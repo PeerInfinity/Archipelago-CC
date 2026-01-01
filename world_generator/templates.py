@@ -186,6 +186,8 @@ def _rule_needs_lambda(rule: dict) -> bool:
 
     Returns True if the rule contains:
     - Block statements (loops, assignments, etc.) that aren't AST_block
+    - Dynamic references (setting_value, placement_lookup, etc.) that need
+      runtime access to world options/attributes
 
     Note: Most rule types including helpers, not, compare, and conditional
     can now be handled by RuleCodeGenerator with the new Rule Builder classes.
@@ -202,8 +204,21 @@ def _rule_needs_lambda(rule: dict) -> bool:
 
     rule_type = rule.get('type', '')
 
-    # Only block statements require lambda (for loops, assignments, etc.)
+    # Block statements require lambda (for loops, assignments, etc.)
     if rule_type == 'block':
+        return True
+
+    # Dynamic references need lambda to generate proper runtime access patterns
+    # These are evaluated to constants in Rule Builder but should be preserved
+    # as dynamic option/attribute access for proper re-export
+    if rule_type in ('setting_value',):
+        return True
+
+    # AST format dynamic references also need lambda
+    # Note: AST_function_call is excluded because it often references variables
+    # (like 'location') that aren't available in the lambda context. These are
+    # typically boss defeat checks that can be evaluated at generation time.
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search'):
         return True
 
     # Recursively check all dict and list values

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, Conditional, CountItem, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, CountItem, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -356,10 +356,8 @@ def set_rules(world: "World") -> None:
         Has('Lamp', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Sewers Door", player),
-        Or(And(Compare('open', "==", 'standard'), Compare('original_dungeon', "==", 'universal')), Has('Small Key (Hyrule Castle)', 4))
-    )
+    multiworld.get_entrance("Sewers Door", player).access_rule = \
+        lambda state: (((((state.multiworld.worlds[player].options.mode == 'standard')) and ((state.multiworld.worlds[player].options.small_key_shuffle == 'universal')))) or (state.has('Small Key (Hyrule Castle)', player, 4)))
 
     world.set_rule(
         multiworld.get_entrance("Sewers Back Door", player),
@@ -456,10 +454,8 @@ def set_rules(world: "World") -> None:
         Has('Hammer', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Tower of Hera Small Key Door", player),
-        And(HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Or(False_(), Has('Small Key (Tower of Hera)')))
-    )
+    multiworld.get_entrance("Tower of Hera Small Key Door", player).access_rule = \
+        lambda state: ((_alinktothepastworldgen_can_activate_crystal_switch(state, player)) and ((((['Bombs (3)', 1] == ['Small Key (Tower of Hera)', 1])) or (state.has('Small Key (Tower of Hera)', player)))))
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Big Key Door", player),
@@ -716,10 +712,8 @@ def set_rules(world: "World") -> None:
         Has('Magic Mirror', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower", player),
-        HelperCall(helper_func=_alinktothepastworldgen_has_crystals, helper_name="has_crystals", args=(7,))
-    )
+    multiworld.get_entrance("Ganons Tower", player).access_rule = \
+        lambda state: _alinktothepastworldgen_has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_gt)
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave", player),
@@ -871,10 +865,8 @@ def set_rules(world: "World") -> None:
         Has('Small Key (Ice Palace)', 2)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Ice Palace (East)", player),
-        And(Or(Conditional(test=True_(), if_true=Has('Small Key (Ice Palace)', 4), if_false=Has('Small Key (Ice Palace)', 6)), Has('Hookshot')), Or(True_(), HasAny('Cane of Byrna', 'Cape', 'Hookshot')))
-    )
+    multiworld.get_entrance("Ice Palace (East)", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ice Palace)', player, 4)) if (True) else (state.has('Small Key (Ice Palace)', player, 6)))) or (state.has('Hookshot', player)))) and (((True) or (True))))
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Kholdstare)", player),
@@ -891,10 +883,8 @@ def set_rules(world: "World") -> None:
         And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword"), HasAny('Cane of Somaria', 'Fire Rod', 'Hammer', 'Ice Rod')), HasAny('Hookshot', 'Pegasus Boots'))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Misery Mire (West)", player),
-        Conditional(test=Or(Compare(['Bombs (3)', 1], "in", [['Big Key (Misery Mire)', 1]]), Compare(['Big Key (Misery Mire)', 1], "in", [['Big Key (Misery Mire)', 1]])), if_true=Has('Small Key (Misery Mire)', 5), if_false=Has('Small Key (Misery Mire)', 6))
-    )
+    multiworld.get_entrance("Misery Mire (West)", player).access_rule = \
+        lambda state: ((state.has('Small Key (Misery Mire)', player, 5)) if ((((['Bombs (3)', 1] in [['Big Key (Misery Mire)', 1]])) or ((['Big Key (Misery Mire)', 1] in [['Big Key (Misery Mire)', 1]])))) else (state.has('Small Key (Misery Mire)', player, 6)))
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Big Key Door", player),
@@ -931,20 +921,16 @@ def set_rules(world: "World") -> None:
         Has('Small Key (Turtle Rock)', 2)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Turtle Rock (Pokey Room) (South)", player),
-        Conditional(test=True_(), if_true=Has('Small Key (Turtle Rock)', 4), if_false=Has('Small Key (Turtle Rock)', 6))
-    )
+    multiworld.get_entrance("Turtle Rock (Pokey Room) (South)", player).access_rule = \
+        lambda state: ((state.has('Small Key (Turtle Rock)', player, 4)) if (True) else (state.has('Small Key (Turtle Rock)', player, 6)))
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Chain Chomp Room) (North)", player),
         Has('Small Key (Turtle Rock)', 3)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Turtle Rock (Chain Chomp Room) (South)", player),
-        Conditional(test=False_(), if_true=Has('Small Key (Turtle Rock)', 3), if_false=Has('Small Key (Turtle Rock)', 5))
-    )
+    multiworld.get_entrance("Turtle Rock (Chain Chomp Room) (South)", player).access_rule = \
+        lambda state: ((state.has('Small Key (Turtle Rock)', player, 3)) if (False) else (state.has('Small Key (Turtle Rock)', player, 5)))
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Chain Chomp Staircase", player),
@@ -1021,10 +1007,8 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk"), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player),
-        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Compare(['Boss Heart Container', 1], "in", [['Small Key (Palace of Darkness)', 1]]), Has('Small Key (Palace of Darkness)', 3)), Has('Small Key (Palace of Darkness)', 6)))
-    )
+    multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player).access_rule = \
+        lambda state: ((_alinktothepastworldgen_can_use_bombs(state, player)) and ((((((['Boss Heart Container', 1] in [['Small Key (Palace of Darkness)', 1]])) and (state.has('Small Key (Palace of Darkness)', player, 3)))) or (state.has('Small Key (Palace of Darkness)', player, 6)))))
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness (North)", player),
@@ -1041,10 +1025,8 @@ def set_rules(world: "World") -> None:
         Has('Hammer', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Palace of Darkness Spike Statue Room Door", player),
-        Or(And(Compare(['Piece of Heart', 1], "in", [['Small Key (Palace of Darkness)', 1]]), Has('Small Key (Palace of Darkness)', 4)), Has('Small Key (Palace of Darkness)', 6))
-    )
+    multiworld.get_entrance("Palace of Darkness Spike Statue Room Door", player).access_rule = \
+        lambda state: (((((['Piece of Heart', 1] in [['Small Key (Palace of Darkness)', 1]])) and (state.has('Small Key (Palace of Darkness)', player, 4)))) or (state.has('Small Key (Palace of Darkness)', player, 6)))
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Maze Door", player),
@@ -1066,30 +1048,22 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Big Key (Ganons Tower)'))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower (Tile Room) Key Door", player),
-        And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Has('Fire Rod'))
-    )
+    multiworld.get_entrance("Ganons Tower (Tile Room) Key Door", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (state.has('Fire Rod', player)))
 
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower (Bottom) (East)", player),
-        Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7))
-    )
+    multiworld.get_entrance("Ganons Tower (Bottom) (East)", player).access_rule = \
+        lambda state: ((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))
 
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower (Map Room)", player),
-        Or(And(Compare(['Progressive Shield', 1], "in", [['Big Key (Ganons Tower)', 1]]), Has('Small Key (Ganons Tower)', 6)), Has('Small Key (Ganons Tower)', 8))
-    )
+    multiworld.get_entrance("Ganons Tower (Map Room)", player).access_rule = \
+        lambda state: (((((['Progressive Shield', 1] in [['Big Key (Ganons Tower)', 1]])) and (state.has('Small Key (Ganons Tower)', player, 6)))) or (state.has('Small Key (Ganons Tower)', player, 8)))
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Double Switch Room)", player),
         And(Has('Small Key (Ganons Tower)', 6), Has('Hookshot'))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower (Firesnake Room)", player),
-        Or(And(Has('Small Key (Ganons Tower)', 5), True_()), Has('Small Key (Ganons Tower)', 7))
-    )
+    multiworld.get_entrance("Ganons Tower (Firesnake Room)", player).access_rule = \
+        lambda state: ((((state.has('Small Key (Ganons Tower)', player, 5)) and (True))) or (state.has('Small Key (Ganons Tower)', player, 7)))
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Torch Rooms", player),
@@ -1286,10 +1260,8 @@ def set_rules(world: "World") -> None:
         And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,)), Has('Big Key (Eastern Palace)')), Has('Lamp'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Eastern Palace - Big Key Chest", player),
-        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(5,)), Or(And(True_(), Has('Small Key (Eastern Palace)')), Has('Small Key (Eastern Palace)', 2))), Has('Lamp'))
-    )
+    multiworld.get_location("Eastern Palace - Big Key Chest", player).access_rule = \
+        lambda state: ((((_alinktothepastworldgen_can_kill_most_things(state, player, 5)) and ((((((['Big Key (Eastern Palace)', 1] == ['Big Key (Eastern Palace)', 1])) and (state.has('Small Key (Eastern Palace)', player)))) or (state.has('Small Key (Eastern Palace)', player, 2)))))) and (state.has('Lamp', player)))
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Boss", player),
@@ -1561,10 +1533,8 @@ def set_rules(world: "World") -> None:
         And(HasAll('Hookshot', 'Moon Pearl'), Has('Moon Pearl'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Mimic Cave", player),
-        And(Or(And(Compare('default', "in", ['easy', 'default']), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", args=(4,))), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), Has('Cane of Somaria')), Has('Hammer'))
-    )
+    multiworld.get_location("Mimic Cave", player).access_rule = \
+        lambda state: (((((((state.multiworld.worlds[player].options.enemy_health in ['easy', 'default'])) and (_alinktothepastworldgen_can_use_bombs(state, player, 4)))) or (_alinktothepastworldgen_can_shoot_arrows(state, player)) or (_alinktothepastworldgen_has_beam_sword(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Hammer', player)))
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
@@ -1586,10 +1556,8 @@ def set_rules(world: "World") -> None:
         And(Has('Small Key (Swamp Palace)', 2), Has('Moon Pearl'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Swamp Palace - Big Chest", player),
-        And(Or(False_(), Has('Big Key (Swamp Palace)')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Swamp Palace - Big Chest", player).access_rule = \
+        lambda state: (((((['Progressive Bow', 1] == ['Big Key (Swamp Palace)', 1])) or (state.has('Big Key (Swamp Palace)', player)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Compass Chest", player),
@@ -1671,10 +1639,8 @@ def set_rules(world: "World") -> None:
         And(Has('Small Key (Thieves Town)', 3), Has('Moon Pearl'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Thieves' Town - Big Chest", player),
-        And(And(Or(And(False_(), Has('Small Key (Thieves Town)', 2)), Has('Small Key (Thieves Town)', 3)), Has('Hammer')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Thieves' Town - Big Chest", player).access_rule = \
+        lambda state: (((((((((['Compass (Thieves Town)', 1] == ['Small Key (Thieves Town)', 1])) and (state.has('Small Key (Thieves Town)', player, 2)))) or (state.has('Small Key (Thieves Town)', player, 3)))) and (state.has('Hammer', player)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Hallway Pot Key", player),
@@ -1721,10 +1687,8 @@ def set_rules(world: "World") -> None:
         Has('Moon Pearl', 1)
     )
 
-    world.set_rule(
-        multiworld.get_location("Skull Woods - Big Chest", player),
-        And(And(Or(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Big Key (Skull Woods)')), False_()), Has('Moon Pearl')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Skull Woods - Big Chest", player).access_rule = \
+        lambda state: ((((((((_alinktothepastworldgen_can_use_bombs(state, player)) and (state.has('Big Key (Skull Woods)', player)))) or ((['Small Key (Skull Woods)', 1] == ['Big Key (Skull Woods)', 1])))) and (state.has('Moon Pearl', player)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Big Key Chest", player),
@@ -1856,10 +1820,8 @@ def set_rules(world: "World") -> None:
         And(Or(Has('Small Key (Misery Mire)', 4), Has('Big Key (Misery Mire)')), Has('Moon Pearl'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Misery Mire - Conveyor Crystal Key Drop", player),
-        And(Conditional(test=Or(False_(), True_(), False_()), if_true=Has('Small Key (Misery Mire)', 4), if_false=Has('Small Key (Misery Mire)', 5)), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Misery Mire - Conveyor Crystal Key Drop", player).access_rule = \
+        lambda state: ((((state.has('Small Key (Misery Mire)', player, 4)) if ((((['Bombs (3)', 1] == ['Big Key (Misery Mire)', 1])) or ((['Big Key (Misery Mire)', 1] == ['Big Key (Misery Mire)', 1])) or ((['Map (Misery Mire)', 1] == ['Big Key (Misery Mire)', 1])))) else (state.has('Small Key (Misery Mire)', player, 5)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Compass Chest", player),
@@ -2056,30 +2018,20 @@ def set_rules(world: "World") -> None:
         Has('Moon Pearl', 1)
     )
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Top Left", player),
-        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Top Left", player).access_rule = \
+        lambda state: ((((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((_alinktothepastworldgen_can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Fire Rod', player)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Top Right", player),
-        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Top Right", player).access_rule = \
+        lambda state: ((((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((_alinktothepastworldgen_can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Fire Rod', player)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Bottom Left", player),
-        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Bottom Left", player).access_rule = \
+        lambda state: ((((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((_alinktothepastworldgen_can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Fire Rod', player)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Bottom Right", player),
-        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Bottom Right", player).access_rule = \
+        lambda state: ((((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((_alinktothepastworldgen_can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Fire Rod', player)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Conveyor Star Pits Pot Key", player),
-        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Conveyor Star Pits Pot Key", player).access_rule = \
+        lambda state: ((((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((_alinktothepastworldgen_can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Fire Rod', player)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Top Left", player),
@@ -2111,30 +2063,20 @@ def set_rules(world: "World") -> None:
         Has('Moon Pearl', 1)
     )
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Firesnake Room", player),
-        And(Or(And(Has('Small Key (Ganons Tower)', 5), Or(True_(), False_())), Has('Small Key (Ganons Tower)', 7)), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Firesnake Room", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (((True) or (False))))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Top Left", player),
-        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Top Left", player).access_rule = \
+        lambda state: ((((_alinktothepastworldgen_can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 6)) and (True))) or (state.has('Small Key (Ganons Tower)', player, 8)))))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Top Right", player),
-        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Top Right", player).access_rule = \
+        lambda state: ((((_alinktothepastworldgen_can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 6)) and (True))) or (state.has('Small Key (Ganons Tower)', player, 8)))))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Left", player),
-        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Left", player).access_rule = \
+        lambda state: ((((_alinktothepastworldgen_can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 6)) and (True))) or (state.has('Small Key (Ganons Tower)', player, 8)))))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Right", player),
-        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Right", player).access_rule = \
+        lambda state: ((((_alinktothepastworldgen_can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 6)) and (True))) or (state.has('Small Key (Ganons Tower)', player, 8)))))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Bob's Chest", player),
@@ -2191,7 +2133,5 @@ def set_rules(world: "World") -> None:
         And(True_(), Has('Moon Pearl'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Ganon", player),
-        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_GanonDefeatRule, helper_name="GanonDefeatRule"), HelperCall(helper_func=_alinktothepastworldgen_has_crystals, helper_name="has_crystals", args=(7,))), Has('Beat Agahnim 2')), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganon", player).access_rule = \
+        lambda state: ((((((_alinktothepastworldgen_GanonDefeatRule(state, player)) and (_alinktothepastworldgen_has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_ganon)))) and (state.has('Beat Agahnim 2', player)))) and (state.has('Moon Pearl', player)))

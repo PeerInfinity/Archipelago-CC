@@ -2977,24 +2977,105 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
-                  "args": [
+                  "rule": "And",
+                  "children": [
                     {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 5
-                      }
+                      "rule": "_alinktothepastworldgen_can_kill_most_things",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 5
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Compare",
+                              "args": {
+                                "left": {
+                                  "rule": "List",
+                                  "args": {
+                                    "value": [
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": "Big Key (Eastern Palace)"
+                                        },
+                                        "_converted_from_ast": true
+                                      },
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": 1
+                                        },
+                                        "_converted_from_ast": true
+                                      }
+                                    ],
+                                    "_original_ast_type": "list"
+                                  },
+                                  "_converted_from_ast": true
+                                },
+                                "op": "==",
+                                "right": {
+                                  "rule": "List",
+                                  "args": {
+                                    "value": [
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": "Big Key (Eastern Palace)"
+                                        },
+                                        "_converted_from_ast": true
+                                      },
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": 1
+                                        },
+                                        "_converted_from_ast": true
+                                      }
+                                    ],
+                                    "_original_ast_type": "list"
+                                  },
+                                  "_converted_from_ast": true
+                                },
+                                "_original_ast_type": "compare"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Eastern Palace)"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Eastern Palace)",
+                            "count": 2
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Lamp",
-                      "Small Key (Eastern Palace)"
-                    ]
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -3487,18 +3568,48 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": "open",
+                        "left": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "mode",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        },
                         "op": "==",
-                        "right": "standard"
-                      }
+                        "right": {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "standard"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": "original_dungeon",
+                        "left": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "small_key_shuffle",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        },
                         "op": "==",
-                        "right": "universal"
-                      }
+                        "right": {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "universal"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4967,14 +5078,74 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_activate_crystal_switch",
-                  "_original_ast_type": "helper"
+                  "rule": "_alinktothepastworldgen_can_activate_crystal_switch",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Tower of Hera)"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Bombs (3)"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "op": "==",
+                        "right": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Small Key (Tower of Hera)"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Tower of Hera)"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -6954,14 +7125,17 @@
             "name": "Ganons Tower",
             "connected_region": "Ganons Tower (Entrance)",
             "access_rule": {
-              "rule": "has_crystals",
+              "rule": "_alinktothepastworldgen_has_crystals",
               "_original_ast_type": "helper",
+              "_converted_from_ast": true,
               "args": [
                 {
-                  "rule": "Constant",
+                  "rule": "AST_setting_value",
                   "args": {
-                    "value": 7
-                  }
+                    "setting": "crystals_needed_for_gt",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7606,35 +7780,67 @@
                         {
                           "rule": "Compare",
                           "args": {
-                            "left": "default",
+                            "left": {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "enemy_health",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
                             "op": "in",
-                            "right": [
-                              "easy",
-                              "default"
-                            ]
-                          }
+                            "right": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "easy"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "default"
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
                         },
                         {
-                          "rule": "can_use_bombs",
+                          "rule": "_alinktothepastworldgen_can_use_bombs",
                           "_original_ast_type": "helper",
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
-                              }
+                              },
+                              "_converted_from_ast": true
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "rule": "can_shoot_arrows",
-                      "_original_ast_type": "helper"
+                      "rule": "_alinktothepastworldgen_can_shoot_arrows",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
-                      "rule": "has_beam_sword",
-                      "_original_ast_type": "helper"
+                      "rule": "_alinktothepastworldgen_has_beam_sword",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7885,13 +8091,80 @@
             "name": "Swamp Palace - Big Chest",
             "id": 59785,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Big Key (Swamp Palace)",
-                  "Moon Pearl"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Progressive Bow"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "op": "==",
+                        "right": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Big Key (Swamp Palace)"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Big Key (Swamp Palace)"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Progressive Bow",
@@ -8303,19 +8576,98 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Thieves Town)",
-                    "count": 3
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Compare",
+                              "args": {
+                                "left": {
+                                  "rule": "List",
+                                  "args": {
+                                    "value": [
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": "Compass (Thieves Town)"
+                                        },
+                                        "_converted_from_ast": true
+                                      },
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": 1
+                                        },
+                                        "_converted_from_ast": true
+                                      }
+                                    ],
+                                    "_original_ast_type": "list"
+                                  },
+                                  "_converted_from_ast": true
+                                },
+                                "op": "==",
+                                "right": {
+                                  "rule": "List",
+                                  "args": {
+                                    "value": [
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": "Small Key (Thieves Town)"
+                                        },
+                                        "_converted_from_ast": true
+                                      },
+                                      {
+                                        "rule": "Constant",
+                                        "args": {
+                                          "value": 1
+                                        },
+                                        "_converted_from_ast": true
+                                      }
+                                    ],
+                                    "_original_ast_type": "list"
+                                  },
+                                  "_converted_from_ast": true
+                                },
+                                "_original_ast_type": "compare"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Thieves Town)",
+                                "count": 2
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Thieves Town)",
+                            "count": 3
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hammer"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Hammer"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -8654,16 +9006,95 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "_alinktothepastworldgen_can_use_bombs",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Big Key (Skull Woods)"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Small Key (Skull Woods)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "==",
+                            "right": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Big Key (Skull Woods)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Moon Pearl"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Big Key (Skull Woods)"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9057,35 +9488,36 @@
             "name": "Ice Palace (East)",
             "connected_region": "Ice Palace (East)",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
+                  "rule": "Or",
+                  "children": [
+                    {
                       "rule": "True_"
                     },
-                    "if_true": {
+                    {
+                      "rule": "True_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ice Palace)",
                         "count": 4
                       }
                     },
-                    "if_false": {
+                    {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Small Key (Ice Palace)",
-                        "count": 6
+                        "item_name": "Hookshot"
                       }
                     }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
+                  ]
                 }
               ]
             }
@@ -9453,34 +9885,128 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": [
-                          "Bombs (3)",
-                          1
-                        ],
+                        "left": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Big Key (Misery Mire)"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
                         "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ]
-                      }
+                        "right": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "List",
+                                "args": {
+                                  "value": [
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "Big Key (Misery Mire)"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": 1
+                                      },
+                                      "_converted_from_ast": true
+                                    }
+                                  ],
+                                  "_original_ast_type": "list"
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": [
-                          "Big Key (Misery Mire)",
-                          1
-                        ],
+                        "left": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Bombs (3)"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
                         "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ]
-                      }
+                        "right": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "List",
+                                "args": {
+                                  "value": [
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "Big Key (Misery Mire)"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": 1
+                                      },
+                                      "_converted_from_ast": true
+                                    }
+                                  ],
+                                  "_original_ast_type": "list"
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -9497,8 +10023,10 @@
                     "item_name": "Small Key (Misery Mire)",
                     "count": 6
                   }
-                }
-              }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -9768,13 +10296,166 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "False_"
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Big Key (Misery Mire)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "==",
+                            "right": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Big Key (Misery Mire)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
                         },
                         {
-                          "rule": "True_"
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Bombs (3)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "==",
+                            "right": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Big Key (Misery Mire)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
                         },
                         {
-                          "rule": "False_"
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Map (Misery Mire)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "==",
+                            "right": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Big Key (Misery Mire)"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -9791,8 +10472,10 @@
                         "item_name": "Small Key (Misery Mire)",
                         "count": 5
                       }
-                    }
-                  }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10105,25 +10788,10 @@
             "name": "Turtle Rock (Pokey Room) (South)",
             "connected_region": "Turtle Rock (First Section)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "True_"
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 4
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 6
-                  }
-                }
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 4
               }
             }
           }
@@ -10188,25 +10856,10 @@
             "name": "Turtle Rock (Chain Chomp Room) (South)",
             "connected_region": "Turtle Rock (Pokey Room)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "False_"
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 3
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 5
-                  }
-                }
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 5
               }
             }
           }
@@ -10958,8 +11611,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "rule": "_alinktothepastworldgen_can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -10970,18 +11624,65 @@
                         {
                           "rule": "Compare",
                           "args": {
-                            "left": [
-                              "Boss Heart Container",
-                              1
-                            ],
+                            "left": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": "Boss Heart Container"
+                                    },
+                                    "_converted_from_ast": true
+                                  },
+                                  {
+                                    "rule": "Constant",
+                                    "args": {
+                                      "value": 1
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
                             "op": "in",
-                            "right": [
-                              [
-                                "Small Key (Palace of Darkness)",
-                                1
-                              ]
-                            ]
-                          }
+                            "right": {
+                              "rule": "List",
+                              "args": {
+                                "value": [
+                                  {
+                                    "rule": "List",
+                                    "args": {
+                                      "value": [
+                                        {
+                                          "rule": "Constant",
+                                          "args": {
+                                            "value": "Small Key (Palace of Darkness)"
+                                          },
+                                          "_converted_from_ast": true
+                                        },
+                                        {
+                                          "rule": "Constant",
+                                          "args": {
+                                            "value": 1
+                                          },
+                                          "_converted_from_ast": true
+                                        }
+                                      ],
+                                      "_original_ast_type": "list"
+                                    },
+                                    "_converted_from_ast": true
+                                  }
+                                ],
+                                "_original_ast_type": "list"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -11196,18 +11897,65 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": [
-                          "Piece of Heart",
-                          1
-                        ],
+                        "left": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Piece of Heart"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
                         "op": "in",
-                        "right": [
-                          [
-                            "Small Key (Palace of Darkness)",
-                            1
-                          ]
-                        ]
-                      }
+                        "right": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "List",
+                                "args": {
+                                  "value": [
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "Small Key (Palace of Darkness)"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": 1
+                                      },
+                                      "_converted_from_ast": true
+                                    }
+                                  ],
+                                  "_original_ast_type": "list"
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -11617,11 +12365,31 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "False_"
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 5
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 7
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -11665,11 +12433,31 @@
             "name": "Ganons Tower (Bottom) (East)",
             "connected_region": "Ganons Tower (Bottom)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Small Key (Ganons Tower)",
-                "count": 7
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "False_"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 7
+                  }
+                }
+              ]
             }
           }
         ],
@@ -11681,16 +12469,55 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "can_use_bombs",
-                      "_original_ast_type": "helper"
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "False_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "_alinktothepastworldgen_can_use_bombs",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Cane of Somaria"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria"
+                        "item_name": "Fire Rod"
                       }
                     }
                   ]
@@ -11698,17 +12525,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Fire Rod"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11728,16 +12545,55 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "can_use_bombs",
-                      "_original_ast_type": "helper"
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "False_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "_alinktothepastworldgen_can_use_bombs",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Cane of Somaria"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria"
+                        "item_name": "Fire Rod"
                       }
                     }
                   ]
@@ -11745,17 +12601,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Fire Rod"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11775,16 +12621,55 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "can_use_bombs",
-                      "_original_ast_type": "helper"
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "False_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "_alinktothepastworldgen_can_use_bombs",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Cane of Somaria"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria"
+                        "item_name": "Fire Rod"
                       }
                     }
                   ]
@@ -11792,17 +12677,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Fire Rod"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11822,16 +12697,55 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "can_use_bombs",
-                      "_original_ast_type": "helper"
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "False_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "_alinktothepastworldgen_can_use_bombs",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Cane of Somaria"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria"
+                        "item_name": "Fire Rod"
                       }
                     }
                   ]
@@ -11839,17 +12753,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Fire Rod"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11869,16 +12773,55 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "can_use_bombs",
-                      "_original_ast_type": "helper"
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "False_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 5
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 7
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "_alinktothepastworldgen_can_use_bombs",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Cane of Somaria"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria"
+                        "item_name": "Fire Rod"
                       }
                     }
                   ]
@@ -11886,17 +12829,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Fire Rod"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11931,18 +12864,65 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": [
-                          "Progressive Shield",
-                          1
-                        ],
+                        "left": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": "Progressive Shield"
+                                },
+                                "_converted_from_ast": true
+                              },
+                              {
+                                "rule": "Constant",
+                                "args": {
+                                  "value": 1
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
                         "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Ganons Tower)",
-                            1
-                          ]
-                        ]
-                      }
+                        "right": {
+                          "rule": "List",
+                          "args": {
+                            "value": [
+                              {
+                                "rule": "List",
+                                "args": {
+                                  "value": [
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "Big Key (Ganons Tower)"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": 1
+                                      },
+                                      "_converted_from_ast": true
+                                    }
+                                  ],
+                                  "_original_ast_type": "list"
+                                },
+                                "_converted_from_ast": true
+                              }
+                            ],
+                            "_original_ast_type": "list"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -12146,11 +13126,31 @@
             "name": "Ganons Tower (Firesnake Room)",
             "connected_region": "Ganons Tower (Teleport Room)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Small Key (Ganons Tower)",
-                "count": 5
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "True_"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 7
+                  }
+                }
+              ]
             }
           }
         ],
@@ -12162,11 +13162,39 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 5
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "False_"
+                            },
+                            {
+                              "rule": "True_"
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 5
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 7
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12210,15 +13238,41 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 6
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "_alinktothepastworldgen_can_use_bombs",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "True_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12243,15 +13297,41 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 6
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "_alinktothepastworldgen_can_use_bombs",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "True_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12276,15 +13356,41 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 6
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "_alinktothepastworldgen_can_use_bombs",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "True_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12309,15 +13415,41 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Ganons Tower)",
-                    "count": 6
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "_alinktothepastworldgen_can_use_bombs",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "True_"
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Small Key (Ganons Tower)",
+                                "count": 6
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 8
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12735,28 +13867,45 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "GanonDefeatRule",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "has_crystals",
-                  "_original_ast_type": "helper",
-                  "args": [
+                  "rule": "And",
+                  "children": [
                     {
-                      "rule": "Constant",
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "_alinktothepastworldgen_GanonDefeatRule",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "_alinktothepastworldgen_has_crystals",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true,
+                          "args": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "crystals_needed_for_ganon",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
                       "args": {
-                        "value": 7
+                        "item_name": "Beat Agahnim 2"
                       }
                     }
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Beat Agahnim 2"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]

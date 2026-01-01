@@ -4318,10 +4318,75 @@ class HelperCodeGenerator:
                 parts = [self._generate_expression(c) for c in children]
                 return '(' + ' or '.join(f'({p})' for p in parts) + ')'
 
+            # Handle Compare rules (Rule Builder format)
+            if rule_type == 'Compare':
+                args = expr.get('args', {})
+                left = args.get('left')
+                op = args.get('op', '==')
+                right = args.get('right')
+                left_expr = self._generate_expression(left) if isinstance(left, dict) else repr(left)
+                right_expr = self._generate_expression(right) if isinstance(right, dict) else repr(right)
+                return f'({left_expr} {op} {right_expr})'
+
+            # Handle Constant rules (Rule Builder format)
+            if rule_type == 'Constant':
+                args = expr.get('args', {})
+                value = args.get('value')
+                if value is None:
+                    return 'None'
+                if isinstance(value, bool):
+                    return 'True' if value else 'False'
+                return repr(value)
+
+            # Handle Has rules (Rule Builder format)
+            if rule_type == 'Has':
+                args = expr.get('args', {})
+                item_name = args.get('item_name', '')
+                count = args.get('count', 1)
+                if count == 1:
+                    return f"state.has({repr(item_name)}, player)"
+                return f"state.has({repr(item_name)}, player, {count})"
+
+            # Handle HasAll rules (Rule Builder format)
+            if rule_type == 'HasAll':
+                args = expr.get('args', {})
+                items = args.get('items', [])
+                items_tuple = tuple(items)
+                return f"state.has_all({items_tuple!r}, player)"
+
+            # Handle True_/False_ rules
+            if rule_type == 'True_':
+                return 'True'
+            if rule_type == 'False_':
+                return 'False'
+
+            # Handle Conditional rules (Rule Builder format)
+            if rule_type == 'Conditional':
+                args = expr.get('args', {})
+                test = args.get('test')
+                if_true = args.get('if_true')
+                if_false = args.get('if_false')
+                test_expr = self._generate_expression(test) if isinstance(test, dict) else repr(test)
+                true_expr = self._generate_expression(if_true) if isinstance(if_true, dict) else repr(if_true)
+                false_expr = self._generate_expression(if_false) if isinstance(if_false, dict) else repr(if_false)
+                return f'(({true_expr}) if ({test_expr}) else ({false_expr}))'
+
+            # Handle List rules (Rule Builder format for list comparisons)
+            if rule_type == 'List':
+                args = expr.get('args', {})
+                value = args.get('value', [])
+                elements = [self._generate_expression(v) if isinstance(v, dict) else repr(v) for v in value]
+                return f'[{", ".join(elements)}]'
+
             # Handle helper calls with _original_ast_type marker
             if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
                 helper_name = rule_type
                 func_name = self.get_function_name(helper_name)
+                # Check for args - this can be a list of arguments to pass to the helper
+                args = expr.get('args', [])
+                if args and isinstance(args, list):
+                    arg_exprs = [self._generate_expression(a) for a in args]
+                    return f'{func_name}(state, player, {", ".join(arg_exprs)})'
                 return f'{func_name}(state, player)'
 
             # Handle AST_placement_search (check if item is at any of listed locations)
@@ -4343,6 +4408,40 @@ class HelperCodeGenerator:
                         return 'True'
                 # Item is not at any of the locations
                 return 'False'
+
+            # Handle AST_setting_value (Rule Builder format for setting_value)
+            if rule_type == 'AST_setting_value':
+                args = expr.get('args', {})
+                setting = args.get('setting', '')
+                index = args.get('index')
+                # Build a setting_value dict and use the existing handler
+                setting_expr = {'setting': setting}
+                if index is not None:
+                    setting_expr['index'] = index
+                return self._expr_setting_value(setting_expr)
+
+            # Handle AST_placement_lookup (Rule Builder format for placement_lookup)
+            if rule_type == 'AST_placement_lookup':
+                args = expr.get('args', {})
+                location = args.get('location', '')
+                if location and location in self.placements:
+                    item_name = self.placements[location]
+                    return f'[{repr(item_name)}, 1]'
+                return 'None'
+
+            # Handle AST_function_call - try to simplify or preserve structure
+            if rule_type == 'AST_function_call':
+                # This represents complex function call patterns
+                # For now, return the result if we can evaluate it, otherwise True
+                args = expr.get('args', {})
+                function = args.get('function', {})
+                # Try to generate the function call expression
+                if isinstance(function, dict):
+                    func_expr = self._generate_expression(function)
+                    call_args = args.get('call_args', [])
+                    arg_exprs = [self._generate_expression(a) for a in call_args]
+                    return f'{func_expr}({", ".join(arg_exprs)})'
+                return 'True'
 
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
