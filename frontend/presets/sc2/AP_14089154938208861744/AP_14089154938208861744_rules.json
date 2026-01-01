@@ -41797,6 +41797,7 @@
         ]
       },
       "advanced_tactics": false,
+      "grant_story_tech": 0,
       "story_levels_granted": true,
       "take_over_ai_allies": false,
       "kerrigan_unit_available": false,
@@ -41823,6 +41824,14 @@
         "Stalker",
         "Zealot"
       ],
+      "all_in_map": 1,
+      "spear_of_adun_presence": 4,
+      "spear_of_adun_passive_presence": 4,
+      "mission_order": 10,
+      "enabled_campaigns": [
+        2
+      ],
+      "story_tech_granted": false,
       "world_directory": "sc2"
     }
   },

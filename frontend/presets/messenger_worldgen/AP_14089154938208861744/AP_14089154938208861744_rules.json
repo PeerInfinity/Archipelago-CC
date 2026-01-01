@@ -6416,7 +6416,7 @@
         "event": false,
         "type": null,
         "max_count": 19,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Time Shard (300)": {
         "name": "Time Shard (300)",
@@ -6427,7 +6427,7 @@
         "event": false,
         "type": null,
         "max_count": 14,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Time Shard (500)": {
         "name": "Time Shard (500)",
@@ -6438,7 +6438,7 @@
         "event": false,
         "type": null,
         "max_count": 3,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Karuta Plates": {
         "name": "Karuta Plates",

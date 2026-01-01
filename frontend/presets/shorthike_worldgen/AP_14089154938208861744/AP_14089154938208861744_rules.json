@@ -2205,7 +2205,7 @@
         "event": false,
         "type": null,
         "max_count": 8,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Seashell": {
         "name": "Seashell",
@@ -2216,7 +2216,7 @@
         "event": false,
         "type": null,
         "max_count": 23,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Golden Feather": {
         "name": "Golden Feather",
@@ -2293,7 +2293,7 @@
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Compass": {
         "name": "Compass",

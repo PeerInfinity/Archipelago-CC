@@ -2436,7 +2436,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "classification": "useful"
       },
       "Hourglass": {
         "name": "Hourglass",
