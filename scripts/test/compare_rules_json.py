@@ -359,8 +359,10 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # can't recreate since it uses generic Location objects.
     # Known game-specific location attributes:
     # - DKC3: progress_byte, progress_bit, inverted_bit
+    # - Yoshi's Island: level_id (used for hint data, not rules)
+    # - Mario Land 2: level_id (used for hint data, not rules)
     if path.startswith('regions') and 'locations[' in path:
-        location_metadata_attrs = ['progress_byte', 'progress_bit', 'inverted_bit']
+        location_metadata_attrs = ['progress_byte', 'progress_bit', 'inverted_bit', 'level_id']
         for attr in location_metadata_attrs:
             if path.endswith(f'.{attr}'):
                 return True
