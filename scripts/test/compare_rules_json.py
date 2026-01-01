@@ -312,6 +312,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # This includes both property access (.args.setting) and array access (.args[0])
         if '.args.' in path or '.args[' in path:
             return True
+        # .child differences - Original AST format uses args.condition for Not rules,
+        # while WorldGen Rule Builder format uses child. These are structurally
+        # different but semantically equivalent representations.
+        if path.endswith('.child') or '.child.' in path:
+            return True
         # Length differences in rule children
         if '[length]' in path:
             return True
