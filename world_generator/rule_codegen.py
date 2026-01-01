@@ -4376,6 +4376,13 @@ class HelperCodeGenerator:
                 items_tuple = tuple(items)
                 return f"state.has_any({items_tuple!r}, player)"
 
+            # Handle Not rules (Rule Builder format)
+            if rule_type == 'Not':
+                args = expr.get('args', {})
+                condition = args.get('condition', {})
+                condition_expr = self._generate_expression(condition)
+                return f"not ({condition_expr})"
+
             # Handle True_/False_ rules
             if rule_type == 'True_':
                 return 'True'
@@ -5212,6 +5219,11 @@ class HelperCodeGenerator:
         # Special handling for state.multiworld.get_location - needs player argument
         # The exported helper body may be missing the player argument
         if func_code == 'state.multiworld.get_location' and len(arg_exprs) == 1:
+            arg_exprs.append('player')
+
+        # Special handling for state.multiworld.get_entrance - needs player argument
+        # The exported helper body may be missing the player argument
+        if func_code == 'state.multiworld.get_entrance' and len(arg_exprs) == 1:
             arg_exprs.append('player')
 
         # Special handling for .can_reach() method calls - needs state argument
