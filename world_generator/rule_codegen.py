@@ -749,42 +749,19 @@ class RuleCodeGenerator:
                 self.required_imports.add('CountItem')
                 return f'Compare(CountItem({repr(item_name)}), ">=", {count_expr})'
 
-            # count=0 means "always true" (no items required)
-            if count <= 0:
-                return self._make_bool_constant(True)
+            # Preserve the exact count from the original rule, including count=0
+            # This ensures round-trip fidelity when comparing exports
             self.required_imports.add('Has')
-            if count > 1:
-                return f'Has({repr(item_name)}, {count})'
-            return f'Has({repr(item_name)})'
+            # Always include count to preserve original rule structure
+            return f'Has({repr(item_name)}, {count})'
 
         if rb_rule == 'And':
             if not children:
                 return self._make_bool_constant(True)
             if len(children) == 1:
                 return self._convert_rule(children[0])
-            # Optimization: If all children are simple Has rules with count=1,
-            # use HasAll instead of And(Has(...), Has(...), ...)
-            # This ensures round-trip consistency with original exports
-            simple_has_items = []
-            all_simple_has = True
-            for child in children:
-                child_rule = child.get('rule', '')
-                child_args = child.get('args', {})
-                if child_rule == 'Has' and child_args.get('count', 1) == 1:
-                    item_name = child_args.get('item_name', '')
-                    if item_name:
-                        simple_has_items.append(item_name)
-                    else:
-                        all_simple_has = False
-                        break
-                else:
-                    all_simple_has = False
-                    break
-            if all_simple_has and len(simple_has_items) >= 2:
-                # Generate HasAll instead of And(Has, Has, ...)
-                self.required_imports.add('HasAll')
-                items_str = ', '.join(repr(item) for item in simple_has_items)
-                return f'HasAll({items_str})'
+            # Preserve original And structure without optimizing to HasAll
+            # This ensures round-trip fidelity when comparing exports
             child_exprs = [self._convert_rule(child) for child in children]
             self.required_imports.add('And')
             return f'And({", ".join(child_exprs)})'
@@ -794,29 +771,8 @@ class RuleCodeGenerator:
                 return self._make_bool_constant(False)
             if len(children) == 1:
                 return self._convert_rule(children[0])
-            # Optimization: If all children are simple Has rules with count=1,
-            # use HasAny instead of Or(Has(...), Has(...), ...)
-            # This ensures round-trip consistency with original exports
-            simple_has_items = []
-            all_simple_has = True
-            for child in children:
-                child_rule = child.get('rule', '')
-                child_args = child.get('args', {})
-                if child_rule == 'Has' and child_args.get('count', 1) == 1:
-                    item_name = child_args.get('item_name', '')
-                    if item_name:
-                        simple_has_items.append(item_name)
-                    else:
-                        all_simple_has = False
-                        break
-                else:
-                    all_simple_has = False
-                    break
-            if all_simple_has and len(simple_has_items) >= 2:
-                # Generate HasAny instead of Or(Has, Has, ...)
-                self.required_imports.add('HasAny')
-                items_str = ', '.join(repr(item) for item in simple_has_items)
-                return f'HasAny({items_str})'
+            # Preserve original Or structure without optimizing to HasAny
+            # This ensures round-trip fidelity when comparing exports
             child_exprs = [self._convert_rule(child) for child in children]
             self.required_imports.add('Or')
             return f'Or({", ".join(child_exprs)})'

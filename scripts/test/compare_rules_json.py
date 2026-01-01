@@ -214,6 +214,8 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     - world.*.options: Option values may differ based on defaults
     - start_inventory_from_pool: May be omitted in WorldGen
     - shops: WorldGen adds empty array when missing
+    - accumulator_rules: WorldGen-specific for state counter patterns
+    - prog_items_init: WorldGen-specific initial counter values
     """
     # === Canonical placement differences ===
 
@@ -327,6 +329,17 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'start_inventory_from_pool' in path:
         return True
 
+    # accumulator_rules (WorldGen-specific for state counter patterns like coins)
+    # Original worlds don't have this, WorldGen worlds generate it from patterns
+    if 'accumulator_rules' in path:
+        return True
+
+    # prog_items_init (WorldGen-specific initial counter values)
+    # Original worlds don't have this, WorldGen worlds generate it from patterns
+    if 'prog_items_init' in path:
+        return True
+
+
     return False
 
 
@@ -394,10 +407,10 @@ def main():
 
     if not differences:
         if ignore_canonical and filtered_count > 0:
-            print(f"✓ Files are identical (after normalizing WorldGen names)")
+            print(f"✓ Files are identical (after normalizing names and rules)")
             print(f"  ({filtered_count} canonical-seed1 differences ignored)")
         else:
-            print("✓ Files are identical (after normalizing WorldGen names)")
+            print("✓ Files are identical (after normalizing names and rules)")
         return 0
 
     print(f"✗ Found {len(differences)} difference(s):")
