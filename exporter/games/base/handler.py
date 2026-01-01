@@ -905,6 +905,46 @@ class BaseGameExportHandler(
     # Item and progression data methods
     # ==========================================================================
 
+    @staticmethod
+    def _classification_to_string(classification) -> str:
+        """Convert ItemClassification to string, preserving modifiers like skip_balancing.
+
+        This mirrors the logic in exporter/exporter.py classification_to_string().
+        """
+        from BaseClasses import ItemClassification
+
+        # Check compound classifications first (order matters!)
+        if classification == ItemClassification.progression_deprioritized_skip_balancing:
+            return "progression_deprioritized_skip_balancing"
+        if classification == ItemClassification.progression_skip_balancing:
+            return "progression_skip_balancing"
+        if classification == ItemClassification.progression_deprioritized:
+            return "progression_deprioritized"
+
+        # Check simple classifications
+        if classification == ItemClassification.progression:
+            return "progression"
+        if classification == ItemClassification.useful:
+            return "useful"
+        if classification == ItemClassification.trap:
+            return "trap"
+        if classification == ItemClassification.filler:
+            return "filler"
+
+        # Fallback for combined classifications (e.g., progression|useful)
+        if ItemClassification.progression in classification:
+            return "progression"
+        if ItemClassification.useful in classification:
+            return "useful"
+        if ItemClassification.trap in classification:
+            return "trap"
+
+        # Check if the classification has a name attribute
+        if hasattr(classification, 'name'):
+            return classification.name
+
+        return str(classification)
+
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
         Return item data with classification flags.
@@ -924,25 +964,27 @@ class BaseGameExportHandler(
                 is_advancement = False
                 is_useful = False
                 is_trap = False
+                item_classification = ItemClassification.filler  # Default
 
                 try:
                     item_class = getattr(world, 'item_name_to_item', {}).get(item_name)
                     if item_class and hasattr(item_class, 'classification'):
-                        classification = item_class.classification
+                        item_classification = item_class.classification
                         # Use 'in' operator to handle combined flags like progression|useful
-                        is_advancement = ItemClassification.progression in classification
-                        is_useful = ItemClassification.useful in classification
-                        is_trap = ItemClassification.trap in classification
+                        is_advancement = ItemClassification.progression in item_classification
+                        is_useful = ItemClassification.useful in item_classification
+                        is_trap = ItemClassification.trap in item_classification
                 except Exception as e:
                     logger.debug(f"Could not determine classification for {item_name}: {e}")
                     # Fallback: check item pool if available
                     if hasattr(world, 'multiworld'):
                         for item in world.multiworld.itempool:
                             if item.player == world.player and item.name == item_name:
+                                item_classification = item.classification
                                 # Use 'in' operator to handle combined flags like progression|useful
-                                is_advancement = ItemClassification.progression in item.classification
-                                is_useful = ItemClassification.useful in item.classification
-                                is_trap = ItemClassification.trap in item.classification
+                                is_advancement = ItemClassification.progression in item_classification
+                                is_useful = ItemClassification.useful in item_classification
+                                is_trap = ItemClassification.trap in item_classification
                                 break
 
                         # Additional fallback: check placed items in locations
@@ -950,10 +992,11 @@ class BaseGameExportHandler(
                             for location in world.multiworld.get_locations(world.player):
                                 if (location.item and location.item.player == world.player and
                                     location.item.name == item_name and location.item.code is not None):
+                                    item_classification = location.item.classification
                                     # Use 'in' operator to handle combined flags like progression|useful
-                                    is_advancement = ItemClassification.progression in location.item.classification
-                                    is_useful = ItemClassification.useful in location.item.classification
-                                    is_trap = ItemClassification.trap in location.item.classification
+                                    is_advancement = ItemClassification.progression in item_classification
+                                    is_useful = ItemClassification.useful in item_classification
+                                    is_trap = ItemClassification.trap in item_classification
                                     break
 
                 # Get groups if available
@@ -976,6 +1019,7 @@ class BaseGameExportHandler(
                     'name': item_name,
                     'id': item_id,
                     'groups': sorted(groups),
+                    'classification': self._classification_to_string(item_classification),
                     'advancement': is_advancement,
                     'useful': is_useful,
                     'trap': is_trap,
@@ -1001,6 +1045,7 @@ class BaseGameExportHandler(
                                 'name': item_name,
                                 'id': None,
                                 'groups': ['Event'],
+                                'classification': self._classification_to_string(item_classification),
                                 # Use 'in' operator to handle combined flags like progression|useful
                                 'advancement': ItemClassification.progression in item_classification,
                                 'useful': ItemClassification.useful in item_classification,
@@ -1016,6 +1061,7 @@ class BaseGameExportHandler(
                                 item_data[item_name]['event'] = True
                                 item_data[item_name]['type'] = 'Event'
                                 item_data[item_name]['id'] = None
+                                item_data[item_name]['classification'] = self._classification_to_string(item_classification)
                                 item_data[item_name]['advancement'] = ItemClassification.progression in item_classification
                                 item_data[item_name]['useful'] = ItemClassification.useful in item_classification
                                 item_data[item_name]['trap'] = ItemClassification.trap in item_classification
