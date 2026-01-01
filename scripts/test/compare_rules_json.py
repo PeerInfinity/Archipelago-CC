@@ -285,6 +285,9 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # dynamically_added marker that WorldGen adds
         if path.endswith('.dynamically_added'):
             return True
+        # placeholder marker - original uses this for shop regions, WorldGen uses dynamically_added
+        if path.endswith('.placeholder'):
+            return True
         # dungeon property - WorldGen doesn't preserve this
         if path.endswith('.dungeon'):
             return True
@@ -306,7 +309,8 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if '._converted_from_ast' in path or '._original_ast_type' in path:
             return True
         # Rule type/structure differences
-        if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children'):
+        # .child is used by Not rules, .children by And/Or rules
+        if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children') or path.endswith('.child'):
             return True
         # All .args.* differences - WorldGen represents rule arguments differently
         # This includes both property access (.args.setting) and array access (.args[0])
