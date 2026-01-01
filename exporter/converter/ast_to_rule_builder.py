@@ -982,12 +982,54 @@ class ASTToRuleBuilder:
     # Expression Converters (Limited Support)
     # -------------------------------------------------------------------------
 
+    def _convert_compare_operand(self, operand: Any) -> Any:
+        """
+        Convert a compare/arithmetic operand.
+
+        Unlike _convert_rule, this extracts raw values from constants instead
+        of wrapping them in Constant rules. This produces cleaner output:
+          {"left": 1, "right": ('a', 'b')} instead of
+          {"left": {"rule": "Constant", "args": {"value": 1}}, ...}
+
+        For complex operands (rules), it still converts them normally.
+        """
+        if not isinstance(operand, dict):
+            return operand
+
+        op_type = operand.get('type', '')
+
+        # Extract raw values from constants
+        if op_type == 'constant':
+            return operand.get('value')
+
+        # Convert tuple to Python tuple of values
+        if op_type == 'tuple':
+            elements = operand.get('elements', operand.get('value', []))
+            result = []
+            for elem in elements:
+                result.append(self._convert_compare_operand(elem))
+            return tuple(result)
+
+        # Convert list to Python list of values
+        if op_type == 'list':
+            elements = operand.get('elements', operand.get('value', []))
+            result = []
+            for elem in elements:
+                result.append(self._convert_compare_operand(elem))
+            return result
+
+        # For complex operands, convert as rule
+        return self._convert_rule(operand)
+
     def _convert_compare(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert compare rule.
 
         AST: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
-        RB: No direct equivalent - preserve as custom rule
+        RB: {"rule": "Compare", "args": {"left": ..., "op": ">=", "right": ...}}
+
+        Uses _convert_compare_operand to extract raw values from constants
+        instead of wrapping them in Constant rules.
         """
         left = rule.get('left', {})
         op = rule.get('op', '==')
@@ -995,9 +1037,9 @@ class ASTToRuleBuilder:
 
         self.warnings.append("Compare expression preserved as custom rule")
         return self._make_custom_rule('Compare', {
-            'left': self._convert_rule(left) if isinstance(left, dict) else left,
+            'left': self._convert_compare_operand(left),
             'op': op,
-            'right': self._convert_rule(right) if isinstance(right, dict) else right,
+            'right': self._convert_compare_operand(right),
             '_original_ast_type': 'compare'
         })
 
@@ -1007,6 +1049,8 @@ class ASTToRuleBuilder:
 
         AST: {"type": "binary_op", "left": {...}, "op": "+", "right": {...}}
         RB: {"rule": "Arithmetic", "args": {"left": ..., "op": "+", "right": ...}}
+
+        Uses _convert_compare_operand to extract raw values from constants.
         """
         left = rule.get('left', {})
         op = rule.get('op', '+')
@@ -1020,9 +1064,9 @@ class ASTToRuleBuilder:
         op = op_map.get(op, op)
 
         return self._make_rule('Arithmetic', {
-            'left': self._convert_rule(left) if isinstance(left, dict) else left,
+            'left': self._convert_compare_operand(left),
             'op': op,
-            'right': self._convert_rule(right) if isinstance(right, dict) else right,
+            'right': self._convert_compare_operand(right),
         })
 
     def _convert_attribute(self, rule: Dict[str, Any]) -> Dict[str, Any]:

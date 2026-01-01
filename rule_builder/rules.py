@@ -2555,9 +2555,46 @@ class Compare(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             return f"({self.left} {self.op} {self.right})"
 
+        def _serialize_operand(self, operand: Any) -> Any:
+            """Serialize a compare operand for JSON export.
+
+            Extracts raw values from simple rules (Constant, Tuple, List)
+            to produce cleaner output matching the original exporter format.
+            """
+            if isinstance(operand, Rule.Resolved):
+                # Check if this is a simple value-holding rule
+                rule_name = operand._rule_class_name
+
+                # Constant - extract the raw value
+                if rule_name == 'Constant':
+                    args = operand._get_args_dict()
+                    return args.get('value')
+
+                # Tuple - extract as Python tuple
+                if rule_name == 'Tuple':
+                    args = operand._get_args_dict()
+                    value = args.get('value', args.get('elements', []))
+                    return tuple(self._serialize_operand(v) for v in value)
+
+                # List - extract as Python list
+                if rule_name == 'List':
+                    args = operand._get_args_dict()
+                    value = args.get('value', args.get('elements', []))
+                    return [self._serialize_operand(v) for v in value]
+
+                # Complex rule - use to_dict()
+                return operand.to_dict()
+
+            # Already a primitive value
+            return operand
+
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"left": self.left, "op": self.op, "right": self.right}
+            return {
+                "left": self._serialize_operand(self.left),
+                "op": self.op,
+                "right": self._serialize_operand(self.right)
+            }
 
 
 @dataclasses.dataclass()
@@ -2704,9 +2741,26 @@ class Arithmetic(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             return f"({self.left} {self.op} {self.right})"
 
+        def _serialize_operand(self, operand: Any) -> Any:
+            """Serialize an arithmetic operand for JSON export.
+
+            Extracts raw values from Constant rules to produce cleaner output.
+            """
+            if isinstance(operand, Rule.Resolved):
+                rule_name = operand._rule_class_name
+                if rule_name == 'Constant':
+                    args = operand._get_args_dict()
+                    return args.get('value')
+                return operand.to_dict()
+            return operand
+
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"left": self.left, "op": self.op, "right": self.right}
+            return {
+                "left": self._serialize_operand(self.left),
+                "op": self.op,
+                "right": self._serialize_operand(self.right)
+            }
 
 
 @dataclasses.dataclass()
