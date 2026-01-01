@@ -215,10 +215,10 @@ def _rule_needs_lambda(rule: dict) -> bool:
         return True
 
     # AST format dynamic references also need lambda
-    # Note: AST_function_call is excluded because it often references complex objects
-    # (like location.parent_region.dungeon.boss) that aren't available in WorldGen.
-    # These are typically boss defeat checks that get evaluated at generation time.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search'):
+    # AST_function_call is included because it may reference 'location' or 'entrance'
+    # variables that are substituted at generation time via set_context(), and
+    # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call'):
         return True
 
     # Recursively check all dict and list values
@@ -419,6 +419,11 @@ class _Boss:
             return True
         return self._defeat_func(state, self.player)
 
+    @property
+    def defeat_rule(self):
+        """Property for exporter compatibility - returns the defeat function."""
+        return self._defeat_func
+
 
 class _Dungeon:
     """Dungeon wrapper for WorldGen."""
@@ -426,6 +431,7 @@ class _Dungeon:
         self.name = name
         self.player = player
         self.bosses: Dict[str, _Boss] = {}
+        self.regions: list = []  # List of Region objects, populated by create_regions()
 
     @property
     def boss(self) -> _Boss:
@@ -488,6 +494,14 @@ DUNGEON_DATA = {
     for region_name, dungeon_name in REGION_DUNGEONS.items():
         if region_name in regions and dungeon_name in dungeons:
             regions[region_name].dungeon = dungeons[dungeon_name]
+
+    # Populate dungeon.regions in the original order from DUNGEON_DATA
+    # (not REGION_DUNGEONS order, which may differ)
+    for dungeon_name, dungeon_info in DUNGEON_DATA.items():
+        if dungeon_name in dungeons:
+            for region_name in dungeon_info["regions"]:
+                if region_name in regions:
+                    dungeons[dungeon_name].regions.append(regions[region_name])
 '''
 
     return dungeon_classes, dungeon_data_code, dungeon_setup_code, True
