@@ -6,7 +6,7 @@ Plando Options:                  connections, texts, bosses
 Game:                            A Link to the Past WorldGen
 Location Count:                  249
 Progression Balancing:           50
-Accessibility:                   Full
+Accessibility:                   Items
 Local Items:                     
 Non-local Items:                 
 Start Inventory:                 
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Allow Collection of checks for other players:Yes
 Beemizer Total Chance:           0
 Beemizer Trap Chance:            60
@@ -51,7 +52,7 @@ Key Drop Shuffle:                Yes
 Killable Thieves:                No
 Map Shuffle:                     Original Dungeon
 Menu Speed:                      Normal
-Misery Mire Medallion:           Bombos
+Misery Mire Medallion:           Quake
 Mode:                            Open
 Play music:                      Yes
 Open Pyramid Hole:               Goal
@@ -85,7 +86,7 @@ Triforce Pieces Mode:            Available
 Triforce Pieces Percentage:      150
 Triforce Pieces Required:        20
 Display Method for Triforce Hunt:Normal
-Turtle Rock Medallion:           Bombos
+Turtle Rock Medallion:           Ether
 Underworld Palette:              Default
 
 

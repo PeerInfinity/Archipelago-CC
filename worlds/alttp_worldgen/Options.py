@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class Accessibility(Choice):
     """Accessibility option with game-specific default."""
     display_name = "Accessibility"
@@ -567,6 +578,7 @@ class UwPalettes(Choice):
 class ALinktothePastWorldGenOptions(PerGameCommonOptions):
     """Options for A Link to the Past WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     accessibility: Accessibility
     allow_collect: AllowCollect
     beemizer_total_chance: BeemizerTotalChance

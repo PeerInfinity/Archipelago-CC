@@ -1823,8 +1823,15 @@ class RuleCodeGenerator:
         return None
 
     def _convert_compare_operand(self, operand: Any) -> str:
-        """Convert a compare operand to Python code."""
+        """Convert a compare operand to Python code.
+
+        Note: Raw lists are converted to tuples because placement_lookup
+        comparisons use location_item_name() which returns tuples.
+        """
         if not isinstance(operand, dict):
+            # Convert lists to tuples for proper comparison with location_item_name()
+            if isinstance(operand, list):
+                return repr(tuple(operand))
             return repr(operand)
 
         op_type = operand.get('type', '')
@@ -1953,7 +1960,8 @@ class RuleCodeGenerator:
                     items.append(repr(item))
             return f"({', '.join(items)})"
 
-        # Handle List operand (e.g., for 'in' operator: value in ['a', 'b', 'c'])
+        # Handle List operand - convert to tuple for consistency with location_item_name()
+        # which returns tuples. This ensures comparisons work correctly.
         if rb_rule == 'List':
             args = operand.get('args', {})
             value_list = args.get('value', args.get('elements', []))
@@ -1968,7 +1976,8 @@ class RuleCodeGenerator:
                         items.append(self._convert_compare_operand(item))
                 else:
                     items.append(repr(item))
-            return f"[{', '.join(items)}]"
+            # Use tuple format to match location_item_name() return type
+            return f"({', '.join(items)},)" if len(items) == 1 else f"({', '.join(items)})"
 
         # Handle integer-returning helpers used as Compare operands
         # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
@@ -4274,6 +4283,13 @@ class HelperCodeGenerator:
                 return 'True' if expr else 'False'
             elif isinstance(expr, str):
                 return repr(expr)
+            elif isinstance(expr, list):
+                # Convert lists to tuples for compatibility with location_item_name()
+                # which returns tuples. Python requires matching types for == comparison.
+                items = [self._generate_expression(e) for e in expr]
+                if len(items) == 1:
+                    return f"({items[0]},)"
+                return f"({', '.join(items)})"
             return str(expr)
 
         expr_type = expr.get('type', '')
@@ -4373,8 +4389,9 @@ class HelperCodeGenerator:
                 left = args.get('left')
                 op = args.get('op', '==')
                 right = args.get('right')
-                left_expr = self._generate_expression(left) if isinstance(left, dict) else repr(left)
-                right_expr = self._generate_expression(right) if isinstance(right, dict) else repr(right)
+                # Always use _generate_expression to properly handle lists -> tuples
+                left_expr = self._generate_expression(left)
+                right_expr = self._generate_expression(right)
                 return f'({left_expr} {op} {right_expr})'
 
             # Handle Constant rules (Rule Builder format)
@@ -4433,13 +4450,16 @@ class HelperCodeGenerator:
                     return f"({items[0]},)"
                 return f"({', '.join(items)})"
 
-            # Handle List rules (Rule Builder format)
+            # Handle List rules (Rule Builder format) - generate as tuple for
+            # compatibility with location_item_name() which returns tuples
             if rule_type == 'List':
                 args = expr.get('args', {})
                 # Support both 'value' and 'elements' keys
                 elements = args.get('value', args.get('elements', []))
                 items = [self._generate_expression(e) for e in elements]
-                return f"[{', '.join(items)}]"
+                if len(items) == 1:
+                    return f"({items[0]},)"
+                return f"({', '.join(items)})"
 
             # Handle Conditional rules (Rule Builder format)
             if rule_type == 'Conditional':
@@ -4453,11 +4473,14 @@ class HelperCodeGenerator:
                 return f'(({true_expr}) if ({test_expr}) else ({false_expr}))'
 
             # Handle List rules (Rule Builder format for list comparisons)
+            # Generate as tuple for compatibility with location_item_name()
             if rule_type == 'List':
                 args = expr.get('args', {})
                 value = args.get('value', [])
                 elements = [self._generate_expression(v) if isinstance(v, dict) else repr(v) for v in value]
-                return f'[{", ".join(elements)}]'
+                if len(elements) == 1:
+                    return f'({elements[0]},)'
+                return f'({", ".join(elements)})'
 
             # Handle Python built-in functions that may have _original_ast_type marker
             # These should NOT be treated as helpers that take state/player args
@@ -5325,10 +5348,17 @@ class HelperCodeGenerator:
         return f"{obj}.{method}({', '.join(arg_exprs)})"
 
     def _expr_list(self, expr: Dict[str, Any]) -> str:
-        """Generate list literal."""
+        """Generate tuple literal from list.
+
+        We use tuples instead of lists because location_item_name() returns
+        tuples, and Python's == comparison requires matching types.
+        """
         values = expr.get('value', expr.get('elements', []))
         items = [self._generate_expression(v) for v in values]
-        return f"[{', '.join(items)}]"
+        # Use tuple format to match location_item_name() return type
+        if len(items) == 1:
+            return f"({items[0]},)"
+        return f"({', '.join(items)})"
 
     def _expr_tuple(self, expr: Dict[str, Any]) -> str:
         """Generate tuple literal."""

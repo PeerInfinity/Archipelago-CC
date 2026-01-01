@@ -18966,7 +18966,7 @@
     "1": {
       "game": "A Link to the Past WorldGen",
       "options": {
-        "accessibility": "full",
+        "accessibility": "items",
         "allow_collect": true,
         "beemizer_total_chance": 0,
         "beemizer_trap_chance": 60,
@@ -19004,7 +19004,7 @@
         "local_items": [],
         "map_shuffle": "original_dungeon",
         "menuspeed": "normal",
-        "misery_mire_medallion": "bombos",
+        "misery_mire_medallion": "quake",
         "mode": "open",
         "music": true,
         "non_local_items": [],
@@ -19046,7 +19046,8 @@
         "triforce_pieces_percentage": 150,
         "triforce_pieces_required": 20,
         "triforcehud": "normal",
-        "turtle_rock_medallion": "bombos",
+        "turtle_rock_medallion": "ether",
+        "use_canonical_options": true,
         "uw_palettes": "default"
       },
       "option_definitions": {
@@ -19054,9 +19055,10 @@
           "type": "choice",
           "name_lookup": {
             "0": "full",
+            "1": "items",
             "2": "minimal"
           },
-          "default": 0,
+          "default": 1,
           "display_name": "Accessibility"
         },
         "allow_collect": {
@@ -19683,6 +19685,11 @@
           },
           "default": "random",
           "display_name": "Turtle Rock Medallion"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         },
         "uw_palettes": {
           "type": "choice",
@@ -22333,8 +22340,8 @@
               },
               "op": "in",
               "right": {
-                "type": "list",
-                "value": [
+                "type": "tuple",
+                "elements": [
                   {
                     "type": "tuple",
                     "elements": [
@@ -22371,8 +22378,8 @@
               },
               "op": "in",
               "right": {
-                "type": "list",
-                "value": [
+                "type": "tuple",
+                "elements": [
                   {
                     "type": "tuple",
                     "elements": [
