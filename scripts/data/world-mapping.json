@@ -26,15 +26,6 @@
     "has_custom_game_logic": false,
     "world_directory": "alttp"
   },
-  "A Link to the Past WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "alttp_worldgen"
-  },
   "A Short Hike": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -1297,7 +1288,7 @@
   },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 1881,
+    "exporter_size": 2260,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

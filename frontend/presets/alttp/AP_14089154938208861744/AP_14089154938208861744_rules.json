@@ -17632,10 +17632,11 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Tempered Sword"
       },
       "Golden Sword": {
         "name": "Golden Sword",
@@ -17645,10 +17646,11 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Golden Sword"
       },
       "Blue Shield": {
         "name": "Blue Shield",
@@ -17658,10 +17660,11 @@
           "Non Progression Items",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Blue Shield"
       },
       "Red Shield": {
         "name": "Red Shield",
@@ -17671,10 +17674,11 @@
           "Non Progression Items",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Red Shield"
       },
       "Mirror Shield": {
         "name": "Mirror Shield",
@@ -17684,64 +17688,65 @@
           "Progression Items",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Mirror Shield"
       },
       "Fire Rod": {
         "name": "Fire Rod",
-        "hint_text": "the Fire Rod",
         "id": 7,
         "groups": [
           "Everything",
           "Progression Items",
           "Rods"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Fire Rod"
       },
       "Ice Rod": {
         "name": "Ice Rod",
-        "hint_text": "the Ice Rod",
         "id": 8,
         "groups": [
           "Everything",
           "Progression Items",
           "Rods"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Ice Rod"
       },
       "Hammer": {
         "name": "Hammer",
-        "hint_text": "the Hammer",
         "id": 9,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Hammer"
       },
       "Hookshot": {
         "name": "Hookshot",
-        "hint_text": "the Hookshot",
         "id": 10,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Hookshot"
       },
       "Bow": {
         "name": "Bow",
@@ -17751,37 +17756,38 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Bow"
       },
       "Blue Boomerang": {
         "name": "Blue Boomerang",
-        "hint_text": "the Blue Boomerang",
         "id": 12,
         "groups": [
           "Boomerangs",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Blue Boomerang"
       },
       "Magic Powder": {
         "name": "Magic Powder",
-        "hint_text": "the Powder",
         "id": 13,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Powder"
       },
       "Bee": {
         "name": "Bee",
@@ -17790,10 +17796,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a bee"
       },
       "Bombos": {
         "name": "Bombos",
@@ -17803,10 +17810,10 @@
           "Medallions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ether": {
         "name": "Ether",
@@ -17816,10 +17823,10 @@
           "Medallions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Quake": {
         "name": "Quake",
@@ -17829,63 +17836,63 @@
           "Medallions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lamp": {
         "name": "Lamp",
-        "hint_text": "the Lamp",
         "id": 18,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Lamp"
       },
       "Shovel": {
         "name": "Shovel",
-        "hint_text": "the Shovel",
         "id": 19,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Shovel"
       },
       "Flute": {
         "name": "Flute",
-        "hint_text": "the Flute",
         "id": 20,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Flute"
       },
       "Cane of Somaria": {
         "name": "Cane of Somaria",
-        "hint_text": "the Red Cane",
         "id": 21,
         "groups": [
           "Canes",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Red Cane"
       },
       "Bottle": {
         "name": "Bottle",
@@ -17895,63 +17902,64 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a bottle"
       },
       "Piece of Heart": {
         "name": "Piece of Heart",
-        "hint_text": "a heart piece",
         "id": 23,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 24,
-        "classification": "useful"
+        "hint_text": "a heart piece"
       },
       "Cane of Byrna": {
         "name": "Cane of Byrna",
-        "hint_text": "the Blue Cane",
         "id": 24,
         "groups": [
           "Canes",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Blue Cane"
       },
       "Cape": {
         "name": "Cape",
-        "hint_text": "the Cape",
         "id": 25,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Cape"
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
-        "hint_text": "the Mirror",
         "id": 26,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Mirror"
       },
       "Power Glove": {
         "name": "Power Glove",
@@ -17961,10 +17969,11 @@
           "Gloves",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Glove"
       },
       "Titans Mitts": {
         "name": "Titans Mitts",
@@ -17974,62 +17983,63 @@
           "Gloves",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Mitts"
       },
       "Book of Mudora": {
         "name": "Book of Mudora",
-        "hint_text": "the Book",
         "id": 29,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Book"
       },
       "Flippers": {
         "name": "Flippers",
-        "hint_text": "the Flippers",
         "id": 30,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Flippers"
       },
       "Moon Pearl": {
         "name": "Moon Pearl",
-        "hint_text": "the Moon Pearl",
         "id": 31,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Moon Pearl"
       },
       "Bug Catching Net": {
         "name": "Bug Catching Net",
-        "hint_text": "the Bug Net",
         "id": 33,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Bug Net"
       },
       "Blue Mail": {
         "name": "Blue Mail",
@@ -18039,10 +18049,11 @@
           "Mails",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Blue Mail"
       },
       "Red Mail": {
         "name": "Red Mail",
@@ -18052,10 +18063,11 @@
           "Mails",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Red Mail"
       },
       "Single Bomb": {
         "name": "Single Bomb",
@@ -18064,54 +18076,54 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a bomb"
       },
       "Bombs (3)": {
         "name": "Bombs (3)",
-        "hint_text": "three bombs",
         "id": 40,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 16,
-        "classification": "filler"
+        "hint_text": "three bombs"
       },
       "Mushroom": {
         "name": "Mushroom",
-        "hint_text": "the Mushroom",
         "id": 41,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Mushroom"
       },
       "Red Boomerang": {
         "name": "Red Boomerang",
-        "hint_text": "the Red Boomerang",
         "id": 42,
         "groups": [
           "Boomerangs",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Red Boomerang"
       },
       "Bottle (Red Potion)": {
         "name": "Bottle (Red Potion)",
-        "hint_text": "a bottle",
         "id": 43,
         "groups": [
           "Bottles",
@@ -18119,10 +18131,11 @@
           "Potions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a bottle"
       },
       "Bottle (Green Potion)": {
         "name": "Bottle (Green Potion)",
@@ -18133,14 +18146,14 @@
           "Potions",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a bottle"
       },
       "Bottle (Blue Potion)": {
         "name": "Bottle (Blue Potion)",
-        "hint_text": "a bottle",
         "id": 45,
         "groups": [
           "Bottles",
@@ -18148,10 +18161,11 @@
           "Potions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a bottle"
       },
       "Red Potion": {
         "name": "Red Potion",
@@ -18161,10 +18175,11 @@
           "Non Progression Items",
           "Potions"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a red potion"
       },
       "Green Potion": {
         "name": "Green Potion",
@@ -18174,10 +18189,11 @@
           "Non Progression Items",
           "Potions"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a green potion"
       },
       "Blue Potion": {
         "name": "Blue Potion",
@@ -18187,65 +18203,66 @@
           "Non Progression Items",
           "Potions"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a blue potion"
       },
       "Bombs (10)": {
         "name": "Bombs (10)",
-        "hint_text": "ten bombs",
         "id": 49,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "ten bombs"
       },
       "Rupee (1)": {
         "name": "Rupee (1)",
-        "hint_text": "a green rupee",
         "id": 52,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "filler"
+        "hint_text": "a green rupee"
       },
       "Rupees (5)": {
         "name": "Rupees (5)",
-        "hint_text": "a blue rupee",
         "id": 53,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "filler"
+        "hint_text": "a blue rupee"
       },
       "Rupees (20)": {
         "name": "Rupees (20)",
-        "hint_text": "a red rupee",
         "id": 54,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 28,
-        "classification": "filler"
+        "hint_text": "a red rupee"
       },
       "Silver Bow": {
         "name": "Silver Bow",
@@ -18255,24 +18272,25 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Silver Bow"
       },
       "Bottle (Bee)": {
         "name": "Bottle (Bee)",
-        "hint_text": "a bottle",
         "id": 60,
         "groups": [
           "Bottles",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a bottle"
       },
       "Bottle (Fairy)": {
         "name": "Bottle (Fairy)",
@@ -18282,64 +18300,65 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a bottle"
       },
       "Boss Heart Container": {
         "name": "Boss Heart Container",
-        "hint_text": "a heart",
         "id": 62,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 10,
-        "classification": "progression"
+        "hint_text": "a heart"
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",
-        "hint_text": "a heart",
         "id": 63,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "hint_text": "a heart"
       },
       "Rupees (100)": {
         "name": "Rupees (100)",
-        "hint_text": "one hundred rupees",
         "id": 64,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "one hundred rupees"
       },
       "Rupees (50)": {
         "name": "Rupees (50)",
-        "hint_text": "fifty rupees",
         "id": 65,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 7,
-        "classification": "filler"
+        "hint_text": "fifty rupees"
       },
       "Small Heart": {
         "name": "Small Heart",
@@ -18348,50 +18367,51 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a heart"
       },
       "Single Arrow": {
         "name": "Single Arrow",
-        "hint_text": "an arrow",
         "id": 67,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "an arrow"
       },
       "Arrows (10)": {
         "name": "Arrows (10)",
-        "hint_text": "ten arrows",
         "id": 68,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 12,
-        "classification": "filler"
+        "hint_text": "ten arrows"
       },
       "Rupees (300)": {
         "name": "Rupees (300)",
-        "hint_text": "three hundred rupees",
         "id": 70,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "filler"
+        "hint_text": "three hundred rupees"
       },
       "Bottle (Good Bee)": {
         "name": "Bottle (Good Bee)",
@@ -18401,10 +18421,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a bottle"
       },
       "Fighter Sword": {
         "name": "Fighter Sword",
@@ -18414,36 +18435,37 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Small Sword"
       },
       "Activated Flute": {
         "name": "Activated Flute",
-        "hint_text": "the Flute",
         "id": 74,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Flute"
       },
       "Pegasus Boots": {
         "name": "Pegasus Boots",
-        "hint_text": "the Boots",
         "id": 75,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Boots"
       },
       "Bomb Upgrade (50)": {
         "name": "Bomb Upgrade (50)",
@@ -18453,10 +18475,11 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "bomb capacity"
       },
       "Arrow Upgrade (70)": {
         "name": "Arrow Upgrade (70)",
@@ -18466,24 +18489,25 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "arrow capacity"
       },
       "Magic Upgrade (1/2)": {
         "name": "Magic Upgrade (1/2)",
-        "hint_text": "Half Magic",
         "id": 78,
         "groups": [
           "Everything",
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "Half Magic"
       },
       "Magic Upgrade (1/4)": {
         "name": "Magic Upgrade (1/4)",
@@ -18493,10 +18517,11 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "Quarter Magic"
       },
       "Master Sword": {
         "name": "Master Sword",
@@ -18506,10 +18531,11 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Master Sword"
       },
       "Bomb Upgrade (+5)": {
         "name": "Bomb Upgrade (+5)",
@@ -18519,10 +18545,11 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "bomb capacity"
       },
       "Bomb Upgrade (+10)": {
         "name": "Bomb Upgrade (+10)",
@@ -18532,10 +18559,11 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "bomb capacity"
       },
       "Arrow Upgrade (+5)": {
         "name": "Arrow Upgrade (+5)",
@@ -18545,10 +18573,11 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "arrow capacity"
       },
       "Arrow Upgrade (+10)": {
         "name": "Arrow Upgrade (+10)",
@@ -18558,10 +18587,11 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "arrow capacity"
       },
       "Silver Arrows": {
         "name": "Silver Arrows",
@@ -18571,10 +18601,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "the Silver Arrows"
       },
       "Rupoor": {
         "name": "Rupoor",
@@ -18583,10 +18614,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a rupoor"
       },
       "Nothing": {
         "name": "Nothing",
@@ -18595,10 +18627,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "nothing"
       },
       "Red Clock": {
         "name": "Red Clock",
@@ -18608,10 +18641,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a red clock"
       },
       "Blue Clock": {
         "name": "Blue Clock",
@@ -18621,10 +18655,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a blue clock"
       },
       "Green Clock": {
         "name": "Green Clock",
@@ -18634,66 +18669,67 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a red clock"
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
-        "hint_text": "a Sword",
         "id": 94,
         "groups": [
           "Everything",
           "Progression Items",
           "Swords"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a Sword"
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
-        "hint_text": "a shield",
         "id": 95,
         "groups": [
           "Everything",
           "Progression Items",
           "Shields"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 3,
-        "classification": "progression"
+        "hint_text": "a shield"
       },
       "Progressive Mail": {
         "name": "Progressive Mail",
-        "hint_text": "some armor",
         "id": 96,
         "groups": [
           "Everything",
           "Mails",
           "Non Progression Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "hint_text": "some armor"
       },
       "Progressive Glove": {
         "name": "Progressive Glove",
-        "hint_text": "a Glove",
         "id": 97,
         "groups": [
           "Everything",
           "Gloves",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a Glove"
       },
       "Single RNG": {
         "name": "Single RNG",
@@ -18702,10 +18738,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a new mystery"
       },
       "Multi RNG": {
         "name": "Multi RNG",
@@ -18714,24 +18751,25 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a total mystery"
       },
       "Progressive Bow": {
         "name": "Progressive Bow",
-        "hint_text": "a Bow",
         "id": 100,
         "groups": [
           "Bows",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a Bow"
       },
       "Progressive Bow (Alt)": {
         "name": "Progressive Bow (Alt)",
@@ -18741,23 +18779,24 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a Bow"
       },
       "Triforce": {
         "name": "Triforce",
-        "hint_text": "the Triforce",
         "id": 106,
         "groups": [
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Triforce"
       },
       "Power Star": {
         "name": "Power Star",
@@ -18766,10 +18805,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a Power Star"
       },
       "Triforce Piece": {
         "name": "Triforce Piece",
@@ -18778,136 +18818,137 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a Triforce Piece"
       },
       "Map (Ganons Tower)": {
         "name": "Map (Ganons Tower)",
-        "hint_text": "a map to Ganon's Tower",
         "id": 114,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Ganon's Tower"
       },
       "Map (Turtle Rock)": {
         "name": "Map (Turtle Rock)",
-        "hint_text": "a map to Turtle Rock",
         "id": 115,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Turtle Rock"
       },
       "Map (Thieves Town)": {
         "name": "Map (Thieves Town)",
-        "hint_text": "a map to Thieves' Town",
         "id": 116,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Thieves' Town"
       },
       "Map (Tower of Hera)": {
         "name": "Map (Tower of Hera)",
-        "hint_text": "a map to Tower of Hera",
         "id": 117,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Tower of Hera"
       },
       "Map (Ice Palace)": {
         "name": "Map (Ice Palace)",
-        "hint_text": "a map to Ice Palace",
         "id": 118,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Ice Palace"
       },
       "Map (Skull Woods)": {
         "name": "Map (Skull Woods)",
-        "hint_text": "a map to Skull Woods",
         "id": 119,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Skull Woods"
       },
       "Map (Misery Mire)": {
         "name": "Map (Misery Mire)",
-        "hint_text": "a map to Misery Mire",
         "id": 120,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Misery Mire"
       },
       "Map (Palace of Darkness)": {
         "name": "Map (Palace of Darkness)",
-        "hint_text": "a map to Palace of Darkness",
         "id": 121,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Palace of Darkness"
       },
       "Map (Swamp Palace)": {
         "name": "Map (Swamp Palace)",
-        "hint_text": "a map to Swamp Palace",
         "id": 122,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Swamp Palace"
       },
       "Map (Agahnims Tower)": {
         "name": "Map (Agahnims Tower)",
@@ -18917,178 +18958,179 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Castle Tower"
       },
       "Map (Desert Palace)": {
         "name": "Map (Desert Palace)",
-        "hint_text": "a map to Desert Palace",
         "id": 124,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Desert Palace"
       },
       "Map (Eastern Palace)": {
         "name": "Map (Eastern Palace)",
-        "hint_text": "a map to Eastern Palace",
         "id": 125,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Eastern Palace"
       },
       "Map (Hyrule Castle)": {
         "name": "Map (Hyrule Castle)",
-        "hint_text": "a map to Hyrule Castle",
         "id": 127,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Hyrule Castle"
       },
       "Compass (Ganons Tower)": {
         "name": "Compass (Ganons Tower)",
-        "hint_text": "a compass to Ganon's Tower",
         "id": 130,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Ganon's Tower"
       },
       "Compass (Turtle Rock)": {
         "name": "Compass (Turtle Rock)",
-        "hint_text": "a compass to Turtle Rock",
         "id": 131,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Turtle Rock"
       },
       "Compass (Thieves Town)": {
         "name": "Compass (Thieves Town)",
-        "hint_text": "a compass to Thieves' Town",
         "id": 132,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Thieves' Town"
       },
       "Compass (Tower of Hera)": {
         "name": "Compass (Tower of Hera)",
-        "hint_text": "a compass to Tower of Hera",
         "id": 133,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Tower of Hera"
       },
       "Compass (Ice Palace)": {
         "name": "Compass (Ice Palace)",
-        "hint_text": "a compass to Ice Palace",
         "id": 134,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Ice Palace"
       },
       "Compass (Skull Woods)": {
         "name": "Compass (Skull Woods)",
-        "hint_text": "a compass to Skull Woods",
         "id": 135,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Skull Woods"
       },
       "Compass (Misery Mire)": {
         "name": "Compass (Misery Mire)",
-        "hint_text": "a compass to Misery Mire",
         "id": 136,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Misery Mire"
       },
       "Compass (Palace of Darkness)": {
         "name": "Compass (Palace of Darkness)",
-        "hint_text": "a compass to Palace of Darkness",
         "id": 137,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Palace of Darkness"
       },
       "Compass (Swamp Palace)": {
         "name": "Compass (Swamp Palace)",
-        "hint_text": "a compass to Swamp Palace",
         "id": 138,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Swamp Palace"
       },
       "Compass (Agahnims Tower)": {
         "name": "Compass (Agahnims Tower)",
@@ -19098,38 +19140,39 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Castle Tower"
       },
       "Compass (Desert Palace)": {
         "name": "Compass (Desert Palace)",
-        "hint_text": "a compass to Desert Palace",
         "id": 140,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Desert Palace"
       },
       "Compass (Eastern Palace)": {
         "name": "Compass (Eastern Palace)",
-        "hint_text": "a compass to Eastern Palace",
         "id": 141,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Eastern Palace"
       },
       "Compass (Hyrule Castle)": {
         "name": "Compass (Hyrule Castle)",
@@ -19139,136 +19182,137 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Hyrule Castle"
       },
       "Big Key (Ganons Tower)": {
         "name": "Big Key (Ganons Tower)",
-        "hint_text": "a big key to Ganon's Tower",
         "id": 146,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Ganon's Tower"
       },
       "Big Key (Turtle Rock)": {
         "name": "Big Key (Turtle Rock)",
-        "hint_text": "a big key to Turtle Rock",
         "id": 147,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Turtle Rock"
       },
       "Big Key (Thieves Town)": {
         "name": "Big Key (Thieves Town)",
-        "hint_text": "a big key to Thieves' Town",
         "id": 148,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Thieves' Town"
       },
       "Big Key (Tower of Hera)": {
         "name": "Big Key (Tower of Hera)",
-        "hint_text": "a big key to Tower of Hera",
         "id": 149,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Tower of Hera"
       },
       "Big Key (Ice Palace)": {
         "name": "Big Key (Ice Palace)",
-        "hint_text": "a big key to Ice Palace",
         "id": 150,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Ice Palace"
       },
       "Big Key (Skull Woods)": {
         "name": "Big Key (Skull Woods)",
-        "hint_text": "a big key to Skull Woods",
         "id": 151,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Skull Woods"
       },
       "Big Key (Misery Mire)": {
         "name": "Big Key (Misery Mire)",
-        "hint_text": "a big key to Misery Mire",
         "id": 152,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Misery Mire"
       },
       "Big Key (Palace of Darkness)": {
         "name": "Big Key (Palace of Darkness)",
-        "hint_text": "a big key to Palace of Darkness",
         "id": 153,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Palace of Darkness"
       },
       "Big Key (Swamp Palace)": {
         "name": "Big Key (Swamp Palace)",
-        "hint_text": "a big key to Swamp Palace",
         "id": 154,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Swamp Palace"
       },
       "Big Key (Agahnims Tower)": {
         "name": "Big Key (Agahnims Tower)",
@@ -19278,234 +19322,235 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a big key to Castle Tower"
       },
       "Big Key (Desert Palace)": {
         "name": "Big Key (Desert Palace)",
-        "hint_text": "a big key to Desert Palace",
         "id": 156,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Desert Palace"
       },
       "Big Key (Eastern Palace)": {
         "name": "Big Key (Eastern Palace)",
-        "hint_text": "a big key to Eastern Palace",
         "id": 157,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Eastern Palace"
       },
       "Big Key (Hyrule Castle)": {
         "name": "Big Key (Hyrule Castle)",
-        "hint_text": "a big key to Hyrule Castle",
         "id": 159,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Hyrule Castle"
       },
       "Small Key (Hyrule Castle)": {
         "name": "Small Key (Hyrule Castle)",
-        "hint_text": "a small key to Hyrule Castle",
         "id": 160,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a small key to Hyrule Castle"
       },
       "Small Key (Eastern Palace)": {
         "name": "Small Key (Eastern Palace)",
-        "hint_text": "a small key to Eastern Palace",
         "id": 162,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a small key to Eastern Palace"
       },
       "Small Key (Desert Palace)": {
         "name": "Small Key (Desert Palace)",
-        "hint_text": "a small key to Desert Palace",
         "id": 163,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a small key to Desert Palace"
       },
       "Small Key (Agahnims Tower)": {
         "name": "Small Key (Agahnims Tower)",
-        "hint_text": "a small key to Castle Tower",
         "id": 164,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a small key to Castle Tower"
       },
       "Small Key (Swamp Palace)": {
         "name": "Small Key (Swamp Palace)",
-        "hint_text": "a small key to Swamp Palace",
         "id": 165,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Swamp Palace"
       },
       "Small Key (Palace of Darkness)": {
         "name": "Small Key (Palace of Darkness)",
-        "hint_text": "a small key to Palace of Darkness",
         "id": 166,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Palace of Darkness"
       },
       "Small Key (Misery Mire)": {
         "name": "Small Key (Misery Mire)",
-        "hint_text": "a small key to Misery Mire",
         "id": 167,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Misery Mire"
       },
       "Small Key (Skull Woods)": {
         "name": "Small Key (Skull Woods)",
-        "hint_text": "a small key to Skull Woods",
         "id": 168,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "progression"
+        "hint_text": "a small key to Skull Woods"
       },
       "Small Key (Ice Palace)": {
         "name": "Small Key (Ice Palace)",
-        "hint_text": "a small key to Ice Palace",
         "id": 169,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Ice Palace"
       },
       "Small Key (Tower of Hera)": {
         "name": "Small Key (Tower of Hera)",
-        "hint_text": "a small key to Tower of Hera",
         "id": 170,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a small key to Tower of Hera"
       },
       "Small Key (Thieves Town)": {
         "name": "Small Key (Thieves Town)",
-        "hint_text": "a small key to Thieves' Town",
         "id": 171,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 3,
-        "classification": "progression"
+        "hint_text": "a small key to Thieves' Town"
       },
       "Small Key (Turtle Rock)": {
         "name": "Small Key (Turtle Rock)",
-        "hint_text": "a small key to Turtle Rock",
         "id": 172,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Turtle Rock"
       },
       "Small Key (Ganons Tower)": {
         "name": "Small Key (Ganons Tower)",
-        "hint_text": "a small key to Ganon's Tower",
         "id": 173,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 8,
-        "classification": "progression"
+        "hint_text": "a small key to Ganon's Tower"
       },
       "Small Key (Universal)": {
         "name": "Small Key (Universal)",
@@ -19515,10 +19560,11 @@
           "Non Progression Items",
           "Small Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a small key"
       },
       "Bee Trap": {
         "name": "Bee Trap",
@@ -19527,10 +19573,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "Friendship"
       },
       "Faerie": {
         "name": "Faerie",
@@ -19539,10 +19586,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a faerie"
       },
       "Good Bee": {
         "name": "Good Bee",
@@ -19551,10 +19599,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a bee"
       },
       "Magic Jar": {
         "name": "Magic Jar",
@@ -19563,10 +19612,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Apple": {
         "name": "Apple",
@@ -19575,10 +19624,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Open Floodgate": {
         "name": "Open Floodgate",
@@ -19586,10 +19635,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Return Smith": {
         "name": "Return Smith",
@@ -19597,10 +19646,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Capacity Upgrade Shop": {
         "name": "Capacity Upgrade Shop",
@@ -19608,10 +19657,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beat Agahnim 1": {
         "name": "Beat Agahnim 1",
@@ -19619,10 +19668,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Get Frog": {
         "name": "Get Frog",
@@ -19630,10 +19679,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pick Up Purple Chest": {
         "name": "Pick Up Purple Chest",
@@ -19641,10 +19690,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beat Agahnim 2": {
         "name": "Beat Agahnim 2",
@@ -19652,10 +19701,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Pendant": {
         "name": "Red Pendant",

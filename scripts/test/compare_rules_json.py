@@ -288,11 +288,10 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
 
 
 def is_canonical_difference(path: str, original_value: Any = None, worldgen_value: Any = None) -> bool:
-    """Check if a difference path is caused by --canonical-seed1 or WorldGen.
-
-    NOTE: All exceptions have been temporarily removed to identify what
-    inconsistencies still exist in the WorldGen output.
-    """
+    """Check if a difference path is caused by --canonical-seed1 or WorldGen."""
+    # canonical_placements section only exists with --canonical-seed1
+    if 'canonical_placements' in path:
+        return True
     return False
 
 
