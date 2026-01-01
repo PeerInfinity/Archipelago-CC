@@ -547,6 +547,12 @@ def generate_rules_py(data: ExtractedData) -> str:
     # Generate helper functions
     helper_functions = []
     if has_helpers:
+        # Pre-scan all helper bodies for NamedTuple types
+        # This is needed so constructor calls can be resolved before code generation
+        for helper_data in data.helpers.values():
+            if helper_data.body:
+                helper_generator.prescan_for_namedtuples(helper_data.body)
+
         for helper_name, helper_data in data.helpers.items():
             func_code = helper_generator.generate_helper_function(
                 helper_name,
@@ -618,7 +624,13 @@ def generate_rules_py(data: ExtractedData) -> str:
     # Build helper section
     helpers_section = ''
     if helper_functions:
-        helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+        # Generate NamedTuple class definitions if any were encountered
+        namedtuple_classes = helper_generator.generate_namedtuple_classes()
+        if namedtuple_classes:
+            helpers_section = '\n\n# NamedTuple types for helper functions\n' + namedtuple_classes + '\n'
+            helpers_section += '\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+        else:
+            helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
 
     # Build indirect condition registrations
     indirect_section = ''

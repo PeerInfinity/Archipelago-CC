@@ -15,6 +15,21 @@ if TYPE_CHECKING:
     from worlds.AutoWorld import World
 
 
+# NamedTuple types for helper functions
+from typing import NamedTuple, Any, List
+
+class _tunicworldgen_NTuple0(NamedTuple):
+    att_level: Any
+    def_level: Any
+    potion_level: Any
+    hp_level: Any
+    sp_level: Any
+    mp_level: Any
+    potion_count: Any
+    equipment: Any
+    is_boss: Any
+
+
 # Helper functions
 def _tunicworldgen_calc_def_sp_cost(state: "CollectionState", player: int, def_upgrades = None, sp_upgrades = None) -> bool:
     money = 0
@@ -67,7 +82,7 @@ def _tunicworldgen_can_shop(state: "CollectionState", player: int) -> bool:
 
 
 def _tunicworldgen_check_combat_reqs(state: "CollectionState", player: int, area_name = None, alt_data = None) -> bool:
-    data = (alt_data) or ({'Overworld': [1, 1, 1, 1, 1, 1, 0, ['Stick'], False], 'East Forest': [1, 1, 1, 1, 1, 1, 0, ['Sword'], False], 'Before Well': [1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False], 'Beneath the Well': [2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'Dark Tomb': [2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'West Garden': [2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False], 'Garden Knight': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True], 'Beneath the Vault': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False], 'Eastern Vault Fortress': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False], 'Siege Engine': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True], "Frog's Domain": [3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False], 'Ruined Atoll': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'The Librarian': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True], 'Quarry': [5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'Rooted Ziggurat': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False], 'Boss Scavenger': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True], 'Swamp': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False], 'Gauntlet': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True], 'The Heir': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True]}[area_name])
+    data = (alt_data) or ({'Overworld': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Stick'], False), 'East Forest': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Sword'], False), 'Before Well': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False), 'Beneath the Well': _tunicworldgen_NTuple0(2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'Dark Tomb': _tunicworldgen_NTuple0(2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'West Garden': _tunicworldgen_NTuple0(2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False), 'Garden Knight': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True), 'Beneath the Vault': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False), 'Eastern Vault Fortress': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False), 'Siege Engine': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True), "Frog's Domain": _tunicworldgen_NTuple0(3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False), 'Ruined Atoll': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'The Librarian': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True), 'Quarry': _tunicworldgen_NTuple0(5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'Rooted Ziggurat': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False), 'Boss Scavenger': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True), 'Swamp': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False), 'Gauntlet': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True), 'The Heir': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True)}[area_name])
     extra_att_needed = 0
     extra_def_needed = 0
     extra_mp_needed = 0
@@ -114,23 +129,23 @@ def _tunicworldgen_check_combat_reqs(state: "CollectionState", player: int, area
                                 extra_att_needed += 2
                                 extra_def_needed += 2
                                 extra_mp_needed -= 32
-    modified_stats = True
+    modified_stats = _tunicworldgen_NTuple0((data.att_level + extra_att_needed), (data.def_level + extra_def_needed), data.potion_level, data.hp_level, data.sp_level, (data.mp_level + extra_mp_needed), data.potion_count, equipment, data.is_boss)
     if _tunicworldgen_has_required_stats(state, player, modified_stats):
         return True
     else:
         if (sword_bool) and (('Sword' in equipment)) and (has_magic):
-            equip_list = (item for item in equipment if (item != 'Sword'))
+            equip_list = [item for item in equipment if (item != 'Sword')]
             if ('Magic' not in equip_list):
                 equip_list.append('Magic')
-            more_modified_stats = True
+            more_modified_stats = _tunicworldgen_NTuple0((modified_stats.att_level - 32), modified_stats.def_level, modified_stats.potion_level, modified_stats.hp_level, modified_stats.sp_level, (modified_stats.mp_level + 4), modified_stats.potion_count, equip_list, data.is_boss)
             if _tunicworldgen_check_combat_reqs(state, player, 'none', more_modified_stats):
                 return True
         else:
             if (stick_bool) and (('Stick' in equipment)) and (has_magic):
-                equip_list = (item for item in equipment if (item != 'Stick'))
+                equip_list = [item for item in equipment if (item != 'Stick')]
                 if ('Magic' not in equip_list):
                     equip_list.append('Magic')
-                more_modified_stats = True
+                more_modified_stats = _tunicworldgen_NTuple0((modified_stats.att_level - 32), modified_stats.def_level, modified_stats.potion_level, modified_stats.hp_level, modified_stats.sp_level, (modified_stats.mp_level + 2), modified_stats.potion_count, equip_list, data.is_boss)
                 if _tunicworldgen_check_combat_reqs(state, player, 'none', more_modified_stats):
                     return True
             else:
@@ -201,17 +216,17 @@ def _tunicworldgen_has_ability(state: "CollectionState", player: int, ability = 
 
 def _tunicworldgen_has_combat_reqs(state: "CollectionState", player: int, area_name = None) -> bool:
     if state.tunic_need_to_reset_combat_from_collect[player]:
-        for name in {'Overworld': [1, 1, 1, 1, 1, 1, 0, ['Stick'], False], 'East Forest': [1, 1, 1, 1, 1, 1, 0, ['Sword'], False], 'Before Well': [1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False], 'Beneath the Well': [2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'Dark Tomb': [2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'West Garden': [2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False], 'Garden Knight': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True], 'Beneath the Vault': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False], 'Eastern Vault Fortress': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False], 'Siege Engine': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True], "Frog's Domain": [3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False], 'Ruined Atoll': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'The Librarian': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True], 'Quarry': [5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'Rooted Ziggurat': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False], 'Boss Scavenger': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True], 'Swamp': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False], 'Gauntlet': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True], 'The Heir': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True]}.keys():
+        for name in {'Overworld': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Stick'], False), 'East Forest': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Sword'], False), 'Before Well': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False), 'Beneath the Well': _tunicworldgen_NTuple0(2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'Dark Tomb': _tunicworldgen_NTuple0(2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'West Garden': _tunicworldgen_NTuple0(2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False), 'Garden Knight': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True), 'Beneath the Vault': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False), 'Eastern Vault Fortress': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False), 'Siege Engine': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True), "Frog's Domain": _tunicworldgen_NTuple0(3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False), 'Ruined Atoll': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'The Librarian': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True), 'Quarry': _tunicworldgen_NTuple0(5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'Rooted Ziggurat': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False), 'Boss Scavenger': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True), 'Swamp': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False), 'Gauntlet': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True), 'The Heir': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True)}.keys():
             if (state.tunic_area_combat_state[player][name] == 1):
                 pass
     if state.tunic_need_to_reset_combat_from_remove[player]:
-        for name in {'Overworld': [1, 1, 1, 1, 1, 1, 0, ['Stick'], False], 'East Forest': [1, 1, 1, 1, 1, 1, 0, ['Sword'], False], 'Before Well': [1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False], 'Beneath the Well': [2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'Dark Tomb': [2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'West Garden': [2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False], 'Garden Knight': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True], 'Beneath the Vault': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False], 'Eastern Vault Fortress': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False], 'Siege Engine': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True], "Frog's Domain": [3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False], 'Ruined Atoll': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'The Librarian': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True], 'Quarry': [5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'Rooted Ziggurat': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False], 'Boss Scavenger': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True], 'Swamp': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False], 'Gauntlet': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True], 'The Heir': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True]}.keys():
+        for name in {'Overworld': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Stick'], False), 'East Forest': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Sword'], False), 'Before Well': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False), 'Beneath the Well': _tunicworldgen_NTuple0(2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'Dark Tomb': _tunicworldgen_NTuple0(2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'West Garden': _tunicworldgen_NTuple0(2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False), 'Garden Knight': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True), 'Beneath the Vault': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False), 'Eastern Vault Fortress': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False), 'Siege Engine': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True), "Frog's Domain": _tunicworldgen_NTuple0(3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False), 'Ruined Atoll': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'The Librarian': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True), 'Quarry': _tunicworldgen_NTuple0(5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'Rooted Ziggurat': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False), 'Boss Scavenger': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True), 'Swamp': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False), 'Gauntlet': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True), 'The Heir': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True)}.keys():
             if (state.tunic_area_combat_state[player][name] == 2):
                 pass
     if (state.tunic_area_combat_state[player][area_name] > 0):
         return (state.tunic_area_combat_state[player][area_name] == 2)
     met_combat_reqs = _tunicworldgen_check_combat_reqs(state, player, area_name)
-    if (area_name not in {'Overworld': [1, 1, 1, 1, 1, 1, 0, ['Stick'], False], 'East Forest': [1, 1, 1, 1, 1, 1, 0, ['Sword'], False], 'Before Well': [1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False], 'Beneath the Well': [2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'Dark Tomb': [2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False], 'West Garden': [2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False], 'Garden Knight': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True], 'Beneath the Vault': [3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False], 'Eastern Vault Fortress': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False], 'Siege Engine': [3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True], "Frog's Domain": [3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False], 'Ruined Atoll': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'The Librarian': [4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True], 'Quarry': [5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False], 'Rooted Ziggurat': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False], 'Boss Scavenger': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True], 'Swamp': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False], 'Gauntlet': [1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True], 'The Heir': [5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True]}.keys()):
+    if (area_name not in {'Overworld': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Stick'], False), 'East Forest': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 0, ['Sword'], False), 'Before Well': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 3, ['Sword', 'Shield'], False), 'Beneath the Well': _tunicworldgen_NTuple0(2, 1, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'Dark Tomb': _tunicworldgen_NTuple0(2, 2, 3, 3, 1, 1, 3, ['Sword', 'Shield'], False), 'West Garden': _tunicworldgen_NTuple0(2, 3, 3, 3, 1, 1, 4, ['Sword', 'Shield'], False), 'Garden Knight': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield'], True), 'Beneath the Vault': _tunicworldgen_NTuple0(3, 3, 3, 3, 2, 1, 4, ['Sword', 'Shield', 'Magic'], False), 'Eastern Vault Fortress': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], False), 'Siege Engine': _tunicworldgen_NTuple0(3, 3, 3, 4, 3, 2, 4, ['Sword', 'Shield', 'Magic'], True), "Frog's Domain": _tunicworldgen_NTuple0(3, 4, 3, 5, 3, 3, 4, ['Sword', 'Shield', 'Magic'], False), 'Ruined Atoll': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'The Librarian': _tunicworldgen_NTuple0(4, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], True), 'Quarry': _tunicworldgen_NTuple0(5, 4, 3, 5, 3, 3, 5, ['Sword', 'Shield', 'Magic'], False), 'Rooted Ziggurat': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], False), 'Boss Scavenger': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic'], True), 'Swamp': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], False), 'Gauntlet': _tunicworldgen_NTuple0(1, 1, 1, 1, 1, 1, 6, ['Sword', 'Shield', 'Magic'], True), 'The Heir': _tunicworldgen_NTuple0(5, 5, 3, 5, 3, 3, 6, ['Sword', 'Shield', 'Magic', 'Laurels'], True)}.keys()):
         return met_combat_reqs
     area_list = (['Garden Knight', 'Siege Engine', 'The Librarian', 'Boss Scavenger', 'The Heir'] if (area_name in ['Garden Knight', 'Siege Engine', 'The Librarian', 'Boss Scavenger', 'The Heir']) else (['Overworld', 'East Forest', 'Before Well', 'Beneath the Well', 'Dark Tomb', 'West Garden', 'Beneath the Vault', 'Eastern Vault Fortress', "Frog's Domain", 'Ruined Atoll', 'Quarry', 'Rooted Ziggurat'] if (area_name in ['Overworld', 'East Forest', 'Before Well', 'Beneath the Well', 'Dark Tomb', 'West Garden', 'Beneath the Vault', 'Eastern Vault Fortress', "Frog's Domain", 'Ruined Atoll', 'Quarry', 'Rooted Ziggurat']) else [area_name]))
     if met_combat_reqs:
@@ -298,7 +313,7 @@ def _tunicworldgen_has_required_stats(state: "CollectionState", player: int, dat
                         if (sp_required < 0):
                             break
                         upgrade_options.add([paid_def, (stats_to_buy - paid_def)])
-                costs = (_tunicworldgen_calc_def_sp_cost(state, player, defense, sp) for [defense, sp] in upgrade_options)
+                costs = [_tunicworldgen_calc_def_sp_cost(state, player, defense, sp) for [defense, sp] in upgrade_options]
                 money_required += 0
     req_effective_hp = _tunicworldgen_calc_effective_hp(state, player, data.hp_level, data.potion_level, data.potion_count)
     player_potion, potion_offerings = _tunicworldgen_get_potion_level(state, player)
@@ -321,7 +336,7 @@ def _tunicworldgen_has_required_stats(state: "CollectionState", player: int, dat
                         upgrade_options.add([paid_hp, paid_potion])
                         lowest_hp_added = paid_hp
                         break
-            costs = (_tunicworldgen_calc_hp_potion_cost(state, player, hp, potion) for [hp, potion] in upgrade_options)
+            costs = [_tunicworldgen_calc_hp_potion_cost(state, player, hp, potion) for [hp, potion] in upgrade_options]
             money_required += 0
     return (_tunicworldgen_get_money_count(state, player) >= money_required)
 

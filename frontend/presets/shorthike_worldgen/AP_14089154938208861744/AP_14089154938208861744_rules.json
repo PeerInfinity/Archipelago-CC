@@ -1199,16 +1199,28 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Feather",
-                    "count": 2
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Bucket"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bucket"
+                    "item_name": "Golden Feather",
+                    "count": 2
                   }
                 }
               ]
@@ -1925,13 +1937,33 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bucket",
-                      "Golden Feather"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bucket"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -2004,16 +2036,28 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Feather",
-                        "count": 2
-                      }
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bucket"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bucket"
+                        "item_name": "Golden Feather",
+                        "count": 2
                       }
                     }
                   ]
@@ -2070,13 +2114,33 @@
             "name": "Old Building Race Reward",
             "id": 83124,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bucket",
-                  "Golden Feather"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Bucket"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Golden Feather"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "21 Coins",

@@ -102,21 +102,13 @@
             "name": "Menu -> Basement",
             "connected_region": "Basement",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Basement Key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Key"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Basement Key",
+                  "Progressive Key"
+                ]
+              }
             }
           },
           {
@@ -2211,12 +2203,9 @@
             "name": "WDW: Quick Race Through Downtown!",
             "id": 3626075,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Vanish Cap",
-                  "Vanish Cap"
-                ]
+                "item_name": "Vanish Cap"
               }
             },
             "item": {

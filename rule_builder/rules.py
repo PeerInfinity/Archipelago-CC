@@ -1074,6 +1074,18 @@ class Has(Rule[TWorld], game="Archipelago"):
         options = f", options={self.options}" if self.options else ""
         return f"{self.__class__.__name__}({self.item_name}{count}{options})"
 
+    @override
+    def to_dict(self) -> dict[str, Any]:
+        """Returns a JSON compatible dict, omitting count when it equals 1."""
+        result: dict[str, Any] = {"rule": self.__class__.__qualname__}
+        if self.options:
+            result["options"] = [o.to_dict() for o in self.options]
+        args = {"item_name": self.item_name}
+        if self.count != 1:
+            args["count"] = self.count
+        result["args"] = args
+        return result
+
     class Resolved(Rule.Resolved):
         item_name: str
         count: int = 1

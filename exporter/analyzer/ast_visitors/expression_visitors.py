@@ -9,7 +9,7 @@ import ast
 import logging
 from typing import Any, Dict, Optional
 
-from ..utils import is_simple_value
+from ..utils import is_simple_value, make_json_serializable
 
 
 class ExpressionVisitorMixin:
@@ -237,7 +237,11 @@ class ExpressionVisitorMixin:
                 elif isinstance(value, dict):
                     # Convert dict to JSON-serializable format
                     # Keys must be strings for JSON, so convert int keys to strings
-                    json_dict = {str(k) if isinstance(k, int) else k: v for k, v in value.items()}
+                    # Use make_json_serializable on values to preserve NamedTuple metadata
+                    json_dict = {
+                        str(k) if isinstance(k, int) else k: make_json_serializable(v)
+                        for k, v in value.items()
+                    }
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant dict: {json_dict}")
                     return {'type': 'constant', 'value': json_dict}
                 # Handle enum values by extracting their .value attribute
@@ -288,7 +292,11 @@ class ExpressionVisitorMixin:
                     # Handle dict values - resolve to constant for subscript access and .items() iteration
                     elif isinstance(resolved_value, dict):
                         # Convert dict to JSON-serializable format
-                        json_dict = {str(k) if isinstance(k, int) else k: v for k, v in resolved_value.items()}
+                        # Use make_json_serializable on values to preserve NamedTuple metadata
+                        json_dict = {
+                            str(k) if isinstance(k, int) else k: make_json_serializable(v)
+                            for k, v in resolved_value.items()
+                        }
                         logging.debug(f"visit_Name: Resolved '{name}' from globals to constant dict: {json_dict}")
                         return {'type': 'constant', 'value': json_dict}
                     # Handle enum values by extracting their .value attribute

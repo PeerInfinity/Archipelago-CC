@@ -18007,283 +18007,549 @@
                     "value": {
                       "type": "constant",
                       "value": {
-                        "Overworld": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          0,
-                          [
-                            "Stick"
+                        "Overworld": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "East Forest": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          0,
-                          [
-                            "Sword"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            0,
+                            [
+                              "Stick"
+                            ],
+                            false
+                          ]
+                        },
+                        "East Forest": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Before Well": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          3,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            0,
+                            [
+                              "Sword"
+                            ],
+                            false
+                          ]
+                        },
+                        "Before Well": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Beneath the Well": [
-                          2,
-                          1,
-                          3,
-                          3,
-                          1,
-                          1,
-                          3,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            3,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "Beneath the Well": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Dark Tomb": [
-                          2,
-                          2,
-                          3,
-                          3,
-                          1,
-                          1,
-                          3,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            2,
+                            1,
+                            3,
+                            3,
+                            1,
+                            1,
+                            3,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "Dark Tomb": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "West Garden": [
-                          2,
-                          3,
-                          3,
-                          3,
-                          1,
-                          1,
-                          4,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            2,
+                            2,
+                            3,
+                            3,
+                            1,
+                            1,
+                            3,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "West Garden": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Garden Knight": [
-                          3,
-                          3,
-                          3,
-                          3,
-                          2,
-                          1,
-                          4,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            2,
+                            3,
+                            3,
+                            3,
+                            1,
+                            1,
+                            4,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "Garden Knight": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Beneath the Vault": [
-                          3,
-                          3,
-                          3,
-                          3,
-                          2,
-                          1,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            3,
+                            2,
+                            1,
+                            4,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            true
+                          ]
+                        },
+                        "Beneath the Vault": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Eastern Vault Fortress": [
-                          3,
-                          3,
-                          3,
-                          4,
-                          3,
-                          2,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            3,
+                            2,
+                            1,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Eastern Vault Fortress": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Siege Engine": [
-                          3,
-                          3,
-                          3,
-                          4,
-                          3,
-                          2,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            4,
+                            3,
+                            2,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Siege Engine": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Frog's Domain": [
-                          3,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            4,
+                            3,
+                            2,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "Frog's Domain": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Ruined Atoll": [
-                          4,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          5,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Ruined Atoll": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "The Librarian": [
-                          4,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          5,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            4,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            5,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "The Librarian": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Quarry": [
-                          5,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          5,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            4,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            5,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "Quarry": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Rooted Ziggurat": [
-                          5,
-                          5,
-                          3,
-                          5,
-                          3,
-                          3,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            5,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            5,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Rooted Ziggurat": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Boss Scavenger": [
-                          5,
-                          5,
-                          3,
-                          5,
-                          3,
-                          3,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            5,
+                            5,
+                            3,
+                            5,
+                            3,
+                            3,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Boss Scavenger": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Swamp": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            5,
+                            5,
+                            3,
+                            5,
+                            3,
+                            3,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "Swamp": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Gauntlet": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Gauntlet": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "The Heir": [
-                          5,
-                          5,
-                          3,
-                          5,
-                          3,
-                          3,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic",
-                            "Laurels"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "The Heir": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ]
+                          "_namedtuple_values": [
+                            5,
+                            5,
+                            3,
+                            5,
+                            3,
+                            3,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic",
+                              "Laurels"
+                            ],
+                            true
+                          ]
+                        }
                       }
                     },
                     "index": {
@@ -20243,283 +20509,549 @@
                       "object": {
                         "type": "constant",
                         "value": {
-                          "Overworld": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            0,
-                            [
-                              "Stick"
+                          "Overworld": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "East Forest": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            0,
-                            [
-                              "Sword"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              0,
+                              [
+                                "Stick"
+                              ],
+                              false
+                            ]
+                          },
+                          "East Forest": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Before Well": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            3,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              0,
+                              [
+                                "Sword"
+                              ],
+                              false
+                            ]
+                          },
+                          "Before Well": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Beneath the Well": [
-                            2,
-                            1,
-                            3,
-                            3,
-                            1,
-                            1,
-                            3,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              3,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "Beneath the Well": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Dark Tomb": [
-                            2,
-                            2,
-                            3,
-                            3,
-                            1,
-                            1,
-                            3,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              2,
+                              1,
+                              3,
+                              3,
+                              1,
+                              1,
+                              3,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "Dark Tomb": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "West Garden": [
-                            2,
-                            3,
-                            3,
-                            3,
-                            1,
-                            1,
-                            4,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              2,
+                              2,
+                              3,
+                              3,
+                              1,
+                              1,
+                              3,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "West Garden": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Garden Knight": [
-                            3,
-                            3,
-                            3,
-                            3,
-                            2,
-                            1,
-                            4,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              2,
+                              3,
+                              3,
+                              3,
+                              1,
+                              1,
+                              4,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "Garden Knight": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Beneath the Vault": [
-                            3,
-                            3,
-                            3,
-                            3,
-                            2,
-                            1,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              3,
+                              2,
+                              1,
+                              4,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              true
+                            ]
+                          },
+                          "Beneath the Vault": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Eastern Vault Fortress": [
-                            3,
-                            3,
-                            3,
-                            4,
-                            3,
-                            2,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              3,
+                              2,
+                              1,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Eastern Vault Fortress": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Siege Engine": [
-                            3,
-                            3,
-                            3,
-                            4,
-                            3,
-                            2,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              4,
+                              3,
+                              2,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Siege Engine": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Frog's Domain": [
-                            3,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              4,
+                              3,
+                              2,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "Frog's Domain": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Ruined Atoll": [
-                            4,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            5,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Ruined Atoll": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "The Librarian": [
-                            4,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            5,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              4,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              5,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "The Librarian": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Quarry": [
-                            5,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            5,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              4,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              5,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "Quarry": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Rooted Ziggurat": [
-                            5,
-                            5,
-                            3,
-                            5,
-                            3,
-                            3,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              5,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              5,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Rooted Ziggurat": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Boss Scavenger": [
-                            5,
-                            5,
-                            3,
-                            5,
-                            3,
-                            3,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              5,
+                              5,
+                              3,
+                              5,
+                              3,
+                              3,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Boss Scavenger": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Swamp": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              5,
+                              5,
+                              3,
+                              5,
+                              3,
+                              3,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "Swamp": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Gauntlet": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Gauntlet": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "The Heir": [
-                            5,
-                            5,
-                            3,
-                            5,
-                            3,
-                            3,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic",
-                              "Laurels"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "The Heir": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ]
+                            "_namedtuple_values": [
+                              5,
+                              5,
+                              3,
+                              5,
+                              3,
+                              3,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic",
+                                "Laurels"
+                              ],
+                              true
+                            ]
+                          }
                         }
                       },
                       "attr": "keys"
@@ -20592,283 +21124,549 @@
                       "object": {
                         "type": "constant",
                         "value": {
-                          "Overworld": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            0,
-                            [
-                              "Stick"
+                          "Overworld": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "East Forest": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            0,
-                            [
-                              "Sword"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              0,
+                              [
+                                "Stick"
+                              ],
+                              false
+                            ]
+                          },
+                          "East Forest": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Before Well": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            3,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              0,
+                              [
+                                "Sword"
+                              ],
+                              false
+                            ]
+                          },
+                          "Before Well": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Beneath the Well": [
-                            2,
-                            1,
-                            3,
-                            3,
-                            1,
-                            1,
-                            3,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              3,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "Beneath the Well": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Dark Tomb": [
-                            2,
-                            2,
-                            3,
-                            3,
-                            1,
-                            1,
-                            3,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              2,
+                              1,
+                              3,
+                              3,
+                              1,
+                              1,
+                              3,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "Dark Tomb": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "West Garden": [
-                            2,
-                            3,
-                            3,
-                            3,
-                            1,
-                            1,
-                            4,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              2,
+                              2,
+                              3,
+                              3,
+                              1,
+                              1,
+                              3,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "West Garden": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Garden Knight": [
-                            3,
-                            3,
-                            3,
-                            3,
-                            2,
-                            1,
-                            4,
-                            [
-                              "Sword",
-                              "Shield"
+                            "_namedtuple_values": [
+                              2,
+                              3,
+                              3,
+                              3,
+                              1,
+                              1,
+                              4,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              false
+                            ]
+                          },
+                          "Garden Knight": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Beneath the Vault": [
-                            3,
-                            3,
-                            3,
-                            3,
-                            2,
-                            1,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              3,
+                              2,
+                              1,
+                              4,
+                              [
+                                "Sword",
+                                "Shield"
+                              ],
+                              true
+                            ]
+                          },
+                          "Beneath the Vault": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Eastern Vault Fortress": [
-                            3,
-                            3,
-                            3,
-                            4,
-                            3,
-                            2,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              3,
+                              2,
+                              1,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Eastern Vault Fortress": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Siege Engine": [
-                            3,
-                            3,
-                            3,
-                            4,
-                            3,
-                            2,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              4,
+                              3,
+                              2,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Siege Engine": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Frog's Domain": [
-                            3,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            4,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              3,
+                              3,
+                              4,
+                              3,
+                              2,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "Frog's Domain": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Ruined Atoll": [
-                            4,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            5,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              3,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              4,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Ruined Atoll": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "The Librarian": [
-                            4,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            5,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              4,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              5,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "The Librarian": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Quarry": [
-                            5,
-                            4,
-                            3,
-                            5,
-                            3,
-                            3,
-                            5,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              4,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              5,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "Quarry": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Rooted Ziggurat": [
-                            5,
-                            5,
-                            3,
-                            5,
-                            3,
-                            3,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              5,
+                              4,
+                              3,
+                              5,
+                              3,
+                              3,
+                              5,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Rooted Ziggurat": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Boss Scavenger": [
-                            5,
-                            5,
-                            3,
-                            5,
-                            3,
-                            3,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              5,
+                              5,
+                              3,
+                              5,
+                              3,
+                              3,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Boss Scavenger": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "Swamp": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              5,
+                              5,
+                              3,
+                              5,
+                              3,
+                              3,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "Swamp": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            false
-                          ],
-                          "Gauntlet": [
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            1,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              false
+                            ]
+                          },
+                          "Gauntlet": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ],
-                          "The Heir": [
-                            5,
-                            5,
-                            3,
-                            5,
-                            3,
-                            3,
-                            6,
-                            [
-                              "Sword",
-                              "Shield",
-                              "Magic",
-                              "Laurels"
+                            "_namedtuple_values": [
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              1,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic"
+                              ],
+                              true
+                            ]
+                          },
+                          "The Heir": {
+                            "_namedtuple_type": "AreaStats",
+                            "_namedtuple_fields": [
+                              "att_level",
+                              "def_level",
+                              "potion_level",
+                              "hp_level",
+                              "sp_level",
+                              "mp_level",
+                              "potion_count",
+                              "equipment",
+                              "is_boss"
                             ],
-                            true
-                          ]
+                            "_namedtuple_values": [
+                              5,
+                              5,
+                              3,
+                              5,
+                              3,
+                              3,
+                              6,
+                              [
+                                "Sword",
+                                "Shield",
+                                "Magic",
+                                "Laurels"
+                              ],
+                              true
+                            ]
+                          }
                         }
                       },
                       "attr": "keys"
@@ -21012,283 +21810,549 @@
                     "object": {
                       "type": "constant",
                       "value": {
-                        "Overworld": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          0,
-                          [
-                            "Stick"
+                        "Overworld": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "East Forest": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          0,
-                          [
-                            "Sword"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            0,
+                            [
+                              "Stick"
+                            ],
+                            false
+                          ]
+                        },
+                        "East Forest": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Before Well": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          3,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            0,
+                            [
+                              "Sword"
+                            ],
+                            false
+                          ]
+                        },
+                        "Before Well": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Beneath the Well": [
-                          2,
-                          1,
-                          3,
-                          3,
-                          1,
-                          1,
-                          3,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            3,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "Beneath the Well": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Dark Tomb": [
-                          2,
-                          2,
-                          3,
-                          3,
-                          1,
-                          1,
-                          3,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            2,
+                            1,
+                            3,
+                            3,
+                            1,
+                            1,
+                            3,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "Dark Tomb": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "West Garden": [
-                          2,
-                          3,
-                          3,
-                          3,
-                          1,
-                          1,
-                          4,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            2,
+                            2,
+                            3,
+                            3,
+                            1,
+                            1,
+                            3,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "West Garden": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Garden Knight": [
-                          3,
-                          3,
-                          3,
-                          3,
-                          2,
-                          1,
-                          4,
-                          [
-                            "Sword",
-                            "Shield"
+                          "_namedtuple_values": [
+                            2,
+                            3,
+                            3,
+                            3,
+                            1,
+                            1,
+                            4,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            false
+                          ]
+                        },
+                        "Garden Knight": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Beneath the Vault": [
-                          3,
-                          3,
-                          3,
-                          3,
-                          2,
-                          1,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            3,
+                            2,
+                            1,
+                            4,
+                            [
+                              "Sword",
+                              "Shield"
+                            ],
+                            true
+                          ]
+                        },
+                        "Beneath the Vault": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Eastern Vault Fortress": [
-                          3,
-                          3,
-                          3,
-                          4,
-                          3,
-                          2,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            3,
+                            2,
+                            1,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Eastern Vault Fortress": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Siege Engine": [
-                          3,
-                          3,
-                          3,
-                          4,
-                          3,
-                          2,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            4,
+                            3,
+                            2,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Siege Engine": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Frog's Domain": [
-                          3,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          4,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            3,
+                            3,
+                            4,
+                            3,
+                            2,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "Frog's Domain": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Ruined Atoll": [
-                          4,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          5,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            3,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            4,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Ruined Atoll": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "The Librarian": [
-                          4,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          5,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            4,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            5,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "The Librarian": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Quarry": [
-                          5,
-                          4,
-                          3,
-                          5,
-                          3,
-                          3,
-                          5,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            4,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            5,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "Quarry": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Rooted Ziggurat": [
-                          5,
-                          5,
-                          3,
-                          5,
-                          3,
-                          3,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            5,
+                            4,
+                            3,
+                            5,
+                            3,
+                            3,
+                            5,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Rooted Ziggurat": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Boss Scavenger": [
-                          5,
-                          5,
-                          3,
-                          5,
-                          3,
-                          3,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            5,
+                            5,
+                            3,
+                            5,
+                            3,
+                            3,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Boss Scavenger": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "Swamp": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            5,
+                            5,
+                            3,
+                            5,
+                            3,
+                            3,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "Swamp": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          false
-                        ],
-                        "Gauntlet": [
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          1,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            false
+                          ]
+                        },
+                        "Gauntlet": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ],
-                        "The Heir": [
-                          5,
-                          5,
-                          3,
-                          5,
-                          3,
-                          3,
-                          6,
-                          [
-                            "Sword",
-                            "Shield",
-                            "Magic",
-                            "Laurels"
+                          "_namedtuple_values": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic"
+                            ],
+                            true
+                          ]
+                        },
+                        "The Heir": {
+                          "_namedtuple_type": "AreaStats",
+                          "_namedtuple_fields": [
+                            "att_level",
+                            "def_level",
+                            "potion_level",
+                            "hp_level",
+                            "sp_level",
+                            "mp_level",
+                            "potion_count",
+                            "equipment",
+                            "is_boss"
                           ],
-                          true
-                        ]
+                          "_namedtuple_values": [
+                            5,
+                            5,
+                            3,
+                            5,
+                            3,
+                            3,
+                            6,
+                            [
+                              "Sword",
+                              "Shield",
+                              "Magic",
+                              "Laurels"
+                            ],
+                            true
+                          ]
+                        }
                       }
                     },
                     "attr": "keys"

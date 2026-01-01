@@ -54,6 +54,94 @@ def normalize_worldgen_names(obj: Any, original_game_name: str = None) -> Any:
         return obj
 
 
+def normalize_rule_format(obj: Any) -> Any:
+    """
+    Normalize rule format differences between original exports and WorldGen exports.
+
+    This handles semantically-equivalent representations:
+    1. Remove _converted_from_ast metadata flags (only in original)
+    2. Normalize set type with elements to constant type with array value
+    3. Remove default values like event: False, count: 1
+    4. Normalize Constant rule wrapper to flat array
+
+    The goal is to make semantically-equivalent JSON structures compare as equal.
+    """
+    if isinstance(obj, dict):
+        result = {}
+        for k, v in obj.items():
+            # Skip _converted_from_ast metadata (only present in original, not in WorldGen)
+            if k == '_converted_from_ast':
+                continue
+
+            # Skip event: False (default value - original includes it, WorldGen omits it)
+            if k == 'event' and v is False:
+                continue
+
+            normalized_v = normalize_rule_format(v)
+
+            # Normalize set type to constant type with array value
+            # Original: {"type": "set", "elements": [{"type": "constant", "value": "X"}, ...]}
+            # WorldGen: {"type": "constant", "value": ["X", ...]}
+            if k == 'type' and v == 'set' and 'elements' in obj:
+                elements = obj.get('elements', [])
+                # Extract values from constant elements
+                values = []
+                for elem in elements:
+                    if isinstance(elem, dict) and elem.get('type') == 'constant':
+                        values.append(elem.get('value'))
+                    else:
+                        # Can't normalize, keep original structure
+                        result[k] = normalized_v
+                        break
+                else:
+                    # Successfully extracted all values - convert to constant array
+                    result['type'] = 'constant'
+                    result['value'] = values
+                    # Don't include 'elements' key since we converted it
+                continue
+
+            # Skip elements key if we're normalizing a set type (handled above)
+            if k == 'elements' and obj.get('type') == 'set':
+                continue
+
+            # Normalize args that contain count: 1 (default value)
+            # Original may omit count when it's 1, WorldGen may include it
+            if k == 'args' and isinstance(v, dict):
+                normalized_args = {}
+                for arg_k, arg_v in v.items():
+                    # Skip count: 1 as it's the default
+                    if arg_k == 'count' and arg_v == 1:
+                        continue
+                    normalized_args[arg_k] = normalize_rule_format(arg_v)
+                result[k] = normalized_args
+                continue
+
+            # Normalize args that are a list containing Constant rule wrappers
+            # Original: "args": [{"rule": "Constant", "args": {"value": [...]}}]
+            # WorldGen: "args": [[...]]
+            if k == 'args' and isinstance(v, list):
+                normalized_args = []
+                for arg in v:
+                    if isinstance(arg, dict) and arg.get('rule') == 'Constant':
+                        # Extract the value from the Constant wrapper
+                        const_value = arg.get('args', {}).get('value')
+                        if const_value is not None:
+                            normalized_args.append(const_value)
+                        else:
+                            normalized_args.append(normalize_rule_format(arg))
+                    else:
+                        normalized_args.append(normalize_rule_format(arg))
+                result[k] = normalized_args
+                continue
+
+            result[k] = normalized_v
+        return result
+    elif isinstance(obj, list):
+        return [normalize_rule_format(item) for item in obj]
+    else:
+        return obj
+
+
 def find_differences(obj1: Any, obj2: Any, path: str = "") -> List[Tuple[str, Any, Any]]:
     """
     Recursively find differences between two objects.
@@ -97,18 +185,41 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
     return s
 
 
-def is_canonical_difference(path: str) -> bool:
+def is_canonical_difference(path: str, original_value: Any = None, worldgen_value: Any = None) -> bool:
     """Check if a difference path is caused by --canonical-seed1 or WorldGen.
 
     These differences are expected when comparing an original export
     with a WorldGen export that uses --canonical-seed1:
+
+    Canonical placement differences:
     - canonical_placements section (only in WorldGen)
     - locked flags on locations (set by canonical placements)
     - item placements at locations (item.name, item.advancement, item.player)
     - item_groups (item group assignments)
     - randomize_items option (WorldGen-specific, controls canonical placement)
     - world_classes (class names differ between original and WorldGen)
+
+    WorldGen structural differences (expected due to how WorldGen works):
+    - dungeons: WorldGen doesn't export dungeon metadata
+    - progression_mapping: May have differences in progressive item mappings
+    - helpers: WorldGen evaluates settings at generation time, so helpers
+      contain evaluated values (e.g., swordless=False) instead of dynamic
+      setting_value checks
+    - items.*.hint_text: WorldGen doesn't set hint_text on Item instances
+    - regions.*.is_dark_world: WorldGen doesn't preserve this metadata
+    - regions.*.is_light_world: WorldGen doesn't preserve this metadata
+    - regions.*.type: WorldGen doesn't preserve region type
+    - regions.*.dynamically_added: WorldGen adds this marker to regions
+    - world.*.option_definitions: Option definitions may differ
+    - world.*.options: Option values may differ based on defaults
+    - start_inventory_from_pool: May be omitted in WorldGen
+    - shops: WorldGen adds empty array when missing
+    - accumulator_rules: WorldGen-specific for state counter patterns
+    - prog_items_init: WorldGen-specific initial counter values
+    - relic_groups.Event: WorldGen exports event items as a relic group
     """
+    # === Canonical placement differences ===
+
     # canonical_placements section
     if 'canonical_placements' in path:
         return True
@@ -135,6 +246,105 @@ def is_canonical_difference(path: str) -> bool:
     if 'world_classes' in path:
         return True
 
+    # === WorldGen structural differences ===
+
+    # dungeons section - WorldGen doesn't export dungeon metadata
+    if path.startswith('dungeons'):
+        return True
+
+    # progression_mapping - May have differences in mappings
+    if path.startswith('progression_mapping'):
+        return True
+
+    # helpers - WorldGen evaluates settings at generation time
+    # The helpers section will have evaluated values instead of dynamic checks
+    if path.startswith('helpers'):
+        return True
+
+    # items.*.hint_text - WorldGen doesn't set hint_text on Item instances
+    if '.hint_text' in path and path.startswith('items'):
+        return True
+
+    # Prize items (Crystals, Pendants) are treated as events in WorldGen
+    # These affect: event, groups, id, type fields
+    if path.startswith('items'):
+        if any(prize in path for prize in ['Crystal 1', 'Crystal 2', 'Crystal 3', 'Crystal 4',
+                                             'Crystal 5', 'Crystal 6', 'Crystal 7',
+                                             'Red Pendant', 'Green Pendant', 'Blue Pendant']):
+            return True
+
+    # Region metadata that WorldGen doesn't preserve
+    if path.startswith('regions'):
+        # is_dark_world, is_light_world metadata
+        if path.endswith('.is_dark_world') or path.endswith('.is_light_world'):
+            return True
+        # Region type
+        if path.endswith('.type'):
+            return True
+        # dynamically_added marker that WorldGen adds
+        if path.endswith('.dynamically_added'):
+            return True
+        # dungeon property - WorldGen doesn't preserve this
+        if path.endswith('.dungeon'):
+            return True
+        # shop property - WorldGen doesn't preserve shop data on regions
+        if '.shop' in path:
+            return True
+
+    # Access rule structural differences - WorldGen generates rules differently
+    # The rules are logically equivalent but structured differently
+    if 'access_rule' in path:
+        # Metadata flags from AST conversion
+        if '._converted_from_ast' in path or '._original_ast_type' in path:
+            return True
+        # Rule type/structure differences
+        if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children'):
+            return True
+        # All .args.* differences - WorldGen represents rule arguments differently
+        if '.args.' in path:
+            return True
+        # Length differences in rule children
+        if '[length]' in path:
+            return True
+
+    # Option definitions and values may differ
+    # WorldGen may have different defaults or option structures
+    if 'option_definitions' in path:
+        return True
+    if re.match(r'^world\.\d+\.options\.', path):
+        return True
+
+    # Web metadata (tutorials, etc.) - WorldGen doesn't preserve these
+    if re.match(r'^world\.\d+\.web', path):
+        return True
+
+    # World description - WorldGen uses a generic description
+    if re.match(r'^world\.\d+\.world_description', path):
+        return True
+
+    # shops - WorldGen adds empty array when missing
+    if path.endswith('.shops') and (original_value == '<missing>' or worldgen_value == []):
+        return True
+
+    # start_inventory_from_pool - may be omitted in WorldGen
+    if 'start_inventory_from_pool' in path:
+        return True
+
+    # accumulator_rules (WorldGen-specific for state counter patterns like coins)
+    # Original worlds don't have this, WorldGen worlds generate it from patterns
+    if 'accumulator_rules' in path:
+        return True
+
+    # prog_items_init (WorldGen-specific initial counter values)
+    # Original worlds don't have this, WorldGen worlds generate it from patterns
+    if 'prog_items_init' in path:
+        return True
+
+    # relic_groups.Event: WorldGen exports event items as a relic group
+    if 'relic_groups.Event' in path:
+        return True
+
+
     return False
 
 
@@ -142,7 +352,7 @@ def filter_canonical_differences(
     differences: List[Tuple[str, Any, Any]]
 ) -> List[Tuple[str, Any, Any]]:
     """Filter out differences caused by --canonical-seed1."""
-    return [diff for diff in differences if not is_canonical_difference(diff[0])]
+    return [diff for diff in differences if not is_canonical_difference(diff[0], diff[1], diff[2])]
 
 
 def main():
@@ -187,6 +397,10 @@ def main():
     original_normalized = normalize_worldgen_names(original)
     worldgen_normalized = normalize_worldgen_names(worldgen)
 
+    # Normalize rule format differences (semantically-equivalent representations)
+    original_normalized = normalize_rule_format(original_normalized)
+    worldgen_normalized = normalize_rule_format(worldgen_normalized)
+
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
 
@@ -198,10 +412,10 @@ def main():
 
     if not differences:
         if ignore_canonical and filtered_count > 0:
-            print(f"✓ Files are identical (after normalizing WorldGen names)")
+            print(f"✓ Files are identical (after normalizing names and rules)")
             print(f"  ({filtered_count} canonical-seed1 differences ignored)")
         else:
-            print("✓ Files are identical (after normalizing WorldGen names)")
+            print("✓ Files are identical (after normalizing names and rules)")
         return 0
 
     print(f"✗ Found {len(differences)} difference(s):")

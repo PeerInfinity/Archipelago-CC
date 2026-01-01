@@ -749,13 +749,11 @@ class RuleCodeGenerator:
                 self.required_imports.add('CountItem')
                 return f'Compare(CountItem({repr(item_name)}), ">=", {count_expr})'
 
-            # count=0 means "always true" (no items required)
-            if count <= 0:
-                return self._make_bool_constant(True)
+            # Preserve the exact count from the original rule, including count=0
+            # This ensures round-trip fidelity when comparing exports
             self.required_imports.add('Has')
-            if count > 1:
-                return f'Has({repr(item_name)}, {count})'
-            return f'Has({repr(item_name)})'
+            # Always include count to preserve original rule structure
+            return f'Has({repr(item_name)}, {count})'
 
         if rb_rule == 'And':
             if not children:
@@ -764,9 +762,9 @@ class RuleCodeGenerator:
                 return self._convert_rule(children[0])
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAll instead of And(Has(...), Has(...), ...)
-            # This ensures round-trip consistency with original exports
+            # This matches the Rule Builder's _simplify_and behavior
             simple_has_items = []
-            all_simple_has = True
+            other_children = []
             for child in children:
                 child_rule = child.get('rule', '')
                 child_args = child.get('args', {})
@@ -775,17 +773,25 @@ class RuleCodeGenerator:
                     if item_name:
                         simple_has_items.append(item_name)
                     else:
-                        all_simple_has = False
-                        break
+                        other_children.append(child)
                 else:
-                    all_simple_has = False
-                    break
-            if all_simple_has and len(simple_has_items) >= 2:
-                # Generate HasAll instead of And(Has, Has, ...)
+                    other_children.append(child)
+
+            # Convert other children
+            child_exprs = [self._convert_rule(child) for child in other_children]
+
+            # Add simple Has items as HasAll (if 2+) or Has (if 1)
+            if len(simple_has_items) >= 2:
                 self.required_imports.add('HasAll')
                 items_str = ', '.join(repr(item) for item in simple_has_items)
-                return f'HasAll({items_str})'
-            child_exprs = [self._convert_rule(child) for child in children]
+                child_exprs.append(f'HasAll({items_str})')
+            elif len(simple_has_items) == 1:
+                self.required_imports.add('Has')
+                child_exprs.append(f'Has({repr(simple_has_items[0])})')
+
+            if len(child_exprs) == 1:
+                return child_exprs[0]
+
             self.required_imports.add('And')
             return f'And({", ".join(child_exprs)})'
 
@@ -796,9 +802,9 @@ class RuleCodeGenerator:
                 return self._convert_rule(children[0])
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAny instead of Or(Has(...), Has(...), ...)
-            # This ensures round-trip consistency with original exports
+            # This matches the Rule Builder's _simplify_or behavior
             simple_has_items = []
-            all_simple_has = True
+            other_children = []
             for child in children:
                 child_rule = child.get('rule', '')
                 child_args = child.get('args', {})
@@ -807,17 +813,25 @@ class RuleCodeGenerator:
                     if item_name:
                         simple_has_items.append(item_name)
                     else:
-                        all_simple_has = False
-                        break
+                        other_children.append(child)
                 else:
-                    all_simple_has = False
-                    break
-            if all_simple_has and len(simple_has_items) >= 2:
-                # Generate HasAny instead of Or(Has, Has, ...)
+                    other_children.append(child)
+
+            # Convert other children
+            child_exprs = [self._convert_rule(child) for child in other_children]
+
+            # Add simple Has items as HasAny (if 2+) or Has (if 1)
+            if len(simple_has_items) >= 2:
                 self.required_imports.add('HasAny')
                 items_str = ', '.join(repr(item) for item in simple_has_items)
-                return f'HasAny({items_str})'
-            child_exprs = [self._convert_rule(child) for child in children]
+                child_exprs.append(f'HasAny({items_str})')
+            elif len(simple_has_items) == 1:
+                self.required_imports.add('Has')
+                child_exprs.append(f'Has({repr(simple_has_items[0])})')
+
+            if len(child_exprs) == 1:
+                return child_exprs[0]
+
             self.required_imports.add('Or')
             return f'Or({", ".join(child_exprs)})'
 
@@ -3846,6 +3860,11 @@ class HelperCodeGenerator:
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
         self.uses_math: bool = False  # Track if math functions are used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
+        # Track NamedTuple types encountered during code generation
+        # Maps tuple of field names to a generated class name
+        self.namedtuple_types: Dict[tuple, str] = {}
+        # Maps original NamedTuple type name to the tuple of fields
+        self.namedtuple_names: Dict[str, tuple] = {}
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -3854,6 +3873,76 @@ class HelperCodeGenerator:
     def set_placements(self, placements: Dict[str, str]) -> None:
         """Set the placement data for resolving placement_lookup rules."""
         self.placements = placements or {}
+
+    def _get_namedtuple_class_name(self, fields: tuple) -> str:
+        """
+        Get or create a class name for a NamedTuple with the given fields.
+
+        Returns a unique class name like '_AreaStats_nt' for this game.
+        """
+        if fields in self.namedtuple_types:
+            return self.namedtuple_types[fields]
+
+        # Generate a class name based on the number of NamedTuple types we've seen
+        index = len(self.namedtuple_types)
+        class_name = f"_{self.game_name_lower}_NTuple{index}"
+        self.namedtuple_types[fields] = class_name
+        return class_name
+
+    def generate_namedtuple_classes(self) -> str:
+        """
+        Generate NamedTuple class definitions for all tracked NamedTuple types.
+
+        Returns Python code defining all NamedTuple classes, to be placed
+        at the top of the helper functions section.
+        """
+        if not self.namedtuple_types:
+            return ""
+
+        lines = ["from typing import NamedTuple, Any, List", ""]
+
+        for fields, class_name in self.namedtuple_types.items():
+            # Generate a simple NamedTuple class
+            lines.append(f"class {class_name}(NamedTuple):")
+            for field in fields:
+                # Use Any type annotation since we don't know the actual types
+                lines.append(f"    {field}: Any")
+            lines.append("")
+
+        return "\n".join(lines)
+
+    def prescan_for_namedtuples(self, rule: Dict[str, Any]) -> None:
+        """
+        Pre-scan a rule tree to discover NamedTuple types.
+
+        This should be called before generate code so that NamedTuple
+        constructor calls can be properly resolved.
+        """
+        if not isinstance(rule, dict):
+            return
+
+        # Check if this is NamedTuple metadata
+        if '_namedtuple_fields' in rule and '_namedtuple_values' in rule:
+            fields = tuple(rule['_namedtuple_fields'])
+            type_name = rule.get('_namedtuple_type', '')
+            # Register the type
+            self._get_namedtuple_class_name(fields)
+            if type_name:
+                self.namedtuple_names[type_name] = fields
+            # Also scan the values for nested NamedTuples
+            for v in rule['_namedtuple_values']:
+                if isinstance(v, dict):
+                    self.prescan_for_namedtuples(v)
+            return
+
+        # Recursively scan all dict values
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                self.prescan_for_namedtuples(value)
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        self.prescan_for_namedtuples(item)
 
     def get_function_name(self, helper_name: str) -> str:
         """
@@ -4325,6 +4414,22 @@ class HelperCodeGenerator:
                     items.append(self._generate_expression({'type': 'constant', 'value': v}))
             return f"[{', '.join(items)}]"
         if isinstance(value, dict):
+            # Check for NamedTuple metadata - this is a serialized NamedTuple
+            if '_namedtuple_fields' in value and '_namedtuple_values' in value:
+                fields = tuple(value['_namedtuple_fields'])
+                values = value['_namedtuple_values']
+                type_name = value.get('_namedtuple_type', '')
+                # Get or create a class name for this NamedTuple type
+                class_name = self._get_namedtuple_class_name(fields)
+                # Register the original type name -> fields mapping for constructor calls
+                if type_name:
+                    self.namedtuple_names[type_name] = fields
+                # Generate constructor call: ClassName(val1, val2, ...)
+                val_reprs = []
+                for v in values:
+                    val_reprs.append(self._generate_expression({'type': 'constant', 'value': v}))
+                return f"{class_name}({', '.join(val_reprs)})"
+
             # Handle dict constants - convert string keys that look like integers
             items = []
             for k, v in value.items():
@@ -4709,6 +4814,14 @@ class HelperCodeGenerator:
                 return f"(sum(state.count(item, player) for item in {items_expr}) >= {count_expr})"
             # Not enough args - return False
             return 'False'
+
+        # Check if this is a NamedTuple constructor call
+        # If we've seen a NamedTuple with this type name, use the generated class
+        if name in self.namedtuple_names:
+            fields = self.namedtuple_names[name]
+            class_name = self._get_namedtuple_class_name(fields)
+            arg_exprs = [self._generate_expression(a) for a in args]
+            return f"{class_name}({', '.join(arg_exprs)})"
 
         # Unknown helper - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
@@ -5231,10 +5344,15 @@ class HelperCodeGenerator:
         return self._generate_expression(value)
 
     def _expr_generator_expression(self, expr: Dict[str, Any]) -> str:
-        """Generate a Python generator expression.
+        """Generate a Python list comprehension.
 
-        Generator expressions are used for things like:
-        (x for x in iterable if condition)
+        Note: The exporter treats both list comprehensions and generator expressions
+        as 'generator_expression' type. We generate list comprehensions by default
+        because they produce lists that support methods like .copy(), .append(), etc.
+        Generator expressions produce iterators which don't support these operations.
+
+        List comprehensions are used for things like:
+        [x for x in iterable if condition]
         """
         element = self._generate_expression(expr.get('element', {}))
         comprehension = expr.get('comprehension', {})
@@ -5249,13 +5367,13 @@ class HelperCodeGenerator:
         # Get the iterator
         iterator = self._generate_expression(comprehension.get('iterator', {}))
 
-        # Build the generator expression
-        result = f"({element} for {target_name} in {iterator})"
+        # Build the list comprehension (use [] not () to produce a list)
+        result = f"[{element} for {target_name} in {iterator}]"
 
         # Handle optional if condition
         condition = comprehension.get('condition')
         if condition:
             cond_expr = self._generate_expression(condition)
-            result = f"({element} for {target_name} in {iterator} if {cond_expr})"
+            result = f"[{element} for {target_name} in {iterator} if {cond_expr}]"
 
         return result
