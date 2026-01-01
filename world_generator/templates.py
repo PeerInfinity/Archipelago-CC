@@ -389,6 +389,14 @@ def generate_regions_py(data: ExtractedData) -> str:
             escaped_name = region_name.replace('\\', '\\\\').replace('"', '\\"')
             dynamically_added_regions.append(f'"{escaped_name}"')
 
+    # Build region IDs dict (only for regions with id set)
+    region_id_entries = []
+    for region_name, region_data in data.regions.items():
+        if region_data.id is not None:
+            escaped_name = region_name.replace('\\', '\\\\').replace('"', '\\"')
+            region_id_entries.append(f'    "{escaped_name}": {region_data.id},')
+    region_ids_content = '\n'.join(region_id_entries)
+
     # Build entrance connections
     entrance_lines = []
 
@@ -423,6 +431,16 @@ REGION_HINTS: Dict[str, str] = {{
 DYNAMICALLY_ADDED_REGIONS = {{{dynamically_added_list}}}
 '''
 
+    # Generate region IDs dict (if any regions have IDs)
+    region_ids_section = ""
+    if region_id_entries:
+        region_ids_section = f'''
+# Region IDs (game-specific, e.g., room_id in ffmq)
+REGION_IDS: Dict[str, int] = {{
+{region_ids_content}
+}}
+'''
+
     # Generate the hint lookup in create_regions
     hint_lookup = "REGION_HINTS.get(region_name)" if hint_entries else "None"
 
@@ -436,7 +454,7 @@ from typing import Dict, Set
 from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, {class_name}Location
 
-{region_hints_section}{dynamically_added_section}
+{region_hints_section}{dynamically_added_section}{region_ids_section}
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
@@ -458,6 +476,15 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     for region_name in _dynamically_added:
         if region_name in regions:
             regions[region_name].dynamically_added = True
+
+    # Set region IDs (game-specific, e.g., room_id in ffmq)
+    try:
+        _region_ids = REGION_IDS
+    except NameError:
+        _region_ids = {{}}
+    for region_name, region_id in _region_ids.items():
+        if region_name in regions:
+            regions[region_name].id = region_id
 
     # Add locations to regions
     for location_name, location_data in location_table.items():
