@@ -35,6 +35,10 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
         'time_keys_unlock': lambda w, m, p: _get_pcw_attr(w, 'time_key_unlock'),
     }
 
+    def _is_common_helper_pattern(self, helper_name: str) -> bool:
+        """Disable generic pattern expansion - helpers are exported as-is."""
+        return False
+
 
 def _get_pcw_attr(world, attr_name: str):
     """Get attribute from precalculated_weights, handling both objects and dicts."""
@@ -46,7 +50,3 @@ def _get_pcw_attr(world, attr_name: str):
         return pcw.get(attr_name)
     # Handle object-based precalculated_weights (from original world)
     return getattr(pcw, attr_name, None)
-
-    def _is_common_helper_pattern(self, helper_name: str) -> bool:
-        """Disable generic pattern expansion - helpers are exported as-is."""
-        return False
