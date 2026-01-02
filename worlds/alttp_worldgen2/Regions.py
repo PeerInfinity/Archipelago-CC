@@ -765,6 +765,10 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         if not location_data.show_in_spoiler:
             location.show_in_spoiler = False
 
+        # Apply extra attributes (game-specific, e.g., type_string, price)
+        for attr_name, attr_value in location_data.extra_attributes.items():
+            setattr(location, attr_name, attr_value)
+
         region.locations.append(location)
 
     # Create entrances

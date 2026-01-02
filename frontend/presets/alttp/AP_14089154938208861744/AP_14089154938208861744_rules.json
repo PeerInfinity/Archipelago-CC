@@ -671,7 +671,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598264,
+            "shop_slot_disabled": false
           },
           {
             "name": "Bottle Merchant",
@@ -685,7 +688,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598265,
+            "shop_slot_disabled": false
           },
           {
             "name": "Flute Spot",
@@ -702,7 +708,10 @@
               "advancement": true,
               "type": "Sword"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598269,
+            "shop_slot_disabled": false
           },
           {
             "name": "Sunken Treasure",
@@ -719,7 +728,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598292,
+            "shop_slot_disabled": false
           },
           {
             "name": "Purple Chest",
@@ -736,7 +748,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598297,
+            "shop_slot_disabled": false
           },
           {
             "name": "Flute Activation Spot",
@@ -754,7 +769,9 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -830,7 +847,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598179,
+            "shop_slot_disabled": false
           },
           {
             "name": "Blind's Hideout - Left",
@@ -844,7 +864,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598182,
+            "shop_slot_disabled": false
           },
           {
             "name": "Blind's Hideout - Right",
@@ -858,7 +881,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598185,
+            "shop_slot_disabled": false
           },
           {
             "name": "Blind's Hideout - Far Left",
@@ -872,7 +898,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598188,
+            "shop_slot_disabled": false
           },
           {
             "name": "Blind's Hideout - Far Right",
@@ -886,7 +915,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598191,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -918,7 +950,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598303,
+            "shop_slot_disabled": false
           },
           {
             "name": "Secret Passage",
@@ -932,7 +967,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597765,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -956,7 +994,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598304,
+            "shop_slot_disabled": false
           },
           {
             "name": "Zora's Ledge",
@@ -973,7 +1014,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598296,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -997,7 +1041,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597828,
+            "shop_slot_disabled": false
           },
           {
             "name": "Waterfall Fairy - Right",
@@ -1011,7 +1058,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597861,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1064,7 +1114,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597774,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1106,7 +1159,9 @@
               "type": "Event"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           },
           {
             "name": "Floodgate Chest",
@@ -1120,7 +1175,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597792,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1152,7 +1210,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597840,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1193,7 +1254,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597858,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1452,7 +1516,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597885,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1478,7 +1545,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597894,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1504,7 +1574,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598038,
+            "shop_slot_disabled": false
           },
           {
             "name": "Sahasrahla's Hut - Middle",
@@ -1520,7 +1593,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598041,
+            "shop_slot_disabled": false
           },
           {
             "name": "Sahasrahla's Hut - Right",
@@ -1536,7 +1612,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598044,
+            "shop_slot_disabled": false
           },
           {
             "name": "Sahasrahla",
@@ -1553,7 +1632,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598309,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1587,7 +1669,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598050,
+            "shop_slot_disabled": false
           },
           {
             "name": "Kakariko Well - Left",
@@ -1601,7 +1686,10 @@
               "advancement": true,
               "type": "Sword"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598053,
+            "shop_slot_disabled": false
           },
           {
             "name": "Kakariko Well - Middle",
@@ -1615,7 +1703,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598056,
+            "shop_slot_disabled": false
           },
           {
             "name": "Kakariko Well - Right",
@@ -1629,7 +1720,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598059,
+            "shop_slot_disabled": false
           },
           {
             "name": "Kakariko Well - Bottom",
@@ -1643,7 +1737,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598062,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1687,7 +1784,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598310,
+            "shop_slot_disabled": false
           },
           {
             "name": "Missing Smith",
@@ -1716,7 +1816,9 @@
               "type": "Event"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1768,7 +1870,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598302,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1812,7 +1917,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598311,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1836,7 +1944,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598312,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1868,7 +1979,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598280,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1917,7 +2031,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598281,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -1975,7 +2092,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598283,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2018,7 +2138,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598284,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2042,7 +2165,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598285,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2087,7 +2213,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598230,
+            "shop_slot_disabled": false
           },
           {
             "name": "Mini Moldorm Cave - Left",
@@ -2112,7 +2241,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598233,
+            "shop_slot_disabled": false
           },
           {
             "name": "Mini Moldorm Cave - Right",
@@ -2137,7 +2269,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598236,
+            "shop_slot_disabled": false
           },
           {
             "name": "Mini Moldorm Cave - Far Right",
@@ -2162,7 +2297,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598239,
+            "shop_slot_disabled": false
           },
           {
             "name": "Mini Moldorm Cave - Generous Guy",
@@ -2187,7 +2325,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598298,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2211,7 +2352,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598242,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2333,7 +2477,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598227,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2360,7 +2507,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598300,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2397,7 +2547,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598301,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2450,7 +2603,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598291,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2475,7 +2631,9 @@
               "type": "Event"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2564,7 +2722,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598289,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2615,7 +2776,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598290,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2761,7 +2925,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597795,
+            "shop_slot_disabled": false
           },
           {
             "name": "Desert Palace - Torch",
@@ -2778,7 +2945,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598306,
+            "shop_slot_disabled": false
           },
           {
             "name": "Desert Palace - Map Chest",
@@ -2792,7 +2962,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597834,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2842,7 +3015,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597855,
+            "shop_slot_disabled": false
           },
           {
             "name": "Desert Palace - Big Key Chest",
@@ -2867,7 +3043,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597846,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -2900,7 +3079,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310768,
+            "shop_slot_disabled": false
           },
           {
             "name": "Desert Palace - Beamos Hall Pot Key",
@@ -2937,7 +3119,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310762,
+            "shop_slot_disabled": false
           },
           {
             "name": "Desert Palace - Desert Tiles 2 Pot Key",
@@ -2974,7 +3159,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310759,
+            "shop_slot_disabled": false
           },
           {
             "name": "Desert Palace - Boss",
@@ -3052,7 +3240,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598271,
+            "shop_slot_disabled": false
           },
           {
             "name": "Desert Palace - Prize",
@@ -3146,7 +3337,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -3178,7 +3371,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597771,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Big Chest",
@@ -3195,7 +3391,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597777,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Cannonball Chest",
@@ -3209,7 +3408,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597831,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Dark Square Pot Key",
@@ -3226,7 +3428,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310810,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Dark Eyegore Key Drop",
@@ -3265,7 +3470,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310792,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Big Key Chest",
@@ -3344,7 +3552,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597837,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Map Chest",
@@ -3358,7 +3569,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597897,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Boss",
@@ -3422,7 +3636,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598270,
+            "shop_slot_disabled": false
           },
           {
             "name": "Eastern Palace - Prize",
@@ -3487,7 +3704,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -3519,7 +3738,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598313,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -3683,7 +3905,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597768,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hyrule Castle - Map Chest",
@@ -3697,7 +3922,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598176,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hyrule Castle - Zelda's Chest",
@@ -3758,7 +3986,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598173,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hyrule Castle - Map Guard Key Drop",
@@ -3783,7 +4014,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310774,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hyrule Castle - Boomerang Guard Key Drop",
@@ -3818,7 +4052,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310771,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hyrule Castle - Big Key Drop",
@@ -3855,7 +4092,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310780,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -3906,7 +4146,7 @@
                           "_converted_from_ast": true
                         },
                         "op": "==",
-                        "right": "standard",
+                        "right": 0,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -3923,7 +4163,7 @@
                           "_converted_from_ast": true
                         },
                         "op": "==",
-                        "right": "universal",
+                        "right": 5,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -3957,7 +4197,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597762,
+            "shop_slot_disabled": false
           },
           {
             "name": "Sewers - Key Rat Key Drop",
@@ -3994,7 +4237,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310732,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -4068,7 +4314,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598257,
+            "shop_slot_disabled": false
           },
           {
             "name": "Sewers - Secret Room - Middle",
@@ -4082,7 +4331,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598260,
+            "shop_slot_disabled": false
           },
           {
             "name": "Sewers - Secret Room - Right",
@@ -4096,7 +4348,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598263,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -4128,7 +4383,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598029,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -4199,7 +4457,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598089,
+            "shop_slot_disabled": false
           },
           {
             "name": "Castle Tower - Dark Maze",
@@ -4238,7 +4499,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598086,
+            "shop_slot_disabled": false
           },
           {
             "name": "Castle Tower - Dark Archer Key Drop",
@@ -4281,7 +4545,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310816,
+            "shop_slot_disabled": false
           },
           {
             "name": "Castle Tower - Circle of Pots Key Drop",
@@ -4324,7 +4591,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310801,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -4374,7 +4644,9 @@
               "type": "Event"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -4420,7 +4692,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598308,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -4643,7 +4918,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598282,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -4858,7 +5136,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598206,
+            "shop_slot_disabled": false
           },
           {
             "name": "Paradox Cave Lower - Left",
@@ -4898,7 +5179,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598209,
+            "shop_slot_disabled": false
           },
           {
             "name": "Paradox Cave Lower - Right",
@@ -4938,7 +5222,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598212,
+            "shop_slot_disabled": false
           },
           {
             "name": "Paradox Cave Lower - Far Right",
@@ -4978,7 +5265,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598215,
+            "shop_slot_disabled": false
           },
           {
             "name": "Paradox Cave Lower - Middle",
@@ -5018,7 +5308,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598218,
+            "shop_slot_disabled": false
           },
           {
             "name": "Paradox Cave Upper - Left",
@@ -5034,7 +5327,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598221,
+            "shop_slot_disabled": false
           },
           {
             "name": "Paradox Cave Upper - Right",
@@ -5050,7 +5346,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598224,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -5251,7 +5550,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597843,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -5432,7 +5734,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598267,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -5464,7 +5769,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598287,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -5598,7 +5906,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598266,
+            "shop_slot_disabled": false
           },
           {
             "name": "Tower of Hera - Map Chest",
@@ -5614,7 +5925,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597825,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -5641,7 +5955,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597882,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -5666,7 +5983,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597903,
+            "shop_slot_disabled": false
           },
           {
             "name": "Tower of Hera - Big Chest",
@@ -5683,7 +6003,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597900,
+            "shop_slot_disabled": false
           },
           {
             "name": "Tower of Hera - Boss",
@@ -5721,7 +6044,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598272,
+            "shop_slot_disabled": false
           },
           {
             "name": "Tower of Hera - Prize",
@@ -5760,7 +6086,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -5966,7 +6294,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598294,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -6003,7 +6334,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598305,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -6271,7 +6605,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598314,
+            "shop_slot_disabled": false
           },
           {
             "name": "Digging Game",
@@ -6288,7 +6625,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598295,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -6314,7 +6654,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598268,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -6526,7 +6869,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598194,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hype Cave - Middle Right",
@@ -6553,7 +6899,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598197,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hype Cave - Middle Left",
@@ -6580,7 +6929,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598200,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hype Cave - Bottom",
@@ -6607,7 +6959,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598203,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hype Cave - Generous Guy",
@@ -6621,7 +6976,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598299,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -6838,7 +7196,9 @@
               "type": "Event"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -6940,7 +7300,9 @@
               "type": "Event"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7164,7 +7526,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598286,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7191,7 +7556,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597780,
+            "shop_slot_disabled": false
           },
           {
             "name": "Pyramid Fairy - Right",
@@ -7208,7 +7576,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597783,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7235,7 +7606,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597888,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7262,7 +7636,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597891,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7289,7 +7666,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598315,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7434,7 +7814,10 @@
               "advancement": true,
               "type": "Sword"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598293,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7645,7 +8028,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598023,
+            "shop_slot_disabled": false
           },
           {
             "name": "Mire Shed - Right",
@@ -7662,7 +8048,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598026,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -7960,7 +8349,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598032,
+            "shop_slot_disabled": false
           },
           {
             "name": "Superbunny Cave - Bottom",
@@ -7977,7 +8369,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598035,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -8126,7 +8521,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598047,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -8187,7 +8585,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598245,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hookshot Cave - Top Left",
@@ -8207,7 +8608,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598248,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hookshot Cave - Bottom Right",
@@ -8238,7 +8642,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598254,
+            "shop_slot_disabled": false
           },
           {
             "name": "Hookshot Cave - Bottom Left",
@@ -8258,7 +8665,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598251,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -8342,7 +8752,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598288,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -8412,8 +8825,8 @@
                             },
                             "op": "in",
                             "right": [
-                              "easy",
-                              "default"
+                              0,
+                              1
                             ],
                             "_original_ast_type": "compare"
                           },
@@ -8467,7 +8880,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597849,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": false,
@@ -8538,7 +8954,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598065,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -8599,7 +9018,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597786,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Pot Row Pot Key",
@@ -8616,7 +9038,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310744,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Trench 1 Pot Key",
@@ -8645,7 +9070,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310741,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -8743,7 +9171,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597789,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Compass Chest",
@@ -8760,7 +9191,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598068,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Hookshot Pot Key",
@@ -8780,7 +9214,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310738,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Trench 2 Pot Key",
@@ -8797,7 +9234,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310735,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -8825,7 +9265,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598074,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - West Chest",
@@ -8842,7 +9285,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598071,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -8870,7 +9316,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598077,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Flooded Room - Right",
@@ -8887,7 +9336,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598080,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Waterway Pot Key",
@@ -8904,7 +9356,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310729,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Waterfall Room",
@@ -8921,7 +9376,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598083,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Boss",
@@ -8977,7 +9435,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598274,
+            "shop_slot_disabled": false
           },
           {
             "name": "Swamp Palace - Prize",
@@ -9034,7 +9495,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9080,7 +9543,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597912,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Map Chest",
@@ -9097,7 +9563,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597909,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Compass Chest",
@@ -9114,7 +9583,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597915,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Ambush Chest",
@@ -9131,7 +9603,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597918,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9193,7 +9668,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597921,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Big Chest",
@@ -9262,7 +9740,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597924,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Hallway Pot Key",
@@ -9279,7 +9760,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310813,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Spike Switch Pot Key",
@@ -9299,7 +9783,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310798,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Blind's Cell",
@@ -9319,7 +9806,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597927,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9379,7 +9869,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598276,
+            "shop_slot_disabled": false
           },
           {
             "name": "Thieves' Town - Prize",
@@ -9429,7 +9922,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9494,7 +9989,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597807,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9545,7 +10043,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597852,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9606,7 +10107,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597798,
+            "shop_slot_disabled": false
           },
           {
             "name": "Skull Woods - Pot Prison",
@@ -9623,7 +10127,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597813,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9708,7 +10215,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597804,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9772,7 +10282,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597810,
+            "shop_slot_disabled": false
           },
           {
             "name": "Skull Woods - West Lobby Pot Key",
@@ -9789,7 +10302,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310765,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9852,7 +10368,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597906,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -9880,7 +10399,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310747,
+            "shop_slot_disabled": false
           },
           {
             "name": "Skull Woods - Boss",
@@ -9936,7 +10458,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598275,
+            "shop_slot_disabled": false
           },
           {
             "name": "Skull Woods - Prize",
@@ -9993,7 +10518,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -10064,7 +10591,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310723,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ice Palace - Compass Chest",
@@ -10094,7 +10624,10 @@
               "advancement": true,
               "type": "Sword"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597864,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -10134,7 +10667,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310753,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -10279,7 +10815,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597801,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ice Palace - Many Pots Pot Key",
@@ -10296,7 +10835,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310789,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ice Palace - Big Chest",
@@ -10316,7 +10858,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597822,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ice Palace - Iced T Room",
@@ -10333,7 +10878,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597879,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -10382,7 +10930,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597876,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -10410,7 +10961,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597816,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ice Palace - Map Chest",
@@ -10427,7 +10981,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597873,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ice Palace - Hammer Block Key Drop",
@@ -10444,7 +11001,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310756,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -10504,7 +11064,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598277,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ice Palace - Prize",
@@ -10554,7 +11117,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -10732,7 +11297,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598011,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Map Chest",
@@ -10783,7 +11351,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598014,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Main Lobby",
@@ -10834,7 +11405,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598002,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Bridge Chest",
@@ -10851,7 +11425,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598005,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Spike Chest",
@@ -10901,7 +11478,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597870,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Spikes Pot Key",
@@ -10918,7 +11498,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310804,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Fishbone Pot Key",
@@ -10958,7 +11541,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310795,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Conveyor Crystal Key Drop",
@@ -11066,7 +11652,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310819,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11104,7 +11693,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598008,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Big Key Chest",
@@ -11131,7 +11723,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598017,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11225,7 +11820,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598278,
+            "shop_slot_disabled": false
           },
           {
             "name": "Misery Mire - Prize",
@@ -11275,7 +11873,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11362,7 +11962,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597942,
+            "shop_slot_disabled": false
           },
           {
             "name": "Turtle Rock - Roller Room - Left",
@@ -11383,7 +11986,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597936,
+            "shop_slot_disabled": false
           },
           {
             "name": "Turtle Rock - Roller Room - Right",
@@ -11404,7 +12010,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597939,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11511,7 +12120,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310807,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11624,7 +12236,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597930,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11750,7 +12365,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597945,
+            "shop_slot_disabled": false
           },
           {
             "name": "Turtle Rock - Pokey 2 Key Drop",
@@ -11786,7 +12404,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310726,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11892,7 +12513,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597933,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -11939,7 +12563,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597960,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12102,7 +12729,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597957,
+            "shop_slot_disabled": false
           },
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Right",
@@ -12134,7 +12764,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597954,
+            "shop_slot_disabled": false
           },
           {
             "name": "Turtle Rock - Eye Bridge - Top Left",
@@ -12166,7 +12799,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597951,
+            "shop_slot_disabled": false
           },
           {
             "name": "Turtle Rock - Eye Bridge - Top Right",
@@ -12198,7 +12834,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597948,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12258,7 +12897,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598279,
+            "shop_slot_disabled": false
           },
           {
             "name": "Turtle Rock - Prize",
@@ -12308,7 +12950,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12374,7 +13018,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597999,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12505,7 +13152,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597969,
+            "shop_slot_disabled": false
           },
           {
             "name": "Palace of Darkness - Stalfos Basement",
@@ -12522,7 +13172,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597981,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12550,7 +13203,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597963,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12599,7 +13255,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597966,
+            "shop_slot_disabled": false
           },
           {
             "name": "Palace of Darkness - Map Chest",
@@ -12616,7 +13275,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597990,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12717,7 +13379,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597975,
+            "shop_slot_disabled": false
           },
           {
             "name": "Palace of Darkness - Dark Basement - Left",
@@ -12737,7 +13402,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597984,
+            "shop_slot_disabled": false
           },
           {
             "name": "Palace of Darkness - Dark Basement - Right",
@@ -12757,7 +13425,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597987,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12785,7 +13456,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597993,
+            "shop_slot_disabled": false
           },
           {
             "name": "Palace of Darkness - Dark Maze - Bottom",
@@ -12802,7 +13476,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1597996,
+            "shop_slot_disabled": false
           },
           {
             "name": "Palace of Darkness - Big Chest",
@@ -12832,7 +13509,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597972,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12860,7 +13540,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1597978,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -12920,7 +13603,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598273,
+            "shop_slot_disabled": false
           },
           {
             "name": "Palace of Darkness - Prize",
@@ -12970,7 +13656,9 @@
               "type": "Crystal"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": true,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -13063,7 +13751,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598307,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Hope Room - Left",
@@ -13080,7 +13771,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598125,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Hope Room - Right",
@@ -13097,7 +13791,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598128,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Conveyor Cross Pot Key",
@@ -13114,7 +13811,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310783,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -13213,7 +13913,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598134,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -13380,7 +14083,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598137,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Compass Room - Top Right",
@@ -13476,7 +14182,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598140,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Compass Room - Bottom Left",
@@ -13572,7 +14281,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598143,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Compass Room - Bottom Right",
@@ -13668,7 +14380,10 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598146,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Conveyor Star Pits Pot Key",
@@ -13764,7 +14479,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310777,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -13868,7 +14586,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598092,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - DMs Room - Top Right",
@@ -13888,7 +14609,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598095,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - DMs Room - Bottom Left",
@@ -13908,7 +14632,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598098,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - DMs Room - Bottom Right",
@@ -13928,7 +14655,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598101,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Double Switch Pot Key",
@@ -13966,7 +14696,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1310786,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -13994,7 +14727,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598119,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -14174,7 +14910,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598116,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -14271,7 +15010,10 @@
               "advancement": true,
               "type": "BigKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598104,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Randomizer Room - Top Right",
@@ -14349,7 +15091,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598107,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Randomizer Room - Bottom Left",
@@ -14427,7 +15172,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598110,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Randomizer Room - Bottom Right",
@@ -14505,7 +15253,10 @@
               "advancement": true,
               "type": "SmallKey"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598113,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -14533,7 +15284,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598131,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Big Chest",
@@ -14553,7 +15307,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598122,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Big Key Room - Left",
@@ -14631,7 +15388,10 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "crystal": false,
+            "player_address": 1598152,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Big Key Room - Right",
@@ -14709,7 +15469,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598155,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Big Key Chest",
@@ -14787,7 +15550,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598149,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -14927,7 +15693,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598161,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Mini Helmasaur Room - Right",
@@ -14944,7 +15713,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598164,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Pre-Moldorm Chest",
@@ -14978,7 +15750,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598167,
+            "shop_slot_disabled": false
           },
           {
             "name": "Ganons Tower - Mini Helmasaur Key Drop",
@@ -15014,7 +15789,10 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1310750,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -15119,7 +15897,10 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "crystal": false,
+            "player_address": 1598170,
+            "shop_slot_disabled": false
           },
           {
             "name": "Agahnim 2",
@@ -15169,7 +15950,9 @@
               "type": "Event"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -15247,7 +16030,9 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "crystal": false,
+            "shop_slot_disabled": false
           }
         ],
         "is_dark_world": true,
@@ -18934,94 +19719,94 @@
     "1": {
       "game": "A Link to the Past",
       "options": {
-        "accessibility": "items",
+        "accessibility": 1,
         "allow_collect": true,
         "beemizer_total_chance": 0,
         "beemizer_trap_chance": 60,
-        "big_key_shuffle": "original_dungeon",
+        "big_key_shuffle": 0,
         "bigkey_shuffle": "",
         "blue_clock_time": 2,
         "bombless_start": false,
-        "boss_shuffle": "none",
+        "boss_shuffle": 0,
         "bush_shuffle": false,
-        "compass_shuffle": "original_dungeon",
+        "compass_shuffle": 0,
         "countdown_start_time": 10,
         "crystals_needed_for_ganon": 7,
         "crystals_needed_for_gt": 7,
-        "dark_room_logic": "lamp",
+        "dark_room_logic": 0,
         "death_link": false,
-        "dungeon_counters": "pickup",
-        "enemy_damage": "default",
-        "enemy_health": "default",
+        "dungeon_counters": 1,
+        "enemy_damage": 0,
+        "enemy_health": 1,
         "enemy_shuffle": false,
-        "entrance_shuffle": "vanilla",
+        "entrance_shuffle": 0,
         "entrance_shuffle_seed": "random",
         "exclude_locations": [],
         "glitch_boots": true,
-        "glitches_required": "no_glitches",
-        "goal": "ganon",
+        "glitches_required": 0,
+        "goal": 0,
         "goals": "",
         "green_clock_time": 4,
-        "heartbeep": "normal",
-        "heartcolor": "red",
-        "hints": "on",
-        "hud_palettes": "default",
+        "heartbeep": 0,
+        "heartcolor": 0,
+        "hints": 2,
+        "hud_palettes": 0,
         "include_witch_hut": false,
-        "item_functionality": "normal",
+        "item_functionality": 1,
         "item_links": [],
-        "item_pool": "normal",
+        "item_pool": 1,
         "key_drop_shuffle": true,
         "killable_thieves": false,
         "local_items": [],
-        "map_shuffle": "original_dungeon",
-        "menuspeed": "normal",
-        "misery_mire_medallion": "quake",
-        "mode": "open",
+        "map_shuffle": 0,
+        "menuspeed": 0,
+        "misery_mire_medallion": 2,
+        "mode": 1,
         "music": true,
         "non_local_items": [],
-        "open_pyramid": "goal",
-        "ow_palettes": "default",
+        "open_pyramid": 2,
+        "ow_palettes": 0,
         "plando_connections": [],
         "plando_items": [],
         "plando_texts": [],
         "pot_shuffle": false,
         "priority_locations": [],
         "progression_balancing": 50,
-        "progressive": "on",
+        "progressive": 2,
         "quickswap": true,
         "randomize_cost_types": false,
-        "randomize_shop_inventories": "default",
+        "randomize_shop_inventories": 0,
         "randomize_shop_prices": false,
         "red_clock_time": -2,
         "reduceflashing": true,
         "restrict_dungeon_item_on_boss": false,
         "retro_bow": false,
         "retro_caves": false,
-        "scams": "off",
-        "shield_palettes": "default",
+        "scams": 0,
+        "shield_palettes": 0,
         "shop_item_slots": 0,
         "shop_price_modifier": 100,
-        "shuffle_capacity_upgrades": "off",
-        "shuffle_prizes": "general",
+        "shuffle_capacity_upgrades": 0,
+        "shuffle_prizes": 1,
         "shuffle_shop_inventories": false,
-        "small_key_shuffle": "original_dungeon",
+        "small_key_shuffle": 0,
         "smallkey_shuffle": "",
         "start_hints": [],
         "start_inventory": {},
         "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "sword_palettes": "default",
+        "sword_palettes": 0,
         "swordless": false,
         "tile_shuffle": false,
-        "timer": "none",
+        "timer": 0,
         "triforce_pieces_available": 30,
         "triforce_pieces_extra": 10,
-        "triforce_pieces_mode": "available",
+        "triforce_pieces_mode": 2,
         "triforce_pieces_percentage": 150,
         "triforce_pieces_required": 20,
-        "triforcehud": "normal",
-        "turtle_rock_medallion": "ether",
-        "uw_palettes": "default"
+        "triforcehud": 0,
+        "turtle_rock_medallion": 0,
+        "uw_palettes": 0
       },
       "option_definitions": {
         "accessibility": {
@@ -20699,7 +21484,7 @@
               "op": "!=",
               "right": {
                 "type": "constant",
-                "value": "no_glitches"
+                "value": 0
               }
             },
             "body": [
@@ -21103,7 +21888,7 @@
                         "op": "==",
                         "right": {
                           "type": "constant",
-                          "value": "hard"
+                          "value": 2
                         }
                       },
                       {
@@ -21163,7 +21948,7 @@
                           "op": "==",
                           "right": {
                             "type": "constant",
-                            "value": "expert"
+                            "value": 3
                           }
                         },
                         {
@@ -21654,11 +22439,11 @@
                       "elements": [
                         {
                           "type": "constant",
-                          "value": "easy"
+                          "value": 0
                         },
                         {
                           "type": "constant",
-                          "value": "default"
+                          "value": 1
                         }
                       ]
                     }
@@ -22305,7 +23090,7 @@
               "op": "!=",
               "right": {
                 "type": "constant",
-                "value": "inverted"
+                "value": 2
               }
             },
             "if_true": {

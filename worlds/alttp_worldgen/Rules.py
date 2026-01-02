@@ -22,7 +22,7 @@ def GanonDefeatRule(state: "CollectionState", player: int) -> bool:
         return (state.has('Hammer', player)) and (has_fire_source(state, player)) and (state.has('Silver Bow', player)) and (can_shoot_arrows(state, player))
     can_hurt = has_beam_sword(state, player)
     common = (can_hurt) and (has_fire_source(state, player))
-    if (state.multiworld.worlds[player].options.glitches_required != 'no_glitches'):
+    if (state.multiworld.worlds[player].options.glitches_required != 0):
         return (common) and ((state.has('Tempered Sword', player)) or (state.has('Golden Sword', player)) or ((state.has('Silver Bow', player)) and (can_shoot_arrows(state, player))) or (state.has('Lamp', player)) or (can_extend_magic(state, player, 12)))
     else:
         return (common) and (state.has('Silver Bow', player)) and (can_shoot_arrows(state, player))
@@ -55,7 +55,7 @@ def can_buy_unlimited(state: "CollectionState", player: int, item = None) -> boo
 def can_extend_magic(state: "CollectionState", player: int, smallmagic = 16, fullrefill: bool = False) -> bool:
     basemagic = 8
     basemagic = (32 if state.has('Magic Upgrade (1/4)', player) else (16 if state.has('Magic Upgrade (1/2)', player) else basemagic))
-    basemagic = (((basemagic + int(((basemagic * 0.5) * bottle_count(state, player)))) if ((state.multiworld.worlds[player].options.item_functionality == 'hard')) and (not (fullrefill)) else ((basemagic + int(((basemagic * 0.25) * bottle_count(state, player)))) if ((state.multiworld.worlds[player].options.item_functionality == 'expert')) and (not (fullrefill)) else (basemagic + (basemagic * bottle_count(state, player))))) if (can_buy_unlimited(state, player, 'Green Potion')) or (can_buy_unlimited(state, player, 'Blue Potion')) else basemagic)
+    basemagic = (((basemagic + int(((basemagic * 0.5) * bottle_count(state, player)))) if ((state.multiworld.worlds[player].options.item_functionality == 2)) and (not (fullrefill)) else ((basemagic + int(((basemagic * 0.25) * bottle_count(state, player)))) if ((state.multiworld.worlds[player].options.item_functionality == 3)) and (not (fullrefill)) else (basemagic + (basemagic * bottle_count(state, player))))) if (can_buy_unlimited(state, player, 'Green Potion')) or (can_buy_unlimited(state, player, 'Blue Potion')) else basemagic)
     return (basemagic >= smallmagic)
 
 
@@ -78,7 +78,7 @@ def can_hold_arrows(state: "CollectionState", player: int, quantity = None) -> b
 
 
 def can_kill_most_things(state: "CollectionState", player: int, enemies = 5) -> bool:
-    return ((has_melee_weapon(state, player)) and (state.has('Cane of Somaria', player)) and (state.has('Cane of Byrna', player)) and (can_extend_magic(state, player)) and (can_shoot_arrows(state, player)) and (state.has('Fire Rod', player)) and (can_use_bombs(state, player, (enemies * 4))) if state.multiworld.worlds[player].options.enemy_shuffle else (has_melee_weapon(state, player)) or (state.has('Cane of Somaria', player)) or ((state.has('Cane of Byrna', player)) and (((enemies < 6)) or (can_extend_magic(state, player)))) or (can_shoot_arrows(state, player)) or (state.has('Fire Rod', player)) or (((state.multiworld.worlds[player].options.enemy_health in ('easy', 'default'))) and (can_use_bombs(state, player, (enemies * 4)))))
+    return ((has_melee_weapon(state, player)) and (state.has('Cane of Somaria', player)) and (state.has('Cane of Byrna', player)) and (can_extend_magic(state, player)) and (can_shoot_arrows(state, player)) and (state.has('Fire Rod', player)) and (can_use_bombs(state, player, (enemies * 4))) if state.multiworld.worlds[player].options.enemy_shuffle else (has_melee_weapon(state, player)) or (state.has('Cane of Somaria', player)) or ((state.has('Cane of Byrna', player)) and (((enemies < 6)) or (can_extend_magic(state, player)))) or (can_shoot_arrows(state, player)) or (state.has('Fire Rod', player)) or (((state.multiworld.worlds[player].options.enemy_health in (0, 1))) and (can_use_bombs(state, player, (enemies * 4)))))
 
 
 def can_lift_heavy_rocks(state: "CollectionState", player: int) -> bool:
@@ -154,7 +154,7 @@ def heart_count(state: "CollectionState", player: int) -> bool:
 
 
 def is_not_bunny(state: "CollectionState", player: int, region = None) -> bool:
-    return (True if state.has('Moon Pearl', player) else (region.is_light_world if (state.multiworld.worlds[player].options.mode != 'inverted') else region.is_dark_world))
+    return (True if state.has('Moon Pearl', player) else (region.is_light_world if (state.multiworld.worlds[player].options.mode != 2) else region.is_dark_world))
 
 
 def tr_big_key_chest_keys_needed(state: "CollectionState", player: int) -> bool:
@@ -450,7 +450,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_entrance("Sewers Door", player).access_rule = \
-        lambda state: (((((state.multiworld.worlds[player].options.mode == 'standard')) and ((state.multiworld.worlds[player].options.small_key_shuffle == 'universal')))) or (state.has('Small Key (Hyrule Castle)', player, 4)))
+        lambda state: (((((state.multiworld.worlds[player].options.mode == 0)) and ((state.multiworld.worlds[player].options.small_key_shuffle == 5)))) or (state.has('Small Key (Hyrule Castle)', player, 4)))
 
     world.set_rule(
         multiworld.get_entrance("Sewers Back Door", player),
@@ -1607,7 +1607,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Mimic Cave", player).access_rule = \
-        lambda state: (((((((state.multiworld.worlds[player].options.enemy_health in ('easy', 'default'))) and (can_use_bombs(state, player, 4)))) or (can_shoot_arrows(state, player)) or (has_beam_sword(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Hammer', player)))
+        lambda state: (((((((state.multiworld.worlds[player].options.enemy_health in (0, 1))) and (can_use_bombs(state, player, 4)))) or (can_shoot_arrows(state, player)) or (has_beam_sword(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Hammer', player)))
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
