@@ -68,10 +68,8 @@
                               "_converted_from_ast": true
                             }
                           ]
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -38968,7 +38966,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MarioLand2World"
     }
   },
   "game_info": {
@@ -39526,8 +39525,8 @@
                       "name": "i"
                     },
                     "iterator": {
-                      "type": "list",
-                      "value": [
+                      "type": "tuple",
+                      "elements": [
                         {
                           "type": "constant",
                           "value": 27

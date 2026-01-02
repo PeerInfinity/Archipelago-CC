@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "Celeste64WorldGenWorld"
+    "1": "Celeste64World"
   },
   "regions": {
     "1": {
@@ -1428,7 +1428,6 @@
       },
       "South-East Tower Checkpoint": {
         "name": "South-East Tower Checkpoint",
-        "hint_text": "South East Tower Checkpoint",
         "id": 13238306,
         "groups": [
           "Everything"
@@ -1436,7 +1435,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "South East Tower Checkpoint"
       },
       "Climb Sign Checkpoint": {
         "name": "Climb Sign Checkpoint",
@@ -1637,7 +1637,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "strawberries_required_percentage": 80,
-        "total_strawberries": 20
+        "total_strawberries": 20,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1843,6 +1844,11 @@
           "range_end": 55,
           "default": 20,
           "display_name": "Total Strawberries"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "madeline_one_dash_hair_color": 14363648,
@@ -2137,7 +2143,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "Celeste64World"
     }
   },
   "game_info": {

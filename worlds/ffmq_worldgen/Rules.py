@@ -16,8 +16,8 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _finalfantasymysticquestworldgen_hard_boss_logic(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('River Coin', 'Sand Coin'), player)
+def hard_boss_logic(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['River Coin', 'Sand Coin'], player)
 
 
 def set_rules(world: "World") -> None:
@@ -358,7 +358,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room", player),
-        And(And(And(HasAny('Progressive Bomb', 'Bomb', 'Jumbo Bomb', 'Mega Grenade'), HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw')), HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur')), True_())
+        And(HasAny('Progressive Bomb', 'Bomb', 'Jumbo Bomb', 'Mega Grenade'), HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw'), HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'), True_())
     )
 
     world.set_rule(
@@ -568,17 +568,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - Libra Teleporter Script", player),
-        And(HasAll('Libra Crest'), HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'))
+        And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), Has('Libra Crest'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - Gemini Teleporter Script", player),
-        And(HasAll('Gemini Crest'), HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'))
+        And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), Has('Gemini Crest'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - Mobius Teleporter Script", player),
-        And(HasAll('Mobius Crest'), HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'))
+        And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), Has('Mobius Crest'))
     )
 
     world.set_rule(
@@ -658,7 +658,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F Mushroom Room - North Face to Meteor", player),
-        And(HasAll('Gidrah'), HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'))
+        And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), Has('Gidrah'))
     )
 
     world.set_rule(
@@ -723,7 +723,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge", player),
-        And(And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw')), True_())
+        And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw'), True_())
     )
 
     world.set_rule(
@@ -768,7 +768,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform", player),
-        And(And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw')), True_())
+        And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw'), True_())
     )
 
     world.set_rule(
@@ -888,7 +888,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Focus Tower 2F - Venus Chest", player),
-        And(HasAll('Venus Key'), HasAny('Progressive Bomb', 'Bomb', 'Jumbo Bomb', 'Mega Grenade'))
+        And(HasAny('Progressive Bomb', 'Bomb', 'Jumbo Bomb', 'Mega Grenade'), Has('Venus Key'))
     )
 
     world.set_rule(
@@ -1073,7 +1073,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bomb Libra Block", player),
-        And(HasAll('Mega Grenade'), HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw'))
+        And(HasAny('Cat Claw', 'Charm Claw', 'Dragon Claw'), Has('Mega Grenade'))
     )
 
     world.set_rule(
@@ -1183,7 +1183,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dullahan", player),
-        And(HelperCall(helper_func=_finalfantasymysticquestworldgen_hard_boss_logic, helper_name="hard_boss_logic"), HasAll('Dragon Claw'))
+        And(HelperCall(helper_func=hard_boss_logic, helper_name="hard_boss_logic"), Has('Dragon Claw'))
     )
 
     world.set_rule(
@@ -1253,7 +1253,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pazuzu 6F Lock", player),
-        And(And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), HasAny('Progressive Bomb', 'Bomb', 'Jumbo Bomb', 'Mega Grenade')), True_())
+        And(HasAny('Progressive Axe', 'Axe', 'Battle Axe', "Giant's Axe", 'Progressive Claw'), HasAny('Progressive Bomb', 'Bomb', 'Jumbo Bomb', 'Mega Grenade'), True_())
     )
 
     world.set_rule(
@@ -1283,12 +1283,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Doom Castle 4F - Northwest Room Box", player),
-        And(HasAll('Dragon Claw'), HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'))
+        And(HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'), Has('Dragon Claw'))
     )
 
     world.set_rule(
         multiworld.get_location("Doom Castle 4F - Southwest Room Box", player),
-        And(HasAll('Dragon Claw'), HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'))
+        And(HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'), Has('Dragon Claw'))
     )
 
     world.set_rule(
@@ -1298,12 +1298,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Doom Castle 4F - Southeast Room Box", player),
-        And(HasAll('Dragon Claw'), HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'))
+        And(HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'), Has('Dragon Claw'))
     )
 
     world.set_rule(
         multiworld.get_location("Stone Golem", player),
-        And(HasAll('Dragon Claw'), HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'))
+        And(HasAny('Progressive Sword', 'Steel Sword', 'Knight Sword', 'Excalibur'), Has('Dragon Claw'))
     )
 
     world.set_rule(

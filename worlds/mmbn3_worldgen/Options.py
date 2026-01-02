@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class ExtraRanks(Range):
     """Option for Extra Undernet Ranks."""
     display_name = "Extra Undernet Ranks"
@@ -44,6 +55,7 @@ class TradeQuestHinting(Choice):
 class MegaManBattleNetwork3WorldGenOptions(PerGameCommonOptions):
     """Options for MegaMan Battle Network 3 WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     extra_ranks: ExtraRanks
     include_jobs: IncludeJobs
     include_secret: IncludeSecret

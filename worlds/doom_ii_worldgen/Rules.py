@@ -47,7 +47,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Crusher (MAP06) Main", player),
-        And(HasAll('Shotgun', 'The Crusher (MAP06)'), HasAny('Chaingun', 'Plasma gun'))
+        And(HasAny('Chaingun', 'Plasma gun'), HasAll('Shotgun', 'The Crusher (MAP06)'))
     )
 
     world.set_rule(
@@ -57,7 +57,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Tricks and Traps (MAP08) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'Tricks and Traps (MAP08)'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'Tricks and Traps (MAP08)'))
     )
 
     world.set_rule(
@@ -72,7 +72,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Circle of Death (MAP11) Main", player),
-        And(HasAll('Chaingun', 'Circle of Death (MAP11)', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Circle of Death (MAP11)', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -82,42 +82,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Downtown (MAP13) Main", player),
-        And(HasAll('Chaingun', 'Downtown (MAP13)', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Downtown (MAP13)', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Inmost Dens (MAP14) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'The Inmost Dens (MAP14)'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'The Inmost Dens (MAP14)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Industrial Zone (MAP15) Main", player),
-        And(HasAll('Chaingun', 'Industrial Zone (MAP15)', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Industrial Zone (MAP15)', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Suburbs (MAP16) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Suburbs (MAP16)', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Suburbs (MAP16)', 'Super Shotgun'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Tenements (MAP17) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'Tenements (MAP17)'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'Tenements (MAP17)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Courtyard (MAP18) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'The Courtyard (MAP18)'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'The Courtyard (MAP18)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Citadel (MAP19) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'The Citadel (MAP19)'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun', 'The Citadel (MAP19)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Gotcha! (MAP20) Main", player),
-        And(HasAll('Chaingun', 'Gotcha! (MAP20)', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Gotcha! (MAP20)', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -132,7 +132,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Barrels o' Fun (MAP23) Main", player),
-        And(HasAll("Barrels o' Fun (MAP23)", 'Chaingun', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll("Barrels o' Fun (MAP23)", 'Chaingun', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -247,7 +247,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Waste Tunnels (MAP05) Start -> The Waste Tunnels (MAP05) Main", player),
-        And(HasAll('Shotgun', 'Super Shotgun'), HasAny('Chaingun', 'Plasma gun'))
+        And(HasAny('Chaingun', 'Plasma gun'), HasAll('Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -282,7 +282,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dead Simple (MAP07) Start -> Dead Simple (MAP07) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -312,7 +312,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Pit (MAP09) Start -> The Pit (MAP09) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -327,7 +327,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Refueling Base (MAP10) Start -> Refueling Base (MAP10) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -357,7 +357,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Factory (MAP12) Main -> The Factory (MAP12) Indoors", player),
-        And(HasAll('Chaingun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun'))
+        And(HasAny('BFG9000', 'Plasma gun'), HasAll('Chaingun', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -472,7 +472,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nirvana (MAP21) Main -> Nirvana (MAP21) Yellow", player),
-        And(HasAll('Chaingun', 'Nirvana (MAP21) - Yellow skull key', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun'))
+        And(HasAny('BFG9000', 'Plasma gun'), HasAll('Chaingun', 'Nirvana (MAP21) - Yellow skull key', 'Super Shotgun'))
     )
 
     world.set_rule(
@@ -512,7 +512,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (MAP22) Early -> The Catacombs (MAP22) Main", player),
-        And(HasAll('Chaingun', 'Shotgun', 'Super Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
     )
 
     world.set_rule(

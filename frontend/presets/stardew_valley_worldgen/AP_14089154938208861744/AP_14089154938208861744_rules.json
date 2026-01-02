@@ -12377,7 +12377,6 @@
       },
       "Mini-Obelisk Recipe": {
         "name": "Mini-Obelisk Recipe",
-        "hint_text": "Mini Obelisk Recipe",
         "id": 717236,
         "groups": [
           "Everything",
@@ -12386,7 +12385,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Mini Obelisk Recipe"
       },
       "Monster Musk Recipe": {
         "name": "Monster Musk Recipe",
@@ -12428,7 +12428,6 @@
       },
       "Mini-Fridge": {
         "name": "Mini-Fridge",
-        "hint_text": "Mini Fridge",
         "id": 717241,
         "groups": [
           "Everything",
@@ -12438,11 +12437,11 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Mini Fridge"
       },
       "Mini-Shipping Bin": {
         "name": "Mini-Shipping Bin",
-        "hint_text": "Mini Shipping Bin",
         "id": 717242,
         "groups": [
           "Everything",
@@ -12452,7 +12451,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Mini Shipping Bin"
       },
       "Deluxe Fish Tank": {
         "name": "Deluxe Fish Tank",
@@ -13572,7 +13572,6 @@
       },
       "Hyper Speed-Gro Recipe": {
         "name": "Hyper Speed-Gro Recipe",
-        "hint_text": "Hyper Speed Gro Recipe",
         "id": 717327,
         "groups": [
           "Everything",
@@ -13582,7 +13581,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Hyper Speed Gro Recipe"
       },
       "Deluxe Fertilizer Recipe": {
         "name": "Deluxe Fertilizer Recipe",
@@ -13624,7 +13624,6 @@
       },
       "Jack-O-Lantern Recipe": {
         "name": "Jack-O-Lantern Recipe",
-        "hint_text": "Jack O Lantern Recipe",
         "id": 717331,
         "groups": [
           "Everything",
@@ -13633,7 +13632,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Jack O Lantern Recipe"
       },
       "Tub o' Flowers Recipe": {
         "name": "Tub o' Flowers Recipe",
@@ -19958,7 +19958,6 @@
       },
       "Auto-Petter": {
         "name": "Auto-Petter",
-        "hint_text": "Auto Petter",
         "id": 722267,
         "groups": [
           "Everything",
@@ -19968,11 +19967,11 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Auto Petter"
       },
       "Auto-Grabber": {
         "name": "Auto-Grabber",
-        "hint_text": "Auto Grabber",
         "id": 722268,
         "groups": [
           "Everything",
@@ -19982,7 +19981,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Auto Grabber"
       },
       "Resource Pack: 10 Calico Egg": {
         "name": "Resource Pack: 10 Calico Egg",
@@ -22937,7 +22937,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "StardewValleyWorldGenWorld"
     }
   },
   "game_info": {

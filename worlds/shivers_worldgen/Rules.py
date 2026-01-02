@@ -16,56 +16,56 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _shiversworldgen_all_skull_dials_set(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'), player)
+def all_skull_dials_set(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'], player)
 
 
-def _shiversworldgen_ash_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE'), player)) or (state.has_all(('Ash Pot Complete', 'Ash Pot Complete DUPE'), player))
+def ash_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE'], player)) or (state.has_all(['Ash Pot Complete', 'Ash Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_beths_body_available(state: "CollectionState", player: int) -> bool:
-    return (_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (True)
+def beths_body_available(state: "CollectionState", player: int) -> bool:
+    return (first_nine_ixupi_capturable(state, player)) or (state.multiworld.worlds[player].options.early_beth)
 
 
-def _shiversworldgen_cloth_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE'), player)) or (state.has_all(('Cloth Pot Complete', 'Cloth Pot Complete DUPE'), player))
+def cloth_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE'], player)) or (state.has_all(['Cloth Pot Complete', 'Cloth Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_crystal_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE'), player)) or (state.has_all(('Crystal Pot Complete', 'Crystal Pot Complete DUPE'), player))
+def crystal_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE'], player)) or (state.has_all(['Crystal Pot Complete', 'Crystal Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_first_nine_ixupi_capturable(state: "CollectionState", player: int) -> bool:
-    return (_shiversworldgen_water_capturable(state, player)) and (_shiversworldgen_wax_capturable(state, player)) and (_shiversworldgen_ash_capturable(state, player)) and (_shiversworldgen_oil_capturable(state, player)) and (_shiversworldgen_cloth_capturable(state, player)) and (_shiversworldgen_wood_capturable(state, player)) and (_shiversworldgen_crystal_capturable(state, player)) and (_shiversworldgen_sand_capturable(state, player)) and (_shiversworldgen_metal_capturable(state, player))
+def first_nine_ixupi_capturable(state: "CollectionState", player: int) -> bool:
+    return (water_capturable(state, player)) and (wax_capturable(state, player)) and (ash_capturable(state, player)) and (oil_capturable(state, player)) and (cloth_capturable(state, player)) and (wood_capturable(state, player)) and (crystal_capturable(state, player)) and (sand_capturable(state, player)) and (metal_capturable(state, player))
 
 
-def _shiversworldgen_lightning_capturable(state: "CollectionState", player: int) -> bool:
-    return ((_shiversworldgen_first_nine_ixupi_capturable(state, player)) or (False)) and ((state.has_all(('Lightning Pot Bottom', 'Lightning Pot Bottom DUPE', 'Lightning Pot Top', 'Lightning Pot Top DUPE'), player)) or (state.has_all(('Lightning Pot Complete', 'Lightning Pot Complete DUPE'), player)))
+def lightning_capturable(state: "CollectionState", player: int) -> bool:
+    return ((first_nine_ixupi_capturable(state, player)) or (state.multiworld.worlds[player].options.early_lightning)) and ((state.has_all(['Lightning Pot Bottom', 'Lightning Pot Bottom DUPE', 'Lightning Pot Top', 'Lightning Pot Top DUPE'], player)) or (state.has_all(['Lightning Pot Complete', 'Lightning Pot Complete DUPE'], player)))
 
 
-def _shiversworldgen_metal_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE'), player)) or (state.has_all(('Metal Pot Complete', 'Metal Pot Complete DUPE'), player))
+def metal_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE'], player)) or (state.has_all(['Metal Pot Complete', 'Metal Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_oil_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE'), player)) or (state.has_all(('Oil Pot Complete', 'Oil Pot Complete DUPE'), player))
+def oil_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE'], player)) or (state.has_all(['Oil Pot Complete', 'Oil Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_sand_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE'), player)) or (state.has_all(('Sand Pot Complete', 'Sand Pot Complete DUPE'), player))
+def sand_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE'], player)) or (state.has_all(['Sand Pot Complete', 'Sand Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_water_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Water Pot Bottom', 'Water Pot Bottom DUPE', 'Water Pot Top', 'Water Pot Top DUPE'), player)) or (state.has_all(('Water Pot Complete', 'Water Pot Complete DUPE'), player))
+def water_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Water Pot Bottom', 'Water Pot Bottom DUPE', 'Water Pot Top', 'Water Pot Top DUPE'], player)) or (state.has_all(['Water Pot Complete', 'Water Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_wax_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Wax Pot Bottom', 'Wax Pot Bottom DUPE', 'Wax Pot Top', 'Wax Pot Top DUPE'), player)) or (state.has_all(('Wax Pot Complete', 'Wax Pot Complete DUPE'), player))
+def wax_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Wax Pot Bottom', 'Wax Pot Bottom DUPE', 'Wax Pot Top', 'Wax Pot Top DUPE'], player)) or (state.has_all(['Wax Pot Complete', 'Wax Pot Complete DUPE'], player))
 
 
-def _shiversworldgen_wood_capturable(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE'), player)) or (state.has_all(('Wood Pot Complete', 'Wood Pot Complete DUPE'), player))
+def wood_capturable(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE'], player)) or (state.has_all(['Wood Pot Complete', 'Wood Pot Complete DUPE'], player))
 
 
 def set_rules(world: "World") -> None:
@@ -151,7 +151,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Tar River From Lobby", player),
-        And(HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable"), CanReachRegion('Tar River'), Has('Crawling'))
+        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable"), CanReachRegion('Tar River'), Has('Crawling'))
     )
 
     world.set_rule(
@@ -161,7 +161,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Victory", player),
-        Compare(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(HelperCall(helper_func=_shiversworldgen_water_capturable, helper_name="water_capturable"), "+", HelperCall(helper_func=_shiversworldgen_wax_capturable, helper_name="wax_capturable")), "+", HelperCall(helper_func=_shiversworldgen_ash_capturable, helper_name="ash_capturable")), "+", HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable")), "+", HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable")), "+", HelperCall(helper_func=_shiversworldgen_wood_capturable, helper_name="wood_capturable")), "+", HelperCall(helper_func=_shiversworldgen_crystal_capturable, helper_name="crystal_capturable")), "+", HelperCall(helper_func=_shiversworldgen_sand_capturable, helper_name="sand_capturable")), "+", HelperCall(helper_func=_shiversworldgen_metal_capturable, helper_name="metal_capturable")), "+", HelperCall(helper_func=_shiversworldgen_lightning_capturable, helper_name="lightning_capturable")), ">=", 10)
+        Compare(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(HelperCall(helper_func=water_capturable, helper_name="water_capturable"), "+", HelperCall(helper_func=wax_capturable, helper_name="wax_capturable")), "+", HelperCall(helper_func=ash_capturable, helper_name="ash_capturable")), "+", HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")), "+", HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")), "+", HelperCall(helper_func=wood_capturable, helper_name="wood_capturable")), "+", HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable")), "+", HelperCall(helper_func=sand_capturable, helper_name="sand_capturable")), "+", HelperCall(helper_func=metal_capturable, helper_name="metal_capturable")), "+", HelperCall(helper_func=lightning_capturable, helper_name="lightning_capturable")), ">=", 10)
     )
 
     world.set_rule(
@@ -181,7 +181,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Beth's Body From Generator", player),
-        And(Conditional(test=True_(), if_true=And(CanReachRegion('Theater'), Has('Viewed Norse Stone')), if_false=True_()), HelperCall(helper_func=_shiversworldgen_beths_body_available, helper_name="beths_body_available"))
+        And(Conditional(test=True_(), if_true=And(CanReachRegion('Theater'), Has('Viewed Norse Stone')), if_false=True_()), HelperCall(helper_func=beths_body_available, helper_name="beths_body_available"))
     )
 
     world.set_rule(
@@ -231,7 +231,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Tar River", player),
-        And(HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable"), Has('Crawling'))
+        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable"), Has('Crawling'))
     )
 
     world.set_rule(
@@ -286,7 +286,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Water Capture From Janitor Closet", player),
-        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable")
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")
     )
 
     world.set_rule(
@@ -346,7 +346,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Slide Room", player),
-        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set")
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set")
     )
 
     world.set_rule(
@@ -411,7 +411,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Tar River", player),
-        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable")
+        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")
     )
 
     world.set_rule(
@@ -441,7 +441,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Janitor Closet", player),
-        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable")
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")
     )
 
     world.set_rule(
@@ -456,50 +456,50 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Skull Dial Door", player),
-        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set")
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Water", player),
-        HelperCall(helper_func=_shiversworldgen_water_capturable, helper_name="water_capturable")
+        HelperCall(helper_func=water_capturable, helper_name="water_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wax", player),
-        HelperCall(helper_func=_shiversworldgen_wax_capturable, helper_name="wax_capturable")
+        HelperCall(helper_func=wax_capturable, helper_name="wax_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Ash", player),
-        HelperCall(helper_func=_shiversworldgen_ash_capturable, helper_name="ash_capturable")
+        HelperCall(helper_func=ash_capturable, helper_name="ash_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Oil", player),
-        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable")
+        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Cloth", player),
-        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable")
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wood", player),
-        HelperCall(helper_func=_shiversworldgen_wood_capturable, helper_name="wood_capturable")
+        HelperCall(helper_func=wood_capturable, helper_name="wood_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Crystal", player),
-        HelperCall(helper_func=_shiversworldgen_crystal_capturable, helper_name="crystal_capturable")
+        HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Sand", player),
-        HelperCall(helper_func=_shiversworldgen_sand_capturable, helper_name="sand_capturable")
+        HelperCall(helper_func=sand_capturable, helper_name="sand_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Metal", player),
-        HelperCall(helper_func=_shiversworldgen_metal_capturable, helper_name="metal_capturable")
+        HelperCall(helper_func=metal_capturable, helper_name="metal_capturable")
     )

@@ -98,28 +98,18 @@
             "name": "Shrink Down",
             "connected_region": "Music Box",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Key of Chaos",
-                      "Key of Courage",
-                      "Key of Hope",
-                      "Key of Love",
-                      "Key of Strength",
-                      "Key of Symbiosis"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rope Dart",
+                  "Key of Chaos",
+                  "Key of Courage",
+                  "Key of Hope",
+                  "Key of Love",
+                  "Key of Strength",
+                  "Key of Symbiosis"
+                ]
+              }
             }
           }
         ],
@@ -1039,29 +1029,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Second Wind"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Rope Dart"
+                    "items": [
+                      "Second Wind",
+                      "Rope Dart"
+                    ]
                   }
                 }
               ]
@@ -1084,29 +1066,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Second Wind"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Rope Dart"
+                    "items": [
+                      "Second Wind",
+                      "Rope Dart"
+                    ]
                   }
                 }
               ]
@@ -1516,24 +1490,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Second Wind"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
                   "rule": "HasAny",
@@ -1542,6 +1505,12 @@
                       "Rope Dart",
                       "Wingsuit"
                     ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Second Wind"
                   }
                 }
               ]
@@ -3877,29 +3846,21 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Meditation",
-                              "Path of Resilience"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Second Wind"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Meditation",
+                          "Path of Resilience"
+                        ]
+                      }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Wingsuit"
+                        "items": [
+                          "Second Wind",
+                          "Wingsuit"
+                        ]
                       }
                     }
                   ]
@@ -4300,21 +4261,21 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Rope Dart",
+                      "Wingsuit"
+                    ]
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Meditation",
                       "Path of Resilience",
                       "Second Wind"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Wingsuit"
                     ]
                   }
                 }
@@ -4511,29 +4472,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Second Wind"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wingsuit"
+                    "items": [
+                      "Second Wind",
+                      "Wingsuit"
+                    ]
                   }
                 }
               ]
@@ -4843,27 +4796,15 @@
             "name": "Underworld - Fireball Wave Shop -> Underworld - Long Climb Shop",
             "connected_region": "Underworld - Long Climb Shop",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Lightfoot Tabi",
-                      "Strike of the Ninja"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Rope Dart",
+                  "Wingsuit",
+                  "Lightfoot Tabi",
+                  "Strike of the Ninja"
+                ]
+              }
             }
           }
         ],
@@ -5311,29 +5252,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Meditation",
-                          "Path of Resilience"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Second Wind"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Rope Dart"
+                    "items": [
+                      "Second Wind",
+                      "Rope Dart"
+                    ]
                   }
                 }
               ]
@@ -5699,27 +5632,15 @@
             "name": "Elemental Skylands Seal - Fire",
             "id": 11391044,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Aerobatics Warrior",
-                      "Wingsuit"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Rope Dart",
-                      "Strike of the Ninja"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Aerobatics Warrior",
+                  "Wingsuit",
+                  "Rope Dart",
+                  "Strike of the Ninja"
+                ]
+              }
             },
             "item": {
               "name": "Time Shard",
@@ -7207,6 +7128,16 @@
           "default": 100,
           "display_name": "Percent Seals Required"
         },
+        "plando_connections": {
+          "type": "plando_connections",
+          "default": [],
+          "display_name": "Transition Plando Connections"
+        },
+        "portal_plando": {
+          "type": "plando_connections",
+          "default": [],
+          "display_name": "Portal Plando Connections"
+        },
         "progression_balancing": {
           "type": "range",
           "range_start": 0,
@@ -7246,6 +7177,11 @@
           },
           "default": 0,
           "display_name": "Shuffle Level Transitions"
+        },
+        "start_inventory": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         },
         "total_seals": {
           "type": "range",
@@ -7409,7 +7345,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MessengerWorld"
     }
   },
   "game_info": {

@@ -5571,8 +5571,8 @@
             "38": "master",
             "39": "random-low",
             "40": "random-middle",
-            "41": "random-high",
-            "42": "random-sinistral"
+            "41": "random-sinistral",
+            "42": "random-high"
           },
           "default": 38,
           "display_name": "Boss"
@@ -5857,7 +5857,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "L2ACWorld"
     }
   },
   "game_info": {

@@ -16,51 +16,51 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _castlevaniacircleofthemoonworldgen_has_jump_level_1(state: "CollectionState", player: int) -> bool:
+def has_jump_level_1(state: "CollectionState", player: int) -> bool:
     return (state.has('Double', player)) or (state.has('Roc Wing', player))
 
 
-def _castlevaniacircleofthemoonworldgen_has_jump_level_2(state: "CollectionState", player: int) -> bool:
+def has_jump_level_2(state: "CollectionState", player: int) -> bool:
     return state.has('Roc Wing', player)
 
 
-def _castlevaniacircleofthemoonworldgen_has_jump_level_3(state: "CollectionState", player: int) -> bool:
+def has_jump_level_3(state: "CollectionState", player: int) -> bool:
     return state.has('Roc Wing', player)
 
 
-def _castlevaniacircleofthemoonworldgen_has_jump_level_4(state: "CollectionState", player: int) -> bool:
+def has_jump_level_4(state: "CollectionState", player: int) -> bool:
     return state.has('Roc Wing', player)
 
 
-def _castlevaniacircleofthemoonworldgen_has_jump_level_5(state: "CollectionState", player: int) -> bool:
+def has_jump_level_5(state: "CollectionState", player: int) -> bool:
     return state.has('Roc Wing', player)
 
 
-def _castlevaniacircleofthemoonworldgen_has_kick(state: "CollectionState", player: int) -> bool:
+def has_kick(state: "CollectionState", player: int) -> bool:
     return state.has('Kick Boots', player)
 
 
-def _castlevaniacircleofthemoonworldgen_has_tackle(state: "CollectionState", player: int) -> bool:
+def has_tackle(state: "CollectionState", player: int) -> bool:
     return state.has('Tackle', player)
 
 
-def _castlevaniacircleofthemoonworldgen_has_push(state: "CollectionState", player: int) -> bool:
+def has_push(state: "CollectionState", player: int) -> bool:
     return state.has('Heavy Ring', player)
 
 
-def _castlevaniacircleofthemoonworldgen_has_ice_or_stone(state: "CollectionState", player: int) -> bool:
+def has_ice_or_stone(state: "CollectionState", player: int) -> bool:
     return ((state.has('Serpent Card', player)) or (state.has('Cockatrice Card', player))) and ((state.has('Mercury Card', player)) or (state.has('Mars Card', player)))
 
 
-def _castlevaniacircleofthemoonworldgen_can_touch_water(state: "CollectionState", player: int) -> bool:
+def can_touch_water(state: "CollectionState", player: int) -> bool:
     return state.has('Cleansing', player)
 
 
-def _castlevaniacircleofthemoonworldgen_broke_iron_maidens(state: "CollectionState", player: int) -> bool:
+def broke_iron_maidens(state: "CollectionState", player: int) -> bool:
     return state.has('Maiden Detonator', player)
 
 
-def _castlevaniacircleofthemoonworldgen_can_open_ceremonial_door(state: "CollectionState", player: int) -> bool:
+def can_open_ceremonial_door(state: "CollectionState", player: int) -> bool:
     return state.has('Last Key', player)
 
 
@@ -72,7 +72,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Catacomb to Stairway", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_1, helper_name="has_jump_level_1"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
@@ -87,17 +87,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Audience to Machine Top", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Chapel", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2")), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Gallery", player),
-        And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_broke_iron_maidens, helper_name="broke_iron_maidens"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_push, helper_name="has_push"))
+        And(HelperCall(helper_func=broke_iron_maidens, helper_name="broke_iron_maidens"), HelperCall(helper_func=has_push, helper_name="has_push"))
     )
 
     world.set_rule(
@@ -107,7 +107,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Audience to Waterway", player),
-        Or(False_(), Has('Maiden Detonator'))
+        Has('Maiden Detonator', 1)
     )
 
     world.set_rule(
@@ -122,12 +122,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Corridor to Gallery", player),
-        Or(False_(), Has('Maiden Detonator'))
+        Has('Maiden Detonator', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Escape the Gallery Pit", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
@@ -137,12 +137,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Climb to Chapel Top", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Arena Passage", player),
-        And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_push, helper_name="has_push"))
+        And(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_push, helper_name="has_push"))
     )
 
     world.set_rule(
@@ -182,7 +182,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catacomb: Fleamen brain room - Upper", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_1, helper_name="has_jump_level_1")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
     )
 
     world.set_rule(
@@ -192,12 +192,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catacomb: Earth Demon bone pit - Upper", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Muddy Mudman platforms room - Upper", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_1, helper_name="has_jump_level_1"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
@@ -227,32 +227,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Audience Room: Right exterior - Upper", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: 100 meter skelly dash hallway", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower roc ledge", player),
-        And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_5, helper_name="has_jump_level_5"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_tackle, helper_name="has_tackle"))
+        And(HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5"), HelperCall(helper_func=has_tackle, helper_name="has_tackle"))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower push crate room", player),
-        And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_push, helper_name="has_push"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_tackle, helper_name="has_tackle"))
+        And(HelperCall(helper_func=has_push, helper_name="has_push"), HelperCall(helper_func=has_tackle, helper_name="has_tackle"))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Left", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Right", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
     )
 
     world.set_rule(
@@ -262,22 +262,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Outer Wall: Right-brained ledge", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_5, helper_name="has_jump_level_5"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5"))
     )
 
     world.set_rule(
         multiworld.get_location("Triumph Hallway: Entrance Flame Armor climb", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_kick, helper_name="has_kick")), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Boneheaded argument wall kicks room", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Skelly-rang wall kicks room", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(
@@ -287,7 +287,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Flame Armor climb room", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
     )
 
     world.set_rule(
@@ -302,22 +302,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Sharp mind climb room", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Behind Adramelech iron maiden", player),
-        Or(False_(), Has('Maiden Detonator'))
+        Has('Maiden Detonator', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Upper", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Lower", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
     )
 
     world.set_rule(
@@ -332,12 +332,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Lower", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Upper", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
     )
 
     world.set_rule(
@@ -347,22 +347,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Succubus shaft roc ledge", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_4, helper_name="has_jump_level_4")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_5, helper_name="has_jump_level_5"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4")), HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5"))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Optional puzzle ceiling fake wall", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Holy fox hideout - Right roc ledge", player),
-        Or(And(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2")), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2")), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Brain freeze room", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_3, helper_name="has_jump_level_3"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"))
     )
 
     world.set_rule(
@@ -392,7 +392,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ceremonial Room: Fake floor", player),
-        Or(HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=_castlevaniacircleofthemoonworldgen_has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
     )
 
     world.set_rule(

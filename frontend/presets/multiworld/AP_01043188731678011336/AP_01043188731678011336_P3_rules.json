@@ -3224,6 +3224,11 @@
           "default": 2,
           "display_name": "Silver Feathers"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "sticks": {
           "type": "range",
           "range_start": 1,
@@ -3273,7 +3278,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "ShortHikeWorld"
     }
   },
   "game_info": {
@@ -3720,7 +3726,7 @@
               "op": "!=",
               "right": {
                 "type": "constant",
-                "value": "no_glitches"
+                "value": 0
               }
             },
             "body": [
@@ -3815,8 +3821,8 @@
           },
           "op": "==",
           "right": {
-            "type": "list",
-            "value": [
+            "type": "tuple",
+            "elements": [
               {
                 "type": "constant",
                 "value": "Small Key (Hyrule Castle)"
@@ -4124,7 +4130,7 @@
                         "op": "==",
                         "right": {
                           "type": "constant",
-                          "value": "hard"
+                          "value": 2
                         }
                       },
                       {
@@ -4184,7 +4190,7 @@
                           "op": "==",
                           "right": {
                             "type": "constant",
-                            "value": "expert"
+                            "value": 3
                           }
                         },
                         {
@@ -4671,15 +4677,15 @@
                     },
                     "op": "in",
                     "right": {
-                      "type": "list",
-                      "value": [
+                      "type": "tuple",
+                      "elements": [
                         {
                           "type": "constant",
-                          "value": "easy"
+                          "value": 0
                         },
                         {
                           "type": "constant",
-                          "value": "default"
+                          "value": 1
                         }
                       ]
                     }
@@ -5326,7 +5332,7 @@
               "op": "!=",
               "right": {
                 "type": "constant",
-                "value": "inverted"
+                "value": 2
               }
             },
             "if_true": {
@@ -5375,8 +5381,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Small Key (Turtle Rock)"
@@ -5413,8 +5419,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Big Key (Turtle Rock)"

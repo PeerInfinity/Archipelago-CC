@@ -1977,6 +1977,12 @@ class _ShopWrapper:
     # Add json and os imports for canonical options loading
     canonical_imports = 'import json\nimport os\n' if canonical_seed1 else ''
 
+    # Check if any items have hint_text for create_item method
+    has_hint_text = any(item.hint_text for item in data.items.values())
+    hint_text_code = '''        if data.hint_text:
+            item._hint_text = data.hint_text
+''' if has_hint_text else ''
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
@@ -2106,9 +2112,7 @@ class {world_class}(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = {class_name}Item(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
-        return item
+{hint_text_code}        return item
 
 {collect_item_section}{fill_slot_data_section}'''
 

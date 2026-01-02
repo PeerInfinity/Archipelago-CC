@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class Bosshealing(DefaultOnToggle):
     """Option for Heal After Bosses."""
     display_name = "Heal After Bosses"
@@ -445,6 +456,7 @@ class UnchainedKeys(Toggle):
 class TimespinnerWorldGenOptions(PerGameCommonOptions):
     """Options for Timespinner WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     BossHealing: Bosshealing
     BossRando: Bossrando
     Cantoran: Cantoran

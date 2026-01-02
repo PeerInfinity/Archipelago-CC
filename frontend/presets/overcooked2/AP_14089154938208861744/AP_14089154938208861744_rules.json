@@ -67,13 +67,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -119,13 +113,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 7
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 7,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -171,13 +159,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 16
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 16,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -223,13 +205,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 28
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 28,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -278,13 +254,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 44
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 44,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -340,13 +310,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -412,13 +376,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 9
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 9,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -484,13 +442,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 18
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 18,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -536,13 +488,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 31
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 31,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -588,13 +534,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 47
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 47,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -650,13 +590,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 3
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 3,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -705,13 +639,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 10
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 10,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -760,13 +688,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 20
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 20,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -815,13 +737,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 33
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 33,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -870,13 +786,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 50
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 50,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -929,13 +839,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -981,13 +885,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 11
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 11,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1033,13 +931,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 22
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 22,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1085,13 +977,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 36
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 36,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1137,13 +1023,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 53
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 53,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1186,13 +1066,7 @@
                   }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 1,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1230,13 +1104,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 5
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 5,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1302,13 +1170,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 13
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 13,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1354,13 +1216,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 24
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 24,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1369,15 +1225,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "5-3 Level Complete",
                       "5-1 Level Complete",
                       "Purple Ramp"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "5-3 Level Complete"
                   }
                 }
               ]
@@ -1415,13 +1266,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 38
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 38,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1430,15 +1275,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "5-4 Level Complete",
                       "5-1 Level Complete",
                       "Purple Ramp"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "5-4 Level Complete"
                   }
                 }
               ]
@@ -1476,13 +1316,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 56
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 56,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1491,15 +1325,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "5-5 Level Complete",
                       "5-1 Level Complete",
                       "Purple Ramp"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "5-5 Level Complete"
                   }
                 }
               ]
@@ -1537,13 +1366,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 1
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 1,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1589,13 +1412,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1604,15 +1421,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "6-1 Level Complete",
                       "5-1 Level Complete",
                       "Purple Ramp"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "6-1 Level Complete"
                   }
                 }
               ]
@@ -1650,13 +1462,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 15
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 15,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1665,15 +1471,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "6-2 Level Complete",
                       "5-1 Level Complete",
                       "Purple Ramp"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "6-2 Level Complete"
                   }
                 }
               ]
@@ -1711,13 +1512,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 26
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 26,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -1758,29 +1553,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "5-1 Level Complete",
-                          "Purple Ramp"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "6-1 Level Complete",
-                          "Red Ramp"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "Compare",
                   "args": {
                     "left": {
@@ -1806,21 +1578,21 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 41
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 41,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "6-4 Level Complete"
+                    "items": [
+                      "6-4 Level Complete",
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete",
+                      "Red Ramp"
+                    ]
                   }
                 }
               ]
@@ -1833,29 +1605,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "5-1 Level Complete",
-                          "Purple Ramp"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "6-1 Level Complete",
-                          "Red Ramp"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "Compare",
                   "args": {
                     "left": {
@@ -1881,21 +1630,21 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 60
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 60,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "6-5 Level Complete"
+                    "items": [
+                      "6-5 Level Complete",
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete",
+                      "Red Ramp"
+                    ]
                   }
                 }
               ]
@@ -1905,24 +1654,13 @@
             "name": "Overworld -> Kevin-1",
             "connected_region": "Kevin-1",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Dark Green Ramp",
-                      "Kevin-1"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kevin-1"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kevin-1",
+                  "Dark Green Ramp"
+                ]
+              }
             }
           },
           {
@@ -1979,62 +1717,30 @@
             "name": "Overworld -> Kevin-7",
             "connected_region": "Kevin-7",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "Purple Ramp"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kevin-7"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kevin-7",
+                  "5-1 Level Complete",
+                  "Purple Ramp"
+                ]
+              }
             }
           },
           {
             "name": "Overworld -> Kevin-8",
             "connected_region": "Kevin-8",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "5-1 Level Complete",
-                          "Purple Ramp"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "6-1 Level Complete",
-                          "Red Ramp"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kevin-8"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kevin-8",
+                  "5-1 Level Complete",
+                  "Purple Ramp",
+                  "6-1 Level Complete",
+                  "Red Ramp"
+                ]
+              }
             }
           }
         ],
@@ -2980,129 +2686,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wok Wheels"
+                    "items": [
+                      "Wok Wheels",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -3530,129 +3226,118 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Throw/Catch"
+                    "items": [
+                      "Progressive Throw/Catch",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -4872,129 +4557,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Fire Extinguisher"
+                    "items": [
+                      "Fire Extinguisher",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -5422,129 +5097,118 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Throw/Catch"
+                    "items": [
+                      "Progressive Throw/Catch",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -5717,129 +5381,118 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Throw/Catch"
+                    "items": [
+                      "Progressive Throw/Catch",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -6012,129 +5665,118 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Throw/Catch"
+                    "items": [
+                      "Progressive Throw/Catch",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -6307,129 +5949,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Control Stick Batteries"
+                    "items": [
+                      "Control Stick Batteries",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -7300,6 +6932,68 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
@@ -7307,6 +7001,65 @@
                       "Fire Extinguisher"
                     ]
                   }
+                }
+              ]
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          },
+          {
+            "name": "4-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
                   "rule": "weighted_sum",
@@ -7369,148 +7122,15 @@
                       "_converted_from_ast": true
                     }
                   ]
-                }
-              ]
-            },
-            "item": {
-              "name": "Star",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          },
-          {
-            "name": "4-2 (3-Star)",
-            "id": null,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
-                        ]
-                      }
-                    }
-                  ]
                 },
                 {
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate",
                       "Faster Condiment/Drink Switch",
                       "Fire Extinguisher"
                     ]
@@ -7686,129 +7306,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Control Stick Batteries"
+                    "items": [
+                      "Control Stick Batteries",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -7972,129 +7582,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wok Wheels"
+                    "items": [
+                      "Wok Wheels",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -8531,129 +8131,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Control Stick Batteries"
+                    "items": [
+                      "Control Stick Batteries",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -10137,129 +9727,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wok Wheels"
+                    "items": [
+                      "Wok Wheels",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -10696,129 +10276,119 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Control Stick Batteries"
+                    "items": [
+                      "Control Stick Batteries",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -11690,6 +11260,68 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
@@ -11698,6 +11330,65 @@
                       "Spare Plate"
                     ]
                   }
+                }
+              ]
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          },
+          {
+            "name": "6-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
                   "rule": "weighted_sum",
@@ -11760,148 +11451,12 @@
                       "_converted_from_ast": true
                     }
                   ]
-                }
-              ]
-            },
-            "item": {
-              "name": "Star",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          },
-          {
-            "name": "6-6 (3-Star)",
-            "id": null,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
-                        ]
-                      }
-                    }
-                  ]
                 },
                 {
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
                       "Spare Plate"
@@ -13876,129 +13431,118 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Dish Scrubber",
-                                1.0
-                              ],
-                              [
-                                "Sharp Knife",
-                                1.0
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.5
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.25
-                              ],
-                              [
-                                "Guest Patience",
-                                0.25
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "weighted_sum",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1.0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": [
-                              [
-                                "Progressive Throw/Catch",
-                                0.4
-                              ],
-                              [
-                                "Progressive Dash",
-                                0.35
-                              ],
-                              [
-                                "Sharp Knife",
-                                0.3
-                              ],
-                              [
-                                "Dish Scrubber",
-                                0.25
-                              ],
-                              [
-                                "Larger Tip Jar",
-                                0.2
-                              ],
-                              [
-                                "Spare Plate",
-                                0.2
-                              ],
-                              [
-                                "Burn Leniency",
-                                0.15
-                              ],
-                              [
-                                "Order Lookahead",
-                                0.15
-                              ],
-                              [
-                                "Clean Dishes",
-                                0.1
-                              ],
-                              [
-                                "Guest Patience",
-                                0.1
-                              ]
-                            ]
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAll",
+                      "rule": "Constant",
                       "args": {
-                        "items": [
-                          "Larger Tip Jar",
-                          "Progressive Dash",
-                          "Progressive Throw/Catch",
-                          "Spare Plate"
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Dish Scrubber",
+                            1.0
+                          ],
+                          [
+                            "Sharp Knife",
+                            1.0
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.5
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.25
+                          ],
+                          [
+                            "Guest Patience",
+                            0.25
+                          ]
                         ]
-                      }
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "weighted_sum",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1.0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": [
+                          [
+                            "Progressive Throw/Catch",
+                            0.4
+                          ],
+                          [
+                            "Progressive Dash",
+                            0.35
+                          ],
+                          [
+                            "Sharp Knife",
+                            0.3
+                          ],
+                          [
+                            "Dish Scrubber",
+                            0.25
+                          ],
+                          [
+                            "Larger Tip Jar",
+                            0.2
+                          ],
+                          [
+                            "Spare Plate",
+                            0.2
+                          ],
+                          [
+                            "Burn Leniency",
+                            0.15
+                          ],
+                          [
+                            "Order Lookahead",
+                            0.15
+                          ],
+                          [
+                            "Clean Dishes",
+                            0.1
+                          ],
+                          [
+                            "Guest Patience",
+                            0.1
+                          ]
+                        ]
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Throw/Catch"
+                    "items": [
+                      "Progressive Throw/Catch",
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -16094,7 +15638,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "Overcooked2World"
     }
   },
   "game_info": {

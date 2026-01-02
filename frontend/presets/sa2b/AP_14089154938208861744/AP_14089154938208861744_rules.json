@@ -1659,18 +1659,18 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Death Chamber - 1"
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Knuckles - Hammer Gloves",
                       "Knuckles - Shovel Claws"
                     ]
-                  }
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Death Chamber - 1"
                   }
                 }
               ]
@@ -2710,18 +2710,18 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Weapons Bed - 1"
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Eggman - Jet Engine",
                       "Eggman - Large Cannon"
                     ]
-                  }
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Weapons Bed - 1"
                   }
                 }
               ]
@@ -3515,18 +3515,18 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Cannon's Core - 1"
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Eggman - Jet Engine",
                       "Tails - Booster"
                     ]
-                  }
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Cannon's Core - 1"
                   }
                 }
               ]
@@ -3630,52 +3630,62 @@
       "Chao Race - Beginner": {
         "name": "Chao Race - Beginner",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Beginner": {
         "name": "Chao Karate - Beginner",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Race - Intermediate": {
         "name": "Chao Race - Intermediate",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Standard": {
         "name": "Chao Karate - Standard",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Race - Expert": {
         "name": "Chao Race - Expert",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Expert": {
         "name": "Chao Karate - Expert",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Super": {
         "name": "Chao Karate - Super",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Kart Race - Beginner": {
         "name": "Kart Race - Beginner",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Kart Race - Intermediate": {
         "name": "Kart Race - Intermediate",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Kart Race - Expert": {
         "name": "Kart Race - Expert",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Gate 0": {
         "name": "Gate 0",
@@ -10937,7 +10947,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SA2BWorld"
     }
   },
   "game_info": {

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,31 +16,31 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _ahatintimeworldgen_Difficulty(state: "CollectionState", player: int, value = None) -> bool:
+def Difficulty(state: "CollectionState", player: int, value = None) -> bool:
     return value
 
 
-def _ahatintimeworldgen_can_clear_alpine(state: "CollectionState", player: int) -> bool:
+def can_clear_alpine(state: "CollectionState", player: int) -> bool:
     return (state.has('Birdhouse Cleared', player)) and (state.has('Lava Cake Cleared', player)) and (state.has('Windmill Cleared', player)) and (state.has('Twilight Bell Cleared', player))
 
 
-def _ahatintimeworldgen_can_hit(state: "CollectionState", player: int, umbrella_only: bool = False) -> bool:
-    return (True if not (False) else (state.has('Umbrella', player)) or ((not (umbrella_only)) and (_ahatintimeworldgen_can_use_hat(state, player, 1))))
+def can_hit(state: "CollectionState", player: int, umbrella_only: bool = False) -> bool:
+    return (True if not (state.multiworld.worlds[player].options.UmbrellaLogic) else (state.has('Umbrella', player)) or ((not (umbrella_only)) and (can_use_hat(state, player, 1))))
 
 
-def _ahatintimeworldgen_can_use_hat(state: "CollectionState", player: int, hat = None) -> bool:
-    return (state.has({0: 'Sprint Hat', 1: 'Brewing Hat', 2: 'Ice Hat', 3: 'Dweller Mask', 4: 'Time Stop Hat'}[hat], player) if False else (True if ({0: 8, 1: 4, 2: 8, 3: 6, 4: 5}[hat] <= 0) else state.has('Yarn', player, _ahatintimeworldgen_get_hat_cost(state, player, hat))))
+def can_use_hat(state: "CollectionState", player: int, hat = None) -> bool:
+    return (state.has({0: 'Sprint Hat', 1: 'Brewing Hat', 2: 'Ice Hat', 3: 'Dweller Mask', 4: 'Time Stop Hat'}[hat], player) if state.multiworld.worlds[player].options.HatItems else (True if ({0: 8, 1: 4, 2: 8, 3: 6, 4: 5}[hat] <= 0) else state.has('Yarn', player, get_hat_cost(state, player, hat))))
 
 
-def _ahatintimeworldgen_can_use_hookshot(state: "CollectionState", player: int) -> bool:
+def can_use_hookshot(state: "CollectionState", player: int) -> bool:
     return state.has('Hookshot Badge', player)
 
 
-def _ahatintimeworldgen_get_difficulty(state: "CollectionState", player: int) -> bool:
-    return _ahatintimeworldgen_Difficulty(state, player, -1)
+def get_difficulty(state: "CollectionState", player: int) -> bool:
+    return Difficulty(state, player, state.multiworld.worlds[player].options.LogicDifficulty)
 
 
-def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat = None) -> bool:
+def get_hat_cost(state: "CollectionState", player: int, hat = None) -> bool:
     cost = 0
     for h in [2, 4, 1, 0, 3]:
         cost += {0: 8, 1: 4, 2: 8, 3: 6, 4: 5}[h]
@@ -49,16 +49,16 @@ def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat 
     return cost
 
 
-def _ahatintimeworldgen_has_paintings(state: "CollectionState", player: int, count = None, allow_skip: bool = True) -> bool:
-    return (True if not (_ahatintimeworldgen_painting_logic(state, player)) else ((True if (_ahatintimeworldgen_get_difficulty(state, player) >= 0) else None) if (not (False)) and (allow_skip) else state.has('Progressive Painting Unlock', player, count)))
+def has_paintings(state: "CollectionState", player: int, count = None, allow_skip: bool = True) -> bool:
+    return (True if not (painting_logic(state, player)) else ((True if (get_difficulty(state, player) >= 0) else None) if (not (state.multiworld.worlds[player].options.NoPaintingSkips)) and (allow_skip) else state.has('Progressive Painting Unlock', player, count)))
 
 
-def _ahatintimeworldgen_has_relic_combo(state: "CollectionState", player: int, relic = None) -> bool:
+def has_relic_combo(state: "CollectionState", player: int, relic = None) -> bool:
     return state.has_group(relic, player, len(state.multiworld.worlds[player].item_name_groups[relic]))
 
 
-def _ahatintimeworldgen_painting_logic(state: "CollectionState", player: int) -> bool:
-    return bool(False)
+def painting_logic(state: "CollectionState", player: int) -> bool:
+    return bool(state.multiworld.worlds[player].options.ShuffleSubconPaintings)
 
 
 def set_rules(world: "World") -> None:
@@ -89,17 +89,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Time's End", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 35))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 35))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Lab Portal - Entrance 1", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 8))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 8))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Gallery Portal - Entrance 1", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Time Piece', 17))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Time Piece', 17))
     )
 
     world.set_rule(
@@ -134,7 +134,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -149,7 +149,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -164,7 +164,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -179,7 +179,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -194,7 +194,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
-        And(And(And(And(And(And(And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has("Snatcher's Contract - The Subcon Well")), Has("Snatcher's Contract - Toilet of Doom")), True_()), Has("Snatcher's Contract - Queen Vanessa's Manor")), True_()), Has("Snatcher's Contract - Mail Delivery Service")), True_())
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
@@ -209,7 +209,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -224,7 +224,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -269,57 +269,57 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Train',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
-        And(And(CanReachRegion('Mail Delivery Service'), CanReachLocation("Act Completion (Mail Delivery Service)")), And(CanReachRegion('Train Rush'), CanReachLocation("Act Completion (Train Rush)")))
+        And(CanReachRegion('Mail Delivery Service'), CanReachLocation("Act Completion (Mail Delivery Service)"), CanReachRegion('Train Rush'), CanReachLocation("Act Completion (Train Rush)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
-        And(And(CanReachRegion('Heating Up Mafia Town'), CanReachLocation("Act Completion (Heating Up Mafia Town)")), CanReachRegion('Alpine Free Roam'))
+        And(CanReachRegion('Heating Up Mafia Town'), CanReachLocation("Act Completion (Heating Up Mafia Town)"), CanReachRegion('Alpine Free Roam'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
-        And(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
-        And(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
-        And(And(CanReachRegion('Heating Up Mafia Town'), CanReachLocation("Act Completion (Heating Up Mafia Town)")), CanReachRegion('Alpine Free Roam'))
+        And(CanReachRegion('Heating Up Mafia Town'), CanReachLocation("Act Completion (Heating Up Mafia Town)"), CanReachRegion('Alpine Free Roam'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
-        And(And(And(And(And(And(And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has("Snatcher's Contract - The Subcon Well")), Has("Snatcher's Contract - Toilet of Doom")), True_()), Has("Snatcher's Contract - Queen Vanessa's Manor")), True_()), Has("Snatcher's Contract - Mail Delivery Service")), True_())
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Train',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
-        And(And(And(And(And(And(And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has("Snatcher's Contract - The Subcon Well")), Has("Snatcher's Contract - Toilet of Doom")), True_()), Has("Snatcher's Contract - Queen Vanessa's Manor")), True_()), Has("Snatcher's Contract - Mail Delivery Service")), True_())
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
@@ -349,7 +349,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -364,7 +364,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -379,7 +379,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -394,17 +394,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_hit, helper_name="can_hit"), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=_ahatintimeworldgen_has_paintings, helper_name="has_paintings", args=(1, False,)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_hit, helper_name="can_hit"), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=_ahatintimeworldgen_has_paintings, helper_name="has_paintings", args=(1, False,)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -419,12 +419,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 3", player),
-        And(And(And(And(And(And(And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has("Snatcher's Contract - The Subcon Well")), Has("Snatcher's Contract - Toilet of Doom")), True_()), Has("Snatcher's Contract - Queen Vanessa's Manor")), True_()), Has("Snatcher's Contract - Mail Delivery Service")), True_())
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -439,27 +439,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
-        And(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
-        And(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
-        And(And(And(And(And(And(And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has("Snatcher's Contract - The Subcon Well")), Has("Snatcher's Contract - Toilet of Doom")), True_()), Has("Snatcher's Contract - Queen Vanessa's Manor")), True_()), Has("Snatcher's Contract - Mail Delivery Service")), True_())
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Alpine Skyline - Finale", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_clear_alpine, helper_name="can_clear_alpine")
+        HelperCall(helper_func=can_clear_alpine, helper_name="can_clear_alpine")
     )
 
     world.set_rule(
         multiworld.get_entrance("AFR -> Alpine Skyline Area", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
@@ -469,7 +469,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        And(And(HelperCall(helper_func=_ahatintimeworldgen_can_hit, helper_name="can_hit"), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")), HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
     )
 
     world.set_rule(
@@ -479,37 +479,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Birdhouse", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Lava Cake", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Windmill", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Twilight Bell", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',))
+        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Crayon',))
     )
 
     world.set_rule(
         multiworld.get_entrance("SF Area -> SF Behind Boss Firewall", player),
-        HelperCall(helper_func=_ahatintimeworldgen_has_paintings, helper_name="has_paintings", args=(1, False,))
+        HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,))
     )
 
     world.set_rule(
         multiworld.get_entrance("SF Behind Boss Firewall -> SF Boss Arena", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has('TOD Access'))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), Has('TOD Access'))
     )
     # Location rules
     world.set_rule(
@@ -519,172 +519,172 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Gallery)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Hallway Brewing Crate", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Secret Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Cheating the Race)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio)", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Murder on the Owl Express - Raven Suite Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Train Rush)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Window Platform", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cardboard Conductor", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Above Conductor Sign", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Disco Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Tightrope", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cameras", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Locked Room", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio Basement)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - DJ Grooves Sign Chest", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Tepee Chest", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Conductor Chest", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Well - On Pipe", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Subcon Well)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_hit, helper_name="can_hit"), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=_ahatintimeworldgen_has_paintings, helper_name="has_paintings", args=(1, False,)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Mail Delivery Service)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Zipline", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(4,)))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Twilight Path", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        And(And(HelperCall(helper_func=_ahatintimeworldgen_can_hit, helper_name="can_hit", args=(True,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has('AFR Access')), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit", args=(True,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), Has('AFR Access'))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Bird Pass Fork", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Ember Summit", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Outpost Horn", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Windy Passage", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Birdhouse: Dweller Platforms Relic", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Illness has Spread)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - The Twilight Bell)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Curly Tail Trail)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
@@ -699,12 +699,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Blue Vault Brewing Crate", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Ice Hat Cage", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
@@ -714,32 +714,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Ruined Tower", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Hot Air Balloon", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Secret Cave", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('HUMT Access'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), Has('HUMT Access'))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Above Boats", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"), Has('HUMT Access'))
+        Or(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), Has('HUMT Access'))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Clock Tower Chest", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Lighthouse", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
@@ -754,70 +754,70 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Swamp Gravestone", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Noose Treehouse", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Long Tree Climb Chest", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Infinite Yarn Bush", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Magnet Badge Bush", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Stump", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Floating Rocks", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Platforming Tree B", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Shack", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
+        HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Tall Tree Hookshot Swing", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Pipe)", player),
-        HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Village)", player),
-        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Umbrella'))
+        Or(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Finale)", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
     )
 
     world.set_rule(
         multiworld.get_location("Time Piece Cluster", player),
-        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
     )

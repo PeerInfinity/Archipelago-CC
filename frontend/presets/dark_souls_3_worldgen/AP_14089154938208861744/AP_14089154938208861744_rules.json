@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "DarkSoulsIIIWorldGenWorld"
+    "1": "DarkSouls3World"
   },
   "regions": {
     "1": {
@@ -14844,9 +14844,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Grand Archives Key",
                       "Pyromancy Flame",
-                      "Transposing Kiln",
-                      "Grand Archives Key"
+                      "Transposing Kiln"
                     ]
                   }
                 }
@@ -22252,7 +22252,6 @@
       },
       "Man-grub's Staff": {
         "name": "Man-grub's Staff",
-        "hint_text": "Man grub's Staff",
         "id": 100179,
         "groups": [
           "Everything",
@@ -22261,7 +22260,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Man grub's Staff"
       },
       "Archdeacon's Great Staff": {
         "name": "Archdeacon's Great Staff",
@@ -22385,7 +22385,6 @@
       },
       "Saint-tree Bellvine": {
         "name": "Saint-tree Bellvine",
-        "hint_text": "Saint tree Bellvine",
         "id": 100190,
         "groups": [
           "Everything",
@@ -22394,7 +22393,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Saint tree Bellvine"
       },
       "Caitha's Chime": {
         "name": "Caitha's Chime",
@@ -23169,7 +23169,6 @@
       },
       "East-West Shield": {
         "name": "East-West Shield",
-        "hint_text": "East West Shield",
         "id": 100255,
         "groups": [
           "Everything",
@@ -23178,7 +23177,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "East West Shield"
       },
       "Sunlight Shield": {
         "name": "Sunlight Shield",
@@ -28873,7 +28873,6 @@
       },
       "Rime-blue Moss Clump": {
         "name": "Rime-blue Moss Clump",
-        "hint_text": "Rime blue Moss Clump",
         "id": 100730,
         "groups": [
           "Everything",
@@ -28882,11 +28881,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "Rime blue Moss Clump"
       },
       "Rime-blue Moss Clump x2": {
         "name": "Rime-blue Moss Clump x2",
-        "hint_text": "Rime blue Moss Clump x2",
         "id": 100731,
         "groups": [
           "Everything",
@@ -28895,7 +28894,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Rime blue Moss Clump x2"
       },
       "Rime-blue Moss Clump x4": {
         "name": "Rime-blue Moss Clump x4",
@@ -31546,7 +31546,6 @@
       },
       "Cinders of a Lord - Abyss Watcher": {
         "name": "Cinders of a Lord - Abyss Watcher",
-        "hint_text": "Cinders of a Lord   Abyss Watcher",
         "id": 100950,
         "groups": [
           "Cinders",
@@ -31557,11 +31556,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Cinders of a Lord   Abyss Watcher"
       },
       "Cinders of a Lord - Aldrich": {
         "name": "Cinders of a Lord - Aldrich",
-        "hint_text": "Cinders of a Lord   Aldrich",
         "id": 100951,
         "groups": [
           "Cinders",
@@ -31572,11 +31571,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Cinders of a Lord   Aldrich"
       },
       "Cinders of a Lord - Yhorm the Giant": {
         "name": "Cinders of a Lord - Yhorm the Giant",
-        "hint_text": "Cinders of a Lord   Yhorm the Giant",
         "id": 100952,
         "groups": [
           "Cinders",
@@ -31587,11 +31586,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Cinders of a Lord   Yhorm the Giant"
       },
       "Cinders of a Lord - Lothric Prince": {
         "name": "Cinders of a Lord - Lothric Prince",
-        "hint_text": "Cinders of a Lord   Lothric Prince",
         "id": 100953,
         "groups": [
           "Cinders",
@@ -31602,7 +31601,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Cinders of a Lord   Lothric Prince"
       },
       "Great Swamp Pyromancy Tome": {
         "name": "Great Swamp Pyromancy Tome",
@@ -31835,7 +31835,6 @@
       },
       "Excrement-covered Ashes": {
         "name": "Excrement-covered Ashes",
-        "hint_text": "Excrement covered Ashes",
         "id": 100972,
         "groups": [
           "Everything",
@@ -31844,7 +31843,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Excrement covered Ashes"
       },
       "Prisoner Chief's Ashes": {
         "name": "Prisoner Chief's Ashes",
@@ -34657,7 +34657,6 @@
       },
       "US -> RS": {
         "name": "US -> RS",
-        "hint_text": "US  > RS",
         "id": null,
         "groups": [
           "Event"
@@ -34665,11 +34664,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "US  > RS"
       },
       "RS -> FK": {
         "name": "RS -> FK",
-        "hint_text": "RS  > FK",
         "id": null,
         "groups": [
           "Event"
@@ -34677,11 +34676,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "RS  > FK"
       },
       "CD -> PW1": {
         "name": "CD -> PW1",
-        "hint_text": "CD  > PW1",
         "id": null,
         "groups": [
           "Event"
@@ -34689,11 +34688,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "CD  > PW1"
       },
       "IBV -> ID": {
         "name": "IBV -> ID",
-        "hint_text": "IBV  > ID",
         "id": null,
         "groups": [
           "Event"
@@ -34701,7 +34700,8 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "IBV  > ID"
       }
     }
   },
@@ -36703,10 +36703,23 @@
         "auto_equip": false,
         "death_link": false,
         "early_banner": 0,
+        "enable_armor_locations": "",
+        "enable_boss_locations": "",
         "enable_dlc": false,
+        "enable_health_upgrade_locations": "",
+        "enable_key_locations": "",
+        "enable_misc_locations": "",
         "enable_ngp": false,
+        "enable_npc_locations": "",
+        "enable_progressive_locations": "",
+        "enable_ring_locations": "",
+        "enable_shield_locations": "",
+        "enable_spell_locations": "",
+        "enable_weapon_locations": "",
         "exclude_locations": [],
         "excluded_location_behavior": 2,
+        "excluded_locations": "",
+        "guaranteed_items": "",
         "impatient_mimics": false,
         "item_links": [],
         "late_basin_of_vows": 0,
@@ -36718,11 +36731,13 @@
         "min_levels_in_10": 1,
         "min_levels_in_5": 1,
         "missable_location_behavior": 2,
+        "missable_locations": "",
         "no_equip_load": false,
         "no_spell_requirements": false,
         "no_weapon_requirements": false,
         "non_local_items": [],
         "plando_items": [],
+        "pool_type": "",
         "priority_locations": [],
         "progression_balancing": 50,
         "random_starting_loadout": true,
@@ -36743,7 +36758,8 @@
         "smooth_upgraded_weapons": true,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -36780,15 +36796,59 @@
           "default": 0,
           "display_name": "Early Small Lothric Banner"
         },
+        "enable_armor_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_boss_locations": {
+          "type": "removed",
+          "default": ""
+        },
         "enable_dlc": {
           "type": "toggle",
           "default": 0,
           "display_name": "Enable DLC"
         },
+        "enable_health_upgrade_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_key_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_misc_locations": {
+          "type": "removed",
+          "default": ""
+        },
         "enable_ngp": {
           "type": "toggle",
           "default": 0,
           "display_name": "Enable NG+"
+        },
+        "enable_npc_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_progressive_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_ring_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_shield_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_spell_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_weapon_locations": {
+          "type": "removed",
+          "default": ""
         },
         "excluded_location_behavior": {
           "type": "choice",
@@ -36799,6 +36859,14 @@
           },
           "default": 2,
           "display_name": "Excluded Locations Behavior"
+        },
+        "excluded_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "guaranteed_items": {
+          "type": "removed",
+          "default": ""
         },
         "impatient_mimics": {
           "type": "toggle",
@@ -36868,6 +36936,10 @@
           "default": 2,
           "display_name": "Missable Locations Behavior"
         },
+        "missable_locations": {
+          "type": "removed",
+          "default": ""
+        },
         "no_equip_load": {
           "type": "toggle",
           "default": 0,
@@ -36882,6 +36954,10 @@
           "type": "toggle",
           "default": 0,
           "display_name": "No Weapon Requirements"
+        },
+        "pool_type": {
+          "type": "removed",
+          "default": ""
         },
         "progression_balancing": {
           "type": "range",
@@ -36979,6 +37055,11 @@
           "type": "default_on_toggle",
           "default": 1,
           "display_name": "Smooth Upgraded Weapons"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "yhorm_location": "Vordt of the Boreal Valley",
@@ -39594,7 +39675,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "DarkSouls3World"
     }
   },
   "game_info": {

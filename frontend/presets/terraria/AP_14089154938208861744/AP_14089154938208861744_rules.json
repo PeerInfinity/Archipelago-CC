@@ -1683,10 +1683,8 @@
                         "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "not"
-                  },
-                  "_converted_from_ast": true
+                    }
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1835,10 +1833,8 @@
                             "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -1988,40 +1984,7 @@
             "name": "Meteorite",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "AST_setting_value",
-                      "args": {
-                        "setting": "calamity",
-                        "_original_ast_type": "setting_value"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Astral Infection"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Meteorite Bar",
-                      "Post-Evil Boss"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Meteorite",
@@ -2139,46 +2102,34 @@
             "name": "Hellstone",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Adamantite Pickaxe",
-                      "Astral Pickaxe",
-                      "Beastial Pickaxe",
-                      "Blossom Pickaxe",
-                      "Chlorophyte Pickaxe",
-                      "Cobalt Pickaxe",
-                      "Crystyl Crusher",
-                      "Evil Pickaxe",
-                      "Gelpick",
-                      "Genesis Pickaxe",
-                      "Laser Drill",
-                      "Luminite Pickaxe",
-                      "Molten Pickaxe",
-                      "Mythril Pickaxe",
-                      "Pickaxe Axe",
-                      "Picksaw",
-                      "Seismic Hampick",
-                      "Shardlight Pickaxe",
-                      "Shroomite Digging Claw",
-                      "Skyfringe Pickaxe",
-                      "Spectre Pickaxe"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Hardmode",
-                      "Hellstone Bar"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Adamantite Pickaxe",
+                  "Astral Pickaxe",
+                  "Beastial Pickaxe",
+                  "Blossom Pickaxe",
+                  "Chlorophyte Pickaxe",
+                  "Cobalt Pickaxe",
+                  "Crystyl Crusher",
+                  "Evil Pickaxe",
+                  "Gelpick",
+                  "Genesis Pickaxe",
+                  "Laser Drill",
+                  "Luminite Pickaxe",
+                  "Molten Pickaxe",
+                  "Mythril Pickaxe",
+                  "Pickaxe Axe",
+                  "Picksaw",
+                  "Seismic Hampick",
+                  "Shardlight Pickaxe",
+                  "Shroomite Digging Claw",
+                  "Skyfringe Pickaxe",
+                  "Spectre Pickaxe",
+                  "Hardmode",
+                  "Hellstone Bar"
+                ]
+              }
             },
             "item": {
               "name": "Hellstone",
@@ -2706,18 +2657,10 @@
             "name": "Not the Bees!",
             "id": 8257794,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bee Armor"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Bee Armor"
+              }
             },
             "item": {
               "name": "Reward: Neptune's Shell",
@@ -2859,54 +2802,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "HasAll",
-                              "args": {
-                                "items": [
-                                  "Hardmode Anvil",
-                                  "Lihzahrd Brick",
-                                  "Lihzahrd Temple"
-                                ]
-                              }
-                            },
-                            {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "getfixedboi",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mirage Mirror"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "AST_setting_value",
-                      "args": {
-                        "setting": "calamity",
-                        "_original_ast_type": "setting_value"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3000,32 +2901,21 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
+                      "rule": "Or",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "HasAll",
-                              "args": {
-                                "items": [
-                                  "Ancient Manipulator",
-                                  "Polterplasm"
-                                ]
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Post-Moon Lord"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Ancient Manipulator",
+                              "Polterplasm"
+                            ]
+                          }
                         },
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Dungeon"
+                            "item_name": "Post-Moon Lord"
                           }
                         }
                       ]
@@ -3045,6 +2935,12 @@
                         "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dungeon"
+                      }
                     }
                   ]
                 },
@@ -3337,10 +3233,8 @@
                             "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -4076,10 +3970,8 @@
                                     "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
-                                },
-                                "_original_ast_type": "not"
-                              },
-                              "_converted_from_ast": true
+                                }
+                              }
                             },
                             {
                               "rule": "Has",
@@ -4773,48 +4665,43 @@
                           ]
                         },
                         {
-                          "rule": "Or",
+                          "rule": "And",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "HasAll",
-                                  "args": {
-                                    "items": [
-                                      "Auric Bar",
-                                      "Brimstone Slag",
-                                      "Core of Calamity",
-                                      "Cosmic Anvil",
-                                      "Fabsol's Vodka"
-                                    ]
-                                  }
-                                },
-                                {
-                                  "rule": "AST_setting_value",
-                                  "args": {
-                                    "setting": "calamity",
-                                    "_original_ast_type": "setting_value"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "AST_setting_value",
-                                  "args": {
-                                    "setting": "getfixedboi",
-                                    "_original_ast_type": "setting_value"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
                             },
                             {
-                              "rule": "Has",
+                              "rule": "AST_setting_value",
                               "args": {
-                                "item_name": "Hallow"
+                                "setting": "getfixedboi",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Auric Bar",
+                                  "Brimstone Slag",
+                                  "Core of Calamity",
+                                  "Cosmic Anvil",
+                                  "Fabsol's Vodka"
+                                ]
                               }
                             }
                           ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Hallow"
+                          }
                         }
                       ]
                     },
@@ -5004,40 +4891,35 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "Or",
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Hardmode",
+                                      "Lihzahrd Temple",
+                                      "Post-Plantera"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "rule": "And",
                                   "children": [
+                                    {
+                                      "rule": "AST_setting_value",
+                                      "args": {
+                                        "setting": "calamity",
+                                        "_original_ast_type": "setting_value"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
                                     {
                                       "rule": "HasAll",
                                       "args": {
                                         "items": [
-                                          "Hardmode",
-                                          "Lihzahrd Temple",
-                                          "Post-Plantera"
+                                          "Essence of Sunlight",
+                                          "Hardmode Anvil",
+                                          "Lihzahrd Temple"
                                         ]
                                       }
-                                    },
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "AST_setting_value",
-                                          "args": {
-                                            "setting": "calamity",
-                                            "_original_ast_type": "setting_value"
-                                          },
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "HasAll",
-                                          "args": {
-                                            "items": [
-                                              "Essence of Sunlight",
-                                              "Hardmode Anvil",
-                                              "Lihzahrd Temple"
-                                            ]
-                                          }
-                                        }
-                                      ]
                                     }
                                   ]
                                 },
@@ -5093,103 +4975,48 @@
                   ]
                 },
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Auric Bar",
-                              "Brimstone Slag",
-                              "Core of Calamity",
-                              "Cosmic Anvil",
-                              "Fabsol's Vodka"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "AST_setting_value",
-                          "args": {
-                            "setting": "calamity",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "AST_setting_value",
-                          "args": {
-                            "setting": "getfixedboi",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "calamity",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Post-Plantera"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Hallow",
-                              "Hardmode"
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
                     {
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Bug Net",
-                          "Hardmode"
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
                         ]
                       }
-                    },
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
                     {
-                      "rule": "And",
+                      "rule": "Or",
                       "children": [
                         {
                           "rule": "AST_setting_value",
                           "args": {
                             "setting": "calamity",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "AST_setting_value",
-                          "args": {
-                            "setting": "getfixedboi",
                             "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
@@ -5197,10 +5024,55 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Titan Heart"
+                            "item_name": "Post-Plantera"
                           }
                         }
                       ]
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Hallow",
+                          "Hardmode"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Bug Net",
+                      "Hardmode"
+                    ]
+                  }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Titan Heart"
+                      }
                     }
                   ]
                 },
@@ -5370,18 +5242,6 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Auric Bar",
-                          "Brimstone Slag",
-                          "Core of Calamity",
-                          "Cosmic Anvil",
-                          "Fabsol's Vodka"
-                        ]
-                      }
-                    },
-                    {
                       "rule": "AST_setting_value",
                       "args": {
                         "setting": "calamity",
@@ -5396,6 +5256,18 @@
                         "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -5425,18 +5297,6 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Auric Bar",
-                          "Brimstone Slag",
-                          "Core of Calamity",
-                          "Cosmic Anvil",
-                          "Fabsol's Vodka"
-                        ]
-                      }
-                    },
-                    {
                       "rule": "AST_setting_value",
                       "args": {
                         "setting": "calamity",
@@ -5451,6 +5311,18 @@
                         "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -5540,10 +5412,8 @@
                                     "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
-                                },
-                                "_original_ast_type": "not"
-                              },
-                              "_converted_from_ast": true
+                                }
+                              }
                             },
                             {
                               "rule": "Has",
@@ -5729,10 +5599,8 @@
                             "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -5761,10 +5629,8 @@
                                     "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
-                                },
-                                "_original_ast_type": "not"
-                              },
-                              "_converted_from_ast": true
+                                }
+                              }
                             },
                             {
                               "rule": "Has",
@@ -6110,10 +5976,8 @@
                             "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -6171,10 +6035,8 @@
                             "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -6232,10 +6094,8 @@
                             "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -11264,9 +11124,9 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-The Destroyer": "The Destroyer",
         "Post-The Twins": "The Twins",
-        "Post-Skeletron Prime": "Skeletron Prime"
+        "Post-Skeletron Prime": "Skeletron Prime",
+        "Post-The Destroyer": "The Destroyer"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
       "slot_data": {
@@ -11306,7 +11166,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "TerrariaWorld"
     }
   },
   "game_info": {

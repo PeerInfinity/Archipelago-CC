@@ -907,26 +907,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Robbed"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Thief"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Robbed"
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Rifleman"
+                    "items": [
+                      "Thief",
+                      "Rifleman"
+                    ]
                   }
                 }
               ]
@@ -952,26 +944,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Open Season"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Mage"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Open Season"
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Knight"
+                    "items": [
+                      "Mage",
+                      "Knight"
+                    ]
                   }
                 }
               ]
@@ -991,26 +975,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Open Season"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Mage"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Open Season"
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Knight"
+                    "items": [
+                      "Mage",
+                      "Knight"
+                    ]
                   }
                 }
               ]
@@ -1098,26 +1074,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Tenri's Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Mage"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Tenri's Fall"
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Thief"
+                    "items": [
+                      "Mage",
+                      "Thief"
+                    ]
                   }
                 }
               ]
@@ -1143,26 +1111,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Foolish Canal"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Mage"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Foolish Canal"
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Spearman"
+                    "items": [
+                      "Mage",
+                      "Spearman"
+                    ]
                   }
                 }
               ]
@@ -1843,6 +1803,11 @@
           "range_end": 99,
           "default": 50,
           "display_name": "Progression Balancing"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         }
       },
       "world_description": "Command an army, in this retro style turn based strategy game!",
@@ -1882,7 +1847,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "WargrooveWorld"
     }
   },
   "game_info": {

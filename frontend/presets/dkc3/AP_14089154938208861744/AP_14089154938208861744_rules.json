@@ -659,21 +659,9 @@
                     "right": {
                       "rule": "Arithmetic",
                       "args": {
-                        "left": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 0,
                         "op": "+",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        }
+                        "right": 1
                       }
                     }
                   }
@@ -701,21 +689,9 @@
                     "right": {
                       "rule": "Arithmetic",
                       "args": {
-                        "left": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 1,
                         "op": "+",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        }
+                        "right": 1
                       }
                     }
                   }
@@ -743,21 +719,9 @@
                     "right": {
                       "rule": "Arithmetic",
                       "args": {
-                        "left": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 2,
                         "op": "+",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        }
+                        "right": 1
                       }
                     }
                   }
@@ -785,21 +749,9 @@
                     "right": {
                       "rule": "Arithmetic",
                       "args": {
-                        "left": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 3
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 3,
                         "op": "+",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        }
+                        "right": 1
                       }
                     }
                   }
@@ -827,21 +779,9 @@
                     "right": {
                       "rule": "Arithmetic",
                       "args": {
-                        "left": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 4
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 4,
                         "op": "+",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        }
+                        "right": 1
                       }
                     }
                   }
@@ -4234,7 +4174,8 @@
       "Sky-High Secret Region": {
         "name": "Sky-High Secret Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Glacial Grotto Region": {
         "name": "Glacial Grotto Region",
@@ -4262,7 +4203,8 @@
       "Clifftop Cache Region": {
         "name": "Clifftop Cache Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Sewer Stockpile Region": {
         "name": "Sewer Stockpile Region",
@@ -4290,37 +4232,44 @@
       "Bazaar's General Store Region": {
         "name": "Bazaar's General Store Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Bramble's Bungalow Region": {
         "name": "Bramble's Bungalow Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Flower Spot Region": {
         "name": "Flower Spot Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Barter's Swap Shop Region": {
         "name": "Barter's Swap Shop Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Barnacle's Island Region": {
         "name": "Barnacle's Island Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Blue's Beach Hut Region": {
         "name": "Blue's Beach Hut Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Bizzard's Basecamp Region": {
         "name": "Bizzard's Basecamp Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -4723,7 +4672,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "DKC3World"
     }
   },
   "game_info": {

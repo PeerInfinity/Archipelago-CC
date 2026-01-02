@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "SuperMarioWorldWorldGenWorld"
+    "1": "SMWWorld"
   },
   "regions": {
     "1": {
@@ -4490,16 +4490,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Compare",
+                  "rule": "Has",
                   "args": {
-                    "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Boss Token"
-                      }
-                    },
-                    "op": ">=",
-                    "right": 7
+                    "item_name": "Boss Token",
+                    "count": 7
                   }
                 },
                 {
@@ -4539,16 +4533,10 @@
             "name": "Back Door -> Bowser - Region",
             "connected_region": "Bowser - Region",
             "access_rule": {
-              "rule": "Compare",
+              "rule": "Has",
               "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": "Boss Token"
-                  }
-                },
-                "op": ">=",
-                "right": 7
+                "item_name": "Boss Token",
+                "count": 7
               }
             }
           }
@@ -5823,7 +5811,6 @@
       },
       "1-Up Mushroom": {
         "name": "1-Up Mushroom",
-        "hint_text": "1 Up Mushroom",
         "id": 12320769,
         "groups": [
           "Everything"
@@ -5831,7 +5818,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "hint_text": "1 Up Mushroom"
       },
       "Yoshi Egg": {
         "name": "Yoshi Egg",
@@ -5912,7 +5900,6 @@
       },
       "P-Switch": {
         "name": "P-Switch",
-        "hint_text": "P Switch",
         "id": 12320777,
         "groups": [
           "Everything"
@@ -5920,7 +5907,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "P Switch"
       },
       "Progressive Powerup": {
         "name": "Progressive Powerup",
@@ -5935,7 +5923,6 @@
       },
       "P-Balloon": {
         "name": "P-Balloon",
-        "hint_text": "P Balloon",
         "id": 12320779,
         "groups": [
           "Everything"
@@ -5943,7 +5930,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "P Balloon"
       },
       "Super Star Activate": {
         "name": "Super Star Activate",
@@ -6334,7 +6322,8 @@
         "thwimp_trap_weight": 2,
         "timer_trap_weight": 2,
         "trap_fill_percentage": 0,
-        "trap_link": false
+        "trap_link": false,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -6649,6 +6638,11 @@
           "type": "toggle",
           "default": 0,
           "display_name": "Trap Link"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "active_level_dict": {
@@ -6875,7 +6869,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SMWWorld"
     }
   },
   "game_info": {

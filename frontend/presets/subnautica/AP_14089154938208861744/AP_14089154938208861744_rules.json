@@ -4504,13 +4504,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 1444
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 1444,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4562,13 +4556,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1444
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 1444,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4594,13 +4582,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 900
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 900,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6035,6 +6017,11 @@
           "default": 50,
           "display_name": "Progression Balancing"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "swim_rule": {
           "type": "choice",
           "name_lookup": {
@@ -6083,7 +6070,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SubnauticaWorld"
     }
   },
   "game_info": {

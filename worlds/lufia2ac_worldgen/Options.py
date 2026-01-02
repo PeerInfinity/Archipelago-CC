@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class BlueChestChance(Range):
     """Option for Blue chest chance."""
     display_name = "Blue chest chance"
@@ -65,8 +76,8 @@ class Boss(Choice):
     option_master = 38
     option_random_low = 39
     option_random_middle = 40
-    option_random_high = 41
-    option_random_sinistral = 42
+    option_random_sinistral = 41
+    option_random_high = 42
     default = 38
 
 class CapsuleCravingsJpStyle(Toggle):
@@ -258,6 +269,7 @@ class ShufflePartyMembers(Toggle):
 class LufiaIIAncientCaveWorldGenOptions(PerGameCommonOptions):
     """Options for Lufia II Ancient Cave WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     blue_chest_chance: BlueChestChance
     blue_chest_count: BlueChestCount
     boss: Boss

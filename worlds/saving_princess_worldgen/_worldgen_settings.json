@@ -1,78 +1,35 @@
 {
-  "settings": {
-    "game": "Saving Princess",
-    "options": {
-      "accessibility": 0,
-      "ace_weapon_upgrade": 1,
-      "cliff_weapon_upgrade": 1,
-      "death_link": false,
-      "exclude_locations": [],
-      "expanded_pool": true,
-      "iframes_duration": 100,
-      "instant_saving": true,
-      "item_links": [],
-      "local_items": [],
-      "music_shuffle": false,
-      "non_local_items": [],
-      "plando_items": [],
-      "priority_locations": [],
-      "progression_balancing": 50,
-      "shake_intensity": 50,
-      "sprint_availability": 2,
-      "start_hints": [],
-      "start_inventory": {},
-      "start_inventory_from_pool": {},
-      "start_location_hints": [],
-      "trap_chance": 50
-    },
-    "world_directory": "saving_princess",
+  "options": {
+    "accessibility": 0,
+    "ace_weapon_upgrade": 1,
+    "cliff_weapon_upgrade": 1,
+    "death_link": false,
+    "exclude_locations": [],
+    "expanded_pool": true,
+    "iframes_duration": 100,
+    "instant_saving": true,
+    "item_links": [],
+    "local_items": [],
+    "music_shuffle": false,
+    "non_local_items": [],
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "shake_intensity": 50,
+    "sprint_availability": 2,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_inventory_from_pool": {},
+    "start_location_hints": [],
+    "trap_chance": 50
+  },
+  "exporter": {
+    "world_class_name": "SavingPrincessWorld",
     "use_resolved_items": false
   },
+  "game": "Saving Princess",
+  "world_directory": "saving_princess",
   "world_attributes": {
-    "is_pool_expanded": true,
-    "world_description": "Explore a space station crawling with rogue machines and even rival bounty hunters\nwith the same objective as you - but with far, far different intentions!\n\nExpand your arsenal as you collect upgrades to your trusty arm cannon and armor!",
-    "slot_data": {
-      "death_link": 0,
-      "expanded_pool": 1,
-      "instant_saving": 1,
-      "sprint_availability": 2,
-      "cliff_weapon_upgrade": 1,
-      "ace_weapon_upgrade": 1,
-      "shake_intensity": 50,
-      "iframes_duration": 100,
-      "music_table": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-      ]
-    },
-    "web": {
-      "theme": "partyTime",
-      "tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up Saving Princess for Archipelago multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "LeonarthCG"
-          ]
-        }
-      ]
-    }
+    "is_pool_expanded": true
   }
 }

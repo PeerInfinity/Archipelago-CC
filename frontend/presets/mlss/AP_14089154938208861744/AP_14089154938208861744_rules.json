@@ -1559,19 +1559,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "thunder",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "ultra",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "thunder",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "ultra",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
@@ -4425,29 +4420,24 @@
                   ]
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "birdo_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "fungitown_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "piranha_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "star_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "birdo_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "fungitown_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "piranha_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "star_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4464,24 +4454,19 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "birdo_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "fungitown_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "star_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "birdo_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "fungitown_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "star_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4498,19 +4483,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "birdo_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "star_shop",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "birdo_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "star_shop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -13702,6 +13682,10 @@
           "default": 0,
           "display_name": "Goal"
         },
+        "harhalls_pants": {
+          "type": "removed",
+          "default": ""
+        },
         "luigi_color": {
           "type": "choice",
           "name_lookup": {
@@ -13837,6 +13821,11 @@
           "default": 0,
           "display_name": "Skip Minecart Minigame"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "tattle_hp": {
           "type": "toggle",
           "default": 0,
@@ -13883,7 +13872,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MLSSWorld"
     }
   },
   "game_info": {

@@ -19,23 +19,13 @@
             "name": "To Heat Man Stage",
             "connected_region": "Heat Man Stage",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Heat Man Access Codes"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Item 2 - Rocket"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Item 2 - Rocket",
+                  "Heat Man Access Codes"
+                ]
+              }
             }
           },
           {
@@ -78,23 +68,13 @@
             "name": "To Quick Man Stage",
             "connected_region": "Quick Man Stage",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Quick Man Access Codes"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Time Stopper"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Time Stopper",
+                  "Quick Man Access Codes"
+                ]
+              }
             }
           },
           {
@@ -2013,7 +1993,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MM2World"
     }
   },
   "game_info": {

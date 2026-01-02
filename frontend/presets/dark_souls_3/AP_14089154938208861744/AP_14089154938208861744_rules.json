@@ -3033,24 +3033,14 @@
             "name": "Go To Road of Sacrifices",
             "connected_region": "Road of Sacrifices",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Pyromancy Flame",
-                      "Transposing Kiln"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "US -> RS"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "US -> RS",
+                  "Pyromancy Flame",
+                  "Transposing Kiln"
+                ]
+              }
             }
           }
         ],
@@ -3102,29 +3092,14 @@
             "name": "US: Old Sage's Blindfold - kill Cornyx",
             "id": 100192,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Large Soul of a Nameless Soldier",
@@ -3138,29 +3113,14 @@
             "name": "US: Cornyx's Garb - kill Cornyx",
             "id": 100193,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Soul of a Stray Demon",
@@ -3174,29 +3134,14 @@
             "name": "US: Cornyx's Wrap - kill Cornyx",
             "id": 100194,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Fire Gem",
@@ -3210,29 +3155,14 @@
             "name": "US: Cornyx's Skirt - kill Cornyx",
             "id": 100195,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Carthus Pyromancy Tome",
-                      "Great Swamp Pyromancy Tome",
-                      "Izalith Pyromancy Tome"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Large Soul of a Crestfallen Knight",
@@ -6693,35 +6623,30 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "_can_get",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "HWL: Red Eye Orb - wall tower, miniboss"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
+                      "rule": "Constant",
+                      "args": {
+                        "value": "HWL: Red Eye Orb - wall tower, miniboss"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "_can_go_to",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Profaned Capital"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Profaned Capital"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15028,27 +14953,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "_can_get",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "LC: Soul of Dragonslayer Armour"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
+                      "rule": "Constant",
                       "args": {
-                        "item_name": "Grand Archives Key"
-                      }
+                        "value": "LC: Soul of Dragonslayer Armour"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15056,6 +14970,7 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Grand Archives Key",
                       "Pyromancy Flame",
                       "Transposing Kiln"
                     ]
@@ -20018,82 +19933,72 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "_can_get",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "CD: Shotel - Patches"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "_can_get",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "FS: Divine Blessing - Greirat from US"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "_can_go_to",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Irithyll of the Boreal Valley"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CD: Shotel - Patches"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "_can_get",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "FS: Divine Blessing - Greirat from IBV"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Divine Blessing - Greirat from US"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "_can_go_to",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Grand Archives"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Irithyll of the Boreal Valley"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Divine Blessing - Greirat from IBV"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Grand Archives"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -36734,15 +36639,59 @@
           "default": 0,
           "display_name": "Early Small Lothric Banner"
         },
+        "enable_armor_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_boss_locations": {
+          "type": "removed",
+          "default": ""
+        },
         "enable_dlc": {
           "type": "toggle",
           "default": 0,
           "display_name": "Enable DLC"
         },
+        "enable_health_upgrade_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_key_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_misc_locations": {
+          "type": "removed",
+          "default": ""
+        },
         "enable_ngp": {
           "type": "toggle",
           "default": 0,
           "display_name": "Enable NG+"
+        },
+        "enable_npc_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_progressive_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_ring_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_shield_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_spell_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "enable_weapon_locations": {
+          "type": "removed",
+          "default": ""
         },
         "excluded_location_behavior": {
           "type": "choice",
@@ -36753,6 +36702,14 @@
           },
           "default": 2,
           "display_name": "Excluded Locations Behavior"
+        },
+        "excluded_locations": {
+          "type": "removed",
+          "default": ""
+        },
+        "guaranteed_items": {
+          "type": "removed",
+          "default": ""
         },
         "impatient_mimics": {
           "type": "toggle",
@@ -36822,6 +36779,10 @@
           "default": 2,
           "display_name": "Missable Locations Behavior"
         },
+        "missable_locations": {
+          "type": "removed",
+          "default": ""
+        },
         "no_equip_load": {
           "type": "toggle",
           "default": 0,
@@ -36836,6 +36797,10 @@
           "type": "toggle",
           "default": 0,
           "display_name": "No Weapon Requirements"
+        },
+        "pool_type": {
+          "type": "removed",
+          "default": ""
         },
         "progression_balancing": {
           "type": "range",
@@ -39543,7 +39508,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "DarkSouls3World"
     }
   },
   "game_info": {

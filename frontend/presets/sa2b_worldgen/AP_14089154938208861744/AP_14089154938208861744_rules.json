@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "SonicAdventure2BattleWorldGenWorld"
+    "1": "SA2BWorld"
   },
   "regions": {
     "1": {
@@ -4165,7 +4165,6 @@
       },
       "Sonic - Magic Gloves": {
         "name": "Sonic - Magic Gloves",
-        "hint_text": "Sonic   Magic Gloves",
         "id": 16711681,
         "groups": [
           "Everything"
@@ -4173,11 +4172,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Sonic   Magic Gloves"
       },
       "Sonic - Light Shoes": {
         "name": "Sonic - Light Shoes",
-        "hint_text": "Sonic   Light Shoes",
         "id": 16711682,
         "groups": [
           "Everything"
@@ -4185,11 +4184,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Sonic   Light Shoes"
       },
       "Sonic - Ancient Light": {
         "name": "Sonic - Ancient Light",
-        "hint_text": "Sonic   Ancient Light",
         "id": 16711683,
         "groups": [
           "Everything"
@@ -4197,11 +4196,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Sonic   Ancient Light"
       },
       "Sonic - Bounce Bracelet": {
         "name": "Sonic - Bounce Bracelet",
-        "hint_text": "Sonic   Bounce Bracelet",
         "id": 16711684,
         "groups": [
           "Everything"
@@ -4209,11 +4208,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Sonic   Bounce Bracelet"
       },
       "Sonic - Flame Ring": {
         "name": "Sonic - Flame Ring",
-        "hint_text": "Sonic   Flame Ring",
         "id": 16711685,
         "groups": [
           "Everything"
@@ -4221,11 +4220,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Sonic   Flame Ring"
       },
       "Sonic - Mystic Melody": {
         "name": "Sonic - Mystic Melody",
-        "hint_text": "Sonic   Mystic Melody",
         "id": 16711686,
         "groups": [
           "Everything"
@@ -4233,11 +4232,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Sonic   Mystic Melody"
       },
       "Tails - Laser Blaster": {
         "name": "Tails - Laser Blaster",
-        "hint_text": "Tails   Laser Blaster",
         "id": 16711687,
         "groups": [
           "Everything"
@@ -4245,11 +4244,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tails   Laser Blaster"
       },
       "Tails - Booster": {
         "name": "Tails - Booster",
-        "hint_text": "Tails   Booster",
         "id": 16711688,
         "groups": [
           "Everything"
@@ -4257,11 +4256,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tails   Booster"
       },
       "Tails - Mystic Melody": {
         "name": "Tails - Mystic Melody",
-        "hint_text": "Tails   Mystic Melody",
         "id": 16711689,
         "groups": [
           "Everything"
@@ -4269,11 +4268,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tails   Mystic Melody"
       },
       "Tails - Bazooka": {
         "name": "Tails - Bazooka",
-        "hint_text": "Tails   Bazooka",
         "id": 16711690,
         "groups": [
           "Everything"
@@ -4281,11 +4280,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tails   Bazooka"
       },
       "Knuckles - Mystic Melody": {
         "name": "Knuckles - Mystic Melody",
-        "hint_text": "Knuckles   Mystic Melody",
         "id": 16711691,
         "groups": [
           "Everything"
@@ -4293,11 +4292,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Knuckles   Mystic Melody"
       },
       "Knuckles - Shovel Claws": {
         "name": "Knuckles - Shovel Claws",
-        "hint_text": "Knuckles   Shovel Claws",
         "id": 16711692,
         "groups": [
           "Everything"
@@ -4305,11 +4304,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Knuckles   Shovel Claws"
       },
       "Knuckles - Air Necklace": {
         "name": "Knuckles - Air Necklace",
-        "hint_text": "Knuckles   Air Necklace",
         "id": 16711693,
         "groups": [
           "Everything"
@@ -4317,11 +4316,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Knuckles   Air Necklace"
       },
       "Knuckles - Hammer Gloves": {
         "name": "Knuckles - Hammer Gloves",
-        "hint_text": "Knuckles   Hammer Gloves",
         "id": 16711694,
         "groups": [
           "Everything"
@@ -4329,11 +4328,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Knuckles   Hammer Gloves"
       },
       "Knuckles - Sunglasses": {
         "name": "Knuckles - Sunglasses",
-        "hint_text": "Knuckles   Sunglasses",
         "id": 16711695,
         "groups": [
           "Everything"
@@ -4341,11 +4340,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Knuckles   Sunglasses"
       },
       "Shadow - Flame Ring": {
         "name": "Shadow - Flame Ring",
-        "hint_text": "Shadow   Flame Ring",
         "id": 16711696,
         "groups": [
           "Everything"
@@ -4353,11 +4352,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Shadow   Flame Ring"
       },
       "Shadow - Air Shoes": {
         "name": "Shadow - Air Shoes",
-        "hint_text": "Shadow   Air Shoes",
         "id": 16711697,
         "groups": [
           "Everything"
@@ -4365,11 +4364,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Shadow   Air Shoes"
       },
       "Shadow - Ancient Light": {
         "name": "Shadow - Ancient Light",
-        "hint_text": "Shadow   Ancient Light",
         "id": 16711698,
         "groups": [
           "Everything"
@@ -4377,11 +4376,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Shadow   Ancient Light"
       },
       "Shadow - Mystic Melody": {
         "name": "Shadow - Mystic Melody",
-        "hint_text": "Shadow   Mystic Melody",
         "id": 16711699,
         "groups": [
           "Everything"
@@ -4389,11 +4388,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Shadow   Mystic Melody"
       },
       "Eggman - Laser Blaster": {
         "name": "Eggman - Laser Blaster",
-        "hint_text": "Eggman   Laser Blaster",
         "id": 16711700,
         "groups": [
           "Everything"
@@ -4401,11 +4400,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Eggman   Laser Blaster"
       },
       "Eggman - Mystic Melody": {
         "name": "Eggman - Mystic Melody",
-        "hint_text": "Eggman   Mystic Melody",
         "id": 16711701,
         "groups": [
           "Everything"
@@ -4413,11 +4412,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Eggman   Mystic Melody"
       },
       "Eggman - Jet Engine": {
         "name": "Eggman - Jet Engine",
-        "hint_text": "Eggman   Jet Engine",
         "id": 16711702,
         "groups": [
           "Everything"
@@ -4425,11 +4424,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Eggman   Jet Engine"
       },
       "Eggman - Large Cannon": {
         "name": "Eggman - Large Cannon",
-        "hint_text": "Eggman   Large Cannon",
         "id": 16711703,
         "groups": [
           "Everything"
@@ -4437,11 +4436,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Eggman   Large Cannon"
       },
       "Eggman - Protective Armor": {
         "name": "Eggman - Protective Armor",
-        "hint_text": "Eggman   Protective Armor",
         "id": 16711704,
         "groups": [
           "Everything"
@@ -4449,11 +4448,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Eggman   Protective Armor"
       },
       "Rouge - Mystic Melody": {
         "name": "Rouge - Mystic Melody",
-        "hint_text": "Rouge   Mystic Melody",
         "id": 16711705,
         "groups": [
           "Everything"
@@ -4461,11 +4460,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Rouge   Mystic Melody"
       },
       "Rouge - Pick Nails": {
         "name": "Rouge - Pick Nails",
-        "hint_text": "Rouge   Pick Nails",
         "id": 16711706,
         "groups": [
           "Everything"
@@ -4473,11 +4472,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Rouge   Pick Nails"
       },
       "Rouge - Treasure Scope": {
         "name": "Rouge - Treasure Scope",
-        "hint_text": "Rouge   Treasure Scope",
         "id": 16711707,
         "groups": [
           "Everything"
@@ -4485,11 +4484,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Rouge   Treasure Scope"
       },
       "Rouge - Iron Boots": {
         "name": "Rouge - Iron Boots",
-        "hint_text": "Rouge   Iron Boots",
         "id": 16711708,
         "groups": [
           "Everything"
@@ -4497,7 +4496,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Rouge   Iron Boots"
       },
       "Chao Coin": {
         "name": "Chao Coin",
@@ -6714,6 +6714,7 @@
         "trap_fill_percentage": 0,
         "trap_link": false,
         "trivia_trap_weight": 2,
+        "use_canonical_options": true,
         "voice_shuffle": 0,
         "whistlesanity": 0
       },
@@ -7616,6 +7617,11 @@
           },
           "default": 2,
           "display_name": "Trivia Trap Weight"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         },
         "voice_shuffle": {
           "type": "choice",
@@ -11162,7 +11168,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SA2BWorld"
     }
   },
   "game_info": {

@@ -42,17 +42,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Citadel (E1M5) Main", player),
-        And(HasAll('Ethereal Crossbow', 'The Citadel (E1M5)'), HasAny('Dragon Claw', 'Gauntlets of the Necromancer'))
+        And(HasAny('Dragon Claw', 'Gauntlets of the Necromancer'), HasAll('Ethereal Crossbow', 'The Citadel (E1M5)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Cathedral (E1M6) Main", player),
-        And(HasAll('Ethereal Crossbow', 'The Cathedral (E1M6)'), HasAny('Dragon Claw', 'Gauntlets of the Necromancer'))
+        And(HasAny('Dragon Claw', 'Gauntlets of the Necromancer'), HasAll('Ethereal Crossbow', 'The Cathedral (E1M6)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Crypts (E1M7) Main", player),
-        And(HasAll('Ethereal Crossbow', 'The Crypts (E1M7)'), HasAny('Dragon Claw', 'Gauntlets of the Necromancer'))
+        And(HasAny('Dragon Claw', 'Gauntlets of the Necromancer'), HasAll('Ethereal Crossbow', 'The Crypts (E1M7)'))
     )
 
     world.set_rule(
@@ -82,22 +82,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Ice Grotto (E2M4) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'The Ice Grotto (E2M4)'), HasAny('Firemace', 'Hellstaff'))
+        And(HasAny('Firemace', 'Hellstaff'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'The Ice Grotto (E2M4)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Catacombs (E2M5) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Gauntlets of the Necromancer', 'The Catacombs (E2M5)'), HasAny('Firemace', 'Hellstaff', 'Phoenix Rod'))
+        And(HasAny('Firemace', 'Hellstaff', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Gauntlets of the Necromancer', 'The Catacombs (E2M5)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Labyrinth (E2M6) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Gauntlets of the Necromancer', 'The Labyrinth (E2M6)'), HasAny('Firemace', 'Hellstaff', 'Phoenix Rod'))
+        And(HasAny('Firemace', 'Hellstaff', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Gauntlets of the Necromancer', 'The Labyrinth (E2M6)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Great Hall (E2M7) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Gauntlets of the Necromancer', 'The Great Hall (E2M7)'), HasAny('Hellstaff', 'Phoenix Rod'))
+        And(HasAny('Hellstaff', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Gauntlets of the Necromancer', 'The Great Hall (E2M7)'))
     )
 
     world.set_rule(
@@ -107,7 +107,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Glacier (E2M9) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Gauntlets of the Necromancer', 'The Glacier (E2M9)'), HasAny('Hellstaff', 'Phoenix Rod'))
+        And(HasAny('Hellstaff', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Gauntlets of the Necromancer', 'The Glacier (E2M9)'))
     )
 
     world.set_rule(
@@ -122,27 +122,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Confluence (E3M3) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'The Confluence (E3M3)'), HasAny('Firemace', 'Gauntlets of the Necromancer', 'Hellstaff', 'Phoenix Rod'))
+        And(HasAny('Firemace', 'Gauntlets of the Necromancer', 'Hellstaff', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'The Confluence (E3M3)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Azure Fortress (E3M4) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Hellstaff', 'The Azure Fortress (E3M4)'), HasAny('Firemace', 'Gauntlets of the Necromancer', 'Phoenix Rod'))
+        And(HasAny('Firemace', 'Gauntlets of the Necromancer', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Hellstaff', 'The Azure Fortress (E3M4)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Ophidian Lair (E3M5) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Hellstaff', 'The Ophidian Lair (E3M5)'), HasAny('Firemace', 'Gauntlets of the Necromancer', 'Phoenix Rod'))
+        And(HasAny('Firemace', 'Gauntlets of the Necromancer', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Hellstaff', 'The Ophidian Lair (E3M5)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Halls of Fear (E3M6) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Hellstaff', 'The Halls of Fear (E3M6)'), HasAny('Gauntlets of the Necromancer', 'Phoenix Rod'))
+        And(HasAny('Gauntlets of the Necromancer', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Hellstaff', 'The Halls of Fear (E3M6)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Chasm (E3M7) Main", player),
-        And(HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Hellstaff', 'The Chasm (E3M7)'), HasAny('Gauntlets of the Necromancer', 'Phoenix Rod'))
+        And(HasAny('Gauntlets of the Necromancer', 'Phoenix Rod'), HasAll('Dragon Claw', 'Ethereal Crossbow', 'Firemace', 'Hellstaff', 'The Chasm (E3M7)'))
     )
 
     world.set_rule(

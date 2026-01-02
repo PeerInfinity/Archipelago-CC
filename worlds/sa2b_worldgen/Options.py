@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class Animalsanity(Toggle):
     """Option for Animalsanity."""
     display_name = "Animalsanity"
@@ -778,6 +789,7 @@ class Whistlesanity(Choice):
 class SonicAdventure2BattleWorldGenOptions(PerGameCommonOptions):
     """Options for Sonic Adventure 2 Battle WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     animalsanity: Animalsanity
     bee_trap_weight: BeeTrapWeight
     beetlesanity: Beetlesanity

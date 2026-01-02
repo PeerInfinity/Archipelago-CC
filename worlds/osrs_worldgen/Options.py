@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class BrutalGrinds(Toggle):
     """Option for Allow Brutal Grinds."""
     display_name = "Allow Brutal Grinds"
@@ -304,6 +315,7 @@ class WoodcuttingTaskWeight(Range):
 class OldSchoolRunescapeWorldGenOptions(PerGameCommonOptions):
     """Options for Old School Runescape WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     brutal_grinds: BrutalGrinds
     combat_task_weight: CombatTaskWeight
     cooking_task_weight: CookingTaskWeight

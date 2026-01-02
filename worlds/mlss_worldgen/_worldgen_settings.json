@@ -1,73 +1,47 @@
 {
-  "settings": {
-    "game": "Mario & Luigi Superstar Saga",
-    "options": {
-      "accessibility": 0,
-      "block_visibility": 0,
-      "castle_skip": false,
-      "chuckle_beans": 2,
-      "coins": false,
-      "difficult_logic": false,
-      "disable_harhalls_pants": false,
-      "disable_surf": false,
-      "emblems_amount": 75,
-      "emblems_required": 50,
-      "exclude_locations": [],
-      "extra_pipes": false,
-      "goal": 0,
-      "harhalls_pants": "",
-      "item_links": [],
-      "local_items": [],
-      "luigi_color": 1,
-      "luigi_pants": 0,
-      "mario_color": 0,
-      "mario_pants": 0,
-      "music_options": 0,
-      "non_local_items": [],
-      "plando_items": [],
-      "priority_locations": [],
-      "progression_balancing": 50,
-      "randomize_backgrounds": false,
-      "randomize_bosses": 0,
-      "randomize_enemies": 0,
-      "randomize_sounds": false,
-      "scale_stats": false,
-      "skip_minecart": false,
-      "start_hints": [],
-      "start_inventory": {},
-      "start_inventory_from_pool": {},
-      "start_location_hints": [],
-      "tattle_hp": false,
-      "xp_multiplier": 1
-    },
-    "world_directory": "mlss",
+  "options": {
+    "accessibility": 0,
+    "block_visibility": 0,
+    "castle_skip": false,
+    "chuckle_beans": 2,
+    "coins": false,
+    "difficult_logic": false,
+    "disable_harhalls_pants": false,
+    "disable_surf": false,
+    "emblems_amount": 75,
+    "emblems_required": 50,
+    "exclude_locations": [],
+    "extra_pipes": false,
+    "goal": 0,
+    "harhalls_pants": "",
+    "item_links": [],
+    "local_items": [],
+    "luigi_color": 1,
+    "luigi_pants": 0,
+    "mario_color": 0,
+    "mario_pants": 0,
+    "music_options": 0,
+    "non_local_items": [],
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "randomize_backgrounds": false,
+    "randomize_bosses": 0,
+    "randomize_enemies": 0,
+    "randomize_sounds": false,
+    "scale_stats": false,
+    "skip_minecart": false,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_inventory_from_pool": {},
+    "start_location_hints": [],
+    "tattle_hp": false,
+    "xp_multiplier": 1
+  },
+  "exporter": {
+    "world_class_name": "MLSSWorld",
     "use_resolved_items": false
   },
-  "world_attributes": {
-    "world_description": "Adventure with Mario and Luigi together in the Beanbean Kingdom\nto stop the evil Cackletta and retrieve the Beanstar.",
-    "slot_data": {
-      "CastleSkip": 0,
-      "SkipMinecart": 0,
-      "DisableSurf": 0,
-      "HarhallsPants": 0,
-      "ChuckleBeans": 2,
-      "DifficultLogic": 0,
-      "Coins": 0
-    },
-    "web": {
-      "theme": "partyTime",
-      "tutorials": [
-        {
-          "name": "Setup Guide",
-          "description": "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "jamesbrq"
-          ]
-        }
-      ]
-    }
-  }
+  "game": "Mario & Luigi Superstar Saga",
+  "world_directory": "mlss"
 }

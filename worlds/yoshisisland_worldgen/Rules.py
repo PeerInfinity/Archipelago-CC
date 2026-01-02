@@ -25,7 +25,7 @@ def _14CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _14Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Key', 'Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Key', 'Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Spring Ball'), player)))
+    return (state.has_all(['Key', 'Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Key', 'Spring Ball'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Spring Ball'], player)))
 
 
 def _17Game(state: "CollectionState", player: int) -> bool:
@@ -41,7 +41,7 @@ def _18CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _18Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Arrow Wheel', 'Key'), player) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Key'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Key'), player)))
+    return (state.has_all(['Arrow Wheel', 'Key'], player) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Key'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Key'], player)))
 
 
 def _24Boss(state: "CollectionState", player: int) -> bool:
@@ -53,11 +53,11 @@ def _24CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _24Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('! Switch', 'Dashed Stairs', 'Key'), player) if ('Easy' == 'Easy') else (state.has_all(('! Switch', 'Dashed Stairs'), player) if ('Easy' == 'Normal') else state.has('! Switch', player)))
+    return (state.has_all(['! Switch', 'Dashed Stairs', 'Key'], player) if ('Easy' == 'Easy') else (state.has_all(['! Switch', 'Dashed Stairs'], player) if ('Easy' == 'Normal') else state.has('! Switch', player)))
 
 
 def _26Game(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
+    return (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Large Spring Ball'], player)))
 
 
 def _27Game(state: "CollectionState", player: int) -> bool:
@@ -73,7 +73,7 @@ def _28CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _28Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Arrow Wheel', 'Key'), player)) and (state.has('Egg Capacity Upgrade', player)) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Key'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Key'), player)))
+    return ((state.has_all(['Arrow Wheel', 'Key'], player)) and (state.has('Egg Capacity Upgrade', player)) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Key'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Key'], player)))
 
 
 def _34Boss(state: "CollectionState", player: int) -> bool:
@@ -85,7 +85,7 @@ def _34CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _34Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has('Dashed Platform', player) if ('Easy' == 'Easy') else ((state.has('Dashed Platform', player)) or (_yoshisislandworldgen_has_midring(state, player)) if ('Easy' == 'Normal') else True))
+    return (state.has('Dashed Platform', player) if ('Easy' == 'Easy') else ((state.has('Dashed Platform', player)) or (has_midring(state, player)) if ('Easy' == 'Normal') else True))
 
 
 def _38Boss(state: "CollectionState", player: int) -> bool:
@@ -97,7 +97,7 @@ def _38CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _38Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Egg Capacity Upgrade', player, 3)) or (_yoshisislandworldgen_combat_item(state, player)) if ('Easy' == 'Easy') else ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player)) if ('Easy' == 'Normal') else True))
+    return ((state.has('Egg Capacity Upgrade', player, 3)) or (combat_item(state, player)) if ('Easy' == 'Easy') else ((state.has('Egg Capacity Upgrade', player)) or (combat_item(state, player)) if ('Easy' == 'Normal') else True))
 
 
 def _44Boss(state: "CollectionState", player: int) -> bool:
@@ -109,11 +109,11 @@ def _44CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _44Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player)) and ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player))) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'), player)))
+    return ((state.has_all(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'], player)) and ((state.has('Egg Capacity Upgrade', player)) or (combat_item(state, player))) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'], player)))
 
 
 def _47Game(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Key', 'Large Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
+    return (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Large Spring Ball'], player)))
 
 
 def _48Boss(state: "CollectionState", player: int) -> bool:
@@ -125,11 +125,11 @@ def _48CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _48Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'), player) if ('Easy' == 'Easy') else (state.has_all(('Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'), player) if ('Easy' == 'Normal') else state.has_all(('Key', 'Large Spring Ball'), player)))
+    return (state.has_all(['Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'], player) if ('Easy' == 'Easy') else (state.has_all(['Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Large Spring Ball'], player)))
 
 
 def _54Boss(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player)) if ('Easy' == 'Easy') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or ((state.has('Egg Capacity Upgrade', player, 5)) and (_yoshisislandworldgen_has_midring(state, player))) if ('Easy' == 'Normal') else (state.has('Egg Plant', player)) or ((state.has('Egg Capacity Upgrade', player, 3)) and (_yoshisislandworldgen_has_midring(state, player)))))
+    return ((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player)) if ('Easy' == 'Easy') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or ((state.has('Egg Capacity Upgrade', player, 5)) and (has_midring(state, player))) if ('Easy' == 'Normal') else (state.has('Egg Plant', player)) or ((state.has('Egg Capacity Upgrade', player, 3)) and (has_midring(state, player)))))
 
 
 def _54CanFightBoss(state: "CollectionState", player: int) -> bool:
@@ -137,7 +137,7 @@ def _54CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _54Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Dashed Platform', 'Dashed Stairs', 'Platform Ghost'), player) if ('Easy' == 'Easy') else (state.has_all(('Dashed Platform', 'Dashed Stairs', 'Platform Ghost'), player) if ('Easy' == 'Normal') else state.has_all(('Dashed Stairs', 'Platform Ghost'), player)))
+    return (state.has_all(['Dashed Platform', 'Dashed Stairs', 'Platform Ghost'], player) if ('Easy' == 'Easy') else (state.has_all(['Dashed Platform', 'Dashed Stairs', 'Platform Ghost'], player) if ('Easy' == 'Normal') else state.has_all(['Dashed Stairs', 'Platform Ghost'], player)))
 
 
 def _58Boss(state: "CollectionState", player: int) -> bool:
@@ -149,7 +149,7 @@ def _58CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _58Clear(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Arrow Wheel', 'Large Spring Ball'), player) if ('Easy' == 'Easy') else (state.has_all(('Arrow Wheel', 'Large Spring Ball'), player) if ('Easy' == 'Normal') else state.has_all(('Arrow Wheel', 'Large Spring Ball'), player)))
+    return (state.has_all(['Arrow Wheel', 'Large Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Large Spring Ball'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Large Spring Ball'], player)))
 
 
 def _64Boss(state: "CollectionState", player: int) -> bool:
@@ -161,74 +161,74 @@ def _64CanFightBoss(state: "CollectionState", player: int) -> bool:
 
 
 def _64Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'), player)) and ((state.has('Egg Capacity Upgrade', player, 3)) or (_yoshisislandworldgen_combat_item(state, player))) if ('Easy' == 'Easy') else ((state.has_all(('Egg Plant', 'Key', 'Large Spring Ball'), player)) and ((state.has('Egg Capacity Upgrade', player, 2)) or (_yoshisislandworldgen_combat_item(state, player))) if ('Easy' == 'Normal') else (state.has_all(('Egg Plant', 'Key'), player)) and ((state.has('Egg Capacity Upgrade', player)) or (_yoshisislandworldgen_combat_item(state, player)))))
+    return ((state.has_all(['Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'], player)) and ((state.has('Egg Capacity Upgrade', player, 3)) or (combat_item(state, player))) if ('Easy' == 'Easy') else ((state.has_all(['Egg Plant', 'Key', 'Large Spring Ball'], player)) and ((state.has('Egg Capacity Upgrade', player, 2)) or (combat_item(state, player))) if ('Easy' == 'Normal') else (state.has_all(['Egg Plant', 'Key'], player)) and ((state.has('Egg Capacity Upgrade', player)) or (combat_item(state, player)))))
 
 
 def _68Clear(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('Egg Plant', 'Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player)) if ('Easy' == 'Easy') else ((state.has_all(('Egg Plant', 'Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player)) if ('Easy' == 'Normal') else (state.has_all(('Giant Eggs', 'Helicopter Morph'), player)) and (_68Route(state, player))))
+    return ((state.has_all(['Egg Plant', 'Giant Eggs', 'Helicopter Morph'], player)) and (_68Route(state, player)) if ('Easy' == 'Easy') else ((state.has_all(['Egg Plant', 'Giant Eggs', 'Helicopter Morph'], player)) and (_68Route(state, player)) if ('Easy' == 'Normal') else (state.has_all(['Giant Eggs', 'Helicopter Morph'], player)) and (_68Route(state, player))))
 
 
 def _68CollectibleRoute(state: "CollectionState", player: int) -> bool:
-    return (True if (0 == 0) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (0 == 1) else (_yoshisislandworldgen_bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (0 == 5) else None))))))
+    return (True if (0 == 0) else (bowserdoor_1(state, player) if (0 == 1) else (bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else (bowserdoor_1(state, player) if (0 == 5) else None))))))
 
 
 def _68Route(state: "CollectionState", player: int) -> bool:
-    return (True if (0 == 0) else (_yoshisislandworldgen_bowserdoor_1(state, player) if (0 == 1) else (_yoshisislandworldgen_bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else ((_yoshisislandworldgen_bowserdoor_1(state, player)) and (_yoshisislandworldgen_bowserdoor_2(state, player)) and (_yoshisislandworldgen_bowserdoor_3(state, player)) if (0 == 5) else None))))))
+    return (True if (0 == 0) else (bowserdoor_1(state, player) if (0 == 1) else (bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else ((bowserdoor_1(state, player)) and (bowserdoor_2(state, player)) and (bowserdoor_3(state, player)) if (0 == 5) else None))))))
 
 
-def _yoshisislandworldgen_bandit_bonus(state: "CollectionState", player: int) -> bool:
+def bandit_bonus(state: "CollectionState", player: int) -> bool:
     return (state.has('Bandit Consumables', player)) or (state.has('Bandit Watermelons', player))
 
 
-def _yoshisislandworldgen_bowserdoor_1(state: "CollectionState", player: int) -> bool:
-    return ((state.has_all(('! Switch', 'Egg Plant'), player)) and (state.has('Egg Capacity Upgrade', player, 2)) if ('Easy' == 'Easy') else ((state.has('Egg Plant', player)) and (state.has('Egg Capacity Upgrade', player)) if ('Easy' == 'Normal') else state.has('Egg Plant', player)))
+def bowserdoor_1(state: "CollectionState", player: int) -> bool:
+    return ((state.has_all(['! Switch', 'Egg Plant'], player)) and (state.has('Egg Capacity Upgrade', player, 2)) if ('Easy' == 'Easy') else ((state.has('Egg Plant', player)) and (state.has('Egg Capacity Upgrade', player)) if ('Easy' == 'Normal') else state.has('Egg Plant', player)))
 
 
-def _yoshisislandworldgen_bowserdoor_2(state: "CollectionState", player: int) -> bool:
-    return ((((state.has('Egg Capacity Upgrade', player, 3)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player)) if ('Easy' == 'Easy') else ((((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player)) if ('Easy' == 'Normal') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or (_yoshisislandworldgen_combat_item(state, player))) and (state.has('Key', player))))
+def bowserdoor_2(state: "CollectionState", player: int) -> bool:
+    return ((((state.has('Egg Capacity Upgrade', player, 3)) and (state.has('Egg Plant', player))) or (combat_item(state, player))) and (state.has('Key', player)) if ('Easy' == 'Easy') else ((((state.has('Egg Capacity Upgrade', player, 2)) and (state.has('Egg Plant', player))) or (combat_item(state, player))) and (state.has('Key', player)) if ('Easy' == 'Normal') else (((state.has('Egg Capacity Upgrade', player)) and (state.has('Egg Plant', player))) or (combat_item(state, player))) and (state.has('Key', player))))
 
 
-def _yoshisislandworldgen_bowserdoor_3(state: "CollectionState", player: int) -> bool:
+def bowserdoor_3(state: "CollectionState", player: int) -> bool:
     return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
-def _yoshisislandworldgen_bowserdoor_4(state: "CollectionState", player: int) -> bool:
+def bowserdoor_4(state: "CollectionState", player: int) -> bool:
     return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
-def _yoshisislandworldgen_cansee_clouds(state: "CollectionState", player: int) -> bool:
-    return (True if ('Easy' != 'Easy') else (_yoshisislandworldgen_default_vis(state, player)) or (state.has('Secret Lens', player)) or (_yoshisislandworldgen_combat_item(state, player)))
+def cansee_clouds(state: "CollectionState", player: int) -> bool:
+    return (True if ('Easy' != 'Easy') else (default_vis(state, player)) or (state.has('Secret Lens', player)) or (combat_item(state, player)))
 
 
-def _yoshisislandworldgen_castle_access(state: "CollectionState", player: int) -> bool:
+def castle_access(state: "CollectionState", player: int) -> bool:
     return state.has('Boss Clear', player, 5)
 
 
-def _yoshisislandworldgen_castle_clear(state: "CollectionState", player: int) -> bool:
+def castle_clear(state: "CollectionState", player: int) -> bool:
     return state.has('Boss Clear', player, 0)
 
 
-def _yoshisislandworldgen_combat_item(state: "CollectionState", player: int) -> bool:
-    return (False if not (True) else (_yoshisislandworldgen_item_bonus(state, player) if ('Easy' == 'Easy') else (_yoshisislandworldgen_bandit_bonus(state, player)) or (_yoshisislandworldgen_item_bonus(state, player))))
+def combat_item(state: "CollectionState", player: int) -> bool:
+    return (False if not (True) else (item_bonus(state, player) if ('Easy' == 'Easy') else (bandit_bonus(state, player)) or (item_bonus(state, player))))
 
 
-def _yoshisislandworldgen_default_vis(state: "CollectionState", player: int) -> bool:
+def default_vis(state: "CollectionState", player: int) -> bool:
     return (True if False else False)
 
 
-def _yoshisislandworldgen_has_midring(state: "CollectionState", player: int) -> bool:
+def has_midring(state: "CollectionState", player: int) -> bool:
     return (True) or (state.has('Middle Ring', player))
 
 
-def _yoshisislandworldgen_item_bonus(state: "CollectionState", player: int) -> bool:
+def item_bonus(state: "CollectionState", player: int) -> bool:
     return state.has('Bonus Consumables', player)
 
 
-def _yoshisislandworldgen_melon_item(state: "CollectionState", player: int) -> bool:
-    return (False if not (True) else (_yoshisislandworldgen_item_bonus(state, player) if ('Easy' == 'Easy') else (state.has('Bandit Watermelons', player)) or (_yoshisislandworldgen_item_bonus(state, player))))
+def melon_item(state: "CollectionState", player: int) -> bool:
+    return (False if not (True) else (item_bonus(state, player) if ('Easy' == 'Easy') else (state.has('Bandit Watermelons', player)) or (item_bonus(state, player))))
 
 
-def _yoshisislandworldgen_reconstitute_luigi(state: "CollectionState", player: int) -> bool:
+def reconstitute_luigi(state: "CollectionState", player: int) -> bool:
     return state.has('Piece of Luigi', player, 25)
 
 
@@ -270,7 +270,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("World 6 -> 6-8", player),
-        HelperCall(helper_func=_yoshisislandworldgen_castle_access, helper_name="castle_access")
+        HelperCall(helper_func=castle_access, helper_name="castle_access")
     )
 
     world.set_rule(
@@ -330,7 +330,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("6-8 -> Bowser's Room", player),
-        HelperCall(helper_func=_yoshisislandworldgen_castle_clear, helper_name="castle_clear")
+        HelperCall(helper_func=castle_clear, helper_name="castle_clear")
     )
     # Location rules
     world.set_rule(
@@ -365,7 +365,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -390,12 +390,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Key', 'Spring Ball'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Key', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Stars", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Key')), Has('Spring Ball'))
+        And(Or(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Key')), Has('Spring Ball'))
     )
 
     world.set_rule(
@@ -410,7 +410,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hop! Hop! Donut Lifts: Stars", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
+        Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
@@ -425,7 +425,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Stars", player),
-        And(Or(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Beanstalk')), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))), Has('Large Spring Ball'))
+        And(Or(And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Beanstalk')), And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Tulip'))), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -440,7 +440,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Stars", player),
-        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HasAll('Beanstalk', 'Chomp Rock', 'Spring Ball')), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
+        Or(And(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), HasAll('Beanstalk', 'Chomp Rock', 'Spring Ball')), HelperCall(helper_func=has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
@@ -460,7 +460,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Or(HasAll('Arrow Wheel', 'Key'), Has('Platform Ghost')))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Or(HasAll('Arrow Wheel', 'Key'), Has('Platform Ghost')))
     )
 
     world.set_rule(
@@ -485,7 +485,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -505,7 +505,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Stars", player),
-        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip')), HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Tulip', 'Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'))
     )
 
     world.set_rule(
@@ -540,7 +540,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('! Switch', 'Dashed Stairs', 'Key'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('! Switch', 'Dashed Stairs', 'Key'))
     )
 
     world.set_rule(
@@ -580,7 +580,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -595,17 +595,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Red Coins", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), HasAny('Dashed Platform', 'Giant Eggs')), Has('Large Spring Ball'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), HasAny('Dashed Platform', 'Giant Eggs')), Has('Large Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Giant Eggs')), HasAll('! Switch', 'Large Spring Ball'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Giant Eggs')), HasAll('! Switch', 'Large Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Giant Eggs'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Giant Eggs'))
     )
 
     world.set_rule(
@@ -620,17 +620,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Red Coins", player),
-        And(HasAll('Arrow Wheel', 'Key'), Has('Egg Capacity Upgrade'))
+        HasAll('Egg Capacity Upgrade', 'Arrow Wheel', 'Key')
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Flowers", player),
-        And(HasAll('Arrow Wheel', 'Key', 'Train Morph'), Has('Egg Capacity Upgrade'))
+        HasAll('Egg Capacity Upgrade', 'Arrow Wheel', 'Key', 'Train Morph')
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Arrow Wheel', 'Key'), Has('Egg Capacity Upgrade'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Egg Capacity Upgrade', 'Arrow Wheel', 'Key'))
     )
 
     world.set_rule(
@@ -645,7 +645,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Welcome To Monkey World!: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
+        HelperCall(helper_func=has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
@@ -660,7 +660,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Tulip'))
     )
 
     world.set_rule(
@@ -680,7 +680,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Stars", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Helicopter Morph', 'Submarine Morph'))
+        Or(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Helicopter Morph', 'Submarine Morph'))
     )
 
     world.set_rule(
@@ -695,12 +695,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 5)), Has('Dashed Platform'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 5)), Has('Dashed Platform'))
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
+        HelperCall(helper_func=has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
@@ -715,12 +715,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jammin' Through The Trees: Flowers", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Watermelon'))
+        Or(HelperCall(helper_func=melon_item, helper_name="melon_item"), Has('Watermelon'))
     )
 
     world.set_rule(
         multiworld.get_location("Jammin' Through The Trees: Stars", player),
-        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip')))
+        Or(And(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), Or(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Tulip'))), And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Tulip')))
     )
 
     world.set_rule(
@@ -735,7 +735,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Beanstalk', 'Chomp Rock', 'Dashed Stairs', 'Large Spring Ball', 'Mole Tank Morph', 'Tulip'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Beanstalk', 'Chomp Rock', 'Dashed Stairs', 'Large Spring Ball', 'Mole Tank Morph', 'Tulip'))
     )
 
     world.set_rule(
@@ -765,17 +765,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Red Coins", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3))
+        Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Flowers", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3))
+        Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Tulip'))
     )
 
     world.set_rule(
@@ -800,7 +800,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Stars", player),
-        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Has('Tulip')), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
+        Or(And(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), Has('Tulip')), HelperCall(helper_func=has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
@@ -840,7 +840,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Stars", player),
-        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip')), Has('! Switch'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Tulip', '! Switch'))
     )
 
     world.set_rule(
@@ -850,17 +850,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Red Coins", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade')), HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade')), HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade')), HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Vanishing Arrow Wheel'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade')), HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Stars", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Vanishing Arrow Wheel')), Has('Dashed Stairs'))
+        And(Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Vanishing Arrow Wheel')), Has('Dashed Stairs'))
     )
 
     world.set_rule(
@@ -890,22 +890,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Red Coins", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant')), HasAny('Large Spring Ball', 'Spring Ball'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Plant')), HasAny('Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant')), HasAny('Large Spring Ball', 'Spring Ball'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Plant')), HasAny('Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Stars", player),
-        And(Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Has('Tulip')), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")), Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant')))
+        And(Or(And(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), Has('Tulip')), HelperCall(helper_func=has_midring, helper_name="has_midring")), Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Plant')))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Level Clear", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant'))
+        Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Plant'))
     )
 
     world.set_rule(
@@ -920,7 +920,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Stars", player),
-        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Helicopter Morph')), Has('Large Spring Ball'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Helicopter Morph', 'Large Spring Ball'))
     )
 
     world.set_rule(
@@ -945,7 +945,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAny('Dashed Stairs', 'Vanishing Arrow Wheel'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAny('Dashed Stairs', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
@@ -965,27 +965,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Stars", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Or(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Dashed Stairs')), Has('Tulip')))
+        Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Stairs')), Has('Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("Ride The Ski Lifts: Stars", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Super Star'))
+        Or(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Super Star'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Red Coins", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Fire Melon')), HasAll('Bucket', 'Dashed Platform', 'Skis', 'Spring Ball', 'Super Star'))
+        And(Or(HelperCall(helper_func=melon_item, helper_name="melon_item"), Has('Fire Melon')), HasAll('Bucket', 'Dashed Platform', 'Skis', 'Spring Ball', 'Super Star'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Fire Melon')), HasAll('Dashed Platform', 'Skis', 'Spring Ball'))
+        And(Or(HelperCall(helper_func=melon_item, helper_name="melon_item"), Has('Fire Melon')), HasAll('Dashed Platform', 'Skis', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Stars", player),
-        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Fire Melon'))), Has('Spring Ball'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Or(HelperCall(helper_func=melon_item, helper_name="melon_item"), Has('Fire Melon')), Has('Spring Ball'))
     )
 
     world.set_rule(
@@ -1005,7 +1005,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Stars", player),
-        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HasAll('Dashed Platform', 'Dashed Stairs')), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Dashed Stairs', 'Platform Ghost')))
+        Or(And(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), HasAll('Dashed Platform', 'Dashed Stairs')), And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Dashed Stairs', 'Platform Ghost')))
     )
 
     world.set_rule(
@@ -1030,7 +1030,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
+        HelperCall(helper_func=has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
@@ -1040,22 +1040,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Welcome To Cloud World: Stars", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))
+        Or(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Red Coins", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
+        Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Flowers", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
+        Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
+        HelperCall(helper_func=has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
@@ -1070,7 +1070,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Arrow Wheel'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Arrow Wheel'))
     )
 
     world.set_rule(
@@ -1095,7 +1095,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Dashed Platform'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Platform'))
     )
 
     world.set_rule(
@@ -1115,7 +1115,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Stars", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
+        Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
@@ -1125,17 +1125,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Red Coins", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
@@ -1150,17 +1150,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Red Coins", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Flowers", player),
-        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
+        And(Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Stars", player),
-        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
     )
 
     world.set_rule(
@@ -1175,7 +1175,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Stars", player),
-        Or(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Chomp Rock', 'Key', 'Large Spring Ball')), HasAll('Chomp Rock', 'Key', 'Tulip'))
+        Or(And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Chomp Rock', 'Key', 'Large Spring Ball')), HasAll('Chomp Rock', 'Key', 'Tulip'))
     )
 
     world.set_rule(
@@ -1185,7 +1185,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Red Coins", player),
-        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
+        Or(HelperCall(helper_func=combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
@@ -1195,7 +1195,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Stars", player),
-        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
+        HelperCall(helper_func=has_midring, helper_name="has_midring")
     )
 
     world.set_rule(

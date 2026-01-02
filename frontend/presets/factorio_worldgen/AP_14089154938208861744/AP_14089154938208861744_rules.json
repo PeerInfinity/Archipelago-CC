@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "FactorioWorldGenWorld"
+    "1": "Factorio"
   },
   "regions": {
     "1": {
@@ -4394,7 +4394,21 @@
             "name": "Automate chemical-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "advanced-circuit",
+                  "advanced-oil-processing",
+                  "automation",
+                  "chemical-science-pack",
+                  "engine",
+                  "oil-gathering",
+                  "oil-processing",
+                  "plastics",
+                  "steel-processing",
+                  "sulfur-processing"
+                ]
+              }
             },
             "item": {
               "name": "Automated chemical-science-pack",
@@ -4409,7 +4423,10 @@
             "name": "Automate logistic-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "logistic-science-pack"
+              }
             },
             "item": {
               "name": "Automated logistic-science-pack",
@@ -4424,7 +4441,15 @@
             "name": "Automate military-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "military-2",
+                  "military-science-pack",
+                  "steel-processing",
+                  "stone-wall"
+                ]
+              }
             },
             "item": {
               "name": "Automated military-science-pack",
@@ -4439,7 +4464,24 @@
             "name": "Automate production-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "advanced-circuit",
+                  "advanced-material-processing-2",
+                  "advanced-oil-processing",
+                  "circuit-network",
+                  "concrete",
+                  "electric-energy-distribution-1",
+                  "oil-gathering",
+                  "oil-processing",
+                  "plastics",
+                  "production-science-pack",
+                  "productivity-module",
+                  "railway",
+                  "steel-processing"
+                ]
+              }
             },
             "item": {
               "name": "Automated production-science-pack",
@@ -4454,7 +4496,27 @@
             "name": "Automate utility-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "advanced-circuit",
+                  "advanced-oil-processing",
+                  "automation",
+                  "battery",
+                  "electric-engine",
+                  "engine",
+                  "low-density-structure",
+                  "lubricant",
+                  "oil-gathering",
+                  "oil-processing",
+                  "plastics",
+                  "processing-unit",
+                  "robotics",
+                  "steel-processing",
+                  "sulfur-processing",
+                  "utility-science-pack"
+                ]
+              }
             },
             "item": {
               "name": "Automated utility-science-pack",
@@ -4580,7 +4642,6 @@
       },
       "advanced-circuit": {
         "name": "advanced-circuit",
-        "hint_text": "advanced circuit",
         "id": 131072,
         "groups": [
           "Everything"
@@ -4588,11 +4649,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "advanced circuit"
       },
       "advanced-combinators": {
         "name": "advanced-combinators",
-        "hint_text": "advanced combinators",
         "id": 131073,
         "groups": [
           "Everything"
@@ -4600,7 +4661,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "advanced combinators"
       },
       "advanced-material-processing": {
         "name": "advanced-material-processing",
@@ -4758,7 +4820,6 @@
       },
       "belt-immunity-equipment": {
         "name": "belt-immunity-equipment",
-        "hint_text": "belt immunity equipment",
         "id": 131088,
         "groups": [
           "Everything"
@@ -4766,7 +4827,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "belt immunity equipment"
       },
       "braking-force-1": {
         "name": "braking-force-1",
@@ -4869,7 +4931,6 @@
       },
       "circuit-network": {
         "name": "circuit-network",
-        "hint_text": "circuit network",
         "id": 131098,
         "groups": [
           "Everything"
@@ -4877,11 +4938,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "circuit network"
       },
       "cliff-explosives": {
         "name": "cliff-explosives",
-        "hint_text": "cliff explosives",
         "id": 131099,
         "groups": [
           "Everything"
@@ -4889,7 +4950,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "cliff explosives"
       },
       "coal-liquefaction": {
         "name": "coal-liquefaction",
@@ -4915,7 +4977,6 @@
       },
       "construction-robotics": {
         "name": "construction-robotics",
-        "hint_text": "construction robotics",
         "id": 131102,
         "groups": [
           "Everything"
@@ -4923,7 +4984,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "construction robotics"
       },
       "defender": {
         "name": "defender",
@@ -4949,7 +5011,6 @@
       },
       "discharge-defense-equipment": {
         "name": "discharge-defense-equipment",
-        "hint_text": "discharge defense equipment",
         "id": 131105,
         "groups": [
           "Everything"
@@ -4957,7 +5018,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "discharge defense equipment"
       },
       "distractor": {
         "name": "distractor",
@@ -4972,7 +5034,6 @@
       },
       "effect-transmission": {
         "name": "effect-transmission",
-        "hint_text": "effect transmission",
         "id": 131107,
         "groups": [
           "Everything"
@@ -4980,7 +5041,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "effect transmission"
       },
       "efficiency-module": {
         "name": "efficiency-module",
@@ -5017,7 +5079,6 @@
       },
       "electric-energy-accumulators": {
         "name": "electric-energy-accumulators",
-        "hint_text": "electric energy accumulators",
         "id": 131111,
         "groups": [
           "Everything"
@@ -5025,7 +5086,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "electric energy accumulators"
       },
       "electric-energy-distribution-1": {
         "name": "electric-energy-distribution-1",
@@ -5117,7 +5179,6 @@
       },
       "exoskeleton-equipment": {
         "name": "exoskeleton-equipment",
-        "hint_text": "exoskeleton equipment",
         "id": 131120,
         "groups": [
           "Everything"
@@ -5125,7 +5186,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "exoskeleton equipment"
       },
       "explosive-rocketry": {
         "name": "explosive-rocketry",
@@ -5162,7 +5224,6 @@
       },
       "fission-reactor-equipment": {
         "name": "fission-reactor-equipment",
-        "hint_text": "fission reactor equipment",
         "id": 131124,
         "groups": [
           "Everything"
@@ -5170,7 +5231,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "fission reactor equipment"
       },
       "flamethrower": {
         "name": "flamethrower",
@@ -5394,7 +5456,6 @@
       },
       "land-mine": {
         "name": "land-mine",
-        "hint_text": "land mine",
         "id": 131145,
         "groups": [
           "Everything"
@@ -5402,7 +5463,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "land mine"
       },
       "landfill": {
         "name": "landfill",
@@ -5582,7 +5644,6 @@
       },
       "logistic-robotics": {
         "name": "logistic-robotics",
-        "hint_text": "logistic robotics",
         "id": 131162,
         "groups": [
           "Everything"
@@ -5590,7 +5651,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "logistic robotics"
       },
       "logistic-science-pack": {
         "name": "logistic-science-pack",
@@ -5605,7 +5667,6 @@
       },
       "logistic-system": {
         "name": "logistic-system",
-        "hint_text": "logistic system",
         "id": 131164,
         "groups": [
           "Everything"
@@ -5613,7 +5674,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "logistic system"
       },
       "logistics": {
         "name": "logistics",
@@ -5650,7 +5712,6 @@
       },
       "low-density-structure": {
         "name": "low-density-structure",
-        "hint_text": "low density structure",
         "id": 131168,
         "groups": [
           "Everything"
@@ -5658,7 +5719,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "low density structure"
       },
       "lubricant": {
         "name": "lubricant",
@@ -5783,7 +5845,6 @@
       },
       "night-vision-equipment": {
         "name": "night-vision-equipment",
-        "hint_text": "night vision equipment",
         "id": 131180,
         "groups": [
           "Everything"
@@ -5791,7 +5852,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "night vision equipment"
       },
       "nuclear-fuel-reprocessing": {
         "name": "nuclear-fuel-reprocessing",
@@ -5806,7 +5868,6 @@
       },
       "nuclear-power": {
         "name": "nuclear-power",
-        "hint_text": "nuclear power",
         "id": 131182,
         "groups": [
           "Everything"
@@ -5814,11 +5875,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "nuclear power"
       },
       "oil-gathering": {
         "name": "oil-gathering",
-        "hint_text": "oil gathering",
         "id": 131183,
         "groups": [
           "Everything"
@@ -5826,7 +5887,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "oil gathering"
       },
       "oil-processing": {
         "name": "oil-processing",
@@ -5841,7 +5903,6 @@
       },
       "personal-laser-defense-equipment": {
         "name": "personal-laser-defense-equipment",
-        "hint_text": "personal laser defense equipment",
         "id": 131185,
         "groups": [
           "Everything"
@@ -5849,7 +5910,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "personal laser defense equipment"
       },
       "personal-roboport-equipment": {
         "name": "personal-roboport-equipment",
@@ -5974,7 +6036,6 @@
       },
       "processing-unit": {
         "name": "processing-unit",
-        "hint_text": "processing unit",
         "id": 131197,
         "groups": [
           "Everything"
@@ -5982,7 +6043,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "processing unit"
       },
       "production-science-pack": {
         "name": "production-science-pack",
@@ -6118,7 +6180,6 @@
       },
       "repair-pack": {
         "name": "repair-pack",
-        "hint_text": "repair pack",
         "id": 131210,
         "groups": [
           "Everything"
@@ -6126,7 +6187,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "repair pack"
       },
       "research-speed-1": {
         "name": "research-speed-1",
@@ -6207,7 +6269,6 @@
       },
       "rocket-fuel": {
         "name": "rocket-fuel",
-        "hint_text": "rocket fuel",
         "id": 131218,
         "groups": [
           "Everything"
@@ -6215,11 +6276,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "rocket fuel"
       },
       "rocket-silo": {
         "name": "rocket-silo",
-        "hint_text": "rocket silo",
         "id": 131219,
         "groups": [
           "Everything"
@@ -6227,7 +6288,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "rocket silo"
       },
       "rocketry": {
         "name": "rocketry",
@@ -6242,7 +6304,6 @@
       },
       "solar-energy": {
         "name": "solar-energy",
-        "hint_text": "solar energy",
         "id": 131221,
         "groups": [
           "Everything"
@@ -6250,11 +6311,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "solar energy"
       },
       "solar-panel-equipment": {
         "name": "solar-panel-equipment",
-        "hint_text": "solar panel equipment",
         "id": 131222,
         "groups": [
           "Everything"
@@ -6262,7 +6323,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "solar panel equipment"
       },
       "space-science-pack": {
         "name": "space-science-pack",
@@ -6332,7 +6394,6 @@
       },
       "steel-axe": {
         "name": "steel-axe",
-        "hint_text": "steel axe",
         "id": 131229,
         "groups": [
           "Everything"
@@ -6340,7 +6401,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "steel axe"
       },
       "steel-processing": {
         "name": "steel-processing",
@@ -6465,7 +6527,6 @@
       },
       "uranium-ammo": {
         "name": "uranium-ammo",
-        "hint_text": "uranium ammo",
         "id": 131241,
         "groups": [
           "Everything"
@@ -6473,11 +6534,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "uranium ammo"
       },
       "uranium-mining": {
         "name": "uranium-mining",
-        "hint_text": "uranium mining",
         "id": 131242,
         "groups": [
           "Everything"
@@ -6485,7 +6546,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "uranium mining"
       },
       "uranium-processing": {
         "name": "uranium-processing",
@@ -6665,7 +6727,6 @@
       },
       "progressive-advanced-material-processing": {
         "name": "progressive-advanced-material-processing",
-        "hint_text": "progressive advanced material processing",
         "id": 131260,
         "groups": [
           "Everything",
@@ -6674,11 +6735,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive advanced material processing"
       },
       "progressive-armor": {
         "name": "progressive-armor",
-        "hint_text": "progressive armor",
         "id": 131261,
         "groups": [
           "Everything",
@@ -6687,11 +6748,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "progressive armor"
       },
       "progressive-automation": {
         "name": "progressive-automation",
-        "hint_text": "progressive automation",
         "id": 131262,
         "groups": [
           "Everything",
@@ -6700,7 +6761,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive automation"
       },
       "progressive-braking-force": {
         "name": "progressive-braking-force",
@@ -6716,7 +6778,6 @@
       },
       "progressive-efficiency-module": {
         "name": "progressive-efficiency-module",
-        "hint_text": "progressive efficiency module",
         "id": 131264,
         "groups": [
           "Everything",
@@ -6725,11 +6786,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive efficiency module"
       },
       "progressive-electric-energy-distribution": {
         "name": "progressive-electric-energy-distribution",
-        "hint_text": "progressive electric energy distribution",
         "id": 131265,
         "groups": [
           "Everything",
@@ -6738,11 +6799,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive electric energy distribution"
       },
       "progressive-energy-shield": {
         "name": "progressive-energy-shield",
-        "hint_text": "progressive energy shield",
         "id": 131266,
         "groups": [
           "Everything",
@@ -6751,11 +6812,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive energy shield"
       },
       "progressive-engine": {
         "name": "progressive-engine",
-        "hint_text": "progressive engine",
         "id": 131267,
         "groups": [
           "Everything",
@@ -6764,11 +6825,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive engine"
       },
       "progressive-flamethrower": {
         "name": "progressive-flamethrower",
-        "hint_text": "progressive flamethrower",
         "id": 131268,
         "groups": [
           "Everything",
@@ -6777,11 +6838,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "hint_text": "progressive flamethrower"
       },
       "progressive-fluid-handling": {
         "name": "progressive-fluid-handling",
-        "hint_text": "progressive fluid handling",
         "id": 131269,
         "groups": [
           "Everything",
@@ -6790,11 +6851,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive fluid handling"
       },
       "progressive-follower": {
         "name": "progressive-follower",
-        "hint_text": "progressive follower",
         "id": 131270,
         "groups": [
           "Everything",
@@ -6803,11 +6864,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive follower"
       },
       "progressive-follower-robot-count": {
         "name": "progressive-follower-robot-count",
-        "hint_text": "progressive follower robot count",
         "id": 131271,
         "groups": [
           "Everything",
@@ -6816,11 +6877,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "progressive follower robot count"
       },
       "progressive-inserter": {
         "name": "progressive-inserter",
-        "hint_text": "progressive inserter",
         "id": 131272,
         "groups": [
           "Everything",
@@ -6829,7 +6890,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 9,
+        "hint_text": "progressive inserter"
       },
       "progressive-inserter-capacity-bonus": {
         "name": "progressive-inserter-capacity-bonus",
@@ -6845,7 +6907,6 @@
       },
       "progressive-laser-shooting-speed": {
         "name": "progressive-laser-shooting-speed",
-        "hint_text": "progressive laser shooting speed",
         "id": 131274,
         "groups": [
           "Everything",
@@ -6854,11 +6915,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "hint_text": "progressive laser shooting speed"
       },
       "progressive-laser-weapons-damage": {
         "name": "progressive-laser-weapons-damage",
-        "hint_text": "progressive laser weapons damage",
         "id": 131275,
         "groups": [
           "Everything",
@@ -6867,11 +6928,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "hint_text": "progressive laser weapons damage"
       },
       "progressive-logistics": {
         "name": "progressive-logistics",
-        "hint_text": "progressive logistics",
         "id": 131276,
         "groups": [
           "Everything",
@@ -6880,11 +6941,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive logistics"
       },
       "progressive-military": {
         "name": "progressive-military",
-        "hint_text": "progressive military",
         "id": 131277,
         "groups": [
           "Everything",
@@ -6893,11 +6954,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "progressive military"
       },
       "progressive-mining-productivity": {
         "name": "progressive-mining-productivity",
-        "hint_text": "progressive mining productivity",
         "id": 131278,
         "groups": [
           "Everything",
@@ -6906,11 +6967,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive mining productivity"
       },
       "progressive-personal-battery": {
         "name": "progressive-personal-battery",
-        "hint_text": "progressive personal battery",
         "id": 131279,
         "groups": [
           "Everything",
@@ -6919,11 +6980,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive personal battery"
       },
       "progressive-personal-roboport-equipment": {
         "name": "progressive-personal-roboport-equipment",
-        "hint_text": "progressive personal roboport equipment",
         "id": 131280,
         "groups": [
           "Everything",
@@ -6932,11 +6993,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive personal roboport equipment"
       },
       "progressive-physical-projectile-damage": {
         "name": "progressive-physical-projectile-damage",
-        "hint_text": "progressive physical projectile damage",
         "id": 131281,
         "groups": [
           "Everything",
@@ -6945,11 +7006,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "hint_text": "progressive physical projectile damage"
       },
       "progressive-processing": {
         "name": "progressive-processing",
-        "hint_text": "progressive processing",
         "id": 131282,
         "groups": [
           "Everything",
@@ -6958,11 +7019,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 8,
+        "hint_text": "progressive processing"
       },
       "progressive-productivity-module": {
         "name": "progressive-productivity-module",
-        "hint_text": "progressive productivity module",
         "id": 131283,
         "groups": [
           "Everything",
@@ -6971,7 +7032,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive productivity module"
       },
       "progressive-refined-flammables": {
         "name": "progressive-refined-flammables",
@@ -6987,7 +7049,6 @@
       },
       "progressive-research-speed": {
         "name": "progressive-research-speed",
-        "hint_text": "progressive research speed",
         "id": 131285,
         "groups": [
           "Everything",
@@ -6996,11 +7057,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "hint_text": "progressive research speed"
       },
       "progressive-rocketry": {
         "name": "progressive-rocketry",
-        "hint_text": "progressive rocketry",
         "id": 131286,
         "groups": [
           "Everything",
@@ -7009,11 +7070,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive rocketry"
       },
       "progressive-science-pack": {
         "name": "progressive-science-pack",
-        "hint_text": "progressive science pack",
         "id": 131287,
         "groups": [
           "Everything",
@@ -7022,11 +7083,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "hint_text": "progressive science pack"
       },
       "progressive-speed-module": {
         "name": "progressive-speed-module",
-        "hint_text": "progressive speed module",
         "id": 131288,
         "groups": [
           "Everything",
@@ -7035,11 +7096,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive speed module"
       },
       "progressive-stronger-explosives": {
         "name": "progressive-stronger-explosives",
-        "hint_text": "progressive stronger explosives",
         "id": 131289,
         "groups": [
           "Everything",
@@ -7048,11 +7109,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "hint_text": "progressive stronger explosives"
       },
       "progressive-train-network": {
         "name": "progressive-train-network",
-        "hint_text": "progressive train network",
         "id": 131290,
         "groups": [
           "Everything",
@@ -7061,11 +7122,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 9,
+        "hint_text": "progressive train network"
       },
       "progressive-turret": {
         "name": "progressive-turret",
-        "hint_text": "progressive turret",
         "id": 131291,
         "groups": [
           "Everything",
@@ -7074,11 +7135,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive turret"
       },
       "progressive-vehicle": {
         "name": "progressive-vehicle",
-        "hint_text": "progressive vehicle",
         "id": 131292,
         "groups": [
           "Everything",
@@ -7087,11 +7148,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive vehicle"
       },
       "progressive-wall": {
         "name": "progressive-wall",
-        "hint_text": "progressive wall",
         "id": 131293,
         "groups": [
           "Everything",
@@ -7100,11 +7161,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive wall"
       },
       "progressive-weapon-shooting-speed": {
         "name": "progressive-weapon-shooting-speed",
-        "hint_text": "progressive weapon shooting speed",
         "id": 131294,
         "groups": [
           "Everything",
@@ -7113,11 +7174,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "hint_text": "progressive weapon shooting speed"
       },
       "progressive-worker-robots-speed": {
         "name": "progressive-worker-robots-speed",
-        "hint_text": "progressive worker robots speed",
         "id": 131295,
         "groups": [
           "Everything",
@@ -7126,11 +7187,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "hint_text": "progressive worker robots speed"
       },
       "progressive-worker-robots-storage": {
         "name": "progressive-worker-robots-storage",
-        "hint_text": "progressive worker robots storage",
         "id": 131296,
         "groups": [
           "Everything",
@@ -7139,7 +7200,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive worker robots storage"
       },
       "Victory": {
         "name": "Victory",
@@ -7154,7 +7216,6 @@
       },
       "Automated automation-science-pack": {
         "name": "Automated automation-science-pack",
-        "hint_text": "Automated automation science pack",
         "id": null,
         "groups": [
           "Event"
@@ -7162,11 +7223,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Automated automation science pack"
       },
       "Automated chemical-science-pack": {
         "name": "Automated chemical-science-pack",
-        "hint_text": "Automated chemical science pack",
         "id": null,
         "groups": [
           "Event"
@@ -7174,11 +7235,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Automated chemical science pack"
       },
       "Automated logistic-science-pack": {
         "name": "Automated logistic-science-pack",
-        "hint_text": "Automated logistic science pack",
         "id": null,
         "groups": [
           "Event"
@@ -7186,11 +7247,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Automated logistic science pack"
       },
       "Automated military-science-pack": {
         "name": "Automated military-science-pack",
-        "hint_text": "Automated military science pack",
         "id": null,
         "groups": [
           "Event"
@@ -7198,11 +7259,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Automated military science pack"
       },
       "Automated production-science-pack": {
         "name": "Automated production-science-pack",
-        "hint_text": "Automated production science pack",
         "id": null,
         "groups": [
           "Event"
@@ -7210,11 +7271,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Automated production science pack"
       },
       "Automated utility-science-pack": {
         "name": "Automated utility-science-pack",
-        "hint_text": "Automated utility science pack",
         "id": null,
         "groups": [
           "Event"
@@ -7222,7 +7283,8 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Automated utility science pack"
       }
     }
   },
@@ -7801,12 +7863,14 @@
         "silo": 0,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "tech_cost_distribution": 0,
         "tech_cost_mix": 70,
         "tech_tree_information": 2,
         "tech_tree_layout": 0,
-        "teleport_traps": 0
+        "teleport_traps": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -8033,6 +8097,11 @@
           "default": 0,
           "display_name": "Rocket Silo"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "tech_cost_distribution": {
           "type": "choice",
           "name_lookup": {
@@ -8086,6 +8155,11 @@
           "range_end": 25,
           "default": 0,
           "display_name": "Teleport Traps"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "custom_recipes": {
@@ -8563,7 +8637,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "world_class_name": "Factorio"
     }
   },
   "game_info": {

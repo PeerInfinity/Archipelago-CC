@@ -15740,7 +15740,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "world_class_name": "SoEWorld"
     }
   },
   "game_info": {

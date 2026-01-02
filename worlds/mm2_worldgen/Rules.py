@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _megaman2worldgen_can_defeat_enough_rbms(state: "CollectionState", player: int, required = None, boss_requirements = None) -> bool:
+def can_defeat_enough_rbms(state: "CollectionState", player: int, required = None, boss_requirements = None) -> bool:
     can_defeat = 0
     for boss, reqs in boss_requirements.items():
         if (boss in {0: 'Heat Man Defeated', 1: 'Air Man Defeated', 2: 'Wood Man Defeated', 3: 'Bubble Man Defeated', 4: 'Quick Man Defeated', 5: 'Flash Man Defeated', 6: 'Metal Man Defeated', 7: 'Crash Man Defeated'}):
@@ -35,7 +35,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Heat Man Stage", player),
-        And(HasAll('Heat Man Access Codes'), Has('Item 2 - Rocket'))
+        HasAll('Item 2 - Rocket', 'Heat Man Access Codes')
     )
 
     world.set_rule(
@@ -55,7 +55,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Quick Man Stage", player),
-        And(HasAll('Quick Man Access Codes'), Has('Time Stopper'))
+        HasAll('Time Stopper', 'Quick Man Access Codes')
     )
 
     world.set_rule(

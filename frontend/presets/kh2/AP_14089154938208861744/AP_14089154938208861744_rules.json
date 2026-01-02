@@ -21869,12 +21869,14 @@
       "Levels Region (26 Visit Locking Items)": {
         "name": "Levels Region (26 Visit Locking Items)",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Summons": {
         "name": "Summons",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -26627,6 +26629,11 @@
           "range_end": 99,
           "default": 50,
           "display_name": "Progression Balancing"
+        },
+        "start_inventory": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         }
       },
       "random_super_boss_list": [],
@@ -32606,7 +32613,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "KH2World"
     }
   },
   "game_info": {
@@ -32693,7 +32701,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                    "value": "Roxas Event Location"
                   }
                 ]
               },
@@ -32777,7 +32785,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "Roxas Event Location"
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -50603,8 +50611,8 @@
           "iterator_info": {
             "type": "comprehension_details",
             "target": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "name",
                   "name": "item_name"
@@ -50642,8 +50650,8 @@
           "iterator_info": {
             "type": "comprehension_details",
             "target": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "name",
                   "name": "item_name"

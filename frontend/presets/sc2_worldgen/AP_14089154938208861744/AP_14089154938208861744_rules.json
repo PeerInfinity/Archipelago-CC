@@ -25547,7 +25547,6 @@
       },
       "Dual-Fusion Welders (SCV)": {
         "name": "Dual-Fusion Welders (SCV)",
-        "hint_text": "Dual Fusion Welders (SCV)",
         "id": 1205,
         "groups": [
           "Armory",
@@ -25562,11 +25561,11 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Dual Fusion Welders (SCV)"
       },
       "Progressive Fire-Suppression System (Terran)": {
         "name": "Progressive Fire-Suppression System (Terran)",
-        "hint_text": "Progressive Fire Suppression System (Terran)",
         "id": 1206,
         "groups": [
           "Everything",
@@ -25586,7 +25585,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Progressive Fire Suppression System (Terran)"
       },
       "Progressive Orbital Command (Deprecated)": {
         "name": "Progressive Orbital Command (Deprecated)",
@@ -25788,7 +25788,6 @@
       },
       "G-4 Clusterbomb (Reaper)": {
         "name": "G-4 Clusterbomb (Reaper)",
-        "hint_text": "G 4 Clusterbomb (Reaper)",
         "id": 1217,
         "groups": [
           "Armory",
@@ -25804,7 +25803,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "G 4 Clusterbomb (Reaper)"
       },
       "Mag-Field Accelerators (Cyclone)": {
         "name": "Mag-Field Accelerators (Cyclone)",
@@ -25824,7 +25824,6 @@
       },
       "Mag-Field Launchers (Cyclone)": {
         "name": "Mag-Field Launchers (Cyclone)",
-        "hint_text": "Mag Field Launchers (Cyclone)",
         "id": 1219,
         "groups": [
           "Armory",
@@ -25837,7 +25836,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Mag Field Launchers (Cyclone)"
       },
       "Laser Targeting System (Marine)": {
         "name": "Laser Targeting System (Marine)",
@@ -26095,7 +26095,6 @@
       },
       "Infernal Pre-Igniter (Firebat)": {
         "name": "Infernal Pre-Igniter (Firebat)",
-        "hint_text": "Infernal Pre Igniter (Firebat)",
         "id": 1235,
         "groups": [
           "Armory",
@@ -26108,7 +26107,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Infernal Pre Igniter (Firebat)"
       },
       "Kinetic Foam (Firebat)": {
         "name": "Kinetic Foam (Firebat)",
@@ -26190,7 +26190,6 @@
       },
       "Jerry-Rigged Patchup (Vulture)": {
         "name": "Jerry-Rigged Patchup (Vulture)",
-        "hint_text": "Jerry Rigged Patchup (Vulture)",
         "id": 1241,
         "groups": [
           "Armory",
@@ -26203,7 +26202,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Jerry Rigged Patchup (Vulture)"
       },
       "Shaped Hull (Goliath)": {
         "name": "Shaped Hull (Goliath)",
@@ -26850,7 +26850,6 @@
       },
       "Anti-Mechanical Munition (Viking)": {
         "name": "Anti-Mechanical Munition (Viking)",
-        "hint_text": "Anti Mechanical Munition (Viking)",
         "id": 1280,
         "groups": [
           "Anti-Mechanical Munition",
@@ -26863,7 +26862,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Anti Mechanical Munition (Viking)"
       },
       "Maglev Propulsion (Diamondback)": {
         "name": "Maglev Propulsion (Diamondback)",
@@ -27010,7 +27010,6 @@
       },
       "All-Terrain Treads (Siege Tank)": {
         "name": "All-Terrain Treads (Siege Tank)",
-        "hint_text": "All Terrain Treads (Siege Tank)",
         "id": 1290,
         "groups": [
           "All-Terrain Treads",
@@ -27023,7 +27022,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "All Terrain Treads (Siege Tank)"
       },
       "Rapid Reignition Systems (Medivac)": {
         "name": "Rapid Reignition Systems (Medivac)",
@@ -27186,7 +27186,6 @@
       },
       "Twin-Linked Flamethrower (Hellion)": {
         "name": "Twin-Linked Flamethrower (Hellion)",
-        "hint_text": "Twin Linked Flamethrower (Hellion)",
         "id": 1300,
         "groups": [
           "Armory",
@@ -27202,7 +27201,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Twin Linked Flamethrower (Hellion)"
       },
       "Thermite Filaments (Hellion)": {
         "name": "Thermite Filaments (Hellion)",
@@ -27312,7 +27312,6 @@
       },
       "Progressive Tri-Lithium Power Cell (Diamondback)": {
         "name": "Progressive Tri-Lithium Power Cell (Diamondback)",
-        "hint_text": "Progressive Tri Lithium Power Cell (Diamondback)",
         "id": 1306,
         "groups": [
           "Diamondback Items",
@@ -27330,7 +27329,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "Progressive Tri Lithium Power Cell (Diamondback)"
       },
       "Shaped Hull (Diamondback)": {
         "name": "Shaped Hull (Diamondback)",
@@ -27490,7 +27490,6 @@
       },
       "Phobos-Class Weapons System (Viking)": {
         "name": "Phobos-Class Weapons System (Viking)",
-        "hint_text": "Phobos Class Weapons System (Viking)",
         "id": 1315,
         "groups": [
           "Armory",
@@ -27506,11 +27505,11 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Phobos Class Weapons System (Viking)"
       },
       "Progressive Cross-Spectrum Dampeners (Banshee)": {
         "name": "Progressive Cross-Spectrum Dampeners (Banshee)",
-        "hint_text": "Progressive Cross Spectrum Dampeners (Banshee)",
         "id": 1316,
         "groups": [
           "Banshee Items",
@@ -27531,7 +27530,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "Progressive Cross Spectrum Dampeners (Banshee)"
       },
       "Shockwave Missile Battery (Banshee)": {
         "name": "Shockwave Missile Battery (Banshee)",
@@ -28046,7 +28046,6 @@
       },
       "Improved Nano-Repair (Science Vessel)": {
         "name": "Improved Nano-Repair (Science Vessel)",
-        "hint_text": "Improved Nano Repair (Science Vessel)",
         "id": 1347,
         "groups": [
           "Armory",
@@ -28059,7 +28058,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Improved Nano Repair (Science Vessel)"
       },
       "Magellan Computation Systems (Science Vessel)": {
         "name": "Magellan Computation Systems (Science Vessel)",
@@ -28353,7 +28353,6 @@
       },
       "Hunter-Seeker Weapon (Raven)": {
         "name": "Hunter-Seeker Weapon (Raven)",
-        "hint_text": "Hunter Seeker Weapon (Raven)",
         "id": 1366,
         "groups": [
           "Armory",
@@ -28370,7 +28369,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Hunter Seeker Weapon (Raven)"
       },
       "Interference Matrix (Raven)": {
         "name": "Interference Matrix (Raven)",
@@ -28390,7 +28390,6 @@
       },
       "Anti-Armor Missile (Raven)": {
         "name": "Anti-Armor Missile (Raven)",
-        "hint_text": "Anti Armor Missile (Raven)",
         "id": 1368,
         "groups": [
           "Anti-Armor Missile",
@@ -28403,7 +28402,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Anti Armor Missile (Raven)"
       },
       "Internal Tech Module (Raven)": {
         "name": "Internal Tech Module (Raven)",
@@ -29233,7 +29233,6 @@
       },
       "Ultra-Capacitors (Terran)": {
         "name": "Ultra-Capacitors (Terran)",
-        "hint_text": "Ultra Capacitors (Terran)",
         "id": 1600,
         "groups": [
           "Everything",
@@ -29248,7 +29247,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Ultra Capacitors (Terran)"
       },
       "Vanadium Plating (Terran)": {
         "name": "Vanadium Plating (Terran)",
@@ -29560,7 +29560,6 @@
       },
       "Progressive Regenerative Bio-Steel (Terran)": {
         "name": "Progressive Regenerative Bio-Steel (Terran)",
-        "hint_text": "Progressive Regenerative Bio Steel (Terran)",
         "id": 1617,
         "groups": [
           "Everything",
@@ -29581,7 +29580,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "Progressive Regenerative Bio Steel (Terran)"
       },
       "Hive Mind Emulator": {
         "name": "Hive Mind Emulator",
@@ -29637,7 +29637,6 @@
       },
       "Hi-Sec Auto Tracking (Terran)": {
         "name": "Hi-Sec Auto Tracking (Terran)",
-        "hint_text": "Hi Sec Auto Tracking (Terran)",
         "id": 1621,
         "groups": [
           "Everything",
@@ -29649,7 +29648,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Hi Sec Auto Tracking (Terran)"
       },
       "Advanced Optics (Terran)": {
         "name": "Advanced Optics (Terran)",
@@ -29684,7 +29684,6 @@
       },
       "Mechanical Know-how (Terran)": {
         "name": "Mechanical Know-how (Terran)",
-        "hint_text": "Mechanical Know how (Terran)",
         "id": 1624,
         "groups": [
           "Everything",
@@ -29697,7 +29696,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Mechanical Know how (Terran)"
       },
       "Mercenary Munitions (Terran)": {
         "name": "Mercenary Munitions (Terran)",
@@ -50706,7 +50706,6 @@
       },
       "Beat All-In (Terran)": {
         "name": "Beat All-In (Terran)",
-        "hint_text": "Beat All In (Terran)",
         "id": null,
         "groups": [
           "Event",
@@ -50716,7 +50715,8 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Beat All In (Terran)"
       },
       "Beat Liberation Day": {
         "name": "Beat Liberation Day",
@@ -53901,7 +53901,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "Starcraft2WorldGenWorld"
     }
   },
   "game_info": {
@@ -54685,15 +54686,36 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Dominion Trooper",
-              "Goliath",
-              "Hellion",
-              "Marauder",
-              "Marine",
-              "Vulture",
-              "Warhound"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Dominion Trooper"
+              },
+              {
+                "type": "constant",
+                "value": "Goliath"
+              },
+              {
+                "type": "constant",
+                "value": "Hellion"
+              },
+              {
+                "type": "constant",
+                "value": "Marauder"
+              },
+              {
+                "type": "constant",
+                "value": "Marine"
+              },
+              {
+                "type": "constant",
+                "value": "Vulture"
+              },
+              {
+                "type": "constant",
+                "value": "Warhound"
+              }
             ]
           }
         ]
@@ -54860,11 +54882,20 @@
                     "method": "has_any",
                     "args": [
                       {
-                        "type": "constant",
-                        "value": [
-                          "Dominion Trooper",
-                          "Marauder",
-                          "Marine"
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Dominion Trooper"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Marauder"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Marine"
+                          }
                         ]
                       }
                     ]
@@ -54927,10 +54958,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Maelstrom Rounds (Siege Tank)",
-                      "Siege Tank"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Maelstrom Rounds (Siege Tank)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Siege Tank"
+                      }
                     ]
                   }
                 ]
@@ -54954,10 +54991,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Graduating Range (Siege Tank)",
-                      "Siege Tank"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Graduating Range (Siege Tank)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Siege Tank"
+                      }
                     ]
                   }
                 ]
@@ -54981,10 +55024,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Concealment (Widow Mine)",
-                      "Widow Mine"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Concealment (Widow Mine)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Widow Mine"
+                      }
                     ]
                   }
                 ]
@@ -55008,10 +55057,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Shredder Rounds (Viking)",
-                      "Viking"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Shredder Rounds (Viking)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Viking"
+                      }
                     ]
                   }
                 ]

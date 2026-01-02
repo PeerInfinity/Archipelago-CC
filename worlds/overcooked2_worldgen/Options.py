@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class AlwaysPreserveCookingProgress(DefaultOnToggle):
     """Option for Preserve Cooking/Mixing Progress."""
     display_name = "Preserve Cooking/Mixing Progress"
@@ -99,6 +110,7 @@ class StarsToWin(Range):
 class Overcooked2WorldGenOptions(PerGameCommonOptions):
     """Options for Overcooked! 2 WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     always_preserve_cooking_progress: AlwaysPreserveCookingProgress
     always_serve_oldest_order: AlwaysServeOldestOrder
     deathlink: Deathlink

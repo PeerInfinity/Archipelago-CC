@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "PaintWorldGenWorld"
+    "1": "PaintWorld"
   },
   "regions": {
     "1": {
@@ -2947,7 +2947,6 @@
       },
       "Free-Form Select": {
         "name": "Free-Form Select",
-        "hint_text": "Free Form Select",
         "id": 198506,
         "groups": [
           "Everything"
@@ -2955,7 +2954,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Free Form Select"
       },
       "Select": {
         "name": "Select",
@@ -3389,9 +3389,11 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "starting_tool": 0,
-        "trap_count": 0
+        "trap_count": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -3465,6 +3467,11 @@
           "default": true,
           "display_name": "Randomize Items"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "starting_tool": {
           "type": "choice",
           "name_lookup": {
@@ -3486,6 +3493,11 @@
           "range_end": 100,
           "default": 0,
           "display_name": "Trap Fill Percent"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "The classic Microsoft app, reimagined as an Archipelago game! Find your tools, expand your canvas, and paint the\ngreatest image the world has ever seen.",
@@ -3520,7 +3532,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "PaintWorld"
     }
   },
   "game_info": {
@@ -3881,8 +3894,8 @@
                             },
                             "op": "*",
                             "right": {
-                              "type": "constant",
-                              "value": 100
+                              "type": "setting_value",
+                              "setting": "canvas_size_increment"
                             }
                           }
                         },
@@ -3912,8 +3925,8 @@
                           },
                           "op": "*",
                           "right": {
-                            "type": "constant",
-                            "value": 100
+                            "type": "setting_value",
+                            "setting": "canvas_size_increment"
                           }
                         }
                       },
@@ -3926,8 +3939,8 @@
                 },
                 "op": "*",
                 "right": {
-                  "type": "constant",
-                  "value": 80
+                  "type": "setting_value",
+                  "setting": "logic_percent"
                 }
               },
               "op": "/",

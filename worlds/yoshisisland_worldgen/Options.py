@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class AddSecretlens(Toggle):
     """Option for Add Secret Lens."""
     display_name = "Add Secret Lens"
@@ -200,6 +211,7 @@ class YoshiSingularityColor(Choice):
 class YoshisIslandWorldGenOptions(PerGameCommonOptions):
     """Options for Yoshi's Island WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     add_secretlens: AddSecretlens
     baby_mario_sound: BabyMarioSound
     boss_shuffle: BossShuffle

@@ -16,28 +16,28 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _savingprincessworldgen_all_weapons(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('Flamethrower', 'Ice Spreadshot', 'Volt Laser'), player)
+def all_weapons(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['Flamethrower', 'Ice Spreadshot', 'Volt Laser'], player)
 
 
-def _savingprincessworldgen_can_hover(state: "CollectionState", player: int) -> bool:
-    return (state.has('Faster Reload', player, 4)) and (state.has_any(('Flamethrower', 'Ice Spreadshot', 'Volt Laser'), player))
+def can_hover(state: "CollectionState", player: int) -> bool:
+    return (state.has('Faster Reload', player, 4)) and (state.has_any(['Flamethrower', 'Ice Spreadshot', 'Volt Laser'], player))
 
 
-def _savingprincessworldgen_is_gate_unlocked(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Arctic Key', 'Cave Key', 'Swamp Key', 'Volcanic Key'), player)) and (_savingprincessworldgen_super_nice_check(state, player))
+def is_gate_unlocked(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Arctic Key', 'Cave Key', 'Swamp Key', 'Volcanic Key'], player)) and (super_nice_check(state, player))
 
 
-def _savingprincessworldgen_is_power_on(state: "CollectionState", player: int) -> bool:
+def is_power_on(state: "CollectionState", player: int) -> bool:
     return state.has('System Power', player)
 
 
-def _savingprincessworldgen_nice_check(state: "CollectionState", player: int) -> bool:
+def nice_check(state: "CollectionState", player: int) -> bool:
     return (state.has('Life Extension', player)) and (state.has('Clip Extension', player)) and (state.has('Faster Reload', player, 2))
 
 
-def _savingprincessworldgen_super_nice_check(state: "CollectionState", player: int) -> bool:
-    return (state.has('Life Extension', player, 2)) and (state.has('Clip Extension', player, 2)) and (state.has('Faster Reload', player, 4)) and (state.has('Powered Blaster', player)) and (state.has_any(('Flamethrower', 'Ice Spreadshot', 'Volt Laser'), player))
+def super_nice_check(state: "CollectionState", player: int) -> bool:
+    return (state.has('Life Extension', player, 2)) and (state.has('Clip Extension', player, 2)) and (state.has('Faster Reload', player, 4)) and (state.has('Powered Blaster', player)) and (state.has_any(['Flamethrower', 'Ice Spreadshot', 'Volt Laser'], player))
 
 
 def set_rules(world: "World") -> None:
@@ -63,12 +63,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Electrical entrance", player),
-        HelperCall(helper_func=_savingprincessworldgen_is_gate_unlocked, helper_name="is_gate_unlocked")
+        HelperCall(helper_func=is_gate_unlocked, helper_name="is_gate_unlocked")
     )
 
     world.set_rule(
         multiworld.get_entrance("Electrical (Power On) entrance", player),
-        HelperCall(helper_func=_savingprincessworldgen_is_power_on, helper_name="is_power_on")
+        HelperCall(helper_func=is_power_on, helper_name="is_power_on")
     )
     # Location rules
     world.set_rule(
@@ -83,17 +83,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Volcanic: Hot coals", player),
-        Or(HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover"), Has('Ice Spreadshot'))
+        Or(HelperCall(helper_func=can_hover, helper_name="can_hover"), Has('Ice Spreadshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Flamethrower chest", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Cliff (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -103,7 +103,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ice Spreadshot chest", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -113,7 +113,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ace (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -128,17 +128,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp: Bramble room", player),
-        HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover")
+        HelperCall(helper_func=can_hover, helper_name="can_hover")
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Special Extension chest", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Snake (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -148,10 +148,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Electrical: BRAINOS (Boss)", player),
-        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons")
+        HelperCall(helper_func=all_weapons, helper_name="all_weapons")
     )
 
     world.set_rule(
         multiworld.get_location("Mission objective", player),
-        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons")
+        HelperCall(helper_func=all_weapons, helper_name="all_weapons")
     )

@@ -39,15 +39,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Pile Of Meat"
-                    ]
-                  }
-                },
-                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Epitaph Piece",
@@ -58,6 +49,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Camera Replica",
+                      "Pile Of Meat",
                       "Film Roll",
                       "Monocle"
                     ]
@@ -73,39 +66,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Camera Replica",
-                          "Pile Of Meat"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Epitaph Piece",
-                        "count": 9
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Film Roll",
-                          "Monocle"
-                        ]
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Epitaph Piece",
+                    "count": 9
+                  }
                 },
                 {
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Camera Replica",
+                      "Pile Of Meat",
+                      "Film Roll",
+                      "Monocle",
                       "Gems Module",
                       "Inspectometer Battery",
                       "Quill"
@@ -1752,25 +1726,15 @@
             "name": "Act 3 - Boss Mycologists",
             "id": 147073,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery",
-                      "Quill"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mycologists Holo Key"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Mycologists Holo Key",
+                  "Gems Module",
+                  "Inspectometer Battery",
+                  "Quill"
+                ]
+              }
             },
             "item": {
               "name": "Currency",
@@ -1895,24 +1859,14 @@
             "name": "Act 3 - Trader 1",
             "id": 147080,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Holo Pelt",
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Card Pack",
@@ -1929,19 +1883,19 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 2
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 2
                   }
                 }
               ]
@@ -1961,19 +1915,19 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 3
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 3
                   }
                 }
               ]
@@ -1993,19 +1947,19 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 4
                   }
                 }
               ]
@@ -2025,19 +1979,19 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 5
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Gems Module",
                       "Inspectometer Battery"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 5
                   }
                 }
               ]
@@ -2233,24 +2187,14 @@
             "name": "Act 3 - Luke's File Entry 4",
             "id": 147095,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quill"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Quill",
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Angler Hook",
@@ -2295,24 +2239,14 @@
             "name": "Act 3 - The Great Transcendence",
             "id": 147098,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quill"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Quill",
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Mycologists Holo Key",
@@ -2344,7 +2278,8 @@
       "Epilogue": {
         "name": "Epilogue",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -3015,6 +2950,11 @@
           "type": "default_on_toggle",
           "default": 1,
           "display_name": "Skip Tutorial"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         }
       },
       "all_items": [
@@ -3277,7 +3217,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "InscryptionWorld"
     }
   },
   "game_info": {

@@ -13404,42 +13404,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Coo",
-                      "Coo Spawn"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Kine",
-                      "Kine Spawn"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Parasol",
-                      "Parasol Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Stone",
-                      "Stone Ability"
-                    ]
-                  }
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
@@ -13530,6 +13494,21 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Coo",
+                      "Coo Spawn",
+                      "Kine",
+                      "Kine Spawn",
+                      "Parasol",
+                      "Parasol Ability",
+                      "Stone",
+                      "Stone Ability"
+                    ]
+                  }
                 }
               ]
             },
@@ -23791,81 +23770,27 @@
             "name": "Iceberg 6 - Angel",
             "id": 7799069,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Burning",
-                      "Burning Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Clean",
-                      "Clean Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Cutter",
-                      "Cutter Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Ice",
-                      "Ice Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Needle",
-                      "Needle Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Parasol",
-                      "Parasol Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Spark",
-                      "Spark Ability"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Stone",
-                      "Stone Ability"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability",
+                  "Clean",
+                  "Clean Ability",
+                  "Cutter",
+                  "Cutter Ability",
+                  "Ice",
+                  "Ice Ability",
+                  "Needle",
+                  "Needle Ability",
+                  "Parasol",
+                  "Parasol Ability",
+                  "Spark",
+                  "Spark Ability",
+                  "Stone",
+                  "Stone Ability"
+                ]
+              }
             },
             "item": {
               "name": "Maxim Tomato",
@@ -24185,6 +24110,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 15
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
@@ -24194,13 +24126,6 @@
                       "Level 4 Boss Purified",
                       "Level 5 Boss Purified"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Heart Star",
-                    "count": 15
                   }
                 }
               ]
@@ -25554,6 +25479,11 @@
           "default": 3,
           "display_name": "Open World Boss Requirement"
         },
+        "plando_connections": {
+          "type": "plando_connections",
+          "default": [],
+          "display_name": "Plando Connections"
+        },
         "progression_balancing": {
           "type": "range",
           "range_start": 0,
@@ -26244,7 +26174,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "KDL3World"
     }
   },
   "game_info": {

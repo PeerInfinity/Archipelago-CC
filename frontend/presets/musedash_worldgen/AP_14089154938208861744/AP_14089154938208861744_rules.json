@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "MuseDashWorldGenWorld"
+    "1": "MuseDashWorld"
   },
   "regions": {
     "1": {
@@ -1813,7 +1813,6 @@
       },
       "Heart-Pounding Flight": {
         "name": "Heart-Pounding Flight",
-        "hint_text": "Heart Pounding Flight",
         "id": 2900057,
         "groups": [
           "Everything",
@@ -1822,7 +1821,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "Heart Pounding Flight"
       },
       "Pancake is Love": {
         "name": "Pancake is Love",
@@ -1898,7 +1898,6 @@
       },
       "Candy-coloured Love Theory": {
         "name": "Candy-coloured Love Theory",
-        "hint_text": "Candy coloured Love Theory",
         "id": 2900064,
         "groups": [
           "Everything",
@@ -1907,7 +1906,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "Candy coloured Love Theory"
       },
       "Night Wander": {
         "name": "Night Wander",
@@ -2247,7 +2247,6 @@
       },
       "Shenri Kuaira -repeat-": {
         "name": "Shenri Kuaira -repeat-",
-        "hint_text": "Shenri Kuaira  repeat ",
         "id": 2900093,
         "groups": [
           "Everything",
@@ -2256,7 +2255,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Shenri Kuaira  repeat "
       },
       "Latitude": {
         "name": "Latitude",
@@ -2332,7 +2332,6 @@
       },
       "Mujinku-Vacuum": {
         "name": "Mujinku-Vacuum",
-        "hint_text": "Mujinku Vacuum",
         "id": 2900100,
         "groups": [
           "Everything",
@@ -2341,7 +2340,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Mujinku Vacuum"
       },
       "MilK": {
         "name": "MilK",
@@ -6689,7 +6689,6 @@
       },
       "Etude -Sunset-": {
         "name": "Etude -Sunset-",
-        "hint_text": "Etude  Sunset ",
         "id": 2900520,
         "groups": [
           "Everything",
@@ -6698,7 +6697,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "Etude  Sunset "
       },
       "Goodbye Boss": {
         "name": "Goodbye Boss",
@@ -9995,6 +9995,8 @@
       "options": {
         "accessibility": 0,
         "additional_song_count": 40,
+        "allow_just_as_planned_dlc_songs": "",
+        "available_trap_types": "",
         "death_link": false,
         "exclude_locations": [],
         "grade_needed": 0,
@@ -10015,7 +10017,8 @@
         "start_location_hints": [],
         "starting_song_count": 5,
         "streamer_mode_enabled": false,
-        "trap_count_percentage": 15
+        "trap_count_percentage": 15,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -10033,6 +10036,14 @@
           "range_end": 600,
           "default": 40,
           "display_name": "Additional Song Count"
+        },
+        "allow_just_as_planned_dlc_songs": {
+          "type": "removed",
+          "default": ""
+        },
+        "available_trap_types": {
+          "type": "removed",
+          "default": ""
         },
         "death_link": {
           "type": "toggle",
@@ -10124,6 +10135,11 @@
           "range_end": 35,
           "default": 15,
           "display_name": "Trap Percentage"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "starting_songs": [
@@ -10217,7 +10233,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MuseDashWorld"
     }
   },
   "game_info": {

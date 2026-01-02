@@ -317,7 +317,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Death Chamber - 2", player),
-        And(HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws'), CanReachLocation('Death Chamber - 1'))
+        And(CanReachLocation('Death Chamber - 1'), HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws'))
     )
 
     world.set_rule(
@@ -447,7 +447,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Weapons Bed - 2", player),
-        And(HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon'), CanReachLocation('Weapons Bed - 1'))
+        And(CanReachLocation('Weapons Bed - 1'), HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon'))
     )
 
     world.set_rule(
@@ -582,7 +582,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cannon's Core - 2", player),
-        And(HasAll('Eggman - Jet Engine', 'Tails - Booster'), CanReachLocation("Cannon's Core - 1"))
+        And(CanReachLocation("Cannon's Core - 1"), HasAll('Eggman - Jet Engine', 'Tails - Booster'))
     )
 
     world.set_rule(

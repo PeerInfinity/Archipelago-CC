@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class Autosave(DefaultOnToggle):
     """Option for Autosave."""
     display_name = "Autosave"
@@ -112,6 +123,7 @@ class StartingLifeCount(Range):
 class DonkeyKongCountry3WorldGenOptions(PerGameCommonOptions):
     """Options for Donkey Kong Country 3 WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     autosave: Autosave
     difficulty: Difficulty
     dk_coins_for_gyrocopter: DkCoinsForGyrocopter

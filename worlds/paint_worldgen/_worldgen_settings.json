@@ -1,56 +1,31 @@
 {
-  "settings": {
-    "game": "Paint",
-    "options": {
-      "accessibility": 0,
-      "canvas_size_increment": 100,
-      "death_link": false,
-      "exclude_locations": [],
-      "goal_image": 1,
-      "goal_percent": 80,
-      "half_percent_checks": 50,
-      "item_links": [],
-      "local_items": [],
-      "logic_percent": 80,
-      "non_local_items": [],
-      "plando_items": [],
-      "priority_locations": [],
-      "progression_balancing": 50,
-      "quarter_percent_checks": 70,
-      "start_hints": [],
-      "start_inventory": {},
-      "start_inventory_from_pool": {},
-      "start_location_hints": [],
-      "starting_tool": 0,
-      "trap_count": 0
-    },
-    "world_directory": "paint",
-    "use_resolved_items": false
+  "options": {
+    "accessibility": 0,
+    "canvas_size_increment": 100,
+    "death_link": false,
+    "exclude_locations": [],
+    "goal_image": 1,
+    "goal_percent": 80,
+    "half_percent_checks": 50,
+    "item_links": [],
+    "local_items": [],
+    "logic_percent": 80,
+    "non_local_items": [],
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "quarter_percent_checks": 70,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_inventory_from_pool": {},
+    "start_location_hints": [],
+    "starting_tool": 0,
+    "trap_count": 0
   },
-  "world_attributes": {
-    "world_description": "The classic Microsoft app, reimagined as an Archipelago game! Find your tools, expand your canvas, and paint the\ngreatest image the world has ever seen.",
-    "slot_data": {
-      "logic_percent": 80,
-      "goal_percent": 80,
-      "goal_image": 1,
-      "death_link": 0,
-      "canvas_size_increment": 100,
-      "version": "0.5.2"
-    },
-    "web": {
-      "theme": "partyTime",
-      "tutorials": [
-        {
-          "name": "Start Guide",
-          "description": "A guide to playing Paint in Archipelago.",
-          "language": "English",
-          "file_name": "guide_en.md",
-          "link": "guide/en",
-          "authors": [
-            "MarioManTAW"
-          ]
-        }
-      ]
-    }
-  }
+  "exporter": {
+    "use_resolved_items": false,
+    "world_class_name": "PaintWorld"
+  },
+  "game": "Paint",
+  "world_directory": "paint"
 }

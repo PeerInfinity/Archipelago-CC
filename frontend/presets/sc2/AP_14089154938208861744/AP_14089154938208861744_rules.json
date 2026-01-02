@@ -462,27 +462,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_basic_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -512,41 +494,17 @@
             "name": "Evacuation (Terran): West Chrysalis",
             "id": 1402,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Banshee",
-                          "Diamondback",
-                          "Goliath",
-                          "Viking"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dominion Trooper",
-                      "Firebat",
-                      "Hellion",
-                      "Marauder",
-                      "Marine",
-                      "Reaper"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Firebat",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Reaper"
+                ]
+              }
             },
             "item": {
               "name": "Advanced Laser Technology (Wraith)",
@@ -560,41 +518,17 @@
             "name": "Evacuation (Terran): East Chrysalis",
             "id": 1403,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Banshee",
-                          "Diamondback",
-                          "Goliath",
-                          "Viking"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dominion Trooper",
-                      "Firebat",
-                      "Hellion",
-                      "Marauder",
-                      "Marine",
-                      "Reaper"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Firebat",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Reaper"
+                ]
+              }
             },
             "item": {
               "name": "Bargain Bin Prices (Ghost)",
@@ -655,13 +589,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -672,27 +600,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_basic_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -778,27 +688,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_basic_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -836,13 +728,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -855,20 +741,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -926,13 +798,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -945,20 +811,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -1002,13 +854,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -1021,20 +867,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -1078,13 +910,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -1097,20 +923,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -1154,13 +966,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -1173,20 +979,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -1230,13 +1022,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -1249,20 +1035,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -1334,13 +1106,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -1353,20 +1119,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -1410,13 +1162,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -1429,20 +1175,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -1742,13 +1474,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -1757,9 +1483,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -1769,8 +1495,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -1778,8 +1504,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -1809,8 +1535,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -1818,8 +1544,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -1827,13 +1553,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -1865,13 +1591,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -1920,17 +1640,9 @@
             "name": "Maw of the Void (Terran): Expansion Prisoners",
             "id": 2202,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "terran_maw_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "terran_maw_requirement",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "All-Terrain Treads (Siege Tank)",
@@ -1944,17 +1656,9 @@
             "name": "Maw of the Void (Terran): South Close Prisoners",
             "id": 2203,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "terran_maw_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "terran_maw_requirement",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Internal Tech Module (Banshee)",
@@ -2017,13 +1721,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -2032,9 +1730,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -2044,8 +1742,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -2053,8 +1751,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -2084,8 +1782,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -2093,8 +1791,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -2102,13 +1800,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -2140,13 +1838,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -2230,13 +1922,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -2245,9 +1931,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -2257,8 +1943,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -2266,8 +1952,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -2297,8 +1983,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -2306,8 +1992,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -2315,13 +2001,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -2353,13 +2039,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -2443,13 +2123,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -2458,9 +2132,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -2470,8 +2144,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -2479,8 +2153,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -2510,8 +2184,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -2519,8 +2193,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -2528,13 +2202,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -2566,13 +2240,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -2607,17 +2275,9 @@
             "name": "Maw of the Void (Terran): Expansion Rip Field Generator",
             "id": 2207,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "terran_maw_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "terran_maw_requirement",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Crius Suit (Ghost)",
@@ -2680,13 +2340,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -2695,9 +2349,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -2707,8 +2361,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -2716,8 +2370,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -2747,8 +2401,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -2756,8 +2410,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -2765,13 +2419,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -2803,13 +2457,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -2893,13 +2541,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -2908,9 +2550,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -2920,8 +2562,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -2929,8 +2571,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -2960,8 +2602,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -2969,8 +2611,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -2978,13 +2620,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -3016,13 +2658,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -3106,13 +2742,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -3121,9 +2751,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -3133,8 +2763,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -3142,8 +2772,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -3173,8 +2803,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -3182,8 +2812,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -3191,13 +2821,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -3229,13 +2859,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -3319,13 +2943,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -3334,9 +2952,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -3346,8 +2964,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -3355,8 +2973,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -3386,8 +3004,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -3395,8 +3013,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -3404,13 +3022,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -3442,13 +3060,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -3532,13 +3144,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -3547,9 +3153,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -3559,8 +3165,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -3568,8 +3174,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -3599,8 +3205,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -3608,8 +3214,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -3617,13 +3223,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -3655,13 +3261,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -3745,13 +3345,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -3760,9 +3354,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -3772,8 +3366,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -3781,8 +3375,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -3812,8 +3406,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -3821,8 +3415,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -3830,13 +3424,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -3868,13 +3462,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -3958,13 +3546,7 @@
                                   ]
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 2,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -3973,9 +3555,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Battlecruiser",
+                                  "Wraith",
                                   "Valkyrie",
-                                  "Wraith"
+                                  "Battlecruiser"
                                 ]
                               }
                             }
@@ -3985,8 +3567,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Progressive High Impact Payload (Thor)",
-                              "Thor"
+                              "Thor",
+                              "Progressive High Impact Payload (Thor)"
                             ]
                           }
                         },
@@ -3994,8 +3576,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Cyclone",
                               "Goliath",
+                              "Cyclone",
                               "Viking"
                             ]
                           }
@@ -4025,8 +3607,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
+                              "Liberator",
+                              "Raid Artillery (Liberator)"
                             ]
                           }
                         },
@@ -4034,8 +3616,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Liberator",
-                              "Raid Artillery (Liberator)"
+                              "Valkyrie",
+                              "Flechette Missiles (Valkyrie)"
                             ]
                           }
                         },
@@ -4043,13 +3625,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Banshee",
-                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Viking",
                               "Warhound",
-                              "Wraith"
+                              "Viking",
+                              "Banshee",
+                              "Wraith",
+                              "Battlecruiser"
                             ]
                           }
                         }
@@ -4081,13 +3663,7 @@
                               ]
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": 2,
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -4415,13 +3991,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4484,13 +4054,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4525,13 +4089,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4580,13 +4138,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4621,13 +4173,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4662,13 +4208,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4827,23 +4367,15 @@
             "name": "The Moebius Factor (Terran): South Rescue",
             "id": 2003,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Hercules",
-                      "Medivac",
-                      "Raven",
-                      "Viking"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Medivac",
+                  "Hercules",
+                  "Raven",
+                  "Viking"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Replenishable Magazine (Vulture)",
@@ -4857,23 +4389,15 @@
             "name": "The Moebius Factor (Terran): Wall Rescue",
             "id": 2004,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Hercules",
-                      "Medivac",
-                      "Raven",
-                      "Viking"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Medivac",
+                  "Hercules",
+                  "Raven",
+                  "Viking"
+                ]
+              }
             },
             "item": {
               "name": "Optimized Logistics (Battlecruiser)",
@@ -4887,23 +4411,15 @@
             "name": "The Moebius Factor (Terran): Mid Rescue",
             "id": 2005,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Hercules",
-                      "Medivac",
-                      "Raven",
-                      "Viking"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Medivac",
+                  "Hercules",
+                  "Raven",
+                  "Viking"
+                ]
+              }
             },
             "item": {
               "name": "Resource Efficiency (Widow Mine)",
@@ -4917,23 +4433,15 @@
             "name": "The Moebius Factor (Terran): Nydus Roof Rescue",
             "id": 2006,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Hercules",
-                      "Medivac",
-                      "Raven",
-                      "Viking"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Medivac",
+                  "Hercules",
+                  "Raven",
+                  "Viking"
+                ]
+              }
             },
             "item": {
               "name": "Jotun",
@@ -4947,23 +4455,15 @@
             "name": "The Moebius Factor (Terran): Alive Inside Rescue",
             "id": 2007,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Hercules",
-                      "Medivac",
-                      "Raven",
-                      "Viking"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Medivac",
+                  "Hercules",
+                  "Raven",
+                  "Viking"
+                ]
+              }
             },
             "item": {
               "name": "Juggernaut Plating (Firebat)",
@@ -5225,13 +4725,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5242,40 +4736,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5310,13 +4778,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5327,17 +4789,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5372,13 +4826,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5389,17 +4837,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5434,13 +4874,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5451,17 +4885,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5477,17 +4903,9 @@
             "name": "The Dig (Terran): Moebius Base",
             "id": 1904,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "marine_medic_upgrade",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Efficiency (Wraith)",
@@ -5520,13 +4938,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5537,17 +4949,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5582,13 +4986,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5599,40 +4997,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5667,13 +5039,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5684,40 +5050,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5752,13 +5092,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5769,40 +5103,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5837,13 +5145,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5864,17 +5166,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5909,13 +5203,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5936,17 +5224,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5981,13 +5261,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -6040,13 +5314,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -6057,40 +5325,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "marine_medic_upgrade",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6278,17 +5520,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "terran_common_unit",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_common_unit",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6439,17 +5673,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "terran_moderate_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_moderate_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6637,17 +5863,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "terran_moderate_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_moderate_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6881,27 +6099,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6931,17 +6131,9 @@
             "name": "Smash and Grab (Terran): Second Relic",
             "id": 1802,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "terran_common_unit",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Kinetic Foam (Marauder)",
@@ -6963,27 +6155,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7007,27 +6181,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7051,27 +6207,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7095,27 +6233,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7165,27 +6285,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_competent_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7208,41 +6310,17 @@
             "name": "The Outlaws (Terran): Victory",
             "id": 1200,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Banshee",
-                          "Diamondback",
-                          "Goliath",
-                          "Viking"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dominion Trooper",
-                      "Firebat",
-                      "Hellion",
-                      "Marauder",
-                      "Marine",
-                      "Reaper"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Firebat",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Reaper"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Terran Vehicle Armor",
@@ -7256,41 +6334,17 @@
             "name": "The Outlaws (Terran): Rebel Base",
             "id": 1201,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Banshee",
-                          "Diamondback",
-                          "Goliath",
-                          "Viking"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dominion Trooper",
-                      "Firebat",
-                      "Hellion",
-                      "Marauder",
-                      "Marine",
-                      "Reaper"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Firebat",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Reaper"
+                ]
+              }
             },
             "item": {
               "name": "MULE (Command Center)",
@@ -7304,41 +6358,17 @@
             "name": "The Outlaws (Terran): North Resource Pickups",
             "id": 1202,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Banshee",
-                          "Diamondback",
-                          "Goliath",
-                          "Viking"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dominion Trooper",
-                      "Firebat",
-                      "Hellion",
-                      "Marauder",
-                      "Marine",
-                      "Reaper"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Firebat",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Reaper"
+                ]
+              }
             },
             "item": {
               "name": "Brynhilds",
@@ -7352,41 +6382,17 @@
             "name": "The Outlaws (Terran): Bunker",
             "id": 1203,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Banshee",
-                          "Diamondback",
-                          "Goliath",
-                          "Viking"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dominion Trooper",
-                      "Firebat",
-                      "Hellion",
-                      "Marauder",
-                      "Marine",
-                      "Reaper"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Firebat",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Reaper"
+                ]
+              }
             },
             "item": {
               "name": "Bunker",
@@ -7414,41 +6420,17 @@
             "name": "Beat The Outlaws (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Banshee",
-                          "Diamondback",
-                          "Goliath",
-                          "Viking"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Dominion Trooper",
-                      "Firebat",
-                      "Hellion",
-                      "Marauder",
-                      "Marine",
-                      "Reaper"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dominion Trooper",
+                  "Firebat",
+                  "Hellion",
+                  "Marauder",
+                  "Marine",
+                  "Reaper"
+                ]
+              }
             },
             "item": {
               "name": "Beat The Outlaws (Terran)",
@@ -7488,13 +6470,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7548,13 +6524,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7608,13 +6578,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7668,13 +6632,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7728,13 +6686,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7788,13 +6740,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7848,13 +6794,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7908,13 +6848,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7968,13 +6902,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 4,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -8912,13 +7840,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -8931,20 +7853,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -9004,13 +7912,7 @@
                           }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": 2,
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -9023,20 +7925,6 @@
                           "type": "constant",
                           "value": 1
                         }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Targeting System (Marine)"
                       }
                     }
                   ]
@@ -9526,17 +8414,9 @@
             "name": "Media Blitz (Terran): Science Facility",
             "id": 3004,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "terran_competent_comp",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "terran_competent_comp",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Progressive High Impact Payload (Thor)",
@@ -9582,17 +8462,9 @@
             "name": "Media Blitz (Terran): All Starports",
             "id": 3007,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "terran_competent_comp",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "terran_competent_comp",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Shaped Hull (Banshee)",
@@ -9898,17 +8770,9 @@
             "name": "Belly of the Beast: Victory",
             "id": 3700,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "marine_medic_firebat_upgrade",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "marine_medic_firebat_upgrade",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Widow Mine",
@@ -9936,17 +8800,9 @@
             "name": "Belly of the Beast: Second Charge",
             "id": 3702,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "marine_medic_firebat_upgrade",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "marine_medic_firebat_upgrade",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Railgun Turret (Raven)",
@@ -9960,17 +8816,9 @@
             "name": "Belly of the Beast: Third Charge",
             "id": 3703,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "marine_medic_firebat_upgrade",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "marine_medic_firebat_upgrade",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Smart Servos (Liberator)",
@@ -10012,17 +8860,9 @@
             "name": "Belly of the Beast: Third Group Rescued",
             "id": 3706,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "marine_medic_firebat_upgrade",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "marine_medic_firebat_upgrade",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Advanced Healing AI (Medivac)",
@@ -10036,17 +8876,9 @@
             "name": "Beat Belly of the Beast",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "marine_medic_firebat_upgrade",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "marine_medic_firebat_upgrade",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beat Belly of the Beast",
@@ -10067,57 +8899,7 @@
             "name": "Ghost of a Chance: Victory",
             "id": 2600,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "nova_anti_air_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "nova_ranged_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "nova_full_stealth",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "nova_heal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "C20A Canister Rifle (Nova Weapon)",
-                          "Domination (Nova Ability)"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Stimpack (Marine)",
@@ -10131,57 +8913,7 @@
             "name": "Ghost of a Chance: Terrazine Tank",
             "id": 2601,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "nova_anti_air_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "nova_ranged_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "nova_full_stealth",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "nova_heal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "C20A Canister Rifle (Nova Weapon)",
-                          "Domination (Nova Ability)"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Laser Targeting System (Liberator)",
@@ -10195,57 +8927,7 @@
             "name": "Ghost of a Chance: Jorium Stockpile",
             "id": 2602,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "nova_anti_air_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "nova_ranged_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "nova_full_stealth",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "nova_heal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "C20A Canister Rifle (Nova Weapon)",
-                          "Domination (Nova Ability)"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "G-4 Clusterbomb (Reaper)",
@@ -10259,57 +8941,7 @@
             "name": "Ghost of a Chance: First Island Spectres",
             "id": 2603,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "nova_anti_air_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "nova_ranged_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "nova_full_stealth",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "nova_heal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "C20A Canister Rifle (Nova Weapon)",
-                          "Domination (Nova Ability)"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Rocket Barrage (Banshee)",
@@ -10323,57 +8955,7 @@
             "name": "Ghost of a Chance: Second Island Spectres",
             "id": 2604,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "nova_anti_air_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "nova_ranged_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "nova_full_stealth",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "nova_heal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "C20A Canister Rifle (Nova Weapon)",
-                          "Domination (Nova Ability)"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Tri-Lithium Power Cell (Diamondback)",
@@ -10387,57 +8969,7 @@
             "name": "Ghost of a Chance: Third Island Spectres",
             "id": 2605,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "nova_anti_air_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "nova_ranged_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "nova_full_stealth",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "nova_heal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "C20A Canister Rifle (Nova Weapon)",
-                          "Domination (Nova Ability)"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Distortion Blasters (Banshee)",
@@ -10451,57 +8983,7 @@
             "name": "Beat Ghost of a Chance",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "nova_anti_air_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "nova_ranged_weapon",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "nova_full_stealth",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "nova_heal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "C20A Canister Rifle (Nova Weapon)",
-                          "Domination (Nova Ability)"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Beat Ghost of a Chance",
@@ -10789,13 +9271,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -10806,17 +9282,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "terran_basic_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_basic_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10887,13 +9355,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -11022,13 +9484,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -11068,13 +9524,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -11114,13 +9564,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -11131,17 +9575,9 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "terran_basic_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "terran_basic_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -11164,36 +9600,28 @@
             "name": "Devil's Playground (Terran): Victory",
             "id": 2300,
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "terran_moderate_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "terran_moderate_anti_air",
+                      "rule": "terran_common_unit",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "terran_common_unit",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Reaper"
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Reaper"
+                      }
                     }
                   ]
-                },
-                {
-                  "rule": "False_"
                 }
               ]
             },
@@ -11225,9 +9653,6 @@
             "access_rule": {
               "rule": "Or",
               "children": [
-                {
-                  "rule": "False_"
-                },
                 {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
@@ -11284,9 +9709,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
-                },
-                {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
@@ -11311,36 +9733,28 @@
             "name": "Devil's Playground (Terran): Southeast Reapers",
             "id": 2306,
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "terran_moderate_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "terran_moderate_anti_air",
+                      "rule": "terran_common_unit",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "terran_common_unit",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Reaper"
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Reaper"
+                      }
                     }
                   ]
-                },
-                {
-                  "rule": "False_"
                 }
               ]
             },
@@ -11366,9 +9780,6 @@
                 {
                   "rule": "Or",
                   "children": [
-                    {
-                      "rule": "False_"
-                    },
                     {
                       "rule": "terran_common_unit",
                       "_original_ast_type": "helper",
@@ -11433,36 +9844,28 @@
             "name": "Beat Devil's Playground (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "terran_moderate_anti_air",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "terran_moderate_anti_air",
+                      "rule": "terran_common_unit",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "terran_common_unit",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Reaper"
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Reaper"
+                      }
                     }
                   ]
-                },
-                {
-                  "rule": "False_"
                 }
               ]
             },
@@ -41840,7 +40243,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SC2World"
     }
   },
   "game_info": {
@@ -42130,11 +40534,11 @@
             "conditions": [
               {
                 "type": "item_check",
-                "item": "Juggernaut Plating (Firebat)"
+                "item": "Nano Projectors (Firebat)"
               },
               {
                 "type": "item_check",
-                "item": "Nano Projectors (Firebat)"
+                "item": "Juggernaut Plating (Firebat)"
               }
             ]
           }
@@ -42552,11 +40956,11 @@
             "conditions": [
               {
                 "type": "item_check",
-                "item": "Flechette Missiles (Valkyrie)"
+                "item": "Valkyrie"
               },
               {
                 "type": "item_check",
-                "item": "Valkyrie"
+                "item": "Flechette Missiles (Valkyrie)"
               }
             ]
           },
@@ -42610,11 +41014,11 @@
                     "conditions": [
                       {
                         "type": "item_check",
-                        "item": "Hunter-Seeker Weapon (Raven)"
+                        "item": "Raven"
                       },
                       {
                         "type": "item_check",
-                        "item": "Raven"
+                        "item": "Hunter-Seeker Weapon (Raven)"
                       }
                     ]
                   }
@@ -42711,11 +41115,15 @@
             "conditions": [
               {
                 "type": "item_check",
-                "item": "Brynhilds"
+                "item": "Missile Turret"
               },
               {
                 "type": "item_check",
-                "item": "Bulwark Company"
+                "item": "War Pigs"
+              },
+              {
+                "type": "item_check",
+                "item": "Spartan Company"
               },
               {
                 "type": "item_check",
@@ -42723,7 +41131,11 @@
               },
               {
                 "type": "item_check",
-                "item": "Missile Turret"
+                "item": "Winged Nightmares"
+              },
+              {
+                "type": "item_check",
+                "item": "Brynhilds"
               },
               {
                 "type": "item_check",
@@ -42735,15 +41147,7 @@
               },
               {
                 "type": "item_check",
-                "item": "Spartan Company"
-              },
-              {
-                "type": "item_check",
-                "item": "War Pigs"
-              },
-              {
-                "type": "item_check",
-                "item": "Winged Nightmares"
+                "item": "Bulwark Company"
               }
             ]
           },
@@ -42763,19 +41167,7 @@
                 "conditions": [
                   {
                     "type": "item_check",
-                    "item": "Blackhammer"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Emperor's Guardian"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Emperor's Shadow"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Night Hawk"
+                    "item": "Widow Mine"
                   },
                   {
                     "type": "item_check",
@@ -42783,7 +41175,19 @@
                   },
                   {
                     "type": "item_check",
-                    "item": "Widow Mine"
+                    "item": "Blackhammer"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Emperor's Shadow"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Emperor's Guardian"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Night Hawk"
                   }
                 ]
               }
@@ -42940,11 +41344,20 @@
                     "method": "has_any",
                     "args": [
                       {
-                        "type": "constant",
-                        "value": [
-                          "Dominion Trooper",
-                          "Marauder",
-                          "Marine"
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Marine"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Dominion Trooper"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Marauder"
+                          }
                         ]
                       }
                     ]
@@ -43007,10 +41420,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Maelstrom Rounds (Siege Tank)",
-                      "Siege Tank"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Siege Tank"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Maelstrom Rounds (Siege Tank)"
+                      }
                     ]
                   }
                 ]
@@ -43034,10 +41453,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Graduating Range (Siege Tank)",
-                      "Siege Tank"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Siege Tank"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Graduating Range (Siege Tank)"
+                      }
                     ]
                   }
                 ]
@@ -43061,10 +41486,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Concealment (Widow Mine)",
-                      "Widow Mine"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Widow Mine"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Concealment (Widow Mine)"
+                      }
                     ]
                   }
                 ]
@@ -43088,10 +41519,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Shredder Rounds (Viking)",
-                      "Viking"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Viking"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Shredder Rounds (Viking)"
+                      }
                     ]
                   }
                 ]
@@ -43404,14 +41841,6 @@
                     "conditions": [
                       {
                         "type": "item_check",
-                        "item": "Banshee"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Battlecruiser"
-                      },
-                      {
-                        "type": "item_check",
                         "item": "Goliath"
                       },
                       {
@@ -43420,15 +41849,23 @@
                       },
                       {
                         "type": "item_check",
-                        "item": "Viking"
-                      },
-                      {
-                        "type": "item_check",
                         "item": "Warhound"
                       },
                       {
                         "type": "item_check",
+                        "item": "Viking"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Banshee"
+                      },
+                      {
+                        "type": "item_check",
                         "item": "Wraith"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Battlecruiser"
                       }
                     ]
                   },
@@ -43450,11 +41887,11 @@
                     "conditions": [
                       {
                         "type": "item_check",
-                        "item": "Flechette Missiles (Valkyrie)"
+                        "item": "Valkyrie"
                       },
                       {
                         "type": "item_check",
-                        "item": "Valkyrie"
+                        "item": "Flechette Missiles (Valkyrie)"
                       }
                     ]
                   },
@@ -43481,11 +41918,11 @@
                     "conditions": [
                       {
                         "type": "item_check",
-                        "item": "Cyclone"
+                        "item": "Goliath"
                       },
                       {
                         "type": "item_check",
-                        "item": "Goliath"
+                        "item": "Cyclone"
                       },
                       {
                         "type": "item_check",
@@ -43501,7 +41938,7 @@
                         "conditions": [
                           {
                             "type": "item_check",
-                            "item": "Battlecruiser"
+                            "item": "Wraith"
                           },
                           {
                             "type": "item_check",
@@ -43509,7 +41946,7 @@
                           },
                           {
                             "type": "item_check",
-                            "item": "Wraith"
+                            "item": "Battlecruiser"
                           }
                         ]
                       },
@@ -43538,11 +41975,11 @@
                     "conditions": [
                       {
                         "type": "item_check",
-                        "item": "Progressive High Impact Payload (Thor)"
+                        "item": "Thor"
                       },
                       {
                         "type": "item_check",
-                        "item": "Thor"
+                        "item": "Progressive High Impact Payload (Thor)"
                       }
                     ]
                   }
@@ -43579,11 +42016,7 @@
                 "conditions": [
                   {
                     "type": "item_check",
-                    "item": "Battlecruiser"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Cyclone"
+                    "item": "Marine"
                   },
                   {
                     "type": "item_check",
@@ -43591,19 +42024,23 @@
                   },
                   {
                     "type": "item_check",
-                    "item": "Marine"
-                  },
-                  {
-                    "type": "item_check",
                     "item": "Thor"
                   },
                   {
                     "type": "item_check",
-                    "item": "Valkyrie"
+                    "item": "Cyclone"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Battlecruiser"
                   },
                   {
                     "type": "item_check",
                     "item": "Wraith"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Valkyrie"
                   }
                 ]
               },
@@ -43659,11 +42096,11 @@
                       },
                       {
                         "type": "item_check",
-                        "item": "Liberator"
+                        "item": "Spectre"
                       },
                       {
                         "type": "item_check",
-                        "item": "Spectre"
+                        "item": "Liberator"
                       }
                     ]
                   }
@@ -43697,8 +42134,8 @@
               "iterator_info": {
                 "type": "comprehension_details",
                 "target": {
-                  "type": "list",
-                  "value": [
+                  "type": "tuple",
+                  "elements": [
                     {
                       "type": "name",
                       "name": "item"
@@ -43792,8 +42229,8 @@
                   "iterator_info": {
                     "type": "comprehension_details",
                     "target": {
-                      "type": "list",
-                      "value": [
+                      "type": "tuple",
+                      "elements": [
                         {
                           "type": "name",
                           "name": "item"

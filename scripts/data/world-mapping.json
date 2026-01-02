@@ -18,11 +18,11 @@
     "world_directory": "ahit_worldgen"
   },
   "A Link to the Past": {
-    "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 607,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "alttp"
   },
@@ -34,6 +34,15 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "alttp_worldgen"
+  },
+  "A Link to the Past WorldGen 2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "alttp_worldgen2"
   },
   "A Short Hike": {
     "exporter_path": null,
@@ -604,7 +613,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 36620,
+    "exporter_size": 36906,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10907,
     "has_custom_exporter": true,

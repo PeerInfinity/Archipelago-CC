@@ -16,40 +16,40 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _inscryptionworldgen_has_act2_bridge_requirements(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Camera Replica', 'Pile Of Meat'), player)) or (state.has('Epitaph Piece', player, 9))
+def has_act2_bridge_requirements(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Camera Replica', 'Pile Of Meat'], player)) or (state.has('Epitaph Piece', player, 9))
 
 
-def _inscryptionworldgen_has_act2_requirements(state: "CollectionState", player: int) -> bool:
+def has_act2_requirements(state: "CollectionState", player: int) -> bool:
     return state.has('Film Roll', player)
 
 
-def _inscryptionworldgen_has_act3_requirements(state: "CollectionState", player: int) -> bool:
-    return (state.has('Film Roll', player)) and (state.has('Epitaph Piece', player, 9)) and (state.has_all(('Camera Replica', 'Pile Of Meat'), player)) and (state.has('Monocle', player))
+def has_act3_requirements(state: "CollectionState", player: int) -> bool:
+    return (state.has('Film Roll', player)) and (state.has('Epitaph Piece', player, 9)) and (state.has_all(['Camera Replica', 'Pile Of Meat'], player)) and (state.has('Monocle', player))
 
 
-def _inscryptionworldgen_has_all_epitaph_pieces(state: "CollectionState", player: int) -> bool:
+def has_all_epitaph_pieces(state: "CollectionState", player: int) -> bool:
     return state.has(self.world.required_epitaph_pieces_name, player, self.world.required_epitaph_pieces_count)
 
 
-def _inscryptionworldgen_has_camera_and_meat(state: "CollectionState", player: int) -> bool:
+def has_camera_and_meat(state: "CollectionState", player: int) -> bool:
     return (state.has('Camera Replica', player)) and (state.has('Pile Of Meat', player))
 
 
-def _inscryptionworldgen_has_gems_and_battery(state: "CollectionState", player: int) -> bool:
+def has_gems_and_battery(state: "CollectionState", player: int) -> bool:
     return (state.has('Gems Module', player)) and (state.has('Inspectometer Battery', player))
 
 
-def _inscryptionworldgen_has_inspectometer_battery(state: "CollectionState", player: int) -> bool:
+def has_inspectometer_battery(state: "CollectionState", player: int) -> bool:
     return state.has('Inspectometer Battery', player)
 
 
-def _inscryptionworldgen_has_monocle(state: "CollectionState", player: int) -> bool:
+def has_monocle(state: "CollectionState", player: int) -> bool:
     return state.has('Monocle', player)
 
 
-def _inscryptionworldgen_has_transcendence_requirements(state: "CollectionState", player: int) -> bool:
-    return (state.has('Quill', player)) and (state.has_all(('Gems Module', 'Inspectometer Battery'), player))
+def has_transcendence_requirements(state: "CollectionState", player: int) -> bool:
+    return (state.has('Quill', player)) and (state.has_all(['Gems Module', 'Inspectometer Battery'], player))
 
 
 def set_rules(world: "World") -> None:
@@ -65,12 +65,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Act 3", player),
-        And(HasAll('Camera Replica', 'Pile Of Meat'), Has('Epitaph Piece', 9), HasAll('Film Roll', 'Monocle'))
+        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Pile Of Meat', 'Film Roll', 'Monocle'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Epilogue", player),
-        And(And(HasAll('Camera Replica', 'Pile Of Meat'), Has('Epitaph Piece', 9), HasAll('Film Roll', 'Monocle')), HasAll('Gems Module', 'Inspectometer Battery', 'Quill'))
+        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Pile Of Meat', 'Film Roll', 'Monocle', 'Gems Module', 'Inspectometer Battery', 'Quill'))
     )
     # Location rules
     world.set_rule(
@@ -295,7 +295,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Boss Mycologists", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery', 'Quill'), Has('Mycologists Holo Key'))
+        HasAll('Mycologists Holo Key', 'Gems Module', 'Inspectometer Battery', 'Quill')
     )
 
     world.set_rule(
@@ -330,27 +330,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 1", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery'), Has('Holo Pelt'))
+        HasAll('Holo Pelt', 'Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 2", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery'), Has('Holo Pelt', 2))
+        And(Has('Holo Pelt', 2), HasAll('Gems Module', 'Inspectometer Battery'))
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 3", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery'), Has('Holo Pelt', 3))
+        And(Has('Holo Pelt', 3), HasAll('Gems Module', 'Inspectometer Battery'))
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 4", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery'), Has('Holo Pelt', 4))
+        And(Has('Holo Pelt', 4), HasAll('Gems Module', 'Inspectometer Battery'))
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 5", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery'), Has('Holo Pelt', 5))
+        And(Has('Holo Pelt', 5), HasAll('Gems Module', 'Inspectometer Battery'))
     )
 
     world.set_rule(
@@ -390,7 +390,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Luke's File Entry 4", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery'), Has('Quill'))
+        HasAll('Quill', 'Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
@@ -400,7 +400,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - The Great Transcendence", player),
-        And(HasAll('Gems Module', 'Inspectometer Battery'), Has('Quill'))
+        HasAll('Quill', 'Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
