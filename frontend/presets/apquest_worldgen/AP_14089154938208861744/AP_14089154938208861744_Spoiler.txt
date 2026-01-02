@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Confetti Explosiveness:          3
 Extra Starting Chest:            No
 Hammer:                          No

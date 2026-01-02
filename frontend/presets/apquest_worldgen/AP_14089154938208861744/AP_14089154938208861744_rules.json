@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "APQuestWorldGenWorld"
+    "1": "APQuestWorld"
   },
   "regions": {
     "1": {
@@ -374,7 +374,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "start_with_one_confetti_cannon": false,
-        "trap_chance": 0
+        "trap_chance": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -442,6 +443,11 @@
           "range_end": 100,
           "default": 0,
           "display_name": "Trap Chance"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",
@@ -485,7 +491,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "APQuestWorld"
     }
   },
   "game_info": {
