@@ -5339,6 +5339,19 @@ class HelperCodeGenerator:
                         nested_value = inner_value[attr]
                         return self._expr_constant({'type': 'constant', 'value': nested_value})
 
+        # Special case: when accessing self.world.xxx where xxx is a known setting
+        # (e.g., self.world.required_epitaph_pieces_name). In original world code,
+        # 'self' refers to a rules class and self.world is the World instance.
+        # Resolve these to literal values from settings, same as world.xxx.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'attribute':
+            inner_obj = obj_expr.get('object', {})
+            inner_attr = obj_expr.get('attr', '')
+            if (isinstance(inner_obj, dict) and inner_obj.get('type') == 'name' and
+                    inner_obj.get('name') == 'self' and inner_attr == 'world'):
+                if attr in self.settings:
+                    value = self.settings[attr]
+                    return self._expr_constant({'type': 'constant', 'value': value})
+
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
 
