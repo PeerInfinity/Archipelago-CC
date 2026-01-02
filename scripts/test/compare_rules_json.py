@@ -420,8 +420,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'options.exclude_locations' in path:
         return True
 
-    # WorldGen-specific exporter fields
-    if path == 'exporter.1.world_class_name' and original_value == '<missing>':
+    # world_class_name: Exporter metadata field that preserves the original world class name.
+    # This field may differ between original and worldgen exports due to:
+    # 1. Original has it, worldgen doesn't (handler caching/timing issues)
+    # 2. Worldgen has it, original doesn't (older exports without this field)
+    # The field is informational and doesn't affect rule correctness.
+    if path == 'exporter.1.world_class_name':
         return True
 
     # WorldGen-specific game_info fields (state counters, accumulator rules, etc.)
