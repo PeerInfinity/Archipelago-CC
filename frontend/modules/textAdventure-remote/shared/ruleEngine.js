@@ -802,7 +802,54 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         if (rule.name === 'bool') {
           // Python's bool() function - convert value to boolean
-          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          // Special case: ALTTP's open_pyramid.to_bool() has complex logic
+          // that depends on the goal option, not just the open_pyramid value
+          const boolArg = rule.args?.[0];
+          if (boolArg?.rule === 'AST_setting_value' && boolArg?.args?.setting === 'open_pyramid') {
+            // ALTTP OpenPyramid.to_bool() logic:
+            // - option_closed (0): false
+            // - option_open (1): true
+            // - option_goal (2): true if goal is in {crystals, ganon_triforce_hunt, local_ganon_triforce_hunt, ganon_pedestal}
+            // - option_auto (3): same as goal but also checks entrance_shuffle
+            const openPyramidValue = context.getSetting('open_pyramid');
+            if (openPyramidValue === 0) {
+              result = false;
+            } else if (openPyramidValue === 1) {
+              result = true;
+            } else if (openPyramidValue === 2 || openPyramidValue === 3) {
+              // Get goal option and convert to key name
+              const goalValue = context.getSetting('goal');
+              const staticData = typeof context.getStaticData === 'function' ? context.getStaticData() : null;
+              const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+              const playerIdKey = String(playerId);
+              const optionDefs = staticData?.world?.[playerIdKey]?.option_definitions;
+              const goalDef = optionDefs?.goal;
+              const goalKey = goalDef?.name_lookup?.[String(goalValue)] || '';
+
+              // Check if goal requires pyramid open
+              const pyramidGoals = ['crystals', 'ganon_triforce_hunt', 'local_ganon_triforce_hunt', 'ganon_pedestal'];
+              const goalRequiresPyramid = pyramidGoals.includes(goalKey);
+
+              if (openPyramidValue === 2) {
+                // goal mode: just check the goal
+                result = goalRequiresPyramid;
+              } else {
+                // auto mode: also check entrance_shuffle
+                const entranceShuffleValue = context.getSetting('entrance_shuffle');
+                const entranceShuffleDef = optionDefs?.entrance_shuffle;
+                const entranceShuffleKey = entranceShuffleDef?.name_lookup?.[String(entranceShuffleValue)] || '';
+                const vanillaEntranceModes = ['vanilla', 'dungeons_simple', 'dungeons_full', 'dungeons_crossed'];
+                const isVanillaEntrance = vanillaEntranceModes.includes(entranceShuffleKey);
+                // Note: shuffle_ganon check is omitted as we don't have access to that flag here
+                result = goalRequiresPyramid && isVanillaEntrance;
+              }
+            } else {
+              result = false;
+            }
+            break;
+          }
+
+          const value = boolArg ? evaluateRule(boolArg, context, depth + 1, localScope) : undefined;
           if (value === undefined) {
             result = undefined;
           } else {
