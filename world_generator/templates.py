@@ -1198,6 +1198,60 @@ class {class_name}(Toggle):
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
+    elif option_type == 'removed':
+        # Deprecated/removed options - use Removed class
+        # Default is typically an empty string
+        default_str = option_def.get('default', '')
+        if isinstance(default_str, str):
+            default_repr = f'"{default_str}"'
+        else:
+            default_repr = repr(default_str)
+        class_code = f'''
+class {class_name}(Removed):
+    """Deprecated option for {display_name}."""
+    default = {default_repr}
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'Removed'
+
+    elif option_type == 'freetext':
+        # Free text options (like entrance_shuffle_seed)
+        default_str = option_def.get('default', '')
+        if isinstance(default_str, str):
+            default_repr = f'"{default_str}"'
+        else:
+            default_repr = repr(default_str)
+        class_code = f'''
+class {class_name}(FreeText):
+    """Option for {display_name}."""
+    display_name = "{display_name_escaped}"
+    default = {default_repr}
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'FreeText'
+
+    elif option_type == 'plando_connections':
+        # Plando connections - inherits from PlandoConnections
+        class_code = f'''
+class {class_name}(PlandoConnections):
+    """Plando connections for {display_name}."""
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections'
+
+    elif option_type == 'plando_texts':
+        # Plando texts - inherits from PlandoTexts
+        class_code = f'''
+class {class_name}(PlandoTexts):
+    """Plando texts for {display_name}."""
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoTexts'
+
+    elif option_type == 'start_inventory_pool':
+        # Start inventory from pool option - inherits from StartInventoryPool
+        class_code = f'''
+class {class_name}(StartInventoryPool):
+    """Start inventory from pool for {display_name}."""
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'StartInventoryPool'
+
     return None, None, None
 
 

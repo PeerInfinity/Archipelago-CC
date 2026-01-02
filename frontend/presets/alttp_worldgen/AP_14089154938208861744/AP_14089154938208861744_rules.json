@@ -18971,6 +18971,7 @@
         "beemizer_total_chance": 0,
         "beemizer_trap_chance": 60,
         "big_key_shuffle": "original_dungeon",
+        "bigkey_shuffle": "",
         "blue_clock_time": 2,
         "bombless_start": false,
         "boss_shuffle": "none",
@@ -18986,10 +18987,12 @@
         "enemy_health": "default",
         "enemy_shuffle": false,
         "entrance_shuffle": "vanilla",
+        "entrance_shuffle_seed": "random",
         "exclude_locations": [],
         "glitch_boots": true,
         "glitches_required": "no_glitches",
         "goal": "ganon",
+        "goals": "",
         "green_clock_time": 4,
         "heartbeep": "normal",
         "heartcolor": "red",
@@ -19010,7 +19013,9 @@
         "non_local_items": [],
         "open_pyramid": "goal",
         "ow_palettes": "default",
+        "plando_connections": [],
         "plando_items": [],
+        "plando_texts": [],
         "pot_shuffle": false,
         "priority_locations": [],
         "progression_balancing": 50,
@@ -19033,8 +19038,10 @@
         "shuffle_prizes": "general",
         "shuffle_shop_inventories": false,
         "small_key_shuffle": "original_dungeon",
+        "smallkey_shuffle": "",
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "sword_palettes": "default",
         "swordless": false,
@@ -19092,6 +19099,10 @@
           },
           "default": 0,
           "display_name": "Big Key Shuffle"
+        },
+        "bigkey_shuffle": {
+          "type": "removed",
+          "default": ""
         },
         "blue_clock_time": {
           "type": "range",
@@ -19224,6 +19235,11 @@
           "default": 0,
           "display_name": "Entrance Shuffle"
         },
+        "entrance_shuffle_seed": {
+          "type": "freetext",
+          "default": "random",
+          "display_name": "Entrance Shuffle Seed"
+        },
         "glitch_boots": {
           "type": "default_on_toggle",
           "default": 1,
@@ -19256,6 +19272,10 @@
           },
           "default": 0,
           "display_name": "Goal"
+        },
+        "goals": {
+          "type": "removed",
+          "default": ""
         },
         "green_clock_time": {
           "type": "range",
@@ -19428,6 +19448,16 @@
           "default": 0,
           "display_name": "Overworld Palette"
         },
+        "plando_connections": {
+          "type": "plando_connections",
+          "default": [],
+          "display_name": "Plando Connections"
+        },
+        "plando_texts": {
+          "type": "plando_texts",
+          "default": [],
+          "display_name": "Plando Texts"
+        },
         "pot_shuffle": {
           "type": "toggle",
           "default": 0,
@@ -19587,6 +19617,15 @@
           },
           "default": 0,
           "display_name": "Small Key Shuffle"
+        },
+        "smallkey_shuffle": {
+          "type": "removed",
+          "default": ""
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         },
         "sword_palettes": {
           "type": "choice",

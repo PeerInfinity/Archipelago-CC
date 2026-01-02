@@ -362,6 +362,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if 'AST_function_call' in str(original_value) or 'AST_function_call' in str(worldgen_value):
             return True
 
+    # WorldGen-specific options that only exist in WorldGen, not original
+    worldgen_only_options = {'randomize_items', 'use_canonical_options'}
+    for opt in worldgen_only_options:
+        if opt in path and original_value == '<missing>':
+            return True
+
     return False
 
 
