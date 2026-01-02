@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-01-02T16:53:00.602732",
-    "last_updated": "2026-01-02T16:53:00.602737",
+    "last_updated": "2026-01-02T18:20:02.137803",
     "script_version": "1.0.0"
   },
   "results": {
@@ -219,12 +219,14 @@
       "game_name_from_filename": "adventure",
       "game_name_from_yaml": "Adventure",
       "generation": {
-        "error_count": 2,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.14,
+        "first_error_line": null,
+        "first_warning_line": null,
+        "processing_time_seconds": 7.96,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "multiclient_test": {
         "client1_event_locations": 1,
@@ -237,9 +239,11 @@
         "client2_locations_received": 25,
         "client2_passed": true,
         "client2_total_locations": 25,
-        "error_count": 0,
+        "error_count": 1,
+        "first_error_line": "CLIENT1 (error): WebSocket connection to 'ws://localhost:38281/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED",
+        "first_warning_line": null,
         "locations_checked": 25,
-        "processing_time_seconds": 14.65,
+        "processing_time_seconds": 21.18,
         "return_code": 0,
         "single_client_mode": false,
         "success": true,
@@ -254,7 +258,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Adventure.yaml",
-      "timestamp": "2026-01-02T16:46:24.473206",
+      "timestamp": "2026-01-02T18:19:32.991169",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,

@@ -16,7 +16,7 @@
       ],
       "last_updated": "2026-01-02T16:33:53.139448"
     },
-    "last_updated": "2026-01-02T16:33:53.139444",
+    "last_updated": "2026-01-02T18:21:36.102388",
     "script_version": "1.0.0"
   },
   "results": {
@@ -262,27 +262,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "ea4d5fabdd17f5be0b390b8d49f1e99dc7091ec668ebb8a2437abf10665c75c5",
-          "new_sphere_log_hash": "b97a376f0a48d6b9690429edda5bddef3acb2525536e70ac32ded7f826684cab",
-          "original_rules_hash": "ea4d5fabdd17f5be0b390b8d49f1e99dc7091ec668ebb8a2437abf10665c75c5",
-          "original_sphere_log_hash": "b97a376f0a48d6b9690429edda5bddef3acb2525536e70ac32ded7f826684cab",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2026-01-02T16:31:04.817573"
-        }
-      },
       "game_name_from_filename": "adventure",
       "game_name_from_yaml": "Adventure",
       "generation": {
-        "error_count": 2,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.59,
+        "processing_time_seconds": 7.51,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -294,7 +282,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.41,
+        "processing_time_seconds": 8.61,
         "return_code": 0,
         "sphere_reached": 6.1,
         "success": true,
@@ -302,7 +290,7 @@
         "warning_count": 0
       },
       "template_filename": "Adventure.yaml",
-      "timestamp": "2026-01-02T16:27:55.740351",
+      "timestamp": "2026-01-02T18:21:18.226118",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
