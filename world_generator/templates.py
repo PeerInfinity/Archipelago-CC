@@ -1378,6 +1378,9 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     class_name = sanitize_class_name(game_name)
     world_class = data.metadata.world_class_name
 
+    # Check if any items have hint_text (to conditionally include in create_item)
+    has_hint_text = any(item.hint_text for item in data.items.values())
+
     # Build canonical placements dict (only needed if canonical_seed1 is enabled)
     # Use canonical_placements if available, otherwise fall back to original_placements
     placement_entries = []
@@ -1972,6 +1975,14 @@ class _ShopWrapper:
         return {}
 '''
 
+    # Build hint_text handling in create_item (only if items have hint_text)
+    if has_hint_text:
+        hint_text_create_item = '''
+        if data.hint_text:
+            item._hint_text = data.hint_text'''
+    else:
+        hint_text_create_item = ''
+
     # Build optional imports
     types_import = 'import types\n' if needs_types_import else ''
     # Add json and os imports for canonical options loading
@@ -2105,9 +2116,7 @@ class {world_class}(RuleWorldMixin, World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = {class_name}Item(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
+        item = {class_name}Item(name, data.classification, data.id, self.player){hint_text_create_item}
         return item
 
 {collect_item_section}{fill_slot_data_section}'''
