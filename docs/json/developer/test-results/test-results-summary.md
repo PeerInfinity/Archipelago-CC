@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-02 16:33:54
+**Generated:** 2026-01-02 16:45:05
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,13 +18,13 @@ Additional test results:
 ### Individual Test Results
 
 - **Minimal Test:** 0/73 passed (0.0%)
-- **Full Test:** 0/0 passed (0.0%)
+- **Full Test:** 0/73 passed (0.0%)
 - **Multiclient Test:** 0/0 passed (0.0%)
 
 ### Intermittent Failures
 
 - **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
-- **Full Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Full Spoilers Test:** 3 game(s), 3 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
@@ -52,79 +52,79 @@ Of the 0 templates passing all 3 tests:
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 4.6KB | ✅ | 235.2KB |
-| A Link to the Past | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 656.0KB |
-| A Short Hike | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 72.5KB |
-| APQuest | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 11.2KB |
-| Adventure | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 26.1KB |
-| Aquaria | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 1.8KB | ✅ | 275.5KB |
-| Baking Adventure | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 18.3KB |
-| Bomb Rush Cyberfunk | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 1.4KB | 40.3KB | 329.1KB |
-| Bumper Stickers | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 50.5KB |
-| Castlevania - Circle of the Moon | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 4.0KB | ✅ | 94.5KB |
-| Castlevania 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 138.6KB |
-| Celeste (Open World) | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1043.4KB |
-| Celeste 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 4.1KB | ✅ | 53.8KB |
-| ChecksFinder | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 16.3KB |
-| Choo-Choo Charles | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 282.4KB |
-| Civilization VI | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 167.0KB |
-| Coding Adventure | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 55.0KB |
-| DLCQuest | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 1.0KB | ✅ | 51.3KB |
-| DOOM 1993 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 280.2KB |
-| DOOM II | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 326.6KB |
-| Dark Souls III | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1062.2KB |
-| Donkey Kong Country 3 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 122.6KB |
-| Factorio | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 5.1KB | ✅ | 299.1KB |
-| Faxanadu | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 68.7KB |
-| Final Fantasy Mystic Quest | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1302.6KB |
-| Heretic | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 367.7KB |
-| Hylics 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 102.3KB |
-| Inscryption | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 7.5KB | ✅ | 84.4KB |
-| Kingdom Hearts | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 754.1KB |
-| Kingdom Hearts 2 | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 19.5KB | ✅ | 1679.2KB |
-| Kirby's Dream Land 3 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 7.4KB | ✅ | 756.7KB |
-| Landstalker - The Treasures of King Nole | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 3.6KB | ✅ | 210.4KB |
-| Lingo | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 38.2KB | 10.7KB | 1020.7KB |
-| Links Awakening DX | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 7.4KB | ✅ | 714.5KB |
-| Lufia II Ancient Cave | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | 132.5KB |
-| Mario & Luigi Superstar Saga | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 398.6KB |
-| Math Adventure | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 12.7KB |
-| Mega Man 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 51.6KB |
-| MegaMan Battle Network 3 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 210.0KB |
-| Meritous | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 57.3KB |
-| Metamath | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 47.6KB |
-| Muse Dash | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 231.6KB |
-| Noita | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 74.7KB |
-| Old School Runescape | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 1.0KB | ✅ | 309.1KB |
-| Overcooked! 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 23.1KB | ✅ | 489.0KB |
-| Paint | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 2.7KB | ✅ | 123.8KB |
-| Raft | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 5.4KB | ✅ | 206.0KB |
-| Risk of Rain 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 146.3KB |
-| Saving Princess | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 33.6KB |
-| Secret of Evermore | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 5.3KB | 6.9KB | 418.8KB |
-| Shivers | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 151.4KB |
-| Sonic Adventure 2 Battle | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 28.7KB | 87.4KB | 1136.2KB |
-| Stardew Valley | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 18.8KB | 8.0KB | 2430.2KB |
-| Subnautica | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 2.2KB | ✅ | 207.9KB |
-| Super Mario 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 12.4KB | ✅ | 93.0KB |
-| Super Mario Land 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 875.3KB |
-| Super Mario World | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 178.4KB |
-| Super Metroid | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 60.9KB | 114.5KB | 625.3KB |
-| TOEM original | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
-| TOEM rule builder | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
-| TUNIC | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 3.1KB | ✅ | 711.9KB |
-| Terraria | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 16.8KB | ✅ | 291.3KB |
-| The Legend of Zelda | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 555.6KB |
-| The Messenger | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 4.7KB | ✅ | 211.9KB |
-| The Wind Waker | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 255.4KB |
-| The Witness | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 14.1KB | ✅ | 401.4KB |
-| Timespinner | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 2.2KB | ✅ | 260.9KB |
-| Undertale | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 58.1KB |
-| VVVVVV | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 2.3KB | ✅ | 22.9KB |
-| Wargroove | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 44.9KB |
-| Yoshi's Island | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 3.8KB | ✅ | 283.3KB |
-| shapez | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 155.6KB |
+| A Hat in Time | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 4.6KB | ✅ | 235.2KB |
+| A Link to the Past | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 656.0KB |
+| A Short Hike | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 72.5KB |
+| APQuest | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 11.2KB |
+| Adventure | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 26.1KB |
+| Aquaria | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 1.8KB | ✅ | 275.5KB |
+| Baking Adventure | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 18.3KB |
+| Bomb Rush Cyberfunk | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 1.4KB | 40.3KB | 329.1KB |
+| Bumper Stickers | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 50.5KB |
+| Castlevania - Circle of the Moon | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 4.0KB | ✅ | 94.5KB |
+| Castlevania 64 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 138.6KB |
+| Celeste (Open World) | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1043.4KB |
+| Celeste 64 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 4.1KB | ✅ | 53.8KB |
+| ChecksFinder | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 16.3KB |
+| Choo-Choo Charles | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 282.4KB |
+| Civilization VI | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 167.0KB |
+| Coding Adventure | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 55.0KB |
+| DLCQuest | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 1.0KB | ✅ | 51.3KB |
+| DOOM 1993 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 280.2KB |
+| DOOM II | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 326.6KB |
+| Dark Souls III | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1062.2KB |
+| Donkey Kong Country 3 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 122.6KB |
+| Factorio | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 5.1KB | ✅ | 299.1KB |
+| Faxanadu | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 68.7KB |
+| Final Fantasy Mystic Quest | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1302.6KB |
+| Heretic | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 367.7KB |
+| Hylics 2 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 102.3KB |
+| Inscryption | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 7.5KB | ✅ | 84.4KB |
+| Kingdom Hearts | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 754.1KB |
+| Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ✅ | 19.5KB | ✅ | 1679.2KB |
+| Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 7.4KB | ✅ | 756.7KB |
+| Landstalker - The Treasures of King Nole | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ✅ | 3.6KB | ✅ | 210.4KB |
+| Lingo | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 38.2KB | 10.7KB | 1020.7KB |
+| Links Awakening DX | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 7.4KB | ✅ | 714.5KB |
+| Lufia II Ancient Cave | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | 132.5KB |
+| Mario & Luigi Superstar Saga | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 398.6KB |
+| Math Adventure | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 12.7KB |
+| Mega Man 2 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 51.6KB |
+| MegaMan Battle Network 3 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 210.0KB |
+| Meritous | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 57.3KB |
+| Metamath | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 47.6KB |
+| Muse Dash | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 231.6KB |
+| Noita | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 74.7KB |
+| Old School Runescape | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 1.0KB | ✅ | 309.1KB |
+| Overcooked! 2 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 23.1KB | ✅ | 489.0KB |
+| Paint | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 2.7KB | ✅ | 123.8KB |
+| Raft | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 5.4KB | ✅ | 206.0KB |
+| Risk of Rain 2 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 146.3KB |
+| Saving Princess | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 33.6KB |
+| Secret of Evermore | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 5.3KB | 6.9KB | 418.8KB |
+| Shivers | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 151.4KB |
+| Sonic Adventure 2 Battle | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 266.2KB |
+| Starcraft 2 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 28.7KB | 87.4KB | 1136.2KB |
+| Stardew Valley | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 18.8KB | 8.0KB | 2430.2KB |
+| Subnautica | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 2.2KB | ✅ | 207.9KB |
+| Super Mario 64 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 12.4KB | ✅ | 93.0KB |
+| Super Mario Land 2 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 875.3KB |
+| Super Mario World | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 178.4KB |
+| Super Metroid | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 60.9KB | 114.5KB | 625.3KB |
+| TOEM original | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
+| TOEM rule builder | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
+| TUNIC | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 3.1KB | ✅ | 711.9KB |
+| Terraria | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ✅ | 16.8KB | ✅ | 291.3KB |
+| The Legend of Zelda | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 555.6KB |
+| The Messenger | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 4.7KB | ✅ | 211.9KB |
+| The Wind Waker | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 255.4KB |
+| The Witness | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 14.1KB | ✅ | 401.4KB |
+| Timespinner | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 2.2KB | ✅ | 260.9KB |
+| Undertale | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 58.1KB |
+| VVVVVV | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 2.3KB | ✅ | 22.9KB |
+| Wargroove | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 44.9KB |
+| Yoshi's Island | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 3.8KB | ✅ | 283.3KB |
+| shapez | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 155.6KB |
 
 ### Largest Rules Files
 
