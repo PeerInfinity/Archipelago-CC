@@ -2299,10 +2299,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Stunted Wolf Card": {
         "name": "Stunted Wolf Card",
@@ -2310,10 +2310,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Wardrobe Key": {
         "name": "Wardrobe Key",
@@ -2321,10 +2321,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skink Card": {
         "name": "Skink Card",
@@ -2332,10 +2332,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Ant Cards": {
         "name": "Ant Cards",
@@ -2343,10 +2343,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Caged Wolf Card": {
         "name": "Caged Wolf Card",
@@ -2354,10 +2354,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Squirrel Totem Head": {
         "name": "Squirrel Totem Head",
@@ -2365,10 +2365,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dagger": {
         "name": "Dagger",
@@ -2376,10 +2376,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Film Roll": {
         "name": "Film Roll",
@@ -2387,10 +2387,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ring": {
         "name": "Ring",
@@ -2398,10 +2398,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Magnificus Eye": {
         "name": "Magnificus Eye",
@@ -2409,10 +2409,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Oil Painting's Clover Plant": {
         "name": "Oil Painting's Clover Plant",
@@ -2420,10 +2420,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Extra Candle": {
         "name": "Extra Candle",
@@ -2431,10 +2431,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bee Figurine": {
         "name": "Bee Figurine",
@@ -2442,10 +2442,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Greater Smoke": {
         "name": "Greater Smoke",
@@ -2453,10 +2453,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Angler Hook": {
         "name": "Angler Hook",
@@ -2464,10 +2464,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Camera Replica": {
         "name": "Camera Replica",
@@ -2475,10 +2475,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pile Of Meat": {
         "name": "Pile Of Meat",
@@ -2486,10 +2486,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Epitaph Piece": {
         "name": "Epitaph Piece",
@@ -2497,10 +2497,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "progression"
+        "max_count": 9
       },
       "Epitaph Pieces": {
         "name": "Epitaph Pieces",
@@ -2508,10 +2508,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Monocle": {
         "name": "Monocle",
@@ -2519,10 +2519,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bone Lord Femur": {
         "name": "Bone Lord Femur",
@@ -2530,10 +2530,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bone Lord Horn": {
         "name": "Bone Lord Horn",
@@ -2541,10 +2541,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bone Lord Holo Key": {
         "name": "Bone Lord Holo Key",
@@ -2552,10 +2552,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mycologists Holo Key": {
         "name": "Mycologists Holo Key",
@@ -2563,10 +2563,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ancient Obol": {
         "name": "Ancient Obol",
@@ -2574,10 +2574,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Great Kraken Card": {
         "name": "Great Kraken Card",
@@ -2585,10 +2585,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Drowned Soul Card": {
         "name": "Drowned Soul Card",
@@ -2596,10 +2596,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Salmon Card": {
         "name": "Salmon Card",
@@ -2607,10 +2607,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Dock's Clover Plant": {
         "name": "Dock's Clover Plant",
@@ -2618,10 +2618,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Extra Battery": {
         "name": "Extra Battery",
@@ -2629,10 +2629,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Nano Armor Generator": {
         "name": "Nano Armor Generator",
@@ -2640,10 +2640,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mrs. Bomb's Remote": {
         "name": "Mrs. Bomb's Remote",
@@ -2651,10 +2651,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Inspectometer Battery": {
         "name": "Inspectometer Battery",
@@ -2662,10 +2662,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gems Module": {
         "name": "Gems Module",
@@ -2673,10 +2673,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lonely Wizbot Card": {
         "name": "Lonely Wizbot Card",
@@ -2684,10 +2684,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Fishbot Card": {
         "name": "Fishbot Card",
@@ -2695,10 +2695,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Ourobot Card": {
         "name": "Ourobot Card",
@@ -2706,10 +2706,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Holo Pelt": {
         "name": "Holo Pelt",
@@ -2717,10 +2717,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Quill": {
         "name": "Quill",
@@ -2728,10 +2728,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Currency": {
         "name": "Currency",
@@ -2739,10 +2739,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 25,
-        "classification": "filler"
+        "max_count": 25
       },
       "Card Pack": {
         "name": "Card Pack",
@@ -2750,10 +2750,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 24,
-        "classification": "filler"
+        "max_count": 24
       }
     }
   },

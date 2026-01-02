@@ -2896,10 +2896,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Progressive Canvas Height": {
         "name": "Progressive Canvas Height",
@@ -2907,10 +2907,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Progressive Color Depth (Red)": {
         "name": "Progressive Color Depth (Red)",
@@ -2918,10 +2918,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "progression"
+        "max_count": 7
       },
       "Progressive Color Depth (Green)": {
         "name": "Progressive Color Depth (Green)",
@@ -2929,10 +2929,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "progression"
+        "max_count": 7
       },
       "Progressive Color Depth (Blue)": {
         "name": "Progressive Color Depth (Blue)",
@@ -2940,10 +2940,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "progression"
+        "max_count": 7
       },
       "Free-Form Select": {
         "name": "Free-Form Select",
@@ -2952,10 +2952,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Select": {
         "name": "Select",
@@ -2963,10 +2963,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Eraser/Color Eraser": {
         "name": "Eraser/Color Eraser",
@@ -2974,10 +2974,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Fill With Color": {
         "name": "Fill With Color",
@@ -2985,10 +2985,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pick Color": {
         "name": "Pick Color",
@@ -2996,10 +2996,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magnifier": {
         "name": "Magnifier",
@@ -3007,10 +3007,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pencil": {
         "name": "Pencil",
@@ -3018,10 +3018,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Brush": {
         "name": "Brush",
@@ -3029,10 +3029,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Airbrush": {
         "name": "Airbrush",
@@ -3040,10 +3040,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Text": {
         "name": "Text",
@@ -3051,10 +3051,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Line": {
         "name": "Line",
@@ -3062,10 +3062,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Curve": {
         "name": "Curve",
@@ -3073,10 +3073,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Rectangle": {
         "name": "Rectangle",
@@ -3084,10 +3084,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Polygon": {
         "name": "Polygon",
@@ -3095,10 +3095,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Ellipse": {
         "name": "Ellipse",
@@ -3106,10 +3106,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Rounded Rectangle": {
         "name": "Rounded Rectangle",
@@ -3117,10 +3117,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Additional Palette Color": {
         "name": "Additional Palette Color",
@@ -3128,10 +3128,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 91,
-        "classification": "filler"
+        "max_count": 91
       },
       "Undo Trap": {
         "name": "Undo Trap",
@@ -3139,10 +3139,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Clear Image Trap": {
         "name": "Clear Image Trap",
@@ -3150,10 +3150,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Invert Colors Trap": {
         "name": "Invert Colors Trap",
@@ -3161,10 +3161,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Flip Horizontal Trap": {
         "name": "Flip Horizontal Trap",
@@ -3172,10 +3172,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Flip Vertical Trap": {
         "name": "Flip Vertical Trap",
@@ -3183,10 +3183,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       }
     }
   },

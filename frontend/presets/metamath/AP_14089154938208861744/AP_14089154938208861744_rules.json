@@ -413,10 +413,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 2": {
         "name": "Statement 2",
@@ -425,10 +425,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 3": {
         "name": "Statement 3",
@@ -437,10 +437,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 4": {
         "name": "Statement 4",
@@ -449,10 +449,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 5": {
         "name": "Statement 5",
@@ -461,10 +461,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 6": {
         "name": "Statement 6",
@@ -473,10 +473,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 7": {
         "name": "Statement 7",
@@ -485,10 +485,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 8": {
         "name": "Statement 8",
@@ -497,10 +497,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 9": {
         "name": "Statement 9",
@@ -509,10 +509,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Statement 10": {
         "name": "Statement 10",
@@ -521,10 +521,10 @@
           "Everything",
           "Statements"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "QED Moment": {
         "name": "QED Moment",
@@ -533,10 +533,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Inference Help": {
         "name": "Inference Help",
@@ -545,10 +545,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Deduction Tip": {
         "name": "Deduction Tip",
@@ -557,10 +557,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Theorem Insight": {
         "name": "Theorem Insight",
@@ -569,10 +569,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lemma Note": {
         "name": "Lemma Note",
@@ -581,10 +581,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Axiom Reference": {
         "name": "Axiom Reference",
@@ -593,10 +593,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Logic Guide": {
         "name": "Logic Guide",
@@ -605,10 +605,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Proof Hint": {
         "name": "Proof Hint",
@@ -617,10 +617,10 @@
           "Everything",
           "Hints"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Statement 11": {
         "name": "Statement 11",

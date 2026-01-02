@@ -7576,10 +7576,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Chuckin Up)": {
         "name": "Music (Chuckin Up)",
@@ -7587,10 +7587,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Spectres)": {
         "name": "Music (Spectres)",
@@ -7598,10 +7598,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (You Can Say Hi)": {
         "name": "Music (You Can Say Hi)",
@@ -7609,10 +7609,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (JACK DA FUNK)": {
         "name": "Music (JACK DA FUNK)",
@@ -7620,10 +7620,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Feel The Funk (Computer Love))": {
         "name": "Music (Feel The Funk (Computer Love))",
@@ -7631,10 +7631,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Big City Life)": {
         "name": "Music (Big City Life)",
@@ -7642,10 +7642,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (I Wanna Kno)": {
         "name": "Music (I Wanna Kno)",
@@ -7653,10 +7653,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Plume)": {
         "name": "Music (Plume)",
@@ -7664,10 +7664,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Two Days Off)": {
         "name": "Music (Two Days Off)",
@@ -7675,10 +7675,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Scraped On The Way Out)": {
         "name": "Music (Scraped On The Way Out)",
@@ -7686,10 +7686,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Last Hoorah)": {
         "name": "Music (Last Hoorah)",
@@ -7697,10 +7697,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (State of Mind)": {
         "name": "Music (State of Mind)",
@@ -7708,10 +7708,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (AGUA)": {
         "name": "Music (AGUA)",
@@ -7719,10 +7719,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Condensed milk)": {
         "name": "Music (Condensed milk)",
@@ -7730,10 +7730,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Light Switch)": {
         "name": "Music (Light Switch)",
@@ -7741,10 +7741,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Hair Dun Nails Dun)": {
         "name": "Music (Hair Dun Nails Dun)",
@@ -7752,10 +7752,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Precious Thing)": {
         "name": "Music (Precious Thing)",
@@ -7763,10 +7763,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Next To Me)": {
         "name": "Music (Next To Me)",
@@ -7774,10 +7774,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Refuse)": {
         "name": "Music (Refuse)",
@@ -7785,10 +7785,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Iridium)": {
         "name": "Music (Iridium)",
@@ -7796,10 +7796,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Funk Express)": {
         "name": "Music (Funk Express)",
@@ -7807,10 +7807,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (In The Pocket)": {
         "name": "Music (In The Pocket)",
@@ -7818,10 +7818,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Bounce Upon A Time)": {
         "name": "Music (Bounce Upon A Time)",
@@ -7829,10 +7829,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (hwbouths)": {
         "name": "Music (hwbouths)",
@@ -7840,10 +7840,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Morning Glow)": {
         "name": "Music (Morning Glow)",
@@ -7851,10 +7851,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Chromebies)": {
         "name": "Music (Chromebies)",
@@ -7862,10 +7862,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (watchyaback!)": {
         "name": "Music (watchyaback!)",
@@ -7873,10 +7873,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Anime Break)": {
         "name": "Music (Anime Break)",
@@ -7884,10 +7884,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (DA PEOPLE)": {
         "name": "Music (DA PEOPLE)",
@@ -7895,10 +7895,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Trinitron)": {
         "name": "Music (Trinitron)",
@@ -7906,10 +7906,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Operator)": {
         "name": "Music (Operator)",
@@ -7917,10 +7917,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Sunshine Popping Mixtape)": {
         "name": "Music (Sunshine Popping Mixtape)",
@@ -7928,10 +7928,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (House Cats Mixtape)": {
         "name": "Music (House Cats Mixtape)",
@@ -7939,10 +7939,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Breaking Machine Mixtape)": {
         "name": "Music (Breaking Machine Mixtape)",
@@ -7950,10 +7950,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Music (Beastmode Hip Hop Mixtape)": {
         "name": "Music (Beastmode Hip Hop Mixtape)",
@@ -7961,10 +7961,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Graffiti (M - OVERWHELMME)": {
         "name": "Graffiti (M - OVERWHELMME)",
@@ -7974,10 +7974,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - QUICK BING)": {
         "name": "Graffiti (M - QUICK BING)",
@@ -7987,10 +7987,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - BLOCKY)": {
         "name": "Graffiti (M - BLOCKY)",
@@ -8000,10 +8000,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Pora)": {
         "name": "Graffiti (M - Pora)",
@@ -8013,10 +8013,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Teddy 4)": {
         "name": "Graffiti (M - Teddy 4)",
@@ -8026,10 +8026,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - BOMB BEATS)": {
         "name": "Graffiti (M - BOMB BEATS)",
@@ -8039,10 +8039,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - SPRAYTANICPANIC!)": {
         "name": "Graffiti (M - SPRAYTANICPANIC!)",
@@ -8052,10 +8052,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - SHOGUN)": {
         "name": "Graffiti (M - SHOGUN)",
@@ -8065,10 +8065,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - TeleBinge)": {
         "name": "Graffiti (M - TeleBinge)",
@@ -8078,10 +8078,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - 0m33)": {
         "name": "Graffiti (M - 0m33)",
@@ -8091,10 +8091,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Vom'B)": {
         "name": "Graffiti (M - Vom'B)",
@@ -8104,10 +8104,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Street classic)": {
         "name": "Graffiti (M - Street classic)",
@@ -8117,10 +8117,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Thick Candy)": {
         "name": "Graffiti (M - Thick Candy)",
@@ -8130,10 +8130,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - colorBOMB)": {
         "name": "Graffiti (M - colorBOMB)",
@@ -8143,10 +8143,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Zona Leste)": {
         "name": "Graffiti (M - Zona Leste)",
@@ -8156,10 +8156,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Stacked Symbols)": {
         "name": "Graffiti (M - Stacked Symbols)",
@@ -8169,10 +8169,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - B-boy Love)": {
         "name": "Graffiti (M - B-boy Love)",
@@ -8182,10 +8182,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - Devil 68)": {
         "name": "Graffiti (M - Devil 68)",
@@ -8195,10 +8195,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (M - pico pow)": {
         "name": "Graffiti (M - pico pow)",
@@ -8208,10 +8208,10 @@
           "Everything",
           "graffitim"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - WHOLE SIXER)": {
         "name": "Graffiti (L - WHOLE SIXER)",
@@ -8221,10 +8221,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - INFINITY)": {
         "name": "Graffiti (L - INFINITY)",
@@ -8234,10 +8234,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - VoodooBoy)": {
         "name": "Graffiti (L - VoodooBoy)",
@@ -8247,10 +8247,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Fang It Up!)": {
         "name": "Graffiti (L - Fang It Up!)",
@@ -8260,10 +8260,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - FREAKS)": {
         "name": "Graffiti (L - FREAKS)",
@@ -8273,10 +8273,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Graffo Le Fou)": {
         "name": "Graffiti (L - Graffo Le Fou)",
@@ -8286,10 +8286,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Lauder)": {
         "name": "Graffiti (L - Lauder)",
@@ -8299,10 +8299,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - SpawningSeason)": {
         "name": "Graffiti (L - SpawningSeason)",
@@ -8312,10 +8312,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Moai Marathon)": {
         "name": "Graffiti (L - Moai Marathon)",
@@ -8325,10 +8325,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Tius)": {
         "name": "Graffiti (L - Tius)",
@@ -8338,10 +8338,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - NOISY NINJA)": {
         "name": "Graffiti (L - NOISY NINJA)",
@@ -8351,10 +8351,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Campaign Trail)": {
         "name": "Graffiti (L - Campaign Trail)",
@@ -8364,10 +8364,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - skate or di3)": {
         "name": "Graffiti (L - skate or di3)",
@@ -8377,10 +8377,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Jd Vila Formosa)": {
         "name": "Graffiti (L - Jd Vila Formosa)",
@@ -8390,10 +8390,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Messenger Mural)": {
         "name": "Graffiti (L - Messenger Mural)",
@@ -8403,10 +8403,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - RECORD.HEAD)": {
         "name": "Graffiti (L - RECORD.HEAD)",
@@ -8416,10 +8416,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - Boom)": {
         "name": "Graffiti (L - Boom)",
@@ -8429,10 +8429,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - wild rush)": {
         "name": "Graffiti (L - wild rush)",
@@ -8442,10 +8442,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (L - buttercup)": {
         "name": "Graffiti (L - buttercup)",
@@ -8455,10 +8455,10 @@
           "Everything",
           "graffitil"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Gold Rush)": {
         "name": "Graffiti (XL - Gold Rush)",
@@ -8468,10 +8468,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - WILD STRUXXA)": {
         "name": "Graffiti (XL - WILD STRUXXA)",
@@ -8481,10 +8481,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - VIBRATIONS)": {
         "name": "Graffiti (XL - VIBRATIONS)",
@@ -8494,10 +8494,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - SECOND SIGHT)": {
         "name": "Graffiti (XL - SECOND SIGHT)",
@@ -8507,10 +8507,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Bomb Croc)": {
         "name": "Graffiti (XL - Bomb Croc)",
@@ -8520,10 +8520,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - FATE)": {
         "name": "Graffiti (XL - FATE)",
@@ -8533,10 +8533,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Web Spitter)": {
         "name": "Graffiti (XL - Web Spitter)",
@@ -8546,10 +8546,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - MOTORCYCLE GANG)": {
         "name": "Graffiti (XL - MOTORCYCLE GANG)",
@@ -8559,10 +8559,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Deep Dive)": {
         "name": "Graffiti (XL - Deep Dive)",
@@ -8572,10 +8572,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - MegaHood)": {
         "name": "Graffiti (XL - MegaHood)",
@@ -8585,10 +8585,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Gamex UPA ABL)": {
         "name": "Graffiti (XL - Gamex UPA ABL)",
@@ -8598,10 +8598,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - BiGSHiNYBoMB)": {
         "name": "Graffiti (XL - BiGSHiNYBoMB)",
@@ -8611,10 +8611,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Bomb Burner)": {
         "name": "Graffiti (XL - Bomb Burner)",
@@ -8624,10 +8624,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Pirate's Life 4 Me)": {
         "name": "Graffiti (XL - Pirate's Life 4 Me)",
@@ -8637,10 +8637,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Bombing by FireMan)": {
         "name": "Graffiti (XL - Bombing by FireMan)",
@@ -8650,10 +8650,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - end 2 end)": {
         "name": "Graffiti (XL - end 2 end)",
@@ -8663,10 +8663,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - Raver Funk)": {
         "name": "Graffiti (XL - Raver Funk)",
@@ -8676,10 +8676,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Graffiti (XL - headphones on Helmet on)": {
         "name": "Graffiti (XL - headphones on Helmet on)",
@@ -8689,10 +8689,10 @@
           "Everything",
           "graffitixl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skateboard (Devon)": {
         "name": "Skateboard (Devon)",
@@ -8701,10 +8701,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Terrence)": {
         "name": "Skateboard (Terrence)",
@@ -8713,10 +8713,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Maceo)": {
         "name": "Skateboard (Maceo)",
@@ -8725,10 +8725,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Lazer Accuracy)": {
         "name": "Skateboard (Lazer Accuracy)",
@@ -8737,10 +8737,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Death Boogie)": {
         "name": "Skateboard (Death Boogie)",
@@ -8749,10 +8749,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Sylk)": {
         "name": "Skateboard (Sylk)",
@@ -8761,10 +8761,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Taiga)": {
         "name": "Skateboard (Taiga)",
@@ -8773,10 +8773,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Just Swell)": {
         "name": "Skateboard (Just Swell)",
@@ -8785,10 +8785,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skateboard (Mantra)": {
         "name": "Skateboard (Mantra)",
@@ -8797,10 +8797,10 @@
           "Everything",
           "skateboard"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Inline Skates (Glaciers)": {
         "name": "Inline Skates (Glaciers)",
@@ -8811,10 +8811,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (Sweet Royale)": {
         "name": "Inline Skates (Sweet Royale)",
@@ -8825,10 +8825,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (Strawberry Missiles)": {
         "name": "Inline Skates (Strawberry Missiles)",
@@ -8839,10 +8839,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (Ice Cold Killers)": {
         "name": "Inline Skates (Ice Cold Killers)",
@@ -8853,10 +8853,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (Red Industry)": {
         "name": "Inline Skates (Red Industry)",
@@ -8867,10 +8867,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (Mech Adversary)": {
         "name": "Inline Skates (Mech Adversary)",
@@ -8881,10 +8881,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (Orange Blasters)": {
         "name": "Inline Skates (Orange Blasters)",
@@ -8895,10 +8895,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (ck)": {
         "name": "Inline Skates (ck)",
@@ -8909,10 +8909,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Inline Skates (Sharpshooters)": {
         "name": "Inline Skates (Sharpshooters)",
@@ -8923,10 +8923,10 @@
           "inline skates",
           "skates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (Mr. Taupe)": {
         "name": "BMX (Mr. Taupe)",
@@ -8937,10 +8937,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (Gum)": {
         "name": "BMX (Gum)",
@@ -8951,10 +8951,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (Steel Wheeler)": {
         "name": "BMX (Steel Wheeler)",
@@ -8965,10 +8965,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (oyo)": {
         "name": "BMX (oyo)",
@@ -8979,10 +8979,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (Rigid No.6)": {
         "name": "BMX (Rigid No.6)",
@@ -8993,10 +8993,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (Ceremony)": {
         "name": "BMX (Ceremony)",
@@ -9007,10 +9007,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (XXX)": {
         "name": "BMX (XXX)",
@@ -9021,10 +9021,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (Terrazza)": {
         "name": "BMX (Terrazza)",
@@ -9035,10 +9035,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BMX (Dedication)": {
         "name": "BMX (Dedication)",
@@ -9049,10 +9049,10 @@
           "bike",
           "bmx"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Outfit (Red - Autumn)": {
         "name": "Outfit (Red - Autumn)",
@@ -9061,10 +9061,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Red - Winter)": {
         "name": "Outfit (Red - Winter)",
@@ -9073,10 +9073,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Tryce - Autumn)": {
         "name": "Outfit (Tryce - Autumn)",
@@ -9085,10 +9085,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Tryce - Winter)": {
         "name": "Outfit (Tryce - Winter)",
@@ -9097,10 +9097,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Bel - Autumn)": {
         "name": "Outfit (Bel - Autumn)",
@@ -9109,10 +9109,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Bel - Winter)": {
         "name": "Outfit (Bel - Winter)",
@@ -9121,10 +9121,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Vinyl - Autumn)": {
         "name": "Outfit (Vinyl - Autumn)",
@@ -9133,10 +9133,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Vinyl - Winter)": {
         "name": "Outfit (Vinyl - Winter)",
@@ -9145,10 +9145,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Solace - Autumn)": {
         "name": "Outfit (Solace - Autumn)",
@@ -9157,10 +9157,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Solace - Winter)": {
         "name": "Outfit (Solace - Winter)",
@@ -9169,10 +9169,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Felix - Autumn)": {
         "name": "Outfit (Felix - Autumn)",
@@ -9181,10 +9181,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Felix - Winter)": {
         "name": "Outfit (Felix - Winter)",
@@ -9193,10 +9193,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Rave - Autumn)": {
         "name": "Outfit (Rave - Autumn)",
@@ -9205,10 +9205,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Rave - Winter)": {
         "name": "Outfit (Rave - Winter)",
@@ -9217,10 +9217,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Mesh - Autumn)": {
         "name": "Outfit (Mesh - Autumn)",
@@ -9229,10 +9229,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Mesh - Winter)": {
         "name": "Outfit (Mesh - Winter)",
@@ -9241,10 +9241,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Shine - Autumn)": {
         "name": "Outfit (Shine - Autumn)",
@@ -9253,10 +9253,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Shine - Winter)": {
         "name": "Outfit (Shine - Winter)",
@@ -9265,10 +9265,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Rise - Autumn)": {
         "name": "Outfit (Rise - Autumn)",
@@ -9277,10 +9277,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Rise - Winter)": {
         "name": "Outfit (Rise - Winter)",
@@ -9289,10 +9289,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Coil - Autumn)": {
         "name": "Outfit (Coil - Autumn)",
@@ -9301,10 +9301,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outfit (Coil - Winter)": {
         "name": "Outfit (Coil - Winter)",
@@ -9313,10 +9313,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tryce": {
         "name": "Tryce",
@@ -9325,10 +9325,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bel": {
         "name": "Bel",
@@ -9338,10 +9338,10 @@
           "characters",
           "girl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Vinyl": {
         "name": "Vinyl",
@@ -9351,10 +9351,10 @@
           "characters",
           "girl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Solace": {
         "name": "Solace",
@@ -9363,10 +9363,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rave": {
         "name": "Rave",
@@ -9376,10 +9376,10 @@
           "characters",
           "girl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mesh": {
         "name": "Mesh",
@@ -9388,10 +9388,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shine": {
         "name": "Shine",
@@ -9401,10 +9401,10 @@
           "characters",
           "girl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rise": {
         "name": "Rise",
@@ -9414,10 +9414,10 @@
           "characters",
           "girl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Coil": {
         "name": "Coil",
@@ -9426,10 +9426,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Frank": {
         "name": "Frank",
@@ -9438,10 +9438,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rietveld": {
         "name": "Rietveld",
@@ -9450,10 +9450,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "DJ Cyber": {
         "name": "DJ Cyber",
@@ -9462,10 +9462,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Eclipse": {
         "name": "Eclipse",
@@ -9474,10 +9474,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "DOT.EXE": {
         "name": "DOT.EXE",
@@ -9486,10 +9486,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Devil Theory": {
         "name": "Devil Theory",
@@ -9498,10 +9498,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flesh Prince": {
         "name": "Flesh Prince",
@@ -9510,10 +9510,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Futurism": {
         "name": "Futurism",
@@ -9523,10 +9523,10 @@
           "characters",
           "girl"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Oldhead": {
         "name": "Oldhead",
@@ -9535,10 +9535,10 @@
           "Everything",
           "characters"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "8 REP": {
         "name": "8 REP",
@@ -9546,10 +9546,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 34,
-        "classification": "progression_skip_balancing"
+        "max_count": 34
       },
       "16 REP": {
         "name": "16 REP",
@@ -9557,10 +9557,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 32,
-        "classification": "progression_skip_balancing"
+        "max_count": 32
       },
       "24 REP": {
         "name": "24 REP",
@@ -9568,10 +9568,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "progression_skip_balancing"
+        "max_count": 13
       },
       "32 REP": {
         "name": "32 REP",
@@ -9579,10 +9579,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression_skip_balancing"
+        "max_count": 5
       },
       "48 REP": {
         "name": "48 REP",
@@ -9590,10 +9590,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression_skip_balancing"
+        "max_count": 3
       },
       "Camera App": {
         "name": "Camera App",
@@ -9601,10 +9601,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Chapter Completed": {
         "name": "Chapter Completed",
@@ -9612,10 +9612,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression_skip_balancing",
         "event": true,
         "type": "Event",
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Victory": {
         "name": "Victory",
@@ -9623,10 +9623,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression_skip_balancing",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

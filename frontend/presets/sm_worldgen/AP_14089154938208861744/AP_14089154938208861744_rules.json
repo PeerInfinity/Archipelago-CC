@@ -8887,10 +8887,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "ETank",
-        "max_count": 14,
-        "classification": "progression"
+        "max_count": 14
       },
       "Missile": {
         "name": "Missile",
@@ -8898,10 +8898,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Missile",
-        "max_count": 30,
-        "classification": "progression"
+        "max_count": 30
       },
       "Super Missile": {
         "name": "Super Missile",
@@ -8909,10 +8909,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Super",
-        "max_count": 25,
-        "classification": "progression"
+        "max_count": 25
       },
       "Power Bomb": {
         "name": "Power Bomb",
@@ -8920,10 +8920,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "PowerBomb",
-        "max_count": 11,
-        "classification": "progression"
+        "max_count": 11
       },
       "Bomb": {
         "name": "Bomb",
@@ -8931,10 +8931,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Bomb",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Charge Beam": {
         "name": "Charge Beam",
@@ -8942,10 +8942,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Charge",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Beam": {
         "name": "Ice Beam",
@@ -8953,10 +8953,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Ice",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hi-Jump Boots": {
         "name": "Hi-Jump Boots",
@@ -8965,10 +8965,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "HiJump",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Speed Booster": {
         "name": "Speed Booster",
@@ -8976,10 +8976,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "SpeedBooster",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wave Beam": {
         "name": "Wave Beam",
@@ -8987,10 +8987,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Wave",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spazer": {
         "name": "Spazer",
@@ -8998,10 +8998,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Spazer",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spring Ball": {
         "name": "Spring Ball",
@@ -9009,10 +9009,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "SpringBall",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Varia Suit": {
         "name": "Varia Suit",
@@ -9020,10 +9020,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Varia",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gravity Suit": {
         "name": "Gravity Suit",
@@ -9031,10 +9031,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Gravity",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "X-Ray Scope": {
         "name": "X-Ray Scope",
@@ -9043,10 +9043,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "XRayScope",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Plasma Beam": {
         "name": "Plasma Beam",
@@ -9054,10 +9054,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Plasma",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Grappling Beam": {
         "name": "Grappling Beam",
@@ -9065,10 +9065,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Grapple",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Space Jump": {
         "name": "Space Jump",
@@ -9076,10 +9076,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "SpaceJump",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Screw Attack": {
         "name": "Screw Attack",
@@ -9087,10 +9087,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "ScrewAttack",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Morph Ball": {
         "name": "Morph Ball",
@@ -9098,10 +9098,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Morph",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reserve Tank": {
         "name": "Reserve Tank",
@@ -9109,10 +9109,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": "Reserve",
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Generic": {
         "name": "Generic",
@@ -9120,10 +9120,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": "ArchipelagoItem",
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nothing": {
         "name": "Nothing",
@@ -9131,10 +9131,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": "Nothing",
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "No Energy": {
         "name": "No Energy",
@@ -9142,10 +9142,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": "NoEnergy",
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Kraid": {
         "name": "Kraid",
@@ -9153,10 +9153,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ridley": {
         "name": "Ridley",
@@ -9164,10 +9164,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phantoon": {
         "name": "Phantoon",
@@ -9175,10 +9175,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Draygon": {
         "name": "Draygon",
@@ -9186,10 +9186,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mother Brain": {
         "name": "Mother Brain",
@@ -9197,10 +9197,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spore Spawn": {
         "name": "Spore Spawn",
@@ -9208,10 +9208,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Botwoon": {
         "name": "Botwoon",
@@ -9219,10 +9219,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Crocomire": {
         "name": "Crocomire",
@@ -9230,10 +9230,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Golden Torizo": {
         "name": "Golden Torizo",
@@ -9241,10 +9241,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

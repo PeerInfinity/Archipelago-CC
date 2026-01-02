@@ -2209,10 +2209,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "progression_skip_balancing"
+        "max_count": 8
       },
       "Seashell": {
         "name": "Seashell",
@@ -2220,10 +2220,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "progression_skip_balancing"
+        "max_count": 23
       },
       "Golden Feather": {
         "name": "Golden Feather",
@@ -2231,10 +2231,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 20,
-        "classification": "progression"
+        "max_count": 20
       },
       "Silver Feather": {
         "name": "Silver Feather",
@@ -2242,10 +2242,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Bucket": {
         "name": "Bucket",
@@ -2253,10 +2253,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Bait": {
         "name": "Bait",
@@ -2264,10 +2264,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Progressive Fishing Rod": {
         "name": "Progressive Fishing Rod",
@@ -2275,10 +2275,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Shovel": {
         "name": "Shovel",
@@ -2287,10 +2287,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Toy Shovel": {
         "name": "Toy Shovel",
@@ -2298,10 +2298,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Compass": {
         "name": "Compass",
@@ -2309,10 +2309,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Medal": {
         "name": "Medal",
@@ -2320,10 +2320,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Shell Necklace": {
         "name": "Shell Necklace",
@@ -2331,10 +2331,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wristwatch": {
         "name": "Wristwatch",
@@ -2342,10 +2342,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Motorboat Key": {
         "name": "Motorboat Key",
@@ -2353,10 +2353,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pickaxe": {
         "name": "Pickaxe",
@@ -2364,10 +2364,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Fishing Journal": {
         "name": "Fishing Journal",
@@ -2375,10 +2375,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "A Stormy View Map": {
         "name": "A Stormy View Map",
@@ -2387,10 +2387,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The King Map": {
         "name": "The King Map",
@@ -2399,10 +2399,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Treasure of Sid Beach Map": {
         "name": "The Treasure of Sid Beach Map",
@@ -2411,10 +2411,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "In Her Shadow Map": {
         "name": "In Her Shadow Map",
@@ -2423,10 +2423,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sunhat": {
         "name": "Sunhat",
@@ -2434,10 +2434,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Baseball Cap": {
         "name": "Baseball Cap",
@@ -2445,10 +2445,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Provincial Park Hat": {
         "name": "Provincial Park Hat",
@@ -2456,10 +2456,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Headband": {
         "name": "Headband",
@@ -2467,10 +2467,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Running Shoes": {
         "name": "Running Shoes",
@@ -2478,10 +2478,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Camping Permit": {
         "name": "Camping Permit",
@@ -2489,10 +2489,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Walkie Talkie": {
         "name": "Walkie Talkie",
@@ -2500,10 +2500,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "7 Coins": {
         "name": "7 Coins",
@@ -2512,10 +2512,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "15 Coins": {
         "name": "15 Coins",
@@ -2524,10 +2524,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "18 Coins": {
         "name": "18 Coins",
@@ -2536,10 +2536,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "21 Coins": {
         "name": "21 Coins",
@@ -2548,10 +2548,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "25 Coins": {
         "name": "25 Coins",
@@ -2560,10 +2560,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "filler"
+        "max_count": 7
       },
       "27 Coins": {
         "name": "27 Coins",
@@ -2572,10 +2572,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "32 Coins": {
         "name": "32 Coins",
@@ -2584,10 +2584,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "33 Coins": {
         "name": "33 Coins",
@@ -2596,10 +2596,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "50 Coins": {
         "name": "50 Coins",
@@ -2608,10 +2608,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "13 Coins": {
         "name": "13 Coins",
@@ -2620,10 +2620,10 @@
           "Coins",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 21,
-        "classification": "filler"
+        "max_count": 21
       },
       "Health Pon": {
         "name": "Health Pon",

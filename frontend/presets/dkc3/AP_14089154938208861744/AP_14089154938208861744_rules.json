@@ -4340,10 +4340,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "1-Up Balloon": {
         "name": "1-Up Balloon",
@@ -4352,10 +4352,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 27,
-        "classification": "filler"
+        "max_count": 27
       },
       "Bear Coin": {
         "name": "Bear Coin",
@@ -4363,10 +4363,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 18,
-        "classification": "filler"
+        "max_count": 18
       },
       "Bonus Coin": {
         "name": "Bonus Coin",
@@ -4374,10 +4374,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 85,
-        "classification": "progression"
+        "max_count": 85
       },
       "DK Coin": {
         "name": "DK Coin",
@@ -4385,10 +4385,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 41,
-        "classification": "progression"
+        "max_count": 41
       },
       "Banana Bird": {
         "name": "Banana Bird",
@@ -4396,10 +4396,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Krematoa Cog": {
         "name": "Krematoa Cog",
@@ -4407,10 +4407,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Progressive Boat Upgrade": {
         "name": "Progressive Boat Upgrade",
@@ -4418,10 +4418,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       }
     }
   },

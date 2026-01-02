@@ -5778,10 +5778,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dashed Platform": {
         "name": "Dashed Platform",
@@ -5790,10 +5790,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dashed Stairs": {
         "name": "Dashed Stairs",
@@ -5802,10 +5802,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beanstalk": {
         "name": "Beanstalk",
@@ -5814,10 +5814,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Helicopter Morph": {
         "name": "Helicopter Morph",
@@ -5826,10 +5826,10 @@
           "Everything",
           "Morphs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spring Ball": {
         "name": "Spring Ball",
@@ -5838,10 +5838,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Large Spring Ball": {
         "name": "Large Spring Ball",
@@ -5850,10 +5850,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Arrow Wheel": {
         "name": "Arrow Wheel",
@@ -5862,10 +5862,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Vanishing Arrow Wheel": {
         "name": "Vanishing Arrow Wheel",
@@ -5874,10 +5874,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mole Tank Morph": {
         "name": "Mole Tank Morph",
@@ -5886,10 +5886,10 @@
           "Everything",
           "Morphs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Watermelon": {
         "name": "Watermelon",
@@ -5898,10 +5898,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Melon": {
         "name": "Ice Melon",
@@ -5910,10 +5910,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fire Melon": {
         "name": "Fire Melon",
@@ -5922,10 +5922,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Super Star": {
         "name": "Super Star",
@@ -5934,10 +5934,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Car Morph": {
         "name": "Car Morph",
@@ -5946,10 +5946,10 @@
           "Everything",
           "Morphs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flashing Eggs": {
         "name": "Flashing Eggs",
@@ -5958,10 +5958,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Giant Eggs": {
         "name": "Giant Eggs",
@@ -5970,10 +5970,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Egg Launcher": {
         "name": "Egg Launcher",
@@ -5982,10 +5982,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Egg Plant": {
         "name": "Egg Plant",
@@ -5994,10 +5994,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Submarine Morph": {
         "name": "Submarine Morph",
@@ -6006,10 +6006,10 @@
           "Everything",
           "Morphs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Chomp Rock": {
         "name": "Chomp Rock",
@@ -6018,10 +6018,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Poochy": {
         "name": "Poochy",
@@ -6030,10 +6030,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Platform Ghost": {
         "name": "Platform Ghost",
@@ -6042,10 +6042,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skis": {
         "name": "Skis",
@@ -6054,10 +6054,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Train Morph": {
         "name": "Train Morph",
@@ -6066,10 +6066,10 @@
           "Everything",
           "Morphs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Key": {
         "name": "Key",
@@ -6078,10 +6078,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Middle Ring": {
         "name": "Middle Ring",
@@ -6090,10 +6090,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bucket": {
         "name": "Bucket",
@@ -6102,10 +6102,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tulip": {
         "name": "Tulip",
@@ -6114,10 +6114,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Egg Capacity Upgrade": {
         "name": "Egg Capacity Upgrade",
@@ -6126,10 +6126,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "World 1 Gate": {
         "name": "World 1 Gate",
@@ -6138,10 +6138,10 @@
           "Everything",
           "Gates"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "World 2 Gate": {
         "name": "World 2 Gate",
@@ -6150,10 +6150,10 @@
           "Everything",
           "Gates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "World 3 Gate": {
         "name": "World 3 Gate",
@@ -6162,10 +6162,10 @@
           "Everything",
           "Gates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "World 4 Gate": {
         "name": "World 4 Gate",
@@ -6174,10 +6174,10 @@
           "Everything",
           "Gates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "World 5 Gate": {
         "name": "World 5 Gate",
@@ -6186,10 +6186,10 @@
           "Everything",
           "Gates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "World 6 Gate": {
         "name": "World 6 Gate",
@@ -6198,10 +6198,10 @@
           "Everything",
           "Gates"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Extra 1": {
         "name": "Extra 1",
@@ -6210,10 +6210,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Extra 2": {
         "name": "Extra 2",
@@ -6222,10 +6222,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Extra 3": {
         "name": "Extra 3",
@@ -6234,10 +6234,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Extra 4": {
         "name": "Extra 4",
@@ -6246,10 +6246,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Extra 5": {
         "name": "Extra 5",
@@ -6258,10 +6258,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Extra 6": {
         "name": "Extra 6",
@@ -6270,10 +6270,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Extra Panels": {
         "name": "Extra Panels",
@@ -6282,10 +6282,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus 1": {
         "name": "Bonus 1",
@@ -6294,10 +6294,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus 2": {
         "name": "Bonus 2",
@@ -6306,10 +6306,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus 3": {
         "name": "Bonus 3",
@@ -6318,10 +6318,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus 4": {
         "name": "Bonus 4",
@@ -6330,10 +6330,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus 5": {
         "name": "Bonus 5",
@@ -6342,10 +6342,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus 6": {
         "name": "Bonus 6",
@@ -6354,10 +6354,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Secret Lens": {
         "name": "Secret Lens",
@@ -6366,10 +6366,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus Panels": {
         "name": "Bonus Panels",
@@ -6378,10 +6378,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Anytime Egg": {
         "name": "Anytime Egg",
@@ -6390,10 +6390,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "useful"
+        "max_count": 11
       },
       "Anywhere Pow": {
         "name": "Anywhere Pow",
@@ -6402,10 +6402,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "Winged Cloud Maker": {
         "name": "Winged Cloud Maker",
@@ -6414,10 +6414,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "Pocket Melon": {
         "name": "Pocket Melon",
@@ -6426,10 +6426,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 15,
-        "classification": "filler"
+        "max_count": 15
       },
       "Pocket Fire Melon": {
         "name": "Pocket Fire Melon",
@@ -6438,10 +6438,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "Pocket Ice Melon": {
         "name": "Pocket Ice Melon",
@@ -6450,10 +6450,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "Magnifying Glass": {
         "name": "Magnifying Glass",
@@ -6462,10 +6462,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "+10 Stars": {
         "name": "+10 Stars",
@@ -6474,10 +6474,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "useful"
+        "max_count": 13
       },
       "+20 Stars": {
         "name": "+20 Stars",
@@ -6486,10 +6486,10 @@
           "Consumable",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "useful"
+        "max_count": 13
       },
       "1-Up": {
         "name": "1-Up",
@@ -6499,10 +6499,10 @@
           "Everything",
           "Lives"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "2-Up": {
         "name": "2-Up",
@@ -6512,10 +6512,10 @@
           "Everything",
           "Lives"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "3-Up": {
         "name": "3-Up",
@@ -6525,10 +6525,10 @@
           "Everything",
           "Lives"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "10-Up": {
         "name": "10-Up",
@@ -6538,10 +6538,10 @@
           "Everything",
           "Lives"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "useful"
+        "max_count": 5
       },
       "Fuzzy Trap": {
         "name": "Fuzzy Trap",
@@ -6550,10 +6550,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reversal Trap": {
         "name": "Reversal Trap",
@@ -6562,10 +6562,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Darkness Trap": {
         "name": "Darkness Trap",
@@ -6574,10 +6574,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Freeze Trap": {
         "name": "Freeze Trap",
@@ -6586,10 +6586,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Piece of Luigi": {
         "name": "Piece of Luigi",
@@ -6598,10 +6598,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Boss Clear": {
         "name": "Boss Clear",
@@ -6609,10 +6609,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 11,
-        "classification": "progression"
+        "max_count": 11
       },
       "Bandit Consumables": {
         "name": "Bandit Consumables",
@@ -6620,10 +6620,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Bandit Watermelons": {
         "name": "Bandit Watermelons",
@@ -6631,10 +6631,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Saved Baby Luigi": {
         "name": "Saved Baby Luigi",
@@ -6642,10 +6642,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

@@ -2735,10 +2735,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BURRITO": {
         "name": "BURRITO",
@@ -2746,10 +2746,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "COFFEE": {
         "name": "COFFEE",
@@ -2757,10 +2757,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "SOUL SPONGE": {
         "name": "SOUL SPONGE",
@@ -2768,10 +2768,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "MUSCLE APPLIQUE": {
         "name": "MUSCLE APPLIQUE",
@@ -2779,10 +2779,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "useful"
+        "max_count": 7
       },
       "POOLWINE": {
         "name": "POOLWINE",
@@ -2790,10 +2790,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "CUPCAKE": {
         "name": "CUPCAKE",
@@ -2801,10 +2801,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "COOKIE": {
         "name": "COOKIE",
@@ -2812,10 +2812,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "HOUSE KEY": {
         "name": "HOUSE KEY",
@@ -2823,10 +2823,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "MEAT": {
         "name": "MEAT",
@@ -2834,10 +2834,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "PNEUMATOPHORE": {
         "name": "PNEUMATOPHORE",
@@ -2845,10 +2845,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CAVE KEY": {
         "name": "CAVE KEY",
@@ -2856,10 +2856,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "JUICE": {
         "name": "JUICE",
@@ -2867,10 +2867,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "DOCK KEY": {
         "name": "DOCK KEY",
@@ -2878,10 +2878,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BANANA": {
         "name": "BANANA",
@@ -2889,10 +2889,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "PAPER CUP": {
         "name": "PAPER CUP",
@@ -2900,10 +2900,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "JAIL KEY": {
         "name": "JAIL KEY",
@@ -2911,10 +2911,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "PADDLE": {
         "name": "PADDLE",
@@ -2922,10 +2922,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "WORM ROOM KEY": {
         "name": "WORM ROOM KEY",
@@ -2933,10 +2933,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BRIDGE KEY": {
         "name": "BRIDGE KEY",
@@ -2944,10 +2944,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "STEM CELL": {
         "name": "STEM CELL",
@@ -2955,10 +2955,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "UPPER CHAMBER KEY": {
         "name": "UPPER CHAMBER KEY",
@@ -2966,10 +2966,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "VESSEL ROOM KEY": {
         "name": "VESSEL ROOM KEY",
@@ -2977,10 +2977,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CLOUD GERM": {
         "name": "CLOUD GERM",
@@ -2988,10 +2988,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "SKULL BOMB": {
         "name": "SKULL BOMB",
@@ -2999,10 +2999,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "TOWER KEY": {
         "name": "TOWER KEY",
@@ -3010,10 +3010,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "DEEP KEY": {
         "name": "DEEP KEY",
@@ -3021,10 +3021,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "MULTI-COFFEE": {
         "name": "MULTI-COFFEE",
@@ -3033,10 +3033,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "MULTI-JUICE": {
         "name": "MULTI-JUICE",
@@ -3045,10 +3045,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "MULTI STEM CELL": {
         "name": "MULTI STEM CELL",
@@ -3056,10 +3056,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "MULTI SOUL SPONGE": {
         "name": "MULTI SOUL SPONGE",
@@ -3067,10 +3067,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "UPPER HOUSE KEY": {
         "name": "UPPER HOUSE KEY",
@@ -3078,10 +3078,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BOTTOMLESS JUICE": {
         "name": "BOTTOMLESS JUICE",
@@ -3089,10 +3089,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SAGE TOKEN": {
         "name": "SAGE TOKEN",
@@ -3100,10 +3100,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "CLICKER": {
         "name": "CLICKER",
@@ -3111,10 +3111,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CURSED GLOVES": {
         "name": "CURSED GLOVES",
@@ -3122,10 +3122,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "LONG GLOVES": {
         "name": "LONG GLOVES",
@@ -3133,10 +3133,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "useful"
+        "max_count": 5
       },
       "BRAIN DIGITS": {
         "name": "BRAIN DIGITS",
@@ -3144,10 +3144,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "MATERIEL MITTS": {
         "name": "MATERIEL MITTS",
@@ -3155,10 +3155,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "PLEATHER GAGE": {
         "name": "PLEATHER GAGE",
@@ -3166,10 +3166,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "PEPTIDE BODKINS": {
         "name": "PEPTIDE BODKINS",
@@ -3177,10 +3177,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "TELESCOPIC SLEEVE": {
         "name": "TELESCOPIC SLEEVE",
@@ -3188,10 +3188,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "TENDRIL HAND": {
         "name": "TENDRIL HAND",
@@ -3199,10 +3199,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "PSYCHIC KNUCKLE": {
         "name": "PSYCHIC KNUCKLE",
@@ -3210,10 +3210,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SINGLE GLOVE": {
         "name": "SINGLE GLOVE",
@@ -3221,10 +3221,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "FADED PONCHO": {
         "name": "FADED PONCHO",
@@ -3232,10 +3232,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "JUMPSUIT": {
         "name": "JUMPSUIT",
@@ -3243,10 +3243,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "BOOTS": {
         "name": "BOOTS",
@@ -3254,10 +3254,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "CONVERTER WORM": {
         "name": "CONVERTER WORM",
@@ -3265,10 +3265,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "COFFEE CHIP": {
         "name": "COFFEE CHIP",
@@ -3276,10 +3276,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "RANCHER PONCHO": {
         "name": "RANCHER PONCHO",
@@ -3287,10 +3287,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "ORGAN FORT": {
         "name": "ORGAN FORT",
@@ -3298,10 +3298,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "LOOPED DOME": {
         "name": "LOOPED DOME",
@@ -3309,10 +3309,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "DUCTILE HABIT": {
         "name": "DUCTILE HABIT",
@@ -3320,10 +3320,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "TARP": {
         "name": "TARP",
@@ -3331,10 +3331,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "POROMER BLEB": {
         "name": "POROMER BLEB",
@@ -3342,10 +3342,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SOUL CRISPER": {
         "name": "SOUL CRISPER",
@@ -3353,10 +3353,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "TIME SIGIL": {
         "name": "TIME SIGIL",
@@ -3364,10 +3364,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "CHARGE UP": {
         "name": "CHARGE UP",
@@ -3375,10 +3375,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "FATE SANDBOX": {
         "name": "FATE SANDBOX",
@@ -3386,10 +3386,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "TELEDENUDATE": {
         "name": "TELEDENUDATE",
@@ -3397,10 +3397,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "LINK MOLLUSC": {
         "name": "LINK MOLLUSC",
@@ -3408,10 +3408,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "BOMBO - GENESIS": {
         "name": "BOMBO - GENESIS",
@@ -3420,10 +3420,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "100 Bones": {
         "name": "100 Bones",
@@ -3431,10 +3431,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "50 Bones": {
         "name": "50 Bones",
@@ -3442,10 +3442,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "NEMATODE INTERFACE": {
         "name": "NEMATODE INTERFACE",
@@ -3453,10 +3453,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pongorma": {
         "name": "Pongorma",
@@ -3464,10 +3464,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dedusmuln": {
         "name": "Dedusmuln",
@@ -3475,10 +3475,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Somsnosa": {
         "name": "Somsnosa",
@@ -3486,10 +3486,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "10 Bones": {
         "name": "10 Bones",
@@ -3497,10 +3497,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -3508,10 +3508,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression_skip_balancing",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

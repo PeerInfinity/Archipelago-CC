@@ -3073,10 +3073,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 105,
-        "classification": "progression_skip_balancing"
+        "max_count": 105
       },
       "Basement Key": {
         "name": "Basement Key",
@@ -3084,10 +3084,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Second Floor Key": {
         "name": "Second Floor Key",
@@ -3095,10 +3095,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Key": {
         "name": "Progressive Key",
@@ -3106,10 +3106,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Wing Cap": {
         "name": "Wing Cap",
@@ -3117,10 +3117,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metal Cap": {
         "name": "Metal Cap",
@@ -3128,10 +3128,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Vanish Cap": {
         "name": "Vanish Cap",
@@ -3139,10 +3139,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "1Up Mushroom": {
         "name": "1Up Mushroom",
@@ -3150,10 +3150,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 29,
-        "classification": "filler"
+        "max_count": 29
       },
       "Double Jump": {
         "name": "Double Jump",
@@ -3161,10 +3161,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triple Jump": {
         "name": "Triple Jump",
@@ -3172,10 +3172,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Long Jump": {
         "name": "Long Jump",
@@ -3183,10 +3183,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Backflip": {
         "name": "Backflip",
@@ -3194,10 +3194,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Side Flip": {
         "name": "Side Flip",
@@ -3205,10 +3205,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wall Kick": {
         "name": "Wall Kick",
@@ -3216,10 +3216,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dive": {
         "name": "Dive",
@@ -3227,10 +3227,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ground Pound": {
         "name": "Ground Pound",
@@ -3238,10 +3238,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Kick": {
         "name": "Kick",
@@ -3249,10 +3249,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Climb": {
         "name": "Climb",
@@ -3260,10 +3260,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ledge Grab": {
         "name": "Ledge Grab",
@@ -3271,10 +3271,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cannon Unlock BoB": {
         "name": "Cannon Unlock BoB",
@@ -3282,10 +3282,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock WF": {
         "name": "Cannon Unlock WF",
@@ -3293,10 +3293,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock JRB": {
         "name": "Cannon Unlock JRB",
@@ -3304,10 +3304,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock CCM": {
         "name": "Cannon Unlock CCM",
@@ -3315,10 +3315,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock SSL": {
         "name": "Cannon Unlock SSL",
@@ -3326,10 +3326,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock SL": {
         "name": "Cannon Unlock SL",
@@ -3337,10 +3337,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock WDW": {
         "name": "Cannon Unlock WDW",
@@ -3348,10 +3348,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock TTM": {
         "name": "Cannon Unlock TTM",
@@ -3359,10 +3359,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock THI": {
         "name": "Cannon Unlock THI",
@@ -3370,10 +3370,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cannon Unlock RR": {
         "name": "Cannon Unlock RR",
@@ -3381,10 +3381,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

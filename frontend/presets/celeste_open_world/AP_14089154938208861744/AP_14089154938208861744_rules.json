@@ -36945,10 +36945,10 @@
           "Collectables",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 45,
-        "classification": "progression_skip_balancing"
+        "max_count": 45
       },
       "Raspberry": {
         "name": "Raspberry",
@@ -36957,10 +36957,10 @@
           "Collectables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 105,
-        "classification": "filler"
+        "max_count": 105
       },
       "Granny's House Keys": {
         "name": "Granny's House Keys",
@@ -36968,10 +36968,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Bald Trap": {
         "name": "Bald Trap",
@@ -36980,10 +36980,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Literature Trap": {
         "name": "Literature Trap",
@@ -36992,10 +36992,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stun Trap": {
         "name": "Stun Trap",
@@ -37004,10 +37004,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Invisible Trap": {
         "name": "Invisible Trap",
@@ -37016,10 +37016,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fast Trap": {
         "name": "Fast Trap",
@@ -37028,10 +37028,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Slow Trap": {
         "name": "Slow Trap",
@@ -37040,10 +37040,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -37052,10 +37052,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reverse Trap": {
         "name": "Reverse Trap",
@@ -37064,10 +37064,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Screen Flip Trap": {
         "name": "Screen Flip Trap",
@@ -37076,10 +37076,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Laughter Trap": {
         "name": "Laughter Trap",
@@ -37088,10 +37088,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hiccup Trap": {
         "name": "Hiccup Trap",
@@ -37100,10 +37100,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Zoom Trap": {
         "name": "Zoom Trap",
@@ -37112,10 +37112,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Prologue Cassette": {
         "name": "Prologue Cassette",
@@ -37124,10 +37124,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Forsaken City Cassette - A Side": {
         "name": "Forsaken City Cassette - A Side",
@@ -37136,10 +37136,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Forsaken City Cassette - B Side": {
         "name": "Forsaken City Cassette - B Side",
@@ -37148,10 +37148,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Forsaken City Cassette - C Side": {
         "name": "Forsaken City Cassette - C Side",
@@ -37160,10 +37160,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Old Site Cassette - A Side": {
         "name": "Old Site Cassette - A Side",
@@ -37172,10 +37172,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Old Site Cassette - B Side": {
         "name": "Old Site Cassette - B Side",
@@ -37184,10 +37184,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Old Site Cassette - C Side": {
         "name": "Old Site Cassette - C Side",
@@ -37196,10 +37196,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Celestial Resort Cassette - A Side": {
         "name": "Celestial Resort Cassette - A Side",
@@ -37208,10 +37208,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Celestial Resort Cassette - B Side": {
         "name": "Celestial Resort Cassette - B Side",
@@ -37220,10 +37220,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Celestial Resort Cassette - C Side": {
         "name": "Celestial Resort Cassette - C Side",
@@ -37232,10 +37232,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Ridge Cassette - A Side": {
         "name": "Golden Ridge Cassette - A Side",
@@ -37244,10 +37244,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Ridge Cassette - B Side": {
         "name": "Golden Ridge Cassette - B Side",
@@ -37256,10 +37256,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Ridge Cassette - C Side": {
         "name": "Golden Ridge Cassette - C Side",
@@ -37268,10 +37268,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Temple Cassette - A Side": {
         "name": "Mirror Temple Cassette - A Side",
@@ -37280,10 +37280,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Temple Cassette - B Side": {
         "name": "Mirror Temple Cassette - B Side",
@@ -37292,10 +37292,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Temple Cassette - C Side": {
         "name": "Mirror Temple Cassette - C Side",
@@ -37304,10 +37304,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflection Cassette - A Side": {
         "name": "Reflection Cassette - A Side",
@@ -37316,10 +37316,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflection Cassette - B Side": {
         "name": "Reflection Cassette - B Side",
@@ -37328,10 +37328,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflection Cassette - C Side": {
         "name": "Reflection Cassette - C Side",
@@ -37340,10 +37340,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit Cassette - A Side": {
         "name": "The Summit Cassette - A Side",
@@ -37352,10 +37352,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit Cassette - B Side": {
         "name": "The Summit Cassette - B Side",
@@ -37364,10 +37364,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit Cassette - C Side": {
         "name": "The Summit Cassette - C Side",
@@ -37376,10 +37376,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Epilogue Cassette": {
         "name": "Epilogue Cassette",
@@ -37388,10 +37388,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core Cassette - A Side": {
         "name": "Core Cassette - A Side",
@@ -37400,10 +37400,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core Cassette - B Side": {
         "name": "Core Cassette - B Side",
@@ -37412,10 +37412,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core Cassette - C Side": {
         "name": "Core Cassette - C Side",
@@ -37424,10 +37424,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell Cassette": {
         "name": "Farewell Cassette",
@@ -37436,10 +37436,10 @@
           "Cassettes",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Springs": {
         "name": "Springs",
@@ -37448,10 +37448,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Traffic Blocks": {
         "name": "Traffic Blocks",
@@ -37460,10 +37460,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pink Cassette Blocks": {
         "name": "Pink Cassette Blocks",
@@ -37472,10 +37472,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blue Cassette Blocks": {
         "name": "Blue Cassette Blocks",
@@ -37484,10 +37484,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dream Blocks": {
         "name": "Dream Blocks",
@@ -37496,10 +37496,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Coins": {
         "name": "Coins",
@@ -37509,10 +37509,10 @@
           "Interactables",
           "Touch Switches"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Moving Platforms": {
         "name": "Moving Platforms",
@@ -37521,10 +37521,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blue Boosters": {
         "name": "Blue Boosters",
@@ -37536,10 +37536,10 @@
           "Green Bubbles",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blue Clouds": {
         "name": "Blue Clouds",
@@ -37548,10 +37548,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Move Blocks": {
         "name": "Move Blocks",
@@ -37560,10 +37560,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Swap Blocks": {
         "name": "Swap Blocks",
@@ -37572,10 +37572,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Boosters": {
         "name": "Red Boosters",
@@ -37585,10 +37585,10 @@
           "Interactables",
           "Red Bubbles"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Theo Crystal": {
         "name": "Theo Crystal",
@@ -37597,10 +37597,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Feathers": {
         "name": "Feathers",
@@ -37609,10 +37609,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bumpers": {
         "name": "Bumpers",
@@ -37621,10 +37621,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kevins": {
         "name": "Kevins",
@@ -37633,10 +37633,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pink Clouds": {
         "name": "Pink Clouds",
@@ -37645,10 +37645,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Badeline Boosters": {
         "name": "Badeline Boosters",
@@ -37657,10 +37657,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fire and Ice Balls": {
         "name": "Fire and Ice Balls",
@@ -37669,10 +37669,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core Toggles": {
         "name": "Core Toggles",
@@ -37681,10 +37681,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core Blocks": {
         "name": "Core Blocks",
@@ -37693,10 +37693,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pufferfish": {
         "name": "Pufferfish",
@@ -37705,10 +37705,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Jellyfish": {
         "name": "Jellyfish",
@@ -37717,10 +37717,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Breaker Boxes": {
         "name": "Breaker Boxes",
@@ -37729,10 +37729,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dash Refills": {
         "name": "Dash Refills",
@@ -37741,10 +37741,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Double Dash Refills": {
         "name": "Double Dash Refills",
@@ -37753,10 +37753,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Cassette Blocks": {
         "name": "Yellow Cassette Blocks",
@@ -37765,10 +37765,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Cassette Blocks": {
         "name": "Green Cassette Blocks",
@@ -37777,10 +37777,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dash Switches": {
         "name": "Dash Switches",
@@ -37789,10 +37789,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Seekers": {
         "name": "Seekers",
@@ -37801,10 +37801,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Strawberry Seeds": {
         "name": "Strawberry Seeds",
@@ -37813,10 +37813,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sinking Platforms": {
         "name": "Sinking Platforms",
@@ -37825,10 +37825,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "White Block": {
         "name": "White Block",
@@ -37837,10 +37837,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Torches": {
         "name": "Torches",
@@ -37849,10 +37849,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bird": {
         "name": "Bird",
@@ -37861,10 +37861,10 @@
           "Everything",
           "Interactables"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 1": {
         "name": "Crystal Heart 1",
@@ -37873,10 +37873,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 2": {
         "name": "Crystal Heart 2",
@@ -37885,10 +37885,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 3": {
         "name": "Crystal Heart 3",
@@ -37897,10 +37897,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 4": {
         "name": "Crystal Heart 4",
@@ -37909,10 +37909,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 5": {
         "name": "Crystal Heart 5",
@@ -37921,10 +37921,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 6": {
         "name": "Crystal Heart 6",
@@ -37933,10 +37933,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 7": {
         "name": "Crystal Heart 7",
@@ -37945,10 +37945,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 8": {
         "name": "Crystal Heart 8",
@@ -37957,10 +37957,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 9": {
         "name": "Crystal Heart 9",
@@ -37969,10 +37969,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 10": {
         "name": "Crystal Heart 10",
@@ -37981,10 +37981,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 11": {
         "name": "Crystal Heart 11",
@@ -37993,10 +37993,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 12": {
         "name": "Crystal Heart 12",
@@ -38005,10 +38005,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 13": {
         "name": "Crystal Heart 13",
@@ -38017,10 +38017,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 14": {
         "name": "Crystal Heart 14",
@@ -38029,10 +38029,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 15": {
         "name": "Crystal Heart 15",
@@ -38041,10 +38041,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Heart 16": {
         "name": "Crystal Heart 16",
@@ -38053,10 +38053,10 @@
           "Crystal Hearts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Forsaken City A - Crossing": {
         "name": "Forsaken City A - Crossing",
@@ -38066,10 +38066,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Forsaken City A - Chasm": {
         "name": "Forsaken City A - Chasm",
@@ -38079,10 +38079,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Forsaken City B - Contraption": {
         "name": "Forsaken City B - Contraption",
@@ -38091,10 +38091,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Forsaken City B - Scrap Pit": {
         "name": "Forsaken City B - Scrap Pit",
@@ -38103,10 +38103,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Old Site A - Intervention": {
         "name": "Old Site A - Intervention",
@@ -38116,10 +38116,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Old Site A - Awake": {
         "name": "Old Site A - Awake",
@@ -38129,10 +38129,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Old Site B - Combination Lock": {
         "name": "Old Site B - Combination Lock",
@@ -38141,10 +38141,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Old Site B - Dream Altar": {
         "name": "Old Site B - Dream Altar",
@@ -38153,10 +38153,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Celestial Resort A - Huge Mess": {
         "name": "Celestial Resort A - Huge Mess",
@@ -38166,10 +38166,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Elevator Shaft": {
         "name": "Celestial Resort A - Elevator Shaft",
@@ -38179,10 +38179,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Presidential Suite": {
         "name": "Celestial Resort A - Presidential Suite",
@@ -38192,10 +38192,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort B - Staff Quarters": {
         "name": "Celestial Resort B - Staff Quarters",
@@ -38204,10 +38204,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Celestial Resort B - Library": {
         "name": "Celestial Resort B - Library",
@@ -38216,10 +38216,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Celestial Resort B - Rooftop": {
         "name": "Celestial Resort B - Rooftop",
@@ -38228,10 +38228,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Ridge A - Shrine": {
         "name": "Golden Ridge A - Shrine",
@@ -38241,10 +38241,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Golden Ridge A - Old Trail": {
         "name": "Golden Ridge A - Old Trail",
@@ -38254,10 +38254,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Golden Ridge A - Cliff Face": {
         "name": "Golden Ridge A - Cliff Face",
@@ -38267,10 +38267,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Golden Ridge B - Stepping Stones": {
         "name": "Golden Ridge B - Stepping Stones",
@@ -38279,10 +38279,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Ridge B - Gusty Canyon": {
         "name": "Golden Ridge B - Gusty Canyon",
@@ -38291,10 +38291,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Ridge B - Eye of the Storm": {
         "name": "Golden Ridge B - Eye of the Storm",
@@ -38303,10 +38303,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Temple A - Depths": {
         "name": "Mirror Temple A - Depths",
@@ -38316,10 +38316,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Unravelling": {
         "name": "Mirror Temple A - Unravelling",
@@ -38329,10 +38329,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Search": {
         "name": "Mirror Temple A - Search",
@@ -38342,10 +38342,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Rescue": {
         "name": "Mirror Temple A - Rescue",
@@ -38355,10 +38355,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple B - Central Chamber": {
         "name": "Mirror Temple B - Central Chamber",
@@ -38367,10 +38367,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Temple B - Through the Mirror": {
         "name": "Mirror Temple B - Through the Mirror",
@@ -38379,10 +38379,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Temple B - Mix Master": {
         "name": "Mirror Temple B - Mix Master",
@@ -38391,10 +38391,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflection A - Hollows": {
         "name": "Reflection A - Hollows",
@@ -38404,10 +38404,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reflection A - Reflection": {
         "name": "Reflection A - Reflection",
@@ -38417,10 +38417,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reflection A - Rock Bottom": {
         "name": "Reflection A - Rock Bottom",
@@ -38430,10 +38430,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reflection A - Resolution": {
         "name": "Reflection A - Resolution",
@@ -38443,10 +38443,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reflection B - Reflection": {
         "name": "Reflection B - Reflection",
@@ -38455,10 +38455,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflection B - Rock Bottom": {
         "name": "Reflection B - Rock Bottom",
@@ -38467,10 +38467,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflection B - Reprieve": {
         "name": "Reflection B - Reprieve",
@@ -38479,10 +38479,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit A - 500 M": {
         "name": "The Summit A - 500 M",
@@ -38492,10 +38492,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - 1000 M": {
         "name": "The Summit A - 1000 M",
@@ -38505,10 +38505,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - 1500 M": {
         "name": "The Summit A - 1500 M",
@@ -38518,10 +38518,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - 2000 M": {
         "name": "The Summit A - 2000 M",
@@ -38531,10 +38531,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - 2500 M": {
         "name": "The Summit A - 2500 M",
@@ -38544,10 +38544,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - 3000 M": {
         "name": "The Summit A - 3000 M",
@@ -38557,10 +38557,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit B - 500 M": {
         "name": "The Summit B - 500 M",
@@ -38569,10 +38569,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit B - 1000 M": {
         "name": "The Summit B - 1000 M",
@@ -38581,10 +38581,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit B - 1500 M": {
         "name": "The Summit B - 1500 M",
@@ -38593,10 +38593,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit B - 2000 M": {
         "name": "The Summit B - 2000 M",
@@ -38605,10 +38605,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit B - 2500 M": {
         "name": "The Summit B - 2500 M",
@@ -38617,10 +38617,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit B - 3000 M": {
         "name": "The Summit B - 3000 M",
@@ -38629,10 +38629,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core A - Into the Core": {
         "name": "Core A - Into the Core",
@@ -38641,10 +38641,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core A - Hot and Cold": {
         "name": "Core A - Hot and Cold",
@@ -38653,10 +38653,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core A - Heart of the Mountain": {
         "name": "Core A - Heart of the Mountain",
@@ -38665,10 +38665,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core B - Into the Core": {
         "name": "Core B - Into the Core",
@@ -38677,10 +38677,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core B - Burning or Freezing": {
         "name": "Core B - Burning or Freezing",
@@ -38689,10 +38689,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Core B - Heartbeat": {
         "name": "Core B - Heartbeat",
@@ -38701,10 +38701,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Singular": {
         "name": "Farewell - Singular",
@@ -38713,10 +38713,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Power Source": {
         "name": "Farewell - Power Source",
@@ -38725,10 +38725,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Remembered": {
         "name": "Farewell - Remembered",
@@ -38737,10 +38737,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Event Horizon": {
         "name": "Farewell - Event Horizon",
@@ -38749,10 +38749,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Determination": {
         "name": "Farewell - Determination",
@@ -38761,10 +38761,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Stubbornness": {
         "name": "Farewell - Stubbornness",
@@ -38773,10 +38773,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Reconciliation": {
         "name": "Farewell - Reconciliation",
@@ -38785,10 +38785,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Farewell": {
         "name": "Farewell - Farewell",
@@ -38797,10 +38797,10 @@
           "Checkpoints",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Celestial Resort A - Front Door Key": {
         "name": "Celestial Resort A - Front Door Key",
@@ -38810,10 +38810,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Hallway Key 1": {
         "name": "Celestial Resort A - Hallway Key 1",
@@ -38823,10 +38823,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Hallway Key 2": {
         "name": "Celestial Resort A - Hallway Key 2",
@@ -38836,10 +38836,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Huge Mess Key": {
         "name": "Celestial Resort A - Huge Mess Key",
@@ -38849,10 +38849,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Presidential Suite Key": {
         "name": "Celestial Resort A - Presidential Suite Key",
@@ -38862,10 +38862,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Entrance Key": {
         "name": "Mirror Temple A - Entrance Key",
@@ -38875,10 +38875,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Depths Key": {
         "name": "Mirror Temple A - Depths Key",
@@ -38888,10 +38888,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Search Key 1": {
         "name": "Mirror Temple A - Search Key 1",
@@ -38901,10 +38901,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Search Key 2": {
         "name": "Mirror Temple A - Search Key 2",
@@ -38914,10 +38914,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple A - Search Key 3": {
         "name": "Mirror Temple A - Search Key 3",
@@ -38927,10 +38927,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mirror Temple B - Central Chamber Key 1": {
         "name": "Mirror Temple B - Central Chamber Key 1",
@@ -38939,10 +38939,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Temple B - Central Chamber Key 2": {
         "name": "Mirror Temple B - Central Chamber Key 2",
@@ -38951,10 +38951,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit A - 2500 M Key": {
         "name": "The Summit A - 2500 M Key",
@@ -38964,10 +38964,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Farewell - Power Source Key 1": {
         "name": "Farewell - Power Source Key 1",
@@ -38976,10 +38976,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Power Source Key 2": {
         "name": "Farewell - Power Source Key 2",
@@ -38988,10 +38988,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Power Source Key 3": {
         "name": "Farewell - Power Source Key 3",
@@ -39000,10 +39000,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Power Source Key 4": {
         "name": "Farewell - Power Source Key 4",
@@ -39012,10 +39012,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Farewell - Power Source Key 5": {
         "name": "Farewell - Power Source Key 5",
@@ -39024,10 +39024,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Summit A - Gem 1": {
         "name": "The Summit A - Gem 1",
@@ -39037,10 +39037,10 @@
           "Everything",
           "Gems"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - Gem 2": {
         "name": "The Summit A - Gem 2",
@@ -39050,10 +39050,10 @@
           "Everything",
           "Gems"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - Gem 3": {
         "name": "The Summit A - Gem 3",
@@ -39063,10 +39063,10 @@
           "Everything",
           "Gems"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - Gem 4": {
         "name": "The Summit A - Gem 4",
@@ -39076,10 +39076,10 @@
           "Everything",
           "Gems"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - Gem 5": {
         "name": "The Summit A - Gem 5",
@@ -39089,10 +39089,10 @@
           "Everything",
           "Gems"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Summit A - Gem 6": {
         "name": "The Summit A - Gem 6",
@@ -39102,10 +39102,10 @@
           "Everything",
           "Gems"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Brown Clutter": {
         "name": "Celestial Resort A - Brown Clutter",
@@ -39114,10 +39114,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Green Clutter": {
         "name": "Celestial Resort A - Green Clutter",
@@ -39126,10 +39126,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Resort A - Pink Clutter": {
         "name": "Celestial Resort A - Pink Clutter",
@@ -39138,10 +39138,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -39149,10 +39149,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

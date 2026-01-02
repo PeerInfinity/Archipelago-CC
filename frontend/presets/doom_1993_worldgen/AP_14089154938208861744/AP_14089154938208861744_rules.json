@@ -7315,10 +7315,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hangar (E1M1) - Computer area map": {
         "name": "Hangar (E1M1) - Computer area map",
@@ -7328,10 +7328,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nuclear Plant (E1M2)": {
         "name": "Nuclear Plant (E1M2)",
@@ -7340,10 +7340,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nuclear Plant (E1M2) - Red keycard": {
         "name": "Nuclear Plant (E1M2) - Red keycard",
@@ -7353,10 +7353,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nuclear Plant (E1M2) - Computer area map": {
         "name": "Nuclear Plant (E1M2) - Computer area map",
@@ -7366,10 +7366,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Toxin Refinery (E1M3)": {
         "name": "Toxin Refinery (E1M3)",
@@ -7378,10 +7378,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Toxin Refinery (E1M3) - Yellow keycard": {
         "name": "Toxin Refinery (E1M3) - Yellow keycard",
@@ -7391,10 +7391,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Toxin Refinery (E1M3) - Blue keycard": {
         "name": "Toxin Refinery (E1M3) - Blue keycard",
@@ -7404,10 +7404,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Toxin Refinery (E1M3) - Computer area map": {
         "name": "Toxin Refinery (E1M3) - Computer area map",
@@ -7417,10 +7417,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Command Control (E1M4)": {
         "name": "Command Control (E1M4)",
@@ -7429,10 +7429,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Control (E1M4) - Yellow keycard": {
         "name": "Command Control (E1M4) - Yellow keycard",
@@ -7442,10 +7442,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Control (E1M4) - Blue keycard": {
         "name": "Command Control (E1M4) - Blue keycard",
@@ -7455,10 +7455,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Control (E1M4) - Computer area map": {
         "name": "Command Control (E1M4) - Computer area map",
@@ -7468,10 +7468,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Phobos Lab (E1M5)": {
         "name": "Phobos Lab (E1M5)",
@@ -7480,10 +7480,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phobos Lab (E1M5) - Blue keycard": {
         "name": "Phobos Lab (E1M5) - Blue keycard",
@@ -7493,10 +7493,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phobos Lab (E1M5) - Yellow keycard": {
         "name": "Phobos Lab (E1M5) - Yellow keycard",
@@ -7506,10 +7506,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phobos Lab (E1M5) - Computer area map": {
         "name": "Phobos Lab (E1M5) - Computer area map",
@@ -7519,10 +7519,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Central Processing (E1M6)": {
         "name": "Central Processing (E1M6)",
@@ -7531,10 +7531,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Central Processing (E1M6) - Blue keycard": {
         "name": "Central Processing (E1M6) - Blue keycard",
@@ -7544,10 +7544,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Central Processing (E1M6) - Red keycard": {
         "name": "Central Processing (E1M6) - Red keycard",
@@ -7557,10 +7557,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Central Processing (E1M6) - Yellow keycard": {
         "name": "Central Processing (E1M6) - Yellow keycard",
@@ -7570,10 +7570,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Central Processing (E1M6) - Computer area map": {
         "name": "Central Processing (E1M6) - Computer area map",
@@ -7583,10 +7583,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Computer Station (E1M7)": {
         "name": "Computer Station (E1M7)",
@@ -7595,10 +7595,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Computer Station (E1M7) - Yellow keycard": {
         "name": "Computer Station (E1M7) - Yellow keycard",
@@ -7608,10 +7608,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Computer Station (E1M7) - Blue keycard": {
         "name": "Computer Station (E1M7) - Blue keycard",
@@ -7621,10 +7621,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Computer Station (E1M7) - Red keycard": {
         "name": "Computer Station (E1M7) - Red keycard",
@@ -7634,10 +7634,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Computer Station (E1M7) - Computer area map": {
         "name": "Computer Station (E1M7) - Computer area map",
@@ -7647,10 +7647,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Phobos Anomaly (E1M8)": {
         "name": "Phobos Anomaly (E1M8)",
@@ -7659,10 +7659,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phobos Anomaly (E1M8) - Computer area map": {
         "name": "Phobos Anomaly (E1M8) - Computer area map",
@@ -7672,10 +7672,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Military Base (E1M9)": {
         "name": "Military Base (E1M9)",
@@ -7684,10 +7684,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Military Base (E1M9) - Yellow keycard": {
         "name": "Military Base (E1M9) - Yellow keycard",
@@ -7697,10 +7697,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Military Base (E1M9) - Red keycard": {
         "name": "Military Base (E1M9) - Red keycard",
@@ -7710,10 +7710,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Military Base (E1M9) - Blue keycard": {
         "name": "Military Base (E1M9) - Blue keycard",
@@ -7723,10 +7723,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Military Base (E1M9) - Computer area map": {
         "name": "Military Base (E1M9) - Computer area map",
@@ -7736,10 +7736,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Deimos Anomaly (E2M1)": {
         "name": "Deimos Anomaly (E2M1)",
@@ -7748,10 +7748,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Anomaly (E2M1) - Blue keycard": {
         "name": "Deimos Anomaly (E2M1) - Blue keycard",
@@ -7761,10 +7761,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Anomaly (E2M1) - Red keycard": {
         "name": "Deimos Anomaly (E2M1) - Red keycard",
@@ -7774,10 +7774,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Anomaly (E2M1) - Computer area map": {
         "name": "Deimos Anomaly (E2M1) - Computer area map",
@@ -7787,10 +7787,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Containment Area (E2M2)": {
         "name": "Containment Area (E2M2)",
@@ -7799,10 +7799,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Containment Area (E2M2) - Blue keycard": {
         "name": "Containment Area (E2M2) - Blue keycard",
@@ -7812,10 +7812,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Containment Area (E2M2) - Yellow keycard": {
         "name": "Containment Area (E2M2) - Yellow keycard",
@@ -7825,10 +7825,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Containment Area (E2M2) - Red keycard": {
         "name": "Containment Area (E2M2) - Red keycard",
@@ -7838,10 +7838,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Containment Area (E2M2) - Computer area map": {
         "name": "Containment Area (E2M2) - Computer area map",
@@ -7851,10 +7851,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Refinery (E2M3)": {
         "name": "Refinery (E2M3)",
@@ -7863,10 +7863,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Refinery (E2M3) - Blue keycard": {
         "name": "Refinery (E2M3) - Blue keycard",
@@ -7876,10 +7876,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Refinery (E2M3) - Computer area map": {
         "name": "Refinery (E2M3) - Computer area map",
@@ -7889,10 +7889,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Deimos Lab (E2M4)": {
         "name": "Deimos Lab (E2M4)",
@@ -7901,10 +7901,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Lab (E2M4) - Blue keycard": {
         "name": "Deimos Lab (E2M4) - Blue keycard",
@@ -7914,10 +7914,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Lab (E2M4) - Yellow keycard": {
         "name": "Deimos Lab (E2M4) - Yellow keycard",
@@ -7927,10 +7927,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Lab (E2M4) - Computer area map": {
         "name": "Deimos Lab (E2M4) - Computer area map",
@@ -7940,10 +7940,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Command Center (E2M5)": {
         "name": "Command Center (E2M5)",
@@ -7952,10 +7952,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Center (E2M5) - Computer area map": {
         "name": "Command Center (E2M5) - Computer area map",
@@ -7965,10 +7965,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Halls of the Damned (E2M6)": {
         "name": "Halls of the Damned (E2M6)",
@@ -7977,10 +7977,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Halls of the Damned (E2M6) - Blue skull key": {
         "name": "Halls of the Damned (E2M6) - Blue skull key",
@@ -7990,10 +7990,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Halls of the Damned (E2M6) - Yellow skull key": {
         "name": "Halls of the Damned (E2M6) - Yellow skull key",
@@ -8003,10 +8003,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Halls of the Damned (E2M6) - Red skull key": {
         "name": "Halls of the Damned (E2M6) - Red skull key",
@@ -8016,10 +8016,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Halls of the Damned (E2M6) - Computer area map": {
         "name": "Halls of the Damned (E2M6) - Computer area map",
@@ -8029,10 +8029,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Spawning Vats (E2M7)": {
         "name": "Spawning Vats (E2M7)",
@@ -8041,10 +8041,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spawning Vats (E2M7) - Red keycard": {
         "name": "Spawning Vats (E2M7) - Red keycard",
@@ -8054,10 +8054,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spawning Vats (E2M7) - Yellow keycard": {
         "name": "Spawning Vats (E2M7) - Yellow keycard",
@@ -8067,10 +8067,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spawning Vats (E2M7) - Blue keycard": {
         "name": "Spawning Vats (E2M7) - Blue keycard",
@@ -8080,10 +8080,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spawning Vats (E2M7) - Computer area map": {
         "name": "Spawning Vats (E2M7) - Computer area map",
@@ -8093,10 +8093,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tower of Babel (E2M8)": {
         "name": "Tower of Babel (E2M8)",
@@ -8105,10 +8105,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tower of Babel (E2M8) - Computer area map": {
         "name": "Tower of Babel (E2M8) - Computer area map",
@@ -8118,10 +8118,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress of Mystery (E2M9)": {
         "name": "Fortress of Mystery (E2M9)",
@@ -8130,10 +8130,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fortress of Mystery (E2M9) - Blue skull key": {
         "name": "Fortress of Mystery (E2M9) - Blue skull key",
@@ -8143,10 +8143,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fortress of Mystery (E2M9) - Red skull key": {
         "name": "Fortress of Mystery (E2M9) - Red skull key",
@@ -8156,10 +8156,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fortress of Mystery (E2M9) - Yellow skull key": {
         "name": "Fortress of Mystery (E2M9) - Yellow skull key",
@@ -8169,10 +8169,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fortress of Mystery (E2M9) - Computer area map": {
         "name": "Fortress of Mystery (E2M9) - Computer area map",
@@ -8182,10 +8182,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hell Keep (E3M1)": {
         "name": "Hell Keep (E3M1)",
@@ -8194,10 +8194,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hell Keep (E3M1) - Computer area map": {
         "name": "Hell Keep (E3M1) - Computer area map",
@@ -8207,10 +8207,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Slough of Despair (E3M2)": {
         "name": "Slough of Despair (E3M2)",
@@ -8219,10 +8219,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Slough of Despair (E3M2) - Blue skull key": {
         "name": "Slough of Despair (E3M2) - Blue skull key",
@@ -8232,10 +8232,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Slough of Despair (E3M2) - Computer area map": {
         "name": "Slough of Despair (E3M2) - Computer area map",
@@ -8245,10 +8245,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pandemonium (E3M3)": {
         "name": "Pandemonium (E3M3)",
@@ -8257,10 +8257,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pandemonium (E3M3) - Blue skull key": {
         "name": "Pandemonium (E3M3) - Blue skull key",
@@ -8270,10 +8270,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pandemonium (E3M3) - Computer area map": {
         "name": "Pandemonium (E3M3) - Computer area map",
@@ -8283,10 +8283,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "House of Pain (E3M4)": {
         "name": "House of Pain (E3M4)",
@@ -8295,10 +8295,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "House of Pain (E3M4) - Blue skull key": {
         "name": "House of Pain (E3M4) - Blue skull key",
@@ -8308,10 +8308,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "House of Pain (E3M4) - Yellow skull key": {
         "name": "House of Pain (E3M4) - Yellow skull key",
@@ -8321,10 +8321,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "House of Pain (E3M4) - Red skull key": {
         "name": "House of Pain (E3M4) - Red skull key",
@@ -8334,10 +8334,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "House of Pain (E3M4) - Computer area map": {
         "name": "House of Pain (E3M4) - Computer area map",
@@ -8347,10 +8347,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unholy Cathedral (E3M5)": {
         "name": "Unholy Cathedral (E3M5)",
@@ -8359,10 +8359,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Unholy Cathedral (E3M5) - Blue skull key": {
         "name": "Unholy Cathedral (E3M5) - Blue skull key",
@@ -8372,10 +8372,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Unholy Cathedral (E3M5) - Yellow skull key": {
         "name": "Unholy Cathedral (E3M5) - Yellow skull key",
@@ -8385,10 +8385,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Unholy Cathedral (E3M5) - Computer area map": {
         "name": "Unholy Cathedral (E3M5) - Computer area map",
@@ -8398,10 +8398,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mt. Erebus (E3M6)": {
         "name": "Mt. Erebus (E3M6)",
@@ -8410,10 +8410,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mt. Erebus (E3M6) - Blue skull key": {
         "name": "Mt. Erebus (E3M6) - Blue skull key",
@@ -8423,10 +8423,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mt. Erebus (E3M6) - Computer area map": {
         "name": "Mt. Erebus (E3M6) - Computer area map",
@@ -8436,10 +8436,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Limbo (E3M7)": {
         "name": "Limbo (E3M7)",
@@ -8448,10 +8448,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Limbo (E3M7) - Blue skull key": {
         "name": "Limbo (E3M7) - Blue skull key",
@@ -8461,10 +8461,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Limbo (E3M7) - Red skull key": {
         "name": "Limbo (E3M7) - Red skull key",
@@ -8474,10 +8474,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Limbo (E3M7) - Yellow skull key": {
         "name": "Limbo (E3M7) - Yellow skull key",
@@ -8487,10 +8487,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Limbo (E3M7) - Computer area map": {
         "name": "Limbo (E3M7) - Computer area map",
@@ -8500,10 +8500,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dis (E3M8)": {
         "name": "Dis (E3M8)",
@@ -8512,10 +8512,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dis (E3M8) - Computer area map": {
         "name": "Dis (E3M8) - Computer area map",
@@ -8525,10 +8525,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Warrens (E3M9)": {
         "name": "Warrens (E3M9)",
@@ -8537,10 +8537,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Warrens (E3M9) - Blue skull key": {
         "name": "Warrens (E3M9) - Blue skull key",
@@ -8550,10 +8550,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Warrens (E3M9) - Red skull key": {
         "name": "Warrens (E3M9) - Red skull key",
@@ -8563,10 +8563,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Warrens (E3M9) - Computer area map": {
         "name": "Warrens (E3M9) - Computer area map",
@@ -8576,10 +8576,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shotgun": {
         "name": "Shotgun",
@@ -8588,10 +8588,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rocket launcher": {
         "name": "Rocket launcher",
@@ -8600,10 +8600,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Plasma gun": {
         "name": "Plasma gun",
@@ -8612,10 +8612,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Chainsaw": {
         "name": "Chainsaw",
@@ -8624,10 +8624,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Chaingun": {
         "name": "Chaingun",
@@ -8636,10 +8636,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BFG9000": {
         "name": "BFG9000",
@@ -8648,10 +8648,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Backpack": {
         "name": "Backpack",
@@ -8659,10 +8659,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Armor": {
         "name": "Armor",
@@ -8671,10 +8671,10 @@
           "Everything",
           "Powerups"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 41,
-        "classification": "filler"
+        "max_count": 41
       },
       "Mega Armor": {
         "name": "Mega Armor",
@@ -8683,10 +8683,10 @@
           "Everything",
           "Powerups"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 25,
-        "classification": "filler"
+        "max_count": 25
       },
       "Berserk": {
         "name": "Berserk",
@@ -8695,10 +8695,10 @@
           "Everything",
           "Powerups"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "filler"
+        "max_count": 12
       },
       "Invulnerability": {
         "name": "Invulnerability",
@@ -8707,10 +8707,10 @@
           "Everything",
           "Powerups"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Partial invisibility": {
         "name": "Partial invisibility",
@@ -8719,10 +8719,10 @@
           "Everything",
           "Powerups"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 18,
-        "classification": "filler"
+        "max_count": 18
       },
       "Supercharge": {
         "name": "Supercharge",
@@ -8731,10 +8731,10 @@
           "Everything",
           "Powerups"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 28,
-        "classification": "filler"
+        "max_count": 28
       },
       "Medikit": {
         "name": "Medikit",
@@ -8742,10 +8742,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 19,
-        "classification": "filler"
+        "max_count": 19
       },
       "Box of bullets": {
         "name": "Box of bullets",
@@ -8754,10 +8754,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "filler"
+        "max_count": 12
       },
       "Box of rockets": {
         "name": "Box of rockets",
@@ -8766,10 +8766,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "Box of shotgun shells": {
         "name": "Box of shotgun shells",
@@ -8778,10 +8778,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 24,
-        "classification": "filler"
+        "max_count": 24
       },
       "Energy cell pack": {
         "name": "Energy cell pack",
@@ -8790,10 +8790,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 15,
-        "classification": "filler"
+        "max_count": 15
       },
       "Hangar (E1M1) - Complete": {
         "name": "Hangar (E1M1) - Complete",
@@ -8802,10 +8802,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nuclear Plant (E1M2) - Complete": {
         "name": "Nuclear Plant (E1M2) - Complete",
@@ -8814,10 +8814,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Toxin Refinery (E1M3) - Complete": {
         "name": "Toxin Refinery (E1M3) - Complete",
@@ -8826,10 +8826,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Control (E1M4) - Complete": {
         "name": "Command Control (E1M4) - Complete",
@@ -8838,10 +8838,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phobos Lab (E1M5) - Complete": {
         "name": "Phobos Lab (E1M5) - Complete",
@@ -8850,10 +8850,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Central Processing (E1M6) - Complete": {
         "name": "Central Processing (E1M6) - Complete",
@@ -8862,10 +8862,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Computer Station (E1M7) - Complete": {
         "name": "Computer Station (E1M7) - Complete",
@@ -8874,10 +8874,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phobos Anomaly (E1M8) - Complete": {
         "name": "Phobos Anomaly (E1M8) - Complete",
@@ -8886,10 +8886,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Military Base (E1M9) - Complete": {
         "name": "Military Base (E1M9) - Complete",
@@ -8898,10 +8898,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Anomaly (E2M1) - Complete": {
         "name": "Deimos Anomaly (E2M1) - Complete",
@@ -8910,10 +8910,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Containment Area (E2M2) - Complete": {
         "name": "Containment Area (E2M2) - Complete",
@@ -8922,10 +8922,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Refinery (E2M3) - Complete": {
         "name": "Refinery (E2M3) - Complete",
@@ -8934,10 +8934,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deimos Lab (E2M4) - Complete": {
         "name": "Deimos Lab (E2M4) - Complete",
@@ -8946,10 +8946,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Center (E2M5) - Complete": {
         "name": "Command Center (E2M5) - Complete",
@@ -8958,10 +8958,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Halls of the Damned (E2M6) - Complete": {
         "name": "Halls of the Damned (E2M6) - Complete",
@@ -8970,10 +8970,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spawning Vats (E2M7) - Complete": {
         "name": "Spawning Vats (E2M7) - Complete",
@@ -8982,10 +8982,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tower of Babel (E2M8) - Complete": {
         "name": "Tower of Babel (E2M8) - Complete",
@@ -8994,10 +8994,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fortress of Mystery (E2M9) - Complete": {
         "name": "Fortress of Mystery (E2M9) - Complete",
@@ -9006,10 +9006,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hell Keep (E3M1) - Complete": {
         "name": "Hell Keep (E3M1) - Complete",
@@ -9018,10 +9018,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Slough of Despair (E3M2) - Complete": {
         "name": "Slough of Despair (E3M2) - Complete",
@@ -9030,10 +9030,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pandemonium (E3M3) - Complete": {
         "name": "Pandemonium (E3M3) - Complete",
@@ -9042,10 +9042,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "House of Pain (E3M4) - Complete": {
         "name": "House of Pain (E3M4) - Complete",
@@ -9054,10 +9054,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Unholy Cathedral (E3M5) - Complete": {
         "name": "Unholy Cathedral (E3M5) - Complete",
@@ -9066,10 +9066,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mt. Erebus (E3M6) - Complete": {
         "name": "Mt. Erebus (E3M6) - Complete",
@@ -9078,10 +9078,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Limbo (E3M7) - Complete": {
         "name": "Limbo (E3M7) - Complete",
@@ -9090,10 +9090,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dis (E3M8) - Complete": {
         "name": "Dis (E3M8) - Complete",
@@ -9102,10 +9102,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Warrens (E3M9) - Complete": {
         "name": "Warrens (E3M9) - Complete",
@@ -9114,10 +9114,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hell Beneath (E4M1) - Red skull key": {
         "name": "Hell Beneath (E4M1) - Red skull key",
@@ -9126,10 +9126,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hell Beneath (E4M1) - Blue skull key": {
         "name": "Hell Beneath (E4M1) - Blue skull key",
@@ -9138,10 +9138,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Perfect Hatred (E4M2) - Yellow skull key": {
         "name": "Perfect Hatred (E4M2) - Yellow skull key",
@@ -9150,10 +9150,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Perfect Hatred (E4M2) - Blue skull key": {
         "name": "Perfect Hatred (E4M2) - Blue skull key",
@@ -9162,10 +9162,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sever the Wicked (E4M3) - Red skull key": {
         "name": "Sever the Wicked (E4M3) - Red skull key",
@@ -9174,10 +9174,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sever the Wicked (E4M3) - Blue skull key": {
         "name": "Sever the Wicked (E4M3) - Blue skull key",
@@ -9186,10 +9186,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unruly Evil (E4M4) - Red skull key": {
         "name": "Unruly Evil (E4M4) - Red skull key",
@@ -9198,10 +9198,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "They Will Repent (E4M5) - Yellow skull key": {
         "name": "They Will Repent (E4M5) - Yellow skull key",
@@ -9210,10 +9210,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "They Will Repent (E4M5) - Red skull key": {
         "name": "They Will Repent (E4M5) - Red skull key",
@@ -9222,10 +9222,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "They Will Repent (E4M5) - Blue skull key": {
         "name": "They Will Repent (E4M5) - Blue skull key",
@@ -9234,10 +9234,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Against Thee Wickedly (E4M6) - Blue skull key": {
         "name": "Against Thee Wickedly (E4M6) - Blue skull key",
@@ -9246,10 +9246,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Against Thee Wickedly (E4M6) - Yellow skull key": {
         "name": "Against Thee Wickedly (E4M6) - Yellow skull key",
@@ -9258,10 +9258,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Against Thee Wickedly (E4M6) - Red skull key": {
         "name": "Against Thee Wickedly (E4M6) - Red skull key",
@@ -9270,10 +9270,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "And Hell Followed (E4M7) - Blue skull key": {
         "name": "And Hell Followed (E4M7) - Blue skull key",
@@ -9282,10 +9282,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "And Hell Followed (E4M7) - Yellow skull key": {
         "name": "And Hell Followed (E4M7) - Yellow skull key",
@@ -9294,10 +9294,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "And Hell Followed (E4M7) - Red skull key": {
         "name": "And Hell Followed (E4M7) - Red skull key",
@@ -9306,10 +9306,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unto the Cruel (E4M8) - Yellow skull key": {
         "name": "Unto the Cruel (E4M8) - Yellow skull key",
@@ -9318,10 +9318,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unto the Cruel (E4M8) - Red skull key": {
         "name": "Unto the Cruel (E4M8) - Red skull key",
@@ -9330,10 +9330,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fear (E4M9) - Yellow skull key": {
         "name": "Fear (E4M9) - Yellow skull key",
@@ -9342,10 +9342,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hell Beneath (E4M1)": {
         "name": "Hell Beneath (E4M1)",
@@ -9354,10 +9354,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hell Beneath (E4M1) - Complete": {
         "name": "Hell Beneath (E4M1) - Complete",
@@ -9365,10 +9365,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hell Beneath (E4M1) - Computer area map": {
         "name": "Hell Beneath (E4M1) - Computer area map",
@@ -9377,10 +9377,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Perfect Hatred (E4M2)": {
         "name": "Perfect Hatred (E4M2)",
@@ -9389,10 +9389,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Perfect Hatred (E4M2) - Complete": {
         "name": "Perfect Hatred (E4M2) - Complete",
@@ -9400,10 +9400,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Perfect Hatred (E4M2) - Computer area map": {
         "name": "Perfect Hatred (E4M2) - Computer area map",
@@ -9412,10 +9412,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sever the Wicked (E4M3)": {
         "name": "Sever the Wicked (E4M3)",
@@ -9424,10 +9424,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sever the Wicked (E4M3) - Complete": {
         "name": "Sever the Wicked (E4M3) - Complete",
@@ -9435,10 +9435,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sever the Wicked (E4M3) - Computer area map": {
         "name": "Sever the Wicked (E4M3) - Computer area map",
@@ -9447,10 +9447,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unruly Evil (E4M4)": {
         "name": "Unruly Evil (E4M4)",
@@ -9459,10 +9459,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unruly Evil (E4M4) - Complete": {
         "name": "Unruly Evil (E4M4) - Complete",
@@ -9470,10 +9470,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unruly Evil (E4M4) - Computer area map": {
         "name": "Unruly Evil (E4M4) - Computer area map",
@@ -9482,10 +9482,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "They Will Repent (E4M5)": {
         "name": "They Will Repent (E4M5)",
@@ -9494,10 +9494,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "They Will Repent (E4M5) - Complete": {
         "name": "They Will Repent (E4M5) - Complete",
@@ -9505,10 +9505,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "They Will Repent (E4M5) - Computer area map": {
         "name": "They Will Repent (E4M5) - Computer area map",
@@ -9517,10 +9517,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Against Thee Wickedly (E4M6)": {
         "name": "Against Thee Wickedly (E4M6)",
@@ -9529,10 +9529,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Against Thee Wickedly (E4M6) - Complete": {
         "name": "Against Thee Wickedly (E4M6) - Complete",
@@ -9540,10 +9540,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Against Thee Wickedly (E4M6) - Computer area map": {
         "name": "Against Thee Wickedly (E4M6) - Computer area map",
@@ -9552,10 +9552,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "And Hell Followed (E4M7)": {
         "name": "And Hell Followed (E4M7)",
@@ -9564,10 +9564,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "And Hell Followed (E4M7) - Complete": {
         "name": "And Hell Followed (E4M7) - Complete",
@@ -9575,10 +9575,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "And Hell Followed (E4M7) - Computer area map": {
         "name": "And Hell Followed (E4M7) - Computer area map",
@@ -9587,10 +9587,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unto the Cruel (E4M8)": {
         "name": "Unto the Cruel (E4M8)",
@@ -9599,10 +9599,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unto the Cruel (E4M8) - Complete": {
         "name": "Unto the Cruel (E4M8) - Complete",
@@ -9610,10 +9610,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unto the Cruel (E4M8) - Computer area map": {
         "name": "Unto the Cruel (E4M8) - Computer area map",
@@ -9622,10 +9622,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fear (E4M9)": {
         "name": "Fear (E4M9)",
@@ -9634,10 +9634,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fear (E4M9) - Complete": {
         "name": "Fear (E4M9) - Complete",
@@ -9645,10 +9645,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fear (E4M9) - Computer area map": {
         "name": "Fear (E4M9) - Computer area map",
@@ -9657,10 +9657,10 @@
           "Computer area maps",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bullet capacity": {
         "name": "Bullet capacity",
@@ -9668,10 +9668,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shell capacity": {
         "name": "Shell capacity",
@@ -9679,10 +9679,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Energy cell capacity": {
         "name": "Energy cell capacity",
@@ -9690,10 +9690,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rocket capacity": {
         "name": "Rocket capacity",
@@ -9701,10 +9701,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       }
     }
   },

@@ -1117,10 +1117,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Air Shooter": {
         "name": "Air Shooter",
@@ -1129,10 +1129,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Leaf Shield": {
         "name": "Leaf Shield",
@@ -1141,10 +1141,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bubble Lead": {
         "name": "Bubble Lead",
@@ -1153,10 +1153,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Quick Boomerang": {
         "name": "Quick Boomerang",
@@ -1165,10 +1165,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Time Stopper": {
         "name": "Time Stopper",
@@ -1177,10 +1177,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metal Blade": {
         "name": "Metal Blade",
@@ -1189,10 +1189,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Crash Bomber": {
         "name": "Crash Bomber",
@@ -1201,10 +1201,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Item 1 - Propeller": {
         "name": "Item 1 - Propeller",
@@ -1214,10 +1214,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Item 2 - Rocket": {
         "name": "Item 2 - Rocket",
@@ -1227,10 +1227,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Item 3 - Bouncy": {
         "name": "Item 3 - Bouncy",
@@ -1240,10 +1240,10 @@
           "Everything",
           "Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "1-Up": {
         "name": "1-Up",
@@ -1252,10 +1252,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Weapon Energy (L)": {
         "name": "Weapon Energy (L)",
@@ -1263,10 +1263,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "Health Energy (L)": {
         "name": "Health Energy (L)",
@@ -1274,10 +1274,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "E-Tank": {
         "name": "E-Tank",
@@ -1286,10 +1286,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "useful"
+        "max_count": 4
       },
       "Heat Man Access Codes": {
         "name": "Heat Man Access Codes",
@@ -1298,10 +1298,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Air Man Access Codes": {
         "name": "Air Man Access Codes",
@@ -1310,10 +1310,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wood Man Access Codes": {
         "name": "Wood Man Access Codes",
@@ -1322,10 +1322,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bubble Man Access Codes": {
         "name": "Bubble Man Access Codes",
@@ -1334,10 +1334,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Quick Man Access Codes": {
         "name": "Quick Man Access Codes",
@@ -1346,10 +1346,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flash Man Access Codes": {
         "name": "Flash Man Access Codes",
@@ -1358,10 +1358,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metal Man Access Codes": {
         "name": "Metal Man Access Codes",
@@ -1370,10 +1370,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Crash Man Access Codes": {
         "name": "Crash Man Access Codes",
@@ -1382,10 +1382,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wily Stage 1 - Completed": {
         "name": "Wily Stage 1 - Completed",
@@ -1394,10 +1394,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wily Stage 2 - Completed": {
         "name": "Wily Stage 2 - Completed",
@@ -1406,10 +1406,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wily Stage 3 - Completed": {
         "name": "Wily Stage 3 - Completed",
@@ -1418,10 +1418,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wily Stage 4 - Completed": {
         "name": "Wily Stage 4 - Completed",
@@ -1430,10 +1430,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wily Stage 5 - Completed": {
         "name": "Wily Stage 5 - Completed",
@@ -1442,10 +1442,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -1453,10 +1453,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },
