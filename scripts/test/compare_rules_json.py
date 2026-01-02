@@ -241,6 +241,60 @@ def normalize_and_has_patterns(obj: Any) -> Any:
         return obj
 
 
+def normalize_or_with_false(obj: Any) -> Any:
+    """
+    Normalize Or rules containing Constant(0) or False_() by removing them.
+
+    Examples:
+        Or(Constant(0), Has(X)) -> Has(X)
+        Or(False_(), Has(X)) -> Has(X)
+        Or(Constant(0), Has(X), Has(Y)) -> Or(Has(X), Has(Y))
+
+    This handles the case where an option evaluates to False (0) at export time,
+    creating Or(Constant(0), other_rule) which is semantically equivalent to just
+    other_rule since Or(false, X) = X.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_or_with_false(v) for k, v in obj.items()}
+
+        # Check if this is an Or rule with Constant(0) or False_() children
+        if normalized.get('rule') == 'Or':
+            children = normalized.get('children', [])
+            if children:
+                # Filter out Constant(0) and False_() children
+                filtered_children = []
+                for child in children:
+                    if isinstance(child, dict):
+                        # Check for Constant(0)
+                        if child.get('rule') == 'Constant':
+                            value = child.get('args', {}).get('value')
+                            if value == 0 or value is False:
+                                continue  # Skip this falsy constant
+                        # Check for False_()
+                        if child.get('rule') == 'False_':
+                            continue  # Skip False_ rule
+                    filtered_children.append(child)
+
+                # If we filtered some children
+                if len(filtered_children) < len(children):
+                    if len(filtered_children) == 0:
+                        # All children were false - return False_
+                        return {'rule': 'False_', 'args': {}}
+                    elif len(filtered_children) == 1:
+                        # Only one child left - return it directly
+                        return filtered_children[0]
+                    else:
+                        # Multiple children left - return simplified Or
+                        normalized['children'] = filtered_children
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_or_with_false(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_and_or_structure(obj: Any) -> Any:
     """
     Normalize And/Or rule structures:
@@ -421,7 +475,8 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         return True
 
     # WorldGen-specific exporter fields
-    if path == 'exporter.1.world_class_name' and original_value == '<missing>':
+    # world_class_name: Original has the class name, WorldGen may not export it
+    if path == 'exporter.1.world_class_name' and worldgen_value == '<missing>':
         return True
 
     # WorldGen-specific game_info fields (state counters, accumulator rules, etc.)
@@ -601,6 +656,10 @@ def main():
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)
     worldgen_normalized = normalize_rule_format(worldgen_normalized)
+
+    # Normalize Or(Constant(0), X) and Or(False_(), X) to just X
+    original_normalized = normalize_or_with_false(original_normalized)
+    worldgen_normalized = normalize_or_with_false(worldgen_normalized)
 
     # Normalize And+Has/HasAll patterns to single HasAll (cleaner format)
     original_normalized = normalize_and_has_patterns(original_normalized)
