@@ -585,10 +585,6 @@ class TurtleRockMedallion(Choice):
     option_quake = 2
     default = "random"
 
-class UseCanonicalOptions(Toggle):
-    """Option for Use Canonical Options."""
-    display_name = "Use Canonical Options"
-
 class UwPalettes(Choice):
     """Option for Underworld Palette."""
     display_name = "Underworld Palette"
@@ -686,5 +682,4 @@ class ALinktothePastWorldGen2Options(PerGameCommonOptions):
     triforce_pieces_required: TriforcePiecesRequired
     triforcehud: Triforcehud
     turtle_rock_medallion: TurtleRockMedallion
-    use_canonical_options: UseCanonicalOptions
     uw_palettes: UwPalettes

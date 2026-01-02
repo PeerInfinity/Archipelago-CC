@@ -550,7 +550,9 @@ class BaseGameExportHandler(
             return False
 
         module_path = type(check_world).__module__
-        self._is_worldgen_cache = module_path.endswith('_worldgen') or '_worldgen.' in module_path
+        # Match _worldgen, _worldgen2, _worldgen3, etc. at end or before dot
+        import re
+        self._is_worldgen_cache = bool(re.search(r'_worldgen\d*($|\.)', module_path))
         return self._is_worldgen_cache
 
     def cache_analyzed_helper(self, helper_name: str, definition: Dict[str, Any]) -> None:

@@ -17,7 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Use Canonical Options:           No
+Use Canonical Options:           Yes
 Allow Collection of checks for other players:Yes
 Beemizer Total Chance:           0
 Beemizer Trap Chance:            60
@@ -53,7 +53,7 @@ Key Drop Shuffle:                Yes
 Killable Thieves:                No
 Map Shuffle:                     Original Dungeon
 Menu Speed:                      Normal
-Misery Mire Medallion:           Bombos
+Misery Mire Medallion:           Quake
 Mode:                            Open
 Play music:                      Yes
 Open Pyramid Hole:               Goal

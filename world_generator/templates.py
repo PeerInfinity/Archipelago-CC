@@ -1272,6 +1272,7 @@ def generate_options_py(data: ExtractedData) -> str:
         'start_inventory', 'start_hints', 'start_location_hints', 'exclude_locations',
         'priority_locations', 'item_links', 'plando_items',
         'randomize_items',  # Defined in hardcoded template with default=True
+        'use_canonical_options',  # Defined in hardcoded template with default=True
     }
 
     # Standard defaults for common options - if the game uses different defaults,
