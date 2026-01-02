@@ -5099,12 +5099,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5151,12 +5147,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5194,12 +5186,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5240,12 +5228,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5295,12 +5279,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {

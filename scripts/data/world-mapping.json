@@ -415,7 +415,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 4208,
+    "exporter_size": 5231,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

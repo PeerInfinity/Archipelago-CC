@@ -16,7 +16,7 @@
       ],
       "last_updated": "2026-01-02T03:15:43.848552"
     },
-    "last_updated": "2026-01-02T03:15:43.848550",
+    "last_updated": "2026-01-02T03:42:41.022947",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1324,50 +1324,38 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "57f75943a04b3edfca82e41964c5f89678ad835a100b9b3e3cfc074ba811a788",
-          "new_sphere_log_hash": "10d5005c8a554b43f9a2731a335a8ad78dd57944c3a17b3c3d41131128b0f0c9",
-          "original_rules_hash": "57f75943a04b3edfca82e41964c5f89678ad835a100b9b3e3cfc074ba811a788",
-          "original_sphere_log_hash": "10d5005c8a554b43f9a2731a335a8ad78dd57944c3a17b3c3d41131128b0f0c9",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2026-01-02T03:12:45.570402"
-        }
-      },
       "game_name_from_filename": "factorio",
       "game_name_from_yaml": "Factorio",
       "generation": {
-        "error_count": 0,
+        "error_count": 2,
         "error_type": null,
-        "processing_time_seconds": 6.16,
+        "processing_time_seconds": 10.36,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 306255,
+        "size_bytes": 305580,
         "size_mb": 0.29
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 13.85,
-        "return_code": 1,
-        "sphere_reached": 1.8,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 12.49,
+        "return_code": 0,
+        "sphere_reached": 12.1,
+        "success": true,
         "total_spheres": 12.1,
         "warning_count": 0
       },
       "template_filename": "Factorio.yaml",
-      "timestamp": "2026-01-02T03:11:46.141442",
+      "timestamp": "2026-01-02T03:42:17.755290",
       "world_info": {
         "exporter_path": "exporter/games/factorio.py",
-        "exporter_size": 4208,
+        "exporter_size": 5231,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "factorio",
