@@ -99,6 +99,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         - Resolves the 'door' variable in lingo_can_use_entrance calls
         - Converts world.player_logic.X references to settings.X
         - Converts PROGRESSIVE_ITEMS/PROGRESSIVE_DOORS_BY_ROOM to settings references
+        - Converts RoomAndDoor namedtuples to arrays
         """
         rule = super().expand_rule(analyzed_rule, _depth)
 
@@ -106,10 +107,55 @@ class LingoGameExportHandler(GenericGameExportHandler):
         # This is essential for helper definitions to work in the frontend
         rule = self._replace_world_references(rule)
 
+        # Convert RoomAndDoor namedtuples to arrays for JavaScript compatibility
+        rule = self._convert_namedtuples_to_arrays(rule)
+
         # Resolve door variables in helper calls
         rule = self._resolve_door_variables(rule)
 
         return rule
+
+    def _convert_namedtuples_to_arrays(self, obj: Any) -> Any:
+        """
+        Recursively convert RoomAndDoor namedtuple objects to arrays.
+
+        The analyzer serializes namedtuples as:
+        {
+            "_namedtuple_type": "RoomAndDoor",
+            "_namedtuple_fields": ["room", "door"],
+            "_namedtuple_values": ["Starting Room", "Back Right Door"]
+        }
+
+        The JavaScript helper expects arrays:
+        ["Starting Room", "Back Right Door"]
+        """
+        if isinstance(obj, dict):
+            # Check if this is a RoomAndDoor namedtuple
+            if obj.get('_namedtuple_type') == 'RoomAndDoor':
+                values = obj.get('_namedtuple_values', [])
+                logger.debug(f"Converting RoomAndDoor namedtuple to array: {values}")
+                return values
+
+            # Also check for constant values that contain RoomAndDoor
+            if obj.get('type') == 'constant' or obj.get('rule') == 'Constant':
+                value = obj.get('value') or (obj.get('args', {}).get('value') if isinstance(obj.get('args'), dict) else None)
+                if isinstance(value, dict) and value.get('_namedtuple_type') == 'RoomAndDoor':
+                    converted = value.get('_namedtuple_values', [])
+                    logger.debug(f"Converting RoomAndDoor constant to array: {converted}")
+                    # Return a new constant with the converted value
+                    if 'value' in obj:
+                        return {'type': 'constant', 'value': converted}
+                    elif 'args' in obj:
+                        new_args = dict(obj.get('args', {}))
+                        new_args['value'] = converted
+                        return {k: (new_args if k == 'args' else v) for k, v in obj.items()}
+
+            # Recursively process dict values
+            return {k: self._convert_namedtuples_to_arrays(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._convert_namedtuples_to_arrays(item) for item in obj]
+        else:
+            return obj
 
     def _resolve_door_variables(self, obj: Any) -> Any:
         """
