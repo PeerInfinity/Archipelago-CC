@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "BakingAdventureWorldGenWorld"
+    "1": "BakingAdventureWorld"
   },
   "regions": {
     "1": {
@@ -695,7 +695,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -718,12 +719,17 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "base_id": 300000000,
       "world_description": "Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
       "slot_data": {
-        "randomize_items": false
+        "randomize_items": 0
       },
       "web": {
         "theme": "partyTime",
@@ -748,7 +754,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "BakingAdventureWorld"
     }
   },
   "game_info": {
