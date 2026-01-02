@@ -9,7 +9,7 @@ import json
 import re
 from typing import Any, Dict, List, Set
 from .constants import BUILTIN_SETTINGS
-from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData
+from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
 
 
@@ -186,6 +186,8 @@ def _rule_needs_lambda(rule: dict) -> bool:
 
     Returns True if the rule contains:
     - Block statements (loops, assignments, etc.) that aren't AST_block
+    - Dynamic references (setting_value, placement_lookup, etc.) that need
+      runtime access to world options/attributes
 
     Note: Most rule types including helpers, not, compare, and conditional
     can now be handled by RuleCodeGenerator with the new Rule Builder classes.
@@ -202,8 +204,21 @@ def _rule_needs_lambda(rule: dict) -> bool:
 
     rule_type = rule.get('type', '')
 
-    # Only block statements require lambda (for loops, assignments, etc.)
+    # Block statements require lambda (for loops, assignments, etc.)
     if rule_type == 'block':
+        return True
+
+    # Dynamic references need lambda to generate proper runtime access patterns
+    # These are evaluated to constants in Rule Builder but should be preserved
+    # as dynamic option/attribute access for proper re-export
+    if rule_type in ('setting_value',):
+        return True
+
+    # AST format dynamic references also need lambda
+    # AST_function_call is included because it may reference 'location' or 'entrance'
+    # variables that are substituted at generation time via set_context(), and
+    # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call'):
         return True
 
     # Recursively check all dict and list values
@@ -355,14 +370,141 @@ class LocationData:
         self.event = event
         self.progress_type = progress_type
         self.show_in_spoiler = show_in_spoiler
-        self.access = access  # Game-specific access data (e.g., Lingo AccessRequirements)
-        self.extra_attributes = extra_attributes or {{}}  # Game-specific attributes (e.g., type_string, price)
+        self.access = access  # Game-specific access data
+        self.extra_attributes = extra_attributes or {{}}  # Game-specific attributes
 
 
 location_table: Dict[str, LocationData] = {{
 {location_table_content}
 }}
 '''
+
+
+def _generate_dungeon_classes_and_data(data: ExtractedData, game_name: str) -> tuple:
+    """Generate Dungeon/Boss wrapper classes and dungeon data.
+
+    Returns:
+        Tuple of (dungeon_classes_code, dungeon_data_code, dungeon_setup_code, has_dungeons)
+    """
+    if not data.dungeons:
+        return "", "", "", False
+
+    # Note: Defeat rule functions are generated in Rules.py (see generate_rules_py)
+    # because they need access to helper functions defined there.
+
+    # Build boss function mapping for reference in dungeon data
+    boss_func_mapping = {}  # (dungeon_name, boss_key) -> function_name
+    for dungeon_name, dungeon_data in data.dungeons.items():
+        for boss_key, boss_data in dungeon_data.bosses.items():
+            if boss_data.defeat_rule:
+                safe_dungeon = re.sub(r'[^a-zA-Z0-9]', '_', dungeon_name)
+                safe_key = 'default' if boss_key == 'None' else boss_key
+                func_name = f"_can_defeat_{safe_dungeon}_{safe_key}"
+                boss_func_mapping[(dungeon_name, boss_key)] = func_name
+
+    # Generate dungeon classes
+    dungeon_classes = '''
+# Dungeon and Boss wrapper classes for WorldGen
+class _Boss:
+    """Boss wrapper for WorldGen dungeons."""
+    def __init__(self, name: str, defeat_func_name: str = None):
+        self.name = name
+        self._defeat_func_name = defeat_func_name
+        self._defeat_func = None  # Set by set_rules() via setup_dungeon_bosses()
+        self.player = None  # Set when dungeon is created
+
+    def can_defeat(self, state) -> bool:
+        """Check if this boss can be defeated."""
+        if self._defeat_func is None:
+            return True
+        return self._defeat_func(state, self.player)
+
+    @property
+    def defeat_rule(self):
+        """Property for exporter compatibility - returns the defeat function."""
+        return self._defeat_func
+
+
+class _Dungeon:
+    """Dungeon wrapper for WorldGen."""
+    def __init__(self, name: str, player: int):
+        self.name = name
+        self.player = player
+        self.bosses: Dict[str, _Boss] = {}
+        self.regions: list = []  # List of Region objects, populated by create_regions()
+
+    @property
+    def boss(self) -> _Boss:
+        """Get the default boss (key 'None')."""
+        return self.bosses.get('None')
+
+    @boss.setter
+    def boss(self, value: _Boss):
+        """Set the default boss."""
+        self.bosses['None'] = value
+
+'''
+
+    # Generate dungeon data structure
+    dungeon_data_entries = []
+    for dungeon_name, dungeon_data in data.dungeons.items():
+        escaped_name = dungeon_name.replace('\\', '\\\\').replace('"', '\\"')
+
+        # Build bosses dict - store function name as string for later lookup
+        boss_entries = []
+        for boss_key, boss_data in dungeon_data.bosses.items():
+            escaped_boss_name = boss_data.name.replace('\\', '\\\\').replace('"', '\\"')
+            func_name = boss_func_mapping.get((dungeon_name, boss_key))
+            func_name_str = f'"{func_name}"' if func_name else 'None'
+            boss_entries.append(f'        "{boss_key}": ("{escaped_boss_name}", {func_name_str}),')
+
+        bosses_content = '\n'.join(boss_entries) if boss_entries else ''
+
+        # Build regions list
+        regions_list = ', '.join(f'"{r.replace(chr(34), chr(92)+chr(34))}"' for r in dungeon_data.regions)
+
+        dungeon_data_entries.append(f'''    "{escaped_name}": {{
+        "regions": [{regions_list}],
+        "bosses": {{
+{bosses_content}
+        }},
+    }},''')
+
+    dungeon_data_code = '''
+# Dungeon data (name -> {regions, bosses})
+# Boss defeat functions are defined in Rules.py and wired up by set_rules()
+DUNGEON_DATA = {
+''' + '\n'.join(dungeon_data_entries) + '''
+}
+'''
+
+    # Generate dungeon setup code - creates dungeons but defeat functions are wired later
+    dungeon_setup_code = '''
+    # Create dungeon objects (defeat functions are wired up by set_rules())
+    dungeons = {}
+    for dungeon_name, dungeon_info in DUNGEON_DATA.items():
+        dungeon = _Dungeon(dungeon_name, player)
+        for boss_key, (boss_name, defeat_func_name) in dungeon_info["bosses"].items():
+            boss = _Boss(boss_name, defeat_func_name)
+            boss.player = player
+            dungeon.bosses[boss_key] = boss
+        dungeons[dungeon_name] = dungeon
+
+    # Assign dungeons to regions
+    for region_name, dungeon_name in REGION_DUNGEONS.items():
+        if region_name in regions and dungeon_name in dungeons:
+            regions[region_name].dungeon = dungeons[dungeon_name]
+
+    # Populate dungeon.regions in the original order from DUNGEON_DATA
+    # (not REGION_DUNGEONS order, which may differ)
+    for dungeon_name, dungeon_info in DUNGEON_DATA.items():
+        if dungeon_name in dungeons:
+            for region_name in dungeon_info["regions"]:
+                if region_name in regions:
+                    dungeons[dungeon_name].regions.append(regions[region_name])
+'''
+
+    return dungeon_classes, dungeon_data_code, dungeon_setup_code, True
 
 
 def generate_regions_py(data: ExtractedData) -> str:
@@ -393,6 +535,15 @@ def generate_regions_py(data: ExtractedData) -> str:
         if region_data.dynamically_added:
             escaped_name = region_name.replace('\\', '\\\\').replace('"', '\\"')
             dynamically_added_regions.append(f'"{escaped_name}"')
+
+    # Build region dungeons dict (region -> dungeon name mapping)
+    dungeon_entries = []
+    for region_name, region_data in data.regions.items():
+        if region_data.dungeon:
+            escaped_name = region_name.replace('\\', '\\\\').replace('"', '\\"')
+            escaped_dungeon = region_data.dungeon.replace('\\', '\\\\').replace('"', '\\"')
+            dungeon_entries.append(f'    "{escaped_name}": "{escaped_dungeon}",')
+    region_dungeons_content = '\n'.join(dungeon_entries)
 
     # Build entrance connections
     entrance_lines = []
@@ -426,6 +577,16 @@ REGION_HINTS: Dict[str, str] = {{
         dynamically_added_section = f'''
 # Regions that were added after sphere calculation (from original export)
 DYNAMICALLY_ADDED_REGIONS = {{{dynamically_added_list}}}
+'''
+
+    # Generate region dungeons dict section (if any)
+    region_dungeons_section = ""
+    if dungeon_entries:
+        region_dungeons_section = f'''
+# Region to dungeon mapping
+REGION_DUNGEONS: Dict[str, str] = {{
+{region_dungeons_content}
+}}
 '''
 
     # Build region extra attributes dict (only for regions with extra_attributes)
@@ -470,6 +631,24 @@ REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {{
                 setattr(regions[region_name], attr_name, attr_value)
 '''
 
+    # Generate dungeon classes and data if dungeons exist
+    dungeon_classes, dungeon_data_code, dungeon_setup_code, has_dungeons = \
+        _generate_dungeon_classes_and_data(data, game_name)
+
+    # Generate code to apply dungeon attributes to regions
+    region_dungeons_apply = ""
+    if has_dungeons:
+        # Use full dungeon object setup
+        region_dungeons_apply = dungeon_setup_code
+    elif dungeon_entries:
+        # Fallback: simple string assignment if no dungeon data but region mapping exists
+        region_dungeons_apply = '''
+    # Apply dungeon assignments to regions (string names only)
+    for region_name, dungeon_name in REGION_DUNGEONS.items():
+        if region_name in regions:
+            regions[region_name].dungeon = dungeon_name
+'''
+
     # Generate code to apply location extra attributes
     location_extra_apply = ""
     if has_location_extra_attrs:
@@ -478,6 +657,11 @@ REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {{
         for attr_name, attr_value in location_data.extra_attributes.items():
             setattr(location, attr_name, attr_value)
 '''
+
+    # Build dungeon section (classes + data)
+    dungeon_section = ""
+    if has_dungeons:
+        dungeon_section = dungeon_classes + dungeon_data_code
 
     return f'''"""
 Region definitions for {game_name}.
@@ -488,8 +672,8 @@ Auto-generated by world_generator.
 from typing import {typing_import}
 from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, {class_name}Location
-
-{region_hints_section}{dynamically_added_section}{region_extra_section}
+{dungeon_section}
+{region_hints_section}{dynamically_added_section}{region_dungeons_section}{region_extra_section}
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
@@ -511,7 +695,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     for region_name in _dynamically_added:
         if region_name in regions:
             regions[region_name].dynamically_added = True
-{region_extra_apply}
+{region_extra_apply}{region_dungeons_apply}
     # Add locations to regions
     for location_name, location_data in location_table.items():
         region = regions[location_data.region]
@@ -578,7 +762,11 @@ def generate_rules_py(data: ExtractedData) -> str:
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
-    helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings)
+    helper_generator = HelperCodeGenerator(
+        game_name,
+        resolved_values=data.metadata.resolved_settings,
+        option_definitions=data.metadata.option_definitions
+    )
     helper_generator.set_known_helpers(set(data.helpers.keys()))
     helper_generator.set_placements(data.original_placements)
 
@@ -633,7 +821,10 @@ def generate_rules_py(data: ExtractedData) -> str:
 
             if _rule_needs_lambda(exit_data.access_rule):
                 # Use lambda with helper code generator
+                # Set context so 'entrance' variable references can be substituted
+                helper_generator.set_context(entrance=exit_name)
                 rule_expr = helper_generator._generate_expression(exit_data.access_rule)
+                helper_generator.set_context()  # Clear context
                 entrance_rules.append(
                     f'    multiworld.get_entrance("{exit_escaped}", player).access_rule = \\\n'
                     f'        lambda state: {rule_expr}'
@@ -655,7 +846,10 @@ def generate_rules_py(data: ExtractedData) -> str:
 
             if _rule_needs_lambda(loc_data.access_rule):
                 # Use lambda with helper code generator
+                # Set context so 'location' variable references can be substituted
+                helper_generator.set_context(location=loc_name)
                 rule_expr = helper_generator._generate_expression(loc_data.access_rule)
+                helper_generator.set_context()  # Clear context
                 location_rules.append(
                     f'    multiworld.get_location("{loc_escaped}", player).access_rule = \\\n'
                     f'        lambda state: {rule_expr}'
@@ -674,6 +868,34 @@ def generate_rules_py(data: ExtractedData) -> str:
     rule_builder_imports = rule_builder_generator.get_imports()
     rule_builder_imports_str = ', '.join(rule_builder_imports)
 
+    # Generate boss defeat rule functions if dungeons exist
+    defeat_rule_functions = []
+    defeat_func_names = []
+    if data.dungeons:
+        for dungeon_name, dungeon_data in data.dungeons.items():
+            for boss_key, boss_data in dungeon_data.bosses.items():
+                if boss_data.defeat_rule:
+                    safe_dungeon = re.sub(r'[^a-zA-Z0-9]', '_', dungeon_name)
+                    safe_key = 'default' if boss_key == 'None' else boss_key
+                    func_name = f"_can_defeat_{safe_dungeon}_{safe_key}"
+                    defeat_func_names.append(func_name)
+
+                    try:
+                        rule_expr = helper_generator._generate_expression(boss_data.defeat_rule)
+                        defeat_rule_functions.append(f'''
+def {func_name}(state: "CollectionState", player: int) -> bool:
+    """Defeat rule for {boss_data.name} in {dungeon_name}."""
+    return {rule_expr}
+{func_name}._internal_function = True
+''')
+                    except Exception as e:
+                        defeat_rule_functions.append(f'''
+def {func_name}(state: "CollectionState", player: int) -> bool:
+    """Defeat rule for {boss_data.name} in {dungeon_name} (fallback: {e})."""
+    return True
+{func_name}._internal_function = True
+''')
+
     # Build helper section
     helpers_section = ''
     if helper_functions:
@@ -684,6 +906,10 @@ def generate_rules_py(data: ExtractedData) -> str:
             helpers_section += '\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
         else:
             helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+
+    # Add defeat rule functions after helpers
+    if defeat_rule_functions:
+        helpers_section += '\n\n# Boss defeat rule functions\n' + '\n'.join(defeat_rule_functions)
 
     # Build indirect condition registrations
     indirect_section = ''
@@ -713,14 +939,56 @@ def generate_rules_py(data: ExtractedData) -> str:
     if not rules_content.strip():
         rules_content = '    pass  # No non-trivial rules'
 
+    # Add dungeon boss setup call if dungeons exist
+    dungeon_setup_section = ''
+    dungeon_setup_function = ''
+    if defeat_func_names:
+        # Add call to setup function at end of set_rules
+        dungeon_setup_section = '''
+
+    # Wire up boss defeat functions to dungeon objects
+    _setup_dungeon_bosses(multiworld, player)'''
+
+        # Generate the setup function
+        func_lookups = []
+        for func_name in defeat_func_names:
+            func_lookups.append(f'        "{func_name}": {func_name},')
+        func_lookup_content = '\n'.join(func_lookups)
+
+        dungeon_setup_function = f'''
+
+
+def _setup_dungeon_bosses(multiworld, player: int) -> None:
+    """Wire up boss defeat functions to dungeon objects.
+
+    This is called at the end of set_rules() to connect the defeat
+    rule functions to the Boss objects created in Regions.py.
+    """
+    # Map function names to actual functions
+    defeat_funcs = {{
+{func_lookup_content}
+    }}
+
+    # Find all regions and wire up their dungeon bosses
+    for region in multiworld.get_regions(player):
+        if hasattr(region, 'dungeon') and region.dungeon is not None:
+            dungeon = region.dungeon
+            if hasattr(dungeon, 'bosses'):
+                for boss in dungeon.bosses.values():
+                    if hasattr(boss, '_defeat_func_name') and boss._defeat_func_name:
+                        func = defeat_funcs.get(boss._defeat_func_name)
+                        if func:
+                            boss._defeat_func = func
+'''
+
     # Build import section
     imports_section = ''
     if rule_builder_imports:
         imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
 
-    # Add CollectionState import if we have helpers or lambda rules
+    # Add CollectionState import if we have helpers, lambda rules, or dungeons
     collection_state_import = ''
-    if has_helpers or needs_lambda:
+    if has_helpers or needs_lambda or defeat_rule_functions:
         collection_state_import = 'from BaseClasses import CollectionState\n'
 
     # Add math import if needed for sqrt, floor, etc.
@@ -728,10 +996,17 @@ def generate_rules_py(data: ExtractedData) -> str:
     if helper_generator.uses_math:
         math_import = 'import math\n'
 
+    # Add placement function imports if placement_lookup/search is used
+    placement_lookup_import = ''
+    if helper_generator.uses_placement_lookup:
+        placement_lookup_import = 'from worlds.generic.Rules import location_item_name, item_name_in_location_names\n'
+
     # Note: Helper definitions for frontend evaluation are no longer stored as AST
     # in the generated Rules.py. Instead, when the exporter runs on a worldgen world,
     # it analyzes the Python helper functions and converts them back to AST format.
     # This keeps the generated code clean and readable.
+
+    typing_import_str = 'TYPE_CHECKING'
 
     return f'''"""
 Access rules for {game_name}.
@@ -739,9 +1014,9 @@ Access rules for {game_name}.
 Auto-generated by world_generator.
 """
 
-from typing import TYPE_CHECKING
+from typing import {typing_import_str}
 {math_import}
-{collection_state_import}{imports_section}
+{placement_lookup_import}{collection_state_import}{imports_section}
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
@@ -751,8 +1026,8 @@ def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
     multiworld = world.multiworld
-{rules_content}
-'''
+{rules_content}{dungeon_setup_section}
+{dungeon_setup_function}'''
 
 
 def _extract_setting_values(rule: dict, settings: Set[str]) -> None:
@@ -923,6 +1198,60 @@ class {class_name}(Toggle):
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
+    elif option_type == 'removed':
+        # Deprecated/removed options - use Removed class
+        # Default is typically an empty string
+        default_str = option_def.get('default', '')
+        if isinstance(default_str, str):
+            default_repr = f'"{default_str}"'
+        else:
+            default_repr = repr(default_str)
+        class_code = f'''
+class {class_name}(Removed):
+    """Deprecated option for {display_name}."""
+    default = {default_repr}
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'Removed'
+
+    elif option_type == 'freetext':
+        # Free text options (like entrance_shuffle_seed)
+        default_str = option_def.get('default', '')
+        if isinstance(default_str, str):
+            default_repr = f'"{default_str}"'
+        else:
+            default_repr = repr(default_str)
+        class_code = f'''
+class {class_name}(FreeText):
+    """Option for {display_name}."""
+    display_name = "{display_name_escaped}"
+    default = {default_repr}
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'FreeText'
+
+    elif option_type == 'plando_connections':
+        # Plando connections - inherits from PlandoConnections
+        class_code = f'''
+class {class_name}(PlandoConnections):
+    """Plando connections for {display_name}."""
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections'
+
+    elif option_type == 'plando_texts':
+        # Plando texts - inherits from PlandoTexts
+        class_code = f'''
+class {class_name}(PlandoTexts):
+    """Plando texts for {display_name}."""
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoTexts'
+
+    elif option_type == 'start_inventory_pool':
+        # Start inventory from pool option - inherits from StartInventoryPool
+        class_code = f'''
+class {class_name}(StartInventoryPool):
+    """Start inventory from pool for {display_name}."""
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'StartInventoryPool'
+
     return None, None, None
 
 
@@ -936,14 +1265,53 @@ def generate_options_py(data: ExtractedData) -> str:
     option_classes = []
     option_fields = []
 
-    # Skip options that are part of PerGameCommonOptions (already inherited)
-    # Also skip 'randomize_items' since it's defined in the hardcoded template below
-    skip_options = {
-        'accessibility', 'progression_balancing', 'local_items', 'non_local_items',
+    # These options are always inherited from PerGameCommonOptions and should not be regenerated
+    # unless they have non-standard defaults
+    always_skip_options = {
+        'progression_balancing', 'local_items', 'non_local_items',
         'start_inventory', 'start_hints', 'start_location_hints', 'exclude_locations',
         'priority_locations', 'item_links', 'plando_items',
         'randomize_items',  # Defined in hardcoded template with default=True
+        'use_canonical_options',  # Defined in hardcoded template with default=True
     }
+
+    # Standard defaults for common options - if the game uses different defaults,
+    # we need to generate a custom class
+    common_option_defaults = {
+        'accessibility': 0,  # Standard Accessibility default is 0 (full)
+    }
+
+    # Check if accessibility needs a custom class (different default than standard)
+    custom_accessibility = False
+    accessibility_def = option_definitions.get('accessibility', {})
+    if accessibility_def.get('default', 0) != common_option_defaults.get('accessibility', 0):
+        custom_accessibility = True
+        # Generate custom accessibility class
+        acc_default = accessibility_def.get('default', 0)
+        name_lookup = accessibility_def.get('name_lookup', {})
+
+        # Build the options
+        option_lines = []
+        for value, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
+            option_lines.append(f"    option_{name} = {value}")
+
+        acc_class = f'''
+class Accessibility(Choice):
+    """Accessibility option with game-specific default."""
+    display_name = "Accessibility"
+{chr(10).join(option_lines)}
+    default = {acc_default}
+'''
+        option_classes.append(acc_class)
+        option_fields.append('    accessibility: Accessibility')
+        imports_needed.add('Choice')
+
+    skip_options = always_skip_options.copy()
+    if not custom_accessibility:
+        skip_options.add('accessibility')
+    else:
+        # Already handled above
+        skip_options.add('accessibility')
 
     # Generate option classes from definitions
     for setting_name in sorted(option_definitions.keys()):
@@ -978,12 +1346,24 @@ class RandomizeItems(Toggle):
     """
     display_name = "Randomize Items"
     default = True
+
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
 {option_classes_str}
 
 @dataclass
 class {class_name}Options(PerGameCommonOptions):
     """Options for {game_name}."""
-    randomize_items: RandomizeItems{option_fields_str}
+    randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions{option_fields_str}
 '''
 
 
@@ -1052,10 +1432,63 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     if canonical_seed1:
         generate_early_section = '''
     def generate_early(self) -> None:
-        """Push starting items and disable randomization for seed 1."""
+        """Push starting items and load canonical options for seed 1."""
         self._push_starting_items()
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
+            if self.options.use_canonical_options.value:
+                self._load_canonical_options()
+
+    def _load_canonical_options(self) -> None:
+        """Load options from _worldgen_settings.json for canonical seed generation.
+
+        This ensures that when generating seed 1, the same options are used
+        as in the original export, producing identical output.
+        """
+        # Find the settings file in the same directory as this module
+        world_dir = os.path.dirname(os.path.abspath(__file__))
+        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+
+        if not os.path.exists(settings_path):
+            return  # No settings file, use defaults
+
+        try:
+            with open(settings_path, 'r') as f:
+                settings = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            return  # Can't read settings, use defaults
+
+        options_data = settings.get('options', {})
+        if not options_data:
+            return
+
+        # Map option names from JSON (snake_case) to option attributes
+        for option_name, option_value in options_data.items():
+            # Get the option attribute if it exists
+            if not hasattr(self.options, option_name):
+                continue
+
+            option_obj = getattr(self.options, option_name)
+
+            # Handle different option types
+            if isinstance(option_value, bool):
+                # Toggle options
+                option_obj.value = int(option_value)
+            elif isinstance(option_value, int):
+                # Range or Choice options with numeric value
+                option_obj.value = option_value
+            elif isinstance(option_value, str):
+                # Choice options with string value - need to look up the value
+                # Try to find the corresponding option_* attribute
+                option_attr_name = f"option_{option_value}"
+                if hasattr(option_obj.__class__, option_attr_name):
+                    option_obj.value = getattr(option_obj.__class__, option_attr_name)
+                else:
+                    # Try to use the string directly if the class has a from_text method
+                    try:
+                        option_obj.value = option_obj.__class__.from_text(option_value).value
+                    except (ValueError, KeyError, AttributeError):
+                        pass  # Keep existing value
 '''
         # Use pre_fill() for canonical placements like the original bakingadventure does
         # This ensures items are created first, then placed/removed from pool later
@@ -1541,13 +1974,15 @@ class _ShopWrapper:
 
     # Build optional imports
     types_import = 'import types\n' if needs_types_import else ''
+    # Add json and os imports for canonical options loading
+    canonical_imports = 'import json\nimport os\n' if canonical_seed1 else ''
 
     return f'''"""
 {game_name} world implementation for Archipelago.
 
 Auto-generated by world_generator.
 """
-{types_import}
+{canonical_imports}{types_import}
 from typing import ClassVar, Dict, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
@@ -1670,7 +2105,10 @@ class {world_class}(RuleWorldMixin, World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        return {class_name}Item(name, data.classification, data.id, self.player)
+        item = {class_name}Item(name, data.classification, data.id, self.player)
+        if data.hint_text:
+            item._hint_text = data.hint_text
+        return item
 
 {collect_item_section}{fill_slot_data_section}'''
 

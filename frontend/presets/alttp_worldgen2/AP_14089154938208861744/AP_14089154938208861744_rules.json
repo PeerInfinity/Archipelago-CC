@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "game_name": "A Link to the Past WorldGen",
-  "game_directory": "alttp_worldgen",
+  "game_name": "A Link to the Past WorldGen 2",
+  "game_directory": "alttp_worldgen2",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
   "player_names": {
@@ -19749,7 +19749,7 @@
   },
   "world": {
     "1": {
-      "game": "A Link to the Past WorldGen",
+      "game": "A Link to the Past WorldGen 2",
       "options": {
         "accessibility": 1,
         "allow_collect": true,
@@ -21439,7 +21439,7 @@
           }
         ]
       },
-      "world_directory": "alttp_worldgen"
+      "world_directory": "alttp_worldgen2"
     }
   },
   "exporter": {

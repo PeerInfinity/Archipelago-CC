@@ -48,6 +48,7 @@ class GameMetadata:
     resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
     option_definitions: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Option class definitions (type, range, choices, etc.)
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
+    original_world_class_name: Optional[str] = None  # Original class name from exporter (preserved during game name override)
 
 
 @dataclass
@@ -74,8 +75,8 @@ class LocationData:
     locked: bool = False  # True if item was placed via place_locked_item
     progress_type: Optional[str] = None  # 'EXCLUDED', 'PRIORITY', or None for DEFAULT
     show_in_spoiler: bool = True  # Whether to show in spoiler log
-    access: Optional[Dict[str, Any]] = None  # Game-specific access data (e.g., Lingo AccessRequirements)
-    extra_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific attributes (e.g., type_string, price)
+    access: Optional[Dict[str, Any]] = None  # Game-specific access data
+    extra_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific attributes
 
 
 @dataclass
@@ -95,6 +96,7 @@ class RegionData:
     exits: List[str] = field(default_factory=list)
     hint_text: Optional[str] = None  # Display name if different from name
     dynamically_added: bool = False  # True if region was added after sphere calculation
+    dungeon: Optional[str] = None  # Dungeon name this region belongs to
     extra_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific attributes (e.g., code)
 
 
@@ -149,6 +151,21 @@ class HelperData:
 
 
 @dataclass
+class BossData:
+    """Extracted boss data."""
+    name: str
+    defeat_rule: Optional[Dict[str, Any]] = None  # Rule Builder format rule for defeating the boss
+
+
+@dataclass
+class DungeonData:
+    """Extracted dungeon data."""
+    name: str
+    regions: List[str] = field(default_factory=list)  # Region names in this dungeon
+    bosses: Dict[str, BossData] = field(default_factory=dict)  # Boss key -> BossData (key is 'None', 'top', 'middle', 'bottom', etc.)
+
+
+@dataclass
 class ExtractedData:
     """All extracted data from a JSON rules file."""
     metadata: GameMetadata
@@ -169,6 +186,7 @@ class ExtractedData:
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
+    dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
 
 
 def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
@@ -180,15 +198,30 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     """
     game_name = json_data.get('game_name', 'UnknownGame')
 
-    # Get world class name from the data or derive from game name
-    world_classes = json_data.get('world_classes', {})
-    world_class_name = None
-    if world_classes:
-        # Get the world class for the specified player, or fall back to first available
-        world_class_name = world_classes.get(player_id) or list(world_classes.values())[0]
+    # Extract exporter settings first (we may need world_class_name from it)
+    exporter_data = json_data.get('exporter', {}).get(player_id, {})
+
+    # Get world class name with priority:
+    # 1. exporter section (most authoritative, new format)
+    # 2. world_classes (legacy format)
+    # 3. derive from game name (fallback)
+    #
+    # Track original_world_class_name to preserve during game name override
+    # This is set when the class name comes from the source export (not derived)
+    original_world_class_name = exporter_data.get('world_class_name')
+    world_class_name = original_world_class_name
+
+    if not world_class_name:
+        world_classes = json_data.get('world_classes', {})
+        if world_classes:
+            # Get the world class for the specified player, or fall back to first available
+            world_class_name = world_classes.get(player_id) or list(world_classes.values())[0]
+            # Also set original_world_class_name since this came from the source export
+            original_world_class_name = world_class_name
 
     if not world_class_name:
         # Derive from game name: "My Game" -> "MyGameWorld"
+        # Note: original_world_class_name stays None since this is derived, not from source
         world_class_name = sanitize_identifier(game_name) + 'World'
 
     # Extract world data for the specified player (contains main world attributes)
@@ -196,9 +229,6 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
 
     # Extract game_info for the specified player (contains game-specific custom data)
     game_info = json_data.get('game_info', {}).get(player_id, {})
-
-    # Extract exporter settings (exporter-specific flags like bidirectional exits)
-    exporter_data = json_data.get('exporter', {}).get(player_id, {})
 
     # Extract base_id (now in world[player], fallback to game_info for legacy)
     base_id = world_data.get('base_id') or game_info.get('base_id')
@@ -279,6 +309,8 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         option_definitions=option_definitions,
         # use_auto_indirect_conditions is now in exporter[player_id], fallback to world_data for legacy
         use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False) or world_data.get('use_auto_indirect_conditions', False),
+        # Track original world class name from exporter (preserved during game name override)
+        original_world_class_name=original_world_class_name,
     )
 
 
@@ -401,7 +433,7 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
                 locked=is_locked,
                 progress_type=progress_type,
                 show_in_spoiler=show_in_spoiler,
-                access=loc_info.get('access'),  # Game-specific access data (e.g., Lingo AccessRequirements)
+                access=loc_info.get('access'),  # Game-specific access data
                 extra_attributes=extra_attrs,
             )
 
@@ -444,6 +476,7 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
         exit_names = [exit_info.get('name', '') for exit_info in region_info.get('exits', [])]
         hint_text = region_info.get('hint_text')  # Only set if different from name
         dynamically_added = region_info.get('dynamically_added', False)
+        dungeon = region_info.get('dungeon')  # Dungeon name this region belongs to
 
         # Auto-mark regions with no locations and no exits as dynamically_added.
         # The original world may filter these out (e.g., shapez does this).
@@ -464,6 +497,7 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
             exits=exit_names,
             hint_text=hint_text,
             dynamically_added=dynamically_added,
+            dungeon=dungeon,
             extra_attributes=extra_attrs,
         )
 
@@ -1007,6 +1041,40 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     return world_attributes
 
 
+def extract_dungeons(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, DungeonData]:
+    """
+    Extract dungeon data from JSON.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
+    Returns:
+        Dictionary of dungeon_name -> DungeonData
+    """
+    dungeons_data = json_data.get('dungeons', {}).get(player_id, {})
+    dungeons = {}
+
+    for dungeon_name, dungeon_info in dungeons_data.items():
+        # Extract boss data
+        bosses = {}
+        bosses_info = dungeon_info.get('bosses', {})
+        for boss_key, boss_info in bosses_info.items():
+            # boss_key is 'None', 'top', 'middle', 'bottom', etc.
+            bosses[boss_key] = BossData(
+                name=boss_info.get('name', ''),
+                defeat_rule=boss_info.get('defeat_rule')
+            )
+
+        dungeons[dungeon_name] = DungeonData(
+            name=dungeon_name,
+            regions=dungeon_info.get('regions', []),
+            bosses=bosses
+        )
+
+    return dungeons
+
+
 def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -1070,6 +1138,9 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Extract game-specific world attributes
     world_attributes = extract_world_attributes(json_data, player_id=player_id)
 
+    # Extract dungeon data (including bosses and defeat rules)
+    dungeons = extract_dungeons(json_data, player_id=player_id)
+
     return ExtractedData(
         metadata=metadata,
         items=items,
@@ -1089,4 +1160,5 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         canonical_placements=canonical_placements,
         progression_mapping=progression_mapping,
         world_attributes=world_attributes,
+        dungeons=dungeons,
     )

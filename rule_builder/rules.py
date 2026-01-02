@@ -1051,26 +1051,42 @@ class Filtered(WrapperRule[TWorld], game="Archipelago"):
 
 @dataclasses.dataclass()
 class Has(Rule[TWorld], game="Archipelago"):
-    """A rule that checks if the player has at least `count` of a given item"""
+    """A rule that checks if the player has at least `count` of a given item.
+
+    The count can be a static integer or a Rule that evaluates to an integer at runtime.
+    """
 
     item_name: str
     """The item to check for"""
 
-    count: int = 1
-    """The count the player is required to have"""
+    count: "int | Rule[TWorld]" = 1
+    """The count the player is required to have. Can be a Rule for dynamic counts."""
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # Resolve count if it's a Rule
+        resolved_count: "int | Rule.Resolved"
+        if isinstance(self.count, Rule):
+            resolved_count = self.count._instantiate(world)
+        else:
+            resolved_count = self.count
+
         return self.Resolved(
             self.item_name,
-            self.count,
+            resolved_count,
             player=world.player,
             caching_enabled=world.rule_caching_enabled,
         )
 
     @override
     def __str__(self) -> str:
-        count = f", count={self.count}" if self.count > 1 else ""
+        # Handle both static and Rule counts
+        if isinstance(self.count, Rule):
+            count = f", count={self.count}"
+        elif self.count > 1:
+            count = f", count={self.count}"
+        else:
+            count = ""
         options = f", options={self.options}" if self.options else ""
         return f"{self.__class__.__name__}({self.item_name}{count}{options})"
 
@@ -1081,20 +1097,36 @@ class Has(Rule[TWorld], game="Archipelago"):
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
         args = {"item_name": self.item_name}
-        if self.count != 1:
+        # Handle both static and Rule counts
+        if isinstance(self.count, Rule):
+            args["count"] = self.count.to_dict()
+        elif self.count != 1:
             args["count"] = self.count
         result["args"] = args
         return result
 
     class Resolved(Rule.Resolved):
         item_name: str
-        count: int = 1
+        count: "int | Rule.Resolved" = 1
         skip_cache: ClassVar[bool] = True
+
+        def _get_count_value(self, state: CollectionState) -> int:
+            """Get the count value, evaluating if it's a Rule.Resolved."""
+            if isinstance(self.count, Rule.Resolved):
+                # Check for get_value or get_count methods
+                if hasattr(self.count, 'get_value'):
+                    return self.count.get_value(state)
+                if hasattr(self.count, 'get_count'):
+                    return self.count.get_count(state)
+                # Otherwise evaluate as boolean and convert to int
+                return int(self.count(state))
+            return self.count
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
             # implementation based on state.has
-            return state.prog_items[self.player][self.item_name] >= self.count
+            count_val = self._get_count_value(state)
+            return state.prog_items[self.player][self.item_name] >= count_val
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
@@ -1104,7 +1136,13 @@ class Has(Rule[TWorld], game="Archipelago"):
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
             verb = "Missing " if state and not self(state) else "Has "
             messages: list[JSONMessagePart] = [{"type": "text", "text": verb}]
-            if self.count > 1:
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                count_val = self._get_count_value(state) if state else None
+                if count_val is not None and count_val > 1:
+                    messages.append({"type": "color", "color": "cyan", "text": str(count_val)})
+                    messages.append({"type": "text", "text": "x "})
+            elif self.count > 1:
                 messages.append({"type": "color", "color": "cyan", "text": str(self.count)})
                 messages.append({"type": "text", "text": "x "})
             if state:
@@ -1119,19 +1157,34 @@ class Has(Rule[TWorld], game="Archipelago"):
             if state is None:
                 return str(self)
             prefix = "Has" if self(state) else "Missing"
-            count = f"{self.count}x " if self.count > 1 else ""
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                count_val = self._get_count_value(state)
+                count = f"{count_val}x " if count_val > 1 else ""
+            else:
+                count = f"{self.count}x " if self.count > 1 else ""
             return f"{prefix} {count}{self.item_name}"
 
         @override
         def __str__(self) -> str:
-            count = f"{self.count}x " if self.count > 1 else ""
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                count = f"({self.count})x "
+            elif self.count > 1:
+                count = f"{self.count}x "
+            else:
+                count = ""
             return f"Has {count}{self.item_name}"
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
             # Only include count if it's not the default (1)
             args = {"item_name": self.item_name}
-            if self.count != 1:
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                # Serialize the count rule as a dict for JSON export
+                args["count"] = self.count.to_dict()
+            elif self.count != 1:
                 args["count"] = self.count
             return args
 
@@ -2502,9 +2555,46 @@ class Compare(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             return f"({self.left} {self.op} {self.right})"
 
+        def _serialize_operand(self, operand: Any) -> Any:
+            """Serialize a compare operand for JSON export.
+
+            Extracts raw values from simple rules (Constant, Tuple, List)
+            to produce cleaner output matching the original exporter format.
+            """
+            if isinstance(operand, Rule.Resolved):
+                # Check if this is a simple value-holding rule
+                rule_name = operand._rule_class_name
+
+                # Constant - extract the raw value
+                if rule_name == 'Constant':
+                    args = operand._get_args_dict()
+                    return args.get('value')
+
+                # Tuple - extract as Python tuple
+                if rule_name == 'Tuple':
+                    args = operand._get_args_dict()
+                    value = args.get('value', args.get('elements', []))
+                    return tuple(self._serialize_operand(v) for v in value)
+
+                # List - extract as Python list
+                if rule_name == 'List':
+                    args = operand._get_args_dict()
+                    value = args.get('value', args.get('elements', []))
+                    return [self._serialize_operand(v) for v in value]
+
+                # Complex rule - use to_dict()
+                return operand.to_dict()
+
+            # Already a primitive value
+            return operand
+
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"left": self.left, "op": self.op, "right": self.right}
+            return {
+                "left": self._serialize_operand(self.left),
+                "op": self.op,
+                "right": self._serialize_operand(self.right)
+            }
 
 
 @dataclasses.dataclass()
@@ -2651,9 +2741,26 @@ class Arithmetic(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             return f"({self.left} {self.op} {self.right})"
 
+        def _serialize_operand(self, operand: Any) -> Any:
+            """Serialize an arithmetic operand for JSON export.
+
+            Extracts raw values from Constant rules to produce cleaner output.
+            """
+            if isinstance(operand, Rule.Resolved):
+                rule_name = operand._rule_class_name
+                if rule_name == 'Constant':
+                    args = operand._get_args_dict()
+                    return args.get('value')
+                return operand.to_dict()
+            return operand
+
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"left": self.left, "op": self.op, "right": self.right}
+            return {
+                "left": self._serialize_operand(self.left),
+                "op": self.op,
+                "right": self._serialize_operand(self.right)
+            }
 
 
 @dataclasses.dataclass()
