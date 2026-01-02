@@ -71,7 +71,9 @@ Both layers must support a rule type for it to work end-to-end.
 | `set` | Set literal (unique values) | `elements: []` | `{"type": "set", "elements": [...]}` |
 | `tuple` | Fixed array | `elements: []` | `{"type": "tuple", "elements": [...]}` |
 | `world_reference` | Reference to world object | (none) | `{"type": "world_reference"}` |
-| `setting_value` | Get game setting value | `setting` | `{"type": "setting_value", "setting": "difficulty"}` |
+| `option_value` | Get user-configurable option value | `option` | `{"type": "option_value", "option": "difficulty"}` |
+| `world_attribute` | Get runtime world attribute | `attribute`, `index` (optional) | `{"type": "world_attribute", "attribute": "required_medallions", "index": 0}` |
+| `setting_value` | Get setting value (legacy) | `setting` | `{"type": "setting_value", "setting": "difficulty"}` |
 | `setting_check` | Check if setting equals value | `setting`, `value` | `{"type": "setting_check", "setting": "mode", "value": "hard"}` |
 | `f_string` | String formatting | `parts: [{type, value}]` | `{"type": "f_string", "parts": [...]}` |
 
@@ -201,7 +203,11 @@ For worlds using class-based helpers (e.g., KH2), the following references are s
 | Python Reference | Rule Type | Notes |
 |------------------|-----------|-------|
 | `self.player` | `player_id` | Returns the current player's slot ID |
-| `self.world.options.*` | `setting_value` | Access world options/settings |
+| `self.world.options.*` | `option_value` | Access user-configurable options |
+| `world.options.*` | `option_value` | Access user-configurable options |
+| `world.*` (non-option) | `world_attribute` | Access runtime world attributes |
+
+**Note:** The `setting_value` type is legacy and covers both options and world attributes. New exports use the more specific `option_value` and `world_attribute` types.
 
 ## Internal/Supporting Types
 
