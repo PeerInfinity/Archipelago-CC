@@ -16,7 +16,7 @@
       ],
       "last_updated": "2026-01-02T16:33:53.139448"
     },
-    "last_updated": "2026-01-02T20:25:15.192421",
+    "last_updated": "2026-01-02T20:40:57.596952",
     "script_version": "1.0.0"
   },
   "results": {
@@ -90,7 +90,7 @@
       "generation": {
         "error_count": 1,
         "error_type": null,
-        "processing_time_seconds": 32.67,
+        "processing_time_seconds": 32.52,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -105,7 +105,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 23.04,
+        "processing_time_seconds": 23.19,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -113,7 +113,7 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past WorldGen.yaml",
-      "timestamp": "2026-01-02T20:22:38.738962",
+      "timestamp": "2026-01-02T20:40:01.481720",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
