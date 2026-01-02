@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-01-02T03:01:06.151862",
+    "timestamp": "2026-01-02T20:16:06.361316",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed1": true,
@@ -15,19 +15,19 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "Coding Adventure": {
-      "template": "Coding Adventure.yaml",
-      "game_name": "Coding Adventure",
-      "timestamp": "2026-01-02T03:01:06.971406",
+    "A Link to the Past": {
+      "template": "A Link to the Past.yaml",
+      "game_name": "A Link to the Past",
+      "timestamp": "2026-01-02T20:16:07.312897",
       "original": {
         "generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/alttp/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 4.49
+          "processing_time_seconds": 30.91
         },
         "spoiler_test": {
           "success": false,
@@ -38,9 +38,9 @@
       "test_world": {
         "world_generation": {
           "success": true,
-          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/codingadventure_worldgen",
+          "world_dir": "/home/user/Archipelago-CC/worlds/alttp_worldgen",
           "error": null,
-          "processing_time_seconds": 0.07
+          "processing_time_seconds": 0.23
         },
         "seed_generation": {
           "success": false
@@ -57,9 +57,9 @@
           "success": false,
           "pass_fail": "unknown"
         },
-        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/codingadventure_worldgen",
-        "test_game_name": "Coding Adventure WorldGen",
-        "test_template_name": "Coding Adventure WorldGen.yaml"
+        "world_dir": "/home/user/Archipelago-CC/worlds/alttp_worldgen",
+        "test_game_name": "A Link to the Past WorldGen",
+        "test_template_name": "A Link to the Past WorldGen.yaml"
       },
       "errors": {
         "generation": [],

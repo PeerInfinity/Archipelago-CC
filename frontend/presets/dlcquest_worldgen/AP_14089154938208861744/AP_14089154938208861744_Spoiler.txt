@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Campaign:                        Basic
 Coin Bundle Quantity:            20
 CoinSanity:                      None
