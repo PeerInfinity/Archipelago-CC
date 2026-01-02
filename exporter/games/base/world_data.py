@@ -96,7 +96,10 @@ class WorldDataMixin:
         # Store world reference for use in expand_rule (option resolution)
         self.world = world
 
-        world_data = {'game': multiworld.game[player]}
+        world_data = {
+            'game': multiworld.game[player],
+            'world_class_name': world.__class__.__name__,  # The world class (e.g., 'ALTTPWorld')
+        }
 
         # Common multiworld settings (like accessibility)
         common_settings = [
@@ -567,39 +570,6 @@ class WorldDataMixin:
                                 try_add_attribute(attr_name, value)
                         except Exception:
                             pass
-
-        # For worldgen worlds, load world_attributes from _worldgen_settings.json
-        # This is needed because worldgen worlds store computed attributes there
-        if self.is_worldgen_world(world):
-            try:
-                module_path = type(world).__module__
-                parts = module_path.split('.')
-                if len(parts) >= 2:
-                    world_dir = parts[1]
-                    worldgen_path = Path('worlds') / world_dir / '_worldgen_settings.json'
-                    if worldgen_path.exists():
-                        with open(worldgen_path, 'r') as f:
-                            worldgen_data = json.load(f)
-                        # Load world_attributes section if present (new format)
-                        if 'world_attributes' in worldgen_data:
-                            for key, value in worldgen_data['world_attributes'].items():
-                                if key not in world_attributes:
-                                    world_attributes[key] = value
-                        else:
-                            # Legacy format: world attributes are mixed with other data
-                            # Skip known structural keys
-                            skip_keys = {
-                                'game', 'options', 'option_definitions', 'world_directory',
-                                'exporter', 'settings',  # exporter section or legacy settings
-                                'assume_bidirectional_exits', 'use_resolved_items',
-                                'use_auto_indirect_conditions', 'add_sphere_items_upfront',
-                            }
-                            for key, value in worldgen_data.items():
-                                if key not in skip_keys and key not in world_attributes:
-                                    world_attributes[key] = value
-                        logger.debug(f"Loaded world attributes from {worldgen_path}")
-            except Exception as e:
-                logger.warning(f"Failed to load worldgen world attributes: {e}")
 
         return world_attributes
 

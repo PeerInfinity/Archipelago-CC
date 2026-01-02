@@ -948,6 +948,19 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     result['multiworld_test']['templates_in_multiworld'] = templates_in_multiworld
     print(f"Templates in multiworld: {templates_in_dir}")
 
+    # Skip testing if there's only 1 template - multiworld tests require at least 2 games
+    # This is because the exporter uses the single-game export path when there's only 1 game,
+    # which places files in frontend/presets/<game>/ instead of frontend/presets/multiworld/
+    if len(templates_in_dir) < 2:
+        print(f"  Skipping tests - multiworld requires at least 2 templates (currently {len(templates_in_dir)})")
+        print(f"  Template will remain in multiworld directory for testing with the next template")
+        result['multiworld_test']['total_players_in_multiworld'] = len(templates_in_dir)
+        result['multiworld_test']['total_players_tested'] = 0
+        result['multiworld_test']['skip_reason'] = 'Waiting for 2+ templates'
+        result['multiworld_test']['success'] = None  # Neither pass nor fail - just skipped
+        print(f"\nCompleted {template_filename}: Multiworld Test=[SKIP], waiting for more templates")
+        return result
+
     # Step 1: Run Generate.py with all templates in multiworld directory
     # Skip if test_only mode, or if second pass without template set changes
     # If needs_regeneration is True (template was restored in second pass), we must regenerate

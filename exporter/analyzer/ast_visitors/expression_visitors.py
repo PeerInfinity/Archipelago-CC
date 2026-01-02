@@ -58,11 +58,11 @@ class ExpressionVisitorMixin:
                     pass
 
             # Check for state.multiworld.worlds[player].options.<setting> pattern
-            # Convert to setting_value rule type for frontend evaluation
+            # Convert to option_value rule type for frontend evaluation
             setting_name = self._is_world_options_pattern(node)
             if setting_name:
-                logging.debug(f"visit_Attribute: Detected world options pattern, setting: {setting_name}")
-                return {'type': 'setting_value', 'setting': setting_name}
+                logging.debug(f"visit_Attribute: Detected world options pattern, option: {setting_name}")
+                return {'type': 'option_value', 'option': setting_name}
 
             # Check for region parameter attribute access (e.g., region.is_light_world)
             # This handles helpers like is_not_bunny that take a region parameter
@@ -81,23 +81,23 @@ class ExpressionVisitorMixin:
                 logging.debug("visit_Attribute: Detected self.player, converting to player_id")
                 return {'type': 'player_id'}
 
-            # Handle self.<attr> patterns that map to settings
+            # Handle self.<attr> patterns that map to options
             # This is used for patterns like self.fight_logic which is set from world.options.FightLogic
             if isinstance(node.value, ast.Name) and node.value.id == 'self':
-                # Check if the game handler has a mapping for this attribute to a setting
+                # Check if the game handler has a mapping for this attribute to an option
                 if hasattr(self, 'game_handler') and self.game_handler is not None:
                     setting_mapping = getattr(self.game_handler, 'SELF_ATTR_TO_SETTING', {})
                     if attr_name in setting_mapping:
                         mapping_value = setting_mapping[attr_name]
                         # Handle both simple string format and dict format with use_current_key
                         if isinstance(mapping_value, dict):
-                            setting_name = mapping_value.get('setting', attr_name)
+                            option_name = mapping_value.get('setting', attr_name)
                             use_current_key = mapping_value.get('use_current_key', False)
                         else:
-                            setting_name = mapping_value
+                            option_name = mapping_value
                             use_current_key = False
-                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}' (use_current_key={use_current_key})")
-                        result = {'type': 'setting_value', 'setting': setting_name}
+                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to option_value '{option_name}' (use_current_key={use_current_key})")
+                        result = {'type': 'option_value', 'option': option_name}
                         if use_current_key:
                             result['use_current_key'] = True
                         return result
@@ -457,11 +457,11 @@ class ExpressionVisitorMixin:
         logging.debug(f"Slice: {ast.dump(node.slice)}")
 
         # Check for state.multiworld.worlds[player].<attr>[index] pattern
-        # Convert to setting_value rule type for frontend evaluation
+        # Convert to world_attribute rule type for frontend evaluation
         attr_name, index_val = self._is_world_attribute_subscript_pattern(node)
         if attr_name is not None and index_val is not None:
             logging.debug(f"visit_Subscript: Detected world attribute subscript pattern: {attr_name}[{index_val}]")
-            return {'type': 'setting_value', 'setting': attr_name, 'index': index_val}
+            return {'type': 'world_attribute', 'attribute': attr_name, 'index': index_val}
 
         # Check for state.prog_items[player][key] pattern
         # Convert to prog_item_count rule type for frontend evaluation

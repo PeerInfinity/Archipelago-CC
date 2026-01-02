@@ -37,6 +37,7 @@ class Buckets(Range):
 class CoinsInShops(Toggle):
     """Option for Coins in Purchaseable Locations."""
     display_name = "Coins in Purchaseable Locations"
+    default = False
 
 class CostMultiplier(Range):
     """Option for Shop Cost Multiplier."""
@@ -48,6 +49,7 @@ class CostMultiplier(Range):
 class EasierRaces(Toggle):
     """Option for Easier Races."""
     display_name = "Easier Races"
+    default = False
 
 class FillerCoinAmount(Choice):
     """Option for Coins per Filler Item."""

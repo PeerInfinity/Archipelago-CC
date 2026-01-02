@@ -68,21 +68,31 @@ class OptionNormalizationMixin:
 
             node_type = node.get('type') or node.get('rule')
 
-            # Handle comparisons - check if one side is a setting_value for a Choice option
+            # Handle comparisons - check if one side is an option_value/setting_value for a Choice option
             if node_type == 'compare':
                 left = node.get('left', {})
                 right = node.get('right', {})
 
-                # Check if left is a setting_value for a Choice option
+                # Check if left is an option_value or setting_value for a Choice option
                 left_option = None
-                if left.get('type') == 'setting_value':
+                left_type = left.get('type', '')
+                if left_type == 'option_value':
+                    option = left.get('option', '')
+                    if option in option_reverse_lookups:
+                        left_option = option
+                elif left_type == 'setting_value':  # Legacy support
                     setting = left.get('setting', '')
                     if setting in option_reverse_lookups:
                         left_option = setting
 
-                # Check if right is a setting_value for a Choice option
+                # Check if right is an option_value or setting_value for a Choice option
                 right_option = None
-                if right.get('type') == 'setting_value':
+                right_type = right.get('type', '')
+                if right_type == 'option_value':
+                    option = right.get('option', '')
+                    if option in option_reverse_lookups:
+                        right_option = option
+                elif right_type == 'setting_value':  # Legacy support
                     setting = right.get('setting', '')
                     if setting in option_reverse_lookups:
                         right_option = setting
@@ -184,26 +194,36 @@ class OptionNormalizationMixin:
 
             node_type = node.get('type') or node.get('rule')
 
-            # Handle comparisons - check if one side is a setting_value for a Choice option
+            # Handle comparisons - check if one side is an option_value/setting_value for a Choice option
             if node_type in ('compare', 'Compare'):
                 # Handle both formats: {left, right} and {args: {left, right}}
                 args = node.get('args', node)
                 left = args.get('left', {})
                 right = args.get('right', {})
 
-                # Check if left is a setting_value for a Choice option
+                # Check if left is an option_value or setting_value for a Choice option
                 left_option = None
                 left_type = left.get('type') or left.get('rule')
-                if left_type in ('setting_value', 'AST_setting_value'):
+                if left_type in ('option_value', 'OptionValue'):
+                    left_args = left.get('args', left)
+                    option = left_args.get('option', '')
+                    if option in option_reverse_lookups:
+                        left_option = option
+                elif left_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
                     left_args = left.get('args', left)
                     setting = left_args.get('setting', '')
                     if setting in option_reverse_lookups:
                         left_option = setting
 
-                # Check if right is a setting_value for a Choice option
+                # Check if right is an option_value or setting_value for a Choice option
                 right_option = None
                 right_type = right.get('type') or right.get('rule')
-                if right_type in ('setting_value', 'AST_setting_value'):
+                if right_type in ('option_value', 'OptionValue'):
+                    right_args = right.get('args', right)
+                    option = right_args.get('option', '')
+                    if option in option_reverse_lookups:
+                        right_option = option
+                elif right_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
                     right_args = right.get('args', right)
                     setting = right_args.get('setting', '')
                     if setting in option_reverse_lookups:
@@ -363,7 +383,12 @@ class OptionNormalizationMixin:
 
                 left_option = None
                 left_type = left.get('type') or left.get('rule')
-                if left_type in ('setting_value', 'AST_setting_value'):
+                if left_type in ('option_value', 'OptionValue'):
+                    left_args = left.get('args', left)
+                    option = left_args.get('option', '')
+                    if option in option_lookups:
+                        left_option = option
+                elif left_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
                     left_args = left.get('args', left)
                     setting = left_args.get('setting', '')
                     if setting in option_lookups:
@@ -371,7 +396,12 @@ class OptionNormalizationMixin:
 
                 right_option = None
                 right_type = right.get('type') or right.get('rule')
-                if right_type in ('setting_value', 'AST_setting_value'):
+                if right_type in ('option_value', 'OptionValue'):
+                    right_args = right.get('args', right)
+                    option = right_args.get('option', '')
+                    if option in option_lookups:
+                        right_option = option
+                elif right_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
                     right_args = right.get('args', right)
                     setting = right_args.get('setting', '')
                     if setting in option_lookups:

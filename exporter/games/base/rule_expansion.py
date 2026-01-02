@@ -124,10 +124,10 @@ class RuleExpansionMixin:
                 name = self.NAME_REMAPPING[name]
                 logger.debug(f"Remapped name '{rule.get('name')}' to '{name}'")
 
-            # Convert known setting names to setting_value type
+            # Convert known setting names to option_value type
             if name in self.SETTINGS_TO_CONVERT:
-                logger.debug(f"Converting name '{name}' to setting_value type")
-                return {'type': 'setting_value', 'setting': name}
+                logger.debug(f"Converting name '{name}' to option_value type")
+                return {'type': 'option_value', 'option': name}
 
             # Otherwise just update the name and return
             rule['name'] = name

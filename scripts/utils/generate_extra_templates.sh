@@ -29,6 +29,10 @@ python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --see
 
 #cp "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
 
+rm -rf Players/presets/Multiworld/
+mkdir -p Players/presets/Multiworld/
+cp "Players/Templates/A Hat in Time.yaml" "Players/Templates/A Link to the Past.yaml" "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
+
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 1
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 2
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 3

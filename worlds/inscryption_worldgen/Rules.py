@@ -29,7 +29,7 @@ def has_act3_requirements(state: "CollectionState", player: int) -> bool:
 
 
 def has_all_epitaph_pieces(state: "CollectionState", player: int) -> bool:
-    return state.has(self.world.required_epitaph_pieces_name, player, self.world.required_epitaph_pieces_count)
+    return state.has('Epitaph Piece', player, 9)
 
 
 def has_camera_and_meat(state: "CollectionState", player: int) -> bool:

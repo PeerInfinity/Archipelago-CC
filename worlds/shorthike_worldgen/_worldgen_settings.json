@@ -28,8 +28,8 @@
     "toy_shovels": 5
   },
   "exporter": {
-    "world_class_name": "ShortHikeWorld",
-    "use_resolved_items": false
+    "use_resolved_items": false,
+    "world_class_name": "ShortHikeWorld"
   },
   "game": "A Short Hike",
   "world_directory": "shorthike"

@@ -349,26 +349,22 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         return self._worldgen_location_access
 
-    def _get_worldgen_settings(self, world) -> Dict[str, Any]:
-        """Load settings from _worldgen_settings.json for worldgen worlds."""
-        if not hasattr(self, '_worldgen_settings'):
-            self._worldgen_settings = {}
-            try:
-                from pathlib import Path
-                import json
-                world_module = type(world).__module__
-                parts = world_module.split('.')
-                if len(parts) >= 2:
-                    world_dir = parts[1]
-                    settings_path = Path('worlds') / world_dir / '_worldgen_settings.json'
-                    if settings_path.exists():
-                        with open(settings_path, 'r') as f:
-                            self._worldgen_settings = json.load(f)
-                        logger.debug(f"Loaded worldgen settings from {settings_path}")
-            except Exception as e:
-                logger.warning(f"Failed to load worldgen settings: {e}")
+    def _get_worldgen_world_attributes(self, world) -> Dict[str, Any]:
+        """Get world attributes from a worldgen world's instance attributes.
 
-        return self._worldgen_settings
+        Worldgen worlds have their world_attributes code-generated in __init__,
+        so we can read them directly from the world object.
+        """
+        if not hasattr(self, '_worldgen_world_attrs'):
+            self._worldgen_world_attrs = {}
+            # Get attributes from world object's __dict__
+            if hasattr(world, '__dict__'):
+                for key in ['item_by_door', 'mastery_reqs', 'door_reqs', 'counting_panel_reqs',
+                            'PROGRESSIVE_ITEMS', 'PROGRESSIVE_DOORS_BY_ROOM']:
+                    if key in world.__dict__:
+                        self._worldgen_world_attrs[key] = world.__dict__[key]
+                        logger.debug(f"Found worldgen attribute {key}")
+        return self._worldgen_world_attrs
 
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """
@@ -421,16 +417,14 @@ class LingoGameExportHandler(GenericGameExportHandler):
         This exports data structures that the rule engine needs to evaluate
         entrance access rules that contain unresolved variable references.
 
-        For worldgen worlds, reads settings from _worldgen_settings.json instead.
+        For worldgen worlds, reads from world instance attributes (code-generated in __init__).
         """
         # Get base world data from parent class
         settings = super().get_world_data(world, multiworld, player)
 
-        # Check if this is a worldgen world - load data from saved file
+        # Check if this is a worldgen world - read from instance attributes
         if self.is_worldgen_world(world):
-            worldgen_data = self._get_worldgen_settings(world)
-            # Check both new format (world_attributes section) and legacy (top-level)
-            world_attrs = worldgen_data.get('world_attributes', worldgen_data)
+            world_attrs = self._get_worldgen_world_attributes(world)
             # Load game-specific data (options are already exported by EXPORTED_OPTIONS)
             for key in ['item_by_door', 'mastery_reqs', 'door_reqs', 'counting_panel_reqs',
                         'PROGRESSIVE_ITEMS', 'PROGRESSIVE_DOORS_BY_ROOM']:
