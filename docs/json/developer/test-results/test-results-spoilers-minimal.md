@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-01 06:42:18
+**Generated:** 2026-01-02 03:55:47
 
-**Source Data Created:** 2026-01-01T05:54:15.467388
+**Source Data Created:** 2026-01-02T03:15:43.848542
 
-**Source Data Last Updated:** 2026-01-01T05:54:15.467395
+**Source Data Last Updated:** 2026-01-02T03:15:43.848550
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 70 (95.9%)
-- **Failed:** 3 (4.1%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 69 (94.5%)
+- **Failed:** 4 (5.5%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 42/70 (60.0% of passed)
-- **Passing with Generic Logic:** 65/70 (92.9% of passed)
-- **Passing with Both Generic:** 42/70 (60.0% of passed)
+- **Passing with Generic Exporter:** 42/69 (60.9% of passed)
+- **Passing with Generic Logic:** 64/69 (92.8% of passed)
+- **Passing with Both Generic:** 42/69 (60.9% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 4.6KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 0.6KB | ✅ |
+| A Link to the Past | ❌ Failed | 0 | 6.1 | 22.1 | 🟡 27.6% | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -62,7 +62,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 7.4KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 3.6KB | ✅ |
-| Lingo | ❌ Failed | 0 | 0 | 5.1 | 🔴 0.0% | 35.8KB | 10.7KB |
+| Lingo | ❌ Failed | 0 | 0 | 5.1 | 🔴 0.0% | 36.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
@@ -103,6 +103,15 @@
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 3.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| DOOM 1993 | 1 | 2026-01-02 03:13 | Previously failed, now passing |
+
 
 ## Notes
 
