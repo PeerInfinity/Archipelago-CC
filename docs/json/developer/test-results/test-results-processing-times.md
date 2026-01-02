@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-02 16:53:01
+**Generated:** 2026-01-02 17:11:53
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -106,8 +106,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Yoshi's Island | 94.8s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+3 more) |
+| 2 | TUNIC | 91.7s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+2 more) |
+| 3 | Sonic Adventure 2 Battle | 81.3s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+1 more) |
+| 4 | Muse Dash | 73.6s | 5 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml |
+| 5 | Landstalker - The Treasures of King Nole | 69.8s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml |
+| 6 | Donkey Kong Country 3 | 61.7s | 3 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml |
+| 7 | Celeste (Open World) | 59.2s | 2 | A Link to the Past.yaml, Celeste (Open World).yaml |
+| 8 | Subnautica | 30.1s | 1 | Subnautica.yaml |
+| 9 | Dark Souls III | 28.8s | 1 | Dark Souls III.yaml |
+| 10 | Kingdom Hearts 2 | 21.0s | 1 | Kingdom Hearts 2.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Adventure | 71.5s | 1 | Adventure.yaml |
+| 2 | Castlevania - Circle of the Moon | 69.0s | 1 | Castlevania - Circle of the Moon.yaml |
+| 3 | Aquaria | 69.0s | 1 | Aquaria.yaml |
+| 4 | Baking Adventure | 67.6s | 1 | Baking Adventure.yaml |
+| 5 | A Short Hike | 67.2s | 1 | A Short Hike.yaml |
+| 6 | Bomb Rush Cyberfunk | 66.8s | 1 | Bomb Rush Cyberfunk.yaml |
+| 7 | A Hat in Time | 66.0s | 1 | A Hat in Time.yaml |
+| 8 | Bumper Stickers | 65.8s | 1 | Bumper Stickers.yaml |
+| 9 | Kingdom Hearts | 65.6s | 1 | Kingdom Hearts.yaml |
+| 10 | VVVVVV | 65.6s | 1 | VVVVVV.yaml |

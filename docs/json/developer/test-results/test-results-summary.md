@@ -1,13 +1,14 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-02 16:53:01
+**Generated:** 2026-01-02 17:11:53
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
-This summary combines results from 3 types of tests:
+This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
 - **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)
 - **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient.md)
+- **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)
 
 Additional test results:
 - **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)
@@ -20,23 +21,26 @@ Additional test results:
 - **Minimal Test:** 0/73 passed (0.0%)
 - **Full Test:** 0/73 passed (0.0%)
 - **Multiclient Test:** 0/73 passed (0.0%)
+- **Multiworld Test:** 8/73 passed (11.0%)
 
 ### Intermittent Failures
 
 - **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
 - **Full Spoilers Test:** 3 game(s), 3 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
+- **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/73 (0.0%)
+- **Templates passing all 4 tests:** 0/73 (0.0%)
+- **Templates passing 3 tests:** 0/73 (0.0%)
 - **Templates passing 2 tests:** 0/73 (0.0%)
-- **Templates passing 1 test:** 0/73 (0.0%)
-- **Templates passing 0 tests:** 73/73 (100.0%)
+- **Templates passing 1 test:** 8/73 (11.0%)
+- **Templates passing 0 tests:** 65/73 (89.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 0 templates passing all 3 tests:
+Of the 0 templates passing all 4 tests:
 
 - **Passing with Generic Exporter:** 0/0
 - **Passing with Generic Logic:** 0/0
@@ -50,81 +54,81 @@ Of the 0 templates passing all 3 tests:
 
 ## Test Results
 
-| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
-|-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.6KB | ✅ | 235.2KB |
-| A Link to the Past | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 656.0KB |
-| A Short Hike | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 72.5KB |
-| APQuest | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 11.2KB |
-| Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 26.1KB |
-| Aquaria | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.8KB | ✅ | 275.5KB |
-| Baking Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 18.3KB |
-| Bomb Rush Cyberfunk | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.4KB | 40.3KB | 329.1KB |
-| Bumper Stickers | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 50.5KB |
-| Castlevania - Circle of the Moon | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.0KB | ✅ | 94.5KB |
-| Castlevania 64 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 138.6KB |
-| Celeste (Open World) | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 1043.4KB |
-| Celeste 64 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.1KB | ✅ | 53.8KB |
-| ChecksFinder | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 16.3KB |
-| Choo-Choo Charles | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 282.4KB |
-| Civilization VI | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 167.0KB |
-| Coding Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 55.0KB |
-| DLCQuest | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.0KB | ✅ | 51.3KB |
-| DOOM 1993 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 280.2KB |
-| DOOM II | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 326.6KB |
-| Dark Souls III | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 1062.2KB |
-| Donkey Kong Country 3 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 122.6KB |
-| Factorio | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.1KB | ✅ | 299.1KB |
-| Faxanadu | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 68.7KB |
-| Final Fantasy Mystic Quest | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 1302.6KB |
-| Heretic | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 367.7KB |
-| Hylics 2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 102.3KB |
-| Inscryption | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.5KB | ✅ | 84.4KB |
-| Kingdom Hearts | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 754.1KB |
-| Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 19.5KB | ✅ | 1679.2KB |
-| Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.4KB | ✅ | 756.7KB |
-| Landstalker - The Treasures of King Nole | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 3.6KB | ✅ | 210.4KB |
-| Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 38.2KB | 10.7KB | 1020.7KB |
-| Links Awakening DX | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.4KB | ✅ | 714.5KB |
-| Lufia II Ancient Cave | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | 132.5KB |
-| Mario & Luigi Superstar Saga | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 398.6KB |
-| Math Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 12.7KB |
-| Mega Man 2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 51.6KB |
-| MegaMan Battle Network 3 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 210.0KB |
-| Meritous | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 57.3KB |
-| Metamath | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 47.6KB |
-| Muse Dash | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 231.6KB |
-| Noita | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 74.7KB |
-| Old School Runescape | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.0KB | ✅ | 309.1KB |
-| Overcooked! 2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 23.1KB | ✅ | 489.0KB |
-| Paint | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.7KB | ✅ | 123.8KB |
-| Raft | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.4KB | ✅ | 206.0KB |
-| Risk of Rain 2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 146.3KB |
-| Saving Princess | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 33.6KB |
-| Secret of Evermore | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.3KB | 6.9KB | 418.8KB |
-| Shivers | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 151.4KB |
-| Sonic Adventure 2 Battle | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 28.7KB | 87.4KB | 1136.2KB |
-| Stardew Valley | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 18.8KB | 8.0KB | 2430.2KB |
-| Subnautica | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.2KB | ✅ | 207.9KB |
-| Super Mario 64 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 12.4KB | ✅ | 93.0KB |
-| Super Mario Land 2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 875.3KB |
-| Super Mario World | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 178.4KB |
-| Super Metroid | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 60.9KB | 114.5KB | 625.3KB |
-| TOEM original | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
-| TOEM rule builder | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
-| TUNIC | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 3.1KB | ✅ | 711.9KB |
-| Terraria | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 16.8KB | ✅ | 291.3KB |
-| The Legend of Zelda | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 555.6KB |
-| The Messenger | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.7KB | ✅ | 211.9KB |
-| The Wind Waker | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 255.4KB |
-| The Witness | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 14.1KB | ✅ | 401.4KB |
-| Timespinner | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.2KB | ✅ | 260.9KB |
-| Undertale | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 58.1KB |
-| VVVVVV | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.3KB | ✅ | 22.9KB |
-| Wargroove | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 44.9KB |
-| Yoshi's Island | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 3.8KB | ✅ | 283.3KB |
-| shapez | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 155.6KB |
+| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
+|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
+| A Hat in Time | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.6KB | ✅ | 235.2KB |
+| A Link to the Past | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 656.0KB |
+| A Short Hike | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 72.5KB |
+| APQuest | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 11.2KB |
+| Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 26.1KB |
+| Aquaria | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.8KB | ✅ | 275.5KB |
+| Baking Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 18.3KB |
+| Bomb Rush Cyberfunk | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.4KB | 40.3KB | 329.1KB |
+| Bumper Stickers | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 50.5KB |
+| Castlevania - Circle of the Moon | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.0KB | ✅ | 94.5KB |
+| Castlevania 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 138.6KB |
+| Celeste (Open World) | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1043.4KB |
+| Celeste 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.1KB | ✅ | 53.8KB |
+| ChecksFinder | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 16.3KB |
+| Choo-Choo Charles | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 282.4KB |
+| Civilization VI | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 167.0KB |
+| Coding Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 55.0KB |
+| DLCQuest | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.0KB | ✅ | 51.3KB |
+| DOOM 1993 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 280.2KB |
+| DOOM II | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 326.6KB |
+| Dark Souls III | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 1062.2KB |
+| Donkey Kong Country 3 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 122.6KB |
+| Factorio | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.1KB | ✅ | 299.1KB |
+| Faxanadu | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 68.7KB |
+| Final Fantasy Mystic Quest | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 1302.6KB |
+| Heretic | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 367.7KB |
+| Hylics 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 102.3KB |
+| Inscryption | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.5KB | ✅ | 84.4KB |
+| Kingdom Hearts | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 754.1KB |
+| Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 19.5KB | ✅ | 1679.2KB |
+| Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.4KB | ✅ | 756.7KB |
+| Landstalker - The Treasures of King Nole | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ✅ | 3.6KB | ✅ | 210.4KB |
+| Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 38.2KB | 10.7KB | 1020.7KB |
+| Links Awakening DX | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.4KB | ✅ | 714.5KB |
+| Lufia II Ancient Cave | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | 132.5KB |
+| Mario & Luigi Superstar Saga | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 398.6KB |
+| Math Adventure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 12.7KB |
+| Mega Man 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 51.6KB |
+| MegaMan Battle Network 3 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 210.0KB |
+| Meritous | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 57.3KB |
+| Metamath | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 47.6KB |
+| Muse Dash | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 231.6KB |
+| Noita | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 74.7KB |
+| Old School Runescape | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.0KB | ✅ | 309.1KB |
+| Overcooked! 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 23.1KB | ✅ | 489.0KB |
+| Paint | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.7KB | ✅ | 123.8KB |
+| Raft | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.4KB | ✅ | 206.0KB |
+| Risk of Rain 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 146.3KB |
+| Saving Princess | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 33.6KB |
+| Secret of Evermore | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.3KB | 6.9KB | 418.8KB |
+| Shivers | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 151.4KB |
+| Sonic Adventure 2 Battle | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 266.2KB |
+| Starcraft 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 28.7KB | 87.4KB | 1136.2KB |
+| Stardew Valley | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 18.8KB | 8.0KB | 2430.2KB |
+| Subnautica | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.2KB | ✅ | 207.9KB |
+| Super Mario 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 12.4KB | ✅ | 93.0KB |
+| Super Mario Land 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 875.3KB |
+| Super Mario World | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 178.4KB |
+| Super Metroid | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 60.9KB | 114.5KB | 625.3KB |
+| TOEM original | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
+| TOEM rule builder | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | 102.9KB |
+| TUNIC | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 3.1KB | ✅ | 711.9KB |
+| Terraria | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 16.8KB | ✅ | 291.3KB |
+| The Legend of Zelda | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 555.6KB |
+| The Messenger | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 4.7KB | ✅ | 211.9KB |
+| The Wind Waker | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 255.4KB |
+| The Witness | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 14.1KB | ✅ | 401.4KB |
+| Timespinner | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.2KB | ✅ | 260.9KB |
+| Undertale | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 58.1KB |
+| VVVVVV | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 2.3KB | ✅ | 22.9KB |
+| Wargroove | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 44.9KB |
+| Yoshi's Island | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 283.3KB |
+| shapez | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 155.6KB |
 
 ### Largest Rules Files
 
