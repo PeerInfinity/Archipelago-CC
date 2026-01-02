@@ -1513,10 +1513,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CSS": {
         "name": "CSS",
@@ -1524,10 +1524,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Design Systems": {
         "name": "Design Systems",
@@ -1535,10 +1535,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "JavaScript Basics": {
         "name": "JavaScript Basics",
@@ -1546,10 +1546,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "DOM Manipulation": {
         "name": "DOM Manipulation",
@@ -1557,10 +1557,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Algorithms": {
         "name": "Algorithms",
@@ -1568,10 +1568,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Server Basics": {
         "name": "Server Basics",
@@ -1579,10 +1579,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "File I/O": {
         "name": "File I/O",
@@ -1590,10 +1590,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "HTTP Basics": {
         "name": "HTTP Basics",
@@ -1601,10 +1601,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Git": {
         "name": "Git",
@@ -1612,10 +1612,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Line": {
         "name": "Command Line",
@@ -1623,10 +1623,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Package Managers": {
         "name": "Package Managers",
@@ -1634,10 +1634,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Static Website Complete": {
         "name": "Static Website Complete",
@@ -1645,10 +1645,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "React": {
         "name": "React",
@@ -1656,10 +1656,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Vue": {
         "name": "Vue",
@@ -1667,10 +1667,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Frontend Framework": {
         "name": "Frontend Framework",
@@ -1678,10 +1678,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "State Management": {
         "name": "State Management",
@@ -1689,10 +1689,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Express": {
         "name": "Express",
@@ -1700,10 +1700,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Django": {
         "name": "Django",
@@ -1711,10 +1711,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flask": {
         "name": "Flask",
@@ -1722,10 +1722,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "REST APIs": {
         "name": "REST APIs",
@@ -1733,10 +1733,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Database Integration": {
         "name": "Database Integration",
@@ -1744,10 +1744,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "UI/UX": {
         "name": "UI/UX",
@@ -1755,10 +1755,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Responsive Design": {
         "name": "Responsive Design",
@@ -1766,10 +1766,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Accessibility": {
         "name": "Accessibility",
@@ -1777,10 +1777,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "SQL": {
         "name": "SQL",
@@ -1788,10 +1788,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "NoSQL": {
         "name": "NoSQL",
@@ -1799,10 +1799,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Database Basics": {
         "name": "Database Basics",
@@ -1810,10 +1810,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Query Optimization": {
         "name": "Query Optimization",
@@ -1821,10 +1821,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Interactive App Complete": {
         "name": "Interactive App Complete",
@@ -1832,10 +1832,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sessions": {
         "name": "Sessions",
@@ -1843,10 +1843,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "JWT": {
         "name": "JWT",
@@ -1854,10 +1854,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Authentication": {
         "name": "Authentication",
@@ -1865,10 +1865,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Caching": {
         "name": "Caching",
@@ -1876,10 +1876,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CDN": {
         "name": "CDN",
@@ -1887,10 +1887,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Performance": {
         "name": "Performance",
@@ -1898,10 +1898,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Unit Tests": {
         "name": "Unit Tests",
@@ -1909,10 +1909,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Integration Tests": {
         "name": "Integration Tests",
@@ -1920,10 +1920,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Testing": {
         "name": "Testing",
@@ -1931,10 +1931,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Docker": {
         "name": "Docker",
@@ -1942,10 +1942,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CI/CD": {
         "name": "CI/CD",
@@ -1953,10 +1953,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "DevOps": {
         "name": "DevOps",
@@ -1964,10 +1964,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Full-Stack Complete": {
         "name": "Full-Stack Complete",
@@ -1976,10 +1976,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "HTTPS": {
         "name": "HTTPS",
@@ -1987,10 +1987,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CORS": {
         "name": "CORS",
@@ -1998,10 +1998,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Security Complete": {
         "name": "Security Complete",
@@ -2009,10 +2009,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Horizontal Scaling": {
         "name": "Horizontal Scaling",
@@ -2020,10 +2020,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Scaling Complete": {
         "name": "Scaling Complete",
@@ -2031,10 +2031,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cloud Provider": {
         "name": "Cloud Provider",
@@ -2042,10 +2042,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Domain": {
         "name": "Domain",
@@ -2053,10 +2053,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deployment Complete": {
         "name": "Deployment Complete",
@@ -2064,10 +2064,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -2075,10 +2075,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

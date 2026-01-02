@@ -18455,10 +18455,10 @@
           "Everything",
           "Power Bracelet"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -18467,10 +18467,10 @@
           "Everything",
           "Shield"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Bow": {
         "name": "Bow",
@@ -18478,10 +18478,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -18489,10 +18489,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Rod": {
         "name": "Magic Rod",
@@ -18501,10 +18501,10 @@
           "Bush Breakers",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pegasus Boots": {
         "name": "Pegasus Boots",
@@ -18512,10 +18512,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ocarina": {
         "name": "Ocarina",
@@ -18523,10 +18523,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Feather": {
         "name": "Feather",
@@ -18534,10 +18534,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shovel": {
         "name": "Shovel",
@@ -18545,10 +18545,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Powder": {
         "name": "Magic Powder",
@@ -18557,10 +18557,10 @@
           "Bush Breakers",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Bomb": {
         "name": "Bomb",
@@ -18569,10 +18569,10 @@
           "Bush Breakers",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -18582,10 +18582,10 @@
           "Everything",
           "Sword"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Flippers": {
         "name": "Flippers",
@@ -18593,10 +18593,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boomerang": {
         "name": "Boomerang",
@@ -18605,10 +18605,10 @@
           "Bush Breakers",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Slime Key": {
         "name": "Slime Key",
@@ -18617,10 +18617,10 @@
           "Entrance Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Medicine": {
         "name": "Medicine",
@@ -18628,10 +18628,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Tail Key": {
         "name": "Tail Key",
@@ -18640,10 +18640,10 @@
           "Entrance Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Angler Key": {
         "name": "Angler Key",
@@ -18652,10 +18652,10 @@
           "Entrance Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Face Key": {
         "name": "Face Key",
@@ -18664,10 +18664,10 @@
           "Entrance Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bird Key": {
         "name": "Bird Key",
@@ -18676,10 +18676,10 @@
           "Entrance Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gold Leaf": {
         "name": "Gold Leaf",
@@ -18687,10 +18687,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Map": {
         "name": "Map",
@@ -18698,10 +18698,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass": {
         "name": "Compass",
@@ -18709,10 +18709,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak": {
         "name": "Stone Beak",
@@ -18720,10 +18720,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nightmare Key": {
         "name": "Nightmare Key",
@@ -18731,10 +18731,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Key": {
         "name": "Key",
@@ -18742,10 +18742,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "50 Rupees": {
         "name": "50 Rupees",
@@ -18754,10 +18754,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "progression_skip_balancing"
+        "max_count": 13
       },
       "20 Rupees": {
         "name": "20 Rupees",
@@ -18766,10 +18766,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "progression_skip_balancing"
+        "max_count": 6
       },
       "100 Rupees": {
         "name": "100 Rupees",
@@ -18778,10 +18778,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression_skip_balancing"
+        "max_count": 3
       },
       "200 Rupees": {
         "name": "200 Rupees",
@@ -18790,10 +18790,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "500 Rupees": {
         "name": "500 Rupees",
@@ -18802,10 +18802,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Seashell": {
         "name": "Seashell",
@@ -18813,10 +18813,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 24,
-        "classification": "progression_skip_balancing"
+        "max_count": 24
       },
       "Nothing": {
         "name": "Nothing",
@@ -18824,10 +18824,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Zol Attack": {
         "name": "Zol Attack",
@@ -18835,10 +18835,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "trap"
+        "max_count": 4
       },
       "Small Key (Tail Cave)": {
         "name": "Small Key (Tail Cave)",
@@ -18847,10 +18847,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Small Key (Bottle Grotto)": {
         "name": "Small Key (Bottle Grotto)",
@@ -18859,10 +18859,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Small Key (Key Cavern)": {
         "name": "Small Key (Key Cavern)",
@@ -18871,10 +18871,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "progression"
+        "max_count": 9
       },
       "Small Key (Angler's Tunnel)": {
         "name": "Small Key (Angler's Tunnel)",
@@ -18883,10 +18883,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Small Key (Catfish's Maw)": {
         "name": "Small Key (Catfish's Maw)",
@@ -18895,10 +18895,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Small Key (Face Shrine)": {
         "name": "Small Key (Face Shrine)",
@@ -18907,10 +18907,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Small Key (Eagle's Tower)": {
         "name": "Small Key (Eagle's Tower)",
@@ -18919,10 +18919,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Small Key (Turtle Rock)": {
         "name": "Small Key (Turtle Rock)",
@@ -18931,10 +18931,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "progression"
+        "max_count": 7
       },
       "Small Key (Color Dungeon)": {
         "name": "Small Key (Color Dungeon)",
@@ -18943,10 +18943,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Dungeon Map (Tail Cave)": {
         "name": "Dungeon Map (Tail Cave)",
@@ -18955,10 +18955,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Bottle Grotto)": {
         "name": "Dungeon Map (Bottle Grotto)",
@@ -18967,10 +18967,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Key Cavern)": {
         "name": "Dungeon Map (Key Cavern)",
@@ -18979,10 +18979,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Angler's Tunnel)": {
         "name": "Dungeon Map (Angler's Tunnel)",
@@ -18991,10 +18991,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Catfish's Maw)": {
         "name": "Dungeon Map (Catfish's Maw)",
@@ -19003,10 +19003,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Face Shrine)": {
         "name": "Dungeon Map (Face Shrine)",
@@ -19015,10 +19015,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Eagle's Tower)": {
         "name": "Dungeon Map (Eagle's Tower)",
@@ -19027,10 +19027,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Turtle Rock)": {
         "name": "Dungeon Map (Turtle Rock)",
@@ -19039,10 +19039,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dungeon Map (Color Dungeon)": {
         "name": "Dungeon Map (Color Dungeon)",
@@ -19051,10 +19051,10 @@
           "Everything",
           "Maps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Tail Cave)": {
         "name": "Compass (Tail Cave)",
@@ -19063,10 +19063,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Bottle Grotto)": {
         "name": "Compass (Bottle Grotto)",
@@ -19075,10 +19075,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Key Cavern)": {
         "name": "Compass (Key Cavern)",
@@ -19087,10 +19087,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Angler's Tunnel)": {
         "name": "Compass (Angler's Tunnel)",
@@ -19099,10 +19099,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Catfish's Maw)": {
         "name": "Compass (Catfish's Maw)",
@@ -19111,10 +19111,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Face Shrine)": {
         "name": "Compass (Face Shrine)",
@@ -19123,10 +19123,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Eagle's Tower)": {
         "name": "Compass (Eagle's Tower)",
@@ -19135,10 +19135,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Turtle Rock)": {
         "name": "Compass (Turtle Rock)",
@@ -19147,10 +19147,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Color Dungeon)": {
         "name": "Compass (Color Dungeon)",
@@ -19159,10 +19159,10 @@
           "Compasses",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Tail Cave)": {
         "name": "Stone Beak (Tail Cave)",
@@ -19171,10 +19171,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Bottle Grotto)": {
         "name": "Stone Beak (Bottle Grotto)",
@@ -19183,10 +19183,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Key Cavern)": {
         "name": "Stone Beak (Key Cavern)",
@@ -19195,10 +19195,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Angler's Tunnel)": {
         "name": "Stone Beak (Angler's Tunnel)",
@@ -19207,10 +19207,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Catfish's Maw)": {
         "name": "Stone Beak (Catfish's Maw)",
@@ -19219,10 +19219,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Face Shrine)": {
         "name": "Stone Beak (Face Shrine)",
@@ -19231,10 +19231,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Eagle's Tower)": {
         "name": "Stone Beak (Eagle's Tower)",
@@ -19243,10 +19243,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Turtle Rock)": {
         "name": "Stone Beak (Turtle Rock)",
@@ -19255,10 +19255,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stone Beak (Color Dungeon)": {
         "name": "Stone Beak (Color Dungeon)",
@@ -19267,10 +19267,10 @@
           "Everything",
           "Stone Beaks"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nightmare Key (Tail Cave)": {
         "name": "Nightmare Key (Tail Cave)",
@@ -19279,10 +19279,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Bottle Grotto)": {
         "name": "Nightmare Key (Bottle Grotto)",
@@ -19291,10 +19291,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Key Cavern)": {
         "name": "Nightmare Key (Key Cavern)",
@@ -19303,10 +19303,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Angler's Tunnel)": {
         "name": "Nightmare Key (Angler's Tunnel)",
@@ -19315,10 +19315,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Catfish's Maw)": {
         "name": "Nightmare Key (Catfish's Maw)",
@@ -19327,10 +19327,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Face Shrine)": {
         "name": "Nightmare Key (Face Shrine)",
@@ -19339,10 +19339,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Eagle's Tower)": {
         "name": "Nightmare Key (Eagle's Tower)",
@@ -19351,10 +19351,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Turtle Rock)": {
         "name": "Nightmare Key (Turtle Rock)",
@@ -19363,10 +19363,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nightmare Key (Color Dungeon)": {
         "name": "Nightmare Key (Color Dungeon)",
@@ -19375,10 +19375,10 @@
           "Everything",
           "Nightmare Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Toadstool": {
         "name": "Toadstool",
@@ -19386,10 +19386,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Guardian Acorn": {
         "name": "Guardian Acorn",
@@ -19397,10 +19397,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Heart Piece": {
         "name": "Heart Piece",
@@ -19408,10 +19408,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "filler"
+        "max_count": 12
       },
       "BowWow": {
         "name": "BowWow",
@@ -19419,10 +19419,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "10 Arrows": {
         "name": "10 Arrows",
@@ -19430,10 +19430,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Single Arrow": {
         "name": "Single Arrow",
@@ -19441,10 +19441,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Max Powder Upgrade": {
         "name": "Max Powder Upgrade",
@@ -19453,10 +19453,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Max Bombs Upgrade": {
         "name": "Max Bombs Upgrade",
@@ -19465,10 +19465,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Max Arrows Upgrade": {
         "name": "Max Arrows Upgrade",
@@ -19477,10 +19477,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Tunic": {
         "name": "Red Tunic",
@@ -19489,10 +19489,10 @@
           "Everything",
           "Tunics"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Blue Tunic": {
         "name": "Blue Tunic",
@@ -19501,10 +19501,10 @@
           "Everything",
           "Tunics"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Heart Container": {
         "name": "Heart Container",
@@ -19512,10 +19512,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "useful"
+        "max_count": 8
       },
       "Ballad of the Wind Fish": {
         "name": "Ballad of the Wind Fish",
@@ -19524,10 +19524,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Manbo's Mambo": {
         "name": "Manbo's Mambo",
@@ -19536,10 +19536,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Frog's Song of Soul": {
         "name": "Frog's Song of Soul",
@@ -19548,10 +19548,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Full Moon Cello": {
         "name": "Full Moon Cello",
@@ -19560,10 +19560,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Conch Horn": {
         "name": "Conch Horn",
@@ -19572,10 +19572,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sea Lily's Bell": {
         "name": "Sea Lily's Bell",
@@ -19584,10 +19584,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Surf Harp": {
         "name": "Surf Harp",
@@ -19596,10 +19596,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wind Marimba": {
         "name": "Wind Marimba",
@@ -19608,10 +19608,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Coral Triangle": {
         "name": "Coral Triangle",
@@ -19620,10 +19620,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Organ of Evening Calm": {
         "name": "Organ of Evening Calm",
@@ -19632,10 +19632,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Thunder Drum": {
         "name": "Thunder Drum",
@@ -19644,10 +19644,10 @@
           "Everything",
           "Instruments"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rooster": {
         "name": "Rooster",
@@ -19655,10 +19655,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Yoshi Doll": {
         "name": "Yoshi Doll",
@@ -19667,10 +19667,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ribbon": {
         "name": "Ribbon",
@@ -19679,10 +19679,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dog Food": {
         "name": "Dog Food",
@@ -19691,10 +19691,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bananas": {
         "name": "Bananas",
@@ -19703,10 +19703,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stick": {
         "name": "Stick",
@@ -19715,10 +19715,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Honeycomb": {
         "name": "Honeycomb",
@@ -19727,10 +19727,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pineapple": {
         "name": "Pineapple",
@@ -19739,10 +19739,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hibiscus": {
         "name": "Hibiscus",
@@ -19751,10 +19751,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Letter": {
         "name": "Letter",
@@ -19763,10 +19763,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Broom": {
         "name": "Broom",
@@ -19775,10 +19775,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fishing Hook": {
         "name": "Fishing Hook",
@@ -19787,10 +19787,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Necklace": {
         "name": "Necklace",
@@ -19799,10 +19799,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Scale": {
         "name": "Scale",
@@ -19811,10 +19811,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magnifying Glass": {
         "name": "Magnifying Glass",
@@ -19823,10 +19823,10 @@
           "Everything",
           "Trading Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Piece Of Power": {
         "name": "Piece Of Power",
@@ -19834,10 +19834,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "ANGLER_KEYHOLE": {
         "name": "ANGLER_KEYHOLE",
@@ -19846,10 +19846,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CASTLE_BUTTON": {
         "name": "CASTLE_BUTTON",
@@ -19858,10 +19858,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "RAFT": {
         "name": "RAFT",
@@ -19869,10 +19869,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "MEDICINE2": {
         "name": "MEDICINE2",
@@ -19880,10 +19880,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "An Alarm Clock": {
         "name": "An Alarm Clock",
@@ -19891,10 +19891,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Can Play Trendy Game": {
         "name": "Can Play Trendy Game",
@@ -19902,10 +19902,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

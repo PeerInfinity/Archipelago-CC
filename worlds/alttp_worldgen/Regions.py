@@ -8,6 +8,132 @@ from typing import Dict, Set, Any
 from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, ALinktothePastWorldGenLocation
 
+# Dungeon and Boss wrapper classes for WorldGen
+class _Boss:
+    """Boss wrapper for WorldGen dungeons."""
+    def __init__(self, name: str, defeat_func_name: str = None):
+        self.name = name
+        self._defeat_func_name = defeat_func_name
+        self._defeat_func = None  # Set by set_rules() via setup_dungeon_bosses()
+        self.player = None  # Set when dungeon is created
+
+    def can_defeat(self, state) -> bool:
+        """Check if this boss can be defeated."""
+        if self._defeat_func is None:
+            return True
+        return self._defeat_func(state, self.player)
+
+    @property
+    def defeat_rule(self):
+        """Property for exporter compatibility - returns the defeat function."""
+        return self._defeat_func
+
+
+class _Dungeon:
+    """Dungeon wrapper for WorldGen."""
+    def __init__(self, name: str, player: int):
+        self.name = name
+        self.player = player
+        self.bosses: Dict[str, _Boss] = {}
+        self.regions: list = []  # List of Region objects, populated by create_regions()
+
+    @property
+    def boss(self) -> _Boss:
+        """Get the default boss (key 'None')."""
+        return self.bosses.get('None')
+
+    @boss.setter
+    def boss(self, value: _Boss):
+        """Set the default boss."""
+        self.bosses['None'] = value
+
+
+# Dungeon data (name -> {regions, bosses})
+# Boss defeat functions are defined in Rules.py and wired up by set_rules()
+DUNGEON_DATA = {
+    "Desert Palace": {
+        "regions": ["Desert Palace North", "Desert Palace Main (Inner)", "Desert Palace Main (Outer)", "Desert Palace East"],
+        "bosses": {
+        "None": ("Lanmolas", "_can_defeat_Desert_Palace_default"),
+        },
+    },
+    "Eastern Palace": {
+        "regions": ["Eastern Palace"],
+        "bosses": {
+        "None": ("Armos Knights", "_can_defeat_Eastern_Palace_default"),
+        },
+    },
+    "Hyrule Castle": {
+        "regions": ["Hyrule Castle", "Sewers", "Sewer Drop", "Sewers (Dark)", "Sanctuary"],
+        "bosses": {
+
+        },
+    },
+    "Agahnims Tower": {
+        "regions": ["Agahnims Tower", "Agahnim 1"],
+        "bosses": {
+        "None": ("Agahnim", "_can_defeat_Agahnims_Tower_default"),
+        },
+    },
+    "Tower of Hera": {
+        "regions": ["Tower of Hera (Bottom)", "Tower of Hera (Basement)", "Tower of Hera (Top)"],
+        "bosses": {
+        "None": ("Moldorm", "_can_defeat_Tower_of_Hera_default"),
+        },
+    },
+    "Swamp Palace": {
+        "regions": ["Swamp Palace (Entrance)", "Swamp Palace (First Room)", "Swamp Palace (Starting Area)", "Swamp Palace (West)", "Swamp Palace (Center)", "Swamp Palace (North)"],
+        "bosses": {
+        "None": ("Arrghus", "_can_defeat_Swamp_Palace_default"),
+        },
+    },
+    "Thieves Town": {
+        "regions": ["Thieves Town (Entrance)", "Thieves Town (Deep)", "Blind Fight"],
+        "bosses": {
+        "None": ("Blind", "_can_defeat_Thieves_Town_default"),
+        },
+    },
+    "Skull Woods": {
+        "regions": ["Skull Woods Final Section (Entrance)", "Skull Woods First Section", "Skull Woods Second Section", "Skull Woods Second Section (Drop)", "Skull Woods Final Section (Mothula)", "Skull Woods First Section (Right)", "Skull Woods First Section (Left)", "Skull Woods First Section (Top)"],
+        "bosses": {
+        "None": ("Mothula", "_can_defeat_Skull_Woods_default"),
+        },
+    },
+    "Ice Palace": {
+        "regions": ["Ice Palace (Entrance)", "Ice Palace (Second Section)", "Ice Palace (Main)", "Ice Palace (East)", "Ice Palace (East Top)", "Ice Palace (Kholdstare)"],
+        "bosses": {
+        "None": ("Kholdstare", "_can_defeat_Ice_Palace_default"),
+        },
+    },
+    "Misery Mire": {
+        "regions": ["Misery Mire (Entrance)", "Misery Mire (Main)", "Misery Mire (West)", "Misery Mire (Final Area)", "Misery Mire (Vitreous)"],
+        "bosses": {
+        "None": ("Vitreous", "_can_defeat_Misery_Mire_default"),
+        },
+    },
+    "Turtle Rock": {
+        "regions": ["Turtle Rock (Entrance)", "Turtle Rock (First Section)", "Turtle Rock (Chain Chomp Room)", "Turtle Rock (Pokey Room)", "Turtle Rock (Second Section)", "Turtle Rock (Big Chest)", "Turtle Rock (Crystaroller Room)", "Turtle Rock (Dark Room)", "Turtle Rock (Eye Bridge)", "Turtle Rock (Trinexx)"],
+        "bosses": {
+        "None": ("Trinexx", "_can_defeat_Turtle_Rock_default"),
+        },
+    },
+    "Palace of Darkness": {
+        "regions": ["Palace of Darkness (Entrance)", "Palace of Darkness (Center)", "Palace of Darkness (Big Key Chest)", "Palace of Darkness (Bonk Section)", "Palace of Darkness (North)", "Palace of Darkness (Maze)", "Palace of Darkness (Harmless Hellway)", "Palace of Darkness (Final Section)"],
+        "bosses": {
+        "None": ("Helmasaur King", "_can_defeat_Palace_of_Darkness_default"),
+        },
+    },
+    "Ganons Tower": {
+        "regions": ["Ganons Tower (Entrance)", "Ganons Tower (Tile Room)", "Ganons Tower (Compass Room)", "Ganons Tower (Hookshot Room)", "Ganons Tower (Map Room)", "Ganons Tower (Firesnake Room)", "Ganons Tower (Teleport Room)", "Ganons Tower (Bottom)", "Ganons Tower (Top)", "Ganons Tower (Before Moldorm)", "Ganons Tower (Moldorm)", "Agahnim 2"],
+        "bosses": {
+        "None": ("Agahnim2", "_can_defeat_Ganons_Tower_default"),
+        "bottom": ("Armos Knights", "_can_defeat_Ganons_Tower_bottom"),
+        "middle": ("Lanmolas", "_can_defeat_Ganons_Tower_middle"),
+        "top": ("Moldorm", "_can_defeat_Ganons_Tower_top"),
+        },
+    },
+}
+
 
 # Region display names (hint text)
 REGION_HINTS: Dict[str, str] = {
@@ -249,6 +375,83 @@ REGION_HINTS: Dict[str, str] = {
 
 # Regions that were added after sphere calculation (from original export)
 DYNAMICALLY_ADDED_REGIONS = {"Snitch Lady (East)", "Snitch Lady (West)", "Bush Covered House", "Tavern (Front)", "Light World Bomb Hut", "Kakariko Shop", "Fortune Teller (Light)", "Lake Hylia Fortune Teller", "Lumberjack House", "Bonk Fairy (Light)", "Bonk Fairy (Dark)", "Lake Hylia Healer Fairy", "Swamp Healer Fairy", "Desert Healer Fairy", "Dark Lake Hylia Healer Fairy", "Dark Lake Hylia Ledge Healer Fairy", "Dark Desert Healer Fairy", "Dark Death Mountain Healer Fairy", "Long Fairy Cave", "Good Bee Cave", "20 Rupee Cave", "Cave Shop (Lake Hylia)", "Cave Shop (Dark Death Mountain)", "Kakariko Gamble Game", "50 Rupee Cave", "Lost Woods Gamble", "Hookshot Fairy", "Light World Death Mountain Shop", "Palace of Darkness Hint", "East Dark World Hint", "Big Bomb Shop", "Archery Game", "Dark Lake Hylia Ledge Hint", "Dark Lake Hylia Ledge Spike Cave", "Fortune Teller (Dark)", "Village of Outcasts Shop", "Dark Lake Hylia Shop", "Dark World Lumberjack Shop", "Dark World Potion Shop", "Red Shield Shop", "Dark Sanctuary Hint", "Dark Desert Hint", "Desert Northern Cliffs", "Dark Death Mountain Bunny Descent Area"}
+
+# Region to dungeon mapping
+REGION_DUNGEONS: Dict[str, str] = {
+    "Desert Palace Main (Outer)": "Desert Palace",
+    "Desert Palace Main (Inner)": "Desert Palace",
+    "Desert Palace East": "Desert Palace",
+    "Desert Palace North": "Desert Palace",
+    "Eastern Palace": "Eastern Palace",
+    "Hyrule Castle": "Hyrule Castle",
+    "Sewer Drop": "Hyrule Castle",
+    "Sewers (Dark)": "Hyrule Castle",
+    "Sewers": "Hyrule Castle",
+    "Sanctuary": "Hyrule Castle",
+    "Agahnims Tower": "Agahnims Tower",
+    "Agahnim 1": "Agahnims Tower",
+    "Tower of Hera (Bottom)": "Tower of Hera",
+    "Tower of Hera (Basement)": "Tower of Hera",
+    "Tower of Hera (Top)": "Tower of Hera",
+    "Swamp Palace (Entrance)": "Swamp Palace",
+    "Swamp Palace (First Room)": "Swamp Palace",
+    "Swamp Palace (Starting Area)": "Swamp Palace",
+    "Swamp Palace (Center)": "Swamp Palace",
+    "Swamp Palace (West)": "Swamp Palace",
+    "Swamp Palace (North)": "Swamp Palace",
+    "Thieves Town (Entrance)": "Thieves Town",
+    "Thieves Town (Deep)": "Thieves Town",
+    "Blind Fight": "Thieves Town",
+    "Skull Woods First Section": "Skull Woods",
+    "Skull Woods First Section (Right)": "Skull Woods",
+    "Skull Woods First Section (Left)": "Skull Woods",
+    "Skull Woods First Section (Top)": "Skull Woods",
+    "Skull Woods Second Section (Drop)": "Skull Woods",
+    "Skull Woods Second Section": "Skull Woods",
+    "Skull Woods Final Section (Entrance)": "Skull Woods",
+    "Skull Woods Final Section (Mothula)": "Skull Woods",
+    "Ice Palace (Entrance)": "Ice Palace",
+    "Ice Palace (Second Section)": "Ice Palace",
+    "Ice Palace (Main)": "Ice Palace",
+    "Ice Palace (East)": "Ice Palace",
+    "Ice Palace (East Top)": "Ice Palace",
+    "Ice Palace (Kholdstare)": "Ice Palace",
+    "Misery Mire (Entrance)": "Misery Mire",
+    "Misery Mire (Main)": "Misery Mire",
+    "Misery Mire (West)": "Misery Mire",
+    "Misery Mire (Final Area)": "Misery Mire",
+    "Misery Mire (Vitreous)": "Misery Mire",
+    "Turtle Rock (Entrance)": "Turtle Rock",
+    "Turtle Rock (First Section)": "Turtle Rock",
+    "Turtle Rock (Pokey Room)": "Turtle Rock",
+    "Turtle Rock (Chain Chomp Room)": "Turtle Rock",
+    "Turtle Rock (Second Section)": "Turtle Rock",
+    "Turtle Rock (Big Chest)": "Turtle Rock",
+    "Turtle Rock (Crystaroller Room)": "Turtle Rock",
+    "Turtle Rock (Dark Room)": "Turtle Rock",
+    "Turtle Rock (Eye Bridge)": "Turtle Rock",
+    "Turtle Rock (Trinexx)": "Turtle Rock",
+    "Palace of Darkness (Entrance)": "Palace of Darkness",
+    "Palace of Darkness (Center)": "Palace of Darkness",
+    "Palace of Darkness (Big Key Chest)": "Palace of Darkness",
+    "Palace of Darkness (Bonk Section)": "Palace of Darkness",
+    "Palace of Darkness (North)": "Palace of Darkness",
+    "Palace of Darkness (Maze)": "Palace of Darkness",
+    "Palace of Darkness (Harmless Hellway)": "Palace of Darkness",
+    "Palace of Darkness (Final Section)": "Palace of Darkness",
+    "Ganons Tower (Entrance)": "Ganons Tower",
+    "Ganons Tower (Tile Room)": "Ganons Tower",
+    "Ganons Tower (Compass Room)": "Ganons Tower",
+    "Ganons Tower (Hookshot Room)": "Ganons Tower",
+    "Ganons Tower (Map Room)": "Ganons Tower",
+    "Ganons Tower (Firesnake Room)": "Ganons Tower",
+    "Ganons Tower (Teleport Room)": "Ganons Tower",
+    "Ganons Tower (Bottom)": "Ganons Tower",
+    "Ganons Tower (Top)": "Ganons Tower",
+    "Ganons Tower (Before Moldorm)": "Ganons Tower",
+    "Ganons Tower (Moldorm)": "Ganons Tower",
+    "Agahnim 2": "Ganons Tower",
+}
 
 # Region extra attributes (game-specific, e.g., code)
 REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {
@@ -521,6 +724,29 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
             for attr_name, attr_value in extra_attrs.items():
                 setattr(regions[region_name], attr_name, attr_value)
 
+    # Create dungeon objects (defeat functions are wired up by set_rules())
+    dungeons = {}
+    for dungeon_name, dungeon_info in DUNGEON_DATA.items():
+        dungeon = _Dungeon(dungeon_name, player)
+        for boss_key, (boss_name, defeat_func_name) in dungeon_info["bosses"].items():
+            boss = _Boss(boss_name, defeat_func_name)
+            boss.player = player
+            dungeon.bosses[boss_key] = boss
+        dungeons[dungeon_name] = dungeon
+
+    # Assign dungeons to regions
+    for region_name, dungeon_name in REGION_DUNGEONS.items():
+        if region_name in regions and dungeon_name in dungeons:
+            regions[region_name].dungeon = dungeons[dungeon_name]
+
+    # Populate dungeon.regions in the original order from DUNGEON_DATA
+    # (not REGION_DUNGEONS order, which may differ)
+    for dungeon_name, dungeon_info in DUNGEON_DATA.items():
+        if dungeon_name in dungeons:
+            for region_name in dungeon_info["regions"]:
+                if region_name in regions:
+                    dungeons[dungeon_name].regions.append(regions[region_name])
+
     # Add locations to regions
     for location_name, location_data in location_table.items():
         region = regions[location_data.region]
@@ -538,6 +764,10 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
             location.progress_type = location_data.progress_type
         if not location_data.show_in_spoiler:
             location.show_in_spoiler = False
+
+        # Apply extra attributes (game-specific, e.g., type_string, price)
+        for attr_name, attr_value in location_data.extra_attributes.items():
+            setattr(location, attr_name, attr_value)
 
         region.locations.append(location)
 

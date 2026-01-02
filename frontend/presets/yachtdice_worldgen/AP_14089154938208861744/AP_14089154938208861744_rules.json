@@ -1310,10 +1310,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Dice Fragment": {
         "name": "Dice Fragment",
@@ -1321,10 +1321,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 16,
-        "classification": "progression"
+        "max_count": 16
       },
       "Roll": {
         "name": "Roll",
@@ -1332,10 +1332,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Roll Fragment": {
         "name": "Roll Fragment",
@@ -1343,10 +1343,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "progression"
+        "max_count": 9
       },
       "Fixed Score Multiplier": {
         "name": "Fixed Score Multiplier",
@@ -1355,10 +1355,10 @@
           "Everything",
           "Score Multiplier"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "progression"
+        "max_count": 11
       },
       "Step Score Multiplier": {
         "name": "Step Score Multiplier",
@@ -1367,10 +1367,10 @@
           "Everything",
           "Score Multiplier"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Ones": {
         "name": "Category Ones",
@@ -1379,10 +1379,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Twos": {
         "name": "Category Twos",
@@ -1391,10 +1391,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Category Threes": {
         "name": "Category Threes",
@@ -1403,10 +1403,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Category Fours": {
         "name": "Category Fours",
@@ -1415,10 +1415,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Fives": {
         "name": "Category Fives",
@@ -1427,10 +1427,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Sixes": {
         "name": "Category Sixes",
@@ -1439,10 +1439,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Choice": {
         "name": "Category Choice",
@@ -1451,10 +1451,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Category Inverse Choice": {
         "name": "Category Inverse Choice",
@@ -1463,10 +1463,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Pair": {
         "name": "Category Pair",
@@ -1475,10 +1475,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Three of a Kind": {
         "name": "Category Three of a Kind",
@@ -1487,10 +1487,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Category Four of a Kind": {
         "name": "Category Four of a Kind",
@@ -1499,10 +1499,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Tiny Straight": {
         "name": "Category Tiny Straight",
@@ -1511,10 +1511,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Category Small Straight": {
         "name": "Category Small Straight",
@@ -1523,10 +1523,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Large Straight": {
         "name": "Category Large Straight",
@@ -1535,10 +1535,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Full House": {
         "name": "Category Full House",
@@ -1547,10 +1547,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Yacht": {
         "name": "Category Yacht",
@@ -1559,10 +1559,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Category Distincts": {
         "name": "Category Distincts",
@@ -1571,10 +1571,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Two times Ones": {
         "name": "Category Two times Ones",
@@ -1583,10 +1583,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Half of Sixes": {
         "name": "Category Half of Sixes",
@@ -1595,10 +1595,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Twos and Threes": {
         "name": "Category Twos and Threes",
@@ -1607,10 +1607,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Sum of Odds": {
         "name": "Category Sum of Odds",
@@ -1619,10 +1619,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Sum of Evens": {
         "name": "Category Sum of Evens",
@@ -1631,10 +1631,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Double Threes and Fours": {
         "name": "Category Double Threes and Fours",
@@ -1643,10 +1643,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Quadruple Ones and Twos": {
         "name": "Category Quadruple Ones and Twos",
@@ -1655,10 +1655,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Micro Straight": {
         "name": "Category Micro Straight",
@@ -1667,10 +1667,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Three Odds": {
         "name": "Category Three Odds",
@@ -1679,10 +1679,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category 1-2-1 Consecutive": {
         "name": "Category 1-2-1 Consecutive",
@@ -1691,10 +1691,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Three Distinct Dice": {
         "name": "Category Three Distinct Dice",
@@ -1703,10 +1703,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Two Pair": {
         "name": "Category Two Pair",
@@ -1715,10 +1715,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category 2-1-2 Consecutive": {
         "name": "Category 2-1-2 Consecutive",
@@ -1727,10 +1727,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category Five Distinct Dice": {
         "name": "Category Five Distinct Dice",
@@ -1739,10 +1739,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Category 4&5 Full House": {
         "name": "Category 4&5 Full House",
@@ -1751,10 +1751,10 @@
           "Categories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Encouragement": {
         "name": "Encouragement",
@@ -1762,10 +1762,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Fun Fact": {
         "name": "Fun Fact",
@@ -1773,10 +1773,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Story Chapter": {
         "name": "Story Chapter",
@@ -1784,10 +1784,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Good RNG": {
         "name": "Good RNG",
@@ -1795,10 +1795,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bad RNG": {
         "name": "Bad RNG",
@@ -1806,10 +1806,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bonus Point": {
         "name": "Bonus Point",
@@ -1818,10 +1818,10 @@
           "Everything",
           "Points"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 20,
-        "classification": "useful"
+        "max_count": 20
       },
       "1 Point": {
         "name": "1 Point",
@@ -1830,10 +1830,10 @@
           "Everything",
           "Points"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "10 Points": {
         "name": "10 Points",
@@ -1842,10 +1842,10 @@
           "Everything",
           "Points"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "100 Points": {
         "name": "100 Points",
@@ -1854,10 +1854,10 @@
           "Everything",
           "Points"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -1865,10 +1865,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

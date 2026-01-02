@@ -1025,10 +1025,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Animation Pack": {
         "name": "Animation Pack",
@@ -1036,10 +1036,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Audio Pack": {
         "name": "Audio Pack",
@@ -1047,10 +1047,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pause Menu Pack": {
         "name": "Pause Menu Pack",
@@ -1058,10 +1058,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Time is Money Pack": {
         "name": "Time is Money Pack",
@@ -1069,10 +1069,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Double Jump Pack": {
         "name": "Double Jump Pack",
@@ -1080,10 +1080,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pet Pack": {
         "name": "Pet Pack",
@@ -1091,10 +1091,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sexy Outfits Pack": {
         "name": "Sexy Outfits Pack",
@@ -1102,10 +1102,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Top Hat Pack": {
         "name": "Top Hat Pack",
@@ -1113,10 +1113,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Map Pack": {
         "name": "Map Pack",
@@ -1124,10 +1124,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gun Pack": {
         "name": "Gun Pack",
@@ -1135,10 +1135,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Zombie Pack": {
         "name": "The Zombie Pack",
@@ -1146,10 +1146,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Night Map Pack": {
         "name": "Night Map Pack",
@@ -1157,10 +1157,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Psychological Warfare Pack": {
         "name": "Psychological Warfare Pack",
@@ -1168,10 +1168,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Armor for your Horse Pack": {
         "name": "Armor for your Horse Pack",
@@ -1179,10 +1179,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Finish the Fight Pack": {
         "name": "Finish the Fight Pack",
@@ -1190,10 +1190,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Particles Pack": {
         "name": "Particles Pack",
@@ -1201,10 +1201,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Day One Patch Pack": {
         "name": "Day One Patch Pack",
@@ -1212,10 +1212,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Checkpoint Pack": {
         "name": "Checkpoint Pack",
@@ -1223,10 +1223,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Incredibly Important Pack": {
         "name": "Incredibly Important Pack",
@@ -1234,10 +1234,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wall Jump Pack": {
         "name": "Wall Jump Pack",
@@ -1245,10 +1245,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Health Bar Pack": {
         "name": "Health Bar Pack",
@@ -1256,10 +1256,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Parallax Pack": {
         "name": "Parallax Pack",
@@ -1267,10 +1267,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Harmless Plants Pack": {
         "name": "Harmless Plants Pack",
@@ -1278,10 +1278,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Death of Comedy Pack": {
         "name": "Death of Comedy Pack",
@@ -1289,10 +1289,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Canadian Dialog Pack": {
         "name": "Canadian Dialog Pack",
@@ -1300,10 +1300,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DLC NPC Pack": {
         "name": "DLC NPC Pack",
@@ -1311,10 +1311,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cut Content Pack": {
         "name": "Cut Content Pack",
@@ -1322,10 +1322,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Name Change Pack": {
         "name": "Name Change Pack",
@@ -1333,10 +1333,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "trap"
+        "max_count": 4
       },
       "Pickaxe": {
         "name": "Pickaxe",
@@ -1344,10 +1344,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Season Pass": {
         "name": "Season Pass",
@@ -1355,10 +1355,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "High Definition Next Gen Pack": {
         "name": "High Definition Next Gen Pack",
@@ -1366,10 +1366,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Increased HP Pack": {
         "name": "Increased HP Pack",
@@ -1377,10 +1377,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Removed Ads Pack": {
         "name": "Removed Ads Pack",
@@ -1388,10 +1388,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Big Sword Pack": {
         "name": "Big Sword Pack",
@@ -1399,10 +1399,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Really Big Sword Pack": {
         "name": "Really Big Sword Pack",
@@ -1410,10 +1410,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unfathomable Sword Pack": {
         "name": "Unfathomable Sword Pack",
@@ -1421,10 +1421,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gun": {
         "name": "Gun",
@@ -1432,10 +1432,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sword": {
         "name": "Sword",
@@ -1443,10 +1443,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wooden Sword": {
         "name": "Wooden Sword",
@@ -1454,10 +1454,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Box of Various Supplies": {
         "name": "Box of Various Supplies",
@@ -1465,10 +1465,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Humble Indie Bindle": {
         "name": "Humble Indie Bindle",
@@ -1476,10 +1476,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DLC Quest: Coin Bundle": {
         "name": "DLC Quest: Coin Bundle",
@@ -1487,10 +1487,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Live Freemium or Die: Coin Bundle": {
         "name": "Live Freemium or Die: Coin Bundle",
@@ -1498,10 +1498,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Zombie Sheep": {
         "name": "Zombie Sheep",
@@ -1509,10 +1509,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "trap"
+        "max_count": 1
       },
       "Temporary Spike": {
         "name": "Temporary Spike",
@@ -1520,10 +1520,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "trap"
+        "max_count": 1
       },
       "Loading Screen": {
         "name": "Loading Screen",
@@ -1531,10 +1531,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "trap"
+        "max_count": 7
       },
       "DLC Quest: Progressive Weapon": {
         "name": "DLC Quest: Progressive Weapon",
@@ -1542,10 +1542,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Live Freemium or Die: Progressive Weapon": {
         "name": "Live Freemium or Die: Progressive Weapon",
@@ -1553,10 +1553,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DLC Quest: Coin Piece": {
         "name": "DLC Quest: Coin Piece",
@@ -1564,10 +1564,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Live Freemium or Die: Coin Piece": {
         "name": "Live Freemium or Die: Coin Piece",
@@ -1575,10 +1575,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "4 coins": {
         "name": "4 coins",
@@ -1742,10 +1742,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       " coins": {
         "name": " coins",

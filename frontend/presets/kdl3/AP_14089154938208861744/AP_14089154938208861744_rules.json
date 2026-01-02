@@ -24577,10 +24577,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stone": {
         "name": "Stone",
@@ -24589,10 +24589,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice": {
         "name": "Ice",
@@ -24601,10 +24601,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Needle": {
         "name": "Needle",
@@ -24613,10 +24613,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Clean": {
         "name": "Clean",
@@ -24625,10 +24625,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Parasol": {
         "name": "Parasol",
@@ -24637,10 +24637,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spark": {
         "name": "Spark",
@@ -24649,10 +24649,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cutter": {
         "name": "Cutter",
@@ -24661,10 +24661,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rick": {
         "name": "Rick",
@@ -24673,10 +24673,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kine": {
         "name": "Kine",
@@ -24685,10 +24685,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Coo": {
         "name": "Coo",
@@ -24697,10 +24697,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nago": {
         "name": "Nago",
@@ -24709,10 +24709,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "ChuChu": {
         "name": "ChuChu",
@@ -24721,10 +24721,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pitch": {
         "name": "Pitch",
@@ -24733,10 +24733,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Heart Star": {
         "name": "Heart Star",
@@ -24744,10 +24744,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "progression_skip_balancing"
+        "max_count": 23
       },
       "1-Up": {
         "name": "1-Up",
@@ -24756,10 +24756,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Maxim Tomato": {
         "name": "Maxim Tomato",
@@ -24767,10 +24767,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Invincible Candy": {
         "name": "Invincible Candy",
@@ -24778,10 +24778,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Little Star": {
         "name": "Little Star",
@@ -24789,10 +24789,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Medium Star": {
         "name": "Medium Star",
@@ -24800,10 +24800,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Big Star": {
         "name": "Big Star",
@@ -24811,10 +24811,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gooey Bag": {
         "name": "Gooey Bag",
@@ -24822,10 +24822,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "trap"
+        "max_count": 9
       },
       "Slowness": {
         "name": "Slowness",
@@ -24833,10 +24833,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "trap"
+        "max_count": 2
       },
       "Eject Ability": {
         "name": "Eject Ability",
@@ -24844,10 +24844,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "trap"
+        "max_count": 3
       },
       "No Ability": {
         "name": "No Ability",
@@ -24855,10 +24855,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "filler",
         "event": true,
         "type": "Event",
-        "max_count": 190,
-        "classification": "filler"
+        "max_count": 190
       },
       "Cutter Ability": {
         "name": "Cutter Ability",
@@ -24866,10 +24866,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 22,
-        "classification": "progression"
+        "max_count": 22
       },
       "Spark Ability": {
         "name": "Spark Ability",
@@ -24877,10 +24877,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 22,
-        "classification": "progression"
+        "max_count": 22
       },
       "Parasol Ability": {
         "name": "Parasol Ability",
@@ -24888,10 +24888,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 21,
-        "classification": "progression"
+        "max_count": 21
       },
       "Nago Spawn": {
         "name": "Nago Spawn",
@@ -24899,10 +24899,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 16,
-        "classification": "progression"
+        "max_count": 16
       },
       "Rick Spawn": {
         "name": "Rick Spawn",
@@ -24910,10 +24910,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 20,
-        "classification": "progression"
+        "max_count": 20
       },
       "Stone Ability": {
         "name": "Stone Ability",
@@ -24921,10 +24921,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 19,
-        "classification": "progression"
+        "max_count": 19
       },
       "Clean Ability": {
         "name": "Clean Ability",
@@ -24932,10 +24932,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 23,
-        "classification": "progression"
+        "max_count": 23
       },
       "Burning Ability": {
         "name": "Burning Ability",
@@ -24943,10 +24943,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 26,
-        "classification": "progression"
+        "max_count": 26
       },
       "ChuChu Spawn": {
         "name": "ChuChu Spawn",
@@ -24954,10 +24954,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 17,
-        "classification": "progression"
+        "max_count": 17
       },
       "Pitch Spawn": {
         "name": "Pitch Spawn",
@@ -24965,10 +24965,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 15,
-        "classification": "progression"
+        "max_count": 15
       },
       "Needle Ability": {
         "name": "Needle Ability",
@@ -24976,10 +24976,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 22,
-        "classification": "progression"
+        "max_count": 22
       },
       "Kine Spawn": {
         "name": "Kine Spawn",
@@ -24987,10 +24987,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 13,
-        "classification": "progression"
+        "max_count": 13
       },
       "Coo Spawn": {
         "name": "Coo Spawn",
@@ -24998,10 +24998,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 17,
-        "classification": "progression"
+        "max_count": 17
       },
       "Level 1 Boss Defeated": {
         "name": "Level 1 Boss Defeated",
@@ -25009,10 +25009,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 1 Boss Purified": {
         "name": "Level 1 Boss Purified",
@@ -25020,10 +25020,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 2 Boss Defeated": {
         "name": "Level 2 Boss Defeated",
@@ -25031,10 +25031,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 2 Boss Purified": {
         "name": "Level 2 Boss Purified",
@@ -25042,10 +25042,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Ability": {
         "name": "Ice Ability",
@@ -25053,10 +25053,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 18,
-        "classification": "progression"
+        "max_count": 18
       },
       "Level 3 Boss Defeated": {
         "name": "Level 3 Boss Defeated",
@@ -25064,10 +25064,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 3 Boss Purified": {
         "name": "Level 3 Boss Purified",
@@ -25075,10 +25075,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 4 Boss Defeated": {
         "name": "Level 4 Boss Defeated",
@@ -25086,10 +25086,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 4 Boss Purified": {
         "name": "Level 4 Boss Purified",
@@ -25097,10 +25097,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 5 Boss Defeated": {
         "name": "Level 5 Boss Defeated",
@@ -25108,10 +25108,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Level 5 Boss Purified": {
         "name": "Level 5 Boss Purified",
@@ -25119,10 +25119,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Grass Land - Stage Completion": {
         "name": "Grass Land - Stage Completion",
@@ -25131,10 +25131,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Ripple Field - Stage Completion": {
         "name": "Ripple Field - Stage Completion",
@@ -25143,10 +25143,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Sand Canyon - Stage Completion": {
         "name": "Sand Canyon - Stage Completion",
@@ -25155,10 +25155,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Cloudy Park - Stage Completion": {
         "name": "Cloudy Park - Stage Completion",
@@ -25167,10 +25167,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Iceberg - Stage Completion": {
         "name": "Iceberg - Stage Completion",
@@ -25179,10 +25179,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Love-Love Rod": {
         "name": "Love-Love Rod",
@@ -25191,10 +25191,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },
@@ -25711,53 +25711,6 @@
         "Jumper Shoot": "Parasol Ability",
         "Boboo": "Burning Ability",
         "Haboki": "Clean Ability"
-      },
-      "player_levels": {
-        "1": [
-          7798784,
-          7798785,
-          7798786,
-          7798787,
-          7798788,
-          7798789,
-          7799296
-        ],
-        "2": [
-          7798790,
-          7798791,
-          7798792,
-          7798793,
-          7798794,
-          7798795,
-          7799297
-        ],
-        "3": [
-          7798796,
-          7798797,
-          7798798,
-          7798799,
-          7798800,
-          7798801,
-          7799298
-        ],
-        "4": [
-          7798802,
-          7798803,
-          7798804,
-          7798805,
-          7798806,
-          7798807,
-          7799299
-        ],
-        "5": [
-          7798808,
-          7798809,
-          7798810,
-          7798811,
-          7798812,
-          7798813,
-          7799300
-        ]
       },
       "required_heart_stars": 15,
       "boss_requirements": [

@@ -4574,10 +4574,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "progression"
+        "max_count": 8
       },
       "Common Item": {
         "name": "Common Item",
@@ -4586,10 +4586,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 39,
-        "classification": "filler"
+        "max_count": 39
       },
       "Uncommon Item": {
         "name": "Uncommon Item",
@@ -4598,10 +4598,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 16,
-        "classification": "filler"
+        "max_count": 16
       },
       "Legendary Item": {
         "name": "Legendary Item",
@@ -4610,10 +4610,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "useful"
+        "max_count": 7
       },
       "Boss Item": {
         "name": "Boss Item",
@@ -4622,10 +4622,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Lunar Item": {
         "name": "Lunar Item",
@@ -4634,10 +4634,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "trap"
+        "max_count": 8
       },
       "Equipment": {
         "name": "Equipment",
@@ -4646,10 +4646,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 18,
-        "classification": "filler"
+        "max_count": 18
       },
       "Item Scrap, White": {
         "name": "Item Scrap, White",
@@ -4658,10 +4658,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "Item Scrap, Green": {
         "name": "Item Scrap, Green",
@@ -4670,10 +4670,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "Item Scrap, Red": {
         "name": "Item Scrap, Red",
@@ -4682,10 +4682,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Item Scrap, Yellow": {
         "name": "Item Scrap, Yellow",
@@ -4694,10 +4694,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Void Item": {
         "name": "Void Item",
@@ -4706,10 +4706,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Beads of Fealty": {
         "name": "Beads of Fealty",
@@ -4717,10 +4717,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Radar Scanner": {
         "name": "Radar Scanner",
@@ -4728,10 +4728,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Money": {
         "name": "Money",
@@ -4740,10 +4740,10 @@
           "Everything",
           "Fillers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 35,
-        "classification": "filler"
+        "max_count": 35
       },
       "Lunar Coin": {
         "name": "Lunar Coin",
@@ -4752,10 +4752,10 @@
           "Everything",
           "Fillers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "1000 Exp": {
         "name": "1000 Exp",
@@ -4764,10 +4764,10 @@
           "Everything",
           "Fillers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 22,
-        "classification": "filler"
+        "max_count": 22
       },
       "Mountain Trap": {
         "name": "Mountain Trap",
@@ -4776,10 +4776,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Time Warp Trap": {
         "name": "Time Warp Trap",
@@ -4788,10 +4788,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Combat Trap": {
         "name": "Combat Trap",
@@ -4800,10 +4800,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Teleport Trap": {
         "name": "Teleport Trap",
@@ -4812,10 +4812,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stage 1": {
         "name": "Stage 1",
@@ -4824,10 +4824,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stage 2": {
         "name": "Stage 2",
@@ -4836,10 +4836,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stage 3": {
         "name": "Stage 3",
@@ -4848,10 +4848,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stage 4": {
         "name": "Stage 4",
@@ -4860,10 +4860,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Stage": {
         "name": "Progressive Stage",
@@ -4872,10 +4872,10 @@
           "Everything",
           "Stages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Aphelian Sanctuary": {
         "name": "Aphelian Sanctuary",
@@ -4884,10 +4884,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Void Fields": {
         "name": "Void Fields",
@@ -4896,10 +4896,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hidden Realm: Bulwark's Ambry": {
         "name": "Hidden Realm: Bulwark's Ambry",
@@ -4908,10 +4908,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hidden Realm: Bazaar Between Time": {
         "name": "Hidden Realm: Bazaar Between Time",
@@ -4920,10 +4920,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Distant Roost": {
         "name": "Distant Roost",
@@ -4932,10 +4932,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Distant Roost (2)": {
         "name": "Distant Roost (2)",
@@ -4944,10 +4944,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Abyssal Depths": {
         "name": "Abyssal Depths",
@@ -4956,10 +4956,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wetland Aspect": {
         "name": "Wetland Aspect",
@@ -4968,10 +4968,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rallypoint Delta": {
         "name": "Rallypoint Delta",
@@ -4980,10 +4980,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hidden Realm: Gilded Coast": {
         "name": "Hidden Realm: Gilded Coast",
@@ -4992,10 +4992,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Titanic Plains": {
         "name": "Titanic Plains",
@@ -5004,10 +5004,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Titanic Plains (2)": {
         "name": "Titanic Plains (2)",
@@ -5016,10 +5016,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Abandoned Aqueduct": {
         "name": "Abandoned Aqueduct",
@@ -5028,10 +5028,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hidden Realm: A Moment, Whole": {
         "name": "Hidden Realm: A Moment, Whole",
@@ -5040,10 +5040,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Verdant Falls": {
         "name": "Verdant Falls",
@@ -5052,10 +5052,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Commencement": {
         "name": "Commencement",
@@ -5064,10 +5064,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hidden Realm: A Moment, Fractured": {
         "name": "Hidden Realm: A Moment, Fractured",
@@ -5076,10 +5076,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sundered Grove": {
         "name": "Sundered Grove",
@@ -5088,10 +5088,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Siren's Call": {
         "name": "Siren's Call",
@@ -5100,10 +5100,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sky Meadow": {
         "name": "Sky Meadow",
@@ -5112,10 +5112,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Siphoned Forest": {
         "name": "Siphoned Forest",
@@ -5124,10 +5124,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sulfur Pools": {
         "name": "Sulfur Pools",
@@ -5136,10 +5136,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Planetarium": {
         "name": "The Planetarium",
@@ -5148,10 +5148,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Void Locus": {
         "name": "Void Locus",
@@ -5160,10 +5160,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Scorched Acres": {
         "name": "Scorched Acres",
@@ -5172,10 +5172,10 @@
           "Environments",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stage 5": {
         "name": "Stage 5",
@@ -5183,10 +5183,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -5194,10 +5194,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

@@ -19478,10 +19478,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red": {
         "name": "Red",
@@ -19490,10 +19490,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blue": {
         "name": "Blue",
@@ -19502,10 +19502,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Yellow": {
         "name": "Yellow",
@@ -19514,10 +19514,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Green": {
         "name": "Green",
@@ -19526,10 +19526,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Orange": {
         "name": "Orange",
@@ -19538,10 +19538,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gray": {
         "name": "Gray",
@@ -19550,10 +19550,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Brown": {
         "name": "Brown",
@@ -19562,10 +19562,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Purple": {
         "name": "Purple",
@@ -19574,10 +19574,10 @@
           "Colors",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       ":)": {
         "name": ":)",
@@ -19586,10 +19586,10 @@
           "Everything",
           "Junk"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 26,
-        "classification": "filler"
+        "max_count": 26
       },
       "Slowness Trap": {
         "name": "Slowness Trap",
@@ -19598,10 +19598,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "trap"
+        "max_count": 10
       },
       "Iceland Trap": {
         "name": "Iceland Trap",
@@ -19610,10 +19610,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "trap"
+        "max_count": 10
       },
       "Atbash Trap": {
         "name": "Atbash Trap",
@@ -19622,10 +19622,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "trap"
+        "max_count": 9
       },
       "Puzzle Skip": {
         "name": "Puzzle Skip",
@@ -19633,10 +19633,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "useful"
+        "max_count": 23
       },
       "Starting Room - Back Right Door": {
         "name": "Starting Room - Back Right Door",
@@ -19645,10 +19645,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - Rhyme Room Entrance": {
         "name": "Starting Room - Rhyme Room Entrance",
@@ -19657,10 +19657,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room Doors": {
         "name": "Rhyme Room Doors",
@@ -19669,10 +19669,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hidden Room - Dead End Door": {
         "name": "Hidden Room - Dead End Door",
@@ -19681,10 +19681,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dead End Area Access": {
         "name": "Dead End Area Access",
@@ -19693,10 +19693,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hidden Room - Knight Night Entrance": {
         "name": "Hidden Room - Knight Night Entrance",
@@ -19705,10 +19705,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Seeker - Entrance": {
         "name": "The Seeker - Entrance",
@@ -19718,10 +19718,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hidden Room - Rhyme Room Entrance": {
         "name": "Hidden Room - Rhyme Room Entrance",
@@ -19730,10 +19730,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Second Room - Exit Door": {
         "name": "Second Room - Exit Door",
@@ -19742,10 +19742,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - Crossroads Entrance": {
         "name": "Hub Room - Crossroads Entrance",
@@ -19754,10 +19754,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - Tenacious Entrance": {
         "name": "Hub Room - Tenacious Entrance",
@@ -19767,10 +19767,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Entrances to The Tenacious": {
         "name": "Entrances to The Tenacious",
@@ -19779,10 +19779,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Room - Near Far Door": {
         "name": "Symmetry Room - Near Far Door",
@@ -19791,10 +19791,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Doors": {
         "name": "Symmetry Doors",
@@ -19803,10 +19803,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - Shortcut to Hedge Maze": {
         "name": "Hub Room - Shortcut to Hedge Maze",
@@ -19815,10 +19815,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hedge Maze Doors": {
         "name": "Hedge Maze Doors",
@@ -19827,10 +19827,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - Near RAT Door": {
         "name": "Hub Room - Near RAT Door",
@@ -19839,10 +19839,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Traveled - Entrance": {
         "name": "The Traveled - Entrance",
@@ -19852,10 +19852,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Entrance to The Traveled": {
         "name": "Entrance to The Traveled",
@@ -19864,10 +19864,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pilgrim Room - Sun Painting": {
         "name": "Pilgrim Room - Sun Painting",
@@ -19878,10 +19878,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pilgrim Room - Shortcut to The Seeker": {
         "name": "Pilgrim Room - Shortcut to The Seeker",
@@ -19890,10 +19890,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Tenacious Entrance": {
         "name": "Crossroads - Tenacious Entrance",
@@ -19903,10 +19903,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Discerning - Entrance": {
         "name": "The Discerning - Entrance",
@@ -19916,10 +19916,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Tower Entrance": {
         "name": "Crossroads - Tower Entrance",
@@ -19928,10 +19928,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Tower Entrances": {
         "name": "Crossroads - Tower Entrances",
@@ -19940,10 +19940,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Tower Back Entrance": {
         "name": "Crossroads - Tower Back Entrance",
@@ -19952,10 +19952,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Words Sword Door": {
         "name": "Crossroads - Words Sword Door",
@@ -19964,10 +19964,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads Doors": {
         "name": "Crossroads Doors",
@@ -19976,10 +19976,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Eye Wall": {
         "name": "Crossroads - Eye Wall",
@@ -19988,10 +19988,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Hollow Hallway": {
         "name": "Crossroads - Hollow Hallway",
@@ -20000,10 +20000,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - Roof Access": {
         "name": "Crossroads - Roof Access",
@@ -20012,10 +20012,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lost Area - Exit": {
         "name": "Lost Area - Exit",
@@ -20024,10 +20024,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Amen Name Area - Exit": {
         "name": "Amen Name Area - Exit",
@@ -20036,10 +20036,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Tenacious - Shortcut to Hub Room": {
         "name": "The Tenacious - Shortcut to Hub Room",
@@ -20048,10 +20048,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Room - Warts Straw Door": {
         "name": "Symmetry Room - Warts Straw Door",
@@ -20060,10 +20060,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Room - Leaf Feel Door": {
         "name": "Symmetry Room - Leaf Feel Door",
@@ -20072,10 +20072,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Agreeable - Tenacious Entrance": {
         "name": "Outside The Agreeable - Tenacious Entrance",
@@ -20085,10 +20085,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Agreeable - Black Door": {
         "name": "Outside The Agreeable - Black Door",
@@ -20097,10 +20097,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Agreeable - Entrance": {
         "name": "The Agreeable - Entrance",
@@ -20110,10 +20110,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - Street Painting": {
         "name": "Starting Room - Street Painting",
@@ -20123,10 +20123,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Agreeable - Purple Barrier": {
         "name": "Outside The Agreeable - Purple Barrier",
@@ -20135,10 +20135,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt Barriers": {
         "name": "Color Hunt Barriers",
@@ -20147,10 +20147,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room (1) - Exit": {
         "name": "Hallway Room (1) - Exit",
@@ -20159,10 +20159,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room Doors": {
         "name": "Hallway Room Doors",
@@ -20171,10 +20171,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Hallway Room": {
         "name": "Progressive Hallway Room",
@@ -20182,10 +20182,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dread Hallway - Tenacious Entrance": {
         "name": "Dread Hallway - Tenacious Entrance",
@@ -20195,10 +20195,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Agreeable - Shortcut to Hedge Maze": {
         "name": "The Agreeable - Shortcut to Hedge Maze",
@@ -20208,10 +20208,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Perceptive - Entrance": {
         "name": "The Perceptive - Entrance",
@@ -20221,10 +20221,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - Hedge Maze Painting": {
         "name": "Starting Room - Hedge Maze Painting",
@@ -20234,10 +20234,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Observant - Entrance": {
         "name": "The Observant - Entrance",
@@ -20247,10 +20247,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Observant Doors": {
         "name": "Observant Doors",
@@ -20259,10 +20259,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Fearless (First Floor) - Second Floor": {
         "name": "The Fearless (First Floor) - Second Floor",
@@ -20271,10 +20271,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fearless Doors": {
         "name": "Fearless Doors",
@@ -20283,10 +20283,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Fearless": {
         "name": "Progressive Fearless",
@@ -20294,10 +20294,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Fearless (Second Floor) - Third Floor": {
         "name": "The Fearless (Second Floor) - Third Floor",
@@ -20306,10 +20306,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Observant - Backside Door": {
         "name": "The Observant - Backside Door",
@@ -20318,10 +20318,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Backside Doors": {
         "name": "Backside Doors",
@@ -20330,10 +20330,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Observant - Stairs": {
         "name": "The Observant - Stairs",
@@ -20342,10 +20342,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Incomparable - Eight Door": {
         "name": "The Incomparable - Eight Door",
@@ -20354,10 +20354,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower - Second Floor": {
         "name": "Orange Tower - Second Floor",
@@ -20366,10 +20366,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower - Third Floor": {
         "name": "Orange Tower - Third Floor",
@@ -20378,10 +20378,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower - Fourth Floor": {
         "name": "Orange Tower - Fourth Floor",
@@ -20390,10 +20390,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower - Fifth Floor": {
         "name": "Orange Tower - Fifth Floor",
@@ -20402,10 +20402,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower - Sixth Floor": {
         "name": "Orange Tower - Sixth Floor",
@@ -20414,10 +20414,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower - Seventh Floor": {
         "name": "Orange Tower - Seventh Floor",
@@ -20426,10 +20426,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Orange Tower": {
         "name": "Progressive Orange Tower",
@@ -20437,10 +20437,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower First Floor - Shortcut to Hub Room": {
         "name": "Orange Tower First Floor - Shortcut to Hub Room",
@@ -20449,10 +20449,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower First Floor - Shortcuts": {
         "name": "Orange Tower First Floor - Shortcuts",
@@ -20461,10 +20461,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower First Floor - Salt Pepper Door": {
         "name": "Orange Tower First Floor - Salt Pepper Door",
@@ -20473,10 +20473,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Third Floor - Red Barrier": {
         "name": "Orange Tower Third Floor - Red Barrier",
@@ -20485,10 +20485,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Third Floor - Rhyme Room Entrance": {
         "name": "Orange Tower Third Floor - Rhyme Room Entrance",
@@ -20497,10 +20497,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - Orange Barrier": {
         "name": "Color Hunt - Orange Barrier",
@@ -20509,10 +20509,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Fourth Floor - Hot Crusts Door": {
         "name": "Orange Tower Fourth Floor - Hot Crusts Door",
@@ -20521,10 +20521,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Fifth Floor - Welcome Back": {
         "name": "Orange Tower Fifth Floor - Welcome Back",
@@ -20533,10 +20533,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Welcome Back Doors": {
         "name": "Welcome Back Doors",
@@ -20545,10 +20545,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mastery": {
         "name": "Mastery",
@@ -20557,10 +20557,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - Flower Painting": {
         "name": "Starting Room - Flower Painting",
@@ -20570,10 +20570,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard - Green Barrier": {
         "name": "Courtyard - Green Barrier",
@@ -20582,10 +20582,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard - Backside Door": {
         "name": "Courtyard - Backside Door",
@@ -20594,10 +20594,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - White Door": {
         "name": "The Colorful - White Door",
@@ -20606,10 +20606,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colorful Doors": {
         "name": "Colorful Doors",
@@ -20618,10 +20618,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Black Door": {
         "name": "The Colorful - Black Door",
@@ -20630,10 +20630,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Red Door": {
         "name": "The Colorful - Red Door",
@@ -20642,10 +20642,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Yellow Door": {
         "name": "The Colorful - Yellow Door",
@@ -20654,10 +20654,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Blue Door": {
         "name": "The Colorful - Blue Door",
@@ -20666,10 +20666,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Purple Door": {
         "name": "The Colorful - Purple Door",
@@ -20678,10 +20678,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Orange Door": {
         "name": "The Colorful - Orange Door",
@@ -20690,10 +20690,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Green Door": {
         "name": "The Colorful - Green Door",
@@ -20702,10 +20702,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Brown Door": {
         "name": "The Colorful - Brown Door",
@@ -20714,10 +20714,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - Gray Door": {
         "name": "The Colorful - Gray Door",
@@ -20726,10 +20726,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Welcome Back Area - Shortcut to Starting Room": {
         "name": "Welcome Back Area - Shortcut to Starting Room",
@@ -20738,10 +20738,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Owl Hallway - Shortcut to Hedge Maze": {
         "name": "Owl Hallway - Shortcut to Hedge Maze",
@@ -20750,10 +20750,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Initiated - Shortcut to Hub Room": {
         "name": "Outside The Initiated - Shortcut to Hub Room",
@@ -20762,10 +20762,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Initiated - Blue Barrier": {
         "name": "Outside The Initiated - Blue Barrier",
@@ -20774,10 +20774,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Initiated - Orange Barrier": {
         "name": "Outside The Initiated - Orange Barrier",
@@ -20786,10 +20786,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Initiated - Entrance": {
         "name": "The Initiated - Entrance",
@@ -20799,10 +20799,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - Green Barrier": {
         "name": "Color Hunt - Green Barrier",
@@ -20811,10 +20811,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - Purple Barrier": {
         "name": "Color Hunt - Purple Barrier",
@@ -20823,10 +20823,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Champion's Rest - Entrance": {
         "name": "Champion's Rest - Entrance",
@@ -20835,10 +20835,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Traveled - Color Hallways Entrance": {
         "name": "The Traveled - Color Hallways Entrance",
@@ -20848,10 +20848,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Bold - Entrance": {
         "name": "The Bold - Entrance",
@@ -20861,10 +20861,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - Pencil Painting": {
         "name": "Starting Room - Pencil Painting",
@@ -20874,10 +20874,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Steady - Entrance": {
         "name": "The Steady - Entrance",
@@ -20887,10 +20887,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Undeterred - Entrance": {
         "name": "The Undeterred - Entrance",
@@ -20900,10 +20900,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - Blue Painting": {
         "name": "Starting Room - Blue Painting",
@@ -20913,10 +20913,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - Green Painting": {
         "name": "Outside The Undeterred - Green Painting",
@@ -20926,10 +20926,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - Twos": {
         "name": "Outside The Undeterred - Twos",
@@ -20939,10 +20939,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - Threes": {
         "name": "Outside The Undeterred - Threes",
@@ -20952,10 +20952,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - Number Hunt": {
         "name": "Outside The Undeterred - Number Hunt",
@@ -20964,10 +20964,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - Fours": {
         "name": "Outside The Undeterred - Fours",
@@ -20977,10 +20977,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Hunt - Fives": {
         "name": "Number Hunt - Fives",
@@ -20990,10 +20990,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Hunt - Challenge Entrance": {
         "name": "Number Hunt - Challenge Entrance",
@@ -21003,10 +21003,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Hunt - Door to Directional Gallery": {
         "name": "Number Hunt - Door to Directional Gallery",
@@ -21015,10 +21015,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Directional Gallery Doors": {
         "name": "Directional Gallery Doors",
@@ -21027,10 +21027,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Hunt - Sixes": {
         "name": "Number Hunt - Sixes",
@@ -21040,10 +21040,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Hunt - Sevens": {
         "name": "Number Hunt - Sevens",
@@ -21053,10 +21053,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Hunt - Eights": {
         "name": "Number Hunt - Eights",
@@ -21066,10 +21066,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Hunt - Nines": {
         "name": "Number Hunt - Nines",
@@ -21079,10 +21079,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - Zero Door": {
         "name": "Outside The Undeterred - Zero Door",
@@ -21092,10 +21092,10 @@
           "Everything",
           "Numbers"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Directional Gallery - Shortcut to The Undeterred": {
         "name": "Directional Gallery - Shortcut to The Undeterred",
@@ -21104,10 +21104,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Directional Gallery - Yellow Barrier": {
         "name": "Directional Gallery - Yellow Barrier",
@@ -21116,10 +21116,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - Shortcut to The Steady": {
         "name": "Color Hunt - Shortcut to The Steady",
@@ -21128,10 +21128,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Bearer - Entrance": {
         "name": "The Bearer - Entrance",
@@ -21141,10 +21141,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Bearer - Backside Door": {
         "name": "The Bearer - Backside Door",
@@ -21153,10 +21153,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Bearer - Shortcut to Tower": {
         "name": "The Bearer - Shortcut to Tower",
@@ -21165,10 +21165,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Knight Night Room - Exit": {
         "name": "Knight Night Room - Exit",
@@ -21177,10 +21177,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Artistic (Smiley) - Door to Panda": {
         "name": "The Artistic (Smiley) - Door to Panda",
@@ -21189,10 +21189,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Artistic Doors": {
         "name": "Artistic Doors",
@@ -21201,10 +21201,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Artistic (Panda) - Door to Lattice": {
         "name": "The Artistic (Panda) - Door to Lattice",
@@ -21213,10 +21213,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Artistic (Lattice) - Door to Apple": {
         "name": "The Artistic (Lattice) - Door to Apple",
@@ -21225,10 +21225,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Artistic (Apple) - Door to Smiley": {
         "name": "The Artistic (Apple) - Door to Smiley",
@@ -21237,10 +21237,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Eyes They See - Exit": {
         "name": "The Eyes They See - Exit",
@@ -21249,10 +21249,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Wondrous - Entrance": {
         "name": "The Wondrous - Entrance",
@@ -21262,10 +21262,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - Symmetry Painting": {
         "name": "Starting Room - Symmetry Painting",
@@ -21275,10 +21275,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Wondrous - Exit": {
         "name": "The Wondrous - Exit",
@@ -21288,10 +21288,10 @@
           "Everything",
           "Paintings"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room (2) - Exit": {
         "name": "Hallway Room (2) - Exit",
@@ -21300,10 +21300,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room (3) - Exit": {
         "name": "Hallway Room (3) - Exit",
@@ -21312,10 +21312,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room (4) - Exit": {
         "name": "Hallway Room (4) - Exit",
@@ -21324,10 +21324,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Wanderer - Entrance": {
         "name": "The Wanderer - Entrance",
@@ -21337,10 +21337,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Wanderer - Tower Entrance": {
         "name": "Outside The Wanderer - Tower Entrance",
@@ -21349,10 +21349,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Art Gallery - Second Floor": {
         "name": "Art Gallery - Second Floor",
@@ -21361,10 +21361,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Art Gallery - Third Floor": {
         "name": "Art Gallery - Third Floor",
@@ -21373,10 +21373,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Art Gallery - Fourth Floor": {
         "name": "Art Gallery - Fourth Floor",
@@ -21385,10 +21385,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Art Gallery - Fifth Floor": {
         "name": "Art Gallery - Fifth Floor",
@@ -21397,10 +21397,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Fifth Floor - Quadruple Intersection": {
         "name": "Orange Tower Fifth Floor - Quadruple Intersection",
@@ -21410,10 +21410,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Art Gallery": {
         "name": "Progressive Art Gallery",
@@ -21421,10 +21421,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room (Smiley) - Door to Target": {
         "name": "Rhyme Room (Smiley) - Door to Target",
@@ -21433,10 +21433,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room (Cross) - Exit": {
         "name": "Rhyme Room (Cross) - Exit",
@@ -21445,10 +21445,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room (Circle) - Door to Smiley": {
         "name": "Rhyme Room (Circle) - Door to Smiley",
@@ -21457,10 +21457,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room (Looped Square) - Door to Circle": {
         "name": "Rhyme Room (Looped Square) - Door to Circle",
@@ -21469,10 +21469,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room (Looped Square) - Door to Cross": {
         "name": "Rhyme Room (Looped Square) - Door to Cross",
@@ -21481,10 +21481,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room (Looped Square) - Door to Target": {
         "name": "Rhyme Room (Looped Square) - Door to Target",
@@ -21493,10 +21493,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rhyme Room (Target) - Door to Cross": {
         "name": "Rhyme Room (Target) - Door to Cross",
@@ -21505,10 +21505,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Room Room - Cellar Exit": {
         "name": "Room Room - Cellar Exit",
@@ -21517,10 +21517,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Wise - Entrance": {
         "name": "The Wise - Entrance",
@@ -21530,10 +21530,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Scientific - Entrance": {
         "name": "The Scientific - Entrance",
@@ -21543,10 +21543,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Challenge Room - Welcome Door": {
         "name": "Challenge Room - Welcome Door",
@@ -21556,10 +21556,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Feeling of Being Lost": {
         "name": "The Feeling of Being Lost",
@@ -21568,10 +21568,10 @@
           "Everything",
           "Junk"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 22,
-        "classification": "filler"
+        "max_count": 22
       },
       "Wanderlust": {
         "name": "Wanderlust",
@@ -21580,10 +21580,10 @@
           "Everything",
           "Junk"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 29,
-        "classification": "filler"
+        "max_count": 29
       },
       "Empty White Hallways": {
         "name": "Empty White Hallways",
@@ -21592,10 +21592,10 @@
           "Everything",
           "Junk"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 16,
-        "classification": "filler"
+        "max_count": 16
       },
       "Outside The Initiated - Eight Door": {
         "name": "Outside The Initiated - Eight Door",
@@ -21605,10 +21605,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass Room - Lookout Entrance": {
         "name": "Compass Room - Lookout Entrance",
@@ -21617,10 +21617,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Colorful": {
         "name": "Progressive Colorful",
@@ -21628,10 +21628,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "1 Sunwarp": {
         "name": "1 Sunwarp",
@@ -21640,10 +21640,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sunwarps": {
         "name": "Sunwarps",
@@ -21652,10 +21652,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Pilgrimage": {
         "name": "Progressive Pilgrimage",
@@ -21663,10 +21663,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "6 Sunwarp": {
         "name": "6 Sunwarp",
@@ -21675,10 +21675,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "4 Sunwarp": {
         "name": "4 Sunwarp",
@@ -21687,10 +21687,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3 Sunwarp": {
         "name": "3 Sunwarp",
@@ -21699,10 +21699,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "5 Sunwarp": {
         "name": "5 Sunwarp",
@@ -21711,10 +21711,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Sunwarp": {
         "name": "2 Sunwarp",
@@ -21723,10 +21723,10 @@
           "Doors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Room - HIDDEN (Panel)": {
         "name": "Starting Room - HIDDEN (Panel)",
@@ -21735,10 +21735,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hidden Room - OPEN (Panel)": {
         "name": "Hidden Room - OPEN (Panel)",
@@ -21747,10 +21747,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - ORDER (Panel)": {
         "name": "Hub Room - ORDER (Panel)",
@@ -21759,10 +21759,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - SLAUGHTER (Panel)": {
         "name": "Hub Room - SLAUGHTER (Panel)",
@@ -21771,10 +21771,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tenacious Entrance Panels": {
         "name": "Tenacious Entrance Panels",
@@ -21783,10 +21783,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - TRACE (Panel)": {
         "name": "Hub Room - TRACE (Panel)",
@@ -21795,10 +21795,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - RAT (Panel)": {
         "name": "Hub Room - RAT (Panel)",
@@ -21807,10 +21807,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hub Room - OPEN (Panel)": {
         "name": "Hub Room - OPEN (Panel)",
@@ -21819,10 +21819,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - DECAY (Panel)": {
         "name": "Crossroads - DECAY (Panel)",
@@ -21831,10 +21831,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - NOPE (Panel)": {
         "name": "Crossroads - NOPE (Panel)",
@@ -21843,10 +21843,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - WE ROT (Panel)": {
         "name": "Crossroads - WE ROT (Panel)",
@@ -21855,10 +21855,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - WORDS, SWORD (Panels)": {
         "name": "Crossroads - WORDS, SWORD (Panels)",
@@ -21867,10 +21867,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crossroads - BEND HI (Panel)": {
         "name": "Crossroads - BEND HI (Panel)",
@@ -21879,10 +21879,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Suits Area": {
         "name": "Progressive Suits Area",
@@ -21890,10 +21890,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lost Area - LOST (1), LOST (2) (Panels)": {
         "name": "Lost Area - LOST (1), LOST (2) (Panels)",
@@ -21902,10 +21902,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Amen Name Area - AMEN, NAME (Panels)": {
         "name": "Amen Name Area - AMEN, NAME (Panels)",
@@ -21914,10 +21914,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Tenacious - Black Palindromes (Panels)": {
         "name": "The Tenacious - Black Palindromes (Panels)",
@@ -21926,10 +21926,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Room - NEAR, FAR (Panels)": {
         "name": "Symmetry Room - NEAR, FAR (Panels)",
@@ -21938,10 +21938,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Room Panels": {
         "name": "Symmetry Room Panels",
@@ -21950,10 +21950,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Symmetry Room": {
         "name": "Progressive Symmetry Room",
@@ -21961,10 +21961,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Room - WARTS, STRAW (Panels)": {
         "name": "Symmetry Room - WARTS, STRAW (Panels)",
@@ -21973,10 +21973,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Symmetry Room - LEAF, FEEL (Panels)": {
         "name": "Symmetry Room - LEAF, FEEL (Panels)",
@@ -21985,10 +21985,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Agreeable - MASSACRED (Panel)": {
         "name": "Outside The Agreeable - MASSACRED (Panel)",
@@ -21997,10 +21997,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Agreeable - BLACK (Panel)": {
         "name": "Outside The Agreeable - BLACK (Panel)",
@@ -22009,10 +22009,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Agreeable - CLOSE (Panel)": {
         "name": "Outside The Agreeable - CLOSE (Panel)",
@@ -22021,10 +22021,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Agreeable - RIGHT (Panel)": {
         "name": "Outside The Agreeable - RIGHT (Panel)",
@@ -22033,10 +22033,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass Room Panels": {
         "name": "Compass Room Panels",
@@ -22045,10 +22045,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hedge Maze - DOWN (Panel)": {
         "name": "Hedge Maze - DOWN (Panel)",
@@ -22057,10 +22057,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Perceptive - GAZE (Panel)": {
         "name": "The Perceptive - GAZE (Panel)",
@@ -22069,10 +22069,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Observant - Backside Entrance Panels": {
         "name": "The Observant - Backside Entrance Panels",
@@ -22081,10 +22081,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Backside Entrance Panels": {
         "name": "Backside Entrance Panels",
@@ -22093,10 +22093,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Observant - SIX (Panel)": {
         "name": "The Observant - SIX (Panel)",
@@ -22105,10 +22105,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Giant Seven Panels": {
         "name": "Giant Seven Panels",
@@ -22117,10 +22117,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Panels": {
         "name": "Orange Tower Panels",
@@ -22129,10 +22129,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower First Floor - SECRET (Panel)": {
         "name": "Orange Tower First Floor - SECRET (Panel)",
@@ -22141,10 +22141,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Fourth Floor - HOT CRUSTS (Panel)": {
         "name": "Orange Tower Fourth Floor - HOT CRUSTS (Panel)",
@@ -22153,10 +22153,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Tower Fifth Floor - SIZE Panels": {
         "name": "Orange Tower Fifth Floor - SIZE Panels",
@@ -22165,10 +22165,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard - Ordinal Panels": {
         "name": "Courtyard - Ordinal Panels",
@@ -22177,10 +22177,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - BEGIN (Panel)": {
         "name": "The Colorful - BEGIN (Panel)",
@@ -22189,10 +22189,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colorful Panels": {
         "name": "Colorful Panels",
@@ -22201,10 +22201,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - FOUND (Panel)": {
         "name": "The Colorful - FOUND (Panel)",
@@ -22213,10 +22213,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - LOAF (Panel)": {
         "name": "The Colorful - LOAF (Panel)",
@@ -22225,10 +22225,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - CREAM (Panel)": {
         "name": "The Colorful - CREAM (Panel)",
@@ -22237,10 +22237,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - SUN (Panel)": {
         "name": "The Colorful - SUN (Panel)",
@@ -22249,10 +22249,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - SPOON (Panel)": {
         "name": "The Colorful - SPOON (Panel)",
@@ -22261,10 +22261,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - LETTERS (Panel)": {
         "name": "The Colorful - LETTERS (Panel)",
@@ -22273,10 +22273,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - WALLS (Panel)": {
         "name": "The Colorful - WALLS (Panel)",
@@ -22285,10 +22285,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - IRON (Panel)": {
         "name": "The Colorful - IRON (Panel)",
@@ -22297,10 +22297,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Colorful - OBSTACLE (Panel)": {
         "name": "The Colorful - OBSTACLE (Panel)",
@@ -22309,10 +22309,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Owl Hallway - STRAYS (Panel)": {
         "name": "Owl Hallway - STRAYS (Panel)",
@@ -22321,10 +22321,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Initiated - UNCOVER (Panel)": {
         "name": "Outside The Initiated - UNCOVER (Panel)",
@@ -22333,10 +22333,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Initiated - OXEN (Panel)": {
         "name": "Outside The Initiated - OXEN (Panel)",
@@ -22345,10 +22345,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Bold - UNOPEN (Panel)": {
         "name": "Outside The Bold - UNOPEN (Panel)",
@@ -22357,10 +22357,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Bold - BEGIN (Panel)": {
         "name": "Outside The Bold - BEGIN (Panel)",
@@ -22369,10 +22369,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - ZERO (Panel)": {
         "name": "Outside The Undeterred - ZERO (Panel)",
@@ -22381,10 +22381,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Undeterred - PEN (Panel)": {
         "name": "Outside The Undeterred - PEN (Panel)",
@@ -22393,10 +22393,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Two Panels": {
         "name": "Two Panels",
@@ -22405,10 +22405,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Three Panels": {
         "name": "Three Panels",
@@ -22417,10 +22417,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Four Panels": {
         "name": "Four Panels",
@@ -22429,10 +22429,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Five Panels": {
         "name": "Five Panels",
@@ -22441,10 +22441,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Six Panels": {
         "name": "Six Panels",
@@ -22453,10 +22453,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Seven Panels": {
         "name": "Seven Panels",
@@ -22465,10 +22465,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Eight Panels": {
         "name": "Eight Panels",
@@ -22477,10 +22477,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nine Panels": {
         "name": "Nine Panels",
@@ -22489,10 +22489,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Number Hunt": {
         "name": "Progressive Number Hunt",
@@ -22500,10 +22500,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - EXIT (Panel)": {
         "name": "Color Hunt - EXIT (Panel)",
@@ -22512,10 +22512,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - RED (Panel)": {
         "name": "Color Hunt - RED (Panel)",
@@ -22524,10 +22524,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt Panels": {
         "name": "Color Hunt Panels",
@@ -22536,10 +22536,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - BLUE (Panel)": {
         "name": "Color Hunt - BLUE (Panel)",
@@ -22548,10 +22548,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - YELLOW (Panel)": {
         "name": "Color Hunt - YELLOW (Panel)",
@@ -22560,10 +22560,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - ORANGE (Panel)": {
         "name": "Color Hunt - ORANGE (Panel)",
@@ -22572,10 +22572,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - PURPLE (Panel)": {
         "name": "Color Hunt - PURPLE (Panel)",
@@ -22584,10 +22584,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Color Hunt - GREEN (Panel)": {
         "name": "Color Hunt - GREEN (Panel)",
@@ -22596,10 +22596,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Bearer - FARTHER (Panel)": {
         "name": "The Bearer - FARTHER (Panel)",
@@ -22608,10 +22608,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Bearer - MIDDLE (Panel)": {
         "name": "The Bearer - MIDDLE (Panel)",
@@ -22620,10 +22620,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Knight Night Room - TRUSTED (Panel)": {
         "name": "Knight Night Room - TRUSTED (Panel)",
@@ -22632,10 +22632,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Wondrous - SHRINK (Panel)": {
         "name": "Outside The Wondrous - SHRINK (Panel)",
@@ -22644,10 +22644,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room - First Room Panels": {
         "name": "Hallway Room - First Room Panels",
@@ -22656,10 +22656,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room Panels": {
         "name": "Hallway Room Panels",
@@ -22668,10 +22668,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room - Second Room Panels": {
         "name": "Hallway Room - Second Room Panels",
@@ -22680,10 +22680,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room - Third Room Panels": {
         "name": "Hallway Room - Third Room Panels",
@@ -22692,10 +22692,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hallway Room - WHEEL": {
         "name": "Hallway Room - WHEEL",
@@ -22704,10 +22704,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Wanderer - WANDERLUST (Panel)": {
         "name": "Outside The Wanderer - WANDERLUST (Panel)",
@@ -22716,10 +22716,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Art Gallery - ORDER (Panel)": {
         "name": "Art Gallery - ORDER (Panel)",
@@ -22728,10 +22728,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Room Room - STAIRS (Panel)": {
         "name": "Room Room - STAIRS (Panel)",
@@ -22740,10 +22740,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Room Room Panels": {
         "name": "Room Room Panels",
@@ -22752,10 +22752,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Room Room - BROOMED, LAYS, BASE (Panels)": {
         "name": "Room Room - BROOMED, LAYS, BASE (Panels)",
@@ -22764,10 +22764,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Wise - KITTEN, CAT (Panels)": {
         "name": "Outside The Wise - KITTEN, CAT (Panels)",
@@ -22776,10 +22776,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Outside The Scientific - OPEN (Panel)": {
         "name": "Outside The Scientific - OPEN (Panel)",
@@ -22788,10 +22788,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Directional Gallery - TURN, LEARN (Panels)": {
         "name": "Directional Gallery - TURN, LEARN (Panels)",
@@ -22800,10 +22800,10 @@
           "Everything",
           "Panels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Speed Boost": {
         "name": "Speed Boost",
@@ -22812,10 +22812,10 @@
           "Everything",
           "Junk"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -22823,10 +22823,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

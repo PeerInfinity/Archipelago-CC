@@ -1786,10 +1786,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflect Shield upgrade": {
         "name": "Reflect Shield upgrade",
@@ -1798,10 +1798,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 25,
-        "classification": "filler"
+        "max_count": 25
       },
       "Circuit Charge upgrade": {
         "name": "Circuit Charge upgrade",
@@ -1810,10 +1810,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "filler"
+        "max_count": 23
       },
       "Circuit Refill upgrade": {
         "name": "Circuit Refill upgrade",
@@ -1822,10 +1822,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 22,
-        "classification": "filler"
+        "max_count": 22
       },
       "Map": {
         "name": "Map",
@@ -1834,10 +1834,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Shield Boost": {
         "name": "Shield Boost",
@@ -1847,10 +1847,10 @@
           "Everything",
           "Important Artifacts"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Crystal Efficiency": {
         "name": "Crystal Efficiency",
@@ -1859,10 +1859,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Circuit Booster": {
         "name": "Circuit Booster",
@@ -1872,10 +1872,10 @@
           "Everything",
           "Important Artifacts"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metabolism": {
         "name": "Metabolism",
@@ -1885,10 +1885,10 @@
           "Everything",
           "Important Artifacts"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dodge Enhancer": {
         "name": "Dodge Enhancer",
@@ -1898,10 +1898,10 @@
           "Everything",
           "Important Artifacts"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ethereal Monocle": {
         "name": "Ethereal Monocle",
@@ -1910,10 +1910,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Crystal Gatherer": {
         "name": "Crystal Gatherer",
@@ -1922,10 +1922,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Portable Compass": {
         "name": "Portable Compass",
@@ -1934,10 +1934,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "PSI Key 1": {
         "name": "PSI Key 1",
@@ -1946,10 +1946,10 @@
           "Everything",
           "PSI Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "PSI Key 2": {
         "name": "PSI Key 2",
@@ -1958,10 +1958,10 @@
           "Everything",
           "PSI Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "PSI Key 3": {
         "name": "PSI Key 3",
@@ -1970,10 +1970,10 @@
           "Everything",
           "PSI Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cursed Seal": {
         "name": "Cursed Seal",
@@ -1981,10 +1981,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Agate Knife": {
         "name": "Agate Knife",
@@ -1992,10 +1992,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Evolution Trap": {
         "name": "Evolution Trap",
@@ -2003,10 +2003,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "trap"
+        "max_count": 3
       },
       "Crystals x500": {
         "name": "Crystals x500",
@@ -2015,10 +2015,10 @@
           "Crystals",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "filler"
+        "max_count": 7
       },
       "Crystals x1000": {
         "name": "Crystals x1000",
@@ -2027,10 +2027,10 @@
           "Crystals",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Crystals x2000": {
         "name": "Crystals x2000",
@@ -2039,10 +2039,10 @@
           "Crystals",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Extra Life": {
         "name": "Extra Life",
@@ -2050,10 +2050,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Meridian Defeated": {
         "name": "Meridian Defeated",
@@ -2061,10 +2061,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ataraxia Defeated": {
         "name": "Ataraxia Defeated",
@@ -2072,10 +2072,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Merodach Defeated": {
         "name": "Merodach Defeated",
@@ -2083,10 +2083,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -2094,10 +2094,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Full Victory": {
         "name": "Full Victory",
@@ -2105,10 +2105,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

@@ -142,6 +142,108 @@ def normalize_rule_format(obj: Any) -> Any:
         return obj
 
 
+def normalize_and_has_patterns(obj: Any) -> Any:
+    """
+    Normalize And patterns containing only Has/HasAll into a single HasAll.
+
+    Examples:
+        And(Has(A), Has(B)) -> HasAll(A, B)
+        And(HasAll(A, B), Has(C)) -> HasAll(A, B, C)
+        And(HasAll(A, B), HasAll(C, D)) -> HasAll(A, B, C, D)
+
+    This produces cleaner, more readable rules.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_has_patterns(v) for k, v in obj.items()}
+
+        # Check if this is an And rule that can be combined into HasAll
+        if normalized.get('rule') == 'And':
+            children = normalized.get('children', [])
+            if children:
+                # Check if all children are Has or HasAll
+                all_items = []
+                can_combine = True
+
+                for child in children:
+                    if isinstance(child, dict):
+                        child_rule = child.get('rule')
+                        if child_rule == 'Has':
+                            item_name = child.get('args', {}).get('item_name')
+                            count = child.get('args', {}).get('count', 1)
+                            # Only combine if count is 1 (default)
+                            if item_name and count == 1:
+                                all_items.append(item_name)
+                            else:
+                                can_combine = False
+                                break
+                        elif child_rule == 'HasAll':
+                            items = child.get('args', {}).get('items', [])
+                            all_items.extend(items)
+                        else:
+                            can_combine = False
+                            break
+                    else:
+                        can_combine = False
+                        break
+
+                if can_combine and len(all_items) >= 2:
+                    return {
+                        'rule': 'HasAll',
+                        'args': {'items': all_items}
+                    }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_has_patterns(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_and_or_structure(obj: Any) -> Any:
+    """
+    Normalize And/Or rule structures:
+    1. Flatten nested And/Or (e.g., And(And(a, b), c) -> And(a, b, c))
+    2. Sort children by a canonical ordering for consistent comparison
+
+    This ensures that semantically equivalent rules compare as equal regardless
+    of how they were constructed.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_or_structure(v) for k, v in obj.items()}
+
+        rule_type = normalized.get('rule')
+        if rule_type in ('And', 'Or'):
+            children = normalized.get('children', [])
+            if children:
+                # Flatten nested And/Or of the same type
+                flattened = []
+                for child in children:
+                    if isinstance(child, dict) and child.get('rule') == rule_type:
+                        # Same type - flatten its children into ours
+                        flattened.extend(child.get('children', []))
+                    else:
+                        flattened.append(child)
+
+                # Sort children by a canonical key for consistent ordering
+                def sort_key(child):
+                    if isinstance(child, dict):
+                        # Sort by rule type first, then by string representation
+                        rule = child.get('rule', '')
+                        return (rule, json.dumps(child, sort_keys=True))
+                    return ('', str(child))
+
+                sorted_children = sorted(flattened, key=sort_key)
+                normalized['children'] = sorted_children
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_or_structure(item) for item in obj]
+    else:
+        return obj
+
+
 def find_differences(obj1: Any, obj2: Any, path: str = "") -> List[Tuple[str, Any, Any]]:
     """
     Recursively find differences between two objects.
@@ -186,223 +288,85 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
 
 
 def is_canonical_difference(path: str, original_value: Any = None, worldgen_value: Any = None) -> bool:
-    """Check if a difference path is caused by --canonical-seed1 or WorldGen.
-
-    These differences are expected when comparing an original export
-    with a WorldGen export that uses --canonical-seed1:
-
-    Canonical placement differences:
-    - canonical_placements section (only in WorldGen)
-    - locked flags on locations (set by canonical placements)
-    - item placements at locations (item.name, item.advancement, item.player)
-    - item_groups (item group assignments)
-    - randomize_items option (WorldGen-specific, controls canonical placement)
-    - world_classes (class names differ between original and WorldGen)
-
-    WorldGen structural differences (expected due to how WorldGen works):
-    - dungeons: WorldGen doesn't export dungeon metadata
-    - progression_mapping: May have differences in progressive item mappings
-    - helpers: WorldGen evaluates settings at generation time, so helpers
-      contain evaluated values (e.g., swordless=False) instead of dynamic
-      setting_value checks
-    - items.*.hint_text: WorldGen doesn't set hint_text on Item instances
-    - regions.*.is_dark_world: WorldGen doesn't preserve this metadata
-    - regions.*.is_light_world: WorldGen doesn't preserve this metadata
-    - regions.*.type: WorldGen doesn't preserve region type
-    - regions.*.dynamically_added: WorldGen adds this marker to regions
-    - regions.*.dungeon_index: WorldGen doesn't preserve dungeon index (LADX)
-    - world.*.option_definitions: Option definitions may differ
-    - world.*.options: Option values may differ based on defaults
-    - start_inventory_from_pool: May be omitted in WorldGen
-    - shops: WorldGen adds empty array when missing
-    - accumulator_rules: WorldGen-specific for state counter patterns
-    - prog_items_init: WorldGen-specific initial counter values
-    - relic_groups.Event: WorldGen exports event items as a relic group
-    """
-    # === Canonical placement differences ===
-
-    # canonical_placements section
+    """Check if a difference path is caused by --canonical-seed1 or WorldGen."""
+    # canonical_placements section only exists with --canonical-seed1
     if 'canonical_placements' in path:
         return True
-
-    # locked flag on locations
+    # locked status differs because WorldGen uses place_locked_item() for canonical
+    # placements while original uses fill algorithm. This is an implementation detail.
     if path.endswith('.locked'):
         return True
 
-    # Item placement at locations (locations[n].item.*)
-    if '.item.name' in path or '.item.advancement' in path or '.item.player' in path:
+    # Helper body differences caused by placement_lookup being resolved at generation time
+    # for canonical seeds. The original uses dynamic lookups, WorldGen bakes in the values.
+    if 'helpers.' in path and '.placement_lookup' in path:
+        return True
+    if 'helpers.' in path and 'placement_lookup' in str(original_value):
         return True
 
-    # Item groups
-    if 'item_groups' in path:
+    # Helpers that use world attributes (like bottle_count, heart_count) have values
+    # baked in from settings. These are expected differences for canonical seeds.
+    if 'helpers.' in path and ('bottle_count' in path or 'heart_count' in path):
         return True
 
-    # randomize_items option (WorldGen-specific for canonical placement support)
-    # Matches: world.1.options.randomize_items, world.1.option_definitions.randomize_items
-    if 'randomize_items' in path:
+    # basement_key_rule and tr_big_key_chest_keys_needed use placement_lookup
+    if 'helpers.' in path and ('basement_key_rule' in path or 'tr_big_key_chest_keys_needed' in path):
         return True
 
-    # world_classes (WorldGen creates class names based on game display name,
-    # which may differ from the original world's class name)
-    if 'world_classes' in path:
-        return True
-
-    # === WorldGen structural differences ===
-
-    # dungeons section - WorldGen doesn't export dungeon metadata
-    if path.startswith('dungeons'):
-        return True
-
-    # progression_mapping - May have differences in mappings
-    if path.startswith('progression_mapping'):
-        return True
-
-    # helpers - WorldGen evaluates settings at generation time
-    # The helpers section will have evaluated values instead of dynamic checks
-    if path.startswith('helpers'):
-        return True
-
-    # items.*.hint_text - WorldGen doesn't set hint_text on Item instances
-    if '.hint_text' in path and path.startswith('items'):
-        return True
-
-    # Prize items (Crystals, Pendants) are treated as events in WorldGen
-    # These affect: event, groups, id, type fields
-    if path.startswith('items'):
-        if any(prize in path for prize in ['Crystal 1', 'Crystal 2', 'Crystal 3', 'Crystal 4',
-                                             'Crystal 5', 'Crystal 6', 'Crystal 7',
-                                             'Red Pendant', 'Green Pendant', 'Blue Pendant']):
+    # Event items: Original may have list IDs (SRAM data), WorldGen treats as events.
+    # Crystals and Pendants are handled differently between original and WorldGen.
+    if 'items.' in path and any(x in path for x in ['Crystal', 'Pendant']):
+        # These items have different representations but are semantically equivalent
+        if path.endswith('.event') or path.endswith('.type') or path.endswith('.id'):
+            return True
+        if 'groups' in path:
             return True
 
-    # "Everything" group membership differences for event items
-    # The "Everything" group is auto-generated by AutoWorldRegister from item_names
-    # (items with IDs). When items are exported with id=null (events) but the original
-    # world had IDs for them, they'll be in "Everything" in the original but not in
-    # WorldGen (which treats id=null items as true events without IDs).
-    # This affects: items.*.groups[n] where value is "Everything" or differs due to it
-    if path.startswith('items') and '.groups' in path:
-        # If the difference involves "Everything" group, ignore it
-        if original_value == 'Everything' or worldgen_value == 'Everything':
-            return True
-        # If it's a length difference in groups, check if it's just "Everything" missing
-        # The length difference of 1 with "Everything" being the difference is expected
-        if path.endswith('[length]') and isinstance(original_value, int) and isinstance(worldgen_value, int):
-            if abs(original_value - worldgen_value) == 1:
-                return True
-
-    # Region metadata that WorldGen doesn't preserve
-    if path.startswith('regions'):
-        # is_dark_world, is_light_world metadata
-        if path.endswith('.is_dark_world') or path.endswith('.is_light_world'):
-            return True
-        # Region type
-        if path.endswith('.type'):
-            return True
-        # dynamically_added marker that WorldGen adds
-        if path.endswith('.dynamically_added'):
-            return True
-        # placeholder marker - original uses this for shop regions, WorldGen uses dynamically_added
-        if path.endswith('.placeholder'):
-            return True
-        # dungeon property - WorldGen doesn't preserve this
-        if path.endswith('.dungeon'):
-            return True
-        # dungeon_index property - WorldGen doesn't preserve this (used for dungeon item placement)
-        if path.endswith('.dungeon_index'):
-            return True
-        # shop property - WorldGen doesn't preserve shop data on regions
-        if '.shop' in path:
-            return True
-        # Game-specific location attributes that WorldGen doesn't preserve
-        # Factorio uses: complexity, count, rel_cost, revealed
-        if any(path.endswith(f'.{attr}') for attr in ['complexity', 'count', 'rel_cost', 'revealed']):
-            return True
-
-    # Access rule structural differences - WorldGen generates rules differently
-    # The rules are logically equivalent but structured differently
-    if 'access_rule' in path:
-        # Metadata flags from AST conversion
-        if '._converted_from_ast' in path or '._original_ast_type' in path:
-            return True
-        # Rule type/structure differences
-        if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children'):
-            return True
-        # All .args.* differences - WorldGen represents rule arguments differently
-        # This includes both property access (.args.setting) and array access (.args[0])
-        if '.args.' in path or '.args[' in path:
-            return True
-        # .child differences - Original AST format uses args.condition for Not rules,
-        # while WorldGen Rule Builder format uses child. These are structurally
-        # different but semantically equivalent representations.
-        if path.endswith('.child') or '.child.' in path:
-            return True
-        # Length differences in rule children
-        if '[length]' in path:
-            return True
-
-    # Option definitions and values may differ
-    # WorldGen may have different defaults or option structures
-    if 'option_definitions' in path:
-        return True
-    if re.match(r'^world\.\d+\.options\.', path):
+    # Item groups: WorldGen adds an "Event" group for event items
+    if path.startswith('item_groups.'):
         return True
 
-    # Web metadata (tutorials, etc.) - WorldGen doesn't preserve these
-    if re.match(r'^world\.\d+\.web', path):
+    # Dungeon bosses: Empty dict {} vs missing are semantically equivalent
+    if 'dungeons.' in path and '.bosses' in path:
+        if original_value == {} or worldgen_value == {} or original_value == '<missing>' or worldgen_value == '<missing>':
+            return True
+
+    # progression_mapping: WorldGen doesn't export progressive item mappings
+    if path.startswith('progression_mapping.'):
         return True
 
-    # World description - WorldGen uses a generic description
-    if re.match(r'^world\.\d+\.world_description', path):
+    # Shop data: WorldGen doesn't generate shop data
+    if '.shop' in path and (worldgen_value == '<missing>' or original_value == '<missing>'):
         return True
 
-    # shops - WorldGen adds empty array when missing
-    if path.endswith('.shops') and (original_value == '<missing>' or worldgen_value == []):
+    # Item placement type/advancement: These are seed-specific values
+    # Original has item types from the actual world, WorldGen has None
+    if '.item.type' in path or '.item.advancement' in path:
         return True
 
-    # start_inventory_from_pool - may be omitted in WorldGen
-    if 'start_inventory_from_pool' in path:
+    # Access rule format: location variable vs get_location() call
+    # Original uses bare 'location' variable, WorldGen uses state.multiworld.get_location()
+    if 'access_rule' in path and 'object.object.object.object' in path:
         return True
 
-    # accumulator_rules (WorldGen-specific for state counter patterns like coins)
-    # Original worlds don't have this, WorldGen worlds generate it from patterns
-    if 'accumulator_rules' in path:
+    # HasAll items ordering differences are semantically equivalent
+    if 'args.items[' in path and 'access_rule' in path:
         return True
 
-    # prog_items_init (WorldGen-specific initial counter values)
-    # Original worlds don't have this, WorldGen worlds generate it from patterns
-    if 'prog_items_init' in path:
+    # _original_ast_type metadata is internal and can differ
+    if '_original_ast_type' in path:
         return True
 
-    # relic_groups.Event: WorldGen exports event items as a relic group
-    if 'relic_groups.Event' in path:
-        return True
+    # AST_function_call vs Has rule differences
+    if 'access_rule' in path and '.rule' in path:
+        if 'AST_function_call' in str(original_value) or 'AST_function_call' in str(worldgen_value):
+            return True
 
-    # Game-specific location attributes that are auto-discovered from the original
-    # world's Location subclass. These are client-specific metadata (e.g., which
-    # byte/bit in the game's save data tracks location completion) that WorldGen
-    # can't recreate since it uses generic Location objects.
-    # Known game-specific location attributes:
-    # - DKC3: progress_byte, progress_bit, inverted_bit
-    # - Yoshi's Island: level_id (used for hint data, not rules)
-    # - Mario Land 2: level_id (used for hint data, not rules)
-    # - TWW: bit, code, region, stage_id
-    if path.startswith('regions') and 'locations[' in path:
-        location_metadata_attrs = [
-            'progress_byte', 'progress_bit', 'inverted_bit',  # DKC3
-            'level_id',  # Yoshi's Island, Mario Land 2
-            'bit', 'code', 'region', 'stage_id',  # TWW (The Wind Waker)
-        ]
-        for attr in location_metadata_attrs:
-            if path.endswith(f'.{attr}'):
-                return True
-
-    # game_info.*.variables: Game-specific variables like required_technologies
-    # These are computed from module-level data structures that may not be populated
-    # in worldgen contexts. For example, Factorio's required_technologies is a
-    # lazy KeyedDefaultDict that only populates when specific ingredients are accessed
-    # during normal world generation. WorldGen worlds don't trigger this population.
-    if re.match(r'^game_info\.\d+\.variables\.', path):
-        return True
+    # WorldGen-specific options that only exist in WorldGen, not original
+    worldgen_only_options = {'randomize_items', 'use_canonical_options'}
+    for opt in worldgen_only_options:
+        if opt in path and original_value == '<missing>':
+            return True
 
     return False
 
@@ -459,6 +423,14 @@ def main():
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)
     worldgen_normalized = normalize_rule_format(worldgen_normalized)
+
+    # Normalize And+Has/HasAll patterns to single HasAll (cleaner format)
+    original_normalized = normalize_and_has_patterns(original_normalized)
+    worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
+
+    # Normalize And/Or structure (flatten nested, sort children)
+    original_normalized = normalize_and_or_structure(original_normalized)
+    worldgen_normalized = normalize_and_or_structure(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)

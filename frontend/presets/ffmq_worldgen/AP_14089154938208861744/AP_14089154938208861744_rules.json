@@ -11302,10 +11302,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tree Wither": {
         "name": "Tree Wither",
@@ -11314,10 +11314,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wakewater": {
         "name": "Wakewater",
@@ -11326,10 +11326,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Venus Key": {
         "name": "Venus Key",
@@ -11338,10 +11338,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Multi Key": {
         "name": "Multi Key",
@@ -11350,10 +11350,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mask": {
         "name": "Mask",
@@ -11362,10 +11362,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
@@ -11374,10 +11374,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Thunder Rock": {
         "name": "Thunder Rock",
@@ -11386,10 +11386,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Captain's Cap": {
         "name": "Captain's Cap",
@@ -11398,10 +11398,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Libra Crest": {
         "name": "Libra Crest",
@@ -11410,10 +11410,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gemini Crest": {
         "name": "Gemini Crest",
@@ -11422,10 +11422,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mobius Crest": {
         "name": "Mobius Crest",
@@ -11434,10 +11434,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sand Coin": {
         "name": "Sand Coin",
@@ -11447,10 +11447,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "River Coin": {
         "name": "River Coin",
@@ -11460,10 +11460,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sun Coin": {
         "name": "Sun Coin",
@@ -11473,10 +11473,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sky Coin": {
         "name": "Sky Coin",
@@ -11486,10 +11486,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cure Potion": {
         "name": "Cure Potion",
@@ -11498,10 +11498,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 61,
-        "classification": "filler"
+        "max_count": 61
       },
       "Heal Potion": {
         "name": "Heal Potion",
@@ -11510,10 +11510,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 52,
-        "classification": "filler"
+        "max_count": 52
       },
       "Seed": {
         "name": "Seed",
@@ -11522,10 +11522,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Refresher": {
         "name": "Refresher",
@@ -11534,10 +11534,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 17,
-        "classification": "filler"
+        "max_count": 17
       },
       "Exit Book": {
         "name": "Exit Book",
@@ -11546,10 +11546,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cure Book": {
         "name": "Cure Book",
@@ -11558,10 +11558,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Heal Book": {
         "name": "Heal Book",
@@ -11570,10 +11570,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Life Book": {
         "name": "Life Book",
@@ -11582,10 +11582,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Quake Book": {
         "name": "Quake Book",
@@ -11594,10 +11594,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Blizzard Book": {
         "name": "Blizzard Book",
@@ -11606,10 +11606,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Fire Book": {
         "name": "Fire Book",
@@ -11618,10 +11618,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Aero Book": {
         "name": "Aero Book",
@@ -11630,10 +11630,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Thunder Seal": {
         "name": "Thunder Seal",
@@ -11642,10 +11642,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "White Seal": {
         "name": "White Seal",
@@ -11654,10 +11654,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Meteor Seal": {
         "name": "Meteor Seal",
@@ -11666,10 +11666,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Flare Seal": {
         "name": "Flare Seal",
@@ -11678,10 +11678,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Steel Sword": {
         "name": "Steel Sword",
@@ -11691,10 +11691,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Knight Sword": {
         "name": "Knight Sword",
@@ -11704,10 +11704,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Excalibur": {
         "name": "Excalibur",
@@ -11717,10 +11717,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Axe": {
         "name": "Axe",
@@ -11730,10 +11730,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Battle Axe": {
         "name": "Battle Axe",
@@ -11743,10 +11743,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Giant's Axe": {
         "name": "Giant's Axe",
@@ -11756,10 +11756,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cat Claw": {
         "name": "Cat Claw",
@@ -11769,10 +11769,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Charm Claw": {
         "name": "Charm Claw",
@@ -11782,10 +11782,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dragon Claw": {
         "name": "Dragon Claw",
@@ -11795,10 +11795,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bomb": {
         "name": "Bomb",
@@ -11808,10 +11808,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Jumbo Bomb": {
         "name": "Jumbo Bomb",
@@ -11821,10 +11821,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mega Grenade": {
         "name": "Mega Grenade",
@@ -11834,10 +11834,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Steel Helm": {
         "name": "Steel Helm",
@@ -11846,10 +11846,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Moon Helm": {
         "name": "Moon Helm",
@@ -11858,10 +11858,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Apollo Helm": {
         "name": "Apollo Helm",
@@ -11870,10 +11870,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Steel Armor": {
         "name": "Steel Armor",
@@ -11882,10 +11882,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Noble Armor": {
         "name": "Noble Armor",
@@ -11894,10 +11894,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Gaia's Armor": {
         "name": "Gaia's Armor",
@@ -11906,10 +11906,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Steel Shield": {
         "name": "Steel Shield",
@@ -11918,10 +11918,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Venus Shield": {
         "name": "Venus Shield",
@@ -11930,10 +11930,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Aegis Shield": {
         "name": "Aegis Shield",
@@ -11942,10 +11942,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Charm": {
         "name": "Charm",
@@ -11954,10 +11954,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Magic Ring": {
         "name": "Magic Ring",
@@ -11966,10 +11966,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cupid Locket": {
         "name": "Cupid Locket",
@@ -11978,10 +11978,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bomb Refill": {
         "name": "Bomb Refill",
@@ -11990,10 +11990,10 @@
           "Everything",
           "Refills"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 19,
-        "classification": "filler"
+        "max_count": 19
       },
       "Projectile Refill": {
         "name": "Projectile Refill",
@@ -12002,10 +12002,10 @@
           "Everything",
           "Refills"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 50,
-        "classification": "filler"
+        "max_count": 50
       },
       "Sky Fragment": {
         "name": "Sky Fragment",
@@ -12014,10 +12014,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -12027,10 +12027,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Axe": {
         "name": "Progressive Axe",
@@ -12040,10 +12040,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Claw": {
         "name": "Progressive Claw",
@@ -12053,10 +12053,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Bomb": {
         "name": "Progressive Bomb",
@@ -12066,10 +12066,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Helm": {
         "name": "Progressive Helm",
@@ -12078,10 +12078,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Armor": {
         "name": "Progressive Armor",
@@ -12090,10 +12090,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -12102,10 +12102,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Accessory": {
         "name": "Progressive Accessory",
@@ -12114,10 +12114,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Minotaur": {
         "name": "Minotaur",
@@ -12125,10 +12125,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kaeli 1": {
         "name": "Kaeli 1",
@@ -12136,10 +12136,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kaeli 2": {
         "name": "Kaeli 2",
@@ -12147,10 +12147,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Barrel Pushed": {
         "name": "Barrel Pushed",
@@ -12158,10 +12158,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tristam": {
         "name": "Tristam",
@@ -12169,10 +12169,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tristam Bone Item Given": {
         "name": "Tristam Bone Item Given",
@@ -12180,10 +12180,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Long Spine Bombed": {
         "name": "Long Spine Bombed",
@@ -12191,10 +12191,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Short Spine Bombed": {
         "name": "Short Spine Bombed",
@@ -12202,10 +12202,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skull 1 Bombed": {
         "name": "Skull 1 Bombed",
@@ -12213,10 +12213,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skull 2 Bombed": {
         "name": "Skull 2 Bombed",
@@ -12224,10 +12224,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flamerus Rex": {
         "name": "Flamerus Rex",
@@ -12235,10 +12235,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phoebe 1": {
         "name": "Phoebe 1",
@@ -12246,10 +12246,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Summer Aquaria": {
         "name": "Summer Aquaria",
@@ -12257,10 +12257,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phanquid": {
         "name": "Phanquid",
@@ -12268,10 +12268,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Freezer Crab": {
         "name": "Freezer Crab",
@@ -12279,10 +12279,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 1F Statue": {
         "name": "Ice Pyramid 1F Statue",
@@ -12290,10 +12290,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 3F Statue": {
         "name": "Ice Pyramid 3F Statue",
@@ -12301,10 +12301,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 4F Statue": {
         "name": "Ice Pyramid 4F Statue",
@@ -12312,10 +12312,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 5F Statue": {
         "name": "Ice Pyramid 5F Statue",
@@ -12323,10 +12323,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Golem": {
         "name": "Ice Golem",
@@ -12334,10 +12334,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Liberated": {
         "name": "Ship Liberated",
@@ -12345,10 +12345,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spencer Cave Libra Block Bombed": {
         "name": "Spencer Cave Libra Block Bombed",
@@ -12356,10 +12356,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reuben 1": {
         "name": "Reuben 1",
@@ -12367,10 +12367,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Jinn": {
         "name": "Jinn",
@@ -12378,10 +12378,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reuben Dad Saved": {
         "name": "Reuben Dad Saved",
@@ -12389,10 +12389,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Medusa": {
         "name": "Medusa",
@@ -12400,10 +12400,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lava Dome Plate": {
         "name": "Lava Dome Plate",
@@ -12411,10 +12411,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dualhead Hydra": {
         "name": "Dualhead Hydra",
@@ -12422,10 +12422,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gidrah": {
         "name": "Gidrah",
@@ -12433,10 +12433,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dullahan": {
         "name": "Dullahan",
@@ -12444,10 +12444,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rainbow Bridge": {
         "name": "Rainbow Bridge",
@@ -12455,10 +12455,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 1F": {
         "name": "Pazuzu 1F",
@@ -12466,10 +12466,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 2F Lock": {
         "name": "Pazuzu 2F Lock",
@@ -12477,10 +12477,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 2F": {
         "name": "Pazuzu 2F",
@@ -12488,10 +12488,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 3F": {
         "name": "Pazuzu 3F",
@@ -12499,10 +12499,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 4F Lock": {
         "name": "Pazuzu 4F Lock",
@@ -12510,10 +12510,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 4F": {
         "name": "Pazuzu 4F",
@@ -12521,10 +12521,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 5F": {
         "name": "Pazuzu 5F",
@@ -12532,10 +12532,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 6F Lock": {
         "name": "Pazuzu 6F Lock",
@@ -12543,10 +12543,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 6F": {
         "name": "Pazuzu 6F",
@@ -12554,10 +12554,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu": {
         "name": "Pazuzu",
@@ -12565,10 +12565,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Dock Access": {
         "name": "Ship Dock Access",
@@ -12576,10 +12576,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Steering Wheel": {
         "name": "Ship Steering Wheel",
@@ -12587,10 +12587,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Loaned": {
         "name": "Ship Loaned",
@@ -12598,10 +12598,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stone Golem": {
         "name": "Stone Golem",
@@ -12609,10 +12609,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Twinhead Wyvern": {
         "name": "Twinhead Wyvern",
@@ -12620,10 +12620,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Zuh": {
         "name": "Zuh",
@@ -12631,10 +12631,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dark King": {
         "name": "Dark King",
@@ -12642,10 +12642,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

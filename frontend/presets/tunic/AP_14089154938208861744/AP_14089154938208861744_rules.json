@@ -14197,10 +14197,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Firecracker x3": {
         "name": "Firecracker x3",
@@ -14209,10 +14209,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Firecracker x4": {
         "name": "Firecracker x4",
@@ -14221,10 +14221,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Firecracker x5": {
         "name": "Firecracker x5",
@@ -14233,10 +14233,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Firecracker x6": {
         "name": "Firecracker x6",
@@ -14245,10 +14245,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Fire Bomb x2": {
         "name": "Fire Bomb x2",
@@ -14257,10 +14257,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Fire Bomb x3": {
         "name": "Fire Bomb x3",
@@ -14269,10 +14269,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ice Bomb x2": {
         "name": "Ice Bomb x2",
@@ -14281,10 +14281,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Ice Bomb x3": {
         "name": "Ice Bomb x3",
@@ -14293,10 +14293,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Ice Bomb x5": {
         "name": "Ice Bomb x5",
@@ -14305,10 +14305,10 @@
           "Bombs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lure": {
         "name": "Lure",
@@ -14317,10 +14317,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Lure x2": {
         "name": "Lure x2",
@@ -14329,10 +14329,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pepper x2": {
         "name": "Pepper x2",
@@ -14341,10 +14341,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Ivy x3": {
         "name": "Ivy x3",
@@ -14353,10 +14353,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Effigy": {
         "name": "Effigy",
@@ -14365,10 +14365,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "useful"
+        "max_count": 12
       },
       "HP Berry": {
         "name": "HP Berry",
@@ -14377,10 +14377,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "HP Berry x2": {
         "name": "HP Berry x2",
@@ -14389,10 +14389,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "HP Berry x3": {
         "name": "HP Berry x3",
@@ -14401,10 +14401,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "MP Berry": {
         "name": "MP Berry",
@@ -14413,10 +14413,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "MP Berry x2": {
         "name": "MP Berry x2",
@@ -14425,10 +14425,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "MP Berry x3": {
         "name": "MP Berry x3",
@@ -14437,10 +14437,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "filler"
+        "max_count": 7
       },
       "Fairy": {
         "name": "Fairy",
@@ -14448,10 +14448,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 20,
-        "classification": "progression"
+        "max_count": 20
       },
       "Stick": {
         "name": "Stick",
@@ -14461,10 +14461,10 @@
           "Melee Weapons",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sword": {
         "name": "Sword",
@@ -14474,10 +14474,10 @@
           "Melee Weapons",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sword Upgrade": {
         "name": "Sword Upgrade",
@@ -14488,10 +14488,10 @@
           "Progressive Sword",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Magic Wand": {
         "name": "Magic Wand",
@@ -14503,10 +14503,10 @@
           "Wand",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Dagger": {
         "name": "Magic Dagger",
@@ -14515,10 +14515,10 @@
           "Dagger",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Orb": {
         "name": "Magic Orb",
@@ -14527,10 +14527,10 @@
           "Everything",
           "Orb"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hero's Laurels": {
         "name": "Hero's Laurels",
@@ -14539,10 +14539,10 @@
           "Everything",
           "Laurels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lantern": {
         "name": "Lantern",
@@ -14550,10 +14550,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gun": {
         "name": "Gun",
@@ -14562,10 +14562,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shield": {
         "name": "Shield",
@@ -14573,10 +14573,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Dath Stone": {
         "name": "Dath Stone",
@@ -14584,10 +14584,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hourglass": {
         "name": "Hourglass",
@@ -14595,10 +14595,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Old House Key": {
         "name": "Old House Key",
@@ -14607,10 +14607,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Key": {
         "name": "Key",
@@ -14619,10 +14619,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Fortress Vault Key": {
         "name": "Fortress Vault Key",
@@ -14631,10 +14631,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flask Shard": {
         "name": "Flask Shard",
@@ -14642,10 +14642,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "useful"
+        "max_count": 12
       },
       "Potion Flask": {
         "name": "Potion Flask",
@@ -14654,10 +14654,10 @@
           "Everything",
           "Flask"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "useful"
+        "max_count": 5
       },
       "Golden Coin": {
         "name": "Golden Coin",
@@ -14665,10 +14665,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 17,
-        "classification": "progression"
+        "max_count": 17
       },
       "Card Slot": {
         "name": "Card Slot",
@@ -14676,10 +14676,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "useful"
+        "max_count": 4
       },
       "Red Questagon": {
         "name": "Red Questagon",
@@ -14689,10 +14689,10 @@
           "Hexagons",
           "Questagons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Green Questagon": {
         "name": "Green Questagon",
@@ -14702,10 +14702,10 @@
           "Hexagons",
           "Questagons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Blue Questagon": {
         "name": "Blue Questagon",
@@ -14715,10 +14715,10 @@
           "Hexagons",
           "Questagons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Gold Questagon": {
         "name": "Gold Questagon",
@@ -14728,10 +14728,10 @@
           "Hexagons",
           "Questagons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "ATT Offering": {
         "name": "ATT Offering",
@@ -14740,10 +14740,10 @@
           "Everything",
           "Offerings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "useful"
+        "max_count": 4
       },
       "DEF Offering": {
         "name": "DEF Offering",
@@ -14752,10 +14752,10 @@
           "Everything",
           "Offerings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "useful"
+        "max_count": 4
       },
       "Potion Offering": {
         "name": "Potion Offering",
@@ -14764,10 +14764,10 @@
           "Everything",
           "Offerings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "HP Offering": {
         "name": "HP Offering",
@@ -14776,10 +14776,10 @@
           "Everything",
           "Offerings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "useful"
+        "max_count": 6
       },
       "MP Offering": {
         "name": "MP Offering",
@@ -14788,10 +14788,10 @@
           "Everything",
           "Offerings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "SP Offering": {
         "name": "SP Offering",
@@ -14800,10 +14800,10 @@
           "Everything",
           "Offerings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Hero Relic - ATT": {
         "name": "Hero Relic - ATT",
@@ -14813,10 +14813,10 @@
           "Everything",
           "Hero Relics"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Hero Relic - DEF": {
         "name": "Hero Relic - DEF",
@@ -14826,10 +14826,10 @@
           "Everything",
           "Hero Relics"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Hero Relic - HP": {
         "name": "Hero Relic - HP",
@@ -14839,10 +14839,10 @@
           "Everything",
           "Hero Relics"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Hero Relic - MP": {
         "name": "Hero Relic - MP",
@@ -14852,10 +14852,10 @@
           "Everything",
           "Hero Relics"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Hero Relic - POTION": {
         "name": "Hero Relic - POTION",
@@ -14865,10 +14865,10 @@
           "Everything",
           "Hero Relics"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Hero Relic - SP": {
         "name": "Hero Relic - SP",
@@ -14878,10 +14878,10 @@
           "Everything",
           "Hero Relics"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Orange Peril Ring": {
         "name": "Orange Peril Ring",
@@ -14890,10 +14890,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Tincture": {
         "name": "Tincture",
@@ -14902,10 +14902,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Scavenger Mask": {
         "name": "Scavenger Mask",
@@ -14914,10 +14914,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cyan Peril Ring": {
         "name": "Cyan Peril Ring",
@@ -14926,10 +14926,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bracer": {
         "name": "Bracer",
@@ -14938,10 +14938,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Dagger Strap": {
         "name": "Dagger Strap",
@@ -14950,10 +14950,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Inverted Ash": {
         "name": "Inverted Ash",
@@ -14962,10 +14962,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Lucky Cup": {
         "name": "Lucky Cup",
@@ -14974,10 +14974,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Magic Echo": {
         "name": "Magic Echo",
@@ -14986,10 +14986,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Anklet": {
         "name": "Anklet",
@@ -14998,10 +14998,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Muffling Bell": {
         "name": "Muffling Bell",
@@ -15010,10 +15010,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Glass Cannon": {
         "name": "Glass Cannon",
@@ -15022,10 +15022,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Perfume": {
         "name": "Perfume",
@@ -15034,10 +15034,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Louder Echo": {
         "name": "Louder Echo",
@@ -15046,10 +15046,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Aura's Gem": {
         "name": "Aura's Gem",
@@ -15058,10 +15058,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bone Card": {
         "name": "Bone Card",
@@ -15070,10 +15070,10 @@
           "Cards",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mr Mayor": {
         "name": "Mr Mayor",
@@ -15082,10 +15082,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Secret Legend": {
         "name": "Secret Legend",
@@ -15094,10 +15094,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Sacred Geometry": {
         "name": "Sacred Geometry",
@@ -15106,10 +15106,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Vintage": {
         "name": "Vintage",
@@ -15118,10 +15118,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Just Some Pals": {
         "name": "Just Some Pals",
@@ -15130,10 +15130,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Regal Weasel": {
         "name": "Regal Weasel",
@@ -15142,10 +15142,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Spring Falls": {
         "name": "Spring Falls",
@@ -15154,10 +15154,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Power Up": {
         "name": "Power Up",
@@ -15166,10 +15166,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Back To Work": {
         "name": "Back To Work",
@@ -15178,10 +15178,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Phonomath": {
         "name": "Phonomath",
@@ -15190,10 +15190,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Dusty": {
         "name": "Dusty",
@@ -15202,10 +15202,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Forever Friend": {
         "name": "Forever Friend",
@@ -15214,10 +15214,10 @@
           "Everything",
           "Golden Treasures"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Fool Trap": {
         "name": "Fool Trap",
@@ -15225,10 +15225,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 15,
-        "classification": "trap"
+        "max_count": 15
       },
       "Money x1": {
         "name": "Money x1",
@@ -15237,10 +15237,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x10": {
         "name": "Money x10",
@@ -15249,10 +15249,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x15": {
         "name": "Money x15",
@@ -15261,10 +15261,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x16": {
         "name": "Money x16",
@@ -15273,10 +15273,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x20": {
         "name": "Money x20",
@@ -15285,10 +15285,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 17,
-        "classification": "filler"
+        "max_count": 17
       },
       "Money x25": {
         "name": "Money x25",
@@ -15297,10 +15297,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "Money x30": {
         "name": "Money x30",
@@ -15309,10 +15309,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Money x32": {
         "name": "Money x32",
@@ -15321,10 +15321,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Money x40": {
         "name": "Money x40",
@@ -15333,10 +15333,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Money x48": {
         "name": "Money x48",
@@ -15345,10 +15345,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x50": {
         "name": "Money x50",
@@ -15357,10 +15357,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "filler"
+        "max_count": 7
       },
       "Money x64": {
         "name": "Money x64",
@@ -15369,10 +15369,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x100": {
         "name": "Money x100",
@@ -15381,10 +15381,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Money x128": {
         "name": "Money x128",
@@ -15393,10 +15393,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Money x200": {
         "name": "Money x200",
@@ -15405,10 +15405,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Money x255": {
         "name": "Money x255",
@@ -15417,10 +15417,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 0-1": {
         "name": "Pages 0-1",
@@ -15430,10 +15430,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 2-3": {
         "name": "Pages 2-3",
@@ -15443,10 +15443,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 4-5": {
         "name": "Pages 4-5",
@@ -15456,10 +15456,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 6-7": {
         "name": "Pages 6-7",
@@ -15469,10 +15469,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 8-9": {
         "name": "Pages 8-9",
@@ -15482,10 +15482,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 10-11": {
         "name": "Pages 10-11",
@@ -15495,10 +15495,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 12-13": {
         "name": "Pages 12-13",
@@ -15508,10 +15508,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 14-15": {
         "name": "Pages 14-15",
@@ -15521,10 +15521,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 16-17": {
         "name": "Pages 16-17",
@@ -15534,10 +15534,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 18-19": {
         "name": "Pages 18-19",
@@ -15547,10 +15547,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 20-21": {
         "name": "Pages 20-21",
@@ -15560,10 +15560,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 22-23": {
         "name": "Pages 22-23",
@@ -15573,10 +15573,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 24-25 (Prayer)": {
         "name": "Pages 24-25 (Prayer)",
@@ -15588,10 +15588,10 @@
           "Pages",
           "Prayer"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pages 26-27": {
         "name": "Pages 26-27",
@@ -15601,10 +15601,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 28-29": {
         "name": "Pages 28-29",
@@ -15614,10 +15614,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 30-31": {
         "name": "Pages 30-31",
@@ -15627,10 +15627,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 32-33": {
         "name": "Pages 32-33",
@@ -15640,10 +15640,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 34-35": {
         "name": "Pages 34-35",
@@ -15653,10 +15653,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 36-37": {
         "name": "Pages 36-37",
@@ -15666,10 +15666,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 38-39": {
         "name": "Pages 38-39",
@@ -15679,10 +15679,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 40-41": {
         "name": "Pages 40-41",
@@ -15692,10 +15692,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 42-43 (Holy Cross)": {
         "name": "Pages 42-43 (Holy Cross)",
@@ -15707,10 +15707,10 @@
           "Holy Cross",
           "Pages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pages 44-45": {
         "name": "Pages 44-45",
@@ -15720,10 +15720,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 46-47": {
         "name": "Pages 46-47",
@@ -15733,10 +15733,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 48-49": {
         "name": "Pages 48-49",
@@ -15746,10 +15746,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 50-51": {
         "name": "Pages 50-51",
@@ -15759,10 +15759,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pages 52-53 (Icebolt)": {
         "name": "Pages 52-53 (Icebolt)",
@@ -15775,10 +15775,10 @@
           "Icebolt",
           "Pages"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pages 54-55": {
         "name": "Pages 54-55",
@@ -15788,10 +15788,10 @@
           "Everything",
           "Pages"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Ladders near Weathervane": {
         "name": "Ladders near Weathervane",
@@ -15800,10 +15800,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders near Overworld Checkpoint": {
         "name": "Ladders near Overworld Checkpoint",
@@ -15812,10 +15812,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders near Patrol Cave": {
         "name": "Ladders near Patrol Cave",
@@ -15824,10 +15824,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladder near Temple Rafters": {
         "name": "Ladder near Temple Rafters",
@@ -15836,10 +15836,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders near Dark Tomb": {
         "name": "Ladders near Dark Tomb",
@@ -15848,10 +15848,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladder to Quarry": {
         "name": "Ladder to Quarry",
@@ -15860,10 +15860,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders to West Bell": {
         "name": "Ladders to West Bell",
@@ -15873,10 +15873,10 @@
           "Ladders",
           "Ladders to Bell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders in Overworld Town": {
         "name": "Ladders in Overworld Town",
@@ -15886,10 +15886,10 @@
           "Ladders",
           "Ladders in Town"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladder to Ruined Atoll": {
         "name": "Ladder to Ruined Atoll",
@@ -15899,10 +15899,10 @@
           "Ladder to Atoll",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladder to Swamp": {
         "name": "Ladder to Swamp",
@@ -15911,10 +15911,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders in Well": {
         "name": "Ladders in Well",
@@ -15924,10 +15924,10 @@
           "Ladders",
           "Ladders to Well"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladder in Dark Tomb": {
         "name": "Ladder in Dark Tomb",
@@ -15936,10 +15936,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladder to East Forest": {
         "name": "Ladder to East Forest",
@@ -15948,10 +15948,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders to Lower Forest": {
         "name": "Ladders to Lower Forest",
@@ -15960,10 +15960,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladder to Beneath the Vault": {
         "name": "Ladder to Beneath the Vault",
@@ -15972,10 +15972,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders in Hourglass Cave": {
         "name": "Ladders in Hourglass Cave",
@@ -15984,10 +15984,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders in South Atoll": {
         "name": "Ladders in South Atoll",
@@ -15998,10 +15998,10 @@
           "Ladders in Atoll",
           "Ladders in Ruined Atoll"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders to Frog's Domain": {
         "name": "Ladders to Frog's Domain",
@@ -16010,10 +16010,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders in Library": {
         "name": "Ladders in Library",
@@ -16022,10 +16022,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders in Lower Quarry": {
         "name": "Ladders in Lower Quarry",
@@ -16035,10 +16035,10 @@
           "Ladder in Quarry",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ladders in Swamp": {
         "name": "Ladders in Swamp",
@@ -16047,10 +16047,10 @@
           "Everything",
           "Ladders"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grass": {
         "name": "Grass",
@@ -16058,10 +16058,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x2": {
         "name": "Money x2",
@@ -16070,10 +16070,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x3": {
         "name": "Money x3",
@@ -16082,10 +16082,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x4": {
         "name": "Money x4",
@@ -16094,10 +16094,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money x5": {
         "name": "Money x5",
@@ -16106,10 +16106,10 @@
           "Everything",
           "Money"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Torch": {
         "name": "Torch",
@@ -16117,10 +16117,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Swamp Fuse 1": {
         "name": "Swamp Fuse 1",
@@ -16129,10 +16129,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Swamp Fuse 2": {
         "name": "Swamp Fuse 2",
@@ -16141,10 +16141,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Swamp Fuse 3": {
         "name": "Swamp Fuse 3",
@@ -16153,10 +16153,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cathedral Elevator Fuse": {
         "name": "Cathedral Elevator Fuse",
@@ -16165,10 +16165,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quarry Fuse 1": {
         "name": "Quarry Fuse 1",
@@ -16177,10 +16177,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quarry Fuse 2": {
         "name": "Quarry Fuse 2",
@@ -16189,10 +16189,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ziggurat Miniboss Fuse": {
         "name": "Ziggurat Miniboss Fuse",
@@ -16201,10 +16201,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ziggurat Teleporter Fuse": {
         "name": "Ziggurat Teleporter Fuse",
@@ -16213,10 +16213,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress Exterior Fuse 1": {
         "name": "Fortress Exterior Fuse 1",
@@ -16225,10 +16225,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress Exterior Fuse 2": {
         "name": "Fortress Exterior Fuse 2",
@@ -16237,10 +16237,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress Courtyard Upper Fuse": {
         "name": "Fortress Courtyard Upper Fuse",
@@ -16249,10 +16249,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress Courtyard Fuse": {
         "name": "Fortress Courtyard Fuse",
@@ -16261,10 +16261,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Beneath the Vault Fuse": {
         "name": "Beneath the Vault Fuse",
@@ -16273,10 +16273,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress Candles Fuse": {
         "name": "Fortress Candles Fuse",
@@ -16285,10 +16285,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress Door Left Fuse": {
         "name": "Fortress Door Left Fuse",
@@ -16297,10 +16297,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fortress Door Right Fuse": {
         "name": "Fortress Door Right Fuse",
@@ -16309,10 +16309,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "West Furnace Fuse": {
         "name": "West Furnace Fuse",
@@ -16321,10 +16321,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "West Garden Fuse": {
         "name": "West Garden Fuse",
@@ -16333,10 +16333,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Atoll Northeast Fuse": {
         "name": "Atoll Northeast Fuse",
@@ -16345,10 +16345,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Atoll Northwest Fuse": {
         "name": "Atoll Northwest Fuse",
@@ -16357,10 +16357,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Atoll Southeast Fuse": {
         "name": "Atoll Southeast Fuse",
@@ -16369,10 +16369,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Atoll Southwest Fuse": {
         "name": "Atoll Southwest Fuse",
@@ -16381,10 +16381,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Library Lab Fuse": {
         "name": "Library Lab Fuse",
@@ -16393,10 +16393,10 @@
           "Everything",
           "Fuses"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "East Bell": {
         "name": "East Bell",
@@ -16405,10 +16405,10 @@
           "Bells",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "West Bell": {
         "name": "West Bell",
@@ -16417,10 +16417,10 @@
           "Bells",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ring Eastern Bell": {
         "name": "Ring Eastern Bell",
@@ -16428,10 +16428,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ring Western Bell": {
         "name": "Ring Western Bell",
@@ -16439,10 +16439,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Furnace Fuse": {
         "name": "Activate Furnace Fuse",
@@ -16450,10 +16450,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate South and West Fortress Exterior Fuses": {
         "name": "Activate South and West Fortress Exterior Fuses",
@@ -16461,10 +16461,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Upper and Central Fortress Exterior Fuses": {
         "name": "Activate Upper and Central Fortress Exterior Fuses",
@@ -16472,10 +16472,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Beneath the Vault Fuse": {
         "name": "Activate Beneath the Vault Fuse",
@@ -16483,10 +16483,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Eastern Vault West Fuses": {
         "name": "Activate Eastern Vault West Fuses",
@@ -16494,10 +16494,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Eastern Vault East Fuse": {
         "name": "Activate Eastern Vault East Fuse",
@@ -16505,10 +16505,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Quarry Connector Fuse": {
         "name": "Activate Quarry Connector Fuse",
@@ -16516,10 +16516,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Quarry Fuse": {
         "name": "Activate Quarry Fuse",
@@ -16527,10 +16527,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Ziggurat Fuse": {
         "name": "Activate Ziggurat Fuse",
@@ -16538,10 +16538,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate West Garden Fuse": {
         "name": "Activate West Garden Fuse",
@@ -16549,10 +16549,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Activate Library Fuse": {
         "name": "Activate Library Fuse",
@@ -16560,10 +16560,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Unseal the Heir": {
         "name": "Unseal the Heir",
@@ -16571,10 +16571,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -16582,10 +16582,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

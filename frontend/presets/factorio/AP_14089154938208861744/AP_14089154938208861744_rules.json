@@ -5364,10 +5364,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Atomic Cliff Remover Trap": {
         "name": "Atomic Cliff Remover Trap",
@@ -5375,10 +5375,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Atomic Rocket Trap": {
         "name": "Atomic Rocket Trap",
@@ -5386,10 +5386,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Artillery Trap": {
         "name": "Artillery Trap",
@@ -5397,10 +5397,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cluster Grenade Trap": {
         "name": "Cluster Grenade Trap",
@@ -5408,10 +5408,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grenade Trap": {
         "name": "Grenade Trap",
@@ -5419,10 +5419,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Teleport Trap": {
         "name": "Teleport Trap",
@@ -5430,10 +5430,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Evolution Trap": {
         "name": "Evolution Trap",
@@ -5441,10 +5441,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Attack Trap": {
         "name": "Attack Trap",
@@ -5452,10 +5452,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "advanced-circuit": {
         "name": "advanced-circuit",
@@ -5464,10 +5464,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "advanced-combinators": {
         "name": "advanced-combinators",
@@ -5476,10 +5476,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "advanced-material-processing": {
         "name": "advanced-material-processing",
@@ -5487,10 +5487,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "advanced-material-processing-2": {
         "name": "advanced-material-processing-2",
@@ -5498,10 +5498,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "advanced-oil-processing": {
         "name": "advanced-oil-processing",
@@ -5509,10 +5509,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "artillery": {
         "name": "artillery",
@@ -5520,10 +5520,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "atomic-bomb": {
         "name": "atomic-bomb",
@@ -5531,10 +5531,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "automated-rail-transportation": {
         "name": "automated-rail-transportation",
@@ -5542,10 +5542,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "automation": {
         "name": "automation",
@@ -5553,10 +5553,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "automation-2": {
         "name": "automation-2",
@@ -5564,10 +5564,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "automation-3": {
         "name": "automation-3",
@@ -5575,10 +5575,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "automation-science-pack": {
         "name": "automation-science-pack",
@@ -5586,10 +5586,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "automobilism": {
         "name": "automobilism",
@@ -5597,10 +5597,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "battery": {
         "name": "battery",
@@ -5608,10 +5608,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "battery-equipment": {
         "name": "battery-equipment",
@@ -5619,10 +5619,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "battery-mk2-equipment": {
         "name": "battery-mk2-equipment",
@@ -5630,10 +5630,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "belt-immunity-equipment": {
         "name": "belt-immunity-equipment",
@@ -5642,10 +5642,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "braking-force-1": {
         "name": "braking-force-1",
@@ -5653,10 +5653,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "braking-force-2": {
         "name": "braking-force-2",
@@ -5664,10 +5664,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "braking-force-3": {
         "name": "braking-force-3",
@@ -5675,10 +5675,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "braking-force-4": {
         "name": "braking-force-4",
@@ -5686,10 +5686,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "braking-force-5": {
         "name": "braking-force-5",
@@ -5697,10 +5697,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "braking-force-6": {
         "name": "braking-force-6",
@@ -5708,10 +5708,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "braking-force-7": {
         "name": "braking-force-7",
@@ -5719,10 +5719,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "bulk-inserter": {
         "name": "bulk-inserter",
@@ -5730,10 +5730,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "chemical-science-pack": {
         "name": "chemical-science-pack",
@@ -5741,10 +5741,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "circuit-network": {
         "name": "circuit-network",
@@ -5753,10 +5753,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "cliff-explosives": {
         "name": "cliff-explosives",
@@ -5765,10 +5765,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "coal-liquefaction": {
         "name": "coal-liquefaction",
@@ -5776,10 +5776,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "concrete": {
         "name": "concrete",
@@ -5787,10 +5787,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "construction-robotics": {
         "name": "construction-robotics",
@@ -5799,10 +5799,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "defender": {
         "name": "defender",
@@ -5810,10 +5810,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "destroyer": {
         "name": "destroyer",
@@ -5821,10 +5821,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "discharge-defense-equipment": {
         "name": "discharge-defense-equipment",
@@ -5833,10 +5833,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "distractor": {
         "name": "distractor",
@@ -5844,10 +5844,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "effect-transmission": {
         "name": "effect-transmission",
@@ -5856,10 +5856,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "efficiency-module": {
         "name": "efficiency-module",
@@ -5867,10 +5867,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "efficiency-module-2": {
         "name": "efficiency-module-2",
@@ -5878,10 +5878,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "efficiency-module-3": {
         "name": "efficiency-module-3",
@@ -5889,10 +5889,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "electric-energy-accumulators": {
         "name": "electric-energy-accumulators",
@@ -5901,10 +5901,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "electric-energy-distribution-1": {
         "name": "electric-energy-distribution-1",
@@ -5912,10 +5912,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "electric-energy-distribution-2": {
         "name": "electric-energy-distribution-2",
@@ -5923,10 +5923,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "electric-engine": {
         "name": "electric-engine",
@@ -5934,10 +5934,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "electric-mining-drill": {
         "name": "electric-mining-drill",
@@ -5945,10 +5945,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "electronics": {
         "name": "electronics",
@@ -5956,10 +5956,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "energy-shield-equipment": {
         "name": "energy-shield-equipment",
@@ -5967,10 +5967,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "energy-shield-mk2-equipment": {
         "name": "energy-shield-mk2-equipment",
@@ -5978,10 +5978,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "engine": {
         "name": "engine",
@@ -5989,10 +5989,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "exoskeleton-equipment": {
         "name": "exoskeleton-equipment",
@@ -6001,10 +6001,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "explosive-rocketry": {
         "name": "explosive-rocketry",
@@ -6012,10 +6012,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "explosives": {
         "name": "explosives",
@@ -6023,10 +6023,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "fast-inserter": {
         "name": "fast-inserter",
@@ -6034,10 +6034,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "fission-reactor-equipment": {
         "name": "fission-reactor-equipment",
@@ -6046,10 +6046,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "flamethrower": {
         "name": "flamethrower",
@@ -6057,10 +6057,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "flammables": {
         "name": "flammables",
@@ -6068,10 +6068,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "fluid-handling": {
         "name": "fluid-handling",
@@ -6079,10 +6079,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "fluid-wagon": {
         "name": "fluid-wagon",
@@ -6090,10 +6090,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "follower-robot-count-1": {
         "name": "follower-robot-count-1",
@@ -6101,10 +6101,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "follower-robot-count-2": {
         "name": "follower-robot-count-2",
@@ -6112,10 +6112,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "follower-robot-count-3": {
         "name": "follower-robot-count-3",
@@ -6123,10 +6123,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "follower-robot-count-4": {
         "name": "follower-robot-count-4",
@@ -6134,10 +6134,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "gate": {
         "name": "gate",
@@ -6145,10 +6145,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "gun-turret": {
         "name": "gun-turret",
@@ -6156,10 +6156,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "heavy-armor": {
         "name": "heavy-armor",
@@ -6167,10 +6167,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "inserter-capacity-bonus-1": {
         "name": "inserter-capacity-bonus-1",
@@ -6178,10 +6178,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "inserter-capacity-bonus-2": {
         "name": "inserter-capacity-bonus-2",
@@ -6189,10 +6189,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "inserter-capacity-bonus-3": {
         "name": "inserter-capacity-bonus-3",
@@ -6200,10 +6200,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "inserter-capacity-bonus-4": {
         "name": "inserter-capacity-bonus-4",
@@ -6211,10 +6211,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "inserter-capacity-bonus-5": {
         "name": "inserter-capacity-bonus-5",
@@ -6222,10 +6222,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "inserter-capacity-bonus-6": {
         "name": "inserter-capacity-bonus-6",
@@ -6233,10 +6233,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "inserter-capacity-bonus-7": {
         "name": "inserter-capacity-bonus-7",
@@ -6244,10 +6244,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "kovarex-enrichment-process": {
         "name": "kovarex-enrichment-process",
@@ -6255,10 +6255,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "lamp": {
         "name": "lamp",
@@ -6266,10 +6266,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "land-mine": {
         "name": "land-mine",
@@ -6278,10 +6278,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "landfill": {
         "name": "landfill",
@@ -6289,10 +6289,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser": {
         "name": "laser",
@@ -6300,10 +6300,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-shooting-speed-1": {
         "name": "laser-shooting-speed-1",
@@ -6311,10 +6311,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-shooting-speed-2": {
         "name": "laser-shooting-speed-2",
@@ -6322,10 +6322,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-shooting-speed-3": {
         "name": "laser-shooting-speed-3",
@@ -6333,10 +6333,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-shooting-speed-4": {
         "name": "laser-shooting-speed-4",
@@ -6344,10 +6344,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-shooting-speed-5": {
         "name": "laser-shooting-speed-5",
@@ -6355,10 +6355,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-shooting-speed-6": {
         "name": "laser-shooting-speed-6",
@@ -6366,10 +6366,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-shooting-speed-7": {
         "name": "laser-shooting-speed-7",
@@ -6377,10 +6377,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-turret": {
         "name": "laser-turret",
@@ -6388,10 +6388,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-weapons-damage-1": {
         "name": "laser-weapons-damage-1",
@@ -6399,10 +6399,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-weapons-damage-2": {
         "name": "laser-weapons-damage-2",
@@ -6410,10 +6410,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-weapons-damage-3": {
         "name": "laser-weapons-damage-3",
@@ -6421,10 +6421,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-weapons-damage-4": {
         "name": "laser-weapons-damage-4",
@@ -6432,10 +6432,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-weapons-damage-5": {
         "name": "laser-weapons-damage-5",
@@ -6443,10 +6443,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "laser-weapons-damage-6": {
         "name": "laser-weapons-damage-6",
@@ -6454,10 +6454,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "logistic-robotics": {
         "name": "logistic-robotics",
@@ -6466,10 +6466,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "logistic-science-pack": {
         "name": "logistic-science-pack",
@@ -6477,10 +6477,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "logistic-system": {
         "name": "logistic-system",
@@ -6489,10 +6489,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "logistics": {
         "name": "logistics",
@@ -6500,10 +6500,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "logistics-2": {
         "name": "logistics-2",
@@ -6511,10 +6511,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "logistics-3": {
         "name": "logistics-3",
@@ -6522,10 +6522,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "low-density-structure": {
         "name": "low-density-structure",
@@ -6534,10 +6534,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "lubricant": {
         "name": "lubricant",
@@ -6545,10 +6545,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "military": {
         "name": "military",
@@ -6556,10 +6556,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "military-2": {
         "name": "military-2",
@@ -6567,10 +6567,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "military-3": {
         "name": "military-3",
@@ -6578,10 +6578,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "military-4": {
         "name": "military-4",
@@ -6589,10 +6589,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "military-science-pack": {
         "name": "military-science-pack",
@@ -6600,10 +6600,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "mining-productivity-1": {
         "name": "mining-productivity-1",
@@ -6611,10 +6611,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "mining-productivity-2": {
         "name": "mining-productivity-2",
@@ -6622,10 +6622,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "mining-productivity-3": {
         "name": "mining-productivity-3",
@@ -6633,10 +6633,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "modular-armor": {
         "name": "modular-armor",
@@ -6644,10 +6644,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "modules": {
         "name": "modules",
@@ -6655,10 +6655,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "night-vision-equipment": {
         "name": "night-vision-equipment",
@@ -6667,10 +6667,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "nuclear-fuel-reprocessing": {
         "name": "nuclear-fuel-reprocessing",
@@ -6678,10 +6678,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "nuclear-power": {
         "name": "nuclear-power",
@@ -6690,10 +6690,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "oil-gathering": {
         "name": "oil-gathering",
@@ -6702,10 +6702,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "oil-processing": {
         "name": "oil-processing",
@@ -6713,10 +6713,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "personal-laser-defense-equipment": {
         "name": "personal-laser-defense-equipment",
@@ -6725,10 +6725,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "personal-roboport-equipment": {
         "name": "personal-roboport-equipment",
@@ -6736,10 +6736,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "personal-roboport-mk2-equipment": {
         "name": "personal-roboport-mk2-equipment",
@@ -6747,10 +6747,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "physical-projectile-damage-1": {
         "name": "physical-projectile-damage-1",
@@ -6758,10 +6758,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "physical-projectile-damage-2": {
         "name": "physical-projectile-damage-2",
@@ -6769,10 +6769,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "physical-projectile-damage-3": {
         "name": "physical-projectile-damage-3",
@@ -6780,10 +6780,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "physical-projectile-damage-4": {
         "name": "physical-projectile-damage-4",
@@ -6791,10 +6791,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "physical-projectile-damage-5": {
         "name": "physical-projectile-damage-5",
@@ -6802,10 +6802,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "physical-projectile-damage-6": {
         "name": "physical-projectile-damage-6",
@@ -6813,10 +6813,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "plastics": {
         "name": "plastics",
@@ -6824,10 +6824,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "power-armor": {
         "name": "power-armor",
@@ -6835,10 +6835,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "power-armor-mk2": {
         "name": "power-armor-mk2",
@@ -6846,10 +6846,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "processing-unit": {
         "name": "processing-unit",
@@ -6858,10 +6858,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "production-science-pack": {
         "name": "production-science-pack",
@@ -6869,10 +6869,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "productivity-module": {
         "name": "productivity-module",
@@ -6880,10 +6880,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "productivity-module-2": {
         "name": "productivity-module-2",
@@ -6891,10 +6891,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "productivity-module-3": {
         "name": "productivity-module-3",
@@ -6902,10 +6902,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "radar": {
         "name": "radar",
@@ -6913,10 +6913,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "railway": {
         "name": "railway",
@@ -6924,10 +6924,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "refined-flammables-1": {
         "name": "refined-flammables-1",
@@ -6935,10 +6935,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "refined-flammables-2": {
         "name": "refined-flammables-2",
@@ -6946,10 +6946,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "refined-flammables-3": {
         "name": "refined-flammables-3",
@@ -6957,10 +6957,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "refined-flammables-4": {
         "name": "refined-flammables-4",
@@ -6968,10 +6968,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "refined-flammables-5": {
         "name": "refined-flammables-5",
@@ -6979,10 +6979,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "refined-flammables-6": {
         "name": "refined-flammables-6",
@@ -6990,10 +6990,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "repair-pack": {
         "name": "repair-pack",
@@ -7002,10 +7002,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "research-speed-1": {
         "name": "research-speed-1",
@@ -7013,10 +7013,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "research-speed-2": {
         "name": "research-speed-2",
@@ -7024,10 +7024,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "research-speed-3": {
         "name": "research-speed-3",
@@ -7035,10 +7035,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "research-speed-4": {
         "name": "research-speed-4",
@@ -7046,10 +7046,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "research-speed-5": {
         "name": "research-speed-5",
@@ -7057,10 +7057,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "research-speed-6": {
         "name": "research-speed-6",
@@ -7068,10 +7068,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "robotics": {
         "name": "robotics",
@@ -7079,10 +7079,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "rocket-fuel": {
         "name": "rocket-fuel",
@@ -7091,10 +7091,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "rocket-silo": {
         "name": "rocket-silo",
@@ -7103,10 +7103,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "rocketry": {
         "name": "rocketry",
@@ -7114,10 +7114,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "solar-energy": {
         "name": "solar-energy",
@@ -7126,10 +7126,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "solar-panel-equipment": {
         "name": "solar-panel-equipment",
@@ -7138,10 +7138,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "space-science-pack": {
         "name": "space-science-pack",
@@ -7149,10 +7149,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "speed-module": {
         "name": "speed-module",
@@ -7160,10 +7160,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "speed-module-2": {
         "name": "speed-module-2",
@@ -7171,10 +7171,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "speed-module-3": {
         "name": "speed-module-3",
@@ -7182,10 +7182,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "spidertron": {
         "name": "spidertron",
@@ -7193,10 +7193,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "steam-power": {
         "name": "steam-power",
@@ -7204,10 +7204,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "steel-axe": {
         "name": "steel-axe",
@@ -7216,10 +7216,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "steel-processing": {
         "name": "steel-processing",
@@ -7227,10 +7227,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "stone-wall": {
         "name": "stone-wall",
@@ -7238,10 +7238,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "stronger-explosives-1": {
         "name": "stronger-explosives-1",
@@ -7249,10 +7249,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "stronger-explosives-2": {
         "name": "stronger-explosives-2",
@@ -7260,10 +7260,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "stronger-explosives-3": {
         "name": "stronger-explosives-3",
@@ -7271,10 +7271,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "stronger-explosives-4": {
         "name": "stronger-explosives-4",
@@ -7282,10 +7282,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "stronger-explosives-5": {
         "name": "stronger-explosives-5",
@@ -7293,10 +7293,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "stronger-explosives-6": {
         "name": "stronger-explosives-6",
@@ -7304,10 +7304,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "sulfur-processing": {
         "name": "sulfur-processing",
@@ -7315,10 +7315,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "tank": {
         "name": "tank",
@@ -7326,10 +7326,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "toolbelt": {
         "name": "toolbelt",
@@ -7337,10 +7337,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "uranium-ammo": {
         "name": "uranium-ammo",
@@ -7349,10 +7349,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "uranium-mining": {
         "name": "uranium-mining",
@@ -7361,10 +7361,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "uranium-processing": {
         "name": "uranium-processing",
@@ -7372,10 +7372,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "utility-science-pack": {
         "name": "utility-science-pack",
@@ -7383,10 +7383,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "weapon-shooting-speed-1": {
         "name": "weapon-shooting-speed-1",
@@ -7394,10 +7394,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "weapon-shooting-speed-2": {
         "name": "weapon-shooting-speed-2",
@@ -7405,10 +7405,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "weapon-shooting-speed-3": {
         "name": "weapon-shooting-speed-3",
@@ -7416,10 +7416,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "weapon-shooting-speed-4": {
         "name": "weapon-shooting-speed-4",
@@ -7427,10 +7427,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "weapon-shooting-speed-5": {
         "name": "weapon-shooting-speed-5",
@@ -7438,10 +7438,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "weapon-shooting-speed-6": {
         "name": "weapon-shooting-speed-6",
@@ -7449,10 +7449,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-speed-1": {
         "name": "worker-robots-speed-1",
@@ -7460,10 +7460,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-speed-2": {
         "name": "worker-robots-speed-2",
@@ -7471,10 +7471,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-speed-3": {
         "name": "worker-robots-speed-3",
@@ -7482,10 +7482,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-speed-4": {
         "name": "worker-robots-speed-4",
@@ -7493,10 +7493,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-speed-5": {
         "name": "worker-robots-speed-5",
@@ -7504,10 +7504,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-storage-1": {
         "name": "worker-robots-storage-1",
@@ -7515,10 +7515,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-storage-2": {
         "name": "worker-robots-storage-2",
@@ -7526,10 +7526,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "worker-robots-storage-3": {
         "name": "worker-robots-storage-3",
@@ -7537,10 +7537,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "progressive-advanced-material-processing": {
         "name": "progressive-advanced-material-processing",
@@ -7550,10 +7550,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "progressive-armor": {
         "name": "progressive-armor",
@@ -7563,10 +7563,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "progressive-automation": {
         "name": "progressive-automation",
@@ -7576,10 +7576,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "progressive-braking-force": {
         "name": "progressive-braking-force",
@@ -7588,10 +7588,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "progressive-efficiency-module": {
         "name": "progressive-efficiency-module",
@@ -7601,10 +7601,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "progressive-electric-energy-distribution": {
         "name": "progressive-electric-energy-distribution",
@@ -7614,10 +7614,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "progressive-energy-shield": {
         "name": "progressive-energy-shield",
@@ -7627,10 +7627,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "progressive-engine": {
         "name": "progressive-engine",
@@ -7640,10 +7640,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "progressive-flamethrower": {
         "name": "progressive-flamethrower",
@@ -7653,10 +7653,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "progression"
+        "max_count": 7
       },
       "progressive-fluid-handling": {
         "name": "progressive-fluid-handling",
@@ -7666,10 +7666,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "progressive-follower": {
         "name": "progressive-follower",
@@ -7679,10 +7679,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "progressive-follower-robot-count": {
         "name": "progressive-follower-robot-count",
@@ -7692,10 +7692,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "progressive-inserter": {
         "name": "progressive-inserter",
@@ -7705,10 +7705,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "filler"
+        "max_count": 9
       },
       "progressive-inserter-capacity-bonus": {
         "name": "progressive-inserter-capacity-bonus",
@@ -7717,10 +7717,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "progressive-laser-shooting-speed": {
         "name": "progressive-laser-shooting-speed",
@@ -7730,10 +7730,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "filler"
+        "max_count": 7
       },
       "progressive-laser-weapons-damage": {
         "name": "progressive-laser-weapons-damage",
@@ -7743,10 +7743,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "progressive-logistics": {
         "name": "progressive-logistics",
@@ -7756,10 +7756,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "progressive-military": {
         "name": "progressive-military",
@@ -7769,10 +7769,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "progressive-mining-productivity": {
         "name": "progressive-mining-productivity",
@@ -7782,10 +7782,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "progressive-personal-battery": {
         "name": "progressive-personal-battery",
@@ -7795,10 +7795,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "progressive-personal-roboport-equipment": {
         "name": "progressive-personal-roboport-equipment",
@@ -7808,10 +7808,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "progressive-physical-projectile-damage": {
         "name": "progressive-physical-projectile-damage",
@@ -7821,10 +7821,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "progressive-processing": {
         "name": "progressive-processing",
@@ -7834,10 +7834,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "progression"
+        "max_count": 8
       },
       "progressive-productivity-module": {
         "name": "progressive-productivity-module",
@@ -7847,10 +7847,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "progressive-refined-flammables": {
         "name": "progressive-refined-flammables",
@@ -7859,10 +7859,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "progressive-research-speed": {
         "name": "progressive-research-speed",
@@ -7872,10 +7872,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "progressive-rocketry": {
         "name": "progressive-rocketry",
@@ -7885,10 +7885,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "progressive-science-pack": {
         "name": "progressive-science-pack",
@@ -7898,10 +7898,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "progressive-speed-module": {
         "name": "progressive-speed-module",
@@ -7911,10 +7911,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "progressive-stronger-explosives": {
         "name": "progressive-stronger-explosives",
@@ -7924,10 +7924,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "progressive-train-network": {
         "name": "progressive-train-network",
@@ -7937,10 +7937,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "progression"
+        "max_count": 9
       },
       "progressive-turret": {
         "name": "progressive-turret",
@@ -7950,10 +7950,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "progressive-vehicle": {
         "name": "progressive-vehicle",
@@ -7963,10 +7963,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "progressive-wall": {
         "name": "progressive-wall",
@@ -7976,10 +7976,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "progressive-weapon-shooting-speed": {
         "name": "progressive-weapon-shooting-speed",
@@ -7989,10 +7989,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "progressive-worker-robots-speed": {
         "name": "progressive-worker-robots-speed",
@@ -8002,10 +8002,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "progressive-worker-robots-storage": {
         "name": "progressive-worker-robots-storage",
@@ -8015,10 +8015,10 @@
           "Everything",
           "Progressive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Victory": {
         "name": "Victory",
@@ -8026,10 +8026,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Automated automation-science-pack": {
         "name": "Automated automation-science-pack",
@@ -8038,10 +8038,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Automated chemical-science-pack": {
         "name": "Automated chemical-science-pack",
@@ -8050,10 +8050,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Automated logistic-science-pack": {
         "name": "Automated logistic-science-pack",
@@ -8062,10 +8062,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Automated military-science-pack": {
         "name": "Automated military-science-pack",
@@ -8074,10 +8074,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Automated production-science-pack": {
         "name": "Automated production-science-pack",
@@ -8086,10 +8086,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Automated utility-science-pack": {
         "name": "Automated utility-science-pack",
@@ -8098,10 +8098,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

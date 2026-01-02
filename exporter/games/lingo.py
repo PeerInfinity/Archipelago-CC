@@ -181,8 +181,10 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         # Check for level 2 location (worldgen world)
         if self.is_worldgen_world(world):
-            settings = self._get_worldgen_settings(world)
-            level_2_req = settings.get('level_2_requirement', 1)
+            worldgen_data = self._get_worldgen_settings(world)
+            # Check options section (new format), then top-level (legacy)
+            options = worldgen_data.get('options', worldgen_data)
+            level_2_req = options.get('level_2_requirement', 1)
             if level_2_req > 1:
                 # In worldgen, the level 2 locations are "Second Room - LEVEL 2" and "Second Room - ANOTHER TRY"
                 if location_name == "Second Room - LEVEL 2" or location_name == "Second Room - ANOTHER TRY":
@@ -378,14 +380,16 @@ class LingoGameExportHandler(GenericGameExportHandler):
         # Get base world data from parent class
         settings = super().get_world_data(world, multiworld, player)
 
-        # Check if this is a worldgen world - load settings from saved file
+        # Check if this is a worldgen world - load data from saved file
         if self.is_worldgen_world(world):
-            worldgen_settings = self._get_worldgen_settings(world)
-            # Options are already exported by EXPORTED_OPTIONS, just add game-specific data
+            worldgen_data = self._get_worldgen_settings(world)
+            # Check both new format (world_attributes section) and legacy (top-level)
+            world_attrs = worldgen_data.get('world_attributes', worldgen_data)
+            # Load game-specific data (options are already exported by EXPORTED_OPTIONS)
             for key in ['item_by_door', 'mastery_reqs', 'door_reqs', 'counting_panel_reqs',
                         'PROGRESSIVE_ITEMS', 'PROGRESSIVE_DOORS_BY_ROOM']:
-                if key in worldgen_settings:
-                    settings[key] = worldgen_settings[key]
+                if key in world_attrs:
+                    settings[key] = world_attrs[key]
             return settings
 
         # Options are exported by EXPORTED_OPTIONS class attribute (handled by base class)

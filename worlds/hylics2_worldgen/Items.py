@@ -93,5 +93,5 @@ item_table: Dict[str, ItemData] = {
     "Dedusmuln": ItemData(200690, ItemClassification.filler),
     "Somsnosa": ItemData(200691, ItemClassification.filler),
     "10 Bones": ItemData(200692, ItemClassification.filler),
-    "Victory": ItemData(None, ItemClassification.progression),
+    "Victory": ItemData(None, ItemClassification.progression_skip_balancing),
 }

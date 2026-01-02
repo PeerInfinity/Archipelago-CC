@@ -714,10 +714,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flamethrower": {
         "name": "Flamethrower",
@@ -726,10 +726,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Spreadshot": {
         "name": "Ice Spreadshot",
@@ -738,10 +738,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Volt Laser": {
         "name": "Volt Laser",
@@ -750,10 +750,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Life Extension": {
         "name": "Life Extension",
@@ -762,10 +762,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Clip Extension": {
         "name": "Clip Extension",
@@ -774,10 +774,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Faster Reload": {
         "name": "Faster Reload",
@@ -786,10 +786,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Special Extension": {
         "name": "Special Extension",
@@ -798,10 +798,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Jacket": {
         "name": "Jacket",
@@ -809,10 +809,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cave Key": {
         "name": "Cave Key",
@@ -821,10 +821,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Volcanic Key": {
         "name": "Volcanic Key",
@@ -833,10 +833,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Arctic Key": {
         "name": "Arctic Key",
@@ -845,10 +845,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Swamp Key": {
         "name": "Swamp Key",
@@ -857,10 +857,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "System Power": {
         "name": "System Power",
@@ -868,10 +868,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Full Heal": {
         "name": "Full Heal",
@@ -880,10 +880,10 @@
           "Everything",
           "Filler"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Quick-fire Mode": {
         "name": "Quick-fire Mode",
@@ -892,10 +892,10 @@
           "Everything",
           "Filler"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Active Camouflage": {
         "name": "Active Camouflage",
@@ -904,10 +904,10 @@
           "Everything",
           "Filler"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -916,10 +916,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "trap"
+        "max_count": 2
       },
       "Shake Trap": {
         "name": "Shake Trap",
@@ -928,10 +928,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ninja Trap": {
         "name": "Ninja Trap",
@@ -940,10 +940,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "trap"
+        "max_count": 2
       },
       "PRINCESS": {
         "name": "PRINCESS",
@@ -951,10 +951,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

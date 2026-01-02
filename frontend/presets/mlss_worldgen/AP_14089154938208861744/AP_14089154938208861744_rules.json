@@ -11058,10 +11058,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -11069,10 +11069,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 52,
-        "classification": "filler"
+        "max_count": 52
       },
       "Super Mushroom": {
         "name": "Super Mushroom",
@@ -11080,10 +11080,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "Ultra Mushroom": {
         "name": "Ultra Mushroom",
@@ -11091,10 +11091,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "Max Mushroom": {
         "name": "Max Mushroom",
@@ -11102,10 +11102,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nuts": {
         "name": "Nuts",
@@ -11113,10 +11113,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Super Nuts": {
         "name": "Super Nuts",
@@ -11124,10 +11124,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Ultra Nuts": {
         "name": "Ultra Nuts",
@@ -11135,10 +11135,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "useful"
+        "max_count": 5
       },
       "Max Nuts": {
         "name": "Max Nuts",
@@ -11146,10 +11146,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Syrup": {
         "name": "Syrup",
@@ -11157,10 +11157,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 24,
-        "classification": "filler"
+        "max_count": 24
       },
       "Super Syrup": {
         "name": "Super Syrup",
@@ -11168,10 +11168,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "filler"
+        "max_count": 8
       },
       "Ultra Syrup": {
         "name": "Ultra Syrup",
@@ -11179,10 +11179,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "useful"
+        "max_count": 10
       },
       "Max Syrup": {
         "name": "Max Syrup",
@@ -11190,10 +11190,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "1-UP Mushroom": {
         "name": "1-UP Mushroom",
@@ -11202,10 +11202,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "1-UP Super": {
         "name": "1-UP Super",
@@ -11214,10 +11214,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Golden Mushroom": {
         "name": "Golden Mushroom",
@@ -11225,10 +11225,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Refreshing Herb": {
         "name": "Refreshing Herb",
@@ -11236,10 +11236,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "filler"
+        "max_count": 9
       },
       "Red Pepper": {
         "name": "Red Pepper",
@@ -11247,10 +11247,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Green Pepper": {
         "name": "Green Pepper",
@@ -11258,10 +11258,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Hoo Bean": {
         "name": "Hoo Bean",
@@ -11269,10 +11269,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 92,
-        "classification": "filler"
+        "max_count": 92
       },
       "Chuckle Bean": {
         "name": "Chuckle Bean",
@@ -11280,10 +11280,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 177,
-        "classification": "filler"
+        "max_count": 177
       },
       "Woohoo Blend": {
         "name": "Woohoo Blend",
@@ -11291,10 +11291,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hoohoo Blend": {
         "name": "Hoohoo Blend",
@@ -11302,10 +11302,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Chuckle Blend": {
         "name": "Chuckle Blend",
@@ -11313,10 +11313,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Teehee Blend": {
         "name": "Teehee Blend",
@@ -11324,10 +11324,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hoolumbian": {
         "name": "Hoolumbian",
@@ -11335,10 +11335,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Chuckoccino": {
         "name": "Chuckoccino",
@@ -11346,10 +11346,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Teeheespresso": {
         "name": "Teeheespresso",
@@ -11357,10 +11357,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Peasley's Rose": {
         "name": "Peasley's Rose",
@@ -11368,10 +11368,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beanbean Brooch": {
         "name": "Beanbean Brooch",
@@ -11379,10 +11379,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Goblet": {
         "name": "Red Goblet",
@@ -11390,10 +11390,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Green Goblet": {
         "name": "Green Goblet",
@@ -11401,10 +11401,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Chuckola Fruit": {
         "name": "Red Chuckola Fruit",
@@ -11413,10 +11413,10 @@
           "Chuckola Fruit",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "White Chuckola Fruit": {
         "name": "White Chuckola Fruit",
@@ -11425,10 +11425,10 @@
           "Chuckola Fruit",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Purple Chuckola Fruit": {
         "name": "Purple Chuckola Fruit",
@@ -11437,10 +11437,10 @@
           "Chuckola Fruit",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hammers": {
         "name": "Hammers",
@@ -11448,10 +11448,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Firebrand": {
         "name": "Firebrand",
@@ -11459,10 +11459,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Thunderhand": {
         "name": "Thunderhand",
@@ -11470,10 +11470,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Membership Card": {
         "name": "Membership Card",
@@ -11481,10 +11481,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Winkle Card": {
         "name": "Winkle Card",
@@ -11492,10 +11492,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Peach's Extra Dress": {
         "name": "Peach's Extra Dress",
@@ -11503,10 +11503,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fake Beanstar": {
         "name": "Fake Beanstar",
@@ -11514,10 +11514,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Pearl Bean": {
         "name": "Red Pearl Bean",
@@ -11525,10 +11525,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Green Pearl Bean": {
         "name": "Green Pearl Bean",
@@ -11536,10 +11536,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bean Fruit 1": {
         "name": "Bean Fruit 1",
@@ -11548,10 +11548,10 @@
           "Beanfruit",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bean Fruit 2": {
         "name": "Bean Fruit 2",
@@ -11560,10 +11560,10 @@
           "Beanfruit",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bean Fruit 3": {
         "name": "Bean Fruit 3",
@@ -11572,10 +11572,10 @@
           "Beanfruit",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bean Fruit 4": {
         "name": "Bean Fruit 4",
@@ -11584,10 +11584,10 @@
           "Beanfruit",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bean Fruit 5": {
         "name": "Bean Fruit 5",
@@ -11596,10 +11596,10 @@
           "Beanfruit",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bean Fruit 6": {
         "name": "Bean Fruit 6",
@@ -11608,10 +11608,10 @@
           "Beanfruit",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bean Fruit 7": {
         "name": "Bean Fruit 7",
@@ -11620,10 +11620,10 @@
           "Beanfruit",
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blue Neon Egg": {
         "name": "Blue Neon Egg",
@@ -11632,10 +11632,10 @@
           "Everything",
           "Neon Egg"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Neon Egg": {
         "name": "Red Neon Egg",
@@ -11644,10 +11644,10 @@
           "Everything",
           "Neon Egg"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Green Neon Egg": {
         "name": "Green Neon Egg",
@@ -11656,10 +11656,10 @@
           "Everything",
           "Neon Egg"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Yellow Neon Egg": {
         "name": "Yellow Neon Egg",
@@ -11668,10 +11668,10 @@
           "Everything",
           "Neon Egg"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Purple Neon Egg": {
         "name": "Purple Neon Egg",
@@ -11680,10 +11680,10 @@
           "Everything",
           "Neon Egg"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Orange Neon Egg": {
         "name": "Orange Neon Egg",
@@ -11692,10 +11692,10 @@
           "Everything",
           "Neon Egg"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Azure Neon Egg": {
         "name": "Azure Neon Egg",
@@ -11704,10 +11704,10 @@
           "Everything",
           "Neon Egg"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beanstar Piece 1": {
         "name": "Beanstar Piece 1",
@@ -11716,10 +11716,10 @@
           "Beanstar Piece",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beanstar Piece 2": {
         "name": "Beanstar Piece 2",
@@ -11728,10 +11728,10 @@
           "Beanstar Piece",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beanstar Piece 3": {
         "name": "Beanstar Piece 3",
@@ -11740,10 +11740,10 @@
           "Beanstar Piece",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beanstar Piece 4": {
         "name": "Beanstar Piece 4",
@@ -11752,10 +11752,10 @@
           "Beanstar Piece",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spangle": {
         "name": "Spangle",
@@ -11763,10 +11763,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Beanlet 1": {
         "name": "Beanlet 1",
@@ -11774,10 +11774,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanlet 2": {
         "name": "Beanlet 2",
@@ -11785,10 +11785,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanlet 3": {
         "name": "Beanlet 3",
@@ -11796,10 +11796,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanlet 4": {
         "name": "Beanlet 4",
@@ -11807,10 +11807,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanlet 5": {
         "name": "Beanlet 5",
@@ -11818,10 +11818,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 1": {
         "name": "Beanstone 1",
@@ -11829,10 +11829,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 2": {
         "name": "Beanstone 2",
@@ -11840,10 +11840,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 3": {
         "name": "Beanstone 3",
@@ -11851,10 +11851,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 4": {
         "name": "Beanstone 4",
@@ -11862,10 +11862,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 5": {
         "name": "Beanstone 5",
@@ -11873,10 +11873,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 6": {
         "name": "Beanstone 6",
@@ -11884,10 +11884,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 7": {
         "name": "Beanstone 7",
@@ -11895,10 +11895,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 8": {
         "name": "Beanstone 8",
@@ -11906,10 +11906,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 9": {
         "name": "Beanstone 9",
@@ -11917,10 +11917,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstone 10": {
         "name": "Beanstone 10",
@@ -11928,10 +11928,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Secret Scroll 1": {
         "name": "Secret Scroll 1",
@@ -11939,10 +11939,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Secret Scroll 2": {
         "name": "Secret Scroll 2",
@@ -11950,10 +11950,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Castle Badge": {
         "name": "Castle Badge",
@@ -11961,10 +11961,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pea Badge": {
         "name": "Pea Badge",
@@ -11972,10 +11972,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bean B. Badge": {
         "name": "Bean B. Badge",
@@ -11983,10 +11983,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Counter Badge": {
         "name": "Counter Badge",
@@ -11994,10 +11994,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Charity Badge": {
         "name": "Charity Badge",
@@ -12005,10 +12005,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bros. Badge": {
         "name": "Bros. Badge",
@@ -12016,10 +12016,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Miracle Badge": {
         "name": "Miracle Badge",
@@ -12027,10 +12027,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Ohoracle Badge": {
         "name": "Ohoracle Badge",
@@ -12038,10 +12038,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mush Badge": {
         "name": "Mush Badge",
@@ -12049,10 +12049,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mari-Lui Badge": {
         "name": "Mari-Lui Badge",
@@ -12061,10 +12061,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Muscle Badge": {
         "name": "Muscle Badge",
@@ -12072,10 +12072,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Spiny Badge AA": {
         "name": "Spiny Badge AA",
@@ -12083,10 +12083,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mush Badge A": {
         "name": "Mush Badge A",
@@ -12094,10 +12094,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Grab Badge": {
         "name": "Grab Badge",
@@ -12105,10 +12105,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mush Badge AA": {
         "name": "Mush Badge AA",
@@ -12116,10 +12116,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Power Badge": {
         "name": "Power Badge",
@@ -12127,10 +12127,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Wonder Badge": {
         "name": "Wonder Badge",
@@ -12138,10 +12138,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beauty Badge": {
         "name": "Beauty Badge",
@@ -12149,10 +12149,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Salvage Badge": {
         "name": "Salvage Badge",
@@ -12160,10 +12160,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Oh-Pah Badge": {
         "name": "Oh-Pah Badge",
@@ -12172,10 +12172,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Brilliant Badge": {
         "name": "Brilliant Badge",
@@ -12183,10 +12183,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Sarge Badge": {
         "name": "Sarge Badge",
@@ -12194,10 +12194,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "General Badge": {
         "name": "General Badge",
@@ -12205,10 +12205,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Tank Badge": {
         "name": "Tank Badge",
@@ -12216,10 +12216,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bros. Rock": {
         "name": "Bros. Rock",
@@ -12227,10 +12227,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Soulful Bros.": {
         "name": "Soulful Bros.",
@@ -12238,10 +12238,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "High-End Badge": {
         "name": "High-End Badge",
@@ -12250,10 +12250,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bean Pants": {
         "name": "Bean Pants",
@@ -12261,10 +12261,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bean Trousers": {
         "name": "Bean Trousers",
@@ -12272,10 +12272,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Blue Jeans": {
         "name": "Blue Jeans",
@@ -12283,10 +12283,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Parasol Pants": {
         "name": "Parasol Pants",
@@ -12294,10 +12294,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hard Pants": {
         "name": "Hard Pants",
@@ -12305,10 +12305,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Heart Jeans": {
         "name": "Heart Jeans",
@@ -12316,10 +12316,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Plaid Trousers": {
         "name": "Plaid Trousers",
@@ -12327,10 +12327,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "#1 Trousers": {
         "name": "#1 Trousers",
@@ -12338,10 +12338,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Safety Slacks": {
         "name": "Safety Slacks",
@@ -12349,10 +12349,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Shroom Pants": {
         "name": "Shroom Pants",
@@ -12360,10 +12360,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Shroom Bells": {
         "name": "Shroom Bells",
@@ -12371,10 +12371,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Shroom Slacks": {
         "name": "Shroom Slacks",
@@ -12382,10 +12382,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Peachy Jeans": {
         "name": "Peachy Jeans",
@@ -12393,10 +12393,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mushwin Pants": {
         "name": "Mushwin Pants",
@@ -12404,10 +12404,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mushluck Pants": {
         "name": "Mushluck Pants",
@@ -12415,10 +12415,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Scandal Jeans": {
         "name": "Scandal Jeans",
@@ -12426,10 +12426,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Street Jeans": {
         "name": "Street Jeans",
@@ -12437,10 +12437,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Tropic Slacks": {
         "name": "Tropic Slacks",
@@ -12448,10 +12448,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hermetic Pants": {
         "name": "Hermetic Pants",
@@ -12459,10 +12459,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Beanstar Pants": {
         "name": "Beanstar Pants",
@@ -12470,10 +12470,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Peasley Slacks": {
         "name": "Peasley Slacks",
@@ -12481,10 +12481,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Queen B. Jeans": {
         "name": "Queen B. Jeans",
@@ -12492,10 +12492,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "B. Brand Jeans": {
         "name": "B. Brand Jeans",
@@ -12503,10 +12503,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Heart Slacks": {
         "name": "Heart Slacks",
@@ -12514,10 +12514,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Casual Slacks": {
         "name": "Casual Slacks",
@@ -12525,10 +12525,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Casual Coral": {
         "name": "Casual Coral",
@@ -12536,10 +12536,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Harhall's Pants": {
         "name": "Harhall's Pants",
@@ -12547,10 +12547,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Wool Trousers": {
         "name": "Wool Trousers",
@@ -12558,10 +12558,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Iron Pants": {
         "name": "Iron Pants",
@@ -12569,10 +12569,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Greed Wallet": {
         "name": "Greed Wallet",
@@ -12580,10 +12580,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bonus Ring": {
         "name": "Bonus Ring",
@@ -12591,10 +12591,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Excite Spring": {
         "name": "Excite Spring",
@@ -12602,10 +12602,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Great Force": {
         "name": "Great Force",
@@ -12613,10 +12613,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Power Grip": {
         "name": "Power Grip",
@@ -12624,10 +12624,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cobalt Necktie": {
         "name": "Cobalt Necktie",
@@ -12635,10 +12635,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Game Boy Horror SP": {
         "name": "Game Boy Horror SP",
@@ -12646,10 +12646,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Woo Bean": {
         "name": "Woo Bean",
@@ -12657,10 +12657,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hee Bean": {
         "name": "Hee Bean",
@@ -12668,10 +12668,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Beanstar Emblem": {
         "name": "Beanstar Emblem",
@@ -12679,10 +12679,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -12690,10 +12690,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

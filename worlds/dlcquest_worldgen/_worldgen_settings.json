@@ -24,8 +24,8 @@
       "time_is_money": 0
     },
     "world_directory": "dlcquest",
-    "use_resolved_items": true,
-    "add_sphere_items_upfront": true
+    "add_sphere_items_upfront": true,
+    "use_resolved_items": true
   },
   "world_attributes": {
     "world_description": "DLCQuest is a metroid ish game where everything is an in-game dlc.",

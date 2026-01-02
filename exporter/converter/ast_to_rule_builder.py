@@ -104,7 +104,10 @@ class ASTToRuleBuilder:
             'list': self._convert_list,
             'tuple': self._convert_tuple,
 
-            # ALTTP-specific types
+            # Function calls
+            'function_call': self._convert_function_call,
+
+            # Placement types
             'placement_search': self._convert_placement_search,
             'placement_lookup': self._convert_placement_lookup,
         }
@@ -406,13 +409,20 @@ class ASTToRuleBuilder:
                 return arg
             return default
 
-        # Helper to extract item list from a set or list argument
+        # Helper to extract item list from a set, list, or tuple argument
         def get_items_from_arg(arg, default=None):
             if isinstance(arg, list):
                 return arg
             if isinstance(arg, dict):
                 if arg.get('type') == 'set':
                     # Extract item values from set elements
+                    elements = arg.get('elements', [])
+                    return [
+                        el.get('value') if isinstance(el, dict) and el.get('type') == 'constant' else el
+                        for el in elements
+                    ]
+                if arg.get('type') == 'tuple':
+                    # Extract item values from tuple elements
                     elements = arg.get('elements', [])
                     return [
                         el.get('value') if isinstance(el, dict) and el.get('type') == 'constant' else el
@@ -528,6 +538,137 @@ class ASTToRuleBuilder:
         })
 
     # -------------------------------------------------------------------------
+    # Composite Rule Optimizations
+    # -------------------------------------------------------------------------
+
+    def _flatten_composite(self, rule_name: str, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Flatten nested And/Or of the same type.
+
+        And(A, And(B, C)) -> And(A, B, C)
+        Or(A, Or(B, C)) -> Or(A, B, C)
+        """
+        flattened = []
+        for child in children:
+            if isinstance(child, dict) and child.get('rule') == rule_name:
+                # Same type - flatten its children
+                nested_children = child.get('children', [])
+                flattened.extend(nested_children)
+            else:
+                flattened.append(child)
+        return flattened
+
+    def _remove_identity_elements(self, rule_name: str, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Remove identity elements from And/Or.
+
+        And(..., True_) -> And(...)  (True_ is identity for And)
+        Or(..., False_) -> Or(...)   (False_ is identity for Or)
+        """
+        identity = 'True_' if rule_name == 'And' else 'False_'
+        return [c for c in children if not (isinstance(c, dict) and c.get('rule') == identity)]
+
+    def _check_absorbing_element(self, rule_name: str, children: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """
+        Check for absorbing elements in And/Or.
+
+        And(..., False_) -> False_  (False_ absorbs And)
+        Or(..., True_) -> True_     (True_ absorbs Or)
+
+        Returns the absorbing element if found, None otherwise.
+        """
+        absorbing = 'False_' if rule_name == 'And' else 'True_'
+        for child in children:
+            if isinstance(child, dict) and child.get('rule') == absorbing:
+                return child
+        return None
+
+    def _combine_has_rules(self, rule_name: str, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Combine multiple simple Has rules into HasAll/HasAny.
+
+        And(Has(A), Has(B), Has(C)) -> And(HasAll([A, B, C]))
+        Or(Has(A), Has(B), Has(C)) -> Or(HasAny([A, B, C]))
+
+        Also merges simple Has rules with existing HasAll/HasAny:
+        And(Has(A), HasAll([B, C])) -> And(HasAll([A, B, C]))
+
+        Only combines Has rules without count (or count=1).
+        """
+        target_rule = 'HasAll' if rule_name == 'And' else 'HasAny'
+
+        simple_has_items = []
+        existing_items = []  # Items from existing HasAll/HasAny
+        other_children = []
+
+        for child in children:
+            if isinstance(child, dict):
+                # Collect items from simple Has rules
+                if child.get('rule') == 'Has':
+                    args = child.get('args', {})
+                    count = args.get('count', 1)
+                    item_name = args.get('item_name')
+                    # Only combine simple Has (count=1 or no count)
+                    if count == 1 and item_name and isinstance(item_name, str):
+                        simple_has_items.append(item_name)
+                        continue
+                # Also collect items from existing HasAll/HasAny (matching target)
+                elif child.get('rule') == target_rule:
+                    args = child.get('args', {})
+                    items = args.get('items', [])
+                    if isinstance(items, list) and all(isinstance(i, str) for i in items):
+                        existing_items.extend(items)
+                        continue
+            other_children.append(child)
+
+        # Combine all items from Has and existing HasAll/HasAny
+        all_items = simple_has_items + existing_items
+
+        # Deduplicate while preserving order
+        unique_items = list(dict.fromkeys(all_items))
+
+        if len(unique_items) >= 2:
+            other_children.append(self._make_rule(target_rule, {'items': unique_items}))
+        elif len(unique_items) == 1:
+            other_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
+
+        return other_children
+
+    def _optimize_composite(self, rule_name: str, children: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Apply all optimizations to a composite rule (And/Or).
+
+        1. Flatten nested same-type composites
+        2. Check for absorbing elements (False_ in And, True_ in Or)
+        3. Remove identity elements (True_ in And, False_ in Or)
+        4. Combine simple Has rules into HasAll/HasAny
+        5. Unwrap single-child composites
+        """
+        # 1. Flatten nested
+        children = self._flatten_composite(rule_name, children)
+
+        # 2. Check absorbing element
+        absorbing = self._check_absorbing_element(rule_name, children)
+        if absorbing:
+            return absorbing
+
+        # 3. Remove identity elements
+        children = self._remove_identity_elements(rule_name, children)
+
+        # 4. Combine Has rules
+        children = self._combine_has_rules(rule_name, children)
+
+        # 5. Handle edge cases
+        if not children:
+            # Empty And -> True_, Empty Or -> False_
+            return self._make_rule('True_' if rule_name == 'And' else 'False_', {})
+
+        if len(children) == 1:
+            return children[0]
+
+        return self._make_composite_rule(rule_name, children)
+
+    # -------------------------------------------------------------------------
     # Composite Rule Converters
     # -------------------------------------------------------------------------
 
@@ -536,25 +677,27 @@ class ASTToRuleBuilder:
         Convert and rule.
 
         AST: {"type": "and", "conditions": [...]}
-        RB: {"rule": "And", "options": [], "children": [...]}
+        RB: {"rule": "And", "children": [...]}
 
-        Optimization: Collects simple item_check rules with count=1 and combines
-        them into HasAll, even when mixed with other conditions. This matches
-        the Rule Builder's _simplify_and behavior for consistent output.
+        Optimizations applied:
+        1. Collect simple item_check rules with count=1 and combine into HasAll
+        2. Flatten nested And rules
+        3. Remove True_ identity elements
+        4. Check for False_ absorbing element
+        5. Combine already-converted Has rules into HasAll
+        6. Unwrap single-child And
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('True_', {})
 
-        # Separate simple item checks (count=1) from other conditions
-        # This partial optimization matches Rule Builder's _simplify_and
+        # First pass: collect simple item_checks before conversion
         simple_item_checks = []
         other_conditions = []
         for cond in conditions:
             if cond.get('type') == 'item_check':
                 count_raw = cond.get('count', 1)
-                # Unwrap constant wrapper if present
                 count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
                     item_raw = cond.get('item', '')
@@ -564,46 +707,45 @@ class ASTToRuleBuilder:
                         continue
             other_conditions.append(cond)
 
-        # Convert other conditions
+        # Convert remaining conditions
         converted_children = [self._convert_rule(cond) for cond in other_conditions]
 
-        # Add simple item checks as HasAll (if 2+) or Has (if 1)
-        # Deduplicate items while preserving order
+        # Add pre-conversion item checks as HasAll/Has
         unique_items = list(dict.fromkeys(simple_item_checks))
         if len(unique_items) >= 2:
             converted_children.append(self._make_rule('HasAll', {'items': unique_items}))
         elif len(unique_items) == 1:
             converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
-        if len(converted_children) == 1:
-            return converted_children[0]
-
-        return self._make_composite_rule('And', converted_children)
+        # Apply post-conversion optimizations
+        return self._optimize_composite('And', converted_children)
 
     def _convert_or(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert or rule.
 
         AST: {"type": "or", "conditions": [...]}
-        RB: {"rule": "Or", "options": [], "children": [...]}
+        RB: {"rule": "Or", "children": [...]}
 
-        Optimization: Collects simple item_check rules with count=1 and combines
-        them into HasAny, even when mixed with other conditions. This matches
-        the Rule Builder's _simplify_or behavior for consistent output.
+        Optimizations applied:
+        1. Collect simple item_check rules with count=1 and combine into HasAny
+        2. Flatten nested Or rules
+        3. Remove False_ identity elements
+        4. Check for True_ absorbing element
+        5. Combine already-converted Has rules into HasAny
+        6. Unwrap single-child Or
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('False_', {})
 
-        # Separate simple item checks (count=1) from other conditions
-        # This partial optimization matches Rule Builder's _simplify_or
+        # First pass: collect simple item_checks before conversion
         simple_item_checks = []
         other_conditions = []
         for cond in conditions:
             if cond.get('type') == 'item_check':
                 count_raw = cond.get('count', 1)
-                # Unwrap constant wrapper if present
                 count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
                     item_raw = cond.get('item', '')
@@ -613,37 +755,39 @@ class ASTToRuleBuilder:
                         continue
             other_conditions.append(cond)
 
-        # Convert other conditions
+        # Convert remaining conditions
         converted_children = [self._convert_rule(cond) for cond in other_conditions]
 
-        # Add simple item checks as HasAny (if 2+) or Has (if 1)
-        # Deduplicate items while preserving order
+        # Add pre-conversion item checks as HasAny/Has
         unique_items = list(dict.fromkeys(simple_item_checks))
         if len(unique_items) >= 2:
             converted_children.append(self._make_rule('HasAny', {'items': unique_items}))
         elif len(unique_items) == 1:
             converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
-        if len(converted_children) == 1:
-            return converted_children[0]
-
-        return self._make_composite_rule('Or', converted_children)
+        # Apply post-conversion optimizations
+        return self._optimize_composite('Or', converted_children)
 
     def _convert_not(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert not rule.
 
         AST: {"type": "not", "condition": {...}}
-        RB: No direct equivalent - preserve as custom rule
+        RB: {"rule": "Not", "args": {"condition": {...}}}
+
+        Optimization: Not(Not(X)) -> X
         """
         condition = rule.get('condition', {})
         converted_condition = self._convert_rule(condition)
 
-        self.warnings.append("'not' rule has no direct Rule Builder equivalent, preserved as custom rule")
-        return self._make_custom_rule('Not', {
-            'condition': converted_condition,
-            '_original_ast_type': 'not'
-        })
+        # Optimization: Not(Not(X)) -> X
+        if (isinstance(converted_condition, dict) and
+            converted_condition.get('rule') == 'Not' and
+            'args' in converted_condition and
+            'condition' in converted_condition['args']):
+            return converted_condition['args']['condition']
+
+        return self._make_rule('Not', {'condition': converted_condition})
 
     # -------------------------------------------------------------------------
     # Reachability Converters
@@ -838,12 +982,54 @@ class ASTToRuleBuilder:
     # Expression Converters (Limited Support)
     # -------------------------------------------------------------------------
 
+    def _convert_compare_operand(self, operand: Any) -> Any:
+        """
+        Convert a compare/arithmetic operand.
+
+        Unlike _convert_rule, this extracts raw values from constants instead
+        of wrapping them in Constant rules. This produces cleaner output:
+          {"left": 1, "right": ('a', 'b')} instead of
+          {"left": {"rule": "Constant", "args": {"value": 1}}, ...}
+
+        For complex operands (rules), it still converts them normally.
+        """
+        if not isinstance(operand, dict):
+            return operand
+
+        op_type = operand.get('type', '')
+
+        # Extract raw values from constants
+        if op_type == 'constant':
+            return operand.get('value')
+
+        # Convert tuple to Python tuple of values
+        if op_type == 'tuple':
+            elements = operand.get('elements', operand.get('value', []))
+            result = []
+            for elem in elements:
+                result.append(self._convert_compare_operand(elem))
+            return tuple(result)
+
+        # Convert list to Python list of values
+        if op_type == 'list':
+            elements = operand.get('elements', operand.get('value', []))
+            result = []
+            for elem in elements:
+                result.append(self._convert_compare_operand(elem))
+            return result
+
+        # For complex operands, convert as rule
+        return self._convert_rule(operand)
+
     def _convert_compare(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert compare rule.
 
         AST: {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
-        RB: No direct equivalent - preserve as custom rule
+        RB: {"rule": "Compare", "args": {"left": ..., "op": ">=", "right": ...}}
+
+        Uses _convert_compare_operand to extract raw values from constants
+        instead of wrapping them in Constant rules.
         """
         left = rule.get('left', {})
         op = rule.get('op', '==')
@@ -851,9 +1037,9 @@ class ASTToRuleBuilder:
 
         self.warnings.append("Compare expression preserved as custom rule")
         return self._make_custom_rule('Compare', {
-            'left': self._convert_rule(left) if isinstance(left, dict) else left,
+            'left': self._convert_compare_operand(left),
             'op': op,
-            'right': self._convert_rule(right) if isinstance(right, dict) else right,
+            'right': self._convert_compare_operand(right),
             '_original_ast_type': 'compare'
         })
 
@@ -863,6 +1049,8 @@ class ASTToRuleBuilder:
 
         AST: {"type": "binary_op", "left": {...}, "op": "+", "right": {...}}
         RB: {"rule": "Arithmetic", "args": {"left": ..., "op": "+", "right": ...}}
+
+        Uses _convert_compare_operand to extract raw values from constants.
         """
         left = rule.get('left', {})
         op = rule.get('op', '+')
@@ -876,9 +1064,9 @@ class ASTToRuleBuilder:
         op = op_map.get(op, op)
 
         return self._make_rule('Arithmetic', {
-            'left': self._convert_rule(left) if isinstance(left, dict) else left,
+            'left': self._convert_compare_operand(left),
             'op': op,
-            'right': self._convert_rule(right) if isinstance(right, dict) else right,
+            'right': self._convert_compare_operand(right),
         })
 
     def _convert_attribute(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -941,7 +1129,8 @@ class ASTToRuleBuilder:
 
     def _convert_tuple(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Convert tuple rule."""
-        value = rule.get('value', [])
+        # Support both 'elements' (preferred) and 'value' (legacy) keys
+        value = rule.get('elements', rule.get('value', []))
         converted_value = [
             self._convert_rule(item) if isinstance(item, dict) else item
             for item in value
@@ -951,8 +1140,100 @@ class ASTToRuleBuilder:
             '_original_ast_type': 'tuple'
         })
 
+    def _convert_function_call(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert function call rule.
+
+        Handles common patterns:
+        - options.X.to_bool() → bool(SettingValue(X))
+        - self.options.X.to_bool() → bool(SettingValue(X))
+        - world.worlds[player].options.X.to_bool() → bool(SettingValue(X))
+        """
+        function = rule.get('function', {})
+        args = rule.get('args', [])
+
+        # Pattern: *.to_bool() or *.value with option access
+        if isinstance(function, dict) and function.get('type') == 'attribute':
+            func_attr = function.get('attr', '')
+            func_obj = function.get('object', {})
+
+            # Check for to_bool() method call on an option
+            if func_attr == 'to_bool':
+                # Extract the setting name from the option access chain
+                setting_name = self._extract_setting_name(func_obj)
+                if setting_name:
+                    # Create a bool helper with the setting value as argument
+                    result = {
+                        'rule': 'bool',
+                        '_original_ast_type': 'helper',
+                        '_converted_from_ast': True,
+                        'args': [
+                            self._make_custom_rule('AST_setting_value', {
+                                'setting': setting_name,
+                                '_original_ast_type': 'setting_value'
+                            })
+                        ]
+                    }
+                    return result
+
+        # Default: preserve as custom rule without converting nested structures
+        # This keeps the raw AST format for function calls that we don't handle
+        result_args = {
+            'function': function,
+            '_original_ast_type': 'function_call'
+        }
+        # Only include args if non-empty (matches WorldGen format)
+        if args:
+            result_args['args'] = args
+        return self._make_custom_rule('AST_function_call', result_args)
+
+    def _extract_setting_name(self, obj: Dict[str, Any]) -> Optional[str]:
+        """
+        Extract setting name from an option access chain.
+
+        Handles patterns like:
+        - options.X → 'X'
+        - self.options.X → 'X'
+        - world.worlds[player].options.X → 'X'
+        """
+        if not isinstance(obj, dict):
+            return None
+
+        obj_type = obj.get('type')
+
+        # Direct name reference
+        if obj_type == 'name':
+            return obj.get('name')
+
+        # Attribute access
+        if obj_type == 'attribute':
+            attr = obj.get('attr', '')
+            inner_obj = obj.get('object', {})
+
+            # Check if parent is 'options'
+            if isinstance(inner_obj, dict):
+                if inner_obj.get('type') == 'name' and inner_obj.get('name') == 'options':
+                    return attr
+                if inner_obj.get('type') == 'attribute' and inner_obj.get('attr') == 'options':
+                    return attr
+
+            # Recurse to find options.X pattern
+            if attr == 'options':
+                # We're at the 'options' attribute, so the setting is the parent's attr
+                return None
+
+            # Check if we've found the setting name (after options)
+            inner_attr = inner_obj.get('attr', '') if isinstance(inner_obj, dict) else ''
+            if inner_attr == 'options':
+                return attr
+
+            # Continue searching
+            return self._extract_setting_name(inner_obj)
+
+        return None
+
     # -------------------------------------------------------------------------
-    # Placement Converters (ALTTP-specific)
+    # Placement Converters
     # -------------------------------------------------------------------------
 
     def _flatten_locations(self, locations: Any) -> List[List[Any]]:
@@ -1002,6 +1283,13 @@ class ASTToRuleBuilder:
                         flattened = self._flatten_inner_list(inner)
                         if flattened:
                             result.append(flattened)
+                    elif item.get('type') == 'tuple':
+                        # Handle tuple format: {"type": "tuple", "elements": [...]}
+                        elements = item.get('elements', [])
+                        if len(elements) >= 2:
+                            loc_name = elements[0].get('value') if isinstance(elements[0], dict) and elements[0].get('type') == 'constant' else elements[0]
+                            player = elements[1].get('value') if isinstance(elements[1], dict) and elements[1].get('type') == 'constant' else elements[1]
+                            result.append([loc_name, player])
                     elif item.get('type') == 'constant':
                         # Constant value
                         inner_val = item.get('value')
@@ -1035,6 +1323,14 @@ class ASTToRuleBuilder:
         """Flatten a single location entry."""
         if item.get('type') == 'list':
             return self._flatten_inner_list(item.get('value', []))
+        elif item.get('type') == 'tuple':
+            # Handle tuple format: {"type": "tuple", "elements": [...]}
+            elements = item.get('elements', [])
+            if len(elements) >= 2:
+                # Extract values from constant elements
+                loc_name = elements[0].get('value') if isinstance(elements[0], dict) and elements[0].get('type') == 'constant' else elements[0]
+                player = elements[1].get('value') if isinstance(elements[1], dict) and elements[1].get('type') == 'constant' else elements[1]
+                return [loc_name, player]
         elif item.get('type') == 'constant':
             val = item.get('value')
             if isinstance(val, list) and len(val) >= 2:

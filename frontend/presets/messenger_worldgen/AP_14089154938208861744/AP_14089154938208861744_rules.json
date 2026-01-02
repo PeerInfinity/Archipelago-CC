@@ -6107,10 +6107,10 @@
           "Keys",
           "Notes"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Key of Chaos": {
         "name": "Key of Chaos",
@@ -6120,10 +6120,10 @@
           "Keys",
           "Notes"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Key of Courage": {
         "name": "Key of Courage",
@@ -6133,10 +6133,10 @@
           "Keys",
           "Notes"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Key of Love": {
         "name": "Key of Love",
@@ -6146,10 +6146,10 @@
           "Keys",
           "Notes"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Key of Strength": {
         "name": "Key of Strength",
@@ -6159,10 +6159,10 @@
           "Keys",
           "Notes"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Key of Symbiosis": {
         "name": "Key of Symbiosis",
@@ -6172,10 +6172,10 @@
           "Keys",
           "Notes"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Windmill Shuriken": {
         "name": "Windmill Shuriken",
@@ -6183,10 +6183,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wingsuit": {
         "name": "Wingsuit",
@@ -6194,10 +6194,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rope Dart": {
         "name": "Rope Dart",
@@ -6205,10 +6205,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lightfoot Tabi": {
         "name": "Lightfoot Tabi",
@@ -6216,10 +6216,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Candle": {
         "name": "Candle",
@@ -6227,10 +6227,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Seashell": {
         "name": "Seashell",
@@ -6238,10 +6238,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Power Thistle": {
         "name": "Power Thistle",
@@ -6249,10 +6249,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Demon King Crown": {
         "name": "Demon King Crown",
@@ -6260,10 +6260,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ruxxtin's Amulet": {
         "name": "Ruxxtin's Amulet",
@@ -6271,10 +6271,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Firefly": {
         "name": "Magic Firefly",
@@ -6282,10 +6282,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sun Crest": {
         "name": "Sun Crest",
@@ -6294,10 +6294,10 @@
           "Crest",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Moon Crest": {
         "name": "Moon Crest",
@@ -6306,10 +6306,10 @@
           "Crest",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Necro": {
         "name": "Necro",
@@ -6319,10 +6319,10 @@
           "Phobe",
           "Phobekin"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pyro": {
         "name": "Pyro",
@@ -6332,10 +6332,10 @@
           "Phobe",
           "Phobekin"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Claustro": {
         "name": "Claustro",
@@ -6345,10 +6345,10 @@
           "Phobe",
           "Phobekin"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Acro": {
         "name": "Acro",
@@ -6358,10 +6358,10 @@
           "Phobe",
           "Phobekin"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Power Seal": {
         "name": "Power Seal",
@@ -6369,10 +6369,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Time Shard": {
         "name": "Time Shard",
@@ -6380,10 +6380,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Time Shard (10)": {
         "name": "Time Shard (10)",
@@ -6391,10 +6391,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Time Shard (50)": {
         "name": "Time Shard (50)",
@@ -6402,10 +6402,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "Time Shard (100)": {
         "name": "Time Shard (100)",
@@ -6413,10 +6413,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 19,
-        "classification": "progression"
+        "max_count": 19
       },
       "Time Shard (300)": {
         "name": "Time Shard (300)",
@@ -6424,10 +6424,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "progression"
+        "max_count": 14
       },
       "Time Shard (500)": {
         "name": "Time Shard (500)",
@@ -6435,10 +6435,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Karuta Plates": {
         "name": "Karuta Plates",
@@ -6446,10 +6446,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Serendipitous Bodies": {
         "name": "Serendipitous Bodies",
@@ -6457,10 +6457,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Path of Resilience": {
         "name": "Path of Resilience",
@@ -6468,10 +6468,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kusari Jacket": {
         "name": "Kusari Jacket",
@@ -6479,10 +6479,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Energy Shuriken": {
         "name": "Energy Shuriken",
@@ -6490,10 +6490,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Serendipitous Minds": {
         "name": "Serendipitous Minds",
@@ -6501,10 +6501,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Prepared Mind": {
         "name": "Prepared Mind",
@@ -6512,10 +6512,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Meditation": {
         "name": "Meditation",
@@ -6523,10 +6523,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rejuvenative Spirit": {
         "name": "Rejuvenative Spirit",
@@ -6534,10 +6534,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Centered Mind": {
         "name": "Centered Mind",
@@ -6545,10 +6545,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Strike of the Ninja": {
         "name": "Strike of the Ninja",
@@ -6556,10 +6556,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Second Wind": {
         "name": "Second Wind",
@@ -6567,10 +6567,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Currents Master": {
         "name": "Currents Master",
@@ -6578,10 +6578,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Aerobatics Warrior": {
         "name": "Aerobatics Warrior",
@@ -6589,10 +6589,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Demon's Bane": {
         "name": "Demon's Bane",
@@ -6600,10 +6600,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Devil's Due": {
         "name": "Devil's Due",
@@ -6611,10 +6611,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Time Sense": {
         "name": "Time Sense",
@@ -6622,10 +6622,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Power Sense": {
         "name": "Power Sense",
@@ -6633,10 +6633,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Focused Power Sense": {
         "name": "Focused Power Sense",
@@ -6644,10 +6644,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Kappa Figurine": {
         "name": "Green Kappa Figurine",
@@ -6655,10 +6655,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Kappa Figurine": {
         "name": "Blue Kappa Figurine",
@@ -6666,10 +6666,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ountarde Figurine": {
         "name": "Ountarde Figurine",
@@ -6677,10 +6677,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Kappa Figurine": {
         "name": "Red Kappa Figurine",
@@ -6688,10 +6688,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Demon King Figurine": {
         "name": "Demon King Figurine",
@@ -6699,10 +6699,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quillshroom Figurine": {
         "name": "Quillshroom Figurine",
@@ -6710,10 +6710,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Jumping Quillshroom Figurine": {
         "name": "Jumping Quillshroom Figurine",
@@ -6721,10 +6721,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Scurubu Figurine": {
         "name": "Scurubu Figurine",
@@ -6732,10 +6732,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Jumping Scurubu Figurine": {
         "name": "Jumping Scurubu Figurine",
@@ -6743,10 +6743,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wallaxer Figurine": {
         "name": "Wallaxer Figurine",
@@ -6754,10 +6754,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Barmath'azel Figurine": {
         "name": "Barmath'azel Figurine",
@@ -6765,10 +6765,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Queen of Quills Figurine": {
         "name": "Queen of Quills Figurine",
@@ -6776,10 +6776,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Demon Hive Figurine": {
         "name": "Demon Hive Figurine",
@@ -6787,10 +6787,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Money Wrench": {
         "name": "Money Wrench",
@@ -6798,10 +6798,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Teleport Trap": {
         "name": "Teleport Trap",
@@ -6809,10 +6809,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Prophecy Trap": {
         "name": "Prophecy Trap",
@@ -6820,10 +6820,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Do the Thing!": {
         "name": "Do the Thing!",

@@ -6,7 +6,7 @@ Plando Options:                  connections, texts, bosses
 Game:                            A Link to the Past WorldGen
 Location Count:                  249
 Progression Balancing:           50
-Accessibility:                   Full
+Accessibility:                   Items
 Local Items:                     
 Non-local Items:                 
 Start Inventory:                 
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Allow Collection of checks for other players:Yes
 Beemizer Total Chance:           0
 Beemizer Trap Chance:            60
@@ -36,6 +37,7 @@ Enemy Damage:                    Default
 Enemy Health:                    Default
 Enemy Shuffle:                   No
 Entrance Shuffle:                Vanilla
+Entrance Shuffle Seed:           random
 Glitched Starting Boots:         Yes
 Glitches Required:               No Glitches
 Goal:                            Ganon
@@ -51,11 +53,13 @@ Key Drop Shuffle:                Yes
 Killable Thieves:                No
 Map Shuffle:                     Original Dungeon
 Menu Speed:                      Normal
-Misery Mire Medallion:           Bombos
+Misery Mire Medallion:           Quake
 Mode:                            Open
 Play music:                      Yes
 Open Pyramid Hole:               Goal
 Overworld Palette:               Default
+Plando Connections:              
+Plando Texts:                    {}
 Pot Shuffle:                     No
 Progressive Items:               On
 L/R Quickswapping:               Yes
@@ -75,6 +79,7 @@ Shuffle Capacity Upgrades:       Off
 Shuffle Prizes:                  General
 Shuffle Shop Inventories:        No
 Small Key Shuffle:               Original Dungeon
+Start Inventory from Pool:       
 Sword Palette:                   Default
 Swordless:                       No
 Tile Shuffle:                    No
@@ -85,7 +90,7 @@ Triforce Pieces Mode:            Available
 Triforce Pieces Percentage:      150
 Triforce Pieces Required:        20
 Display Method for Triforce Hunt:Normal
-Turtle Rock Medallion:           Bombos
+Turtle Rock Medallion:           Ether
 Underworld Palette:              Default
 
 

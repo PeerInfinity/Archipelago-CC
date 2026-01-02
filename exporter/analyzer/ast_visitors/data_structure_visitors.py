@@ -29,8 +29,8 @@ class DataStructureVisitorMixin:
                     return None
                 elements.append(elt_result)
 
-            # Represent as a list in the output JSON
-            return {'type': 'list', 'value': elements}
+            # Preserve tuple type for correct Python semantics (tuple != list)
+            return {'type': 'tuple', 'elements': elements}
         except Exception as e:
             logging.error("Error in visit_Tuple", e)
             return None

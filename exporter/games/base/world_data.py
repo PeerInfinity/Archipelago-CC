@@ -163,9 +163,16 @@ class WorldDataMixin:
 
                     # Determine option type by checking class hierarchy
                     # Import here to avoid circular imports
-                    from Options import Choice, Range, Toggle, DefaultOnToggle, OptionSet, OptionList, OptionDict
+                    from Options import (Choice, Range, Toggle, DefaultOnToggle, OptionSet, OptionList, OptionDict,
+                                         FreeText, Removed, PlandoConnections, PlandoTexts, StartInventoryPool)
 
-                    if isinstance(option, OptionSet) or isinstance(option, OptionList) or isinstance(option, OptionDict):
+                    # Check for specific subclasses BEFORE checking their parent classes
+                    # (StartInventoryPool inherits from OptionDict, so must be checked first)
+                    if isinstance(option, StartInventoryPool):
+                        # Start inventory from pool option
+                        option_def['type'] = 'start_inventory_pool'
+                        option_def['default'] = {}
+                    elif isinstance(option, OptionSet) or isinstance(option, OptionList) or isinstance(option, OptionDict):
                         # Skip complex collection options for now
                         continue
                     elif isinstance(option, Range) and not isinstance(option, Choice):
@@ -189,6 +196,22 @@ class WorldDataMixin:
                             return str(k)
                         option_def['name_lookup'] = {normalize_key(k): v for k, v in option_class.name_lookup.items()}
                         option_def['default'] = option_class.default
+                    elif isinstance(option, Removed):
+                        # Deprecated/removed options - export so WorldGen can recreate them
+                        option_def['type'] = 'removed'
+                        option_def['default'] = option_class.default if hasattr(option_class, 'default') else ''
+                    elif isinstance(option, FreeText):
+                        # Free text options (like entrance_shuffle_seed)
+                        option_def['type'] = 'freetext'
+                        option_def['default'] = option_class.default if hasattr(option_class, 'default') else ''
+                    elif isinstance(option, PlandoConnections):
+                        # Plando connections - skip value but export definition
+                        option_def['type'] = 'plando_connections'
+                        option_def['default'] = []
+                    elif isinstance(option, PlandoTexts):
+                        # Plando texts - skip value but export definition
+                        option_def['type'] = 'plando_texts'
+                        option_def['default'] = []
                     else:
                         # Unknown option type, skip
                         continue
@@ -553,27 +576,28 @@ class WorldDataMixin:
                 parts = module_path.split('.')
                 if len(parts) >= 2:
                     world_dir = parts[1]
-                    settings_path = Path('worlds') / world_dir / '_worldgen_settings.json'
-                    if settings_path.exists():
-                        with open(settings_path, 'r') as f:
-                            worldgen_settings = json.load(f)
+                    worldgen_path = Path('worlds') / world_dir / '_worldgen_settings.json'
+                    if worldgen_path.exists():
+                        with open(worldgen_path, 'r') as f:
+                            worldgen_data = json.load(f)
                         # Load world_attributes section if present (new format)
-                        if 'world_attributes' in worldgen_settings:
-                            for key, value in worldgen_settings['world_attributes'].items():
+                        if 'world_attributes' in worldgen_data:
+                            for key, value in worldgen_data['world_attributes'].items():
                                 if key not in world_attributes:
                                     world_attributes[key] = value
                         else:
-                            # Legacy format: world attributes are mixed with settings
-                            # Skip known settings keys
+                            # Legacy format: world attributes are mixed with other data
+                            # Skip known structural keys
                             skip_keys = {
                                 'game', 'options', 'option_definitions', 'world_directory',
+                                'exporter', 'settings',  # exporter section or legacy settings
                                 'assume_bidirectional_exits', 'use_resolved_items',
                                 'use_auto_indirect_conditions', 'add_sphere_items_upfront',
                             }
-                            for key, value in worldgen_settings.items():
+                            for key, value in worldgen_data.items():
                                 if key not in skip_keys and key not in world_attributes:
                                     world_attributes[key] = value
-                        logger.debug(f"Loaded world attributes from {settings_path}")
+                        logger.debug(f"Loaded world attributes from {worldgen_path}")
             except Exception as e:
                 logger.warning(f"Failed to load worldgen world attributes: {e}")
 

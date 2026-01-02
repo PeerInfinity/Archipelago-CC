@@ -10618,10 +10618,10 @@
           "Everything",
           "Train Upgrade"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 637,
-        "classification": "useful"
+        "max_count": 637
       },
       "30 Scraps Reward": {
         "name": "30 Scraps Reward",
@@ -10630,10 +10630,10 @@
           "Everything",
           "Train Upgrade"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "25 Scraps Reward": {
         "name": "25 Scraps Reward",
@@ -10642,10 +10642,10 @@
           "Everything",
           "Train Upgrade"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "35 Scraps Reward": {
         "name": "35 Scraps Reward",
@@ -10653,10 +10653,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "40 Scraps Reward": {
         "name": "40 Scraps Reward",
@@ -10665,10 +10665,10 @@
           "Everything",
           "Train Upgrade"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "South Mine Key": {
         "name": "South Mine Key",
@@ -10677,10 +10677,10 @@
           "Dungeon Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "North Mine Key": {
         "name": "North Mine Key",
@@ -10689,10 +10689,10 @@
           "Dungeon Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mountain Ruin Key": {
         "name": "Mountain Ruin Key",
@@ -10701,10 +10701,10 @@
           "Dungeon Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Barn Key": {
         "name": "Barn Key",
@@ -10713,10 +10713,10 @@
           "Building Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Candice's Key": {
         "name": "Candice's Key",
@@ -10725,10 +10725,10 @@
           "Building Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dead Fish": {
         "name": "Dead Fish",
@@ -10737,10 +10737,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lockpicks": {
         "name": "Lockpicks",
@@ -10749,10 +10749,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ancient Tablet": {
         "name": "Ancient Tablet",
@@ -10761,10 +10761,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blue Box": {
         "name": "Blue Box",
@@ -10773,10 +10773,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Page Drawing": {
         "name": "Page Drawing",
@@ -10785,10 +10785,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "progression"
+        "max_count": 8
       },
       "Journal": {
         "name": "Journal",
@@ -10797,10 +10797,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Timed Dynamite": {
         "name": "Timed Dynamite",
@@ -10809,10 +10809,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Box of Rockets": {
         "name": "Box of Rockets",
@@ -10821,10 +10821,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Breaker": {
         "name": "Breaker",
@@ -10833,10 +10833,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Broken Bob": {
         "name": "Broken Bob",
@@ -10845,10 +10845,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Employment Contracts": {
         "name": "Employment Contracts",
@@ -10857,10 +10857,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mob Camp Key": {
         "name": "Mob Camp Key",
@@ -10869,10 +10869,10 @@
           "Building Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Jar of Pickles": {
         "name": "Jar of Pickles",
@@ -10881,10 +10881,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Orange Paint Can": {
         "name": "Orange Paint Can",
@@ -10893,10 +10893,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Paint Can": {
         "name": "Green Paint Can",
@@ -10905,10 +10905,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "White Paint Can": {
         "name": "White Paint Can",
@@ -10917,10 +10917,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pink Paint Can": {
         "name": "Pink Paint Can",
@@ -10929,10 +10929,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grey Paint Can": {
         "name": "Grey Paint Can",
@@ -10941,10 +10941,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Paint Can": {
         "name": "Blue Paint Can",
@@ -10953,10 +10953,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Black Paint Can": {
         "name": "Black Paint Can",
@@ -10965,10 +10965,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lime Paint Can": {
         "name": "Lime Paint Can",
@@ -10977,10 +10977,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Teal Paint Can": {
         "name": "Teal Paint Can",
@@ -10989,10 +10989,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Paint Can": {
         "name": "Red Paint Can",
@@ -11001,10 +11001,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Paint Can": {
         "name": "Purple Paint Can",
@@ -11013,10 +11013,10 @@
           "Everything",
           "Paint Can"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Boomer": {
         "name": "The Boomer",
@@ -11025,10 +11025,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bob": {
         "name": "Bob",
@@ -11037,10 +11037,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Egg": {
         "name": "Green Egg",
@@ -11049,10 +11049,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blue Egg": {
         "name": "Blue Egg",
@@ -11061,10 +11061,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Egg": {
         "name": "Red Egg",
@@ -11073,10 +11073,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Remote Explosive": {
         "name": "Remote Explosive",
@@ -11085,10 +11085,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Remote Explosive x8": {
         "name": "Remote Explosive x8",
@@ -11097,10 +11097,10 @@
           "Everything",
           "Mission Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Temple Key": {
         "name": "Temple Key",
@@ -11109,10 +11109,10 @@
           "Building Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bug Spray": {
         "name": "Bug Spray",
@@ -11121,10 +11121,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -11132,10 +11132,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

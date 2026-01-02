@@ -2703,10 +2703,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 37,
-        "classification": "filler"
+        "max_count": 37
       },
       "HP Max Up": {
         "name": "HP Max Up",
@@ -2714,10 +2714,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 34,
-        "classification": "filler"
+        "max_count": 34
       },
       "MP Max Up": {
         "name": "MP Max Up",
@@ -2725,10 +2725,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 24,
-        "classification": "filler"
+        "max_count": 24
       },
       "Salamander Card": {
         "name": "Salamander Card",
@@ -2740,10 +2740,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Serpent Card": {
         "name": "Serpent Card",
@@ -2757,10 +2757,10 @@
           "Freeze",
           "Freeze Attribute"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mandragora Card": {
         "name": "Mandragora Card",
@@ -2772,10 +2772,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Golem Card": {
         "name": "Golem Card",
@@ -2787,10 +2787,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cockatrice Card": {
         "name": "Cockatrice Card",
@@ -2804,10 +2804,10 @@
           "Freeze",
           "Freeze Attribute"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Manticore Card": {
         "name": "Manticore Card",
@@ -2819,10 +2819,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Griffin Card": {
         "name": "Griffin Card",
@@ -2834,10 +2834,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Thunderbird Card": {
         "name": "Thunderbird Card",
@@ -2849,10 +2849,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Unicorn Card": {
         "name": "Unicorn Card",
@@ -2864,10 +2864,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Black Dog Card": {
         "name": "Black Dog Card",
@@ -2879,10 +2879,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mercury Card": {
         "name": "Mercury Card",
@@ -2896,10 +2896,10 @@
           "Freeze",
           "Freeze Action"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Venus Card": {
         "name": "Venus Card",
@@ -2911,10 +2911,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Jupiter Card": {
         "name": "Jupiter Card",
@@ -2926,10 +2926,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Mars Card": {
         "name": "Mars Card",
@@ -2943,10 +2943,10 @@
           "Freeze",
           "Freeze Action"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Diana Card": {
         "name": "Diana Card",
@@ -2958,10 +2958,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Apollo Card": {
         "name": "Apollo Card",
@@ -2973,10 +2973,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Neptune Card": {
         "name": "Neptune Card",
@@ -2988,10 +2988,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Saturn Card": {
         "name": "Saturn Card",
@@ -3003,10 +3003,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Uranus Card": {
         "name": "Uranus Card",
@@ -3018,10 +3018,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pluto Card": {
         "name": "Pluto Card",
@@ -3033,10 +3033,10 @@
           "DSS",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Double": {
         "name": "Double",
@@ -3044,10 +3044,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tackle": {
         "name": "Tackle",
@@ -3055,10 +3055,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kick Boots": {
         "name": "Kick Boots",
@@ -3066,10 +3066,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Heavy Ring": {
         "name": "Heavy Ring",
@@ -3077,10 +3077,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cleansing": {
         "name": "Cleansing",
@@ -3088,10 +3088,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Roc Wing": {
         "name": "Roc Wing",
@@ -3099,10 +3099,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Last Key": {
         "name": "Last Key",
@@ -3110,10 +3110,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Maiden Detonator": {
         "name": "Maiden Detonator",
@@ -3121,10 +3121,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "The Count Downed": {
         "name": "The Count Downed",
@@ -3132,10 +3132,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

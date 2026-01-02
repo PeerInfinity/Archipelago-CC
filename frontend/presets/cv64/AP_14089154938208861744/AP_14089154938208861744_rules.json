@@ -4398,10 +4398,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 29,
-        "classification": "filler"
+        "max_count": 29
       },
       "Red jewel(L)": {
         "name": "Red jewel(L)",
@@ -4409,10 +4409,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 33,
-        "classification": "filler"
+        "max_count": 33
       },
       "Special1": {
         "name": "Special1",
@@ -4420,10 +4420,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "progression"
+        "max_count": 7
       },
       "Special2": {
         "name": "Special2",
@@ -4431,10 +4431,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Roast chicken": {
         "name": "Roast chicken",
@@ -4442,10 +4442,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 21,
-        "classification": "filler"
+        "max_count": 21
       },
       "Roast beef": {
         "name": "Roast beef",
@@ -4453,10 +4453,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 24,
-        "classification": "filler"
+        "max_count": 24
       },
       "Healing kit": {
         "name": "Healing kit",
@@ -4464,10 +4464,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "useful"
+        "max_count": 4
       },
       "Purifying": {
         "name": "Purifying",
@@ -4475,10 +4475,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "Cure ampoule": {
         "name": "Cure ampoule",
@@ -4486,10 +4486,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "PowerUp": {
         "name": "PowerUp",
@@ -4497,10 +4497,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Knife": {
         "name": "Knife",
@@ -4508,10 +4508,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Holy water": {
         "name": "Holy water",
@@ -4519,10 +4519,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cross": {
         "name": "Cross",
@@ -4530,10 +4530,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Axe": {
         "name": "Axe",
@@ -4541,10 +4541,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -4552,10 +4552,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Magical Nitro": {
         "name": "Magical Nitro",
@@ -4565,10 +4565,10 @@
           "Everything",
           "Ingredient"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Mandragora": {
         "name": "Mandragora",
@@ -4578,10 +4578,10 @@
           "Everything",
           "Ingredient"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Sun card": {
         "name": "Sun card",
@@ -4589,10 +4589,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "filler"
+        "max_count": 9
       },
       "Moon card": {
         "name": "Moon card",
@@ -4600,10 +4600,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "filler"
+        "max_count": 8
       },
       "Archives Key": {
         "name": "Archives Key",
@@ -4611,10 +4611,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Left Tower Key": {
         "name": "Left Tower Key",
@@ -4622,10 +4622,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Storeroom Key": {
         "name": "Storeroom Key",
@@ -4633,10 +4633,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Garden Key": {
         "name": "Garden Key",
@@ -4644,10 +4644,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Copper Key": {
         "name": "Copper Key",
@@ -4655,10 +4655,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Chamber Key": {
         "name": "Chamber Key",
@@ -4666,10 +4666,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Execution Key": {
         "name": "Execution Key",
@@ -4677,10 +4677,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Science Key1": {
         "name": "Science Key1",
@@ -4688,10 +4688,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Science Key2": {
         "name": "Science Key2",
@@ -4699,10 +4699,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Science Key3": {
         "name": "Science Key3",
@@ -4710,10 +4710,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Clocktower Key1": {
         "name": "Clocktower Key1",
@@ -4721,10 +4721,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Clocktower Key2": {
         "name": "Clocktower Key2",
@@ -4732,10 +4732,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Clocktower Key3": {
         "name": "Clocktower Key3",
@@ -4743,10 +4743,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "500 GOLD": {
         "name": "500 GOLD",
@@ -4754,10 +4754,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 18,
-        "classification": "filler"
+        "max_count": 18
       },
       "300 GOLD": {
         "name": "300 GOLD",
@@ -4765,10 +4765,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "filler"
+        "max_count": 9
       },
       "100 GOLD": {
         "name": "100 GOLD",
@@ -4776,10 +4776,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "PermaUp": {
         "name": "PermaUp",
@@ -4787,10 +4787,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal": {
         "name": "Crystal",
@@ -4798,10 +4798,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Count Downed": {
         "name": "The Count Downed",
@@ -4809,10 +4809,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

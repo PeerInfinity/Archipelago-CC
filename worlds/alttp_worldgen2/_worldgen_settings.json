@@ -1,0 +1,879 @@
+{
+  "options": {
+    "accessibility": 1,
+    "allow_collect": true,
+    "beemizer_total_chance": 0,
+    "beemizer_trap_chance": 60,
+    "big_key_shuffle": 0,
+    "bigkey_shuffle": "",
+    "blue_clock_time": 2,
+    "bombless_start": false,
+    "boss_shuffle": 0,
+    "bush_shuffle": false,
+    "compass_shuffle": 0,
+    "countdown_start_time": 10,
+    "crystals_needed_for_ganon": 7,
+    "crystals_needed_for_gt": 7,
+    "dark_room_logic": 0,
+    "death_link": false,
+    "dungeon_counters": 1,
+    "enemy_damage": 0,
+    "enemy_health": 1,
+    "enemy_shuffle": false,
+    "entrance_shuffle": 0,
+    "entrance_shuffle_seed": "random",
+    "exclude_locations": [],
+    "glitch_boots": true,
+    "glitches_required": 0,
+    "goal": 0,
+    "goals": "",
+    "green_clock_time": 4,
+    "heartbeep": 0,
+    "heartcolor": 0,
+    "hints": 2,
+    "hud_palettes": 0,
+    "include_witch_hut": false,
+    "item_functionality": 1,
+    "item_links": [],
+    "item_pool": 1,
+    "key_drop_shuffle": true,
+    "killable_thieves": false,
+    "local_items": [],
+    "map_shuffle": 0,
+    "menuspeed": 0,
+    "misery_mire_medallion": 2,
+    "mode": 1,
+    "music": true,
+    "non_local_items": [],
+    "open_pyramid": 2,
+    "ow_palettes": 0,
+    "plando_connections": [],
+    "plando_items": [],
+    "plando_texts": [],
+    "pot_shuffle": false,
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "progressive": 2,
+    "quickswap": true,
+    "randomize_cost_types": false,
+    "randomize_items": false,
+    "randomize_shop_inventories": 0,
+    "randomize_shop_prices": false,
+    "red_clock_time": -2,
+    "reduceflashing": true,
+    "restrict_dungeon_item_on_boss": false,
+    "retro_bow": false,
+    "retro_caves": false,
+    "scams": 0,
+    "shield_palettes": 0,
+    "shop_item_slots": 0,
+    "shop_price_modifier": 100,
+    "shuffle_capacity_upgrades": 0,
+    "shuffle_prizes": 1,
+    "shuffle_shop_inventories": false,
+    "small_key_shuffle": 0,
+    "smallkey_shuffle": "",
+    "start_hints": [],
+    "start_inventory": {},
+    "start_inventory_from_pool": {},
+    "start_location_hints": [],
+    "sword_palettes": 0,
+    "swordless": false,
+    "tile_shuffle": false,
+    "timer": 0,
+    "triforce_pieces_available": 30,
+    "triforce_pieces_extra": 10,
+    "triforce_pieces_mode": 2,
+    "triforce_pieces_percentage": 150,
+    "triforce_pieces_required": 20,
+    "triforcehud": 0,
+    "turtle_rock_medallion": 0,
+    "use_canonical_options": true,
+    "uw_palettes": 0
+  },
+  "exporter": {
+    "world_class_name": "ALTTPWorld",
+    "use_resolved_items": false
+  },
+  "game": "A Link to the Past WorldGen",
+  "world_directory": "alttp_worldgen",
+  "world_attributes": {
+    "shops": [
+      {
+        "region": "Cave Shop (Dark Death Mountain)",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Small Heart",
+            "price": 10,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 274,
+        "shopkeeper_config": 193,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 0
+      },
+      {
+        "region": "Red Shield Shop",
+        "inventory": [
+          {
+            "item": "Red Shield",
+            "price": 500,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bee",
+            "price": 10,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Arrows (10)",
+            "price": 30,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 272,
+        "shopkeeper_config": 193,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 3
+      },
+      {
+        "region": "Dark Lake Hylia Shop",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Blue Shield",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 271,
+        "shopkeeper_config": 193,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 6
+      },
+      {
+        "region": "Dark World Lumberjack Shop",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Blue Shield",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 271,
+        "shopkeeper_config": 193,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 9
+      },
+      {
+        "region": "Village of Outcasts Shop",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Blue Shield",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 271,
+        "shopkeeper_config": 193,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 12
+      },
+      {
+        "region": "Dark World Potion Shop",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Blue Shield",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 271,
+        "shopkeeper_config": 193,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 15
+      },
+      {
+        "region": "Light World Death Mountain Shop",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Small Heart",
+            "price": 10,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 255,
+        "shopkeeper_config": 160,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 18
+      },
+      {
+        "region": "Kakariko Shop",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Small Heart",
+            "price": 10,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 287,
+        "shopkeeper_config": 160,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 21
+      },
+      {
+        "region": "Cave Shop (Lake Hylia)",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 150,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Small Heart",
+            "price": 10,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Bombs (10)",
+            "price": 50,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 274,
+        "shopkeeper_config": 160,
+        "custom": true,
+        "locked": false,
+        "sram_offset": 24
+      },
+      {
+        "region": "Potion Shop",
+        "inventory": [
+          {
+            "item": "Red Potion",
+            "price": 120,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Green Potion",
+            "price": 60,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Blue Potion",
+            "price": 160,
+            "price_type": 0,
+            "max": 0,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          }
+        ],
+        "room_id": 265,
+        "shopkeeper_config": 160,
+        "custom": true,
+        "locked": true,
+        "sram_offset": 27
+      },
+      {
+        "region": "Capacity Upgrade",
+        "inventory": [
+          {
+            "item": "Bomb Upgrade (+5)",
+            "price": 100,
+            "price_type": 0,
+            "max": 7,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          {
+            "item": "Arrow Upgrade (+5)",
+            "price": 100,
+            "price_type": 0,
+            "max": 7,
+            "replacement_price": 0,
+            "replacement_price_type": 0,
+            "player": 0
+          },
+          null
+        ],
+        "room_id": 277,
+        "shopkeeper_config": 4,
+        "custom": true,
+        "locked": true,
+        "sram_offset": 30
+      }
+    ],
+    "has_progressive_bows": true,
+    "dungeons": {
+      "Hyrule Castle": "Hyrule Castle",
+      "Eastern Palace": "Eastern Palace",
+      "Desert Palace": "Desert Palace",
+      "Tower of Hera": "Tower of Hera",
+      "Agahnims Tower": "Agahnims Tower",
+      "Palace of Darkness": "Palace of Darkness",
+      "Thieves Town": "Thieves Town",
+      "Skull Woods": "Skull Woods",
+      "Swamp Palace": "Swamp Palace",
+      "Ice Palace": "Ice Palace",
+      "Misery Mire": "Misery Mire",
+      "Turtle Rock": "Turtle Rock",
+      "Ganons Tower": "Ganons Tower"
+    },
+    "waterfall_fairy_bottle_fill": "Bottle (Red Potion)",
+    "pyramid_fairy_bottle_fill": "Bottle (Good Bee)",
+    "fix_trock_doors": false,
+    "fix_skullwoods_exit": false,
+    "fix_palaceofdarkness_exit": false,
+    "fix_trock_exit": false,
+    "required_medallions": [
+      "Quake",
+      "Ether"
+    ],
+    "escape_assist": [],
+    "logical_heart_containers": 10,
+    "logical_heart_pieces": 24,
+    "er_seed": "vanilla",
+    "difficulty_requirements": {
+      "baseitems": [
+        "Single Arrow",
+        "Sanctuary Heart Container",
+        "Arrows (10)",
+        "Bombs (10)",
+        "Rupees (300)",
+        "Rupees (300)",
+        "Rupees (300)",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Boss Heart Container",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart"
+      ],
+      "bottles": [
+        "Bottle",
+        "Bottle (Red Potion)",
+        "Bottle (Green Potion)",
+        "Bottle (Blue Potion)",
+        "Bottle (Fairy)",
+        "Bottle (Bee)",
+        "Bottle (Good Bee)"
+      ],
+      "bottle_count": 4,
+      "same_bottle": false,
+      "progressiveshield": [
+        "Progressive Shield",
+        "Progressive Shield",
+        "Progressive Shield"
+      ],
+      "basicshield": [
+        "Blue Shield",
+        "Red Shield",
+        "Mirror Shield"
+      ],
+      "progressivearmor": [
+        "Progressive Mail",
+        "Progressive Mail"
+      ],
+      "basicarmor": [
+        "Blue Mail",
+        "Red Mail"
+      ],
+      "swordless": [
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)"
+      ],
+      "progressivemagic": [
+        "Magic Upgrade (1/2)",
+        "Rupees (300)"
+      ],
+      "basicmagic": [
+        "Magic Upgrade (1/2)",
+        "Rupees (300)"
+      ],
+      "progressivesword": [
+        "Progressive Sword",
+        "Progressive Sword",
+        "Progressive Sword",
+        "Progressive Sword"
+      ],
+      "basicsword": [
+        "Fighter Sword",
+        "Master Sword",
+        "Tempered Sword",
+        "Golden Sword"
+      ],
+      "progressivebow": [
+        "Progressive Bow",
+        "Progressive Bow"
+      ],
+      "basicbow": [
+        "Bow",
+        "Silver Bow"
+      ],
+      "timedohko": [
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock"
+      ],
+      "timedother": [
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Green Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Blue Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock",
+        "Red Clock"
+      ],
+      "progressiveglove": [
+        "Progressive Glove",
+        "Progressive Glove"
+      ],
+      "basicglove": [
+        "Power Glove",
+        "Titans Mitts"
+      ],
+      "alwaysitems": [
+        "Bombos",
+        "Book of Mudora",
+        "Cane of Somaria",
+        "Ether",
+        "Fire Rod",
+        "Flippers",
+        "Flute",
+        "Hammer",
+        "Hookshot",
+        "Ice Rod",
+        "Lamp",
+        "Cape",
+        "Magic Powder",
+        "Mushroom",
+        "Pegasus Boots",
+        "Quake",
+        "Shovel",
+        "Bug Catching Net",
+        "Cane of Byrna",
+        "Blue Boomerang",
+        "Red Boomerang"
+      ],
+      "legacyinsanity": [
+        "Magic Mirror",
+        "Moon Pearl"
+      ],
+      "universal_keys": [
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Small Key (Universal)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)",
+        "Rupees (20)"
+      ],
+      "extras": [
+        [
+          "Rupees (100)",
+          "Rupees (300)",
+          "Rupees (50)",
+          "Arrows (10)",
+          "Arrows (10)",
+          "Arrows (10)",
+          "Arrows (10)",
+          "Arrows (10)",
+          "Arrows (10)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)"
+        ],
+        [
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Bombs (3)",
+          "Rupees (50)",
+          "Rupees (50)",
+          "Arrows (10)",
+          "Arrows (10)",
+          "Rupee (1)"
+        ],
+        [
+          "Rupees (50)",
+          "Rupees (50)",
+          "Rupees (50)",
+          "Rupees (50)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Arrows (10)",
+          "Rupee (1)",
+          "Rupees (5)"
+        ],
+        [
+          "Arrows (10)",
+          "Arrows (10)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (5)"
+        ],
+        [
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (5)",
+          "Rupees (5)"
+        ]
+      ],
+      "progressive_sword_limit": 4,
+      "progressive_shield_limit": 3,
+      "progressive_armor_limit": 2,
+      "progressive_bottle_limit": 4,
+      "progressive_bow_limit": 2,
+      "heart_piece_limit": 24,
+      "boss_heart_container_limit": 10
+    },
+    "treasure_hunt_required": 0,
+    "treasure_hunt_total": 0,
+    "rom_name": "ALTTP_ROM_NOT_GENERATED",
+    "can_take_damage": true,
+    "swamp_patch_required": false,
+    "powder_patch_required": false,
+    "ganon_at_pyramid": true,
+    "ganonstower_vanilla": true,
+    "fix_fake_world": true,
+    "clock_mode": "",
+    "light_world_light_cone": false,
+    "dark_world_light_cone": false,
+    "save_and_quit_from_boss": true,
+    "rupoor_cost": 10
+  }
+}
