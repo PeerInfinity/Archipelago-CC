@@ -3946,11 +3946,18 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": 1,
+                        "left": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "enemy_health",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        },
                         "op": "in",
                         "right": [
-                          "easy",
-                          "default"
+                          0,
+                          1
                         ],
                         "_original_ast_type": "compare"
                       },
@@ -6220,30 +6227,10 @@
             "name": "Pyramid Hole",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "bool",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "AST_setting_value",
-                      "args": {
-                        "setting": "open_pyramid",
-                        "_original_ast_type": "setting_value"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beat Agahnim 2"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Beat Agahnim 2"
+              }
             }
           },
           {

@@ -1357,6 +1357,69 @@ class CallVisitorMixin:
                 else:
                     logging.debug(f"Could not find callable '{method_name}' in module {obj_name}")
 
+            # Handle options.X.to_bool() method calls at analysis time
+            # This is critical for options like OpenPyramid that have custom to_bool() logic
+            # which checks other settings (e.g., goal type) rather than just truthiness.
+            # We evaluate to_bool() at analysis time since it only depends on settings, not game state.
+            elif method_name == 'to_bool':
+                logging.debug(f"Processing potential option to_bool call")
+                # Check if the object is a setting_value (options access pattern)
+                func_object = func_info.get('object', {})
+                if func_object.get('type') == 'setting_value':
+                    setting_name = func_object.get('setting')
+                    logging.debug(f"to_bool called on setting: {setting_name}")
+
+                    # Try to get the actual option object and call to_bool()
+                    # closure_vars['world'] could be either:
+                    # 1. The player's world (multiworld.worlds[player]) - has .options
+                    # 2. The multiworld itself - has .worlds dict
+                    world_or_multiworld = self.closure_vars.get('world')
+                    if world_or_multiworld is not None and setting_name:
+                        try:
+                            # Determine if we have the player's world or the multiworld
+                            if hasattr(world_or_multiworld, 'options'):
+                                # We have the player's world directly
+                                player_world = world_or_multiworld
+                                multiworld = getattr(world_or_multiworld, 'multiworld', None)
+                                player = getattr(world_or_multiworld, 'player', 1)
+                            elif hasattr(world_or_multiworld, 'worlds'):
+                                # We have the multiworld - get player's world
+                                multiworld = world_or_multiworld
+                                player = self.player_context if hasattr(self, 'player_context') and self.player_context else 1
+                                player_world = multiworld.worlds.get(player)
+                                if player_world is None:
+                                    logging.warning(f"Could not get player world for player {player}")
+                                    player_world = world_or_multiworld
+                            else:
+                                # Fallback - try to use it as player's world
+                                player_world = world_or_multiworld
+                                multiworld = None
+                                player = 1
+
+                            # Get the option object from player's world
+                            option_obj = getattr(player_world.options, setting_name, None) if hasattr(player_world, 'options') else None
+                            if option_obj is not None and hasattr(option_obj, 'to_bool'):
+                                # Call to_bool with appropriate arguments
+                                # to_bool(world, player) signature - world here is multiworld
+                                if multiworld is not None:
+                                    result_value = option_obj.to_bool(multiworld, player)
+                                else:
+                                    # Fallback: try calling with just the value's truthiness
+                                    result_value = bool(option_obj.value)
+
+                                logging.debug(f"Evaluated {setting_name}.to_bool() = {result_value}")
+                                return {'type': 'constant', 'value': result_value}
+                            else:
+                                logging.debug(f"Option {setting_name} has no to_bool method, falling back to value truthiness")
+                                if option_obj is not None and hasattr(option_obj, 'value'):
+                                    return {'type': 'constant', 'value': bool(option_obj.value)}
+                        except Exception as e:
+                            logging.warning(f"Failed to evaluate {setting_name}.to_bool(): {e}")
+                            # Fall through to let ast_to_rule_builder handle it
+
+                # If we can't resolve to_bool at analysis time, let the converter handle it
+                logging.debug(f"Could not evaluate to_bool at analysis time, falling through")
+
             # Handle Location and Region object method calls (e.g., loc.can_reach(state) or region.can_reach(state))
             elif obj_name and method_name == 'can_reach':
                 logging.debug(f"Processing potential Location/Region method call: {obj_name}.{method_name}")
