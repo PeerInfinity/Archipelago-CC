@@ -1501,11 +1501,6 @@ class BaseGameExportHandler(
         if self.USE_AUTO_INDIRECT_CONDITIONS:
             exporter_settings['use_auto_indirect_conditions'] = True
 
-        # world_class_name: The original world class name (e.g., 'ALTTPWorld')
-        # Used by WorldGen to preserve the original class name when regenerating
-        if self.world is not None:
-            exporter_settings['world_class_name'] = self.world.__class__.__name__
-
         return exporter_settings
 
     def get_game_info(self, world) -> Dict[str, Any]:

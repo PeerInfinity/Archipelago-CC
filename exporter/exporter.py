@@ -767,8 +767,6 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         "archipelago_version": Utils.__version__,
         "generation_seed": multiworld.seed,
         "player_names": getattr(multiworld, 'player_name', {}), # Player ID -> Name mapping (default to {} if missing)
-        "world_classes": {player: multiworld.worlds[player].__class__.__name__
-                           for player in multiworld.player_ids}, # Player ID -> World Class Name mapping
         'regions': {},  # Full region graph
         'helpers': {},  # Helper function definitions by player
         'items': {},    # Item data by player
@@ -2192,7 +2190,6 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'archipelago_version',
         'generation_seed',
         'player_names',
-        'world_classes',
         'regions',
         'dungeons',
         'start_regions',
