@@ -95,6 +95,32 @@ def normalize_helper_body(obj: Any) -> Any:
         return obj
 
 
+def normalize_toggle_defaults(obj: Any) -> Any:
+    """
+    Normalize toggle option defaults to boolean values.
+
+    The exporter is inconsistent - sometimes it exports toggle defaults as `false`
+    (boolean) and sometimes as `0` (integer). Both are semantically equivalent,
+    so normalize them to boolean for comparison.
+    """
+    if isinstance(obj, dict):
+        # Check if this is a toggle option definition
+        if obj.get('type') == 'toggle' and 'default' in obj:
+            result = dict(obj)
+            # Normalize 0/false to False, 1/true to True
+            default = obj['default']
+            if default == 0 or default is False:
+                result['default'] = False
+            elif default == 1 or default is True:
+                result['default'] = True
+            return {k: normalize_toggle_defaults(v) for k, v in result.items()}
+        return {k: normalize_toggle_defaults(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_toggle_defaults(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_rule_format(obj: Any) -> Any:
     """
     Normalize rule format differences between original exports and WorldGen exports.
@@ -687,6 +713,10 @@ def main():
     # Normalize helper body formats (location_check -> state_method, etc.)
     original_normalized = normalize_helper_body(original_normalized)
     worldgen_normalized = normalize_helper_body(worldgen_normalized)
+
+    # Normalize toggle defaults (0 vs false, 1 vs true)
+    original_normalized = normalize_toggle_defaults(original_normalized)
+    worldgen_normalized = normalize_toggle_defaults(worldgen_normalized)
 
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)
