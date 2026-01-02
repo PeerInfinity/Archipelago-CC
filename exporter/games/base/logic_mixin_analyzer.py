@@ -143,7 +143,7 @@ def analyze_logic_mixin_method(method) -> Optional[Dict[str, Any]]:
 def _match_simple_attribute_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
     """Match: self.multiworld.worlds[player].<attr>
 
-    Returns {'type': 'setting_value', 'setting': '<attr>'}
+    Returns {'type': 'world_attribute', 'attribute': '<attr>'}
     """
     if not isinstance(node, ast.Attribute):
         return None
@@ -152,7 +152,7 @@ def _match_simple_attribute_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
 
     # Check for self.multiworld.worlds[player].<attr> pattern
     if _is_world_subscript(node.value):
-        return {'type': 'setting_value', 'setting': attr_name}
+        return {'type': 'world_attribute', 'attribute': attr_name}
 
     return None
 
@@ -160,7 +160,7 @@ def _match_simple_attribute_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
 def _match_negated_attribute_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
     """Match: not self.multiworld.worlds[player].<attr>
 
-    Returns {'type': 'not', 'operand': {'type': 'setting_value', 'setting': '<attr>'}}
+    Returns {'type': 'not', 'operand': {'type': 'world_attribute', 'attribute': '<attr>'}}
     """
     if not isinstance(node, ast.UnaryOp):
         return None
@@ -178,7 +178,7 @@ def _match_negated_attribute_pattern(node: ast.expr) -> Optional[Dict[str, Any]]
 def _match_bool_option_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
     """Match: bool(self.multiworld.worlds[player].options.<option>.value)
 
-    Returns {'type': 'setting_value', 'setting': '<option>'}
+    Returns {'type': 'option_value', 'option': '<option>'}
     """
     # Check for bool(...) call
     if not isinstance(node, ast.Call):
@@ -209,7 +209,7 @@ def _match_bool_option_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
 
     # Check for self.multiworld.worlds[player]
     if _is_world_subscript(options_access.value.value):
-        return {'type': 'setting_value', 'setting': option_name}
+        return {'type': 'option_value', 'option': option_name}
 
     return None
 

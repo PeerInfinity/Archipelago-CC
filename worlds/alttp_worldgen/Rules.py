@@ -212,7 +212,7 @@ _can_defeat_Skull_Woods_default._internal_function = True
 
 def _can_defeat_Ice_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Kholdstare in Ice Palace."""
-    return ((((((can_extend_magic(state, player, 16)) and (state.multiworld.worlds[player].options.swordless) and (state.has_all(['Bombos', 'Fire Rod'], player)))) or (((can_extend_magic(state, player, 20)) and (state.has('Fire Rod', player)))) or (has_melee_weapon(state, player)))) and (((((((has_sword(state, player)) or (state.multiworld.worlds[player].options.swordless))) and (state.has('Bombos', player)))) or (state.has('Fire Rod', player)))))
+    return ((((((can_extend_magic(state, player, 16)) and (True) and (state.has_all(['Bombos', 'Fire Rod'], player)))) or (((can_extend_magic(state, player, 20)) and (state.has('Fire Rod', player)))) or (has_melee_weapon(state, player)))) and (((((((has_sword(state, player)) or (True))) and (state.has('Bombos', player)))) or (state.has('Fire Rod', player)))))
 _can_defeat_Ice_Palace_default._internal_function = True
 
 
@@ -449,8 +449,10 @@ def set_rules(world: "World") -> None:
         Has('Lamp', 1)
     )
 
-    multiworld.get_entrance("Sewers Door", player).access_rule = \
-        lambda state: (((((state.multiworld.worlds[player].options.mode == 0)) and ((state.multiworld.worlds[player].options.small_key_shuffle == 5)))) or (state.has('Small Key (Hyrule Castle)', player, 4)))
+    world.set_rule(
+        multiworld.get_entrance("Sewers Door", player),
+        Or(And(Compare(1, "==", 0), Compare(0, "==", 5)), Has('Small Key (Hyrule Castle)', 4))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Sewers Back Door", player),
@@ -803,8 +805,10 @@ def set_rules(world: "World") -> None:
         Has('Magic Mirror', 1)
     )
 
-    multiworld.get_entrance("Ganons Tower", player).access_rule = \
-        lambda state: has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_gt)
+    world.set_rule(
+        multiworld.get_entrance("Ganons Tower", player),
+        HelperCall(helper_func=has_crystals, helper_name="has_crystals", args=(7,))
+    )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave", player),
@@ -1364,7 +1368,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Zelda's Chest", player),
-        And(Has('Small Key (Hyrule Castle)', 4), Or(Compare(1, "in", ('easy', 'default')), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
+        And(Has('Small Key (Hyrule Castle)', 4), Or(Compare(1, "in", (0, 1)), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
     )
 
     world.set_rule(
@@ -1606,8 +1610,10 @@ def set_rules(world: "World") -> None:
         HasAll('Moon Pearl', 'Hookshot')
     )
 
-    multiworld.get_location("Mimic Cave", player).access_rule = \
-        lambda state: (((((((state.multiworld.worlds[player].options.enemy_health in (0, 1))) and (can_use_bombs(state, player, 4)))) or (can_shoot_arrows(state, player)) or (has_beam_sword(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Hammer', player)))
+    world.set_rule(
+        multiworld.get_location("Mimic Cave", player),
+        And(Or(And(Compare(1, "in", (0, 1)), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs", args=(4,))), HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword"), Has('Cane of Somaria')), Has('Hammer'))
+    )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
@@ -2170,8 +2176,10 @@ def set_rules(world: "World") -> None:
     multiworld.get_location("Agahnim 2", player).access_rule = \
         lambda state: ((state.multiworld.get_location("Agahnim 2", player).parent_region.dungeon.boss.can_defeat(state)) and (state.has('Moon Pearl', player)))
 
-    multiworld.get_location("Ganon", player).access_rule = \
-        lambda state: ((GanonDefeatRule(state, player)) and (has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_ganon)) and (state.has_all(['Beat Agahnim 2', 'Moon Pearl'], player)))
+    world.set_rule(
+        multiworld.get_location("Ganon", player),
+        And(HelperCall(helper_func=GanonDefeatRule, helper_name="GanonDefeatRule"), HelperCall(helper_func=has_crystals, helper_name="has_crystals", args=(7,)), HasAll('Beat Agahnim 2', 'Moon Pearl'))
+    )
 
     # Wire up boss defeat functions to dungeon objects
     _setup_dungeon_bosses(multiworld, player)

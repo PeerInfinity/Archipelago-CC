@@ -3780,8 +3780,8 @@
                         "left": 1,
                         "op": "in",
                         "right": [
-                          "easy",
-                          "default"
+                          0,
+                          1
                         ]
                       }
                     },
@@ -3964,36 +3964,18 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": {
-                          "rule": "AST_setting_value",
-                          "args": {
-                            "setting": "mode",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 1,
                         "op": "==",
-                        "right": 0,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
+                        "right": 0
+                      }
                     },
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": {
-                          "rule": "AST_setting_value",
-                          "args": {
-                            "setting": "small_key_shuffle",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 0,
                         "op": "==",
-                        "right": 5,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
+                        "right": 5
+                      }
                     }
                   ]
                 },
@@ -6036,12 +6018,10 @@
                   "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "AST_setting_value",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_pyramid",
-                        "_original_ast_type": "setting_value"
-                      },
-                      "_converted_from_ast": true
+                        "option": "open_pyramid"
+                      }
                     }
                   ]
                 },
@@ -7769,15 +7749,12 @@
             "access_rule": {
               "rule": "has_crystals",
               "_original_ast_type": "helper",
-              "_converted_from_ast": true,
               "args": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "Constant",
                   "args": {
-                    "setting": "crystals_needed_for_gt",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "value": 7
+                  }
                 }
               ]
             }
@@ -8446,34 +8423,23 @@
                         {
                           "rule": "Compare",
                           "args": {
-                            "left": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "enemy_health",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "left": 1,
                             "op": "in",
                             "right": [
                               0,
                               1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
+                            ]
+                          }
                         },
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
-                              },
-                              "_converted_from_ast": true
+                              }
                             }
                           ]
                         }
@@ -8481,13 +8447,11 @@
                     },
                     {
                       "rule": "can_shoot_arrows",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "has_beam_sword",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -15830,21 +15794,17 @@
               "children": [
                 {
                   "rule": "GanonDefeatRule",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_crystals",
                   "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "AST_setting_value",
+                      "rule": "Constant",
                       "args": {
-                        "setting": "crystals_needed_for_ganon",
-                        "_original_ast_type": "setting_value"
-                      },
-                      "_converted_from_ast": true
+                        "value": 7
+                      }
                     }
                   ]
                 },
@@ -16487,14 +16447,6 @@
                           ]
                         },
                         {
-                          "rule": "AST_setting_value",
-                          "args": {
-                            "setting": "swordless",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
                           "rule": "HasAll",
                           "args": {
                             "items": [
@@ -16538,44 +16490,13 @@
                   ]
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "has_sword",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "swordless",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Bombos"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Bombos",
+                      "Fire Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -21462,8 +21383,8 @@
           {
             "type": "if_statement",
             "test": {
-              "type": "setting_value",
-              "setting": "swordless"
+              "type": "option_value",
+              "option": "swordless"
             },
             "body": [
               {
@@ -21522,8 +21443,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "setting_value",
-                "setting": "glitches_required"
+                "type": "option_value",
+                "option": "glitches_required"
               },
               "op": "!=",
               "right": {
@@ -21918,8 +21839,8 @@
                       {
                         "type": "compare",
                         "left": {
-                          "type": "setting_value",
-                          "setting": "item_functionality"
+                          "type": "option_value",
+                          "option": "item_functionality"
                         },
                         "op": "==",
                         "right": {
@@ -21978,8 +21899,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "setting_value",
-                            "setting": "item_functionality"
+                            "type": "option_value",
+                            "option": "item_functionality"
                           },
                           "op": "==",
                           "right": {
@@ -22162,8 +22083,8 @@
             {
               "type": "if_statement",
               "test": {
-                "type": "setting_value",
-                "setting": "shuffle_capacity_upgrades"
+                "type": "option_value",
+                "option": "shuffle_capacity_upgrades"
               },
               "body": [
                 {
@@ -22361,8 +22282,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "enemy_shuffle"
+            "type": "option_value",
+            "option": "enemy_shuffle"
           },
           "if_true": {
             "type": "and",
@@ -22466,8 +22387,8 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "setting_value",
-                      "setting": "enemy_health"
+                      "type": "option_value",
+                      "option": "enemy_health"
                     },
                     "op": "in",
                     "right": {
@@ -22546,8 +22467,8 @@
                 "type": "or",
                 "conditions": [
                   {
-                    "type": "setting_value",
-                    "setting": "swordless"
+                    "type": "option_value",
+                    "option": "swordless"
                   },
                   {
                     "type": "helper",
@@ -22577,8 +22498,8 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "setting_value",
-                    "setting": "swordless"
+                    "type": "option_value",
+                    "option": "swordless"
                   },
                   {
                     "type": "item_check",
@@ -22597,8 +22518,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "retro_bow"
+            "type": "option_value",
+            "option": "retro_bow"
           },
           "if_true": {
             "type": "and",
@@ -22674,8 +22595,8 @@
               "value": {
                 "type": "conditional",
                 "test": {
-                  "type": "setting_value",
-                  "setting": "bombless_start"
+                  "type": "option_value",
+                  "option": "bombless_start"
                 },
                 "if_true": {
                   "type": "constant",
@@ -22802,8 +22723,8 @@
                   {
                     "type": "not",
                     "condition": {
-                      "type": "setting_value",
-                      "setting": "shuffle_capacity_upgrades"
+                      "type": "option_value",
+                      "option": "shuffle_capacity_upgrades"
                     }
                   },
                   {
@@ -22963,8 +22884,8 @@
       "has_misery_mire_medallion": {
         "type": "item_check",
         "item": {
-          "type": "setting_value",
-          "setting": "required_medallions",
+          "type": "world_attribute",
+          "attribute": "required_medallions",
           "index": 0
         }
       },
@@ -22992,8 +22913,8 @@
       "has_turtle_rock_medallion": {
         "type": "item_check",
         "item": {
-          "type": "setting_value",
-          "setting": "required_medallions",
+          "type": "world_attribute",
+          "attribute": "required_medallions",
           "index": 1
         }
       },
@@ -23112,8 +23033,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "setting_value",
-                "setting": "mode"
+                "type": "option_value",
+                "option": "mode"
               },
               "op": "!=",
               "right": {
