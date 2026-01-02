@@ -31,8 +31,8 @@
     "traps": false
   },
   "exporter": {
-    "use_resolved_items": false,
-    "world_class_name": "MessengerWorld"
+    "world_class_name": "MessengerWorld",
+    "use_resolved_items": false
   },
   "game": "The Messenger",
   "world_directory": "messenger",
