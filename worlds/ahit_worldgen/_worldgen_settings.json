@@ -80,8 +80,8 @@
     "start_location_hints": []
   },
   "exporter": {
-    "world_class_name": "HatInTimeWorld",
-    "use_resolved_items": false
+    "use_resolved_items": false,
+    "world_class_name": "HatInTimeWorld"
   },
   "game": "A Hat in Time",
   "world_directory": "ahit",
