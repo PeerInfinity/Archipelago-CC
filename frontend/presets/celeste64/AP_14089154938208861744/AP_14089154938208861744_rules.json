@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Celeste64World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1567,6 +1564,7 @@
   "world": {
     "1": {
       "game": "Celeste 64",
+      "world_class_name": "Celeste64World",
       "options": {
         "accessibility": 0,
         "badeline_chaser_frequency": 0,
@@ -2085,15 +2083,7 @@
       "world_directory": "celeste64"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "Celeste64World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "FinalFantasyMysticQuestWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4134,17 +4131,6 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Excalibur",
-                      "Knight Sword",
-                      "Progressive Sword",
-                      "Steel Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
                       "Bomb",
                       "Jumbo Bomb",
                       "Mega Grenade",
@@ -4159,6 +4145,17 @@
                       "Cat Claw",
                       "Charm Claw",
                       "Dragon Claw"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Excalibur",
+                      "Knight Sword",
+                      "Progressive Sword",
+                      "Steel Sword"
                     ]
                   }
                 }
@@ -13094,8 +13091,9 @@
   "world": {
     "1": {
       "game": "Final Fantasy Mystic Quest WorldGen",
+      "world_class_name": "FFMQWorld",
       "options": {
-        "accessibility": 0,
+        "accessibility": 1,
         "available_companions": 4,
         "battlefields_battles_quantities": 0,
         "bosses_scaling_lower": 0,
@@ -13119,6 +13117,7 @@
         "local_items": [],
         "logic": 1,
         "map_shuffle": 0,
+        "map_shuffle_seed": "random",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
@@ -13128,24 +13127,26 @@
         "randomize_items": false,
         "shattered_sky_coin_quantity": 1,
         "shuffle_battlefield_rewards": false,
-        "shuffle_enemies_position": false,
+        "shuffle_enemies_position": true,
         "shuffle_res_weak_types": false,
         "sky_coin_mode": 0,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
         "starting_companion": 0,
-        "starting_weapon": 0,
-        "tweak_frustrating_dungeons": false
+        "starting_weapon": 3,
+        "tweak_frustrating_dungeons": false,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
           "type": "choice",
           "name_lookup": {
             "0": "full",
+            "1": "items",
             "2": "minimal"
           },
-          "default": 0,
+          "default": 1,
           "display_name": "Accessibility"
         },
         "available_companions": {
@@ -13248,7 +13249,7 @@
         },
         "crest_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Crest Shuffle"
         },
         "doom_castle_mode": {
@@ -13263,7 +13264,7 @@
         },
         "doom_castle_shortcut": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Doom Castle Shortcut"
         },
         "enemies_density": {
@@ -13334,7 +13335,7 @@
         },
         "kaelis_mom_fight_minotaur": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Kaeli's Mom Fights Minotaur"
         },
         "leveling_curve": {
@@ -13373,6 +13374,11 @@
           "default": 0,
           "display_name": "Map Shuffle"
         },
+        "map_shuffle_seed": {
+          "type": "freetext",
+          "default": "random",
+          "display_name": "Map Shuffle Seed"
+        },
         "progression_balancing": {
           "type": "range",
           "range_start": 0,
@@ -13392,7 +13398,7 @@
         },
         "progressive_gear": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Progressive Gear"
         },
         "randomize_items": {
@@ -13414,17 +13420,17 @@
         },
         "shuffle_battlefield_rewards": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Battlefield Rewards"
         },
         "shuffle_enemies_position": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Shuffle Enemies' Positions"
         },
         "shuffle_res_weak_types": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Resistance/Weakness Types"
         },
         "sky_coin_mode": {
@@ -13465,8 +13471,13 @@
         },
         "tweak_frustrating_dungeons": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tweak Frustrating Dungeons"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "rooms": [
@@ -21691,14 +21702,7 @@
       "world_directory": "ffmq_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -558,6 +558,7 @@ class MMBN3World(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'MMBN3World'
         self.item_frequencies = {'Progressive Undernet Rank': 8, 'ExpMem': 2, 'Unlocker': 10, 'HPMemory': 23, 'RegUP1': 4, 'RegUP2': 13, 'RegUP3': 4, 'Untrap': 2, 'SubMem': 4, 'MiniEnrg': 3, 'FullEnrg': 5, 'CopyDmg *': 3, 'Charge+1 (White)': 2, 'Charge+1 (Pink)': 2, '600z': 2, '800z': 2, '1000z': 2, '1200z': 2, '1 BugFrag': 10, '10 BugFrags': 5}
         self.rom_name = 'MMBN3_ROM_NOT_GENERATED'
         self.world_description = 'Play as Lan and MegaMan to stop the evil organization WWW led by the nefarious\nDr. Wily in their plans to take over the Net! Collect BattleChips, Customize your Navi,\nand utilize powerful Style Changes to grow strong enough to take on the greatest\nthreat the Internet has ever faced!'
@@ -572,25 +573,24 @@ class MMBN3World(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -722,8 +722,6 @@ class MMBN3World(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = MegaManBattleNetwork3WorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

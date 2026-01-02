@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class IncludePendant(Toggle):
     """Option for Include Pendant."""
     display_name = "Include Pendant"
+    default = False
 
 class IncludePoisons(DefaultOnToggle):
     """Option for Include Poisons."""
@@ -38,6 +39,7 @@ class IncludePoisons(DefaultOnToggle):
 class KeepShopRedPotions(Toggle):
     """Option for Keep Shop Red Potions."""
     display_name = "Keep Shop Red Potions"
+    default = False
 
 class RandomMonsters(Choice):
     """Option for Random Monsters."""
@@ -53,22 +55,27 @@ class RandomMonsters(Choice):
 class RandomMusics(Toggle):
     """Option for Random Musics."""
     display_name = "Random Musics"
+    default = False
 
 class RandomNpcs(Toggle):
     """Option for Random NPCs."""
     display_name = "Random NPCs"
+    default = False
 
 class RandomRewards(Toggle):
     """Option for Random Rewards."""
     display_name = "Random Rewards"
+    default = False
 
 class RandomSounds(Toggle):
     """Option for Random Sounds."""
     display_name = "Random Sounds"
+    default = False
 
 class RequireDragonSlayer(Toggle):
     """Option for Require Dragon Slayer."""
     display_name = "Require Dragon Slayer"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""

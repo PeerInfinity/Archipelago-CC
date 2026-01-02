@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ChecksFinderWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -638,6 +635,7 @@
   "world": {
     "1": {
       "game": "ChecksFinder WorldGen",
+      "world_class_name": "ChecksFinderWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -650,7 +648,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -673,6 +672,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "ChecksFinder is a game where you avoid mines and collect checks by beating boards!\nYou win when you get all your items and beat the last board!",
@@ -702,14 +706,7 @@
       "world_directory": "checksfinder_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

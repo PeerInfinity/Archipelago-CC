@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Overcooked2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -14713,6 +14710,7 @@
   "world": {
     "1": {
       "game": "Overcooked! 2",
+      "world_class_name": "Overcooked2World",
       "options": {
         "accessibility": 0,
         "always_preserve_cooking_progress": true,
@@ -15633,15 +15631,7 @@
       "world_directory": "overcooked2"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "Overcooked2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "level_logic": {

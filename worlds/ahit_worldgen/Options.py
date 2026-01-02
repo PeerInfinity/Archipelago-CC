@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -59,6 +59,7 @@ class Badgesellerminitems(Range):
 class Baseballbat(Toggle):
     """Option for Baseball Bat."""
     display_name = "Baseball Bat"
+    default = False
 
 class Ctrlogic(Choice):
     """Option for Cheating the Race Logic."""
@@ -98,6 +99,7 @@ class Dwautocompletebonuses(DefaultOnToggle):
 class Dwenablebonus(Toggle):
     """Option for Shuffle Death Wish Full Completions."""
     display_name = "Shuffle Death Wish Full Completions"
+    default = False
 
 class Dwexcludeannoyingbonuses(DefaultOnToggle):
     """Option for Exclude Annoying Death Wish Full Completions."""
@@ -114,6 +116,7 @@ class Dwexcludecandles(DefaultOnToggle):
 class Dwshuffle(Toggle):
     """Option for Death Wish Shuffle."""
     display_name = "Death Wish Shuffle"
+    default = False
 
 class Dwshufflecountmax(Range):
     """Option for Death Wish Shuffle Maximum Count."""
@@ -139,18 +142,22 @@ class Dwtimepiecerequirement(Range):
 class Deathwishonly(Toggle):
     """Option for Death Wish Only."""
     display_name = "Death Wish Only"
+    default = False
 
 class Enabledlc1(Toggle):
     """Option for Shuffle Chapter 6."""
     display_name = "Shuffle Chapter 6"
+    default = False
 
 class Enabledlc2(Toggle):
     """Option for Shuffle Chapter 7."""
     display_name = "Shuffle Chapter 7"
+    default = False
 
 class Enabledeathwish(Toggle):
     """Option for Enable Death Wish."""
     display_name = "Enable Death Wish"
+    default = False
 
 class Endgoal(Choice):
     """Option for End Goal."""
@@ -163,6 +170,7 @@ class Endgoal(Choice):
 class Excludetour(Toggle):
     """Option for Exclude Tour Time Rift."""
     display_name = "Exclude Tour Time Rift"
+    default = False
 
 class Finalchaptermaxcost(Range):
     """Option for Final Chapter Maximum Time Piece Cost."""
@@ -181,10 +189,12 @@ class Finalchaptermincost(Range):
 class Finaleshuffle(Toggle):
     """Option for Finale Shuffle."""
     display_name = "Finale Shuffle"
+    default = False
 
 class Hatitems(Toggle):
     """Option for Hat Items."""
     display_name = "Hat Items"
+    default = False
 
 class Highestchaptercost(Range):
     """Option for Highest Possible Chapter Cost."""
@@ -261,6 +271,7 @@ class Minponcost(Range):
 class Nopaintingskips(Toggle):
     """Option for No Subcon Fire Wall Skips."""
     display_name = "No Subcon Fire Wall Skips"
+    default = False
 
 class Noticketskips(Choice):
     """Option for No Ticket Skips."""
@@ -313,6 +324,7 @@ class Shuffleactcontracts(DefaultOnToggle):
 class Shufflealpineziplines(Toggle):
     """Option for Shuffle Alpine Ziplines."""
     display_name = "Shuffle Alpine Ziplines"
+    default = False
 
 class Shufflestorybookpages(DefaultOnToggle):
     """Option for Shuffle Storybook Pages."""
@@ -321,6 +333,7 @@ class Shufflestorybookpages(DefaultOnToggle):
 class Shufflesubconpaintings(Toggle):
     """Option for Shuffle Subcon Paintings."""
     display_name = "Shuffle Subcon Paintings"
+    default = False
 
 class Startwithcompassbadge(DefaultOnToggle):
     """Option for Start with Compass Badge."""
@@ -338,6 +351,7 @@ class Startingchapter(Choice):
 class Tasksanity(Toggle):
     """Option for Tasksanity."""
     display_name = "Tasksanity"
+    default = False
 
 class Tasksanitycheckcount(Range):
     """Option for Tasksanity Check Count."""
@@ -370,6 +384,7 @@ class Trapchance(Range):
 class Umbrellalogic(Toggle):
     """Option for Umbrella Logic."""
     display_name = "Umbrella Logic"
+    default = False
 
 class Yarnavailable(Range):
     """Option for Yarn Available."""
@@ -402,6 +417,7 @@ class Yarncostmin(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DeathLinkAmnesty(Range):
     """Option for Death Link Amnesty."""

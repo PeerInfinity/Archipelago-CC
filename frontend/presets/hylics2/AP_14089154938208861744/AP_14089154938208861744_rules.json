@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Hylics2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -3725,6 +3722,7 @@
   "world": {
     "1": {
       "game": "Hylics 2",
+      "world_class_name": "Hylics2World",
       "options": {
         "accessibility": 0,
         "death_link": false,
@@ -3834,15 +3832,7 @@
       "world_directory": "hylics2"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "Hylics2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

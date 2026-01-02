@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "CelesteOpenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -39702,6 +39699,7 @@
   "world": {
     "1": {
       "game": "Celeste (Open World)",
+      "world_class_name": "CelesteOpenWorld",
       "options": {
         "accessibility": 0,
         "bald_trap_weight": 2,
@@ -40376,15 +40374,7 @@
       "world_directory": "celeste_open_world"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "CelesteOpenWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

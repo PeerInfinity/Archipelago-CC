@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SuperMetroidWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Ceres": {
@@ -9410,6 +9407,7 @@
   "world": {
     "1": {
       "game": "Super Metroid WorldGen",
+      "world_class_name": "SuperMetroidWorldGenWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -9447,49 +9445,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "count_non_advancement_items": true,
-      "hardRooms": {
-        "X-Ray": [
-          [
-            6,
-            10
-          ],
-          [
-            8,
-            5
-          ],
-          [
-            10,
-            1
-          ]
-        ],
-        "Gauntlet": [
-          [
-            0,
-            25
-          ],
-          [
-            1,
-            10
-          ],
-          [
-            3,
-            5
-          ],
-          [
-            6,
-            1
-          ]
-        ]
-      },
-      "romPatches": {
-        "NoGravityEnvProtection": false,
-        "ProgressiveSuits": false,
-        "AreaRandoBlueDoors": false,
-        "LNChozoSJCheckDisabled": false
-      },
-      "knows": {},
-      "hellRuns": {},
       "world_description": "This is Very Adaptive Randomizer of Items and Areas for Super Metroid (VARIA SM). It supports\na wide range of options to randomize Item locations, required skills and even the connections\nbetween the main Areas!",
       "slot_data": {
         "start_location": 1,
@@ -10145,18 +10100,53 @@
           }
         ]
       },
+      "count_non_advancement_items": true,
+      "hardRooms": {
+        "X-Ray": [
+          [
+            6,
+            10
+          ],
+          [
+            8,
+            5
+          ],
+          [
+            10,
+            1
+          ]
+        ],
+        "Gauntlet": [
+          [
+            0,
+            25
+          ],
+          [
+            1,
+            10
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            6,
+            1
+          ]
+        ]
+      },
+      "romPatches": {
+        "NoGravityEnvProtection": false,
+        "ProgressiveSuits": false,
+        "AreaRandoBlueDoors": false,
+        "LNChozoSJCheckDisabled": false
+      },
+      "knows": {},
+      "hellRuns": {},
       "world_directory": "sm_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SuperMetroidWorldGenWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

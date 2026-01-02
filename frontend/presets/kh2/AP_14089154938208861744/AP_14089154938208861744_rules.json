@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "KH2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -10468,12 +10465,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -10797,12 +10792,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -11126,12 +11119,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -11455,12 +11446,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -11784,12 +11773,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -12113,12 +12100,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -12448,12 +12433,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -12777,12 +12760,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -13106,12 +13087,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -13435,12 +13414,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -13764,12 +13741,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -14093,12 +14068,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -14428,12 +14401,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -14757,12 +14728,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -15086,12 +15055,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -15415,12 +15382,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -15744,12 +15709,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -16073,12 +16036,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -16408,12 +16369,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "HasAll",
@@ -16740,12 +16699,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "HasAll",
@@ -17072,12 +17029,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "HasAll",
@@ -17404,12 +17359,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "HasAll",
@@ -17736,12 +17689,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "HasAll",
@@ -18068,12 +18019,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "HasAll",
@@ -18406,12 +18355,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -18735,12 +18682,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -19064,12 +19009,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -19393,12 +19336,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -19722,12 +19663,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -20051,12 +19990,10 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "SettingValue",
                           "args": {
-                            "setting": "AutoFormLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "setting": "AutoFormLogic"
+                          }
                         },
                         {
                           "rule": "Has",
@@ -26271,6 +26208,7 @@
   "world": {
     "1": {
       "game": "Kingdom Hearts 2",
+      "world_class_name": "KH2World",
       "options": {
         "AntiForm": false,
         "AtlanticaToggle": false,
@@ -32608,15 +32546,7 @@
       "world_directory": "kh2"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "KH2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -32701,63 +32631,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "Roxas Event Location"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
                     "value": "(TT3) Underground Concourse Mythril Gem"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -32814,6 +32688,62 @@
                   {
                     "type": "constant",
                     "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Roxas Event Location"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -32966,8 +32896,8 @@
                 "name": "ansem_riku_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -33092,8 +33022,8 @@
                 "name": "armored_xemnas_one_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -33220,8 +33150,8 @@
                 "name": "armored_xemnas_two_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -33380,8 +33310,8 @@
                 "name": "barbosa_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -33572,8 +33502,8 @@
                 "name": "blizzard_lords_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -33688,8 +33618,8 @@
                     "name": "cerberus_cup_rules"
                   },
                   "index": {
-                    "type": "setting_value",
-                    "setting": "FightLogic",
+                    "type": "option_value",
+                    "option": "FightLogic",
                     "use_current_key": true
                   }
                 },
@@ -33832,8 +33762,8 @@
                 "name": "cerberus_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -34447,8 +34377,8 @@
                 "name": "cor_first_fight_movement_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -35396,8 +35326,8 @@
                 "name": "cor_first_fight_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -36062,8 +35992,8 @@
                 "name": "cor_second_fight_movement_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -36078,8 +36008,8 @@
             "test": {
               "type": "not",
               "condition": {
-                "type": "setting_value",
-                "setting": "CorSkipToggle"
+                "type": "option_value",
+                "option": "CorSkipToggle"
               }
             },
             "body": [
@@ -36586,8 +36516,8 @@
                     "name": "void_cross_rules"
                   },
                   "index": {
-                    "type": "setting_value",
-                    "setting": "FightLogic",
+                    "type": "option_value",
+                    "option": "FightLogic",
                     "use_current_key": true
                   }
                 },
@@ -36598,8 +36528,8 @@
                     "name": "wall_rise_rules"
                   },
                   "index": {
-                    "type": "setting_value",
-                    "setting": "FightLogic",
+                    "type": "option_value",
+                    "option": "FightLogic",
                     "use_current_key": true
                   }
                 }
@@ -36734,8 +36664,8 @@
                 "name": "dark_thorn_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -36943,8 +36873,8 @@
                 "name": "data_axel_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -37806,8 +37736,8 @@
                 "name": "data_demyx_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -38748,8 +38678,8 @@
                 "name": "data_larxene_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -39421,8 +39351,8 @@
                 "name": "data_lexaues_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -39539,8 +39469,8 @@
                 "name": "data_luxord_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -40223,8 +40153,8 @@
                 "name": "data_marluxia_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -40429,8 +40359,8 @@
                 "name": "data_roxas_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -41178,8 +41108,8 @@
                 "name": "easy_data_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -42126,8 +42056,8 @@
                 "name": "data_vexen_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -43022,8 +42952,8 @@
                 "name": "data_xaldin_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -43216,8 +43146,8 @@
                 "name": "data_xemnas_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -44136,8 +44066,8 @@
                 "name": "data_xigbar_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -45064,8 +44994,8 @@
                 "name": "data_zexion_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -45200,8 +45130,8 @@
                 "name": "demyx_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -45391,8 +45321,8 @@
                 "name": "experiment_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -45496,8 +45426,8 @@
                 "name": "final_xemnas_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -45684,8 +45614,8 @@
                 "name": "fire_lords_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -45842,8 +45772,8 @@
                 "name": "future_pete_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -46000,8 +45930,8 @@
                 "name": "genie_jafar_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -46177,8 +46107,8 @@
                 "name": "gr2_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -46291,8 +46221,8 @@
                 "name": "groundshaker_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -46480,8 +46410,8 @@
                 "name": "hades_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -46671,8 +46601,8 @@
                 "name": "hostile_program_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -46832,8 +46762,8 @@
                 "name": "hydra_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -46973,8 +46903,8 @@
                 "name": "luxord_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -47164,8 +47094,8 @@
                 "name": "mcp_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -47326,8 +47256,8 @@
                 "name": "olympus_pete_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -47430,8 +47360,8 @@
                     "name": "pain_and_panic_rules"
                   },
                   "index": {
-                    "type": "setting_value",
-                    "setting": "FightLogic",
+                    "type": "option_value",
+                    "option": "FightLogic",
                     "use_current_key": true
                   }
                 },
@@ -47620,8 +47550,8 @@
                 "name": "prison_keeper_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -47692,8 +47622,8 @@
                 "name": "roxas_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -47829,8 +47759,8 @@
                 "name": "saix_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -47904,8 +47834,8 @@
                 "name": "scar_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -48077,8 +48007,8 @@
                 "name": "sephiroth_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -48228,8 +48158,8 @@
                 "name": "shan_yu_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -48422,8 +48352,8 @@
                 "name": "storm_rider_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -48835,8 +48765,8 @@
                 "name": "terra_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -48896,8 +48826,8 @@
                 "name": "thousand_heartless_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -49049,8 +48979,8 @@
                 "name": "thresholder_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -49189,8 +49119,8 @@
                     "name": "titan_cup_rules"
                   },
                   "index": {
-                    "type": "setting_value",
-                    "setting": "FightLogic",
+                    "type": "option_value",
+                    "option": "FightLogic",
                     "use_current_key": true
                   }
                 },
@@ -49312,8 +49242,8 @@
                 "name": "transport_fight_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -49501,8 +49431,8 @@
                 "name": "transport_movement_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -49650,8 +49580,8 @@
                 "name": "xaldin_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -49787,8 +49717,8 @@
                 "name": "xemnas_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -50475,8 +50405,8 @@
                 "name": "xigbar_rules"
               },
               "index": {
-                "type": "setting_value",
-                "setting": "FightLogic",
+                "type": "option_value",
+                "option": "FightLogic",
                 "use_current_key": true
               }
             }
@@ -50814,8 +50744,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "setting_value",
-                "setting": "Promise_Charm"
+                "type": "option_value",
+                "option": "Promise_Charm"
               },
               {
                 "type": "item_check",

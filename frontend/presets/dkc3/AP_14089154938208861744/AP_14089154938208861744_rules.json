@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "DKC3World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -49,9 +46,9 @@
                   "args": {
                     "item_name": "DK Coin",
                     "count": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "dk_coins_for_gyrocopter"
+                        "option": "dk_coins_for_gyrocopter"
                       }
                     }
                   }
@@ -650,9 +647,9 @@
                   "rule": "Arithmetic",
                   "args": {
                     "left": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "krematoa_bonus_coin_cost"
+                        "option": "krematoa_bonus_coin_cost"
                       }
                     },
                     "op": "*",
@@ -680,9 +677,9 @@
                   "rule": "Arithmetic",
                   "args": {
                     "left": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "krematoa_bonus_coin_cost"
+                        "option": "krematoa_bonus_coin_cost"
                       }
                     },
                     "op": "*",
@@ -710,9 +707,9 @@
                   "rule": "Arithmetic",
                   "args": {
                     "left": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "krematoa_bonus_coin_cost"
+                        "option": "krematoa_bonus_coin_cost"
                       }
                     },
                     "op": "*",
@@ -740,9 +737,9 @@
                   "rule": "Arithmetic",
                   "args": {
                     "left": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "krematoa_bonus_coin_cost"
+                        "option": "krematoa_bonus_coin_cost"
                       }
                     },
                     "op": "*",
@@ -770,9 +767,9 @@
                   "rule": "Arithmetic",
                   "args": {
                     "left": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "krematoa_bonus_coin_cost"
+                        "option": "krematoa_bonus_coin_cost"
                       }
                     },
                     "op": "*",
@@ -4402,6 +4399,7 @@
   "world": {
     "1": {
       "game": "Donkey Kong Country 3",
+      "world_class_name": "DKC3World",
       "options": {
         "accessibility": 0,
         "autosave": true,
@@ -4667,15 +4665,7 @@
       "world_directory": "dkc3"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "DKC3World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

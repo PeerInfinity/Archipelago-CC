@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SecretofEvermoreWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -15784,6 +15781,7 @@
   "world": {
     "1": {
       "game": "Secret of Evermore WorldGen",
+      "world_class_name": "SecretofEvermoreWorldGenWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -15842,11 +15840,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": true,
-      "world_class_name": "SecretofEvermoreWorldGenWorld"
+      "use_resolved_items": true
     }
   },
   "game_info": {

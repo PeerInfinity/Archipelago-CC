@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -47,6 +47,7 @@ class BootsControls(Choice):
 class ExperimentalDungeonShuffle(Toggle):
     """Option for Dungeon Shuffle."""
     display_name = "Dungeon Shuffle"
+    default = False
 
 class ExperimentalEntranceShuffle(Choice):
     """Option for Entrance Shuffle."""
@@ -65,6 +66,7 @@ class ForeignItemIcons(Choice):
 class Gfxmod(Toggle):
     """Option for GFX Modification."""
     display_name = "GFX Modification"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -143,6 +145,7 @@ class MusicChangeCondition(Choice):
 class NagMessages(Toggle):
     """Option for Nag Messages."""
     display_name = "Nag Messages"
+    default = False
 
 class NoFlash(DefaultOnToggle):
     """Option for No Flash."""
@@ -242,6 +245,7 @@ class ShuffleStoneBeaks(Choice):
 class StabilizeItemPool(Toggle):
     """Option for Stabilize Item Pool."""
     display_name = "Stabilize Item Pool"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""
@@ -272,10 +276,12 @@ class TextMode(Choice):
 class TextShuffle(Toggle):
     """Option for Text Shuffle."""
     display_name = "Text Shuffle"
+    default = False
 
 class Tradequest(Toggle):
     """Option for Trade Quest."""
     display_name = "Trade Quest"
+    default = False
 
 class TrendyGame(Choice):
     """Option for Trendy Game."""

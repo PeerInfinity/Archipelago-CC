@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "BombRushCyberfunkWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -9830,6 +9827,7 @@
   "world": {
     "1": {
       "game": "Bomb Rush Cyberfunk",
+      "world_class_name": "BombRushCyberfunkWorld",
       "options": {
         "accessibility": 0,
         "damage_multiplier": 1,
@@ -10266,15 +10264,7 @@
       "world_directory": "bomb_rush_cyberfunk"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "BombRushCyberfunkWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "accumulator_rules": [

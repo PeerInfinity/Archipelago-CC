@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "WitnessWorld"
-  },
   "regions": {
     "1": {
       "Entry": {
@@ -9862,6 +9859,7 @@
   "world": {
     "1": {
       "game": "The Witness",
+      "world_class_name": "WitnessWorld",
       "options": {
         "EP_difficulty": 0,
         "accessibility": 0,
@@ -16017,12 +16015,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "add_sphere_items_upfront": true,
-      "world_class_name": "WitnessWorld"
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {

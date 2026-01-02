@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "RaftWorld"
-  },
   "regions": {
     "1": {
       "Raft": {
@@ -7140,6 +7137,7 @@
   "world": {
     "1": {
       "game": "Raft",
+      "world_class_name": "RaftWorld",
       "options": {
         "accessibility": 0,
         "big_island_early_crafting": false,
@@ -7365,12 +7363,8 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
       "use_resolved_items": true,
-      "add_sphere_items_upfront": true,
-      "world_class_name": "RaftWorld"
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
@@ -7386,8 +7380,8 @@
             "name": "bool",
             "args": [
               {
-                "type": "setting_value",
-                "setting": "big_island_early_crafting"
+                "type": "option_value",
+                "option": "big_island_early_crafting"
               }
             ]
           },
@@ -8055,8 +8049,8 @@
         "name": "bool",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "paddleboard_mode"
+            "type": "option_value",
+            "option": "paddleboard_mode"
           }
         ]
       }

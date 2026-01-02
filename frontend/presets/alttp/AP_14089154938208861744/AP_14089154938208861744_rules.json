@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ALTTPWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -19709,6 +19706,7 @@
   "world": {
     "1": {
       "game": "A Link to the Past",
+      "world_class_name": "ALTTPWorld",
       "options": {
         "accessibility": 1,
         "allow_collect": true,
@@ -21389,15 +21387,7 @@
       "world_directory": "alttp"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "ALTTPWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ShiversWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -912,9 +909,9 @@
                 },
                 "op": ">=",
                 "right": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "ixupi_captures_needed"
+                    "option": "ixupi_captures_needed"
                   }
                 },
                 "_original_ast_type": "compare"
@@ -1200,9 +1197,9 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "puzzle_hints_required"
+                        "option": "puzzle_hints_required"
                       }
                     },
                     "if_true": {
@@ -1422,9 +1419,9 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "puzzle_hints_required"
+                    "option": "puzzle_hints_required"
                   }
                 },
                 "if_true": {
@@ -1556,9 +1553,9 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "puzzle_hints_required"
+                        "option": "puzzle_hints_required"
                       }
                     },
                     "if_true": {
@@ -3050,9 +3047,9 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "puzzle_hints_required"
+                        "option": "puzzle_hints_required"
                       }
                     },
                     "if_true": {
@@ -4925,6 +4922,7 @@
   "world": {
     "1": {
       "game": "Shivers",
+      "world_class_name": "ShiversWorld",
       "options": {
         "accessibility": 0,
         "early_beth": true,
@@ -5141,15 +5139,7 @@
       "world_directory": "shivers"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "ShiversWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -5231,8 +5221,8 @@
             "name": "first_nine_ixupi_capturable"
           },
           {
-            "type": "setting_value",
-            "setting": "early_beth"
+            "type": "option_value",
+            "option": "early_beth"
           }
         ]
       },
@@ -5390,8 +5380,8 @@
                 "name": "first_nine_ixupi_capturable"
               },
               {
-                "type": "setting_value",
-                "setting": "early_lightning"
+                "type": "option_value",
+                "option": "early_lightning"
               }
             ]
           },

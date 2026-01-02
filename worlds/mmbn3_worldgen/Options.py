@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -41,6 +41,7 @@ class IncludeJobs(DefaultOnToggle):
 class IncludeSecret(Toggle):
     """Option for Include Secret Area."""
     display_name = "Include Secret Area"
+    default = False
 
 class TradeQuestHinting(Choice):
     """Option for Trade Quest Hinting."""

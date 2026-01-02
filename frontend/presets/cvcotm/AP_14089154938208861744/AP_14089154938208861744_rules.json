@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "CVCotMWorld"
-  },
   "regions": {
     "1": {
       "Catacomb": {
@@ -3177,6 +3174,7 @@
   "world": {
     "1": {
       "game": "Castlevania - Circle of the Moon",
+      "world_class_name": "CVCotMWorld",
       "options": {
         "accessibility": 0,
         "always_allow_speed_dash": false,
@@ -3448,15 +3446,7 @@
       "world_directory": "cvcotm"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "CVCotMWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

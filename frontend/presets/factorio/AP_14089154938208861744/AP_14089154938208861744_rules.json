@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Factorio"
-  },
   "regions": {
     "1": {
       "Nauvis": {
@@ -5099,12 +5096,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5151,12 +5144,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5194,12 +5183,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5240,12 +5225,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -5295,12 +5276,8 @@
                 "element_rule": {
                   "type": "item_check",
                   "item": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "technology"
-                    },
-                    "attr": "name"
+                    "type": "name",
+                    "name": "technology"
                   }
                 },
                 "iterator_info": {
@@ -9037,6 +9014,7 @@
   "world": {
     "1": {
       "game": "Factorio",
+      "world_class_name": "Factorio",
       "options": {
         "accessibility": 0,
         "artillery_traps": 0,
@@ -10121,11 +10099,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": true,
-      "world_class_name": "Factorio"
+      "use_resolved_items": true
     }
   },
   "game_info": {

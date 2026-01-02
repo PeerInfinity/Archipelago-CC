@@ -383,6 +383,7 @@ class HatInTimeWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'HatInTimeWorld'
         self.act_connections = types.SimpleNamespace(chapter1_tutorial='chapter1_barrelboss', TimeRift_Water_Subcon_Dwellers='TimeRift_Water_Subcon_Hookshot', Spaceship_WaterRift_MailRoom='TimeRift_Water_TWreck_Panels', TimeRift_Water_TWreck_Panels='TimeRift_Water_Subcon_Dwellers', TimeRift_Water_AlpineSkyline_Cats='Spaceship_WaterRift_Gallery', TimeRift_Cave_Mafia='TimeRift_Cave_Mafia', TimeRift_Water_TWreck_Parade='TimeRift_Water_AlpineSkyline_Cats', TimeRift_Water_Mafia_Hard='TimeRift_Water_Alp_Goats', TimeRift_Cave_BirdBasement='TimeRift_Cave_Alps', TimeRift_Cave_Alps='TimeRift_Cave_BirdBasement', TimeRift_Water_Mafia_Easy='TimeRift_Water_TWreck_Parade', TimeRift_Cave_Raccoon='TimeRift_Cave_Raccoon', TimeRift_Water_Alp_Goats='Spaceship_WaterRift_MailRoom', Spaceship_WaterRift_Gallery='TimeRift_Water_Mafia_Easy', TimeRift_Water_Subcon_Hookshot='TimeRift_Water_Mafia_Hard', snatcher_boss='chapter1_tutorial', AlpineSkyline_Finale='harbor_impossible_race', chapter3_secret_finale='subcon_cave', AlpineFreeRoam='chapter3_murder', subcon_village_icewall='snatcher_boss', subcon_cave='chapter3_secret_finale', mafiatown_lava='moon_camerasnap', moon_parade='mafiatown_lava', chapter1_boss='mafiatown_goldenvault', subcon_maildelivery='moon_parade', chapter1_cannon_repair='subcon_village_icewall', chapter2_toiletboss='vanessa_manor_attic', DeadBirdStudio='chapter2_toiletboss', vanessa_manor_attic='chapter1_boss', chapter1_barrelboss='chapter1_cannon_repair', moon_camerasnap='subcon_maildelivery', chapter3_murder='trainwreck_selfdestruct', mafiatown_goldenvault='DeadBirdStudio', trainwreck_selfdestruct='AlpineFreeRoam', harbor_impossible_race='AlpineSkyline_Finale', award_ceremony='award_ceremony')
         self.shop_locs = ['Mafia Boss Shop Item', 'Badge Seller - Item 1', 'Badge Seller - Item 2', 'Badge Seller - Item 3', 'Badge Seller - Item 4']
         self.hat_craft_order = [2, 4, 1, 0, 3]
@@ -404,25 +405,24 @@ class HatInTimeWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 

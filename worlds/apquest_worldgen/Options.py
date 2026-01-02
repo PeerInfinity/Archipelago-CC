@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -37,14 +37,17 @@ class ConfettiExplosiveness(Range):
 class ExtraStartingChest(Toggle):
     """Option for Extra Starting Chest."""
     display_name = "Extra Starting Chest"
+    default = False
 
 class Hammer(Toggle):
     """Option for Hammer."""
     display_name = "Hammer"
+    default = False
 
 class HardMode(Toggle):
     """Option for Hard Mode."""
     display_name = "Hard Mode"
+    default = False
 
 class PlayerSprite(Choice):
     """Option for Player Sprite."""
@@ -58,6 +61,7 @@ class PlayerSprite(Choice):
 class StartWithOneConfettiCannon(Toggle):
     """Option for Start With One Confetti Cannon."""
     display_name = "Start With One Confetti Cannon"
+    default = False
 
 class TrapChance(Range):
     """Option for Trap Chance."""

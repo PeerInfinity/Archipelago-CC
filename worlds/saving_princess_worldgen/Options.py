@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -46,6 +46,7 @@ class CliffWeaponUpgrade(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class ExpandedPool(DefaultOnToggle):
     """Option for Expanded Item Pool."""
@@ -65,6 +66,7 @@ class InstantSaving(DefaultOnToggle):
 class MusicShuffle(Toggle):
     """Option for Music Shuffle."""
     display_name = "Music Shuffle"
+    default = False
 
 class ShakeIntensity(Range):
     """Option for Screen Shake Intensity %."""

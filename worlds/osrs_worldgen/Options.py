@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class BrutalGrinds(Toggle):
     """Option for Allow Brutal Grinds."""
     display_name = "Allow Brutal Grinds"
+    default = False
 
 class CombatTaskWeight(Range):
     """Option for Combat Task Weight."""
@@ -62,10 +63,12 @@ class DudCount(Range):
 class EnableCarepacks(Toggle):
     """Option for Enable Care Packs."""
     display_name = "Enable Care Packs"
+    default = False
 
 class EnableDuds(Toggle):
     """Option for Enable Duds."""
     display_name = "Enable Duds"
+    default = False
 
 class FiremakingTaskWeight(Range):
     """Option for Firemaking Task Weight."""
@@ -273,6 +276,7 @@ class PrayerTaskWeight(Range):
 class ProgressiveTasks(Toggle):
     """Option for Progressive Tasks."""
     display_name = "Progressive Tasks"
+    default = False
 
 class RunecraftTaskWeight(Range):
     """Option for Runecraft Task Weight."""

@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -74,15 +74,16 @@ class Boss(Choice):
     option_daos = 36
     option_egg_dragon = 37
     option_master = 38
-    option_random_low = 39
-    option_random_middle = 40
-    option_random_sinistral = 41
-    option_random_high = 42
+    option_random_middle = 39
+    option_random_high = 40
+    option_random_low = 41
+    option_random_sinistral = 42
     default = 38
 
 class CapsuleCravingsJpStyle(Toggle):
     """Option for Capsule cravings JP style."""
     display_name = "Capsule cravings JP style"
+    default = False
 
 class CapsuleStartingForm(Range):
     """Option for Capsule monster starting form."""
@@ -108,6 +109,7 @@ class CrowdedFloorChance(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DefaultCapsule(Choice):
     """Option for Default capsule monster."""
@@ -172,6 +174,7 @@ class FinalFloor(Range):
 class GearVarietyAfterB9(Toggle):
     """Option for Increase gear variety after B9."""
     display_name = "Increase gear variety after B9"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -259,10 +262,12 @@ class ShopInterval(NamedRange):
 class ShuffleCapsuleMonsters(Toggle):
     """Option for Shuffle capsule monsters."""
     display_name = "Shuffle capsule monsters"
+    default = False
 
 class ShufflePartyMembers(Toggle):
     """Option for Shuffle party members."""
     display_name = "Shuffle party members"
+    default = False
 
 
 @dataclass

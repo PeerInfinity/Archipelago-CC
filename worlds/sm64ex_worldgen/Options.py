@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -53,6 +53,7 @@ class BasementStarDoorCost(Range):
 class BuddyChecks(Toggle):
     """Option for Bob-omb Buddy Checks."""
     display_name = "Bob-omb Buddy Checks"
+    default = False
 
 class CompletionType(Choice):
     """Option for Completion Goal."""
@@ -64,6 +65,7 @@ class CompletionType(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EnableCoinStars(Choice):
     """Option for Enable 100 Coin Stars."""
@@ -76,10 +78,12 @@ class EnableCoinStars(Choice):
 class EnableMoveRando(Toggle):
     """Option for Enable Move Randomizer."""
     display_name = "Enable Move Randomizer"
+    default = False
 
 class ExclamationBoxes(Toggle):
     """Option for Randomize 1Up !-Blocks."""
     display_name = "Randomize 1Up !-Blocks"
+    default = False
 
 class FirstBowserStarDoorCost(Range):
     """Option for First Star Door Cost %."""

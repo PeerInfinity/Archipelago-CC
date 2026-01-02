@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "DarkSouls3World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -36697,6 +36694,7 @@
   "world": {
     "1": {
       "game": "Dark Souls III WorldGen",
+      "world_class_name": "DarkSouls3World",
       "options": {
         "accessibility": 0,
         "all_chests_are_mimics": false,
@@ -36773,17 +36771,17 @@
         },
         "all_chests_are_mimics": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "All Chests Are Mimics"
         },
         "auto_equip": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Auto-Equip"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "early_banner": {
@@ -36806,7 +36804,7 @@
         },
         "enable_dlc": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable DLC"
         },
         "enable_health_upgrade_locations": {
@@ -36823,7 +36821,7 @@
         },
         "enable_ngp": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable NG+"
         },
         "enable_npc_locations": {
@@ -36870,7 +36868,7 @@
         },
         "impatient_mimics": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Impatient Mimics"
         },
         "late_basin_of_vows": {
@@ -36895,7 +36893,7 @@
         },
         "lock_equip": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Lock Equipment Slots"
         },
         "max_levels_in_10": {
@@ -36942,17 +36940,17 @@
         },
         "no_equip_load": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "No Equip Load"
         },
         "no_spell_requirements": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "No Spell Requirements"
         },
         "no_weapon_requirements": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "No Weapon Requirements"
         },
         "pool_type": {
@@ -36978,7 +36976,7 @@
         },
         "randomize_infusion": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Infusion"
         },
         "randomize_infusion_percentage": {
@@ -36995,12 +36993,12 @@
         },
         "randomize_mimics_with_enemies": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Mimics With Enemies"
         },
         "randomize_small_crystal_lizards_with_enemies": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Small Crystal Lizards With Enemies"
         },
         "randomize_weapon_level": {
@@ -37023,7 +37021,7 @@
         },
         "reduce_harmless_enemies": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Reduce Harmless Enemies"
         },
         "require_one_handed_starting_weapons": {
@@ -39670,15 +39668,7 @@
       "world_directory": "dark_souls_3_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "DarkSouls3World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

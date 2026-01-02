@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MLSSWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -13424,6 +13421,7 @@
   "world": {
     "1": {
       "game": "Mario & Luigi Superstar Saga WorldGen",
+      "world_class_name": "MLSSWorld",
       "options": {
         "accessibility": 0,
         "block_visibility": 0,
@@ -13487,7 +13485,7 @@
         },
         "castle_skip": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Bowser's Castle"
         },
         "chuckle_beans": {
@@ -13502,22 +13500,22 @@
         },
         "coins": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Coin Blocks"
         },
         "difficult_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Difficult Logic"
         },
         "disable_harhalls_pants": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Remove Harhall's Pants"
         },
         "disable_surf": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Disable Surf Minigame"
         },
         "emblems_amount": {
@@ -13536,7 +13534,7 @@
         },
         "extra_pipes": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Start With Extra Pipes"
         },
         "goal": {
@@ -13649,7 +13647,7 @@
         },
         "randomize_backgrounds": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Battle Backgrounds"
         },
         "randomize_bosses": {
@@ -13679,17 +13677,17 @@
         },
         "randomize_sounds": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Sounds"
         },
         "scale_stats": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Scale Enemy Stats"
         },
         "skip_minecart": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Minecart Minigame"
         },
         "start_inventory_from_pool": {
@@ -13699,7 +13697,7 @@
         },
         "tattle_hp": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tattle HP"
         },
         "use_canonical_options": {
@@ -13743,15 +13741,7 @@
       "world_directory": "mlss_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MLSSWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

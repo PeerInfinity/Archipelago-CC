@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MM2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1483,6 +1480,7 @@
   "world": {
     "1": {
       "game": "Mega Man 2 WorldGen",
+      "world_class_name": "MM2World",
       "options": {
         "accessibility": 0,
         "consumables": 1,
@@ -1535,22 +1533,22 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "enable_lasers": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable Lasers"
         },
         "enemy_weakness": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Enemy Weaknesses"
         },
         "energy_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "EnergyLink"
         },
         "palette_shuffle": {
@@ -1630,7 +1628,7 @@
         },
         "strict_weakness": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Strict Boss Weaknesses"
         },
         "use_canonical_options": {
@@ -1647,7 +1645,7 @@
         },
         "yoku_jumps": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Yoku Block Jumps"
         }
       },
@@ -1987,15 +1985,7 @@
       "world_directory": "mm2_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MM2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

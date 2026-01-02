@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "HereticWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -13167,6 +13164,7 @@
   "world": {
     "1": {
       "game": "Heretic",
+      "world_class_name": "HereticWorld",
       "options": {
         "accessibility": 0,
         "added_ammo_arrows": 50,
@@ -13501,15 +13499,7 @@
       "world_directory": "heretic"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "HereticWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -359,6 +359,7 @@ class RiskOfRainWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'RiskOfRainWorld'
         self.total_revivals = 7
         self.world_description = 'Escape a chaotic alien planet by fighting through hordes of frenzied monsters – with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.'
         self.slot_data = types.SimpleNamespace(itemPickupStep=1, shrineUseStep=0, goal=1, victory=0, totalLocations=40, chestsPerStage=10, shrinesPerStage=5, scavengersPerStage=0, scannerPerStage=1, altarsPerStage=1, totalRevivals=4, startWithRevive=1, finalStageDeath=0, deathLink=0, requireStages=1, progressiveStages=1, seed='3991975562123098', offset=37000)
@@ -372,25 +373,24 @@ class RiskOfRainWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -522,8 +522,6 @@ class RiskOfRainWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = RiskofRain2WorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

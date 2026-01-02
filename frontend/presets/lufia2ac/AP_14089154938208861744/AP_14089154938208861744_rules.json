@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "L2ACWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -5464,6 +5461,7 @@
   "world": {
     "1": {
       "game": "Lufia II Ancient Cave",
+      "world_class_name": "L2ACWorld",
       "options": {
         "accessibility": 0,
         "blue_chest_chance": 25,
@@ -5569,10 +5567,10 @@
             "36": "daos",
             "37": "egg_dragon",
             "38": "master",
-            "39": "random-low",
-            "40": "random-middle",
-            "41": "random-sinistral",
-            "42": "random-high"
+            "39": "random-middle",
+            "40": "random-high",
+            "41": "random-low",
+            "42": "random-sinistral"
           },
           "default": 38,
           "display_name": "Boss"
@@ -5852,15 +5850,7 @@
       "world_directory": "lufia2ac"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "L2ACWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

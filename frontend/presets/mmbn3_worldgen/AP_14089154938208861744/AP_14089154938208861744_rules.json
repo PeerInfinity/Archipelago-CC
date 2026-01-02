@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MegaManBattleNetwork3WorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -8298,6 +8295,7 @@
   "world": {
     "1": {
       "game": "MegaMan Battle Network 3 WorldGen",
+      "world_class_name": "MMBN3World",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -8314,7 +8312,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "trade_quest_hinting": 2
+        "trade_quest_hinting": 2,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -8340,7 +8339,7 @@
         },
         "include_secret": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Secret Area"
         },
         "progression_balancing": {
@@ -8364,6 +8363,11 @@
           },
           "default": 2,
           "display_name": "Trade Quest Hinting"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "item_frequencies": {
@@ -8413,14 +8417,7 @@
       "world_directory": "mmbn3_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

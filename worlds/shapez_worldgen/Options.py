@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class AllowFloatingLayers(Toggle):
     """Option for Allow floating layers."""
     display_name = "Allow floating layers"
+    default = False
 
 class ComplexityGrowthGradient(FreeText):
     """Option for Complexity growth gradient."""
@@ -48,14 +49,17 @@ class EarlyBalancerTunnelAndTrash(Choice):
 class ExcludeLongPlaytimeAchievements(Toggle):
     """Option for Exclude long playtime achievements."""
     display_name = "Exclude long playtime achievements"
+    default = True
 
 class ExcludeProgressionUnreasonable(Toggle):
     """Option for Exclude progression items in softlock and long playtime achievements."""
     display_name = "Exclude progression items in softlock and long playtime achievements"
+    default = True
 
 class ExcludeSoftlockAchievements(Toggle):
     """Option for Exclude softlock achievements."""
     display_name = "Exclude softlock achievements"
+    default = True
 
 class Goal(Choice):
     """Option for Goal."""
@@ -76,14 +80,17 @@ class GoalAmount(Range):
 class IncludeAchievements(Toggle):
     """Option for Include Achievements."""
     display_name = "Include Achievements"
+    default = True
 
 class IncludeWhackyUpgrades(Toggle):
     """Option for Include Whacky Upgrades."""
     display_name = "Include Whacky Upgrades"
+    default = False
 
 class LockBeltAndExtractor(Toggle):
     """Option for Lock Belt and Extractor."""
     display_name = "Lock Belt and Extractor"
+    default = False
 
 class RandomizeLevelLogic(Choice):
     """Option for Randomize level logic."""
@@ -104,6 +111,7 @@ class RandomizeLevelLogic(Choice):
 class RandomizeLevelRequirements(Toggle):
     """Option for Randomize level requirements."""
     display_name = "Randomize level requirements"
+    default = True
 
 class RandomizeUpgradeLogic(Choice):
     """Option for Randomize upgrade logic."""
@@ -118,6 +126,7 @@ class RandomizeUpgradeLogic(Choice):
 class RandomizeUpgradeRequirements(Toggle):
     """Option for Randomize upgrade requirements."""
     display_name = "Randomize upgrade requirements"
+    default = True
 
 class RequiredShapesMultiplier(Range):
     """Option for Required shapes multiplier."""
@@ -129,6 +138,7 @@ class RequiredShapesMultiplier(Range):
 class SameLateUpgradeRequirements(Toggle):
     """Option for Same late upgrade requirements."""
     display_name = "Same late upgrade requirements"
+    default = True
 
 class ShapesanityAmount(Range):
     """Option for Shapesanity amount."""
@@ -140,6 +150,7 @@ class ShapesanityAmount(Range):
 class SplitInventoryDrainingTrap(Toggle):
     """Option for Split Inventory Draining Trap."""
     display_name = "Split Inventory Draining Trap"
+    default = False
 
 class ThroughputLevelsRatio(Range):
     """Option for Throughput levels ratio."""
@@ -151,6 +162,7 @@ class ThroughputLevelsRatio(Range):
 class ToolbarShuffling(Toggle):
     """Option for Toolbar Shuffling."""
     display_name = "Toolbar Shuffling"
+    default = True
 
 class TrapsPercentage(Range):
     """Option for Traps Percentage."""

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SMWWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4494,9 +4491,9 @@
                   "args": {
                     "item_name": "Boss Token",
                     "count": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "bosses_required"
+                        "option": "bosses_required"
                       }
                     }
                   }
@@ -4542,9 +4539,9 @@
               "args": {
                 "item_name": "Boss Token",
                 "count": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "bosses_required"
+                    "option": "bosses_required"
                   }
                 }
               }
@@ -6175,6 +6172,7 @@
   "world": {
     "1": {
       "game": "Super Mario World",
+      "world_class_name": "SMWWorld",
       "options": {
         "accessibility": 0,
         "autosave": true,
@@ -6753,15 +6751,7 @@
       "world_directory": "smw"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SMWWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

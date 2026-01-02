@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,10 +30,12 @@ class UseCanonicalOptions(Toggle):
 class Calamity(Toggle):
     """Option for Calamity Mod Integration."""
     display_name = "Calamity Mod Integration"
+    default = False
 
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EarlyAchievements(DefaultOnToggle):
     """Option for Early Pre-Hardmode Achievements."""
@@ -49,10 +51,12 @@ class FillExtraChecksWith(Choice):
 class FishingAchievements(Toggle):
     """Option for Fishing Quest Achievements."""
     display_name = "Fishing Quest Achievements"
+    default = False
 
 class Getfixedboi(Toggle):
     """Option for "getfixedboi" Seed."""
     display_name = "\"getfixedboi\" Seed"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -77,6 +81,7 @@ class Goal(Choice):
 class GrindyAchievements(Toggle):
     """Option for Grindy Achievements."""
     display_name = "Grindy Achievements"
+    default = False
 
 class NormalAchievements(DefaultOnToggle):
     """Option for Normal Achievements."""

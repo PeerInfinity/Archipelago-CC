@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,14 +30,17 @@ class UseCanonicalOptions(Toggle):
 class AreaCost(Toggle):
     """Option for Area Cost Randomizer."""
     display_name = "Area Cost Randomizer"
+    default = False
 
 class AreaRando(Toggle):
     """Option for Area Randomizer."""
     display_name = "Area Randomizer"
+    default = False
 
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DeathLinkAmnesty(Range):
     """Option for Death Link Amnesty."""
@@ -56,6 +59,7 @@ class DoorCost(Range):
 class MusicRando(Toggle):
     """Option for Music Randomizer."""
     display_name = "Music Randomizer"
+    default = False
 
 
 @dataclass

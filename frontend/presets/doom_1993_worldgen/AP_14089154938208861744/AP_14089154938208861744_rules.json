@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "DOOM1993World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -10233,6 +10230,7 @@
   "world": {
     "1": {
       "game": "DOOM 1993 WorldGen",
+      "world_class_name": "DOOM1993World",
       "options": {
         "accessibility": 0,
         "added_ammo_bullets": 200,
@@ -10314,7 +10312,7 @@
         },
         "allow_death_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Allow Death Logic"
         },
         "backpack_count": {
@@ -10326,7 +10324,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "difficulty": {
@@ -10358,7 +10356,7 @@
         },
         "episode4": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Episode 4"
         },
         "flip_levels": {
@@ -10410,7 +10408,7 @@
         },
         "pro": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Pro Doom"
         },
         "progression_balancing": {
@@ -10463,7 +10461,7 @@
         },
         "split_backpack": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Split Backpack"
         },
         "start_inventory_from_pool": {
@@ -10473,7 +10471,7 @@
         },
         "start_with_computer_area_maps": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Start With Computer Area Maps"
         },
         "use_canonical_options": {
@@ -10539,15 +10537,7 @@
       "world_directory": "doom_1993_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "DOOM1993World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

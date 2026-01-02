@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "CV64World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4607,6 +4604,7 @@
   "world": {
     "1": {
       "game": "Castlevania 64",
+      "world_class_name": "CV64World",
       "options": {
         "accessibility": 1,
         "background_music": 0,
@@ -5207,15 +5205,7 @@
       "world_directory": "cv64"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "CV64World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

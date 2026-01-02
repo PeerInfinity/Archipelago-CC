@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "BakingAdventureWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -683,6 +680,7 @@
   "world": {
     "1": {
       "game": "Baking Adventure",
+      "world_class_name": "BakingAdventureWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -743,15 +741,7 @@
       "world_directory": "bakingadventure"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "BakingAdventureWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

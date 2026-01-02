@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SC2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -37656,6 +37653,7 @@
   "world": {
     "1": {
       "game": "Starcraft 2",
+      "world_class_name": "SC2World",
       "options": {
         "accessibility": 0,
         "all_in_map": 1,
@@ -40238,15 +40236,7 @@
       "world_directory": "sc2"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SC2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "rating_tables": {

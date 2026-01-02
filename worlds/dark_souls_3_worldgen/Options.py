@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,14 +30,17 @@ class UseCanonicalOptions(Toggle):
 class AllChestsAreMimics(Toggle):
     """Option for All Chests Are Mimics."""
     display_name = "All Chests Are Mimics"
+    default = False
 
 class AutoEquip(Toggle):
     """Option for Auto-Equip."""
     display_name = "Auto-Equip"
+    default = False
 
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EarlyBanner(Choice):
     """Option for Early Small Lothric Banner."""
@@ -58,6 +61,7 @@ class EnableBossLocations(Removed):
 class EnableDlc(Toggle):
     """Option for Enable DLC."""
     display_name = "Enable DLC"
+    default = False
 
 class EnableHealthUpgradeLocations(Removed):
     """Deprecated option for Enable Health Upgrade Locations."""
@@ -74,6 +78,7 @@ class EnableMiscLocations(Removed):
 class EnableNgp(Toggle):
     """Option for Enable NG+."""
     display_name = "Enable NG+"
+    default = False
 
 class EnableNpcLocations(Removed):
     """Deprecated option for Enable Npc Locations."""
@@ -118,6 +123,7 @@ class GuaranteedItems(Removed):
 class ImpatientMimics(Toggle):
     """Option for Impatient Mimics."""
     display_name = "Impatient Mimics"
+    default = False
 
 class LateBasinOfVows(Choice):
     """Option for Late Basin of Vows."""
@@ -138,6 +144,7 @@ class LateDlc(Choice):
 class LockEquip(Toggle):
     """Option for Lock Equipment Slots."""
     display_name = "Lock Equipment Slots"
+    default = False
 
 class MaxLevelsIn10(Range):
     """Option for Maximum Level of +10 Weapons."""
@@ -182,14 +189,17 @@ class MissableLocations(Removed):
 class NoEquipLoad(Toggle):
     """Option for No Equip Load."""
     display_name = "No Equip Load"
+    default = False
 
 class NoSpellRequirements(Toggle):
     """Option for No Spell Requirements."""
     display_name = "No Spell Requirements"
+    default = False
 
 class NoWeaponRequirements(Toggle):
     """Option for No Weapon Requirements."""
     display_name = "No Weapon Requirements"
+    default = False
 
 class PoolType(Removed):
     """Deprecated option for Pool Type."""
@@ -206,6 +216,7 @@ class RandomizeEnemies(DefaultOnToggle):
 class RandomizeInfusion(Toggle):
     """Option for Randomize Infusion."""
     display_name = "Randomize Infusion"
+    default = False
 
 class RandomizeInfusionPercentage(Range):
     """Option for Percentage of Infused Weapons."""
@@ -217,10 +228,12 @@ class RandomizeInfusionPercentage(Range):
 class RandomizeMimicsWithEnemies(Toggle):
     """Option for Randomize Mimics With Enemies."""
     display_name = "Randomize Mimics With Enemies"
+    default = False
 
 class RandomizeSmallCrystalLizardsWithEnemies(Toggle):
     """Option for Randomize Small Crystal Lizards With Enemies."""
     display_name = "Randomize Small Crystal Lizards With Enemies"
+    default = False
 
 class RandomizeWeaponLevel(Choice):
     """Option for Randomize Weapon Level."""
@@ -241,6 +254,7 @@ class RandomizeWeaponLevelPercentage(Range):
 class ReduceHarmlessEnemies(Toggle):
     """Option for Reduce Harmless Enemies."""
     display_name = "Reduce Harmless Enemies"
+    default = False
 
 class RequireOneHandedStartingWeapons(DefaultOnToggle):
     """Option for Require One-Handed Starting Weapons."""

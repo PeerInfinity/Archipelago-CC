@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -44,6 +44,7 @@ class CombatDifficulty(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EnsureEkeekeInShops(DefaultOnToggle):
     """Option for Ensure EkeEke in Shops."""
@@ -60,14 +61,17 @@ class Goal(Choice):
 class HandleDamageBoostingInLogic(Toggle):
     """Option for Damage Boosting in Logic."""
     display_name = "Damage Boosting in Logic"
+    default = False
 
 class HandleEnemyJumpingInLogic(Toggle):
     """Option for Enemy Jumping in Logic."""
     display_name = "Enemy Jumping in Logic"
+    default = False
 
 class HandleTreeCuttingGlitchInLogic(Toggle):
     """Option for Tree-cutting Glitch in Logic."""
     display_name = "Tree-cutting Glitch in Logic"
+    default = False
 
 class HintCount(Range):
     """Option for Hint Count."""
@@ -90,6 +94,7 @@ class ProgressiveArmors(DefaultOnToggle):
 class RemoveGumiBoulder(Toggle):
     """Option for Remove Boulder After Gumi."""
     display_name = "Remove Boulder After Gumi"
+    default = False
 
 class ReviveUsingEkeeke(DefaultOnToggle):
     """Option for Revive Using EkeEke."""
@@ -105,6 +110,7 @@ class ShopPricesFactor(Range):
 class ShuffleTrees(Toggle):
     """Option for Shuffle Teleportation Trees."""
     display_name = "Shuffle Teleportation Trees"
+    default = False
 
 class SpawnRegion(Choice):
     """Option for Starting Region."""

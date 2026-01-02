@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -65,10 +65,12 @@ class ClusterGrenadeTraps(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EnergyLink(Toggle):
     """Option for Energy Link."""
     display_name = "Energy Link"
+    default = False
 
 class EvolutionTrapIncrease(Range):
     """Option for Evolution Trap % Effect."""
@@ -165,6 +167,7 @@ class Progressive(Choice):
 class RampingTechCosts(Toggle):
     """Option for Ramping Tech Costs."""
     display_name = "Ramping Tech Costs"
+    default = False
 
 class RecipeIngredients(Choice):
     """Option for Random Recipe Ingredients Level."""

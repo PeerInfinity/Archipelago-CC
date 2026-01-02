@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MessengerWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -7027,6 +7024,7 @@
   "world": {
     "1": {
       "game": "The Messenger",
+      "world_class_name": "MessengerWorld",
       "options": {
         "accessibility": 0,
         "available_portals": 6,
@@ -7340,15 +7338,7 @@
       "world_directory": "messenger"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MessengerWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SavingPrincessWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1002,6 +999,7 @@
   "world": {
     "1": {
       "game": "Saving Princess",
+      "world_class_name": "SavingPrincessWorld",
       "options": {
         "accessibility": 0,
         "ace_weapon_upgrade": 1,
@@ -1168,15 +1166,7 @@
       "world_directory": "saving_princess"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SavingPrincessWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "TunicWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -14018,21 +14015,19 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "hexagon_quest",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "hexagon_quest"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
                   "args": {
                     "item_name": "Gold Questagon",
                     "count": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "hexagon_goal"
+                        "option": "hexagon_goal"
                       }
                     }
                   }
@@ -16743,6 +16738,7 @@
   "world": {
     "1": {
       "game": "TUNIC",
+      "world_class_name": "TunicWorld",
       "options": {
         "ability_shuffling": true,
         "accessibility": 0,
@@ -17503,15 +17499,7 @@
       "world_directory": "tunic"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "TunicWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -17910,8 +17898,8 @@
         "test": {
           "type": "not",
           "condition": {
-            "type": "setting_value",
-            "setting": "ladder_storage"
+            "type": "option_value",
+            "option": "ladder_storage"
           }
         },
         "if_true": {
@@ -17921,8 +17909,8 @@
         "if_false": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "ladder_storage_without_items"
+            "type": "option_value",
+            "option": "ladder_storage_without_items"
           },
           "if_true": {
             "type": "constant",
@@ -22616,8 +22604,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "shuffle_fuses"
+            "type": "option_value",
+            "option": "shuffle_fuses"
           },
           "if_true": {
             "type": "state_method",
@@ -22742,8 +22730,8 @@
           "test": {
             "type": "compare",
             "left": {
-              "type": "setting_value",
-              "setting": "ice_grappling"
+              "type": "option_value",
+              "option": "ice_grappling"
             },
             "op": "<",
             "right": {
@@ -22834,8 +22822,8 @@
             {
               "type": "not",
               "condition": {
-                "type": "setting_value",
-                "setting": "shuffle_ladders"
+                "type": "option_value",
+                "option": "shuffle_ladders"
               }
             },
             {
@@ -22852,8 +22840,8 @@
         "type": "or",
         "conditions": [
           {
-            "type": "setting_value",
-            "setting": "lanternless"
+            "type": "option_value",
+            "option": "lanternless"
           },
           {
             "type": "item_check",
@@ -22865,8 +22853,8 @@
         "type": "or",
         "conditions": [
           {
-            "type": "setting_value",
-            "setting": "maskless"
+            "type": "option_value",
+            "option": "maskless"
           },
           {
             "type": "item_check",
@@ -23991,8 +23979,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "setting_value",
-            "setting": "laurels_zips"
+            "type": "option_value",
+            "option": "laurels_zips"
           },
           {
             "type": "item_check",

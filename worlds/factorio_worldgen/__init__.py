@@ -404,6 +404,7 @@ class Factorio(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'Factorio'
         self.custom_recipes = {'rocket-part': 'rocket-part', 'ap-energy-bridge': 'ap-energy-bridge'}
         self.science_locations = ['AP-1-235', 'AP-5-349', 'AP-1-798', 'AP-5-126', 'AP-2-328', 'AP-4-431', 'AP-3-926', 'AP-1-757', 'AP-3-413', 'AP-4-529', 'AP-2-416', 'AP-4-304', 'AP-4-024', 'AP-6-946', 'AP-4-169', 'AP-4-954', 'AP-3-041', 'AP-4-822', 'AP-2-179', 'AP-1-097', 'AP-2-634', 'AP-3-974', 'AP-2-688', 'AP-4-499', 'AP-4-738', 'AP-1-141', 'AP-2-683', 'AP-2-650', 'AP-1-459', 'AP-1-055', 'AP-5-117', 'AP-2-269', 'AP-5-220', 'AP-5-338', 'AP-4-022', 'AP-2-413', 'AP-2-502', 'AP-3-722', 'AP-3-806', 'AP-2-524', 'AP-1-769', 'AP-6-011', 'AP-4-013', 'AP-4-849', 'AP-4-600', 'AP-4-374', 'AP-6-002', 'AP-2-654', 'AP-4-274', 'AP-2-272', 'AP-3-129', 'AP-2-072', 'AP-2-898', 'AP-4-696', 'AP-1-633', 'AP-4-972', 'AP-1-076', 'AP-3-719', 'AP-1-880', 'AP-5-703', 'AP-1-211', 'AP-6-676', 'AP-5-735', 'AP-2-270', 'AP-5-755', 'AP-1-754', 'AP-2-861', 'AP-6-077', 'AP-2-469', 'AP-5-464', 'AP-3-954', 'AP-3-886', 'AP-4-999', 'AP-5-609', 'AP-6-201', 'AP-5-316', 'AP-4-829', 'AP-3-702', 'AP-1-983', 'AP-3-953', 'AP-2-996', 'AP-1-080', 'AP-2-901', 'AP-5-844', 'AP-5-734', 'AP-1-475', 'AP-6-193', 'AP-1-126', 'AP-4-406', 'AP-1-954', 'AP-6-148', 'AP-4-827', 'AP-4-409', 'AP-3-240', 'AP-3-025', 'AP-5-133', 'AP-2-507', 'AP-2-585', 'AP-4-350', 'AP-3-466', 'AP-5-401', 'AP-1-951', 'AP-3-210', 'AP-1-079', 'AP-4-603', 'AP-6-618', 'AP-6-496', 'AP-5-180', 'AP-1-711', 'AP-3-801', 'AP-5-693', 'AP-5-934', 'AP-2-644', 'AP-5-261', 'AP-2-784', 'AP-6-269', 'AP-6-746', 'AP-2-514', 'AP-3-554', 'AP-2-889', 'AP-6-092', 'AP-2-473', 'AP-4-336', 'AP-1-195', 'AP-4-126', 'AP-5-034', 'AP-1-494', 'AP-6-117', 'AP-6-577', 'AP-5-472', 'AP-2-652', 'AP-3-063', 'AP-6-737', 'AP-4-881', 'AP-4-276', 'AP-5-561', 'AP-6-576', 'AP-4-678', 'AP-6-371', 'AP-4-823', 'AP-3-733', 'AP-3-318', 'AP-3-079', 'AP-3-537', 'AP-3-674', 'AP-1-330', 'AP-5-599', 'AP-6-406', 'AP-5-298', 'AP-4-527', 'AP-6-800', 'AP-4-927', 'AP-1-158', 'AP-6-321', 'AP-5-356', 'AP-1-934', 'AP-4-649', 'AP-1-108', 'AP-5-953', 'AP-2-255', 'AP-3-106', 'AP-2-794', 'AP-6-070', 'AP-5-998', 'AP-5-075', 'AP-1-031', 'AP-3-043', 'AP-1-653', 'AP-1-997', 'AP-6-096', 'AP-1-194', 'AP-2-491', 'AP-3-794', 'AP-6-684', 'AP-2-338', 'AP-6-685', 'AP-2-763', 'AP-1-499', 'AP-2-569']
         self.tech_mix = 70
@@ -421,25 +422,24 @@ class Factorio(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
