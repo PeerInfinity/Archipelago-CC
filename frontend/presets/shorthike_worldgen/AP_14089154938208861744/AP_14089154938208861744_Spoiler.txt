@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Buckets:                         2
 Coins in Purchaseable Locations: No
 Shop Cost Multiplier:            100
@@ -29,6 +30,7 @@ Minimum Shop Check Logic Application:100 Coins
 Randomize Walkie Talkie:         Yes
 Shop Check Logic:                Fishing Rod
 Silver Feathers:                 2
+Start Inventory from Pool:       
 Sticks:                          8
 Toy Shovels:                     5
 

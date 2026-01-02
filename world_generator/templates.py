@@ -1191,10 +1191,18 @@ class {class_name}(DefaultOnToggle):
         return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
 
     elif option_type == 'toggle':
+        # Get the default value, preserving boolean type if present
+        toggle_default = option_def.get('default', False)
+        # Normalize to Python boolean for consistency
+        if toggle_default == 0 or toggle_default is False:
+            default_repr = 'False'
+        else:
+            default_repr = 'True'
         class_code = f'''
 class {class_name}(Toggle):
     """Option for {display_name}."""
     display_name = "{display_name_escaped}"
+    default = {default_repr}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 

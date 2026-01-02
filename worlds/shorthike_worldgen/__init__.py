@@ -449,8 +449,6 @@ class ShortHikeWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = AShortHikeWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 
