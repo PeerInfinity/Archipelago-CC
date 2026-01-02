@@ -2106,8 +2106,9 @@ class {world_class}(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = {class_name}Item(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
+        hint_text = getattr(data, 'hint_text', None)
+        if hint_text:
+            item._hint_text = hint_text
         return item
 
 {collect_item_section}{fill_slot_data_section}'''
