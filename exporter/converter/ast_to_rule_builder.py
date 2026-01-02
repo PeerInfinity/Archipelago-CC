@@ -110,6 +110,11 @@ class ASTToRuleBuilder:
             # Placement types
             'placement_search': self._convert_placement_search,
             'placement_lookup': self._convert_placement_lookup,
+
+            # Setting/option/attribute value types
+            'setting_value': self._convert_setting_value,  # Legacy
+            'option_value': self._convert_option_value,
+            'world_attribute': self._convert_world_attribute,
         }
 
     def convert(self, rule: Dict[str, Any]) -> ConversionResult:
@@ -1074,18 +1079,25 @@ class ASTToRuleBuilder:
         Convert attribute access rule.
 
         Handles common patterns:
-        - setting_value.value → SettingValue(setting_name)
+        - setting_value.value → SettingValue(setting_name) (legacy)
+        - option_value.value → OptionValue(option_name)
         - options.X → SettingValue(X)
         - self.options.X → SettingValue(X)
         """
         obj = rule.get('object', {})
         attr = rule.get('attr', '')
 
-        # Pattern 1: setting_value.value → SettingValue
+        # Pattern 1a: setting_value.value → SettingValue (legacy)
         # {"type": "attribute", "object": {"type": "setting_value", "setting": "X"}, "attr": "value"}
         if isinstance(obj, dict) and obj.get('type') == 'setting_value' and attr == 'value':
             setting_name = obj.get('setting', '')
             return self._make_rule('SettingValue', {'setting': setting_name})
+
+        # Pattern 1b: option_value.value → OptionValue
+        # {"type": "attribute", "object": {"type": "option_value", "option": "X"}, "attr": "value"}
+        if isinstance(obj, dict) and obj.get('type') == 'option_value' and attr == 'value':
+            option_name = obj.get('option', '')
+            return self._make_rule('OptionValue', {'option': option_name})
 
         # Pattern 2: options.X → SettingValue
         # {"type": "attribute", "object": {"type": "name", "name": "options"}, "attr": "X"}
@@ -1391,6 +1403,38 @@ class ASTToRuleBuilder:
             },
             '_converted_from_ast': True
         }
+
+    # -------------------------------------------------------------------------
+    # Setting/Option/Attribute Value Converters
+    # -------------------------------------------------------------------------
+
+    def _convert_setting_value(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert setting_value to SettingValue rule (legacy, for backward compat)."""
+        setting = rule.get('setting', '')
+        args = {'setting': setting}
+        if 'index' in rule:
+            args['index'] = rule['index']
+        if rule.get('use_current_key'):
+            args['use_current_key'] = True
+        return self._make_rule('SettingValue', args)
+
+    def _convert_option_value(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert option_value to OptionValue rule."""
+        option = rule.get('option', '')
+        args = {'option': option}
+        if rule.get('use_current_key'):
+            args['use_current_key'] = True
+        return self._make_rule('OptionValue', args)
+
+    def _convert_world_attribute(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert world_attribute to WorldAttribute rule."""
+        attribute = rule.get('attribute', '')
+        args = {'attribute': attribute}
+        if 'index' in rule:
+            args['index'] = rule['index']
+        if rule.get('use_current_key'):
+            args['use_current_key'] = True
+        return self._make_rule('WorldAttribute', args)
 
     # -------------------------------------------------------------------------
     # Unknown Type Handler

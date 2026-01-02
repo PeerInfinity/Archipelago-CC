@@ -1,6 +1,6 @@
 """Constants for the world generator module."""
 
-# Internal settings filtered out when building resolved_settings
+# Internal settings filtered out when building resolved_values
 # These are structural/internal and not actual game options
 INTERNAL_SETTINGS = frozenset({
     'game',

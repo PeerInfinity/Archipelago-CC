@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 AP Title Screen:                 Yes
 Boots Controls:                  Vanilla
 Dungeon Shuffle:                 No
@@ -45,6 +46,7 @@ Shuffle Nightmare Keys:          Original Dungeon
 Shuffle Small Keys:              Original Dungeon
 Shuffle Stone Beaks:             Original Dungeon
 Stabilize Item Pool:             No
+Start Inventory from Pool:       
 Stealing:                        Out Of Logic
 Tarin's Gift:                    Local Progression
 Text Mode:                       Fast

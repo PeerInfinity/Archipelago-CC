@@ -562,7 +562,9 @@ class RuleCodeGenerator:
                     'AST_any_of': 'ast_any_of',
                     'AST_prog_item_count': 'prog_item_count',  # State counter items like coins
                     'Arithmetic': 'binary_op',
-                    'SettingValue': 'setting_value',
+                    'SettingValue': 'setting_value',  # Legacy
+                    'OptionValue': 'option_value',
+                    'WorldAttribute': 'world_attribute',
                     'Conditional': 'conditional',
                     'Name': 'name',  # Option/setting references
                     'CountItem': 'count_item',  # Item count for arithmetic/comparisons
@@ -950,12 +952,30 @@ class RuleCodeGenerator:
             return self._convert_binary_op(binary_op_rule)
 
         if rb_rule == 'SettingValue':
-            # Convert Rule Builder format SettingValue
+            # Convert Rule Builder format SettingValue (legacy)
             setting_rule = {
                 'type': 'setting_value',
                 'setting': args.get('setting', '')
             }
             return self._convert_setting_value(setting_rule)
+
+        if rb_rule == 'OptionValue':
+            # Convert Rule Builder format OptionValue
+            option_rule = {
+                'type': 'option_value',
+                'option': args.get('option', '')
+            }
+            return self._expr_option_value(option_rule)
+
+        if rb_rule == 'WorldAttribute':
+            # Convert Rule Builder format WorldAttribute
+            attr_rule = {
+                'type': 'world_attribute',
+                'attribute': args.get('attribute', '')
+            }
+            if 'index' in args:
+                attr_rule['index'] = args['index']
+            return self._expr_world_attribute(attr_rule)
 
         if rb_rule == 'Conditional':
             # Convert Rule Builder format Conditional
@@ -1932,6 +1952,32 @@ class RuleCodeGenerator:
             # Unknown setting - return 0 as safe fallback
             return '0'
 
+        if rb_rule == 'OptionValue':
+            # Handle OptionValue in Compare operand - preserve numeric value
+            option = rb_args.get('option', '')
+            if option in self.settings:
+                value = self.settings[option]
+                if isinstance(value, (int, float)):
+                    return repr(value)
+                if isinstance(value, bool):
+                    self.required_imports.add('True_' if value else 'False_')
+                    return 'True_()' if value else 'False_()'
+                return repr(value)
+            return '0'
+
+        if rb_rule == 'WorldAttribute':
+            # Handle WorldAttribute in Compare operand - preserve value
+            attribute = rb_args.get('attribute', '')
+            if attribute in self.world_attributes:
+                value = self.world_attributes[attribute]
+                if isinstance(value, (int, float)):
+                    return repr(value)
+                if isinstance(value, bool):
+                    self.required_imports.add('True_' if value else 'False_')
+                    return 'True_()' if value else 'False_()'
+                return repr(value)
+            return '0'
+
         if rb_rule == 'Arithmetic':
             # Handle Rule Builder format Arithmetic in Compare operand
             binary_op_rule = {
@@ -2065,6 +2111,26 @@ class RuleCodeGenerator:
                 if isinstance(value, (int, float)):
                     return repr(value)
             # Unknown or non-numeric setting - return 0 as safe fallback
+            return '0'
+
+        # Handle Rule Builder format OptionValue in arithmetic operand
+        if rb_rule == 'OptionValue':
+            rb_args = operand.get('args', {})
+            option = rb_args.get('option', '')
+            if option in self.settings:
+                value = self.settings[option]
+                if isinstance(value, (int, float)):
+                    return repr(value)
+            return '0'
+
+        # Handle Rule Builder format WorldAttribute in arithmetic operand
+        if rb_rule == 'WorldAttribute':
+            rb_args = operand.get('args', {})
+            attribute = rb_args.get('attribute', '')
+            if attribute in self.world_attributes:
+                value = self.world_attributes[attribute]
+                if isinstance(value, (int, float)):
+                    return repr(value)
             return '0'
 
         if op_type == 'count_item':
@@ -3695,10 +3761,24 @@ class RuleCodeGenerator:
                     # Handle Rule Builder format args (SettingValue, Constant, etc.)
                     arg_rule = arg.get('rule', '')
                     if arg_rule == 'SettingValue':
-                        # Resolve setting_value args to their actual values
+                        # Resolve setting_value args to their actual values (legacy)
                         setting = arg.get('args', {}).get('setting', '')
                         if setting in self.settings:
                             arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    elif arg_rule == 'OptionValue':
+                        # Resolve option_value args to their actual values
+                        option = arg.get('args', {}).get('option', '')
+                        if option in self.settings:
+                            arg_strs.append(repr(self.settings[option]))
+                        else:
+                            arg_strs.append('None')
+                    elif arg_rule == 'WorldAttribute':
+                        # Resolve world_attribute args to their actual values
+                        attribute = arg.get('args', {}).get('attribute', '')
+                        if attribute in self.world_attributes:
+                            arg_strs.append(repr(self.world_attributes[attribute]))
                         else:
                             arg_strs.append('None')
                     elif arg_rule == 'AST_setting_value':
@@ -3719,6 +3799,18 @@ class RuleCodeGenerator:
                         setting = arg.get('setting', '')
                         if setting in self.settings:
                             arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    elif arg.get('type') == 'option_value':
+                        option = arg.get('option', '')
+                        if option in self.settings:
+                            arg_strs.append(repr(self.settings[option]))
+                        else:
+                            arg_strs.append('None')
+                    elif arg.get('type') == 'world_attribute':
+                        attribute = arg.get('attribute', '')
+                        if attribute in self.world_attributes:
+                            arg_strs.append(repr(self.world_attributes[attribute]))
                         else:
                             arg_strs.append('None')
                     elif arg_rule == 'False_':
@@ -4387,7 +4479,9 @@ class HelperCodeGenerator:
             'location_check': self._expr_location_check,
             'count_item': self._expr_count_item,
             'group_count': self._expr_group_count,
-            'setting_value': self._expr_setting_value,
+            'setting_value': self._expr_setting_value,  # Legacy
+            'option_value': self._expr_option_value,
+            'world_attribute': self._expr_world_attribute,
             'prog_item_count': self._expr_prog_item_count,
             'sum_of': self._expr_sum_of,
             'sum': self._expr_sum,
@@ -4658,6 +4752,44 @@ class HelperCodeGenerator:
             base_path = f'state.multiworld.worlds[player].options.{setting}'
         else:
             base_path = f'state.multiworld.worlds[player].{setting}'
+
+        # Handle indexed access (e.g., required_medallions[0])
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
+
+    def _expr_option_value(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access an option at runtime.
+
+        Always generates: state.multiworld.worlds[player].options.<name>
+        This pattern is recognized by the exporter's _is_world_options_pattern().
+        """
+        option = expr.get('option', '')
+        base_path = f'state.multiworld.worlds[player].options.{option}'
+
+        # Handle indexed access (not common for options, but supported)
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
+
+    def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access a world attribute at runtime.
+
+        Always generates: state.multiworld.worlds[player].<name>
+        This pattern is recognized by the exporter's pattern detection.
+        """
+        attribute = expr.get('attribute', '')
+        base_path = f'state.multiworld.worlds[player].{attribute}'
 
         # Handle indexed access (e.g., required_medallions[0])
         if 'index' in expr:

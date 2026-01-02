@@ -365,6 +365,47 @@ def normalize_and_or_structure(obj: Any) -> Any:
         return obj
 
 
+def normalize_setting_types(obj: Any) -> Any:
+    """
+    Normalize option_value/world_attribute types to setting_value for comparison.
+
+    This allows comparing rules using the new split types with rules using
+    the legacy setting_value type:
+    - {"type": "option_value", "option": "X"} -> {"type": "setting_value", "setting": "X"}
+    - {"type": "world_attribute", "attribute": "X"} -> {"type": "setting_value", "setting": "X"}
+    - {"type": "world_attribute", "attribute": "X", "index": N} -> {"type": "setting_value", "setting": "X", "index": N}
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Normalize option_value to setting_value
+        if obj_type == 'option_value' and 'option' in obj:
+            result = {'type': 'setting_value', 'setting': obj['option']}
+            # Preserve any other keys (unlikely but for safety)
+            for k, v in obj.items():
+                if k not in ('type', 'option'):
+                    result[k] = normalize_setting_types(v)
+            return result
+
+        # Normalize world_attribute to setting_value
+        if obj_type == 'world_attribute' and 'attribute' in obj:
+            result = {'type': 'setting_value', 'setting': obj['attribute']}
+            if 'index' in obj:
+                result['index'] = obj['index']
+            # Preserve any other keys
+            for k, v in obj.items():
+                if k not in ('type', 'attribute', 'index'):
+                    result[k] = normalize_setting_types(v)
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_setting_types(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_setting_types(item) for item in obj]
+    else:
+        return obj
+
+
 def find_differences(obj1: Any, obj2: Any, path: str = "") -> List[Tuple[str, Any, Any]]:
     """
     Recursively find differences between two objects.
@@ -733,6 +774,10 @@ def main():
     # Normalize And/Or structure (flatten nested, sort children)
     original_normalized = normalize_and_or_structure(original_normalized)
     worldgen_normalized = normalize_and_or_structure(worldgen_normalized)
+
+    # Normalize setting types (option_value/world_attribute -> setting_value)
+    original_normalized = normalize_setting_types(original_normalized)
+    worldgen_normalized = normalize_setting_types(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
