@@ -96,7 +96,10 @@ class WorldDataMixin:
         # Store world reference for use in expand_rule (option resolution)
         self.world = world
 
-        world_data = {'game': multiworld.game[player]}
+        world_data = {
+            'game': multiworld.game[player],
+            'world_class_name': world.__class__.__name__,  # The world class (e.g., 'ALTTPWorld')
+        }
 
         # Common multiworld settings (like accessibility)
         common_settings = [

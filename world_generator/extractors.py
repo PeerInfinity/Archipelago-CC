@@ -198,20 +198,30 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     """
     game_name = json_data.get('game_name', 'UnknownGame')
 
-    # Extract exporter settings first (we may need world_class_name from it)
+    # Extract world data for the specified player (contains main world attributes)
+    world_data = json_data.get('world', {}).get(player_id, {})
+
+    # Extract exporter settings (legacy location for world_class_name)
     exporter_data = json_data.get('exporter', {}).get(player_id, {})
 
     # Get world class name with priority:
-    # 1. exporter section (most authoritative, new format)
-    # 2. world_classes (legacy format)
-    # 3. derive from game name (fallback)
+    # 1. world.{player}.world_class_name (authoritative, new format)
+    # 2. exporter.{player}.world_class_name (legacy)
+    # 3. world_classes (older legacy)
+    # 4. derive from game name (fallback)
     #
     # Track original_world_class_name to preserve during game name override
     # This is set when the class name comes from the source export (not derived)
-    original_world_class_name = exporter_data.get('world_class_name')
+    original_world_class_name = world_data.get('world_class_name')
     world_class_name = original_world_class_name
 
     if not world_class_name:
+        # Try exporter section (legacy)
+        original_world_class_name = exporter_data.get('world_class_name')
+        world_class_name = original_world_class_name
+
+    if not world_class_name:
+        # Try top-level world_classes (older legacy)
         world_classes = json_data.get('world_classes', {})
         if world_classes:
             # Get the world class for the specified player, or fall back to first available
@@ -223,9 +233,6 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         # Derive from game name: "My Game" -> "MyGameWorld"
         # Note: original_world_class_name stays None since this is derived, not from source
         world_class_name = sanitize_identifier(game_name) + 'World'
-
-    # Extract world data for the specified player (contains main world attributes)
-    world_data = json_data.get('world', {}).get(player_id, {})
 
     # Extract game_info for the specified player (contains game-specific custom data)
     game_info = json_data.get('game_info', {}).get(player_id, {})

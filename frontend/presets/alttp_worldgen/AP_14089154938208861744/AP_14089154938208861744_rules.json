@@ -19671,6 +19671,7 @@
   "world": {
     "1": {
       "game": "A Link to the Past WorldGen",
+      "world_class_name": "ALTTPWorld",
       "options": {
         "accessibility": 1,
         "allow_collect": true,
