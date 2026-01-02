@@ -759,12 +759,12 @@ def generate_rules_py(data: ExtractedData) -> str:
         if helper_data.defaults
     }
 
-    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings)
+    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
     helper_generator = HelperCodeGenerator(
         game_name,
-        resolved_values=data.metadata.resolved_settings,
+        resolved_values=data.metadata.resolved_values,
         option_definitions=data.metadata.option_definitions
     )
     helper_generator.set_known_helpers(set(data.helpers.keys()))
@@ -1191,10 +1191,18 @@ class {class_name}(DefaultOnToggle):
         return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
 
     elif option_type == 'toggle':
+        # Get the default value, preserving boolean type if present
+        toggle_default = option_def.get('default', False)
+        # Normalize to Python boolean for consistency
+        if toggle_default == 0 or toggle_default is False:
+            default_repr = 'False'
+        else:
+            default_repr = 'True'
         class_code = f'''
 class {class_name}(Toggle):
     """Option for {display_name}."""
     display_name = "{display_name_escaped}"
+    default = {default_repr}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
@@ -1230,9 +1238,13 @@ class {class_name}(FreeText):
 
     elif option_type == 'plando_connections':
         # Plando connections - inherits from PlandoConnections
+        # Must define entrances and exits (required by PlandoConnections metaclass)
+        # Using empty sets since plando is not used in worldgen testing
         class_code = f'''
 class {class_name}(PlandoConnections):
     """Plando connections for {display_name}."""
+    entrances = frozenset()
+    exits = frozenset()
 '''
         return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections'
 
@@ -1352,7 +1364,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -1440,25 +1452,24 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -1977,6 +1988,12 @@ class _ShopWrapper:
     # Add json and os imports for canonical options loading
     canonical_imports = 'import json\nimport os\n' if canonical_seed1 else ''
 
+    # Check if any items have hint_text for create_item method
+    has_hint_text = any(item.hint_text for item in data.items.values())
+    hint_text_code = '''        if data.hint_text:
+            item._hint_text = data.hint_text
+''' if has_hint_text else ''
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
@@ -2106,9 +2123,7 @@ class {world_class}(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = {class_name}Item(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
-        return item
+{hint_text_code}        return item
 
 {collect_item_section}{fill_slot_data_section}'''
 

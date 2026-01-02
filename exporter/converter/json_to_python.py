@@ -106,7 +106,9 @@ class JSONToPython:
             'attribute': self._convert_attribute,
             'name': self._convert_name,
             'subscript': self._convert_subscript,
-            'setting_value': self._convert_setting_value,
+            'setting_value': self._convert_setting_value,  # Legacy, kept for backward compat
+            'option_value': self._convert_option_value,
+            'world_attribute': self._convert_world_attribute,
             'player_id': self._convert_player_id,
 
             # Collections
@@ -514,9 +516,22 @@ class JSONToPython:
         return f"{obj_code}[{index_code}]"
 
     def _convert_setting_value(self, rule: Dict, context: str) -> str:
-        """Convert setting_value rule to options reference."""
+        """Convert setting_value rule to options reference (legacy, for backward compat)."""
         setting = rule.get('setting', '')
         return f"world.options.{setting}.value"
+
+    def _convert_option_value(self, rule: Dict, context: str) -> str:
+        """Convert option_value rule to options reference."""
+        option = rule.get('option', '')
+        return f"world.options.{option}.value"
+
+    def _convert_world_attribute(self, rule: Dict, context: str) -> str:
+        """Convert world_attribute rule to world attribute reference."""
+        attribute = rule.get('attribute', '')
+        index = rule.get('index')
+        if index is not None:
+            return f"world.{attribute}[{index}]"
+        return f"world.{attribute}"
 
     def _convert_player_id(self, rule: Dict, context: str) -> str:
         """Convert player_id rule."""

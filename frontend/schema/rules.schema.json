@@ -397,7 +397,15 @@
         },
         "setting": {
           "type": "string",
-          "description": "Setting name for 'setting_value', 'setting_check'."
+          "description": "Setting name for 'setting_value' (legacy)."
+        },
+        "option": {
+          "type": "string",
+          "description": "Option name for 'option_value' type."
+        },
+        "attribute": {
+          "type": "string",
+          "description": "Attribute name for 'world_attribute' type."
         },
         "capability": {
           "type": "string",

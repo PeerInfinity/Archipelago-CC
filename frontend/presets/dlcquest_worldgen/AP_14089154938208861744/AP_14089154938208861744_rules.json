@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "DLCQuestWorldGenWorld"
+    "1": "DLCqworld"
   },
   "regions": {
     "1": {
@@ -1895,7 +1895,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "time_is_money": 0
+        "time_is_money": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1995,6 +1996,11 @@
           },
           "default": 0,
           "display_name": "Time Is Money"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "DLCQuest is a metroid ish game where everything is an in-game dlc.",
@@ -2042,7 +2048,8 @@
         "version": "1.0"
       },
       "use_resolved_items": true,
-      "add_sphere_items_upfront": true
+      "add_sphere_items_upfront": true,
+      "world_class_name": "DLCqworld"
     }
   },
   "game_info": {

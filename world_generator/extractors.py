@@ -45,7 +45,7 @@ class GameMetadata:
     world_description: Optional[str] = None
     slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
-    resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
+    resolved_values: Dict[str, Any] = field(default_factory=dict)  # Resolved values from seed (options + world attributes)
     option_definitions: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Option class definitions (type, range, choices, etc.)
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
     original_world_class_name: Optional[str] = None  # Original class name from exporter (preserved during game name override)
@@ -198,20 +198,30 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     """
     game_name = json_data.get('game_name', 'UnknownGame')
 
-    # Extract exporter settings first (we may need world_class_name from it)
+    # Extract world data for the specified player (contains main world attributes)
+    world_data = json_data.get('world', {}).get(player_id, {})
+
+    # Extract exporter settings (legacy location for world_class_name)
     exporter_data = json_data.get('exporter', {}).get(player_id, {})
 
     # Get world class name with priority:
-    # 1. exporter section (most authoritative, new format)
-    # 2. world_classes (legacy format)
-    # 3. derive from game name (fallback)
+    # 1. world.{player}.world_class_name (authoritative, new format)
+    # 2. exporter.{player}.world_class_name (legacy)
+    # 3. world_classes (older legacy)
+    # 4. derive from game name (fallback)
     #
     # Track original_world_class_name to preserve during game name override
     # This is set when the class name comes from the source export (not derived)
-    original_world_class_name = exporter_data.get('world_class_name')
+    original_world_class_name = world_data.get('world_class_name')
     world_class_name = original_world_class_name
 
     if not world_class_name:
+        # Try exporter section (legacy)
+        original_world_class_name = exporter_data.get('world_class_name')
+        world_class_name = original_world_class_name
+
+    if not world_class_name:
+        # Try top-level world_classes (older legacy)
         world_classes = json_data.get('world_classes', {})
         if world_classes:
             # Get the world class for the specified player, or fall back to first available
@@ -223,9 +233,6 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         # Derive from game name: "My Game" -> "MyGameWorld"
         # Note: original_world_class_name stays None since this is derived, not from source
         world_class_name = sanitize_identifier(game_name) + 'World'
-
-    # Extract world data for the specified player (contains main world attributes)
-    world_data = json_data.get('world', {}).get(player_id, {})
 
     # Extract game_info for the specified player (contains game-specific custom data)
     game_info = json_data.get('game_info', {}).get(player_id, {})
@@ -259,36 +266,39 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     # Extract game options (for generating dynamic fill_slot_data)
     game_options = world_data.get('options', {})
 
-    # Extract resolved settings for evaluating setting_value nodes in helpers
-    # These are the actual values used in the seed, stored at the top level of settings
-    # Also include game_options since many setting_value nodes reference world.options.X.value
+    # Extract resolved values for evaluating option_value/world_attribute/setting_value nodes
+    # This flat dict merges values from three sources:
+    # 1. game_options (from world_data.options) - user-configurable options
+    # 2. Top-level world_data attributes - game-specific values with correct types
+    # 3. world_attributes section - runtime-computed values like shop_items
+    #
     # IMPORTANT: Start with game_options, then merge top-level settings to let them take precedence.
     # This is necessary because:
     # - game_options may have string keys for Choice options (e.g., "100" instead of 100)
     # - game_options may have string booleans ('true'/'false') that need conversion
     # - Top-level settings from game-specific handlers have the correct types
     # - By applying top-level settings last, we ensure correct types win
-    resolved_settings = {}
+    resolved_values = {}
     for k, v in game_options.items():
         # Convert string booleans to actual booleans
         if v == 'true':
-            resolved_settings[k] = True
+            resolved_values[k] = True
         elif v == 'false':
-            resolved_settings[k] = False
+            resolved_values[k] = False
         else:
-            resolved_settings[k] = v
+            resolved_values[k] = v
 
     # Merge top-level attributes from world_data
     skip_keys = INTERNAL_SETTINGS | {'options', 'option_definitions', 'dungeons', 'shops', 'game'}
     for k, v in world_data.items():
         if k not in skip_keys:
-            resolved_settings[k] = v
+            resolved_values[k] = v
 
-    # Also include world_attributes (new format) for resolving setting_value nodes
-    # that reference world attributes like shop_items, difficulty_requirements, etc.
+    # Also include world_attributes (new format) for resolving world_attribute nodes
+    # that reference runtime values like shop_items, difficulty_requirements, etc.
     world_attrs = json_data.get('world_attributes', {}).get(player_id, {})
     for k, v in world_attrs.items():
-        resolved_settings[k] = v
+        resolved_values[k] = v
 
     # Extract option definitions (type, range, choices, etc.)
     option_definitions = world_data.get('option_definitions', {})
@@ -305,7 +315,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         world_description=world_description,
         slot_data_fields=slot_data_fields,
         game_options=game_options,
-        resolved_settings=resolved_settings,
+        resolved_values=resolved_values,
         option_definitions=option_definitions,
         # use_auto_indirect_conditions is now in exporter[player_id], fallback to world_data for legacy
         use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False) or world_data.get('use_auto_indirect_conditions', False),
@@ -1105,7 +1115,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
 
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(
-        items, original_placements, settings=metadata.resolved_settings
+        items, original_placements, settings=metadata.resolved_values
     )
 
     # For games with state counters, we need to precollect the counter items

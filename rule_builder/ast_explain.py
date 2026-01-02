@@ -61,7 +61,9 @@ def explain_ast_rule(
         'conditional': _explain_conditional,
         'helper': _explain_helper,
         'state_method': _explain_state_method,
-        'setting_value': _explain_setting_value,
+        'setting_value': _explain_setting_value,  # Legacy
+        'option_value': _explain_option_value,
+        'world_attribute': _explain_world_attribute,
         'can_reach': _explain_can_reach,
         'region_check': _explain_region_check,
         'location_check': _explain_location_check,
@@ -299,11 +301,39 @@ def _explain_state_method(
 def _explain_setting_value(
     rule: dict, state: "CollectionState | None", player: int, depth: int
 ) -> list[JSONMessagePart]:
-    """Explain a setting_value rule."""
+    """Explain a setting_value rule (legacy, for backward compat)."""
     setting = rule.get('setting', '')
     return [
         {"type": "text", "text": "Setting: "},
         {"type": "color", "color": "cyan", "text": setting},
+    ]
+
+
+def _explain_option_value(
+    rule: dict, state: "CollectionState | None", player: int, depth: int
+) -> list[JSONMessagePart]:
+    """Explain an option_value rule."""
+    option = rule.get('option', '')
+    return [
+        {"type": "text", "text": "Option: "},
+        {"type": "color", "color": "cyan", "text": option},
+    ]
+
+
+def _explain_world_attribute(
+    rule: dict, state: "CollectionState | None", player: int, depth: int
+) -> list[JSONMessagePart]:
+    """Explain a world_attribute rule."""
+    attribute = rule.get('attribute', '')
+    index = rule.get('index')
+    if index is not None:
+        return [
+            {"type": "text", "text": "World attribute: "},
+            {"type": "color", "color": "cyan", "text": f"{attribute}[{index}]"},
+        ]
+    return [
+        {"type": "text", "text": "World attribute: "},
+        {"type": "color", "color": "cyan", "text": attribute},
     ]
 
 

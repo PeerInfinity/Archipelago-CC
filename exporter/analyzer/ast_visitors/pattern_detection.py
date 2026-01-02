@@ -20,14 +20,22 @@ class PatternDetectionMixin:
     def _is_world_player_subscript(self, node) -> bool:
         """
         Check if node is the pattern: state.multiworld.worlds[player]
-        Also matches self.multiworld.worlds[player] for class-based helpers (e.g., RaftLogic).
+        Also matches:
+        - self.multiworld.worlds[player] for class-based helpers (e.g., RaftLogic)
+        - world.worlds[player] where 'world' is the multiworld directly (e.g., ALTTP rules)
         Returns True if matched, False otherwise.
 
-        AST structure:
+        AST structure (with multiworld):
         Subscript
           value=Attribute(attr='worlds')
             value=Attribute(attr='multiworld')
               value=Name(id='state', 'world', or 'self')
+          slice=Name(id='player')
+
+        AST structure (world is multiworld):
+        Subscript
+          value=Attribute(attr='worlds')
+            value=Name(id='world')
           slice=Name(id='player')
         """
         if not isinstance(node, ast.Subscript):
@@ -40,6 +48,12 @@ class PatternDetectionMixin:
         if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
             return False
 
+        # Pattern 1: world.worlds[player] - world IS the multiworld
+        # Used in games like ALTTP where 'world' parameter is the multiworld
+        if isinstance(worlds_attr.value, ast.Name) and worlds_attr.value.id == 'world':
+            return True
+
+        # Pattern 2: state.multiworld.worlds[player] or self.multiworld.worlds[player]
         # Check .multiworld
         multiworld_attr = worlds_attr.value
         if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
@@ -122,6 +136,10 @@ class PatternDetectionMixin:
             # converted to setting_value. These are exported in game_info and should be
             # accessed as world.attr_name, which the frontend resolves from game_info.
             if attrs[0] == 'options' and len(attrs) >= 2:
+                # Do NOT match if pattern ends with .to_bool - this is a method call
+                # that needs to be evaluated at analysis time via call_visitor
+                if attrs[-1] == 'to_bool':
+                    return None
                 # Remove 'options' prefix for .options.<setting> pattern
                 return '.'.join(attrs[1:])
             else:
@@ -145,6 +163,10 @@ class PatternDetectionMixin:
                 # Do NOT match if pattern ends with .value - let closure_vars resolve it
                 if attrs[-1] == 'value':
                     return None
+                # Do NOT match if pattern ends with .to_bool - this is a method call
+                # that needs to be evaluated at analysis time via call_visitor
+                if attrs[-1] == 'to_bool':
+                    return None
                 # Return the setting name (everything after 'options')
                 return '.'.join(attrs[2:])
 
@@ -158,6 +180,10 @@ class PatternDetectionMixin:
             if len(attrs) >= 2 and attrs[0] == 'options':
                 # Do NOT match if pattern ends with .value - let closure_vars resolve it
                 if attrs[-1] == 'value':
+                    return None
+                # Do NOT match if pattern ends with .to_bool - this is a method call
+                # that needs to be evaluated at analysis time via call_visitor
+                if attrs[-1] == 'to_bool':
                     return None
                 # Return the setting name (everything after 'options')
                 return '.'.join(attrs[1:])

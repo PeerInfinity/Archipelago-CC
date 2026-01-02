@@ -150,66 +150,20 @@ class WorldGenerator:
             '__init__.py': generate_init_py(self.data, canonical_seed1=self.canonical_seed1),
         }
 
-        # Export options, exporter flags, and world_attributes for game-specific export handlers
-        # This allows worldgen exports to reproduce the same behavior as the source
+        # Export options for canonical seed generation
+        # This allows worldgen worlds to reproduce the exact original seed when seed=1
         with open(self.json_path, 'r') as f:
             source_json = json.load(f)
 
-        # Build the worldgen data file with clear separate sections:
-        # - options: game option values (from world[player].options)
-        # - exporter: exporter behavior flags (from exporter[player])
-        # - world_attributes: computed/runtime world attributes
-        worldgen_data = {}
-
-        # Extract from world section (contains options and other data)
+        # Extract options from world section
         source_world = source_json.get('world', {}).get(self.player_id, {})
-        source_exporter = source_json.get('exporter', {}).get(self.player_id, {})
+        options_data = source_world.get('options', {})
 
-        # Extract options (game option values)
-        if source_world.get('options'):
-            worldgen_data['options'] = source_world['options']
-
-        # Extract exporter behavior flags
-        exporter_keys = {'assume_bidirectional_exits', 'use_resolved_items',
-                        'use_auto_indirect_conditions', 'add_sphere_items_upfront',
-                        'world_class_name'}
-        exporter_data = {}
-        for key in exporter_keys:
-            # Prefer exporter section, fall back to world section for legacy
-            if key in source_exporter:
-                exporter_data[key] = source_exporter[key]
-            elif key in source_world:
-                exporter_data[key] = source_world[key]
-        if exporter_data:
-            worldgen_data['exporter'] = exporter_data
-
-        # Include game and world_directory as metadata
-        if source_world.get('game'):
-            worldgen_data['game'] = source_world['game']
-        if source_world.get('world_directory'):
-            worldgen_data['world_directory'] = source_world['world_directory']
-
-        # Extract world_attributes (new format) or from legacy mixed format
-        source_world_attrs = source_json.get('world_attributes', {}).get(self.player_id, {})
-        if source_world_attrs:
-            worldgen_data['world_attributes'] = source_world_attrs
-        elif source_world:
-            # Legacy format: extract world attributes from world section
-            skip_keys = {
-                'game', 'options', 'option_definitions', 'world_directory',
-                'assume_bidirectional_exits', 'use_resolved_items',
-                'use_auto_indirect_conditions', 'add_sphere_items_upfront',
-                'base_id', 'web', 'world_description', 'slot_data', 'accessibility', 'mode',
-            }
-            legacy_world_attrs = {k: v for k, v in source_world.items() if k not in skip_keys}
-            if legacy_world_attrs:
-                worldgen_data['world_attributes'] = legacy_world_attrs
-
-        if worldgen_data:
-            worldgen_path = output_dir / '_worldgen_settings.json'
+        if options_data:
+            options_path = output_dir / '_worldgen_options.json'
             if not dry_run:
-                worldgen_path.write_text(json.dumps(worldgen_data, indent=2))
-                logger.info(f"Wrote worldgen data to {worldgen_path}")
+                options_path.write_text(json.dumps(options_data, indent=2))
+                logger.info(f"Wrote worldgen options to {options_path}")
 
         for filename, content in files.items():
             file_path = output_dir / filename
