@@ -1478,20 +1478,19 @@ class BaseGameExportHandler(
         """Get exporter-specific settings (not part of the Archipelago world).
 
         These settings control how the frontend processes the exported data.
+        Only non-default values are included to keep the output minimal.
         """
         exporter_settings = {}
-
-        # rule_format: Version metadata for the exported rules
-        exporter_settings['rule_format'] = {"version": "1.0"}
 
         # assume_bidirectional_exits: Whether region connections are bidirectional by default
         # Only include when explicitly set (True or False); omitting allows frontend auto-detection
         if self.ASSUME_BIDIRECTIONAL_EXITS is not None:
             exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
 
-        # use_resolved_items: When false (default), eventProcessor uses only base_items from sphere log
-        # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
-        exporter_settings['use_resolved_items'] = self.USE_RESOLVED_ITEMS
+        # use_resolved_items: When true, eventProcessor uses resolved_items
+        # Default is False, so only include when True
+        if self.USE_RESOLVED_ITEMS:
+            exporter_settings['use_resolved_items'] = True
 
         # add_sphere_items_upfront: When true, adds items at the start of each sphere before accessibility checks
         if self.ADD_SPHERE_ITEMS_UPFRONT:
