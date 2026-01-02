@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "MathAdventureWorldGenWorld"
+    "1": "MathAdventureWorld"
   },
   "regions": {
     "1": {
@@ -310,7 +310,6 @@
     "1": {
       "df-2": {
         "name": "df-2",
-        "hint_text": "df 2",
         "id": 200100001,
         "groups": [
           "Everything"
@@ -318,11 +317,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "df 2"
       },
       "df-3": {
         "name": "df-3",
-        "hint_text": "df 3",
         "id": 200100002,
         "groups": [
           "Everything"
@@ -330,11 +329,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "df 3"
       },
       "df-4": {
         "name": "df-4",
-        "hint_text": "df 4",
         "id": 200100003,
         "groups": [
           "Everything"
@@ -342,11 +341,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "df 4"
       },
       "ax-1cn": {
         "name": "ax-1cn",
-        "hint_text": "ax 1cn",
         "id": 200100004,
         "groups": [
           "Everything"
@@ -354,7 +353,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "ax 1cn"
       },
       "2cn": {
         "name": "2cn",
@@ -491,7 +491,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -514,6 +515,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "Math Adventure: Proof that 2+2=4\n\nA logical adventure through mathematical proofs where you must collect\ndefinitions, axioms, and theorems to prove that 2+2=4.\nNavigate through the regions of mathematical logic, gathering the\nnecessary components to complete your proof.",
@@ -540,7 +546,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MathAdventureWorld"
     }
   },
   "game_info": {

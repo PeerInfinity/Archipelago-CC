@@ -1497,25 +1497,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tulip"
-                      }
-                    }
-                  ]
+                  "rule": "has_midring",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Tulip",
                       "Beanstalk",
                       "Egg Launcher",
                       "Large Spring Ball",
@@ -2136,24 +2126,14 @@
             "name": "The Potted Ghost's Castle: Red Coins",
             "id": 3166301,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Arrow Wheel",
-                      "Key"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Egg Capacity Upgrade",
+                  "Arrow Wheel",
+                  "Key"
+                ]
+              }
             },
             "item": {
               "name": "Magnifying Glass",
@@ -2168,25 +2148,15 @@
             "name": "The Potted Ghost's Castle: Flowers",
             "id": 3166302,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Arrow Wheel",
-                      "Key",
-                      "Train Morph"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Egg Capacity Upgrade",
+                  "Arrow Wheel",
+                  "Key",
+                  "Train Morph"
+                ]
+              }
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -2212,15 +2182,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Egg Capacity Upgrade",
                       "Arrow Wheel",
                       "Key"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Egg Capacity Upgrade"
                   }
                 }
               ]
@@ -3376,25 +3341,17 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tulip"
-                      }
-                    }
-                  ]
+                  "rule": "has_midring",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "! Switch"
+                    "items": [
+                      "Tulip",
+                      "! Switch"
+                    ]
                   }
                 }
               ]
@@ -3930,25 +3887,17 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_midring",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Helicopter Morph"
-                      }
-                    }
-                  ]
+                  "rule": "has_midring",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Large Spring Ball"
+                    "items": [
+                      "Helicopter Morph",
+                      "Large Spring Ball"
+                    ]
                   }
                 }
               ]
@@ -4184,31 +4133,26 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "has_midring",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Dashed Stairs"
-                          }
-                        }
-                      ]
+                      "rule": "has_midring",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Tulip"
+                        "item_name": "Dashed Stairs"
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tulip"
+                  }
                 }
               ]
             },
@@ -4416,28 +4360,23 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "has_midring",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "has_midring",
+                      "rule": "melon_item",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "melon_item",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fire Melon"
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Melon"
+                      }
                     }
                   ]
                 },
@@ -8160,7 +8099,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "YoshisIslandWorld"
     }
   },
   "game_info": {

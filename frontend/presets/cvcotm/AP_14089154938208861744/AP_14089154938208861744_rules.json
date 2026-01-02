@@ -504,18 +504,10 @@
             "name": "Audience to Waterway",
             "connected_region": "Underground Waterway Start",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Maiden Detonator"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Maiden Detonator"
+              }
             }
           },
           {
@@ -1269,18 +1261,10 @@
             "name": "Corridor to Gallery",
             "connected_region": "Underground Gallery Upper",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Maiden Detonator"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Maiden Detonator"
+              }
             }
           },
           {
@@ -1617,18 +1601,10 @@
             "name": "Chapel Tower: Behind Adramelech iron maiden",
             "id": 3579576433,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Maiden Detonator"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Maiden Detonator"
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -3431,6 +3407,11 @@
           "default": 0,
           "display_name": "Skip Magic Item Tutorials"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "sub_weapon_shuffle": {
           "type": "toggle",
           "default": 0,
@@ -3472,7 +3453,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "CVCotMWorld"
     }
   },
   "game_info": {

@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "Hylics2WorldGenWorld"
+    "1": "Hylics2World"
   },
   "regions": {
     "1": {
@@ -115,15 +115,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "enter_hylemxylem",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "charge_up",
                   "_original_ast_type": "helper"
                 },
                 {
                   "rule": "paper_cup",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "enter_hylemxylem",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -417,10 +417,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "enter_sageship",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "charge_up",
                   "_original_ast_type": "helper"
                 },
@@ -430,6 +426,10 @@
                 },
                 {
                   "rule": "worm_room_key",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "enter_sageship",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -442,15 +442,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "enter_hylemxylem",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "charge_up",
                   "_original_ast_type": "helper"
                 },
                 {
                   "rule": "paper_cup",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "enter_hylemxylem",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -667,6 +667,14 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "jail_key",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "paddle",
+                      "_original_ast_type": "helper"
+                    },
+                    {
                       "rule": "Or",
                       "children": [
                         {
@@ -678,14 +686,6 @@
                           "_original_ast_type": "helper"
                         }
                       ]
-                    },
-                    {
-                      "rule": "jail_key",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "paddle",
-                      "_original_ast_type": "helper"
                     }
                   ]
                 },
@@ -713,6 +713,14 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "jail_key",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "paddle",
+                      "_original_ast_type": "helper"
+                    },
+                    {
                       "rule": "Or",
                       "children": [
                         {
@@ -724,14 +732,6 @@
                           "_original_ast_type": "helper"
                         }
                       ]
-                    },
-                    {
-                      "rule": "jail_key",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "paddle",
-                      "_original_ast_type": "helper"
                     }
                   ]
                 },
@@ -3028,7 +3028,6 @@
       },
       "MULTI-COFFEE": {
         "name": "MULTI-COFFEE",
-        "hint_text": "MULTI COFFEE",
         "id": 200649,
         "groups": [
           "Everything"
@@ -3036,11 +3035,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "MULTI COFFEE"
       },
       "MULTI-JUICE": {
         "name": "MULTI-JUICE",
-        "hint_text": "MULTI JUICE",
         "id": 200650,
         "groups": [
           "Everything"
@@ -3048,7 +3047,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "MULTI JUICE"
       },
       "MULTI STEM CELL": {
         "name": "MULTI STEM CELL",
@@ -3415,7 +3415,6 @@
       },
       "BOMBO - GENESIS": {
         "name": "BOMBO - GENESIS",
-        "hint_text": "BOMBO   GENESIS",
         "id": 200685,
         "groups": [
           "Everything"
@@ -3423,7 +3422,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "BOMBO   GENESIS"
       },
       "100 Bones": {
         "name": "100 Bones",
@@ -3753,11 +3753,13 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "random_start": "",
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location": 0,
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -3806,6 +3808,10 @@
           "default": 50,
           "display_name": "Progression Balancing"
         },
+        "random_start": {
+          "type": "removed",
+          "default": ""
+        },
         "randomize_items": {
           "type": "toggle",
           "default": true,
@@ -3821,6 +3827,11 @@
           },
           "default": 0,
           "display_name": "Start Location"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,\ntravel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!",
@@ -3854,7 +3865,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "Hylics2World"
     }
   },
   "game_info": {

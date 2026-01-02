@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class Consumables(Choice):
     """Option for Consumables."""
     display_name = "Consumables"
@@ -113,6 +124,7 @@ class YokuJumps(Toggle):
 class MegaMan2WorldGenOptions(PerGameCommonOptions):
     """Options for Mega Man 2 WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     consumables: Consumables
     death_link: DeathLink
     enable_lasers: EnableLasers

@@ -9589,6 +9589,11 @@
           "default": 0,
           "display_name": "Rocket Silo"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "tech_cost_distribution": {
           "type": "choice",
           "name_lookup": {
@@ -10119,7 +10124,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "world_class_name": "Factorio"
     }
   },
   "game_info": {

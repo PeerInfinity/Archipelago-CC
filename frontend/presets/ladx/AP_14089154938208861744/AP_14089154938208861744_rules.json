@@ -332,41 +332,20 @@
             "name": "Mabe Village -> Sword Beach",
             "connected_region": "Sword Beach",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Magic Powder",
-                      "Magic Rod",
-                      "Progressive Power Bracelet",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword",
+                  "Magic Powder",
+                  "Progressive Power Bracelet"
+                ]
+              }
             }
           },
           {
@@ -694,41 +673,20 @@
             "name": "Sword Beach -> Mabe Village",
             "connected_region": "Mabe Village",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Magic Powder",
-                      "Magic Rod",
-                      "Progressive Power Bracelet",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword",
+                  "Magic Powder",
+                  "Progressive Power Bracelet"
+                ]
+              }
             }
           },
           {
@@ -1614,33 +1572,21 @@
             "name": "No Name 5 -> Nightmare",
             "connected_region": "Nightmare",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Ballad of the Wind Fish",
-                      "Ocarina"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Conch Horn",
-                      "Coral Triangle",
-                      "Full Moon Cello",
-                      "Organ of Evening Calm",
-                      "Sea Lily's Bell",
-                      "Surf Harp",
-                      "Thunder Drum",
-                      "Wind Marimba"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ballad of the Wind Fish",
+                  "Ocarina",
+                  "Conch Horn",
+                  "Coral Triangle",
+                  "Full Moon Cello",
+                  "Organ of Evening Calm",
+                  "Sea Lily's Bell",
+                  "Surf Harp",
+                  "Thunder Drum",
+                  "Wind Marimba"
+                ]
+              }
             }
           }
         ],
@@ -2349,27 +2295,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bomb",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bow",
-                          "Magic Rod"
-                        ]
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Bomb",
+                      "Progressive Sword",
+                      "Bow",
+                      "Magic Rod"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2994,29 +2928,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Magic Rod",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Power Bracelet"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Magic Rod",
+                      "Progressive Sword"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Nightmare Key (Bottle Grotto)"
+                    "items": [
+                      "Progressive Power Bracelet",
+                      "Nightmare Key (Bottle Grotto)"
+                    ]
                   }
                 }
               ]
@@ -3036,29 +2962,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Magic Rod",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Power Bracelet"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Magic Rod",
+                      "Progressive Sword"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Nightmare Key (Bottle Grotto)"
+                    "items": [
+                      "Progressive Power Bracelet",
+                      "Nightmare Key (Bottle Grotto)"
+                    ]
                   }
                 }
               ]
@@ -3106,24 +3024,14 @@
             "name": "D2 Room 9 -> Boo Buddies Room Chest (Bottle Grotto)",
             "connected_region": "Boo Buddies Room Chest (Bottle Grotto)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Magic Powder",
-                      "Magic Rod"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bow"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bow",
+                  "Magic Powder",
+                  "Magic Rod"
+                ]
+              }
             }
           },
           {
@@ -3159,24 +3067,14 @@
             "name": "Boo Buddies Room Chest (Bottle Grotto) -> D2 Room 9",
             "connected_region": "D2 Room 9",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Magic Powder",
-                      "Magic Rod"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bow"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bow",
+                  "Magic Powder",
+                  "Magic Rod"
+                ]
+              }
             }
           }
         ],
@@ -3270,27 +3168,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bomb",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bow",
-                          "Magic Rod"
-                        ]
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Bomb",
+                      "Progressive Sword",
+                      "Bow",
+                      "Magic Rod"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -5083,30 +4969,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bow",
-                          "Magic Rod",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Flippers"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Bow",
+                      "Magic Rod",
+                      "Progressive Sword"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Nightmare Key (Angler's Tunnel)"
+                    "items": [
+                      "Flippers",
+                      "Nightmare Key (Angler's Tunnel)"
+                    ]
                   }
                 }
               ]
@@ -5164,30 +5042,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bow",
-                          "Magic Rod",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Flippers"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Bow",
+                      "Magic Rod",
+                      "Progressive Sword"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Nightmare Key (Angler's Tunnel)"
+                    "items": [
+                      "Flippers",
+                      "Nightmare Key (Angler's Tunnel)"
+                    ]
                   }
                 }
               ]
@@ -6008,56 +5878,36 @@
             "name": "Armos Maze -> Outside Armos Maze Cave",
             "connected_region": "Outside Armos Maze Cave",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
             "name": "Armos Maze -> Outside Southern Shrine",
             "connected_region": "Outside Southern Shrine",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -6070,28 +5920,18 @@
             "name": "Outside Armos Maze Cave -> Armos Maze",
             "connected_region": "Armos Maze",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -6139,28 +5979,18 @@
             "name": "Outside Southern Shrine -> Armos Maze",
             "connected_region": "Armos Maze",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -7494,40 +7324,25 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Bomb",
-                              "Boomerang",
-                              "Bow",
-                              "Hookshot",
-                              "Magic Rod",
-                              "Progressive Sword"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Feather"
-                          }
-                        }
-                      ]
-                    },
                     {
                       "rule": "HasAny",
                       "args": {
                         "items": [
+                          "Bomb",
                           "Boomerang",
                           "Bow",
-                          "Magic Rod"
+                          "Hookshot",
+                          "Magic Rod",
+                          "Progressive Sword"
                         ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Feather"
                       }
                     }
                   ]
@@ -7536,11 +7351,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Bomb",
                       "Boomerang",
                       "Bow",
-                      "Hookshot",
                       "Magic Rod",
+                      "Bomb",
+                      "Hookshot",
                       "Progressive Sword"
                     ]
                   }
@@ -7617,40 +7432,25 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Bomb",
-                              "Boomerang",
-                              "Bow",
-                              "Hookshot",
-                              "Magic Rod",
-                              "Progressive Sword"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Feather"
-                          }
-                        }
-                      ]
-                    },
                     {
                       "rule": "HasAny",
                       "args": {
                         "items": [
+                          "Bomb",
                           "Boomerang",
                           "Bow",
-                          "Magic Rod"
+                          "Hookshot",
+                          "Magic Rod",
+                          "Progressive Sword"
                         ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Feather"
                       }
                     }
                   ]
@@ -7659,11 +7459,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Bomb",
                       "Boomerang",
                       "Bow",
-                      "Hookshot",
                       "Magic Rod",
+                      "Bomb",
+                      "Hookshot",
                       "Progressive Sword"
                     ]
                   }
@@ -8010,22 +7810,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Turtle Rock)",
-                        "count": 4
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Turtle Rock)"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "HasAny",
@@ -8039,6 +7828,12 @@
                       "Magic Rod",
                       "Progressive Sword"
                     ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)"
                   }
                 }
               ]
@@ -10241,33 +10036,21 @@
             "name": "Nightmare -> No Name 5",
             "connected_region": "No Name 5",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Ballad of the Wind Fish",
-                      "Ocarina"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Conch Horn",
-                      "Coral Triangle",
-                      "Full Moon Cello",
-                      "Organ of Evening Calm",
-                      "Sea Lily's Bell",
-                      "Surf Harp",
-                      "Thunder Drum",
-                      "Wind Marimba"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ballad of the Wind Fish",
+                  "Ocarina",
+                  "Conch Horn",
+                  "Coral Triangle",
+                  "Full Moon Cello",
+                  "Organ of Evening Calm",
+                  "Sea Lily's Bell",
+                  "Surf Harp",
+                  "Thunder Drum",
+                  "Wind Marimba"
+                ]
+              }
             }
           }
         ],
@@ -10754,28 +10537,18 @@
             "name": "Lower Small Key (Color Dungeon) -> D9 Room 2",
             "connected_region": "D9 Room 2",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -10916,28 +10689,18 @@
             "name": "D9 Room 2 -> Lower Small Key (Color Dungeon)",
             "connected_region": "Lower Small Key (Color Dungeon)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -11120,28 +10883,18 @@
             "name": "Zol Chest (Color Dungeon) -> D9 Room 4",
             "connected_region": "D9 Room 4",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -11222,28 +10975,18 @@
             "name": "D9 Room 4 -> Zol Chest (Color Dungeon)",
             "connected_region": "Zol Chest (Color Dungeon)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -11692,29 +11435,19 @@
             "name": "Four Zol Chest (Key Cavern) -> D3 Room 2",
             "connected_region": "D3 Room 2",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Powder",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Pegasus Boots",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Powder",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -11785,29 +11518,19 @@
             "name": "D3 Room 2 -> Four Zol Chest (Key Cavern)",
             "connected_region": "Four Zol Chest (Key Cavern)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Powder",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Pegasus Boots",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Powder",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -13066,24 +12789,14 @@
             "name": "Nightmare Door Key (Key Cavern) -> D3 Room 11",
             "connected_region": "D3 Room 11",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Pegasus Boots",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nightmare Key (Key Cavern)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Nightmare Key (Key Cavern)",
+                  "Pegasus Boots",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -13113,24 +12826,14 @@
             "name": "D3 Room 11 -> Nightmare Door Key (Key Cavern)",
             "connected_region": "Nightmare Door Key (Key Cavern)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Pegasus Boots",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nightmare Key (Key Cavern)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Nightmare Key (Key Cavern)",
+                  "Pegasus Boots",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -14673,24 +14376,14 @@
             "name": "D5 Room 6 -> D5 Room 7",
             "connected_region": "D5 Room 7",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nightmare Key (Catfish's Maw)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Nightmare Key (Catfish's Maw)",
+                  "Hookshot",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -14704,24 +14397,14 @@
             "name": "D5 Room 7 -> D5 Room 6",
             "connected_region": "D5 Room 6",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nightmare Key (Catfish's Maw)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Nightmare Key (Catfish's Maw)",
+                  "Hookshot",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -15345,19 +15028,19 @@
               "rule": "Or",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Power Bracelet",
+                    "count": 2
+                  }
+                },
+                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "Bomb",
                       "Magic Rod"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
                   }
                 }
               ]
@@ -15491,19 +15174,19 @@
               "rule": "Or",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Power Bracelet",
+                    "count": 2
+                  }
+                },
+                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "Bomb",
                       "Magic Rod"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
                   }
                 }
               ]
@@ -15677,24 +15360,14 @@
             "name": "D6 Room 2 -> Two Wizzrobe Key (Face Shrine)",
             "connected_region": "Two Wizzrobe Key (Face Shrine)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Magic Rod"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bow"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bow",
+                  "Bomb",
+                  "Magic Rod"
+                ]
+              }
             }
           },
           {
@@ -15750,24 +15423,14 @@
             "name": "Two Wizzrobe Key (Face Shrine) -> D6 Room 2",
             "connected_region": "D6 Room 2",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Magic Rod"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bow"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bow",
+                  "Bomb",
+                  "Magic Rod"
+                ]
+              }
             }
           }
         ],
@@ -16772,25 +16435,15 @@
             "name": "Dream Hut -> Dream Hut East (Mabe Village)",
             "connected_region": "Dream Hut East (Mabe Village)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Boomerang",
-                      "Feather",
-                      "Hookshot"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Sword",
+                  "Boomerang",
+                  "Feather",
+                  "Hookshot"
+                ]
+              }
             }
           },
           {
@@ -16813,25 +16466,15 @@
             "name": "Dream Hut East (Mabe Village) -> Dream Hut",
             "connected_region": "Dream Hut",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Boomerang",
-                      "Feather",
-                      "Hookshot"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Sword",
+                  "Boomerang",
+                  "Feather",
+                  "Hookshot"
+                ]
+              }
             }
           },
           {
@@ -17352,55 +16995,35 @@
             "name": "D1 Room -> Hardhat Beetles Key (Tail Cave)",
             "connected_region": "Hardhat Beetles Key (Tail Cave)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Boomerang",
-                      "Hookshot",
-                      "Progressive Shield",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bomb"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bomb",
+                  "Boomerang",
+                  "Hookshot",
+                  "Progressive Shield",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
             "name": "D1 Room -> Mini-Moldorm Spawn Chest (Tail Cave)",
             "connected_region": "Mini-Moldorm Spawn Chest (Tail Cave)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Powder",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Powder",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -17424,27 +17047,17 @@
                   }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bomb",
-                          "Boomerang",
-                          "Bow",
-                          "Hookshot",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Shield",
+                      "Bomb",
+                      "Boomerang",
+                      "Bow",
+                      "Hookshot",
+                      "Progressive Sword"
+                    ]
+                  }
                 }
               ]
             }
@@ -17592,26 +17205,16 @@
             "name": "Hardhat Beetles Key (Tail Cave) -> D1 Room",
             "connected_region": "D1 Room",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Boomerang",
-                      "Hookshot",
-                      "Progressive Shield",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bomb"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bomb",
+                  "Boomerang",
+                  "Hookshot",
+                  "Progressive Shield",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -17641,29 +17244,19 @@
             "name": "Mini-Moldorm Spawn Chest (Tail Cave) -> D1 Room",
             "connected_region": "D1 Room",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Powder",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Bomb",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Powder",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -17710,27 +17303,17 @@
                   }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Bomb",
-                          "Boomerang",
-                          "Bow",
-                          "Hookshot",
-                          "Progressive Sword"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Shield"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Shield",
+                      "Bomb",
+                      "Boomerang",
+                      "Bow",
+                      "Hookshot",
+                      "Progressive Sword"
+                    ]
+                  }
                 }
               ]
             }
@@ -17915,27 +17498,17 @@
             "name": "D1 Room 3 -> Three of a Kind Chest (Tail Cave)",
             "connected_region": "Three of a Kind Chest (Tail Cave)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -17999,27 +17572,17 @@
             "name": "Three of a Kind Chest (Tail Cave) -> D1 Room 3",
             "connected_region": "D1 Room 3",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Shield"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Shield",
+                  "Boomerang",
+                  "Bow",
+                  "Hookshot",
+                  "Magic Rod",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -20124,6 +19687,10 @@
           "default": 0,
           "display_name": "Accessibility"
         },
+        "additional_warp_points": {
+          "type": "removed",
+          "default": ""
+        },
         "ap_title_screen": {
           "type": "default_on_toggle",
           "default": 1,
@@ -20389,6 +19956,11 @@
           "default": 0,
           "display_name": "Stabilize Item Pool"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "stealing": {
           "type": "choice",
           "name_lookup": {
@@ -20440,6 +20012,10 @@
           },
           "default": 1,
           "display_name": "Trendy Game"
+        },
+        "warp_improvements": {
+          "type": "removed",
+          "default": ""
         },
         "warps": {
           "type": "choice",
@@ -26925,7 +26501,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "world_class_name": "LinksAwakeningWorld"
     }
   },
   "game_info": {

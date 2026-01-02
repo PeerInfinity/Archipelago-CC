@@ -415,7 +415,8 @@
       "0a_-1_room": {
         "name": "0a_-1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "0a_-1_main": {
         "name": "0a_-1_main",
@@ -467,7 +468,8 @@
       "0a_0_room": {
         "name": "0a_0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "0a_0_west": {
         "name": "0a_0_west",
@@ -587,7 +589,8 @@
       "0a_0b_room": {
         "name": "0a_0b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "0a_0b_south": {
         "name": "0a_0b_south",
@@ -612,7 +615,8 @@
       "0a_1_room": {
         "name": "0a_1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "0a_1_west": {
         "name": "0a_1_west",
@@ -698,7 +702,8 @@
       "0a_2_room": {
         "name": "0a_2_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "0a_2_west": {
         "name": "0a_2_west",
@@ -784,7 +789,8 @@
       "0a_3_room": {
         "name": "0a_3_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "0a_3_west": {
         "name": "0a_3_west",
@@ -878,7 +884,8 @@
       "1a_1_room": {
         "name": "1a_1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_1_main": {
         "name": "1a_1_main",
@@ -930,7 +937,8 @@
       "1a_2_room": {
         "name": "1a_2_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_2_west": {
         "name": "1a_2_west",
@@ -1000,7 +1008,8 @@
       "1a_3_room": {
         "name": "1a_3_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_3_west": {
         "name": "1a_3_west",
@@ -1067,7 +1076,8 @@
       "1a_4_room": {
         "name": "1a_4_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_4_west": {
         "name": "1a_4_west",
@@ -1122,7 +1132,8 @@
       "1a_3b_room": {
         "name": "1a_3b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_3b_west": {
         "name": "1a_3b_west",
@@ -1223,7 +1234,8 @@
       "1a_5_room": {
         "name": "1a_5_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_5_bottom": {
         "name": "1a_5_bottom",
@@ -1459,7 +1471,8 @@
       "1a_5z_room": {
         "name": "1a_5z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_5z_east": {
         "name": "1a_5z_east",
@@ -1502,7 +1515,8 @@
       "1a_5a_room": {
         "name": "1a_5a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_5a_west": {
         "name": "1a_5a_west",
@@ -1667,7 +1681,8 @@
       "1a_6z_room": {
         "name": "1a_6z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_6z_north-west": {
         "name": "1a_6z_north-west",
@@ -1763,7 +1778,8 @@
       "1a_6zb_room": {
         "name": "1a_6zb_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_6zb_north-west": {
         "name": "1a_6zb_north-west",
@@ -1842,7 +1858,8 @@
       "1a_7zb_room": {
         "name": "1a_7zb_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_7zb_west": {
         "name": "1a_7zb_west",
@@ -1925,7 +1942,8 @@
       "1a_6a_room": {
         "name": "1a_6a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_6a_west": {
         "name": "1a_6a_west",
@@ -1987,7 +2005,8 @@
       "1a_6b_room": {
         "name": "1a_6b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_6b_south-west": {
         "name": "1a_6b_south-west",
@@ -2086,7 +2105,8 @@
       "1a_s0_room": {
         "name": "1a_s0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_s0_west": {
         "name": "1a_s0_west",
@@ -2148,7 +2168,8 @@
       "1a_s1_room": {
         "name": "1a_s1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_s1_east": {
         "name": "1a_s1_east",
@@ -2202,7 +2223,8 @@
       "1a_6c_room": {
         "name": "1a_6c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_6c_south-west": {
         "name": "1a_6c_south-west",
@@ -2301,7 +2323,8 @@
       "1a_7_room": {
         "name": "1a_7_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_7_west": {
         "name": "1a_7_west",
@@ -2353,7 +2376,8 @@
       "1a_7z_room": {
         "name": "1a_7z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_7z_bottom": {
         "name": "1a_7z_bottom",
@@ -2430,7 +2454,8 @@
       "1a_8z_room": {
         "name": "1a_8z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_8z_bottom": {
         "name": "1a_8z_bottom",
@@ -2492,7 +2517,8 @@
       "1a_8zb_room": {
         "name": "1a_8zb_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_8zb_west": {
         "name": "1a_8zb_west",
@@ -2575,7 +2601,8 @@
       "1a_8_room": {
         "name": "1a_8_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_8_south-west": {
         "name": "1a_8_south-west",
@@ -2735,7 +2762,8 @@
       "1a_7a_room": {
         "name": "1a_7a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_7a_east": {
         "name": "1a_7a_east",
@@ -2812,7 +2840,8 @@
       "1a_9z_room": {
         "name": "1a_9z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_9z_east": {
         "name": "1a_9z_east",
@@ -2855,7 +2884,8 @@
       "1a_8b_room": {
         "name": "1a_8b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_8b_east": {
         "name": "1a_8b_east",
@@ -2935,7 +2965,8 @@
       "1a_9_room": {
         "name": "1a_9_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_9_east": {
         "name": "1a_9_east",
@@ -3174,7 +3205,8 @@
       "1a_9c_room": {
         "name": "1a_9c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_9c_west": {
         "name": "1a_9c_west",
@@ -3210,7 +3242,8 @@
       "1a_10_room": {
         "name": "1a_10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_10_south-east": {
         "name": "1a_10_south-east",
@@ -3326,7 +3359,8 @@
       "1a_10z_room": {
         "name": "1a_10z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_10z_west": {
         "name": "1a_10z_west",
@@ -3388,7 +3422,8 @@
       "1a_10zb_room": {
         "name": "1a_10zb_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_10zb_east": {
         "name": "1a_10zb_east",
@@ -3428,7 +3463,8 @@
       "1a_11_room": {
         "name": "1a_11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_11_south-east": {
         "name": "1a_11_south-east",
@@ -3598,7 +3634,8 @@
       "1a_11z_room": {
         "name": "1a_11z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_11z_east": {
         "name": "1a_11z_east",
@@ -3644,7 +3681,8 @@
       "1a_10a_room": {
         "name": "1a_10a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_10a_bottom": {
         "name": "1a_10a_bottom",
@@ -3709,7 +3747,8 @@
       "1a_12_room": {
         "name": "1a_12_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_12_south-west": {
         "name": "1a_12_south-west",
@@ -3788,7 +3827,8 @@
       "1a_12z_room": {
         "name": "1a_12z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_12z_east": {
         "name": "1a_12z_east",
@@ -3831,7 +3871,8 @@
       "1a_12a_room": {
         "name": "1a_12a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_12a_bottom": {
         "name": "1a_12a_bottom",
@@ -3893,7 +3934,8 @@
       "1a_end_room": {
         "name": "1a_end_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "1a_end_south": {
         "name": "1a_end_south",
@@ -3953,7 +3995,8 @@
       "2a_start_room": {
         "name": "2a_start_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_start_main": {
         "name": "2a_start_main",
@@ -4046,7 +4089,8 @@
       "2a_s0_room": {
         "name": "2a_s0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_s0_bottom": {
         "name": "2a_s0_bottom",
@@ -4105,7 +4149,8 @@
       "2a_s1_room": {
         "name": "2a_s1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_s1_bottom": {
         "name": "2a_s1_bottom",
@@ -4164,7 +4209,8 @@
       "2a_s2_room": {
         "name": "2a_s2_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_s2_bottom": {
         "name": "2a_s2_bottom",
@@ -4204,7 +4250,8 @@
       "2a_0_room": {
         "name": "2a_0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_0_south-west": {
         "name": "2a_0_south-west",
@@ -4350,7 +4397,8 @@
       "2a_1_room": {
         "name": "2a_1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_1_south-west": {
         "name": "2a_1_south-west",
@@ -4481,7 +4529,8 @@
       "2a_d0_room": {
         "name": "2a_d0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d0_north": {
         "name": "2a_d0_north",
@@ -4787,7 +4836,8 @@
       "2a_d7_room": {
         "name": "2a_d7_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d7_west": {
         "name": "2a_d7_west",
@@ -4852,7 +4902,8 @@
       "2a_d8_room": {
         "name": "2a_d8_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d8_west": {
         "name": "2a_d8_west",
@@ -4944,7 +4995,8 @@
       "2a_d3_room": {
         "name": "2a_d3_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d3_west": {
         "name": "2a_d3_west",
@@ -5044,7 +5096,8 @@
       "2a_d2_room": {
         "name": "2a_d2_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d2_west": {
         "name": "2a_d2_west",
@@ -5156,7 +5209,8 @@
       "2a_d9_room": {
         "name": "2a_d9_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d9_north-west": {
         "name": "2a_d9_north-west",
@@ -5203,7 +5257,8 @@
       "2a_d1_room": {
         "name": "2a_d1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d1_south-west": {
         "name": "2a_d1_south-west",
@@ -5331,7 +5386,8 @@
       "2a_d6_room": {
         "name": "2a_d6_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d6_west": {
         "name": "2a_d6_west",
@@ -5408,7 +5464,8 @@
       "2a_d4_room": {
         "name": "2a_d4_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d4_west": {
         "name": "2a_d4_west",
@@ -5528,7 +5585,8 @@
       "2a_d5_room": {
         "name": "2a_d5_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_d5_west": {
         "name": "2a_d5_west",
@@ -5571,7 +5629,8 @@
       "2a_3x_room": {
         "name": "2a_3x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_3x_bottom": {
         "name": "2a_3x_bottom",
@@ -5709,7 +5768,8 @@
       "2a_4_room": {
         "name": "2a_4_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_4_bottom": {
         "name": "2a_4_bottom",
@@ -5785,7 +5845,8 @@
       "2a_5_room": {
         "name": "2a_5_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_5_bottom": {
         "name": "2a_5_bottom",
@@ -5861,7 +5922,8 @@
       "2a_6_room": {
         "name": "2a_6_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_6_bottom": {
         "name": "2a_6_bottom",
@@ -5922,7 +5984,8 @@
       "2a_7_room": {
         "name": "2a_7_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_7_bottom": {
         "name": "2a_7_bottom",
@@ -5983,7 +6046,8 @@
       "2a_8_room": {
         "name": "2a_8_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_8_bottom": {
         "name": "2a_8_bottom",
@@ -6059,7 +6123,8 @@
       "2a_9_room": {
         "name": "2a_9_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_9_west": {
         "name": "2a_9_west",
@@ -6222,7 +6287,8 @@
       "2a_9b_room": {
         "name": "2a_9b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_9b_east": {
         "name": "2a_9b_east",
@@ -6289,7 +6355,8 @@
       "2a_10_room": {
         "name": "2a_10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_10_top": {
         "name": "2a_10_top",
@@ -6376,7 +6443,8 @@
       "2a_2_room": {
         "name": "2a_2_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_2_north-west": {
         "name": "2a_2_north-west",
@@ -6455,7 +6523,8 @@
       "2a_11_room": {
         "name": "2a_11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_11_west": {
         "name": "2a_11_west",
@@ -6514,7 +6583,8 @@
       "2a_12b_room": {
         "name": "2a_12b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_12b_west": {
         "name": "2a_12b_west",
@@ -6679,7 +6749,8 @@
       "2a_12c_room": {
         "name": "2a_12c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_12c_south": {
         "name": "2a_12c_south",
@@ -6722,7 +6793,8 @@
       "2a_12d_room": {
         "name": "2a_12d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_12d_north-west": {
         "name": "2a_12d_north-west",
@@ -6799,7 +6871,8 @@
       "2a_12_room": {
         "name": "2a_12_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_12_west": {
         "name": "2a_12_west",
@@ -6858,7 +6931,8 @@
       "2a_13_room": {
         "name": "2a_13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_13_west": {
         "name": "2a_13_west",
@@ -6917,7 +6991,8 @@
       "2a_end_0_room": {
         "name": "2a_end_0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_0_main": {
         "name": "2a_end_0_main",
@@ -7010,7 +7085,8 @@
       "2a_end_s0_room": {
         "name": "2a_end_s0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_s0_bottom": {
         "name": "2a_end_s0_bottom",
@@ -7069,7 +7145,8 @@
       "2a_end_s1_room": {
         "name": "2a_end_s1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_s1_bottom": {
         "name": "2a_end_s1_bottom",
@@ -7094,7 +7171,8 @@
       "2a_end_1_room": {
         "name": "2a_end_1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_1_west": {
         "name": "2a_end_1_west",
@@ -7187,7 +7265,8 @@
       "2a_end_2_room": {
         "name": "2a_end_2_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_2_north-west": {
         "name": "2a_end_2_north-west",
@@ -7394,7 +7473,8 @@
       "2a_end_4_room": {
         "name": "2a_end_4_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_4_west": {
         "name": "2a_end_4_west",
@@ -7453,7 +7533,8 @@
       "2a_end_3b_room": {
         "name": "2a_end_3b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_3b_west": {
         "name": "2a_end_3b_west",
@@ -7549,7 +7630,8 @@
       "2a_end_3cb_room": {
         "name": "2a_end_3cb_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_3cb_bottom": {
         "name": "2a_end_3cb_bottom",
@@ -7608,7 +7690,8 @@
       "2a_end_3c_room": {
         "name": "2a_end_3c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_3c_bottom": {
         "name": "2a_end_3c_bottom",
@@ -7651,7 +7734,8 @@
       "2a_end_5_room": {
         "name": "2a_end_5_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_5_west": {
         "name": "2a_end_5_west",
@@ -7710,7 +7794,8 @@
       "2a_end_6_room": {
         "name": "2a_end_6_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "2a_end_6_west": {
         "name": "2a_end_6_west",
@@ -7777,7 +7862,8 @@
       "3a_s0_room": {
         "name": "3a_s0_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_s0_main": {
         "name": "3a_s0_main",
@@ -7829,7 +7915,8 @@
       "3a_s1_room": {
         "name": "3a_s1_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_s1_west": {
         "name": "3a_s1_west",
@@ -7922,7 +8009,8 @@
       "3a_s2_room": {
         "name": "3a_s2_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_s2_west": {
         "name": "3a_s2_west",
@@ -8045,7 +8133,8 @@
       "3a_s3_room": {
         "name": "3a_s3_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_s3_west": {
         "name": "3a_s3_west",
@@ -8157,7 +8246,8 @@
       "3a_0x-a_room": {
         "name": "3a_0x-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_0x-a_west": {
         "name": "3a_0x-a_west",
@@ -8209,7 +8299,8 @@
       "3a_00-a_room": {
         "name": "3a_00-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_00-a_west": {
         "name": "3a_00-a_west",
@@ -8283,7 +8374,8 @@
       "3a_02-a_room": {
         "name": "3a_02-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_02-a_west": {
         "name": "3a_02-a_west",
@@ -8460,7 +8552,8 @@
       "3a_02-b_room": {
         "name": "3a_02-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_02-b_west": {
         "name": "3a_02-b_west",
@@ -8554,7 +8647,8 @@
       "3a_01-b_room": {
         "name": "3a_01-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_01-b_west": {
         "name": "3a_01-b_west",
@@ -8650,7 +8744,8 @@
       "3a_00-b_room": {
         "name": "3a_00-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_00-b_south-west": {
         "name": "3a_00-b_south-west",
@@ -8832,7 +8927,8 @@
       "3a_00-c_room": {
         "name": "3a_00-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_00-c_south-west": {
         "name": "3a_00-c_south-west",
@@ -8931,7 +9027,8 @@
       "3a_0x-b_room": {
         "name": "3a_0x-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_0x-b_west": {
         "name": "3a_0x-b_west",
@@ -9013,7 +9110,8 @@
       "3a_03-a_room": {
         "name": "3a_03-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_03-a_west": {
         "name": "3a_03-a_west",
@@ -9102,7 +9200,8 @@
       "3a_04-b_room": {
         "name": "3a_04-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_04-b_west": {
         "name": "3a_04-b_west",
@@ -9165,7 +9264,8 @@
       "3a_05-a_room": {
         "name": "3a_05-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_05-a_west": {
         "name": "3a_05-a_west",
@@ -9236,7 +9336,8 @@
       "3a_06-a_room": {
         "name": "3a_06-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_06-a_west": {
         "name": "3a_06-a_west",
@@ -9303,7 +9404,8 @@
       "3a_07-a_room": {
         "name": "3a_07-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_07-a_west": {
         "name": "3a_07-a_west",
@@ -9408,7 +9510,8 @@
       "3a_07-b_room": {
         "name": "3a_07-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_07-b_bottom": {
         "name": "3a_07-b_bottom",
@@ -9544,7 +9647,8 @@
       "3a_06-b_room": {
         "name": "3a_06-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_06-b_west": {
         "name": "3a_06-b_west",
@@ -9618,7 +9722,8 @@
       "3a_06-c_room": {
         "name": "3a_06-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_06-c_south-west": {
         "name": "3a_06-c_south-west",
@@ -9753,7 +9858,8 @@
       "3a_05-c_room": {
         "name": "3a_05-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_05-c_east": {
         "name": "3a_05-c_east",
@@ -9793,7 +9899,8 @@
       "3a_08-c_room": {
         "name": "3a_08-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_08-c_west": {
         "name": "3a_08-c_west",
@@ -9852,7 +9959,8 @@
       "3a_08-b_room": {
         "name": "3a_08-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_08-b_west": {
         "name": "3a_08-b_west",
@@ -10059,7 +10167,8 @@
       "3a_09-b_room": {
         "name": "3a_09-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_09-b_west": {
         "name": "3a_09-b_west",
@@ -10500,7 +10609,8 @@
       "3a_10-x_room": {
         "name": "3a_10-x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_10-x_west": {
         "name": "3a_10-x_west",
@@ -10618,7 +10728,8 @@
       "3a_11-x_room": {
         "name": "3a_11-x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_11-x_west": {
         "name": "3a_11-x_west",
@@ -10673,7 +10784,8 @@
       "3a_11-y_room": {
         "name": "3a_11-y_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_11-y_west": {
         "name": "3a_11-y_west",
@@ -10766,7 +10878,8 @@
       "3a_12-y_room": {
         "name": "3a_12-y_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_12-y_west": {
         "name": "3a_12-y_west",
@@ -10806,7 +10919,8 @@
       "3a_11-z_room": {
         "name": "3a_11-z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_11-z_west": {
         "name": "3a_11-z_west",
@@ -10871,7 +10985,8 @@
       "3a_10-z_room": {
         "name": "3a_10-z_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_10-z_bottom": {
         "name": "3a_10-z_bottom",
@@ -10933,7 +11048,8 @@
       "3a_10-y_room": {
         "name": "3a_10-y_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_10-y_bottom": {
         "name": "3a_10-y_bottom",
@@ -11000,7 +11116,8 @@
       "3a_10-c_room": {
         "name": "3a_10-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_10-c_south-east": {
         "name": "3a_10-c_south-east",
@@ -11113,7 +11230,8 @@
       "3a_11-c_room": {
         "name": "3a_11-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_11-c_west": {
         "name": "3a_11-c_west",
@@ -11234,7 +11352,8 @@
       "3a_12-c_room": {
         "name": "3a_12-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_12-c_west": {
         "name": "3a_12-c_west",
@@ -11308,7 +11427,8 @@
       "3a_12-d_room": {
         "name": "3a_12-d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_12-d_bottom": {
         "name": "3a_12-d_bottom",
@@ -11353,7 +11473,8 @@
       "3a_11-d_room": {
         "name": "3a_11-d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_11-d_west": {
         "name": "3a_11-d_west",
@@ -11436,7 +11557,8 @@
       "3a_10-d_room": {
         "name": "3a_10-d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_10-d_west": {
         "name": "3a_10-d_west",
@@ -11534,7 +11656,8 @@
       "3a_11-b_room": {
         "name": "3a_11-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_11-b_west": {
         "name": "3a_11-b_west",
@@ -11660,7 +11783,8 @@
       "3a_12-b_room": {
         "name": "3a_12-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_12-b_west": {
         "name": "3a_12-b_west",
@@ -11719,7 +11843,8 @@
       "3a_13-b_room": {
         "name": "3a_13-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_13-b_top": {
         "name": "3a_13-b_top",
@@ -11793,7 +11918,8 @@
       "3a_13-a_room": {
         "name": "3a_13-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_13-a_west": {
         "name": "3a_13-a_west",
@@ -11885,7 +12011,8 @@
       "3a_13-x_room": {
         "name": "3a_13-x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_13-x_west": {
         "name": "3a_13-x_west",
@@ -11959,7 +12086,8 @@
       "3a_12-x_room": {
         "name": "3a_12-x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_12-x_west": {
         "name": "3a_12-x_west",
@@ -12061,7 +12189,8 @@
       "3a_11-a_room": {
         "name": "3a_11-a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_11-a_west": {
         "name": "3a_11-a_west",
@@ -12173,7 +12302,8 @@
       "3a_08-x_room": {
         "name": "3a_08-x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_08-x_west": {
         "name": "3a_08-x_west",
@@ -12307,7 +12437,8 @@
       "3a_08-d_room": {
         "name": "3a_08-d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_08-d_west": {
         "name": "3a_08-d_west",
@@ -12365,7 +12496,8 @@
       "3a_06-d_room": {
         "name": "3a_06-d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_06-d_west": {
         "name": "3a_06-d_west",
@@ -12435,7 +12567,8 @@
       "3a_04-d_room": {
         "name": "3a_04-d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_04-d_west": {
         "name": "3a_04-d_west",
@@ -12554,7 +12687,8 @@
       "3a_04-c_room": {
         "name": "3a_04-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_04-c_west": {
         "name": "3a_04-c_west",
@@ -12668,7 +12802,8 @@
       "3a_02-c_room": {
         "name": "3a_02-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_02-c_west": {
         "name": "3a_02-c_west",
@@ -12779,7 +12914,8 @@
       "3a_03-b_room": {
         "name": "3a_03-b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_03-b_west": {
         "name": "3a_03-b_west",
@@ -12904,7 +13040,8 @@
       "3a_01-c_room": {
         "name": "3a_01-c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_01-c_west": {
         "name": "3a_01-c_west",
@@ -12970,7 +13107,8 @@
       "3a_02-d_room": {
         "name": "3a_02-d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_02-d_west": {
         "name": "3a_02-d_west",
@@ -13102,7 +13240,8 @@
       "3a_roof00_room": {
         "name": "3a_roof00_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof00_west": {
         "name": "3a_roof00_west",
@@ -13154,7 +13293,8 @@
       "3a_roof01_room": {
         "name": "3a_roof01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof01_west": {
         "name": "3a_roof01_west",
@@ -13209,7 +13349,8 @@
       "3a_roof02_room": {
         "name": "3a_roof02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof02_west": {
         "name": "3a_roof02_west",
@@ -13268,7 +13409,8 @@
       "3a_roof03_room": {
         "name": "3a_roof03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof03_west": {
         "name": "3a_roof03_west",
@@ -13342,7 +13484,8 @@
       "3a_roof04_room": {
         "name": "3a_roof04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof04_west": {
         "name": "3a_roof04_west",
@@ -13401,7 +13544,8 @@
       "3a_roof05_room": {
         "name": "3a_roof05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof05_west": {
         "name": "3a_roof05_west",
@@ -13456,7 +13600,8 @@
       "3a_roof06b_room": {
         "name": "3a_roof06b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof06b_west": {
         "name": "3a_roof06b_west",
@@ -13521,7 +13666,8 @@
       "3a_roof06_room": {
         "name": "3a_roof06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof06_west": {
         "name": "3a_roof06_west",
@@ -13609,7 +13755,8 @@
       "3a_roof07_room": {
         "name": "3a_roof07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "3a_roof07_west": {
         "name": "3a_roof07_west",
@@ -13676,7 +13823,8 @@
       "4a_a-00_room": {
         "name": "4a_a-00_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-00_west": {
         "name": "4a_a-00_west",
@@ -13731,7 +13879,8 @@
       "4a_a-01_room": {
         "name": "4a_a-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-01_west": {
         "name": "4a_a-01_west",
@@ -13796,7 +13945,8 @@
       "4a_a-01x_room": {
         "name": "4a_a-01x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-01x_west": {
         "name": "4a_a-01x_west",
@@ -13876,7 +14026,8 @@
       "4a_a-02_room": {
         "name": "4a_a-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-02_west": {
         "name": "4a_a-02_west",
@@ -13950,7 +14101,8 @@
       "4a_a-03_room": {
         "name": "4a_a-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-03_west": {
         "name": "4a_a-03_west",
@@ -14033,7 +14185,8 @@
       "4a_a-04_room": {
         "name": "4a_a-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-04_west": {
         "name": "4a_a-04_west",
@@ -14119,7 +14272,8 @@
       "4a_a-05_room": {
         "name": "4a_a-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-05_west": {
         "name": "4a_a-05_west",
@@ -14184,7 +14338,8 @@
       "4a_a-06_room": {
         "name": "4a_a-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-06_west": {
         "name": "4a_a-06_west",
@@ -14258,7 +14413,8 @@
       "4a_a-07_room": {
         "name": "4a_a-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-07_west": {
         "name": "4a_a-07_west",
@@ -14331,7 +14487,8 @@
       "4a_a-08_room": {
         "name": "4a_a-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-08_west": {
         "name": "4a_a-08_west",
@@ -14436,7 +14593,8 @@
       "4a_a-10_room": {
         "name": "4a_a-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-10_west": {
         "name": "4a_a-10_west",
@@ -14516,7 +14674,8 @@
       "4a_a-11_room": {
         "name": "4a_a-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-11_east": {
         "name": "4a_a-11_east",
@@ -14562,7 +14721,8 @@
       "4a_a-09_room": {
         "name": "4a_a-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_a-09_bottom": {
         "name": "4a_a-09_bottom",
@@ -14875,7 +15035,8 @@
       "4a_b-01_room": {
         "name": "4a_b-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-01_west": {
         "name": "4a_b-01_west",
@@ -14935,7 +15096,8 @@
       "4a_b-04_room": {
         "name": "4a_b-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-04_west": {
         "name": "4a_b-04_west",
@@ -15032,7 +15194,8 @@
       "4a_b-06_room": {
         "name": "4a_b-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-06_west": {
         "name": "4a_b-06_west",
@@ -15100,7 +15263,8 @@
       "4a_b-07_room": {
         "name": "4a_b-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-07_west": {
         "name": "4a_b-07_west",
@@ -15179,7 +15343,8 @@
       "4a_b-03_room": {
         "name": "4a_b-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-03_west": {
         "name": "4a_b-03_west",
@@ -15256,7 +15421,8 @@
       "4a_b-02_room": {
         "name": "4a_b-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-02_south-west": {
         "name": "4a_b-02_south-west",
@@ -15402,7 +15568,8 @@
       "4a_b-sec_room": {
         "name": "4a_b-sec_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-sec_west": {
         "name": "4a_b-sec_west",
@@ -15479,7 +15646,8 @@
       "4a_b-secb_room": {
         "name": "4a_b-secb_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-secb_west": {
         "name": "4a_b-secb_west",
@@ -15522,7 +15690,8 @@
       "4a_b-05_room": {
         "name": "4a_b-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-05_center": {
         "name": "4a_b-05_center",
@@ -15630,7 +15799,8 @@
       "4a_b-08b_room": {
         "name": "4a_b-08b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-08b_west": {
         "name": "4a_b-08b_west",
@@ -15698,7 +15868,8 @@
       "4a_b-08_room": {
         "name": "4a_b-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_b-08_west": {
         "name": "4a_b-08_west",
@@ -15899,7 +16070,8 @@
       "4a_c-01_room": {
         "name": "4a_c-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-01_east": {
         "name": "4a_c-01_east",
@@ -15939,7 +16111,8 @@
       "4a_c-02_room": {
         "name": "4a_c-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-02_west": {
         "name": "4a_c-02_west",
@@ -16004,7 +16177,8 @@
       "4a_c-04_room": {
         "name": "4a_c-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-04_west": {
         "name": "4a_c-04_west",
@@ -16052,7 +16226,8 @@
       "4a_c-05_room": {
         "name": "4a_c-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-05_west": {
         "name": "4a_c-05_west",
@@ -16141,7 +16316,8 @@
       "4a_c-06_room": {
         "name": "4a_c-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-06_bottom": {
         "name": "4a_c-06_bottom",
@@ -16258,7 +16434,8 @@
       "4a_c-06b_room": {
         "name": "4a_c-06b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-06b_east": {
         "name": "4a_c-06b_east",
@@ -16304,7 +16481,8 @@
       "4a_c-09_room": {
         "name": "4a_c-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-09_west": {
         "name": "4a_c-09_west",
@@ -16355,7 +16533,8 @@
       "4a_c-07_room": {
         "name": "4a_c-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-07_west": {
         "name": "4a_c-07_west",
@@ -16400,7 +16579,8 @@
       "4a_c-08_room": {
         "name": "4a_c-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-08_bottom": {
         "name": "4a_c-08_bottom",
@@ -16517,7 +16697,8 @@
       "4a_c-10_room": {
         "name": "4a_c-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_c-10_bottom": {
         "name": "4a_c-10_bottom",
@@ -16725,7 +16906,8 @@
       "4a_d-00b_room": {
         "name": "4a_d-00b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-00b_east": {
         "name": "4a_d-00b_east",
@@ -16771,7 +16953,8 @@
       "4a_d-01_room": {
         "name": "4a_d-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-01_west": {
         "name": "4a_d-01_west",
@@ -16845,7 +17028,8 @@
       "4a_d-02_room": {
         "name": "4a_d-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-02_west": {
         "name": "4a_d-02_west",
@@ -16905,7 +17089,8 @@
       "4a_d-03_room": {
         "name": "4a_d-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-03_west": {
         "name": "4a_d-03_west",
@@ -16964,7 +17149,8 @@
       "4a_d-04_room": {
         "name": "4a_d-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-04_west": {
         "name": "4a_d-04_west",
@@ -17038,7 +17224,8 @@
       "4a_d-05_room": {
         "name": "4a_d-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-05_west": {
         "name": "4a_d-05_west",
@@ -17097,7 +17284,8 @@
       "4a_d-06_room": {
         "name": "4a_d-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-06_west": {
         "name": "4a_d-06_west",
@@ -17159,7 +17347,8 @@
       "4a_d-07_room": {
         "name": "4a_d-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-07_west": {
         "name": "4a_d-07_west",
@@ -17242,7 +17431,8 @@
       "4a_d-08_room": {
         "name": "4a_d-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-08_west": {
         "name": "4a_d-08_west",
@@ -17300,7 +17490,8 @@
       "4a_d-09_room": {
         "name": "4a_d-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-09_west": {
         "name": "4a_d-09_west",
@@ -17383,7 +17574,8 @@
       "4a_d-10_room": {
         "name": "4a_d-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "4a_d-10_west": {
         "name": "4a_d-10_west",
@@ -17436,7 +17628,8 @@
       "5a_a-00b_room": {
         "name": "5a_a-00b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-00b_west": {
         "name": "5a_a-00b_west",
@@ -17495,7 +17688,8 @@
       "5a_a-00x_room": {
         "name": "5a_a-00x_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-00x_east": {
         "name": "5a_a-00x_east",
@@ -17535,7 +17729,8 @@
       "5a_a-00d_room": {
         "name": "5a_a-00d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-00d_west": {
         "name": "5a_a-00d_west",
@@ -17594,7 +17789,8 @@
       "5a_a-00c_room": {
         "name": "5a_a-00c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-00c_west": {
         "name": "5a_a-00c_west",
@@ -17653,7 +17849,8 @@
       "5a_a-00_room": {
         "name": "5a_a-00_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-00_west": {
         "name": "5a_a-00_west",
@@ -17711,7 +17908,8 @@
       "5a_a-01_room": {
         "name": "5a_a-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-01_west": {
         "name": "5a_a-01_west",
@@ -17933,7 +18131,8 @@
       "5a_a-02_room": {
         "name": "5a_a-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-02_west": {
         "name": "5a_a-02_west",
@@ -18044,7 +18243,8 @@
       "5a_a-03_room": {
         "name": "5a_a-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-03_west": {
         "name": "5a_a-03_west",
@@ -18121,7 +18321,8 @@
       "5a_a-04_room": {
         "name": "5a_a-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-04_east": {
         "name": "5a_a-04_east",
@@ -18235,7 +18436,8 @@
       "5a_a-05_room": {
         "name": "5a_a-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-05_north-west": {
         "name": "5a_a-05_north-west",
@@ -18419,7 +18621,8 @@
       "5a_a-06_room": {
         "name": "5a_a-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-06_west": {
         "name": "5a_a-06_west",
@@ -18465,7 +18668,8 @@
       "5a_a-07_room": {
         "name": "5a_a-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-07_east": {
         "name": "5a_a-07_east",
@@ -18511,7 +18715,8 @@
       "5a_a-08_room": {
         "name": "5a_a-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-08_west": {
         "name": "5a_a-08_west",
@@ -18753,7 +18958,8 @@
       "5a_a-10_room": {
         "name": "5a_a-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-10_west": {
         "name": "5a_a-10_west",
@@ -18818,7 +19024,8 @@
       "5a_a-09_room": {
         "name": "5a_a-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-09_west": {
         "name": "5a_a-09_west",
@@ -18883,7 +19090,8 @@
       "5a_a-11_room": {
         "name": "5a_a-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-11_east": {
         "name": "5a_a-11_east",
@@ -18929,7 +19137,8 @@
       "5a_a-12_room": {
         "name": "5a_a-12_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-12_north-west": {
         "name": "5a_a-12_north-west",
@@ -19037,7 +19246,8 @@
       "5a_a-15_room": {
         "name": "5a_a-15_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-15_south": {
         "name": "5a_a-15_south",
@@ -19083,7 +19293,8 @@
       "5a_a-14_room": {
         "name": "5a_a-14_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-14_south": {
         "name": "5a_a-14_south",
@@ -19129,7 +19340,8 @@
       "5a_a-13_room": {
         "name": "5a_a-13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_a-13_west": {
         "name": "5a_a-13_west",
@@ -19291,7 +19503,8 @@
       "5a_b-18_room": {
         "name": "5a_b-18_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-18_south": {
         "name": "5a_b-18_south",
@@ -19334,7 +19547,8 @@
       "5a_b-01_room": {
         "name": "5a_b-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-01_south-west": {
         "name": "5a_b-01_south-west",
@@ -19612,7 +19826,8 @@
       "5a_b-01c_room": {
         "name": "5a_b-01c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-01c_west": {
         "name": "5a_b-01c_west",
@@ -19695,7 +19910,8 @@
       "5a_b-20_room": {
         "name": "5a_b-20_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-20_north-west": {
         "name": "5a_b-20_north-west",
@@ -19854,7 +20070,8 @@
       "5a_b-21_room": {
         "name": "5a_b-21_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-21_east": {
         "name": "5a_b-21_east",
@@ -19900,7 +20117,8 @@
       "5a_b-01b_room": {
         "name": "5a_b-01b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-01b_west": {
         "name": "5a_b-01b_west",
@@ -19965,7 +20183,8 @@
       "5a_b-02_room": {
         "name": "5a_b-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-02_center": {
         "name": "5a_b-02_center",
@@ -20260,7 +20479,8 @@
       "5a_b-03_room": {
         "name": "5a_b-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-03_east": {
         "name": "5a_b-03_east",
@@ -20303,7 +20523,8 @@
       "5a_b-05_room": {
         "name": "5a_b-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-05_west": {
         "name": "5a_b-05_west",
@@ -20349,7 +20570,8 @@
       "5a_b-04_room": {
         "name": "5a_b-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-04_west": {
         "name": "5a_b-04_west",
@@ -20450,7 +20672,8 @@
       "5a_b-07_room": {
         "name": "5a_b-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-07_north": {
         "name": "5a_b-07_north",
@@ -20512,7 +20735,8 @@
       "5a_b-08_room": {
         "name": "5a_b-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-08_west": {
         "name": "5a_b-08_west",
@@ -20577,7 +20801,8 @@
       "5a_b-09_room": {
         "name": "5a_b-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-09_north": {
         "name": "5a_b-09_north",
@@ -20645,7 +20870,8 @@
       "5a_b-10_room": {
         "name": "5a_b-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-10_east": {
         "name": "5a_b-10_east",
@@ -20688,7 +20914,8 @@
       "5a_b-11_room": {
         "name": "5a_b-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-11_north-west": {
         "name": "5a_b-11_north-west",
@@ -20848,7 +21075,8 @@
       "5a_b-12_room": {
         "name": "5a_b-12_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-12_west": {
         "name": "5a_b-12_west",
@@ -20925,7 +21153,8 @@
       "5a_b-13_room": {
         "name": "5a_b-13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-13_west": {
         "name": "5a_b-13_west",
@@ -21020,7 +21249,8 @@
       "5a_b-17_room": {
         "name": "5a_b-17_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-17_west": {
         "name": "5a_b-17_west",
@@ -21135,7 +21365,8 @@
       "5a_b-22_room": {
         "name": "5a_b-22_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-22_west": {
         "name": "5a_b-22_west",
@@ -21182,7 +21413,8 @@
       "5a_b-06_room": {
         "name": "5a_b-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-06_west": {
         "name": "5a_b-06_west",
@@ -21283,7 +21515,8 @@
       "5a_b-19_room": {
         "name": "5a_b-19_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-19_west": {
         "name": "5a_b-19_west",
@@ -21368,7 +21601,8 @@
       "5a_b-14_room": {
         "name": "5a_b-14_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-14_west": {
         "name": "5a_b-14_west",
@@ -21460,7 +21694,8 @@
       "5a_b-15_room": {
         "name": "5a_b-15_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-15_west": {
         "name": "5a_b-15_west",
@@ -21503,7 +21738,8 @@
       "5a_b-16_room": {
         "name": "5a_b-16_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_b-16_bottom": {
         "name": "5a_b-16_bottom",
@@ -21561,7 +21797,8 @@
       "5a_void_room": {
         "name": "5a_void_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_void_east": {
         "name": "5a_void_east",
@@ -21673,7 +21910,8 @@
       "5a_c-01_room": {
         "name": "5a_c-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-01_west": {
         "name": "5a_c-01_west",
@@ -21732,7 +21970,8 @@
       "5a_c-01b_room": {
         "name": "5a_c-01b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-01b_west": {
         "name": "5a_c-01b_west",
@@ -21784,7 +22023,8 @@
       "5a_c-01c_room": {
         "name": "5a_c-01c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-01c_west": {
         "name": "5a_c-01c_west",
@@ -21835,7 +22075,8 @@
       "5a_c-08b_room": {
         "name": "5a_c-08b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-08b_west": {
         "name": "5a_c-08b_west",
@@ -21883,7 +22124,8 @@
       "5a_c-08_room": {
         "name": "5a_c-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-08_west": {
         "name": "5a_c-08_west",
@@ -21946,7 +22188,8 @@
       "5a_c-10_room": {
         "name": "5a_c-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-10_west": {
         "name": "5a_c-10_west",
@@ -22001,7 +22244,8 @@
       "5a_c-12_room": {
         "name": "5a_c-12_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-12_west": {
         "name": "5a_c-12_west",
@@ -22049,7 +22293,8 @@
       "5a_c-07_room": {
         "name": "5a_c-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-07_west": {
         "name": "5a_c-07_west",
@@ -22097,7 +22342,8 @@
       "5a_c-11_room": {
         "name": "5a_c-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-11_west": {
         "name": "5a_c-11_west",
@@ -22149,7 +22395,8 @@
       "5a_c-09_room": {
         "name": "5a_c-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-09_west": {
         "name": "5a_c-09_west",
@@ -22204,7 +22451,8 @@
       "5a_c-13_room": {
         "name": "5a_c-13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_c-13_west": {
         "name": "5a_c-13_west",
@@ -22372,7 +22620,8 @@
       "5a_d-01_room": {
         "name": "5a_d-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-01_south": {
         "name": "5a_d-01_south",
@@ -22685,7 +22934,8 @@
       "5a_d-09_room": {
         "name": "5a_d-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-09_east": {
         "name": "5a_d-09_east",
@@ -22751,7 +23001,8 @@
       "5a_d-04_room": {
         "name": "5a_d-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-04_east": {
         "name": "5a_d-04_east",
@@ -22977,7 +23228,8 @@
       "5a_d-05_room": {
         "name": "5a_d-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-05_north": {
         "name": "5a_d-05_north",
@@ -23089,7 +23341,8 @@
       "5a_d-06_room": {
         "name": "5a_d-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-06_north-east": {
         "name": "5a_d-06_north-east",
@@ -23197,7 +23450,8 @@
       "5a_d-07_room": {
         "name": "5a_d-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-07_west": {
         "name": "5a_d-07_west",
@@ -23252,7 +23506,8 @@
       "5a_d-02_room": {
         "name": "5a_d-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-02_east": {
         "name": "5a_d-02_east",
@@ -23356,7 +23611,8 @@
       "5a_d-03_room": {
         "name": "5a_d-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-03_east": {
         "name": "5a_d-03_east",
@@ -23414,7 +23670,8 @@
       "5a_d-15_room": {
         "name": "5a_d-15_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-15_north-west": {
         "name": "5a_d-15_north-west",
@@ -23633,7 +23890,8 @@
       "5a_d-13_room": {
         "name": "5a_d-13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-13_east": {
         "name": "5a_d-13_east",
@@ -23700,7 +23958,8 @@
       "5a_d-19b_room": {
         "name": "5a_d-19b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-19b_south-east-right": {
         "name": "5a_d-19b_south-east-right",
@@ -23813,7 +24072,8 @@
       "5a_d-19_room": {
         "name": "5a_d-19_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-19_east": {
         "name": "5a_d-19_east",
@@ -23889,7 +24149,8 @@
       "5a_d-10_room": {
         "name": "5a_d-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-10_west": {
         "name": "5a_d-10_west",
@@ -23944,7 +24205,8 @@
       "5a_d-20_room": {
         "name": "5a_d-20_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_d-20_west": {
         "name": "5a_d-20_west",
@@ -24058,7 +24320,8 @@
       "5a_e-01_room": {
         "name": "5a_e-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-01_west": {
         "name": "5a_e-01_west",
@@ -24109,7 +24372,8 @@
       "5a_e-02_room": {
         "name": "5a_e-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-02_west": {
         "name": "5a_e-02_west",
@@ -24160,7 +24424,8 @@
       "5a_e-03_room": {
         "name": "5a_e-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-03_west": {
         "name": "5a_e-03_west",
@@ -24211,7 +24476,8 @@
       "5a_e-04_room": {
         "name": "5a_e-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-04_west": {
         "name": "5a_e-04_west",
@@ -24262,7 +24528,8 @@
       "5a_e-06_room": {
         "name": "5a_e-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-06_west": {
         "name": "5a_e-06_west",
@@ -24332,7 +24599,8 @@
       "5a_e-05_room": {
         "name": "5a_e-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-05_west": {
         "name": "5a_e-05_west",
@@ -24384,7 +24652,8 @@
       "5a_e-07_room": {
         "name": "5a_e-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-07_west": {
         "name": "5a_e-07_west",
@@ -24432,7 +24701,8 @@
       "5a_e-08_room": {
         "name": "5a_e-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-08_west": {
         "name": "5a_e-08_west",
@@ -24483,7 +24753,8 @@
       "5a_e-09_room": {
         "name": "5a_e-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-09_west": {
         "name": "5a_e-09_west",
@@ -24534,7 +24805,8 @@
       "5a_e-10_room": {
         "name": "5a_e-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-10_west": {
         "name": "5a_e-10_west",
@@ -24587,7 +24859,8 @@
       "5a_e-11_room": {
         "name": "5a_e-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "5a_e-11_west": {
         "name": "5a_e-11_west",
@@ -24643,7 +24916,8 @@
       "6a_00_room": {
         "name": "6a_00_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_00_west": {
         "name": "6a_00_west",
@@ -24698,7 +24972,8 @@
       "6a_01_room": {
         "name": "6a_01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_01_bottom": {
         "name": "6a_01_bottom",
@@ -24753,7 +25028,8 @@
       "6a_02_room": {
         "name": "6a_02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_02_bottom": {
         "name": "6a_02_bottom",
@@ -24861,7 +25137,8 @@
       "6a_03_room": {
         "name": "6a_03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_03_bottom": {
         "name": "6a_03_bottom",
@@ -24916,7 +25193,8 @@
       "6a_02b_room": {
         "name": "6a_02b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_02b_bottom": {
         "name": "6a_02b_bottom",
@@ -25142,7 +25420,8 @@
       "6a_04b_room": {
         "name": "6a_04b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_04b_west": {
         "name": "6a_04b_west",
@@ -25201,7 +25480,8 @@
       "6a_04c_room": {
         "name": "6a_04c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_04c_east": {
         "name": "6a_04c_east",
@@ -25241,7 +25521,8 @@
       "6a_04d_room": {
         "name": "6a_04d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_04d_west": {
         "name": "6a_04d_west",
@@ -25266,7 +25547,8 @@
       "6a_04e_room": {
         "name": "6a_04e_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_04e_east": {
         "name": "6a_04e_east",
@@ -25313,7 +25595,8 @@
       "6a_05_room": {
         "name": "6a_05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_05_west": {
         "name": "6a_05_west",
@@ -25368,7 +25651,8 @@
       "6a_06_room": {
         "name": "6a_06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_06_west": {
         "name": "6a_06_west",
@@ -25426,7 +25710,8 @@
       "6a_07_room": {
         "name": "6a_07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_07_west": {
         "name": "6a_07_west",
@@ -25519,7 +25804,8 @@
       "6a_08a_room": {
         "name": "6a_08a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_08a_west": {
         "name": "6a_08a_west",
@@ -25577,7 +25863,8 @@
       "6a_08b_room": {
         "name": "6a_08b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_08b_west": {
         "name": "6a_08b_west",
@@ -25635,7 +25922,8 @@
       "6a_09_room": {
         "name": "6a_09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_09_west": {
         "name": "6a_09_west",
@@ -25734,7 +26022,8 @@
       "6a_10a_room": {
         "name": "6a_10a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_10a_west": {
         "name": "6a_10a_west",
@@ -25799,7 +26088,8 @@
       "6a_10b_room": {
         "name": "6a_10b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_10b_west": {
         "name": "6a_10b_west",
@@ -25864,7 +26154,8 @@
       "6a_11_room": {
         "name": "6a_11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_11_west": {
         "name": "6a_11_west",
@@ -25976,7 +26267,8 @@
       "6a_12a_room": {
         "name": "6a_12a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_12a_west": {
         "name": "6a_12a_west",
@@ -26031,7 +26323,8 @@
       "6a_12b_room": {
         "name": "6a_12b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_12b_west": {
         "name": "6a_12b_west",
@@ -26099,7 +26392,8 @@
       "6a_13_room": {
         "name": "6a_13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_13_west": {
         "name": "6a_13_west",
@@ -26212,7 +26506,8 @@
       "6a_14a_room": {
         "name": "6a_14a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_14a_west": {
         "name": "6a_14a_west",
@@ -26270,7 +26565,8 @@
       "6a_14b_room": {
         "name": "6a_14b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_14b_west": {
         "name": "6a_14b_west",
@@ -26329,7 +26625,8 @@
       "6a_15_room": {
         "name": "6a_15_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_15_west": {
         "name": "6a_15_west",
@@ -26442,7 +26739,8 @@
       "6a_16a_room": {
         "name": "6a_16a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_16a_west": {
         "name": "6a_16a_west",
@@ -26497,7 +26795,8 @@
       "6a_16b_room": {
         "name": "6a_16b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_16b_west": {
         "name": "6a_16b_west",
@@ -26555,7 +26854,8 @@
       "6a_17_room": {
         "name": "6a_17_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_17_west": {
         "name": "6a_17_west",
@@ -26674,7 +26974,8 @@
       "6a_18a_room": {
         "name": "6a_18a_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_18a_west": {
         "name": "6a_18a_west",
@@ -26732,7 +27033,8 @@
       "6a_18b_room": {
         "name": "6a_18b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_18b_west": {
         "name": "6a_18b_west",
@@ -26787,7 +27089,8 @@
       "6a_19_room": {
         "name": "6a_19_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_19_west": {
         "name": "6a_19_west",
@@ -26872,7 +27175,8 @@
       "6a_20_room": {
         "name": "6a_20_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_20_west": {
         "name": "6a_20_west",
@@ -27028,7 +27332,8 @@
       "6a_b-00b_room": {
         "name": "6a_b-00b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_b-00b_bottom": {
         "name": "6a_b-00b_bottom",
@@ -27087,7 +27392,8 @@
       "6a_b-00c_room": {
         "name": "6a_b-00c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_b-00c_east": {
         "name": "6a_b-00c_east",
@@ -27112,7 +27418,8 @@
       "6a_b-01_room": {
         "name": "6a_b-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_b-01_west": {
         "name": "6a_b-01_west",
@@ -27171,7 +27478,8 @@
       "6a_b-02_room": {
         "name": "6a_b-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_b-02_top": {
         "name": "6a_b-02_top",
@@ -27226,7 +27534,8 @@
       "6a_b-02b_room": {
         "name": "6a_b-02b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_b-02b_top": {
         "name": "6a_b-02b_top",
@@ -27278,7 +27587,8 @@
       "6a_b-03_room": {
         "name": "6a_b-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_b-03_west": {
         "name": "6a_b-03_west",
@@ -27400,7 +27710,8 @@
       "6a_boss-01_room": {
         "name": "6a_boss-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-01_west": {
         "name": "6a_boss-01_west",
@@ -27459,7 +27770,8 @@
       "6a_boss-02_room": {
         "name": "6a_boss-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-02_west": {
         "name": "6a_boss-02_west",
@@ -27521,7 +27833,8 @@
       "6a_boss-03_room": {
         "name": "6a_boss-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-03_west": {
         "name": "6a_boss-03_west",
@@ -27580,7 +27893,8 @@
       "6a_boss-04_room": {
         "name": "6a_boss-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-04_west": {
         "name": "6a_boss-04_west",
@@ -27639,7 +27953,8 @@
       "6a_boss-05_room": {
         "name": "6a_boss-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-05_west": {
         "name": "6a_boss-05_west",
@@ -27704,7 +28019,8 @@
       "6a_boss-06_room": {
         "name": "6a_boss-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-06_west": {
         "name": "6a_boss-06_west",
@@ -27763,7 +28079,8 @@
       "6a_boss-07_room": {
         "name": "6a_boss-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-07_west": {
         "name": "6a_boss-07_west",
@@ -27828,7 +28145,8 @@
       "6a_boss-08_room": {
         "name": "6a_boss-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-08_west": {
         "name": "6a_boss-08_west",
@@ -27883,7 +28201,8 @@
       "6a_boss-09_room": {
         "name": "6a_boss-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-09_west": {
         "name": "6a_boss-09_west",
@@ -27938,7 +28257,8 @@
       "6a_boss-10_room": {
         "name": "6a_boss-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-10_west": {
         "name": "6a_boss-10_west",
@@ -28003,7 +28323,8 @@
       "6a_boss-11_room": {
         "name": "6a_boss-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-11_west": {
         "name": "6a_boss-11_west",
@@ -28058,7 +28379,8 @@
       "6a_boss-12_room": {
         "name": "6a_boss-12_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-12_west": {
         "name": "6a_boss-12_west",
@@ -28113,7 +28435,8 @@
       "6a_boss-13_room": {
         "name": "6a_boss-13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-13_west": {
         "name": "6a_boss-13_west",
@@ -28172,7 +28495,8 @@
       "6a_boss-14_room": {
         "name": "6a_boss-14_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-14_west": {
         "name": "6a_boss-14_west",
@@ -28231,7 +28555,8 @@
       "6a_boss-15_room": {
         "name": "6a_boss-15_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-15_west": {
         "name": "6a_boss-15_west",
@@ -28283,7 +28608,8 @@
       "6a_boss-16_room": {
         "name": "6a_boss-16_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-16_west": {
         "name": "6a_boss-16_west",
@@ -28342,7 +28668,8 @@
       "6a_boss-17_room": {
         "name": "6a_boss-17_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-17_west": {
         "name": "6a_boss-17_west",
@@ -28404,7 +28731,8 @@
       "6a_boss-18_room": {
         "name": "6a_boss-18_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-18_west": {
         "name": "6a_boss-18_west",
@@ -28462,7 +28790,8 @@
       "6a_boss-19_room": {
         "name": "6a_boss-19_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-19_west": {
         "name": "6a_boss-19_west",
@@ -28520,7 +28849,8 @@
       "6a_boss-20_room": {
         "name": "6a_boss-20_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_boss-20_west": {
         "name": "6a_boss-20_west",
@@ -28646,7 +28976,8 @@
       "6a_after-01_room": {
         "name": "6a_after-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "6a_after-01_bottom": {
         "name": "6a_after-01_bottom",
@@ -28702,7 +29033,8 @@
       "7a_a-00_room": {
         "name": "7a_a-00_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-00_west": {
         "name": "7a_a-00_west",
@@ -28754,7 +29086,8 @@
       "7a_a-01_room": {
         "name": "7a_a-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-01_west": {
         "name": "7a_a-01_west",
@@ -28812,7 +29145,8 @@
       "7a_a-02_room": {
         "name": "7a_a-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-02_west": {
         "name": "7a_a-02_west",
@@ -28924,7 +29258,8 @@
       "7a_a-02b_room": {
         "name": "7a_a-02b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-02b_east": {
         "name": "7a_a-02b_east",
@@ -28991,7 +29326,8 @@
       "7a_a-03_room": {
         "name": "7a_a-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-03_west": {
         "name": "7a_a-03_west",
@@ -29056,7 +29392,8 @@
       "7a_a-04_room": {
         "name": "7a_a-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-04_west": {
         "name": "7a_a-04_west",
@@ -29155,7 +29492,8 @@
       "7a_a-04b_room": {
         "name": "7a_a-04b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-04b_east": {
         "name": "7a_a-04b_east",
@@ -29218,7 +29556,8 @@
       "7a_a-05_room": {
         "name": "7a_a-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-05_west": {
         "name": "7a_a-05_west",
@@ -29301,7 +29640,8 @@
       "7a_a-06_room": {
         "name": "7a_a-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_a-06_bottom": {
         "name": "7a_a-06_bottom",
@@ -29490,7 +29830,8 @@
       "7a_b-01_room": {
         "name": "7a_b-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-01_west": {
         "name": "7a_b-01_west",
@@ -29541,7 +29882,8 @@
       "7a_b-02_room": {
         "name": "7a_b-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-02_south": {
         "name": "7a_b-02_south",
@@ -29698,7 +30040,8 @@
       "7a_b-02b_room": {
         "name": "7a_b-02b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-02b_south": {
         "name": "7a_b-02b_south",
@@ -29825,7 +30168,8 @@
       "7a_b-02e_room": {
         "name": "7a_b-02e_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-02e_east": {
         "name": "7a_b-02e_east",
@@ -29868,7 +30212,8 @@
       "7a_b-02c_room": {
         "name": "7a_b-02c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-02c_west": {
         "name": "7a_b-02c_west",
@@ -29973,7 +30318,8 @@
       "7a_b-02d_room": {
         "name": "7a_b-02d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-02d_north": {
         "name": "7a_b-02d_north",
@@ -30053,7 +30399,8 @@
       "7a_b-03_room": {
         "name": "7a_b-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-03_west": {
         "name": "7a_b-03_west",
@@ -30152,7 +30499,8 @@
       "7a_b-04_room": {
         "name": "7a_b-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-04_west": {
         "name": "7a_b-04_west",
@@ -30195,7 +30543,8 @@
       "7a_b-05_room": {
         "name": "7a_b-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-05_west": {
         "name": "7a_b-05_west",
@@ -30267,7 +30616,8 @@
       "7a_b-06_room": {
         "name": "7a_b-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-06_west": {
         "name": "7a_b-06_west",
@@ -30329,7 +30679,8 @@
       "7a_b-07_room": {
         "name": "7a_b-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-07_west": {
         "name": "7a_b-07_west",
@@ -30391,7 +30742,8 @@
       "7a_b-08_room": {
         "name": "7a_b-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-08_west": {
         "name": "7a_b-08_west",
@@ -30461,7 +30813,8 @@
       "7a_b-09_room": {
         "name": "7a_b-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_b-09_bottom": {
         "name": "7a_b-09_bottom",
@@ -30644,7 +30997,8 @@
       "7a_c-01_room": {
         "name": "7a_c-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-01_bottom": {
         "name": "7a_c-01_bottom",
@@ -30702,7 +31056,8 @@
       "7a_c-02_room": {
         "name": "7a_c-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-02_bottom": {
         "name": "7a_c-02_bottom",
@@ -30754,7 +31109,8 @@
       "7a_c-03_room": {
         "name": "7a_c-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-03_south": {
         "name": "7a_c-03_south",
@@ -30846,7 +31202,8 @@
       "7a_c-03b_room": {
         "name": "7a_c-03b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-03b_east": {
         "name": "7a_c-03b_east",
@@ -30892,7 +31249,8 @@
       "7a_c-04_room": {
         "name": "7a_c-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-04_west": {
         "name": "7a_c-04_west",
@@ -31024,7 +31382,8 @@
       "7a_c-05_room": {
         "name": "7a_c-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-05_west": {
         "name": "7a_c-05_west",
@@ -31067,7 +31426,8 @@
       "7a_c-06_room": {
         "name": "7a_c-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-06_south": {
         "name": "7a_c-06_south",
@@ -31169,7 +31529,8 @@
       "7a_c-06b_room": {
         "name": "7a_c-06b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-06b_south": {
         "name": "7a_c-06b_south",
@@ -31302,7 +31663,8 @@
       "7a_c-06c_room": {
         "name": "7a_c-06c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-06c_west": {
         "name": "7a_c-06c_west",
@@ -31348,7 +31710,8 @@
       "7a_c-07_room": {
         "name": "7a_c-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-07_west": {
         "name": "7a_c-07_west",
@@ -31467,7 +31830,8 @@
       "7a_c-07b_room": {
         "name": "7a_c-07b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-07b_east": {
         "name": "7a_c-07b_east",
@@ -31510,7 +31874,8 @@
       "7a_c-08_room": {
         "name": "7a_c-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-08_west": {
         "name": "7a_c-08_west",
@@ -31593,7 +31958,8 @@
       "7a_c-09_room": {
         "name": "7a_c-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_c-09_bottom": {
         "name": "7a_c-09_bottom",
@@ -31764,7 +32130,8 @@
       "7a_d-01_room": {
         "name": "7a_d-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-01_west": {
         "name": "7a_d-01_west",
@@ -31822,7 +32189,8 @@
       "7a_d-01b_room": {
         "name": "7a_d-01b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-01b_west": {
         "name": "7a_d-01b_west",
@@ -31942,7 +32310,8 @@
       "7a_d-01c_room": {
         "name": "7a_d-01c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-01c_west": {
         "name": "7a_d-01c_west",
@@ -32080,7 +32449,8 @@
       "7a_d-01d_room": {
         "name": "7a_d-01d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-01d_west": {
         "name": "7a_d-01d_west",
@@ -32160,7 +32530,8 @@
       "7a_d-02_room": {
         "name": "7a_d-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-02_west": {
         "name": "7a_d-02_west",
@@ -32215,7 +32586,8 @@
       "7a_d-03_room": {
         "name": "7a_d-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-03_west": {
         "name": "7a_d-03_west",
@@ -32346,7 +32718,8 @@
       "7a_d-03b_room": {
         "name": "7a_d-03b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-03b_west": {
         "name": "7a_d-03b_west",
@@ -32419,7 +32792,8 @@
       "7a_d-04_room": {
         "name": "7a_d-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-04_west": {
         "name": "7a_d-04_west",
@@ -32493,7 +32867,8 @@
       "7a_d-05_room": {
         "name": "7a_d-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-05_west": {
         "name": "7a_d-05_west",
@@ -32641,7 +33016,8 @@
       "7a_d-05b_room": {
         "name": "7a_d-05b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-05b_west": {
         "name": "7a_d-05b_west",
@@ -32684,7 +33060,8 @@
       "7a_d-06_room": {
         "name": "7a_d-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-06_west": {
         "name": "7a_d-06_west",
@@ -32811,7 +33188,8 @@
       "7a_d-07_room": {
         "name": "7a_d-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-07_east": {
         "name": "7a_d-07_east",
@@ -32854,7 +33232,8 @@
       "7a_d-08_room": {
         "name": "7a_d-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-08_west": {
         "name": "7a_d-08_west",
@@ -32934,7 +33313,8 @@
       "7a_d-09_room": {
         "name": "7a_d-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-09_west": {
         "name": "7a_d-09_west",
@@ -32989,7 +33369,8 @@
       "7a_d-10_room": {
         "name": "7a_d-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-10_west": {
         "name": "7a_d-10_west",
@@ -33141,7 +33522,8 @@
       "7a_d-10b_room": {
         "name": "7a_d-10b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-10b_west": {
         "name": "7a_d-10b_west",
@@ -33211,7 +33593,8 @@
       "7a_d-11_room": {
         "name": "7a_d-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_d-11_bottom": {
         "name": "7a_d-11_bottom",
@@ -33346,7 +33729,8 @@
       "7a_e-00_room": {
         "name": "7a_e-00_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-00_west": {
         "name": "7a_e-00_west",
@@ -33478,7 +33862,8 @@
       "7a_e-01_room": {
         "name": "7a_e-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-01_west": {
         "name": "7a_e-01_west",
@@ -33543,7 +33928,8 @@
       "7a_e-01b_room": {
         "name": "7a_e-01b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-01b_west": {
         "name": "7a_e-01b_west",
@@ -33602,7 +33988,8 @@
       "7a_e-01c_room": {
         "name": "7a_e-01c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-01c_west": {
         "name": "7a_e-01c_west",
@@ -33665,7 +34052,8 @@
       "7a_e-02_room": {
         "name": "7a_e-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-02_west": {
         "name": "7a_e-02_west",
@@ -33731,7 +34119,8 @@
       "7a_e-03_room": {
         "name": "7a_e-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-03_south-west": {
         "name": "7a_e-03_south-west",
@@ -33823,7 +34212,8 @@
       "7a_e-04_room": {
         "name": "7a_e-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-04_west": {
         "name": "7a_e-04_west",
@@ -33881,7 +34271,8 @@
       "7a_e-05_room": {
         "name": "7a_e-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-05_west": {
         "name": "7a_e-05_west",
@@ -33955,7 +34346,8 @@
       "7a_e-06_room": {
         "name": "7a_e-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-06_west": {
         "name": "7a_e-06_west",
@@ -34010,7 +34402,8 @@
       "7a_e-07_room": {
         "name": "7a_e-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-07_bottom": {
         "name": "7a_e-07_bottom",
@@ -34086,7 +34479,8 @@
       "7a_e-08_room": {
         "name": "7a_e-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-08_south": {
         "name": "7a_e-08_south",
@@ -34178,7 +34572,8 @@
       "7a_e-09_room": {
         "name": "7a_e-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-09_north": {
         "name": "7a_e-09_north",
@@ -34252,7 +34647,8 @@
       "7a_e-11_room": {
         "name": "7a_e-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-11_south": {
         "name": "7a_e-11_south",
@@ -34362,7 +34758,8 @@
       "7a_e-12_room": {
         "name": "7a_e-12_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-12_west": {
         "name": "7a_e-12_west",
@@ -34408,7 +34805,8 @@
       "7a_e-10_room": {
         "name": "7a_e-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-10_south": {
         "name": "7a_e-10_south",
@@ -34501,7 +34899,8 @@
       "7a_e-10b_room": {
         "name": "7a_e-10b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-10b_west": {
         "name": "7a_e-10b_west",
@@ -34560,7 +34959,8 @@
       "7a_e-13_room": {
         "name": "7a_e-13_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_e-13_bottom": {
         "name": "7a_e-13_bottom",
@@ -34801,7 +35201,8 @@
       "7a_f-01_room": {
         "name": "7a_f-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-01_south": {
         "name": "7a_f-01_south",
@@ -34878,7 +35279,8 @@
       "7a_f-02_room": {
         "name": "7a_f-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-02_west": {
         "name": "7a_f-02_west",
@@ -34983,7 +35385,8 @@
       "7a_f-02b_room": {
         "name": "7a_f-02b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-02b_west": {
         "name": "7a_f-02b_west",
@@ -35058,7 +35461,8 @@
       "7a_f-04_room": {
         "name": "7a_f-04_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-04_west": {
         "name": "7a_f-04_west",
@@ -35113,7 +35517,8 @@
       "7a_f-03_room": {
         "name": "7a_f-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-03_west": {
         "name": "7a_f-03_west",
@@ -35184,7 +35589,8 @@
       "7a_f-05_room": {
         "name": "7a_f-05_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-05_west": {
         "name": "7a_f-05_west",
@@ -35443,7 +35849,8 @@
       "7a_f-06_room": {
         "name": "7a_f-06_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-06_north-west": {
         "name": "7a_f-06_north-west",
@@ -35536,7 +35943,8 @@
       "7a_f-07_room": {
         "name": "7a_f-07_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-07_west": {
         "name": "7a_f-07_west",
@@ -35643,7 +36051,8 @@
       "7a_f-08_room": {
         "name": "7a_f-08_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-08_west": {
         "name": "7a_f-08_west",
@@ -35739,7 +36148,8 @@
       "7a_f-08b_room": {
         "name": "7a_f-08b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-08b_west": {
         "name": "7a_f-08b_west",
@@ -35822,7 +36232,8 @@
       "7a_f-08d_room": {
         "name": "7a_f-08d_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-08d_west": {
         "name": "7a_f-08d_west",
@@ -35880,7 +36291,8 @@
       "7a_f-08c_room": {
         "name": "7a_f-08c_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-08c_west": {
         "name": "7a_f-08c_west",
@@ -35953,7 +36365,8 @@
       "7a_f-09_room": {
         "name": "7a_f-09_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-09_west": {
         "name": "7a_f-09_west",
@@ -36008,7 +36421,8 @@
       "7a_f-10_room": {
         "name": "7a_f-10_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-10_west": {
         "name": "7a_f-10_west",
@@ -36083,7 +36497,8 @@
       "7a_f-10b_room": {
         "name": "7a_f-10b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-10b_west": {
         "name": "7a_f-10b_west",
@@ -36142,7 +36557,8 @@
       "7a_f-11_room": {
         "name": "7a_f-11_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_f-11_bottom": {
         "name": "7a_f-11_bottom",
@@ -36321,7 +36737,8 @@
       "7a_g-00b_room": {
         "name": "7a_g-00b_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_g-00b_bottom": {
         "name": "7a_g-00b_bottom",
@@ -36518,7 +36935,8 @@
       "7a_g-01_room": {
         "name": "7a_g-01_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_g-01_bottom": {
         "name": "7a_g-01_bottom",
@@ -36671,7 +37089,8 @@
       "7a_g-02_room": {
         "name": "7a_g-02_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_g-02_bottom": {
         "name": "7a_g-02_bottom",
@@ -36722,7 +37141,8 @@
       "7a_g-03_room": {
         "name": "7a_g-03_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "7a_g-03_bottom": {
         "name": "7a_g-03_bottom",
@@ -36804,7 +37224,8 @@
       "8a_outside_room": {
         "name": "8a_outside_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "8a_outside_east": {
         "name": "8a_outside_east",
@@ -36845,7 +37266,8 @@
       "8a_bridge_room": {
         "name": "8a_bridge_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "8a_bridge_west": {
         "name": "8a_bridge_west",
@@ -36904,7 +37326,8 @@
       "8a_secret_room": {
         "name": "8a_secret_room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "8a_secret_west": {
         "name": "8a_secret_west",
@@ -39958,7 +40381,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "CelesteOpenWorld"
     }
   },
   "game_info": {

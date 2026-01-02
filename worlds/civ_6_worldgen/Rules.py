@@ -16,11 +16,11 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _civilizationviworldgen_has_non_progressive_items(state: "CollectionState", player: int, era = None) -> bool:
+def has_non_progressive_items(state: "CollectionState", player: int, era = None) -> bool:
     return state.has_all({'ERA_ANCIENT': ['Mining', 'Irrigation', 'Sailing', 'Animal Husbandry', 'State Workforce', 'Foreign Trade'], 'ERA_CLASSICAL': ['Shipbuilding', 'Political Philosophy'], 'ERA_MEDIEVAL': ['Divine Right'], 'ERA_RENAISSANCE': ['Exploration', 'Reformed Church', 'Cartography'], 'ERA_INDUSTRIAL': ['Nationalism'], 'ERA_MODERN': ['Refining', 'Suffrage', 'Totalitarianism', 'Class Struggle'], 'ERA_ATOMIC': ['Combined Arms', 'Plastics'], 'ERA_INFORMATION': ['Corporate Libertarianism', 'Digital Democracy', 'Synthetic Technocracy'], 'ERA_FUTURE': []}[era], player)
 
 
-def _civilizationviworldgen_has_progressive_items(state: "CollectionState", player: int, era = None) -> bool:
+def has_progressive_items(state: "CollectionState", player: int, era = None) -> bool:
     return state.has_all_counts({'ERA_ANCIENT': {'Progressive Encampment': 1, 'Progressive Holy Site': 1, 'Progressive Campus': 1}, 'ERA_CLASSICAL': {'Progressive Encampment': 1, 'Progressive Holy Site': 2, 'Progressive Campus': 1, 'Progressive Harbor': 1, 'Progressive Commercial Hub': 1, 'Progressive Diplomatic Quarter': 1, 'Progressive Entertainment Complex': 1, 'Progressive Theater': 1}, 'ERA_MEDIEVAL': {'Progressive Encampment': 2, 'Progressive Holy Site': 2, 'Progressive Campus': 2, 'Progressive Harbor': 1, 'Progressive Commercial Hub': 1, 'Progressive Diplomatic Quarter': 1, 'Progressive Entertainment Complex': 1, 'Progressive Theater': 1, 'Progressive Industrial Zone': 1}, 'ERA_RENAISSANCE': {'Progressive Encampment': 2, 'Progressive Holy Site': 2, 'Progressive Campus': 2, 'Progressive Harbor': 2, 'Progressive Commercial Hub': 2, 'Progressive Diplomatic Quarter': 2, 'Progressive Entertainment Complex': 1, 'Progressive Theater': 2, 'Progressive Industrial Zone': 1}, 'ERA_INDUSTRIAL': {'Progressive Encampment': 3, 'Progressive Holy Site': 2, 'Progressive Campus': 2, 'Progressive Harbor': 2, 'Progressive Commercial Hub': 3, 'Progressive Diplomatic Quarter': 2, 'Progressive Entertainment Complex': 2, 'Progressive Theater': 2, 'Progressive Industrial Zone': 2}, 'ERA_MODERN': {'Progressive Encampment': 3, 'Progressive Holy Site': 2, 'Progressive Campus': 3, 'Progressive Harbor': 2, 'Progressive Commercial Hub': 3, 'Progressive Diplomatic Quarter': 2, 'Progressive Entertainment Complex': 2, 'Progressive Theater': 3, 'Progressive Industrial Zone': 3, 'Progressive Aerodrome': 1}, 'ERA_ATOMIC': {'Progressive Encampment': 3, 'Progressive Holy Site': 2, 'Progressive Campus': 3, 'Progressive Harbor': 2, 'Progressive Commercial Hub': 3, 'Progressive Diplomatic Quarter': 2, 'Progressive Entertainment Complex': 3, 'Progressive Theater': 3, 'Progressive Industrial Zone': 4, 'Progressive Aerodrome': 2, 'Progressive Space Port': 1}, 'ERA_INFORMATION': {'Progressive Encampment': 3, 'Progressive Holy Site': 2, 'Progressive Campus': 3, 'Progressive Harbor': 2, 'Progressive Commercial Hub': 3, 'Progressive Diplomatic Quarter': 2, 'Progressive Entertainment Complex': 3, 'Progressive Theater': 3, 'Progressive Industrial Zone': 4, 'Progressive Aerodrome': 2, 'Progressive Space Port': 4}, 'ERA_FUTURE': {'Progressive Encampment': 3, 'Progressive Holy Site': 2, 'Progressive Campus': 3, 'Progressive Harbor': 2, 'Progressive Commercial Hub': 3, 'Progressive Diplomatic Quarter': 2, 'Progressive Entertainment Complex': 3, 'Progressive Theater': 3, 'Progressive Industrial Zone': 4, 'Progressive Aerodrome': 2, 'Progressive Space Port': 4}}[era], player)
 
 
@@ -32,42 +32,42 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("ERA_ANCIENT -> ERA_CLASSICAL", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_ANCIENT',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_ANCIENT',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_ANCIENT',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_ANCIENT',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("ERA_CLASSICAL -> ERA_MEDIEVAL", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_CLASSICAL',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_CLASSICAL',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_CLASSICAL',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_CLASSICAL',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("ERA_MEDIEVAL -> ERA_RENAISSANCE", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_MEDIEVAL',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_MEDIEVAL',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_MEDIEVAL',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_MEDIEVAL',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("ERA_RENAISSANCE -> ERA_INDUSTRIAL", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_RENAISSANCE',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_RENAISSANCE',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_RENAISSANCE',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_RENAISSANCE',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("ERA_INDUSTRIAL -> ERA_MODERN", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_INDUSTRIAL',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_INDUSTRIAL',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_INDUSTRIAL',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_INDUSTRIAL',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("ERA_MODERN -> ERA_ATOMIC", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_MODERN',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_MODERN',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_MODERN',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_MODERN',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("ERA_ATOMIC -> ERA_INFORMATION", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_ATOMIC',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_ATOMIC',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_ATOMIC',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_ATOMIC',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("ERA_INFORMATION -> ERA_FUTURE", player),
-        And(HelperCall(helper_func=_civilizationviworldgen_has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_INFORMATION',)), HelperCall(helper_func=_civilizationviworldgen_has_progressive_items, helper_name="has_progressive_items", args=('ERA_INFORMATION',)))
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_INFORMATION',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_INFORMATION',)))
     )
     # Location rules
     world.set_rule(

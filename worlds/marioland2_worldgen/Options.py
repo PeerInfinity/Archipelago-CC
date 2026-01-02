@@ -16,6 +16,25 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
+class Accessibility(Choice):
+    """Accessibility option with game-specific default."""
+    display_name = "Accessibility"
+    option_full = 0
+    option_items = 1
+    option_minimal = 2
+    default = 1
+
 class AutoScrollChances(NamedRange):
     """Option for Auto Scroll Chance."""
     display_name = "Auto Scroll Chance"
@@ -121,6 +140,8 @@ class ShufflePipeTraversal(Choice):
 class SuperMarioLand2WorldGenOptions(PerGameCommonOptions):
     """Options for Super Mario Land 2 WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
+    accessibility: Accessibility
     auto_scroll_chances: AutoScrollChances
     auto_scroll_mode: AutoScrollMode
     coinsanity: Coinsanity

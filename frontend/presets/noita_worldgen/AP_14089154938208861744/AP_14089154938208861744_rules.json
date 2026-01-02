@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "NoitaWorldGenWorld"
+    "1": "NoitaWorld"
   },
   "regions": {
     "1": {
@@ -2498,7 +2498,6 @@
       },
       "All-Seeing Eye Perk": {
         "name": "All-Seeing Eye Perk",
-        "hint_text": "All Seeing Eye Perk",
         "id": 110019,
         "groups": [
           "Everything",
@@ -2507,7 +2506,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "All Seeing Eye Perk"
       },
       "Spatial Awareness Perk": {
         "name": "Spatial Awareness Perk",
@@ -2949,7 +2949,9 @@
         "shop_price": 100,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
+        "use_canonical_options": true,
         "victory_condition": 0
       },
       "option_definitions": {
@@ -3048,6 +3050,16 @@
           "default": 100,
           "display_name": "Shop Price Reduction"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        },
         "victory_condition": {
           "type": "choice",
           "name_lookup": {
@@ -3096,7 +3108,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "NoitaWorld"
     }
   },
   "game_info": {

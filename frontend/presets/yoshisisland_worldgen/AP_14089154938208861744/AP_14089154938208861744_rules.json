@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "YoshisIslandWorldGenWorld"
+    "1": "YoshisIslandWorld"
   },
   "regions": {
     "1": {
@@ -2099,8 +2099,8 @@
               "args": {
                 "items": [
                   "Arrow Wheel",
-                  "Key",
-                  "Egg Capacity Upgrade"
+                  "Egg Capacity Upgrade",
+                  "Key"
                 ]
               }
             },
@@ -2121,9 +2121,9 @@
               "args": {
                 "items": [
                   "Arrow Wheel",
+                  "Egg Capacity Upgrade",
                   "Key",
-                  "Train Morph",
-                  "Egg Capacity Upgrade"
+                  "Train Morph"
                 ]
               }
             },
@@ -2151,8 +2151,8 @@
                   "args": {
                     "items": [
                       "Arrow Wheel",
-                      "Key",
-                      "Egg Capacity Upgrade"
+                      "Egg Capacity Upgrade",
+                      "Key"
                     ]
                   }
                 }
@@ -3825,8 +3825,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Large Spring Ball",
-                      "Helicopter Morph"
+                      "Helicopter Morph",
+                      "Large Spring Ball"
                     ]
                   }
                 }
@@ -6493,7 +6493,6 @@
       },
       "1-Up": {
         "name": "1-Up",
-        "hint_text": "1 Up",
         "id": 3154060,
         "groups": [
           "Everything",
@@ -6502,11 +6501,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 10,
+        "hint_text": "1 Up"
       },
       "2-Up": {
         "name": "2-Up",
-        "hint_text": "2 Up",
         "id": 3154061,
         "groups": [
           "Everything",
@@ -6515,11 +6514,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11
+        "max_count": 11,
+        "hint_text": "2 Up"
       },
       "3-Up": {
         "name": "3-Up",
-        "hint_text": "3 Up",
         "id": 3154062,
         "groups": [
           "Everything",
@@ -6528,11 +6527,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 13,
+        "hint_text": "3 Up"
       },
       "10-Up": {
         "name": "10-Up",
-        "hint_text": "10 Up",
         "id": 3154063,
         "groups": [
           "Everything",
@@ -6541,7 +6540,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "hint_text": "10 Up"
       },
       "Fuzzy Trap": {
         "name": "Fuzzy Trap",
@@ -6976,6 +6976,7 @@
         "starting_world": 0,
         "trap_percent": 10,
         "traps_enabled": false,
+        "use_canonical_options": true,
         "yoshi_colors": 0,
         "yoshi_singularity_color": 0
       },
@@ -7184,6 +7185,11 @@
           "type": "toggle",
           "default": 0,
           "display_name": "Traps Enabled"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         },
         "yoshi_colors": {
           "type": "choice",
@@ -8197,7 +8203,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "YoshisIslandWorld"
     }
   },
   "game_info": {

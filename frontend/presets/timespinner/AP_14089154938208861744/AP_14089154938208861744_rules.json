@@ -74,21 +74,13 @@
             "name": "Lake desolation -> Lower lake desolation",
             "connected_region": "Lower lake desolation",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Talaria Attachment",
-                      "Timestop"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Talaria Attachment",
+                  "Timestop"
+                ]
+              }
             }
           },
           {
@@ -116,18 +108,10 @@
             "name": "Lake desolation -> Skeleton Shaft",
             "connected_region": "Skeleton Shaft",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Doublejump"
+              }
             }
           },
           {
@@ -2088,10 +2072,8 @@
                             "value": 0
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2200,10 +2182,8 @@
                         "value": 0
                       },
                       "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "not"
-                  },
-                  "_converted_from_ast": true
+                    }
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2236,10 +2216,8 @@
                         "value": 0
                       },
                       "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "not"
-                  },
-                  "_converted_from_ast": true
+                    }
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2285,10 +2263,8 @@
                             "value": 0
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2378,10 +2354,8 @@
                         "value": 0
                       },
                       "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "not"
-                  },
-                  "_converted_from_ast": true
+                    }
+                  }
                 }
               ]
             },
@@ -3067,18 +3041,7 @@
             "name": "Sealed Caves (Xarion): Xarion",
             "id": 1337052,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Lightwall",
@@ -3241,21 +3204,13 @@
             "name": "Forest -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Talaria Attachment",
-                      "Timestop"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Talaria Attachment",
+                  "Timestop"
+                ]
+              }
             }
           },
           {
@@ -3280,10 +3235,8 @@
                         "value": 0
                       },
                       "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "not"
-                  },
-                  "_converted_from_ast": true
+                    }
+                  }
                 },
                 {
                   "rule": "HasAny",
@@ -3435,18 +3388,7 @@
             "name": "Castle Ramparts: In the moat",
             "id": 1337097,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Blood Orb",
@@ -3487,18 +3429,10 @@
             "name": "Left Side forest Caves -> Lower Lake Serene",
             "connected_region": "Lower Lake Serene",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Water Mask"
+              }
             }
           },
           {
@@ -3590,18 +3524,10 @@
             "name": "Upper Lake Serene -> Lower Lake Serene",
             "connected_region": "Lower Lake Serene",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Water Mask"
+              }
             }
           }
         ],
@@ -3769,18 +3695,7 @@
             "name": "Lower Lake Serene -> Caves of Banishment (upper)",
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           }
         ],
@@ -3852,18 +3767,7 @@
             "name": "Lake Serene (Lower): T chest",
             "id": 1337109,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump_Of_Npc"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Max Sand",
@@ -3877,18 +3781,7 @@
             "name": "Lake Serene (Lower): Underwater pedestal",
             "id": 1337111,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Aura Blast",
@@ -3907,36 +3800,17 @@
             "name": "Caves of Banishment (upper) -> Lower Lake Serene",
             "connected_region": "Lower Lake Serene",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Water Mask"
+              }
             }
           },
           {
             "name": "Caves of Banishment (upper) -> Caves of Banishment (Maw)",
             "connected_region": "Caves of Banishment (Maw)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
@@ -3968,18 +3842,10 @@
             "name": "Caves of Banishment (Maw): Shroom jump room",
             "id": 1337112,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Doublejump"
+              }
             },
             "item": {
               "name": "Max Aura",
@@ -3993,33 +3859,14 @@
             "name": "Caves of Banishment (Maw): Secret room",
             "id": 1337113,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "break_walls",
-                    "inferred": true,
-                    "description": "Requires ability to break walls",
-                    "_original_ast_type": "capability"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Water Mask"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "break_walls",
+                "inferred": true,
+                "description": "Requires ability to break walls",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ether",
@@ -4033,18 +3880,7 @@
             "name": "Caves of Banishment (Maw): Bottom left room",
             "id": 1337114,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Spaghetti",
@@ -4072,18 +3908,10 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 1",
             "id": 1337116,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Forwarddash_Doublejump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Forwarddash_Doublejump"
+              }
             },
             "item": {
               "name": "Hi-Potion",
@@ -4097,18 +3925,10 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 2",
             "id": 1337117,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Forwarddash_Doublejump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Forwarddash_Doublejump"
+              }
             },
             "item": {
               "name": "Galaxy Stone",
@@ -4122,18 +3942,10 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 3",
             "id": 1337118,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Forwarddash_Doublejump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Forwarddash_Doublejump"
+              }
             },
             "item": {
               "name": "Max HP",
@@ -4147,18 +3959,10 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 4",
             "id": 1337119,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Forwarddash_Doublejump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Forwarddash_Doublejump"
+              }
             },
             "item": {
               "name": "Pendulum",
@@ -4172,18 +3976,7 @@
             "name": "Caves of Banishment (Maw): Pedestal",
             "id": 1337120,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Blades",
@@ -4225,18 +4018,10 @@
             "name": "Caves of Banishment (Maw) -> Caves of Banishment (Flooded)",
             "connected_region": "Caves of Banishment (Flooded)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Water Mask"
+              }
             }
           },
           {
@@ -4268,18 +4053,10 @@
             "name": "Caves of Banishment (Maw): Last chance before Maw",
             "id": 1337121,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Doublejump"
+              }
             },
             "item": {
               "name": "Timespinner Gear 1",
@@ -4352,7 +4129,8 @@
       "Caves of Banishment (Flooded)": {
         "name": "Caves of Banishment (Flooded)",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Caves of Banishment (Sirens)": {
         "name": "Caves of Banishment (Sirens)",
@@ -4604,18 +4382,7 @@
             "name": "Castle Keep -> Castle Basement",
             "connected_region": "Castle Basement",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
@@ -4636,10 +4403,8 @@
                             "value": 0
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Has",
@@ -5030,18 +4795,7 @@
             "name": "Royal Towers: Long balcony",
             "id": 1337144,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Max HP",
@@ -5055,18 +4809,10 @@
             "name": "Royal Towers: Past bottom struggle juggle",
             "id": 1337145,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump_Of_Npc"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Doublejump_Of_Npc"
+              }
             },
             "item": {
               "name": "Eternal Brooch",
@@ -5372,18 +5118,10 @@
             "name": "Ancient Pyramid (left) -> Ancient Pyramid (right)",
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Upwarddash"
+              }
             }
           },
           {
@@ -5429,33 +5167,14 @@
             "name": "Ancient Pyramid: Pit secret room",
             "id": 1337248,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "break_walls",
-                    "inferred": true,
-                    "description": "Requires ability to break walls",
-                    "_original_ast_type": "capability"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Water Mask"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "break_walls",
+                "inferred": true,
+                "description": "Requires ability to break walls",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Sand Bottle",
@@ -5506,18 +5225,10 @@
             "name": "Ancient Pyramid (right) -> Ancient Pyramid (left)",
             "connected_region": "Ancient Pyramid (left)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Upwarddash"
+              }
             }
           },
           {
@@ -5549,18 +5260,7 @@
             "name": "Ancient Pyramid: Nightmare Door chest",
             "id": 1337236,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Mask"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Fire Orb",
@@ -5574,35 +5274,16 @@
             "name": "Killed Nightmare",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Water Mask"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Timespinner Gear 1",
-                      "Timespinner Gear 2",
-                      "Timespinner Gear 3",
-                      "Timespinner Spindle",
-                      "Timespinner Wheel"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Timespinner Gear 1",
+                  "Timespinner Gear 2",
+                  "Timespinner Gear 3",
+                  "Timespinner Spindle",
+                  "Timespinner Wheel"
+                ]
+              }
             },
             "item": {
               "name": "Killed Nightmare",
@@ -5888,10 +5569,8 @@
                             "value": 0
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     }
                   ]
                 },
@@ -9939,7 +9618,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "TimespinnerWorld"
     }
   },
   "game_info": {

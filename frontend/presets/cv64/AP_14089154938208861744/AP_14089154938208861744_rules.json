@@ -739,126 +739,59 @@
                       "_converted_from_ast": true
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "List",
-                      "args": {
-                        "value": [
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": "Storeroom Key"
-                            },
-                            "_converted_from_ast": true
-                          },
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": 1
-                            },
-                            "_converted_from_ast": true
-                          }
-                        ],
-                        "_original_ast_type": "list"
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ],
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
                       "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Villa: Storeroom - Right",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "==",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "Storeroom Key"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": 1
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "compare"
+                        "location": "Villa: Storeroom - Right",
+                        "_original_ast_type": "placement_lookup"
                       },
                       "_converted_from_ast": true
                     },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Villa: Storeroom - Left",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": {
-                              "rule": "List",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "Storeroom Key"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": 1
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "list"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Storeroom Key"
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                    "op": "==",
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Villa: Storeroom - Left",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Storeroom Key"
+                  }
                 }
               ]
             }
@@ -881,82 +814,39 @@
                       "_converted_from_ast": true
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "List",
-                      "args": {
-                        "value": [
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": "Archives Key"
-                            },
-                            "_converted_from_ast": true
-                          },
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": 1
-                            },
-                            "_converted_from_ast": true
-                          }
-                        ],
-                        "_original_ast_type": "list"
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": [
+                      "Archives Key",
+                      1
+                    ],
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
                       "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Villa: Archives table",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "==",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "Archives Key"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": 1
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "compare"
+                        "location": "Villa: Archives table",
+                        "_original_ast_type": "placement_lookup"
                       },
                       "_converted_from_ast": true
                     },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Archives Key"
-                      }
-                    }
-                  ]
+                    "op": "==",
+                    "right": [
+                      "Archives Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Archives Key"
+                  }
                 }
               ]
             }
@@ -2319,170 +2209,79 @@
                       "_converted_from_ast": true
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "List",
-                      "args": {
-                        "value": [
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": "Chamber Key"
-                            },
-                            "_converted_from_ast": true
-                          },
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": 1
-                            },
-                            "_converted_from_ast": true
-                          }
-                        ],
-                        "_original_ast_type": "list"
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
                       "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Castle Center: Torture chamber instrument rack",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "==",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "Chamber Key"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": 1
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "compare"
+                        "location": "Castle Center: Torture chamber instrument rack",
+                        "_original_ast_type": "placement_lookup"
                       },
                       "_converted_from_ast": true
                     },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Castle Center: Mandragora shelf - Right",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": {
-                              "rule": "List",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "Chamber Key"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": 1
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "list"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Compare",
-                              "args": {
-                                "left": {
-                                  "rule": "AST_placement_lookup",
-                                  "args": {
-                                    "location": "Castle Center: Mandragora shelf - Left",
-                                    "_original_ast_type": "placement_lookup"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "op": "==",
-                                "right": {
-                                  "rule": "List",
-                                  "args": {
-                                    "value": [
-                                      {
-                                        "rule": "Constant",
-                                        "args": {
-                                          "value": "Chamber Key"
-                                        },
-                                        "_converted_from_ast": true
-                                      },
-                                      {
-                                        "rule": "Constant",
-                                        "args": {
-                                          "value": 1
-                                        },
-                                        "_converted_from_ast": true
-                                      }
-                                    ],
-                                    "_original_ast_type": "list"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "_original_ast_type": "compare"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Chamber Key"
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                    "op": "==",
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Castle Center: Mandragora shelf - Right",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Castle Center: Mandragora shelf - Left",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Chamber Key"
+                  }
                 }
               ]
             }
@@ -3556,29 +3355,10 @@
                       "_converted_from_ast": true
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "List",
-                      "args": {
-                        "value": [
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": "Science Key1"
-                            },
-                            "_converted_from_ast": true
-                          },
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": 1
-                            },
-                            "_converted_from_ast": true
-                          }
-                        ],
-                        "_original_ast_type": "list"
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": [
+                      "Science Key1",
+                      1
+                    ],
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -3699,82 +3479,39 @@
                       "_converted_from_ast": true
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "List",
-                      "args": {
-                        "value": [
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": "Science Key3"
-                            },
-                            "_converted_from_ast": true
-                          },
-                          {
-                            "rule": "Constant",
-                            "args": {
-                              "value": 1
-                            },
-                            "_converted_from_ast": true
-                          }
-                        ],
-                        "_original_ast_type": "list"
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": [
+                      "Science Key3",
+                      1
+                    ],
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
                       "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Tower of Science: Locked Key3 room - Right",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "==",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "Science Key3"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": 1
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "compare"
+                        "location": "Tower of Science: Locked Key3 room - Right",
+                        "_original_ast_type": "placement_lookup"
                       },
                       "_converted_from_ast": true
                     },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Science Key3"
-                      }
-                    }
-                  ]
+                    "op": "==",
+                    "right": [
+                      "Science Key3",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Science Key3"
+                  }
                 }
               ]
             }
@@ -5248,6 +4985,11 @@
           "default": 0,
           "display_name": "Stage Shuffle"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "starting_stage": {
           "type": "choice",
           "name_lookup": {
@@ -5470,7 +5212,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "CV64World"
     }
   },
   "game_info": {

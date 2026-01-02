@@ -11240,6 +11240,11 @@
           "range_end": 99,
           "default": 50,
           "display_name": "Progression Balancing"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         }
       },
       "world_description": "An independent 3D horror game, taking place on an island.\nThe main gameplay consists of traveling and fighting a monster on board a train.\nUpgrading the train requires leaving the train to gather resources with the threat of encountering the monster.",
@@ -11276,7 +11281,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "CCCharlesWorld"
     }
   },
   "game_info": {

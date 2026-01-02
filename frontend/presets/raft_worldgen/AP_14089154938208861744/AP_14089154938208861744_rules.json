@@ -3885,7 +3885,6 @@
       },
       "progressive-salve": {
         "name": "progressive-salve",
-        "hint_text": "progressive salve",
         "id": 47094,
         "groups": [
           "Everything"
@@ -3893,11 +3892,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive salve"
       },
       "progressive-backpack": {
         "name": "progressive-backpack",
-        "hint_text": "progressive backpack",
         "id": 47095,
         "groups": [
           "Everything"
@@ -3905,11 +3904,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive backpack"
       },
       "progressive-containers": {
         "name": "progressive-containers",
-        "hint_text": "progressive containers",
         "id": 47096,
         "groups": [
           "Everything"
@@ -3917,11 +3916,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive containers"
       },
       "progressive-headlight": {
         "name": "progressive-headlight",
-        "hint_text": "progressive headlight",
         "id": 47097,
         "groups": [
           "Everything"
@@ -3929,11 +3928,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive headlight"
       },
       "progressive-biofuel": {
         "name": "progressive-biofuel",
-        "hint_text": "progressive biofuel",
         "id": 47098,
         "groups": [
           "Everything"
@@ -3941,11 +3940,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive biofuel"
       },
       "progressive-bottle": {
         "name": "progressive-bottle",
-        "hint_text": "progressive bottle",
         "id": 47099,
         "groups": [
           "Everything"
@@ -3953,11 +3952,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive bottle"
       },
       "progressive-grill": {
         "name": "progressive-grill",
-        "hint_text": "progressive grill",
         "id": 47100,
         "groups": [
           "Everything"
@@ -3965,11 +3964,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive grill"
       },
       "progressive-purifier": {
         "name": "progressive-purifier",
-        "hint_text": "progressive purifier",
         "id": 47101,
         "groups": [
           "Everything"
@@ -3977,11 +3976,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive purifier"
       },
       "progressive-crop-plot": {
         "name": "progressive-crop-plot",
-        "hint_text": "progressive crop plot",
         "id": 47102,
         "groups": [
           "Everything"
@@ -3989,11 +3988,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "hint_text": "progressive crop plot"
       },
       "progressive-battery": {
         "name": "progressive-battery",
-        "hint_text": "progressive battery",
         "id": 47103,
         "groups": [
           "Everything"
@@ -4001,11 +4000,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "progressive battery"
       },
       "progressive-anchor": {
         "name": "progressive-anchor",
-        "hint_text": "progressive anchor",
         "id": 47104,
         "groups": [
           "Everything"
@@ -4013,11 +4012,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive anchor"
       },
       "progressive-engine": {
         "name": "progressive-engine",
-        "hint_text": "progressive engine",
         "id": 47105,
         "groups": [
           "Everything"
@@ -4025,11 +4024,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive engine"
       },
       "progressive-scarecrow": {
         "name": "progressive-scarecrow",
-        "hint_text": "progressive scarecrow",
         "id": 47106,
         "groups": [
           "Everything"
@@ -4037,11 +4036,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive scarecrow"
       },
       "progressive-net": {
         "name": "progressive-net",
-        "hint_text": "progressive net",
         "id": 47107,
         "groups": [
           "Everything"
@@ -4049,11 +4048,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive net"
       },
       "progressive-storage": {
         "name": "progressive-storage",
-        "hint_text": "progressive storage",
         "id": 47108,
         "groups": [
           "Everything"
@@ -4061,11 +4060,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive storage"
       },
       "progressive-zipline": {
         "name": "progressive-zipline",
-        "hint_text": "progressive zipline",
         "id": 47109,
         "groups": [
           "Everything"
@@ -4073,11 +4072,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive zipline"
       },
       "progressive-metals": {
         "name": "progressive-metals",
-        "hint_text": "progressive metals",
         "id": 47110,
         "groups": [
           "Everything"
@@ -4085,11 +4084,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive metals"
       },
       "progressive-bow": {
         "name": "progressive-bow",
-        "hint_text": "progressive bow",
         "id": 47111,
         "groups": [
           "Everything"
@@ -4097,11 +4096,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "progressive bow"
       },
       "progressive-axe": {
         "name": "progressive-axe",
-        "hint_text": "progressive axe",
         "id": 47112,
         "groups": [
           "Everything"
@@ -4109,11 +4108,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive axe"
       },
       "progressive-hook": {
         "name": "progressive-hook",
-        "hint_text": "progressive hook",
         "id": 47113,
         "groups": [
           "Everything"
@@ -4121,11 +4120,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "progressive hook"
       },
       "progressive-spear": {
         "name": "progressive-spear",
-        "hint_text": "progressive spear",
         "id": 47114,
         "groups": [
           "Everything"
@@ -4133,7 +4132,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "progressive spear"
       },
       "progressive-frequency": {
         "name": "progressive-frequency",
@@ -5479,7 +5479,6 @@
       },
       "Resource Pack: 2 Raw_Beet": {
         "name": "Resource Pack: 2 Raw_Beet",
-        "hint_text": "Resource Pack: 2 Raw Beet",
         "id": 47237,
         "groups": [
           "Everything"
@@ -5487,11 +5486,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Resource Pack: 2 Raw Beet"
       },
       "Resource Pack: 3 Raw_Beet": {
         "name": "Resource Pack: 3 Raw_Beet",
-        "hint_text": "Resource Pack: 3 Raw Beet",
         "id": 47238,
         "groups": [
           "Everything"
@@ -5499,11 +5498,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Resource Pack: 3 Raw Beet"
       },
       "Resource Pack: 4 Raw_Beet": {
         "name": "Resource Pack: 4 Raw_Beet",
-        "hint_text": "Resource Pack: 4 Raw Beet",
         "id": 47239,
         "groups": [
           "Everything"
@@ -5511,7 +5510,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Resource Pack: 4 Raw Beet"
       },
       "Resource Pack: 5 Raw_Beet": {
         "name": "Resource Pack: 5 Raw_Beet",
@@ -5669,7 +5669,6 @@
       },
       "Resource Pack: 4 Raw_Potato": {
         "name": "Resource Pack: 4 Raw_Potato",
-        "hint_text": "Resource Pack: 4 Raw Potato",
         "id": 47254,
         "groups": [
           "Everything"
@@ -5677,7 +5676,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Resource Pack: 4 Raw Potato"
       },
       "Resource Pack: 5 Raw_Potato": {
         "name": "Resource Pack: 5 Raw_Potato",
@@ -6927,7 +6927,8 @@
         "version": "1.0"
       },
       "use_resolved_items": true,
-      "add_sphere_items_upfront": true
+      "add_sphere_items_upfront": true,
+      "world_class_name": "RaftWorldGenWorld"
     }
   },
   "game_info": {

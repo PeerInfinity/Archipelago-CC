@@ -55,13 +55,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -89,13 +83,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -123,13 +111,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -157,13 +139,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -233,13 +209,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 20
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 20,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -267,13 +237,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 50
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 50,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -301,13 +265,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 250
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 250,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -394,13 +352,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 100
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 100,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -428,13 +380,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 140
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 140,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -581,13 +527,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -615,13 +555,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -768,13 +702,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -921,13 +849,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 75
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 75,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -955,13 +877,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 75
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 75,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1021,13 +937,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1125,13 +1035,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2151,7 +2055,8 @@
         "version": "1.0"
       },
       "use_resolved_items": true,
-      "add_sphere_items_upfront": true
+      "add_sphere_items_upfront": true,
+      "world_class_name": "DLCqworld"
     }
   },
   "game_info": {

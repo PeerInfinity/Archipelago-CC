@@ -42,7 +42,8 @@
       "Awakening": {
         "name": "Awakening",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Traverse Town": {
         "name": "Traverse Town",
@@ -69,32 +70,13 @@
             "name": "Traverse Town 1st District Blue Trinity Balcony Chest",
             "id": 2650411,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Blue Trinity",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Trinity",
+                  "Progressive Glide"
+                ]
+              }
             },
             "item": {
               "name": "Potion",
@@ -1525,135 +1507,13 @@
             "name": "Traverse Town Mystical House Glide Chest",
             "id": 2650891,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Air Combo Plus",
-                                            "count": 2
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "High Jump"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "High Jump",
-                                        "count": 2
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Combo Master"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "High Jump",
-                                "count": 3
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Air Combo Plus",
-                                        "count": 2
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "High Jump"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Combo Master"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Mermaid Kick"
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Fire"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Progressive Glide",
+                  "Progressive Fire"
+                ]
+              }
             },
             "item": {
               "name": "Megalixir",
@@ -1673,33 +1533,11 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 2
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2301,13 +2139,7 @@
                       }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 15
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 15,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4259,27 +4091,16 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
                   "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAny",
                   "args": {
                     "items": [
                       "High Jump",
@@ -4301,99 +4122,10 @@
             "name": "Wonderland Lotus Forest Glide Chest",
             "id": 2651052,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "has_key_item",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Footprints"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 5
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Glide"
+              }
             },
             "item": {
               "name": "Postcard",
@@ -4750,20 +4482,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -4806,9 +4524,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "High Jump"
+                    "items": [
+                      "Progressive Glide",
+                      "High Jump"
+                    ]
                   }
                 }
               ]
@@ -4828,20 +4549,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -4884,9 +4591,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "High Jump"
+                    "items": [
+                      "Progressive Glide",
+                      "High Jump"
+                    ]
                   }
                 }
               ]
@@ -4906,20 +4616,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -4962,9 +4658,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "High Jump"
+                    "items": [
+                      "Progressive Glide",
+                      "High Jump"
+                    ]
                   }
                 }
               ]
@@ -5009,88 +4708,37 @@
             "name": "Wonderland Rabbit Hole Defeat Heartless 3 Chest",
             "id": 2650934,
             "access_rule": {
-              "rule": "Or",
-              "children": [
+              "rule": "has_x_worlds",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "has_x_worlds",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 3
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 5
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    }
-                  ]
+                  "rule": "Constant",
+                  "args": {
+                    "value": 6
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "False_"
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_x_worlds",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 0
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 5
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 0
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "Constant",
+                  "args": {
+                    "value": 5
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5128,93 +4776,6 @@
                 {
                   "rule": "And",
                   "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "has_key_item",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Footprints"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 5
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
                     {
                       "rule": "has_key_item",
                       "_original_ast_type": "helper",
@@ -5292,93 +4853,6 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "has_key_item",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Footprints"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 5
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
                       "rule": "has_key_item",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
@@ -5455,150 +4929,6 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "has_key_item",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Footprints"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 1
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 1
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 5
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 0
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "High Jump",
-                                "count": 2
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "has_key_item",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Footprints"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 1
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 1
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 5
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 0
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "HasAll",
-                              "args": {
-                                "items": [
-                                  "Combo Master",
-                                  "High Jump"
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
                       "rule": "has_key_item",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
@@ -5672,24 +5002,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -5753,24 +5065,6 @@
             "access_rule": {
               "rule": "Or",
               "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
                 {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
@@ -5836,24 +5130,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -5917,24 +5193,6 @@
             "access_rule": {
               "rule": "Or",
               "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
                 {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
@@ -6000,24 +5258,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -6081,24 +5321,6 @@
             "access_rule": {
               "rule": "Or",
               "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Air Combo Plus": 2,
-                          "Combo Master": 1,
-                          "High Jump": 3
-                        }
-                      }
-                    }
-                  ]
-                },
                 {
                   "rule": "has_key_item",
                   "_original_ast_type": "helper",
@@ -7057,27 +6279,16 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
                   "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAny",
                   "args": {
                     "items": [
                       "High Jump",
@@ -7264,18 +6475,10 @@
             "name": "Deep Jungle Tree House Rooftop Chest",
             "id": 2651214,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "High Jump"
+              }
             },
             "item": {
               "name": "Shooting Star",
@@ -7342,18 +6545,10 @@
             "name": "Deep Jungle Tree House Suspended Boat Chest",
             "id": 2651413,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Glide"
+              }
             },
             "item": {
               "name": "Blizzaga Ring",
@@ -7742,32 +6937,13 @@
             "name": "Agrabah Cave of Wonders Bottomless Hall Pillar Chest",
             "id": 2652171,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Progressive Glide"
+                ]
+              }
             },
             "item": {
               "name": "Shiva Belt",
@@ -7837,21 +7013,7 @@
             "name": "Agrabah Cave of Wonders Dark Chamber Near Save Chest",
             "id": 2652254,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Orichalcum",
@@ -7882,49 +7044,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Combo Master",
-                              "High Jump"
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 2
+                  }
                 },
                 {
                   "rule": "Has",
@@ -7991,43 +7115,13 @@
             "name": "Agrabah Cave of Wonders Hidden Room Left Chest",
             "id": 2652293,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yellow Trinity"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Yellow Trinity"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Glide",
@@ -8041,43 +7135,13 @@
             "name": "Agrabah Cave of Wonders Hidden Room Right Chest",
             "id": 2652292,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yellow Trinity"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Yellow Trinity"
+                ]
+              }
             },
             "item": {
               "name": "Lucky Emblem",
@@ -8279,42 +7343,13 @@
             "name": "Agrabah Main Street High Above Palace Gates Entrance Chest",
             "id": 2652052,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "can_dumbo_skip",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Glide",
+                  "High Jump"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Fire",
@@ -8345,68 +7380,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Combo Master"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Combo Master",
-                              "High Jump"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "HasAll",
@@ -8431,32 +7409,10 @@
             "name": "Agrabah Palace Gates High Opposite Palace Chest",
             "id": 2652054,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "High Jump"
+              }
             },
             "item": {
               "name": "Ars Arcanum",
@@ -8633,21 +7589,7 @@
             "name": "Monstro Chamber 2 Platform Chest",
             "id": 2653571,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Power Up",
@@ -8689,18 +7631,7 @@
             "name": "Monstro Chamber 3 Platform Above Chamber 2 Entrance Chest",
             "id": 2653651,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Postcard",
@@ -8714,18 +7645,7 @@
             "name": "Monstro Chamber 3 Platform Near Chamber 6 Entrance Chest",
             "id": 2653653,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Power Up",
@@ -8739,18 +7659,10 @@
             "name": "Monstro Chamber 5 Atop Barrel Chest",
             "id": 2653733,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "High Jump"
+              }
             },
             "item": {
               "name": "Puppy",
@@ -8809,18 +7721,10 @@
             "name": "Monstro Chamber 5 Platform Chest",
             "id": 2653613,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "High Jump"
+              }
             },
             "item": {
               "name": "Combo Plus",
@@ -8848,39 +7752,13 @@
             "name": "Monstro Chamber 6 Other Platform Chest",
             "id": 2652413,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Combo Master",
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Progressive Glide"
+                ]
+              }
             },
             "item": {
               "name": "Zantetsuken",
@@ -8894,18 +7772,10 @@
             "name": "Monstro Chamber 6 Platform Near Chamber 5 Entrance Chest",
             "id": 2652414,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "High Jump"
+              }
             },
             "item": {
               "name": "Camping Set",
@@ -8919,39 +7789,13 @@
             "name": "Monstro Chamber 6 Raised Area Near Chamber 1 Entrance Chest",
             "id": 2652451,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Combo Master",
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Progressive Glide"
+                ]
+              }
             },
             "item": {
               "name": "Orichalcum",
@@ -9090,29 +7934,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Glide",
+                      "High Jump"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -9134,29 +7962,13 @@
             "name": "Monstro Mouth High Platform Across from Boat Chest",
             "id": 2653492,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Glide",
+                  "High Jump"
+                ]
+              }
             },
             "item": {
               "name": "Megalixir",
@@ -9170,29 +7982,13 @@
             "name": "Monstro Mouth High Platform Boat Side Chest",
             "id": 2653491,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Progressive Glide",
+                  "High Jump"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Glide",
@@ -9220,29 +8016,7 @@
             "name": "Monstro Mouth Near Ship Chest",
             "id": 2653493,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Name",
-                  "args": {
-                    "name": "has_basic_tools",
-                    "_original_ast_type": "name"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Gravity Arts",
@@ -9473,21 +8247,13 @@
                   ]
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide"
+                    ]
+                  }
                 }
               ]
             },
@@ -9593,36 +8359,11 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "False_"
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 2
+                      }
                     },
                     {
                       "rule": "Has",
@@ -10568,37 +9309,16 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "can_dumbo_skip",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAny",
                   "args": {
                     "items": [
                       "High Jump",
@@ -10623,74 +9343,23 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Glide",
+                      "High Jump"
+                    ]
+                  }
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Combo Master"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 2
+                      }
                     },
                     {
                       "rule": "Has",
@@ -10717,74 +9386,23 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Glide",
+                      "High Jump"
+                    ]
+                  }
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Combo Master"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 2
+                      }
                     },
                     {
                       "rule": "Has",
@@ -11433,28 +10051,6 @@
                       "_converted_from_ast": true
                     }
                   ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Name",
-                      "args": {
-                        "name": "has_basic_tools",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
                 }
               ]
             },
@@ -11567,31 +10163,6 @@
                         "value": 5
                       },
                       "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Name",
-                      "args": {
-                        "name": "has_basic_tools",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -12114,19 +10685,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "HasAny",
@@ -12154,19 +10717,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "HasAny",
@@ -12409,21 +10964,7 @@
             "name": "Hollow Bastion Base Level Platform Near Entrance Chest",
             "id": 2654332,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Tech Boost",
@@ -12440,61 +10981,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "has_emblems",
@@ -12546,57 +11037,6 @@
                     {
                       "rule": "And",
                       "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "can_dumbo_skip",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "High Jump",
-                                "count": 2
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "High Jump",
-                              "Progressive Glide"
-                            ]
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
                         {
                           "rule": "Has",
                           "args": {
@@ -12665,61 +11105,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "has_emblems",
@@ -13020,34 +11410,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "has_emblems",
@@ -13139,34 +11506,11 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 3
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 3
+                      }
                     },
                     {
                       "rule": "has_emblems",
@@ -13241,35 +11585,14 @@
                   ]
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Progressive Glide",
-                          "Progressive Thunder"
-                        ]
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide",
+                      "Progressive Thunder"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13294,34 +11617,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "has_emblems",
@@ -13413,34 +11713,11 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 3
-                          }
-                        }
-                      ]
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 3
+                      }
                     },
                     {
                       "rule": "has_emblems",
@@ -13534,56 +11811,10 @@
             "name": "Hollow Bastion Entrance Hall Left of Emblem Door Chest",
             "id": 2654212,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "can_dumbo_skip",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "has_emblems",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 5
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "High Jump"
+              }
             },
             "item": {
               "name": "AP Up",
@@ -14135,57 +12366,6 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_dumbo_skip",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "High Jump",
-                          "Progressive Glide"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
                       "rule": "Has",
                       "args": {
                         "item_name": "High Jump",
@@ -14250,57 +12430,6 @@
                     {
                       "rule": "And",
                       "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "can_dumbo_skip",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "High Jump",
-                                "count": 2
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "High Jump",
-                              "Progressive Glide"
-                            ]
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "True_"
-                        },
                         {
                           "rule": "Has",
                           "args": {
@@ -14481,20 +12610,6 @@
                   ]
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Progressive Gravity"
@@ -14559,36 +12674,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Combo Master",
-                          "High Jump"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "And",
@@ -14628,9 +12718,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
@@ -14934,19 +13021,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "HasAll",
@@ -15187,21 +13266,13 @@
             "name": "End of the World Giant Crevasse 1st Chest",
             "id": 2654651,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Progressive Glide"
+                ]
+              }
             },
             "item": {
               "name": "Ripple Drive",
@@ -15215,21 +13286,7 @@
             "name": "End of the World Giant Crevasse 2nd Chest",
             "id": 2654653,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Lucky Emblem",
@@ -15243,21 +13300,7 @@
             "name": "End of the World Giant Crevasse 3rd Chest",
             "id": 2654613,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "High Jump",
-                      "Progressive Glide"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Red Trinity",
@@ -15271,44 +13314,10 @@
             "name": "End of the World Giant Crevasse 4th Chest",
             "id": 2654652,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Combo Master",
-                              "High Jump"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Glide"
+              }
             },
             "item": {
               "name": "Camping Set",
@@ -15322,18 +13331,10 @@
             "name": "End of the World Giant Crevasse 5th Chest",
             "id": 2654614,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Glide"
+              }
             },
             "item": {
               "name": "Fire Arts",
@@ -15361,34 +13362,10 @@
             "name": "End of the World World Terminus Agrabah Chest",
             "id": 2654694,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "can_dumbo_skip",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "High Jump"
+              }
             },
             "item": {
               "name": "Ifrit's Horn",
@@ -15515,7 +13492,8 @@
       "100 Acre Wood": {
         "name": "100 Acre Wood",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Levels": {
         "name": "Levels",
@@ -22741,24 +20719,16 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
+                              "rule": "has_lucky_emblems",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
                                 {
-                                  "rule": "True_"
-                                },
-                                {
-                                  "rule": "has_lucky_emblems",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 7
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": 7
+                                  },
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -23260,24 +21230,16 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
+                      "rule": "has_lucky_emblems",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "has_lucky_emblems",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 7
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": 7
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -26763,6 +24725,11 @@
           "default": 1,
           "display_name": "Stacking World Items"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "starting_tools": {
           "type": "default_on_toggle",
           "default": 1,
@@ -27614,7 +25581,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "KH1World"
     }
   },
   "game_info": {

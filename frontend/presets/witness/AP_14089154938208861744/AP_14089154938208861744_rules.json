@@ -1367,7 +1367,8 @@
       "Desert Flood Room Underwater": {
         "name": "Desert Flood Room Underwater",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Desert Elevator Room": {
         "name": "Desert Elevator Room",
@@ -1414,7 +1415,8 @@
       "Desert Behind Elevator": {
         "name": "Desert Behind Elevator",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Quarry Obelisk": {
         "name": "Quarry Obelisk",
@@ -2739,7 +2741,8 @@
       "Monastery North Shutters": {
         "name": "Monastery North Shutters",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Town Obelisk": {
         "name": "Town Obelisk",
@@ -3719,7 +3722,8 @@
       "Jungle Under Popup Wall": {
         "name": "Jungle Under Popup Wall",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Outside Jungle River": {
         "name": "Outside Jungle River",
@@ -4711,7 +4715,8 @@
       "Swamp Long Bridge": {
         "name": "Swamp Long Bridge",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Swamp Purple Area": {
         "name": "Swamp Purple Area",
@@ -5445,12 +5450,14 @@
       "Treehouse Green Bridge Front House": {
         "name": "Treehouse Green Bridge Front House",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Treehouse Green Bridge Left House": {
         "name": "Treehouse Green Bridge Left House",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Treehouse Laser Room Front Platform": {
         "name": "Treehouse Laser Room Front Platform",
@@ -5498,12 +5505,14 @@
       "Treehouse Laser Room Back Platform": {
         "name": "Treehouse Laser Room Back Platform",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Treehouse Burned House": {
         "name": "Treehouse Burned House",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Treehouse Laser Room": {
         "name": "Treehouse Laser Room",
@@ -5822,7 +5831,8 @@
       "Mountain Floor 1 Trash Pillar": {
         "name": "Mountain Floor 1 Trash Pillar",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Mountain Floor 1 Back Section": {
         "name": "Mountain Floor 1 Back Section",
@@ -6467,7 +6477,8 @@
       "Mountain Pink Bridge EP": {
         "name": "Mountain Pink Bridge EP",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "The Ocean": {
         "name": "The Ocean",
@@ -16010,7 +16021,8 @@
         "version": "1.0"
       },
       "use_resolved_items": false,
-      "add_sphere_items_upfront": true
+      "add_sphere_items_upfront": true,
+      "world_class_name": "WitnessWorld"
     }
   },
   "game_info": {

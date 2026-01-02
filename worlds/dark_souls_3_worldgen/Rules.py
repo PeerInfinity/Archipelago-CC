@@ -61,7 +61,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Road of Sacrifices", player),
-        And(HasAll('Pyromancy Flame', 'Transposing Kiln'), Has('US -> RS'))
+        HasAll('US -> RS', 'Pyromancy Flame', 'Transposing Kiln')
     )
 
     world.set_rule(
@@ -111,7 +111,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Grand Archives", player),
-        And(And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',)), Has('Grand Archives Key')), HasAll('Pyromancy Flame', 'Transposing Kiln'))
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',)), HasAll('Grand Archives Key', 'Pyromancy Flame', 'Transposing Kiln'))
     )
 
     world.set_rule(
@@ -501,22 +501,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("US: Old Sage's Blindfold - kill Cornyx", player),
-        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
+        HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome')
     )
 
     world.set_rule(
         multiworld.get_location("US: Cornyx's Garb - kill Cornyx", player),
-        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
+        HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome')
     )
 
     world.set_rule(
         multiworld.get_location("US: Cornyx's Wrap - kill Cornyx", player),
-        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
+        HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome')
     )
 
     world.set_rule(
         multiworld.get_location("US: Cornyx's Skirt - kill Cornyx", player),
-        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
+        HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome')
     )
 
     world.set_rule(
@@ -681,7 +681,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("CD: Black Eye Orb - Rosaria from Leonhard's quest", player),
-        And(And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('HWL: Red Eye Orb - wall tower, miniboss',)), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Profaned Capital',))), Has('Pale Tongue'))
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('HWL: Red Eye Orb - wall tower, miniboss',)), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Profaned Capital',)), Has('Pale Tongue'))
     )
 
     world.set_rule(
@@ -1081,7 +1081,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Ember - shop for Greirat's Ashes", player),
-        And(And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',)), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',)), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',))), And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from IBV',)), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Grand Archives',))))
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',)), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',)), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',)), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from IBV',)), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Grand Archives',)))
     )
 
     world.set_rule(

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HelperCall, Or
+from rule_builder import True_, False_, And, Has, HasAny, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -53,7 +53,7 @@ def _has_fish_form(state: "CollectionState", player: int) -> bool:
 
 
 def _has_hot_soup(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Hot Soup', 'Hot Soup x 2'), player)
+    return state.has_any(['Hot Soup', 'Hot Soup x 2'], player)
 
 
 def _has_li(state: "CollectionState", player: int) -> bool:
@@ -1172,12 +1172,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sun Temple boss path, first cliff bulb", player),
-        Or(Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), Has('Lumerean God beated')), Has('Sun God beated'))
+        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
     )
 
     world.set_rule(
         multiworld.get_location("Sun Temple boss path, second cliff bulb", player),
-        Or(Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), Has('Lumerean God beated')), Has('Sun God beated'))
+        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
     )
 
     world.set_rule(

@@ -68,7 +68,8 @@
       "Yoshi's House": {
         "name": "Yoshi's House",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Yoshi's Island 1 - Tile": {
         "name": "Yoshi's Island 1 - Tile",
@@ -1284,7 +1285,8 @@
       "Top Secret Area": {
         "name": "Top Secret Area",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Vanilla Dome 1 - Tile": {
         "name": "Vanilla Dome 1 - Tile",
@@ -1697,24 +1699,14 @@
             "name": "Vanilla Secret 1 -> Vanilla Secret 1 - Secret Exit",
             "connected_region": "Vanilla Secret 1 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Blue Switch Palace",
-                      "Carry"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Climb"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Climb",
+                  "Blue Switch Palace",
+                  "Carry"
+                ]
+              }
             }
           }
         ],
@@ -5801,7 +5793,8 @@
       "Special Zone - Star Road - Complete": {
         "name": "Special Zone - Star Road - Complete",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -6765,7 +6758,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SMWWorld"
     }
   },
   "game_info": {

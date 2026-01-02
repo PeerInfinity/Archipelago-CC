@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "HereticWorldGenWorld"
+    "1": "HereticWorld"
   },
   "regions": {
     "1": {
@@ -9963,7 +9963,6 @@
       },
       "The Docks (E1M1) - Yellow key": {
         "name": "The Docks (E1M1) - Yellow key",
-        "hint_text": "The Docks (E1M1)   Yellow key",
         "id": 370200,
         "groups": [
           "Everything",
@@ -9972,11 +9971,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Docks (E1M1)   Yellow key"
       },
       "The Dungeons (E1M2) - Yellow key": {
         "name": "The Dungeons (E1M2) - Yellow key",
-        "hint_text": "The Dungeons (E1M2)   Yellow key",
         "id": 370201,
         "groups": [
           "Everything",
@@ -9985,11 +9984,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Dungeons (E1M2)   Yellow key"
       },
       "The Dungeons (E1M2) - Green key": {
         "name": "The Dungeons (E1M2) - Green key",
-        "hint_text": "The Dungeons (E1M2)   Green key",
         "id": 370202,
         "groups": [
           "Everything",
@@ -9998,11 +9997,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Dungeons (E1M2)   Green key"
       },
       "The Dungeons (E1M2) - Blue key": {
         "name": "The Dungeons (E1M2) - Blue key",
-        "hint_text": "The Dungeons (E1M2)   Blue key",
         "id": 370203,
         "groups": [
           "Everything",
@@ -10011,11 +10010,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Dungeons (E1M2)   Blue key"
       },
       "The Gatehouse (E1M3) - Yellow key": {
         "name": "The Gatehouse (E1M3) - Yellow key",
-        "hint_text": "The Gatehouse (E1M3)   Yellow key",
         "id": 370204,
         "groups": [
           "Everything",
@@ -10024,11 +10023,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gatehouse (E1M3)   Yellow key"
       },
       "The Gatehouse (E1M3) - Green key": {
         "name": "The Gatehouse (E1M3) - Green key",
-        "hint_text": "The Gatehouse (E1M3)   Green key",
         "id": 370205,
         "groups": [
           "Everything",
@@ -10037,11 +10036,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gatehouse (E1M3)   Green key"
       },
       "The Guard Tower (E1M4) - Yellow key": {
         "name": "The Guard Tower (E1M4) - Yellow key",
-        "hint_text": "The Guard Tower (E1M4)   Yellow key",
         "id": 370206,
         "groups": [
           "Everything",
@@ -10050,11 +10049,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Guard Tower (E1M4)   Yellow key"
       },
       "The Guard Tower (E1M4) - Green key": {
         "name": "The Guard Tower (E1M4) - Green key",
-        "hint_text": "The Guard Tower (E1M4)   Green key",
         "id": 370207,
         "groups": [
           "Everything",
@@ -10063,11 +10062,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Guard Tower (E1M4)   Green key"
       },
       "The Citadel (E1M5) - Green key": {
         "name": "The Citadel (E1M5) - Green key",
-        "hint_text": "The Citadel (E1M5)   Green key",
         "id": 370208,
         "groups": [
           "Everything",
@@ -10076,11 +10075,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (E1M5)   Green key"
       },
       "The Citadel (E1M5) - Yellow key": {
         "name": "The Citadel (E1M5) - Yellow key",
-        "hint_text": "The Citadel (E1M5)   Yellow key",
         "id": 370209,
         "groups": [
           "Everything",
@@ -10089,11 +10088,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (E1M5)   Yellow key"
       },
       "The Citadel (E1M5) - Blue key": {
         "name": "The Citadel (E1M5) - Blue key",
-        "hint_text": "The Citadel (E1M5)   Blue key",
         "id": 370210,
         "groups": [
           "Everything",
@@ -10102,11 +10101,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (E1M5)   Blue key"
       },
       "The Cathedral (E1M6) - Yellow key": {
         "name": "The Cathedral (E1M6) - Yellow key",
-        "hint_text": "The Cathedral (E1M6)   Yellow key",
         "id": 370211,
         "groups": [
           "Everything",
@@ -10115,11 +10114,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cathedral (E1M6)   Yellow key"
       },
       "The Cathedral (E1M6) - Green key": {
         "name": "The Cathedral (E1M6) - Green key",
-        "hint_text": "The Cathedral (E1M6)   Green key",
         "id": 370212,
         "groups": [
           "Everything",
@@ -10128,11 +10127,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cathedral (E1M6)   Green key"
       },
       "The Crypts (E1M7) - Yellow key": {
         "name": "The Crypts (E1M7) - Yellow key",
-        "hint_text": "The Crypts (E1M7)   Yellow key",
         "id": 370213,
         "groups": [
           "Everything",
@@ -10141,11 +10140,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crypts (E1M7)   Yellow key"
       },
       "The Crypts (E1M7) - Green key": {
         "name": "The Crypts (E1M7) - Green key",
-        "hint_text": "The Crypts (E1M7)   Green key",
         "id": 370214,
         "groups": [
           "Everything",
@@ -10154,11 +10153,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crypts (E1M7)   Green key"
       },
       "The Crypts (E1M7) - Blue key": {
         "name": "The Crypts (E1M7) - Blue key",
-        "hint_text": "The Crypts (E1M7)   Blue key",
         "id": 370215,
         "groups": [
           "Everything",
@@ -10167,11 +10166,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crypts (E1M7)   Blue key"
       },
       "The Graveyard (E1M9) - Yellow key": {
         "name": "The Graveyard (E1M9) - Yellow key",
-        "hint_text": "The Graveyard (E1M9)   Yellow key",
         "id": 370216,
         "groups": [
           "Everything",
@@ -10180,11 +10179,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Graveyard (E1M9)   Yellow key"
       },
       "The Graveyard (E1M9) - Green key": {
         "name": "The Graveyard (E1M9) - Green key",
-        "hint_text": "The Graveyard (E1M9)   Green key",
         "id": 370217,
         "groups": [
           "Everything",
@@ -10193,11 +10192,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Graveyard (E1M9)   Green key"
       },
       "The Graveyard (E1M9) - Blue key": {
         "name": "The Graveyard (E1M9) - Blue key",
-        "hint_text": "The Graveyard (E1M9)   Blue key",
         "id": 370218,
         "groups": [
           "Everything",
@@ -10206,11 +10205,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Graveyard (E1M9)   Blue key"
       },
       "The Crater (E2M1) - Yellow key": {
         "name": "The Crater (E2M1) - Yellow key",
-        "hint_text": "The Crater (E2M1)   Yellow key",
         "id": 370219,
         "groups": [
           "Everything",
@@ -10219,11 +10218,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crater (E2M1)   Yellow key"
       },
       "The Crater (E2M1) - Green key": {
         "name": "The Crater (E2M1) - Green key",
-        "hint_text": "The Crater (E2M1)   Green key",
         "id": 370220,
         "groups": [
           "Everything",
@@ -10232,11 +10231,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crater (E2M1)   Green key"
       },
       "The Lava Pits (E2M2) - Green key": {
         "name": "The Lava Pits (E2M2) - Green key",
-        "hint_text": "The Lava Pits (E2M2)   Green key",
         "id": 370221,
         "groups": [
           "Everything",
@@ -10245,11 +10244,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Lava Pits (E2M2)   Green key"
       },
       "The Lava Pits (E2M2) - Yellow key": {
         "name": "The Lava Pits (E2M2) - Yellow key",
-        "hint_text": "The Lava Pits (E2M2)   Yellow key",
         "id": 370222,
         "groups": [
           "Everything",
@@ -10258,11 +10257,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Lava Pits (E2M2)   Yellow key"
       },
       "The River of Fire (E2M3) - Yellow key": {
         "name": "The River of Fire (E2M3) - Yellow key",
-        "hint_text": "The River of Fire (E2M3)   Yellow key",
         "id": 370223,
         "groups": [
           "Everything",
@@ -10271,11 +10270,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The River of Fire (E2M3)   Yellow key"
       },
       "The River of Fire (E2M3) - Blue key": {
         "name": "The River of Fire (E2M3) - Blue key",
-        "hint_text": "The River of Fire (E2M3)   Blue key",
         "id": 370224,
         "groups": [
           "Everything",
@@ -10284,11 +10283,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The River of Fire (E2M3)   Blue key"
       },
       "The River of Fire (E2M3) - Green key": {
         "name": "The River of Fire (E2M3) - Green key",
-        "hint_text": "The River of Fire (E2M3)   Green key",
         "id": 370225,
         "groups": [
           "Everything",
@@ -10297,11 +10296,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The River of Fire (E2M3)   Green key"
       },
       "The Ice Grotto (E2M4) - Yellow key": {
         "name": "The Ice Grotto (E2M4) - Yellow key",
-        "hint_text": "The Ice Grotto (E2M4)   Yellow key",
         "id": 370226,
         "groups": [
           "Everything",
@@ -10310,11 +10309,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ice Grotto (E2M4)   Yellow key"
       },
       "The Ice Grotto (E2M4) - Blue key": {
         "name": "The Ice Grotto (E2M4) - Blue key",
-        "hint_text": "The Ice Grotto (E2M4)   Blue key",
         "id": 370227,
         "groups": [
           "Everything",
@@ -10323,11 +10322,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ice Grotto (E2M4)   Blue key"
       },
       "The Ice Grotto (E2M4) - Green key": {
         "name": "The Ice Grotto (E2M4) - Green key",
-        "hint_text": "The Ice Grotto (E2M4)   Green key",
         "id": 370228,
         "groups": [
           "Everything",
@@ -10336,11 +10335,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ice Grotto (E2M4)   Green key"
       },
       "The Catacombs (E2M5) - Yellow key": {
         "name": "The Catacombs (E2M5) - Yellow key",
-        "hint_text": "The Catacombs (E2M5)   Yellow key",
         "id": 370229,
         "groups": [
           "Everything",
@@ -10349,11 +10348,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (E2M5)   Yellow key"
       },
       "The Catacombs (E2M5) - Blue key": {
         "name": "The Catacombs (E2M5) - Blue key",
-        "hint_text": "The Catacombs (E2M5)   Blue key",
         "id": 370230,
         "groups": [
           "Everything",
@@ -10362,11 +10361,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (E2M5)   Blue key"
       },
       "The Catacombs (E2M5) - Green key": {
         "name": "The Catacombs (E2M5) - Green key",
-        "hint_text": "The Catacombs (E2M5)   Green key",
         "id": 370231,
         "groups": [
           "Everything",
@@ -10375,11 +10374,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (E2M5)   Green key"
       },
       "The Labyrinth (E2M6) - Yellow key": {
         "name": "The Labyrinth (E2M6) - Yellow key",
-        "hint_text": "The Labyrinth (E2M6)   Yellow key",
         "id": 370232,
         "groups": [
           "Everything",
@@ -10388,11 +10387,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Labyrinth (E2M6)   Yellow key"
       },
       "The Labyrinth (E2M6) - Blue key": {
         "name": "The Labyrinth (E2M6) - Blue key",
-        "hint_text": "The Labyrinth (E2M6)   Blue key",
         "id": 370233,
         "groups": [
           "Everything",
@@ -10401,11 +10400,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Labyrinth (E2M6)   Blue key"
       },
       "The Labyrinth (E2M6) - Green key": {
         "name": "The Labyrinth (E2M6) - Green key",
-        "hint_text": "The Labyrinth (E2M6)   Green key",
         "id": 370234,
         "groups": [
           "Everything",
@@ -10414,11 +10413,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Labyrinth (E2M6)   Green key"
       },
       "The Great Hall (E2M7) - Green key": {
         "name": "The Great Hall (E2M7) - Green key",
-        "hint_text": "The Great Hall (E2M7)   Green key",
         "id": 370235,
         "groups": [
           "Everything",
@@ -10427,11 +10426,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Great Hall (E2M7)   Green key"
       },
       "The Great Hall (E2M7) - Yellow key": {
         "name": "The Great Hall (E2M7) - Yellow key",
-        "hint_text": "The Great Hall (E2M7)   Yellow key",
         "id": 370236,
         "groups": [
           "Everything",
@@ -10440,11 +10439,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Great Hall (E2M7)   Yellow key"
       },
       "The Great Hall (E2M7) - Blue key": {
         "name": "The Great Hall (E2M7) - Blue key",
-        "hint_text": "The Great Hall (E2M7)   Blue key",
         "id": 370237,
         "groups": [
           "Everything",
@@ -10453,11 +10452,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Great Hall (E2M7)   Blue key"
       },
       "The Glacier (E2M9) - Yellow key": {
         "name": "The Glacier (E2M9) - Yellow key",
-        "hint_text": "The Glacier (E2M9)   Yellow key",
         "id": 370238,
         "groups": [
           "Everything",
@@ -10466,11 +10465,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Glacier (E2M9)   Yellow key"
       },
       "The Glacier (E2M9) - Blue key": {
         "name": "The Glacier (E2M9) - Blue key",
-        "hint_text": "The Glacier (E2M9)   Blue key",
         "id": 370239,
         "groups": [
           "Everything",
@@ -10479,11 +10478,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Glacier (E2M9)   Blue key"
       },
       "The Glacier (E2M9) - Green key": {
         "name": "The Glacier (E2M9) - Green key",
-        "hint_text": "The Glacier (E2M9)   Green key",
         "id": 370240,
         "groups": [
           "Everything",
@@ -10492,11 +10491,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Glacier (E2M9)   Green key"
       },
       "The Storehouse (E3M1) - Yellow key": {
         "name": "The Storehouse (E3M1) - Yellow key",
-        "hint_text": "The Storehouse (E3M1)   Yellow key",
         "id": 370241,
         "groups": [
           "Everything",
@@ -10505,11 +10504,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Storehouse (E3M1)   Yellow key"
       },
       "The Storehouse (E3M1) - Green key": {
         "name": "The Storehouse (E3M1) - Green key",
-        "hint_text": "The Storehouse (E3M1)   Green key",
         "id": 370242,
         "groups": [
           "Everything",
@@ -10518,11 +10517,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Storehouse (E3M1)   Green key"
       },
       "The Cesspool (E3M2) - Yellow key": {
         "name": "The Cesspool (E3M2) - Yellow key",
-        "hint_text": "The Cesspool (E3M2)   Yellow key",
         "id": 370243,
         "groups": [
           "Everything",
@@ -10531,11 +10530,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cesspool (E3M2)   Yellow key"
       },
       "The Cesspool (E3M2) - Green key": {
         "name": "The Cesspool (E3M2) - Green key",
-        "hint_text": "The Cesspool (E3M2)   Green key",
         "id": 370244,
         "groups": [
           "Everything",
@@ -10544,11 +10543,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cesspool (E3M2)   Green key"
       },
       "The Cesspool (E3M2) - Blue key": {
         "name": "The Cesspool (E3M2) - Blue key",
-        "hint_text": "The Cesspool (E3M2)   Blue key",
         "id": 370245,
         "groups": [
           "Everything",
@@ -10557,11 +10556,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cesspool (E3M2)   Blue key"
       },
       "The Confluence (E3M3) - Yellow key": {
         "name": "The Confluence (E3M3) - Yellow key",
-        "hint_text": "The Confluence (E3M3)   Yellow key",
         "id": 370246,
         "groups": [
           "Everything",
@@ -10570,11 +10569,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Confluence (E3M3)   Yellow key"
       },
       "The Confluence (E3M3) - Green key": {
         "name": "The Confluence (E3M3) - Green key",
-        "hint_text": "The Confluence (E3M3)   Green key",
         "id": 370247,
         "groups": [
           "Everything",
@@ -10583,11 +10582,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Confluence (E3M3)   Green key"
       },
       "The Confluence (E3M3) - Blue key": {
         "name": "The Confluence (E3M3) - Blue key",
-        "hint_text": "The Confluence (E3M3)   Blue key",
         "id": 370248,
         "groups": [
           "Everything",
@@ -10596,11 +10595,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Confluence (E3M3)   Blue key"
       },
       "The Azure Fortress (E3M4) - Yellow key": {
         "name": "The Azure Fortress (E3M4) - Yellow key",
-        "hint_text": "The Azure Fortress (E3M4)   Yellow key",
         "id": 370249,
         "groups": [
           "Everything",
@@ -10609,11 +10608,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Azure Fortress (E3M4)   Yellow key"
       },
       "The Azure Fortress (E3M4) - Green key": {
         "name": "The Azure Fortress (E3M4) - Green key",
-        "hint_text": "The Azure Fortress (E3M4)   Green key",
         "id": 370250,
         "groups": [
           "Everything",
@@ -10622,11 +10621,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Azure Fortress (E3M4)   Green key"
       },
       "The Ophidian Lair (E3M5) - Yellow key": {
         "name": "The Ophidian Lair (E3M5) - Yellow key",
-        "hint_text": "The Ophidian Lair (E3M5)   Yellow key",
         "id": 370251,
         "groups": [
           "Everything",
@@ -10635,11 +10634,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ophidian Lair (E3M5)   Yellow key"
       },
       "The Ophidian Lair (E3M5) - Green key": {
         "name": "The Ophidian Lair (E3M5) - Green key",
-        "hint_text": "The Ophidian Lair (E3M5)   Green key",
         "id": 370252,
         "groups": [
           "Everything",
@@ -10648,11 +10647,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ophidian Lair (E3M5)   Green key"
       },
       "The Halls of Fear (E3M6) - Yellow key": {
         "name": "The Halls of Fear (E3M6) - Yellow key",
-        "hint_text": "The Halls of Fear (E3M6)   Yellow key",
         "id": 370253,
         "groups": [
           "Everything",
@@ -10661,11 +10660,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Halls of Fear (E3M6)   Yellow key"
       },
       "The Halls of Fear (E3M6) - Green key": {
         "name": "The Halls of Fear (E3M6) - Green key",
-        "hint_text": "The Halls of Fear (E3M6)   Green key",
         "id": 370254,
         "groups": [
           "Everything",
@@ -10674,11 +10673,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Halls of Fear (E3M6)   Green key"
       },
       "The Halls of Fear (E3M6) - Blue key": {
         "name": "The Halls of Fear (E3M6) - Blue key",
-        "hint_text": "The Halls of Fear (E3M6)   Blue key",
         "id": 370255,
         "groups": [
           "Everything",
@@ -10687,11 +10686,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Halls of Fear (E3M6)   Blue key"
       },
       "The Chasm (E3M7) - Blue key": {
         "name": "The Chasm (E3M7) - Blue key",
-        "hint_text": "The Chasm (E3M7)   Blue key",
         "id": 370256,
         "groups": [
           "Everything",
@@ -10700,11 +10699,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (E3M7)   Blue key"
       },
       "The Chasm (E3M7) - Green key": {
         "name": "The Chasm (E3M7) - Green key",
-        "hint_text": "The Chasm (E3M7)   Green key",
         "id": 370257,
         "groups": [
           "Everything",
@@ -10713,11 +10712,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (E3M7)   Green key"
       },
       "The Chasm (E3M7) - Yellow key": {
         "name": "The Chasm (E3M7) - Yellow key",
-        "hint_text": "The Chasm (E3M7)   Yellow key",
         "id": 370258,
         "groups": [
           "Everything",
@@ -10726,11 +10725,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (E3M7)   Yellow key"
       },
       "The Aquifer (E3M9) - Blue key": {
         "name": "The Aquifer (E3M9) - Blue key",
-        "hint_text": "The Aquifer (E3M9)   Blue key",
         "id": 370259,
         "groups": [
           "Everything",
@@ -10739,11 +10738,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Aquifer (E3M9)   Blue key"
       },
       "The Aquifer (E3M9) - Green key": {
         "name": "The Aquifer (E3M9) - Green key",
-        "hint_text": "The Aquifer (E3M9)   Green key",
         "id": 370260,
         "groups": [
           "Everything",
@@ -10752,11 +10751,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Aquifer (E3M9)   Green key"
       },
       "The Aquifer (E3M9) - Yellow key": {
         "name": "The Aquifer (E3M9) - Yellow key",
-        "hint_text": "The Aquifer (E3M9)   Yellow key",
         "id": 370261,
         "groups": [
           "Everything",
@@ -10765,7 +10764,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Aquifer (E3M9)   Yellow key"
       },
       "Catafalque (E4M1) - Yellow key": {
         "name": "Catafalque (E4M1) - Yellow key",
@@ -11285,7 +11285,6 @@
       },
       "The Docks (E1M1) - Complete": {
         "name": "The Docks (E1M1) - Complete",
-        "hint_text": "The Docks (E1M1)   Complete",
         "id": 370401,
         "groups": [
           "Everything"
@@ -11293,11 +11292,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Docks (E1M1)   Complete"
       },
       "The Docks (E1M1) - Map Scroll": {
         "name": "The Docks (E1M1) - Map Scroll",
-        "hint_text": "The Docks (E1M1)   Map Scroll",
         "id": 370402,
         "groups": [
           "Everything",
@@ -11306,7 +11305,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Docks (E1M1)   Map Scroll"
       },
       "The Dungeons (E1M2)": {
         "name": "The Dungeons (E1M2)",
@@ -11322,7 +11322,6 @@
       },
       "The Dungeons (E1M2) - Complete": {
         "name": "The Dungeons (E1M2) - Complete",
-        "hint_text": "The Dungeons (E1M2)   Complete",
         "id": 370404,
         "groups": [
           "Everything"
@@ -11330,11 +11329,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Dungeons (E1M2)   Complete"
       },
       "The Dungeons (E1M2) - Map Scroll": {
         "name": "The Dungeons (E1M2) - Map Scroll",
-        "hint_text": "The Dungeons (E1M2)   Map Scroll",
         "id": 370405,
         "groups": [
           "Everything",
@@ -11343,7 +11342,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Dungeons (E1M2)   Map Scroll"
       },
       "The Gatehouse (E1M3)": {
         "name": "The Gatehouse (E1M3)",
@@ -11359,7 +11359,6 @@
       },
       "The Gatehouse (E1M3) - Complete": {
         "name": "The Gatehouse (E1M3) - Complete",
-        "hint_text": "The Gatehouse (E1M3)   Complete",
         "id": 370407,
         "groups": [
           "Everything"
@@ -11367,11 +11366,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gatehouse (E1M3)   Complete"
       },
       "The Gatehouse (E1M3) - Map Scroll": {
         "name": "The Gatehouse (E1M3) - Map Scroll",
-        "hint_text": "The Gatehouse (E1M3)   Map Scroll",
         "id": 370408,
         "groups": [
           "Everything",
@@ -11380,7 +11379,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gatehouse (E1M3)   Map Scroll"
       },
       "The Guard Tower (E1M4)": {
         "name": "The Guard Tower (E1M4)",
@@ -11396,7 +11396,6 @@
       },
       "The Guard Tower (E1M4) - Complete": {
         "name": "The Guard Tower (E1M4) - Complete",
-        "hint_text": "The Guard Tower (E1M4)   Complete",
         "id": 370410,
         "groups": [
           "Everything"
@@ -11404,11 +11403,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Guard Tower (E1M4)   Complete"
       },
       "The Guard Tower (E1M4) - Map Scroll": {
         "name": "The Guard Tower (E1M4) - Map Scroll",
-        "hint_text": "The Guard Tower (E1M4)   Map Scroll",
         "id": 370411,
         "groups": [
           "Everything",
@@ -11417,7 +11416,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Guard Tower (E1M4)   Map Scroll"
       },
       "The Citadel (E1M5)": {
         "name": "The Citadel (E1M5)",
@@ -11433,7 +11433,6 @@
       },
       "The Citadel (E1M5) - Complete": {
         "name": "The Citadel (E1M5) - Complete",
-        "hint_text": "The Citadel (E1M5)   Complete",
         "id": 370413,
         "groups": [
           "Everything"
@@ -11441,11 +11440,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (E1M5)   Complete"
       },
       "The Citadel (E1M5) - Map Scroll": {
         "name": "The Citadel (E1M5) - Map Scroll",
-        "hint_text": "The Citadel (E1M5)   Map Scroll",
         "id": 370414,
         "groups": [
           "Everything",
@@ -11454,7 +11453,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (E1M5)   Map Scroll"
       },
       "The Cathedral (E1M6)": {
         "name": "The Cathedral (E1M6)",
@@ -11470,7 +11470,6 @@
       },
       "The Cathedral (E1M6) - Complete": {
         "name": "The Cathedral (E1M6) - Complete",
-        "hint_text": "The Cathedral (E1M6)   Complete",
         "id": 370416,
         "groups": [
           "Everything"
@@ -11478,11 +11477,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cathedral (E1M6)   Complete"
       },
       "The Cathedral (E1M6) - Map Scroll": {
         "name": "The Cathedral (E1M6) - Map Scroll",
-        "hint_text": "The Cathedral (E1M6)   Map Scroll",
         "id": 370417,
         "groups": [
           "Everything",
@@ -11491,7 +11490,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cathedral (E1M6)   Map Scroll"
       },
       "The Crypts (E1M7)": {
         "name": "The Crypts (E1M7)",
@@ -11507,7 +11507,6 @@
       },
       "The Crypts (E1M7) - Complete": {
         "name": "The Crypts (E1M7) - Complete",
-        "hint_text": "The Crypts (E1M7)   Complete",
         "id": 370419,
         "groups": [
           "Everything"
@@ -11515,11 +11514,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crypts (E1M7)   Complete"
       },
       "The Crypts (E1M7) - Map Scroll": {
         "name": "The Crypts (E1M7) - Map Scroll",
-        "hint_text": "The Crypts (E1M7)   Map Scroll",
         "id": 370420,
         "groups": [
           "Everything",
@@ -11528,7 +11527,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crypts (E1M7)   Map Scroll"
       },
       "Hell's Maw (E1M8)": {
         "name": "Hell's Maw (E1M8)",
@@ -11544,7 +11544,6 @@
       },
       "Hell's Maw (E1M8) - Complete": {
         "name": "Hell's Maw (E1M8) - Complete",
-        "hint_text": "Hell's Maw (E1M8)   Complete",
         "id": 370422,
         "groups": [
           "Everything"
@@ -11552,11 +11551,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Hell's Maw (E1M8)   Complete"
       },
       "Hell's Maw (E1M8) - Map Scroll": {
         "name": "Hell's Maw (E1M8) - Map Scroll",
-        "hint_text": "Hell's Maw (E1M8)   Map Scroll",
         "id": 370423,
         "groups": [
           "Everything",
@@ -11565,7 +11564,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Hell's Maw (E1M8)   Map Scroll"
       },
       "The Graveyard (E1M9)": {
         "name": "The Graveyard (E1M9)",
@@ -11581,7 +11581,6 @@
       },
       "The Graveyard (E1M9) - Complete": {
         "name": "The Graveyard (E1M9) - Complete",
-        "hint_text": "The Graveyard (E1M9)   Complete",
         "id": 370425,
         "groups": [
           "Everything"
@@ -11589,11 +11588,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Graveyard (E1M9)   Complete"
       },
       "The Graveyard (E1M9) - Map Scroll": {
         "name": "The Graveyard (E1M9) - Map Scroll",
-        "hint_text": "The Graveyard (E1M9)   Map Scroll",
         "id": 370426,
         "groups": [
           "Everything",
@@ -11602,7 +11601,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Graveyard (E1M9)   Map Scroll"
       },
       "The Crater (E2M1)": {
         "name": "The Crater (E2M1)",
@@ -11618,7 +11618,6 @@
       },
       "The Crater (E2M1) - Complete": {
         "name": "The Crater (E2M1) - Complete",
-        "hint_text": "The Crater (E2M1)   Complete",
         "id": 370428,
         "groups": [
           "Everything"
@@ -11626,11 +11625,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crater (E2M1)   Complete"
       },
       "The Crater (E2M1) - Map Scroll": {
         "name": "The Crater (E2M1) - Map Scroll",
-        "hint_text": "The Crater (E2M1)   Map Scroll",
         "id": 370429,
         "groups": [
           "Everything",
@@ -11639,7 +11638,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crater (E2M1)   Map Scroll"
       },
       "The Lava Pits (E2M2)": {
         "name": "The Lava Pits (E2M2)",
@@ -11655,7 +11655,6 @@
       },
       "The Lava Pits (E2M2) - Complete": {
         "name": "The Lava Pits (E2M2) - Complete",
-        "hint_text": "The Lava Pits (E2M2)   Complete",
         "id": 370431,
         "groups": [
           "Everything"
@@ -11663,11 +11662,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Lava Pits (E2M2)   Complete"
       },
       "The Lava Pits (E2M2) - Map Scroll": {
         "name": "The Lava Pits (E2M2) - Map Scroll",
-        "hint_text": "The Lava Pits (E2M2)   Map Scroll",
         "id": 370432,
         "groups": [
           "Everything",
@@ -11676,7 +11675,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Lava Pits (E2M2)   Map Scroll"
       },
       "The River of Fire (E2M3)": {
         "name": "The River of Fire (E2M3)",
@@ -11692,7 +11692,6 @@
       },
       "The River of Fire (E2M3) - Complete": {
         "name": "The River of Fire (E2M3) - Complete",
-        "hint_text": "The River of Fire (E2M3)   Complete",
         "id": 370434,
         "groups": [
           "Everything"
@@ -11700,11 +11699,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The River of Fire (E2M3)   Complete"
       },
       "The River of Fire (E2M3) - Map Scroll": {
         "name": "The River of Fire (E2M3) - Map Scroll",
-        "hint_text": "The River of Fire (E2M3)   Map Scroll",
         "id": 370435,
         "groups": [
           "Everything",
@@ -11713,7 +11712,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The River of Fire (E2M3)   Map Scroll"
       },
       "The Ice Grotto (E2M4)": {
         "name": "The Ice Grotto (E2M4)",
@@ -11729,7 +11729,6 @@
       },
       "The Ice Grotto (E2M4) - Complete": {
         "name": "The Ice Grotto (E2M4) - Complete",
-        "hint_text": "The Ice Grotto (E2M4)   Complete",
         "id": 370437,
         "groups": [
           "Everything"
@@ -11737,11 +11736,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ice Grotto (E2M4)   Complete"
       },
       "The Ice Grotto (E2M4) - Map Scroll": {
         "name": "The Ice Grotto (E2M4) - Map Scroll",
-        "hint_text": "The Ice Grotto (E2M4)   Map Scroll",
         "id": 370438,
         "groups": [
           "Everything",
@@ -11750,7 +11749,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ice Grotto (E2M4)   Map Scroll"
       },
       "The Catacombs (E2M5)": {
         "name": "The Catacombs (E2M5)",
@@ -11766,7 +11766,6 @@
       },
       "The Catacombs (E2M5) - Complete": {
         "name": "The Catacombs (E2M5) - Complete",
-        "hint_text": "The Catacombs (E2M5)   Complete",
         "id": 370440,
         "groups": [
           "Everything"
@@ -11774,11 +11773,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (E2M5)   Complete"
       },
       "The Catacombs (E2M5) - Map Scroll": {
         "name": "The Catacombs (E2M5) - Map Scroll",
-        "hint_text": "The Catacombs (E2M5)   Map Scroll",
         "id": 370441,
         "groups": [
           "Everything",
@@ -11787,7 +11786,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (E2M5)   Map Scroll"
       },
       "The Labyrinth (E2M6)": {
         "name": "The Labyrinth (E2M6)",
@@ -11803,7 +11803,6 @@
       },
       "The Labyrinth (E2M6) - Complete": {
         "name": "The Labyrinth (E2M6) - Complete",
-        "hint_text": "The Labyrinth (E2M6)   Complete",
         "id": 370443,
         "groups": [
           "Everything"
@@ -11811,11 +11810,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Labyrinth (E2M6)   Complete"
       },
       "The Labyrinth (E2M6) - Map Scroll": {
         "name": "The Labyrinth (E2M6) - Map Scroll",
-        "hint_text": "The Labyrinth (E2M6)   Map Scroll",
         "id": 370444,
         "groups": [
           "Everything",
@@ -11824,7 +11823,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Labyrinth (E2M6)   Map Scroll"
       },
       "The Great Hall (E2M7)": {
         "name": "The Great Hall (E2M7)",
@@ -11840,7 +11840,6 @@
       },
       "The Great Hall (E2M7) - Complete": {
         "name": "The Great Hall (E2M7) - Complete",
-        "hint_text": "The Great Hall (E2M7)   Complete",
         "id": 370446,
         "groups": [
           "Everything"
@@ -11848,11 +11847,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Great Hall (E2M7)   Complete"
       },
       "The Great Hall (E2M7) - Map Scroll": {
         "name": "The Great Hall (E2M7) - Map Scroll",
-        "hint_text": "The Great Hall (E2M7)   Map Scroll",
         "id": 370447,
         "groups": [
           "Everything",
@@ -11861,7 +11860,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Great Hall (E2M7)   Map Scroll"
       },
       "The Portals of Chaos (E2M8)": {
         "name": "The Portals of Chaos (E2M8)",
@@ -11877,7 +11877,6 @@
       },
       "The Portals of Chaos (E2M8) - Complete": {
         "name": "The Portals of Chaos (E2M8) - Complete",
-        "hint_text": "The Portals of Chaos (E2M8)   Complete",
         "id": 370449,
         "groups": [
           "Everything"
@@ -11885,11 +11884,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Portals of Chaos (E2M8)   Complete"
       },
       "The Portals of Chaos (E2M8) - Map Scroll": {
         "name": "The Portals of Chaos (E2M8) - Map Scroll",
-        "hint_text": "The Portals of Chaos (E2M8)   Map Scroll",
         "id": 370450,
         "groups": [
           "Everything",
@@ -11898,7 +11897,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Portals of Chaos (E2M8)   Map Scroll"
       },
       "The Glacier (E2M9)": {
         "name": "The Glacier (E2M9)",
@@ -11914,7 +11914,6 @@
       },
       "The Glacier (E2M9) - Complete": {
         "name": "The Glacier (E2M9) - Complete",
-        "hint_text": "The Glacier (E2M9)   Complete",
         "id": 370452,
         "groups": [
           "Everything"
@@ -11922,11 +11921,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Glacier (E2M9)   Complete"
       },
       "The Glacier (E2M9) - Map Scroll": {
         "name": "The Glacier (E2M9) - Map Scroll",
-        "hint_text": "The Glacier (E2M9)   Map Scroll",
         "id": 370453,
         "groups": [
           "Everything",
@@ -11935,7 +11934,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Glacier (E2M9)   Map Scroll"
       },
       "The Storehouse (E3M1)": {
         "name": "The Storehouse (E3M1)",
@@ -11951,7 +11951,6 @@
       },
       "The Storehouse (E3M1) - Complete": {
         "name": "The Storehouse (E3M1) - Complete",
-        "hint_text": "The Storehouse (E3M1)   Complete",
         "id": 370455,
         "groups": [
           "Everything"
@@ -11959,11 +11958,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Storehouse (E3M1)   Complete"
       },
       "The Storehouse (E3M1) - Map Scroll": {
         "name": "The Storehouse (E3M1) - Map Scroll",
-        "hint_text": "The Storehouse (E3M1)   Map Scroll",
         "id": 370456,
         "groups": [
           "Everything",
@@ -11972,7 +11971,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Storehouse (E3M1)   Map Scroll"
       },
       "The Cesspool (E3M2)": {
         "name": "The Cesspool (E3M2)",
@@ -11988,7 +11988,6 @@
       },
       "The Cesspool (E3M2) - Complete": {
         "name": "The Cesspool (E3M2) - Complete",
-        "hint_text": "The Cesspool (E3M2)   Complete",
         "id": 370458,
         "groups": [
           "Everything"
@@ -11996,11 +11995,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cesspool (E3M2)   Complete"
       },
       "The Cesspool (E3M2) - Map Scroll": {
         "name": "The Cesspool (E3M2) - Map Scroll",
-        "hint_text": "The Cesspool (E3M2)   Map Scroll",
         "id": 370459,
         "groups": [
           "Everything",
@@ -12009,7 +12008,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Cesspool (E3M2)   Map Scroll"
       },
       "The Confluence (E3M3)": {
         "name": "The Confluence (E3M3)",
@@ -12025,7 +12025,6 @@
       },
       "The Confluence (E3M3) - Complete": {
         "name": "The Confluence (E3M3) - Complete",
-        "hint_text": "The Confluence (E3M3)   Complete",
         "id": 370461,
         "groups": [
           "Everything"
@@ -12033,11 +12032,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Confluence (E3M3)   Complete"
       },
       "The Confluence (E3M3) - Map Scroll": {
         "name": "The Confluence (E3M3) - Map Scroll",
-        "hint_text": "The Confluence (E3M3)   Map Scroll",
         "id": 370462,
         "groups": [
           "Everything",
@@ -12046,7 +12045,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Confluence (E3M3)   Map Scroll"
       },
       "The Azure Fortress (E3M4)": {
         "name": "The Azure Fortress (E3M4)",
@@ -12062,7 +12062,6 @@
       },
       "The Azure Fortress (E3M4) - Complete": {
         "name": "The Azure Fortress (E3M4) - Complete",
-        "hint_text": "The Azure Fortress (E3M4)   Complete",
         "id": 370464,
         "groups": [
           "Everything"
@@ -12070,11 +12069,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Azure Fortress (E3M4)   Complete"
       },
       "The Azure Fortress (E3M4) - Map Scroll": {
         "name": "The Azure Fortress (E3M4) - Map Scroll",
-        "hint_text": "The Azure Fortress (E3M4)   Map Scroll",
         "id": 370465,
         "groups": [
           "Everything",
@@ -12083,7 +12082,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Azure Fortress (E3M4)   Map Scroll"
       },
       "The Ophidian Lair (E3M5)": {
         "name": "The Ophidian Lair (E3M5)",
@@ -12099,7 +12099,6 @@
       },
       "The Ophidian Lair (E3M5) - Complete": {
         "name": "The Ophidian Lair (E3M5) - Complete",
-        "hint_text": "The Ophidian Lair (E3M5)   Complete",
         "id": 370467,
         "groups": [
           "Everything"
@@ -12107,11 +12106,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ophidian Lair (E3M5)   Complete"
       },
       "The Ophidian Lair (E3M5) - Map Scroll": {
         "name": "The Ophidian Lair (E3M5) - Map Scroll",
-        "hint_text": "The Ophidian Lair (E3M5)   Map Scroll",
         "id": 370468,
         "groups": [
           "Everything",
@@ -12120,7 +12119,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Ophidian Lair (E3M5)   Map Scroll"
       },
       "The Halls of Fear (E3M6)": {
         "name": "The Halls of Fear (E3M6)",
@@ -12136,7 +12136,6 @@
       },
       "The Halls of Fear (E3M6) - Complete": {
         "name": "The Halls of Fear (E3M6) - Complete",
-        "hint_text": "The Halls of Fear (E3M6)   Complete",
         "id": 370470,
         "groups": [
           "Everything"
@@ -12144,11 +12143,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Halls of Fear (E3M6)   Complete"
       },
       "The Halls of Fear (E3M6) - Map Scroll": {
         "name": "The Halls of Fear (E3M6) - Map Scroll",
-        "hint_text": "The Halls of Fear (E3M6)   Map Scroll",
         "id": 370471,
         "groups": [
           "Everything",
@@ -12157,7 +12156,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Halls of Fear (E3M6)   Map Scroll"
       },
       "The Chasm (E3M7)": {
         "name": "The Chasm (E3M7)",
@@ -12173,7 +12173,6 @@
       },
       "The Chasm (E3M7) - Complete": {
         "name": "The Chasm (E3M7) - Complete",
-        "hint_text": "The Chasm (E3M7)   Complete",
         "id": 370473,
         "groups": [
           "Everything"
@@ -12181,11 +12180,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (E3M7)   Complete"
       },
       "The Chasm (E3M7) - Map Scroll": {
         "name": "The Chasm (E3M7) - Map Scroll",
-        "hint_text": "The Chasm (E3M7)   Map Scroll",
         "id": 370474,
         "groups": [
           "Everything",
@@ -12194,7 +12193,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (E3M7)   Map Scroll"
       },
       "D'Sparil's Keep (E3M8)": {
         "name": "D'Sparil's Keep (E3M8)",
@@ -12210,7 +12210,6 @@
       },
       "D'Sparil's Keep (E3M8) - Complete": {
         "name": "D'Sparil's Keep (E3M8) - Complete",
-        "hint_text": "D'Sparil's Keep (E3M8)   Complete",
         "id": 370476,
         "groups": [
           "Everything"
@@ -12218,11 +12217,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "D'Sparil's Keep (E3M8)   Complete"
       },
       "D'Sparil's Keep (E3M8) - Map Scroll": {
         "name": "D'Sparil's Keep (E3M8) - Map Scroll",
-        "hint_text": "D'Sparil's Keep (E3M8)   Map Scroll",
         "id": 370477,
         "groups": [
           "Everything",
@@ -12231,7 +12230,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "D'Sparil's Keep (E3M8)   Map Scroll"
       },
       "The Aquifer (E3M9)": {
         "name": "The Aquifer (E3M9)",
@@ -12247,7 +12247,6 @@
       },
       "The Aquifer (E3M9) - Complete": {
         "name": "The Aquifer (E3M9) - Complete",
-        "hint_text": "The Aquifer (E3M9)   Complete",
         "id": 370479,
         "groups": [
           "Everything"
@@ -12255,11 +12254,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Aquifer (E3M9)   Complete"
       },
       "The Aquifer (E3M9) - Map Scroll": {
         "name": "The Aquifer (E3M9) - Map Scroll",
-        "hint_text": "The Aquifer (E3M9)   Map Scroll",
         "id": 370480,
         "groups": [
           "Everything",
@@ -12268,7 +12267,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Aquifer (E3M9)   Map Scroll"
       },
       "Catafalque (E4M1)": {
         "name": "Catafalque (E4M1)",
@@ -13711,8 +13711,10 @@
         "split_bag_of_holding": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "start_with_map_scrolls": false
+        "start_with_map_scrolls": false,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -13934,10 +13936,20 @@
           "default": 0,
           "display_name": "Split Bag of Holding"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "start_with_map_scrolls": {
           "type": "toggle",
           "default": 0,
           "display_name": "Start With Map Scrolls"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "included_episodes": [
@@ -14006,7 +14018,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "HereticWorld"
     }
   },
   "game_info": {

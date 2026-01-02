@@ -128,22 +128,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "Phobos Anomaly (E1M8)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Phobos Anomaly (E1M8)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -181,20 +181,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Containment Area (E2M2)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "Chaingun",
                       "Plasma gun"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Containment Area (E2M2)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -208,20 +208,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Refinery (E2M3)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "Chaingun",
                       "Plasma gun"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Refinery (E2M3)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -301,22 +301,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "Fortress of Mystery (E2M9)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Fortress of Mystery (E2M9)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -364,22 +364,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "Pandemonium (E3M3)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Pandemonium (E3M3)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -393,22 +393,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "House of Pain (E3M4)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "House of Pain (E3M4)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -446,22 +446,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "Limbo (E3M7)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Limbo (E3M7)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -475,22 +475,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "Dis (E3M8)",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Dis (E3M8)",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -504,6 +504,15 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Rocket launcher"
+                    ]
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
@@ -511,15 +520,6 @@
                       "Plasma gun",
                       "Shotgun",
                       "Warrens (E3M9)"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "BFG9000",
-                      "Rocket launcher"
                     ]
                   }
                 }
@@ -4778,7 +4778,8 @@
       "Spawning Vats (E2M7) Red Exit": {
         "name": "Spawning Vats (E2M7) Red Exit",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Tower of Babel (E2M8) Main": {
         "name": "Tower of Babel (E2M8) Main",
@@ -4860,21 +4861,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -6295,21 +6296,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Chaingun",
-                      "Shotgun"
-                    ]
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
                       "BFG9000",
                       "Plasma gun",
                       "Rocket launcher"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
                     ]
                   }
                 }
@@ -10119,6 +10120,11 @@
           "default": 0,
           "display_name": "Split Backpack"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "start_with_computer_area_maps": {
           "type": "toggle",
           "default": 0,
@@ -10187,7 +10193,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "DOOM1993World"
     }
   },
   "game_info": {

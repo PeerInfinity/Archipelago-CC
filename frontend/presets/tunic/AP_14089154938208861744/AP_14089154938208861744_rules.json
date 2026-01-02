@@ -384,20 +384,20 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Gun",
-                      "Hero's Laurels",
-                      "Magic Orb"
-                    ]
-                  }
-                },
-                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Sword Upgrade",
                     "count": 4
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hero's Laurels",
+                      "Magic Orb",
+                      "Gun"
+                    ]
                   }
                 }
               ]
@@ -668,10 +668,8 @@
                             "value": 0
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "HasAll",
@@ -892,8 +890,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             },
@@ -1805,8 +1803,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             }
@@ -1918,8 +1916,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             }
@@ -2054,20 +2052,20 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Gun",
-                      "Hero's Laurels",
-                      "Magic Orb"
-                    ]
-                  }
-                },
-                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Sword Upgrade",
                     "count": 4
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hero's Laurels",
+                      "Magic Orb",
+                      "Gun"
+                    ]
                   }
                 }
               ]
@@ -2633,8 +2631,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             },
@@ -3998,9 +3996,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Red Questagon",
                   "Blue Questagon",
-                  "Green Questagon",
-                  "Red Questagon"
+                  "Green Questagon"
                 ]
               }
             },
@@ -4691,8 +4689,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Magic Dagger",
                       "Magic Orb",
+                      "Magic Dagger",
                       "Magic Wand"
                     ]
                   }
@@ -4742,8 +4740,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             },
@@ -6929,10 +6927,10 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Atoll Northeast Fuse",
                               "Atoll Northwest Fuse",
-                              "Atoll Southeast Fuse",
-                              "Atoll Southwest Fuse"
+                              "Atoll Northeast Fuse",
+                              "Atoll Southwest Fuse",
+                              "Atoll Southeast Fuse"
                             ]
                           }
                         }
@@ -6950,10 +6948,8 @@
                                 "value": 0
                               },
                               "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
+                            }
+                          }
                         },
                         {
                           "rule": "Or",
@@ -6964,21 +6960,9 @@
                                 {
                                   "rule": "Compare",
                                   "args": {
-                                    "left": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 0
-                                      },
-                                      "_converted_from_ast": true
-                                    },
+                                    "left": 0,
                                     "op": ">=",
-                                    "right": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 3
-                                      },
-                                      "_converted_from_ast": true
-                                    },
+                                    "right": 3,
                                     "_original_ast_type": "compare"
                                   },
                                   "_converted_from_ast": true
@@ -7753,8 +7737,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             },
@@ -7787,8 +7771,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             },
@@ -7936,8 +7920,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Hero's Laurels",
-                  "Magic Orb"
+                  "Magic Orb",
+                  "Hero's Laurels"
                 ]
               }
             },
@@ -8016,8 +8000,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Hero's Laurels",
-                      "Magic Orb"
+                      "Magic Orb",
+                      "Hero's Laurels"
                     ]
                   }
                 }
@@ -8493,8 +8477,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Gun",
-                      "Magic Wand"
+                      "Magic Wand",
+                      "Gun"
                     ]
                   }
                 }
@@ -8523,8 +8507,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Gun",
-                      "Magic Wand"
+                      "Magic Wand",
+                      "Gun"
                     ]
                   }
                 }
@@ -8553,8 +8537,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Gun",
-                      "Magic Wand"
+                      "Magic Wand",
+                      "Gun"
                     ]
                   }
                 }
@@ -8649,8 +8633,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Hero's Laurels",
-                      "Magic Orb"
+                      "Magic Orb",
+                      "Hero's Laurels"
                     ]
                   }
                 }
@@ -9359,9 +9343,9 @@
                       "args": {
                         "items": [
                           "Gun",
-                          "Hero's Laurels",
                           "Magic Orb",
-                          "Magic Wand"
+                          "Magic Wand",
+                          "Hero's Laurels"
                         ]
                       }
                     }
@@ -9452,10 +9436,10 @@
                       "rule": "HasAny",
                       "args": {
                         "items": [
-                          "Gun",
                           "Hero's Laurels",
+                          "Magic Wand",
                           "Magic Dagger",
-                          "Magic Wand"
+                          "Gun"
                         ]
                       }
                     }
@@ -9768,8 +9752,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Activate South and West Fortress Exterior Fuses",
-                  "Activate Upper and Central Fortress Exterior Fuses"
+                  "Activate Upper and Central Fortress Exterior Fuses",
+                  "Activate South and West Fortress Exterior Fuses"
                 ]
               }
             },
@@ -11866,10 +11850,8 @@
                             "value": 0
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     }
                   ]
                 },
@@ -12488,10 +12470,8 @@
                             "value": 0
                           },
                           "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
+                        }
+                      }
                     },
                     {
                       "rule": "Or",
@@ -12502,21 +12482,9 @@
                             {
                               "rule": "Compare",
                               "args": {
-                                "left": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 0
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "left": 0,
                                 "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 3
-                                  },
-                                  "_converted_from_ast": true
-                                },
+                                "right": 3,
                                 "_original_ast_type": "compare"
                               },
                               "_converted_from_ast": true
@@ -12555,17 +12523,15 @@
                                         "value": 0
                                       },
                                       "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "not"
-                                  },
-                                  "_converted_from_ast": true
+                                    }
+                                  }
                                 },
                                 {
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Ladder to Swamp",
                                       "Ladders in Overworld Town",
+                                      "Ladder to Swamp",
                                       "Ladders near Weathervane"
                                     ]
                                   }
@@ -12614,10 +12580,8 @@
                                 "value": 0
                               },
                               "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
+                            }
+                          }
                         }
                       ]
                     }
@@ -13159,38 +13123,33 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
+                  "rule": "has_ability",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "has_ability",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Pages 24-25 (Prayer)"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Pages 24-25 (Prayer)"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_ice_grapple_logic",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "False_"
                     },
                     {
-                      "rule": "has_ice_grapple_logic",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 2
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -16894,6 +16853,10 @@
           "default": 50,
           "display_name": "Percentage of Extra Gold Hexagons"
         },
+        "fixed_shop": {
+          "type": "removed",
+          "default": ""
+        },
         "fool_traps": {
           "type": "choice",
           "name_lookup": {
@@ -16991,10 +16954,19 @@
           "default": -1,
           "display_name": "Local Fill Percent"
         },
+        "logic_rules": {
+          "type": "removed",
+          "default": ""
+        },
         "maskless": {
           "type": "toggle",
           "default": 0,
           "display_name": "Maskless"
+        },
+        "plando_connections": {
+          "type": "plando_connections",
+          "default": [],
+          "display_name": "Plando Connections"
         },
         "progression_balancing": {
           "type": "range",
@@ -17017,6 +16989,11 @@
           "type": "toggle",
           "default": 0,
           "display_name": "Shuffle Ladders"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         },
         "start_with_sword": {
           "type": "toggle",
@@ -17531,7 +17508,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "TunicWorld"
     }
   },
   "game_info": {
@@ -17907,11 +17885,20 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Gun",
-                  "Hero's Laurels",
-                  "Magic Wand"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Magic Wand"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Hero's Laurels"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Gun"
+                  }
                 ]
               }
             ]
@@ -17953,10 +17940,16 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Magic Orb",
-                      "Shield"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Magic Orb"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Shield"
+                      }
                     ]
                   }
                 ]
@@ -18592,10 +18585,16 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Gun",
-                      "Magic Wand"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Magic Wand"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Gun"
+                      }
                     ]
                   }
                 ]
@@ -19740,8 +19739,8 @@
           {
             "type": "return",
             "value": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "binary_op",
                   "left": {
@@ -19819,8 +19818,8 @@
           {
             "type": "return",
             "value": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "binary_op",
                   "left": {
@@ -19852,11 +19851,20 @@
                             "method": "count_from_list",
                             "args": [
                               {
-                                "type": "constant",
-                                "value": [
-                                  "Hero Relic - DEF",
-                                  "Secret Legend",
-                                  "Phonomath"
+                                "type": "tuple",
+                                "elements": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Hero Relic - DEF"
+                                  },
+                                  {
+                                    "type": "constant",
+                                    "value": "Secret Legend"
+                                  },
+                                  {
+                                    "type": "constant",
+                                    "value": "Phonomath"
+                                  }
                                 ]
                               }
                             ]
@@ -19927,8 +19935,8 @@
           {
             "type": "return",
             "value": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "binary_op",
                   "left": {
@@ -20148,8 +20156,8 @@
           {
             "type": "return",
             "value": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "binary_op",
                   "left": {
@@ -20170,12 +20178,24 @@
                     "method": "count_from_list",
                     "args": [
                       {
-                        "type": "constant",
-                        "value": [
-                          "Hero Relic - MP",
-                          "Sacred Geometry",
-                          "Vintage",
-                          "Dusty"
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Hero Relic - MP"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Sacred Geometry"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Vintage"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Dusty"
+                          }
                         ]
                       }
                     ]
@@ -20251,8 +20271,8 @@
           {
             "type": "return",
             "value": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "binary_op",
                   "left": {
@@ -20273,12 +20293,24 @@
                     "method": "count_from_list",
                     "args": [
                       {
-                        "type": "constant",
-                        "value": [
-                          "Hero Relic - POTION",
-                          "Just Some Pals",
-                          "Spring Falls",
-                          "Back To Work"
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Hero Relic - POTION"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Just Some Pals"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Spring Falls"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Back To Work"
+                          }
                         ]
                       }
                     ]
@@ -20313,8 +20345,8 @@
           {
             "type": "return",
             "value": {
-              "type": "list",
-              "value": [
+              "type": "tuple",
+              "elements": [
                 {
                   "type": "binary_op",
                   "left": {
@@ -20335,13 +20367,28 @@
                     "method": "count_from_list",
                     "args": [
                       {
-                        "type": "constant",
-                        "value": [
-                          "Hero Relic - SP",
-                          "Mr Mayor",
-                          "Power Up",
-                          "Regal Weasel",
-                          "Forever Friend"
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Hero Relic - SP"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Mr Mayor"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Power Up"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Regal Weasel"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Forever Friend"
+                          }
                         ]
                       }
                     ]
@@ -22722,10 +22769,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Magic Dagger",
-                    "Magic Orb"
+                  "type": "tuple",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Magic Dagger"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Magic Orb"
+                    }
                   ]
                 }
               ]
@@ -22738,11 +22791,20 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Magic Dagger",
-                        "Magic Orb",
-                        "Magic Wand"
+                      "type": "tuple",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Magic Dagger"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Magic Wand"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Magic Orb"
+                        }
                       ]
                     }
                   ]
@@ -22817,11 +22879,20 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Stick",
-              "Sword",
-              "Sword Upgrade"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Stick"
+              },
+              {
+                "type": "constant",
+                "value": "Sword"
+              },
+              {
+                "type": "constant",
+                "value": "Sword Upgrade"
+              }
             ]
           }
         ]
@@ -23438,8 +23509,8 @@
                                   },
                                   "args": [
                                     {
-                                      "type": "list",
-                                      "value": [
+                                      "type": "tuple",
+                                      "elements": [
                                         {
                                           "type": "name",
                                           "name": "paid_def"
@@ -23487,8 +23558,8 @@
                             "comprehension": {
                               "type": "comprehension_details",
                               "target": {
-                                "type": "list",
-                                "value": [
+                                "type": "tuple",
+                                "elements": [
                                   {
                                     "type": "name",
                                     "name": "defense"
@@ -23791,8 +23862,8 @@
                                   },
                                   "args": [
                                     {
-                                      "type": "list",
-                                      "value": [
+                                      "type": "tuple",
+                                      "elements": [
                                         {
                                           "type": "name",
                                           "name": "paid_hp"
@@ -23846,8 +23917,8 @@
                         "comprehension": {
                           "type": "comprehension_details",
                           "target": {
-                            "type": "list",
-                            "value": [
+                            "type": "tuple",
+                            "elements": [
                               {
                                 "type": "name",
                                 "name": "hp"

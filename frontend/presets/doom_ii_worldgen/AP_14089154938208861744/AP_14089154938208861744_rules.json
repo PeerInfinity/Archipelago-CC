@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "DOOMIIWorldGenWorld"
+    "1": "DOOM2World"
   },
   "regions": {
     "1": {
@@ -9417,7 +9417,6 @@
       },
       "Underhalls (MAP02) - Red keycard": {
         "name": "Underhalls (MAP02) - Red keycard",
-        "hint_text": "Underhalls (MAP02)   Red keycard",
         "id": 360200,
         "groups": [
           "Everything",
@@ -9426,11 +9425,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Underhalls (MAP02)   Red keycard"
       },
       "Underhalls (MAP02) - Blue keycard": {
         "name": "Underhalls (MAP02) - Blue keycard",
-        "hint_text": "Underhalls (MAP02)   Blue keycard",
         "id": 360201,
         "groups": [
           "Everything",
@@ -9439,11 +9438,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Underhalls (MAP02)   Blue keycard"
       },
       "The Gantlet (MAP03) - Blue keycard": {
         "name": "The Gantlet (MAP03) - Blue keycard",
-        "hint_text": "The Gantlet (MAP03)   Blue keycard",
         "id": 360202,
         "groups": [
           "Everything",
@@ -9452,11 +9451,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gantlet (MAP03)   Blue keycard"
       },
       "The Gantlet (MAP03) - Red keycard": {
         "name": "The Gantlet (MAP03) - Red keycard",
-        "hint_text": "The Gantlet (MAP03)   Red keycard",
         "id": 360203,
         "groups": [
           "Everything",
@@ -9465,11 +9464,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gantlet (MAP03)   Red keycard"
       },
       "The Focus (MAP04) - Blue keycard": {
         "name": "The Focus (MAP04) - Blue keycard",
-        "hint_text": "The Focus (MAP04)   Blue keycard",
         "id": 360204,
         "groups": [
           "Everything",
@@ -9478,11 +9477,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Focus (MAP04)   Blue keycard"
       },
       "The Focus (MAP04) - Red keycard": {
         "name": "The Focus (MAP04) - Red keycard",
-        "hint_text": "The Focus (MAP04)   Red keycard",
         "id": 360205,
         "groups": [
           "Everything",
@@ -9491,11 +9490,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Focus (MAP04)   Red keycard"
       },
       "The Focus (MAP04) - Yellow keycard": {
         "name": "The Focus (MAP04) - Yellow keycard",
-        "hint_text": "The Focus (MAP04)   Yellow keycard",
         "id": 360206,
         "groups": [
           "Everything",
@@ -9504,11 +9503,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Focus (MAP04)   Yellow keycard"
       },
       "The Waste Tunnels (MAP05) - Blue keycard": {
         "name": "The Waste Tunnels (MAP05) - Blue keycard",
-        "hint_text": "The Waste Tunnels (MAP05)   Blue keycard",
         "id": 360207,
         "groups": [
           "Everything",
@@ -9517,11 +9516,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Waste Tunnels (MAP05)   Blue keycard"
       },
       "The Waste Tunnels (MAP05) - Red keycard": {
         "name": "The Waste Tunnels (MAP05) - Red keycard",
-        "hint_text": "The Waste Tunnels (MAP05)   Red keycard",
         "id": 360208,
         "groups": [
           "Everything",
@@ -9530,11 +9529,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Waste Tunnels (MAP05)   Red keycard"
       },
       "The Waste Tunnels (MAP05) - Yellow keycard": {
         "name": "The Waste Tunnels (MAP05) - Yellow keycard",
-        "hint_text": "The Waste Tunnels (MAP05)   Yellow keycard",
         "id": 360209,
         "groups": [
           "Everything",
@@ -9543,11 +9542,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Waste Tunnels (MAP05)   Yellow keycard"
       },
       "The Crusher (MAP06) - Red keycard": {
         "name": "The Crusher (MAP06) - Red keycard",
-        "hint_text": "The Crusher (MAP06)   Red keycard",
         "id": 360210,
         "groups": [
           "Everything",
@@ -9556,11 +9555,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crusher (MAP06)   Red keycard"
       },
       "The Crusher (MAP06) - Yellow keycard": {
         "name": "The Crusher (MAP06) - Yellow keycard",
-        "hint_text": "The Crusher (MAP06)   Yellow keycard",
         "id": 360211,
         "groups": [
           "Everything",
@@ -9569,11 +9568,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crusher (MAP06)   Yellow keycard"
       },
       "The Crusher (MAP06) - Blue keycard": {
         "name": "The Crusher (MAP06) - Blue keycard",
-        "hint_text": "The Crusher (MAP06)   Blue keycard",
         "id": 360212,
         "groups": [
           "Everything",
@@ -9582,11 +9581,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crusher (MAP06)   Blue keycard"
       },
       "Tricks and Traps (MAP08) - Yellow skull key": {
         "name": "Tricks and Traps (MAP08) - Yellow skull key",
-        "hint_text": "Tricks and Traps (MAP08)   Yellow skull key",
         "id": 360213,
         "groups": [
           "Everything",
@@ -9595,11 +9594,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tricks and Traps (MAP08)   Yellow skull key"
       },
       "Tricks and Traps (MAP08) - Red skull key": {
         "name": "Tricks and Traps (MAP08) - Red skull key",
-        "hint_text": "Tricks and Traps (MAP08)   Red skull key",
         "id": 360214,
         "groups": [
           "Everything",
@@ -9608,11 +9607,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tricks and Traps (MAP08)   Red skull key"
       },
       "The Pit (MAP09) - Blue keycard": {
         "name": "The Pit (MAP09) - Blue keycard",
-        "hint_text": "The Pit (MAP09)   Blue keycard",
         "id": 360215,
         "groups": [
           "Everything",
@@ -9621,11 +9620,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Pit (MAP09)   Blue keycard"
       },
       "The Pit (MAP09) - Yellow keycard": {
         "name": "The Pit (MAP09) - Yellow keycard",
-        "hint_text": "The Pit (MAP09)   Yellow keycard",
         "id": 360216,
         "groups": [
           "Everything",
@@ -9634,11 +9633,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Pit (MAP09)   Yellow keycard"
       },
       "Refueling Base (MAP10) - Blue keycard": {
         "name": "Refueling Base (MAP10) - Blue keycard",
-        "hint_text": "Refueling Base (MAP10)   Blue keycard",
         "id": 360217,
         "groups": [
           "Everything",
@@ -9647,11 +9646,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Refueling Base (MAP10)   Blue keycard"
       },
       "Refueling Base (MAP10) - Yellow keycard": {
         "name": "Refueling Base (MAP10) - Yellow keycard",
-        "hint_text": "Refueling Base (MAP10)   Yellow keycard",
         "id": 360218,
         "groups": [
           "Everything",
@@ -9660,11 +9659,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Refueling Base (MAP10)   Yellow keycard"
       },
       "Circle of Death (MAP11) - Red keycard": {
         "name": "Circle of Death (MAP11) - Red keycard",
-        "hint_text": "Circle of Death (MAP11)   Red keycard",
         "id": 360219,
         "groups": [
           "Everything",
@@ -9673,11 +9672,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Circle of Death (MAP11)   Red keycard"
       },
       "Circle of Death (MAP11) - Blue keycard": {
         "name": "Circle of Death (MAP11) - Blue keycard",
-        "hint_text": "Circle of Death (MAP11)   Blue keycard",
         "id": 360220,
         "groups": [
           "Everything",
@@ -9686,11 +9685,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Circle of Death (MAP11)   Blue keycard"
       },
       "The Factory (MAP12) - Blue keycard": {
         "name": "The Factory (MAP12) - Blue keycard",
-        "hint_text": "The Factory (MAP12)   Blue keycard",
         "id": 360221,
         "groups": [
           "Everything",
@@ -9699,11 +9698,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Factory (MAP12)   Blue keycard"
       },
       "The Factory (MAP12) - Yellow keycard": {
         "name": "The Factory (MAP12) - Yellow keycard",
-        "hint_text": "The Factory (MAP12)   Yellow keycard",
         "id": 360222,
         "groups": [
           "Everything",
@@ -9712,11 +9711,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Factory (MAP12)   Yellow keycard"
       },
       "Downtown (MAP13) - Blue keycard": {
         "name": "Downtown (MAP13) - Blue keycard",
-        "hint_text": "Downtown (MAP13)   Blue keycard",
         "id": 360223,
         "groups": [
           "Everything",
@@ -9725,11 +9724,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Downtown (MAP13)   Blue keycard"
       },
       "Downtown (MAP13) - Yellow keycard": {
         "name": "Downtown (MAP13) - Yellow keycard",
-        "hint_text": "Downtown (MAP13)   Yellow keycard",
         "id": 360224,
         "groups": [
           "Everything",
@@ -9738,11 +9737,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Downtown (MAP13)   Yellow keycard"
       },
       "Downtown (MAP13) - Red keycard": {
         "name": "Downtown (MAP13) - Red keycard",
-        "hint_text": "Downtown (MAP13)   Red keycard",
         "id": 360225,
         "groups": [
           "Everything",
@@ -9751,11 +9750,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Downtown (MAP13)   Red keycard"
       },
       "The Inmost Dens (MAP14) - Red skull key": {
         "name": "The Inmost Dens (MAP14) - Red skull key",
-        "hint_text": "The Inmost Dens (MAP14)   Red skull key",
         "id": 360226,
         "groups": [
           "Everything",
@@ -9764,11 +9763,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Inmost Dens (MAP14)   Red skull key"
       },
       "The Inmost Dens (MAP14) - Blue skull key": {
         "name": "The Inmost Dens (MAP14) - Blue skull key",
-        "hint_text": "The Inmost Dens (MAP14)   Blue skull key",
         "id": 360227,
         "groups": [
           "Everything",
@@ -9777,11 +9776,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Inmost Dens (MAP14)   Blue skull key"
       },
       "Industrial Zone (MAP15) - Yellow keycard": {
         "name": "Industrial Zone (MAP15) - Yellow keycard",
-        "hint_text": "Industrial Zone (MAP15)   Yellow keycard",
         "id": 360228,
         "groups": [
           "Everything",
@@ -9790,11 +9789,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Industrial Zone (MAP15)   Yellow keycard"
       },
       "Industrial Zone (MAP15) - Red keycard": {
         "name": "Industrial Zone (MAP15) - Red keycard",
-        "hint_text": "Industrial Zone (MAP15)   Red keycard",
         "id": 360229,
         "groups": [
           "Everything",
@@ -9803,11 +9802,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Industrial Zone (MAP15)   Red keycard"
       },
       "Industrial Zone (MAP15) - Blue keycard": {
         "name": "Industrial Zone (MAP15) - Blue keycard",
-        "hint_text": "Industrial Zone (MAP15)   Blue keycard",
         "id": 360230,
         "groups": [
           "Everything",
@@ -9816,11 +9815,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Industrial Zone (MAP15)   Blue keycard"
       },
       "Suburbs (MAP16) - Blue skull key": {
         "name": "Suburbs (MAP16) - Blue skull key",
-        "hint_text": "Suburbs (MAP16)   Blue skull key",
         "id": 360231,
         "groups": [
           "Everything",
@@ -9829,11 +9828,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Suburbs (MAP16)   Blue skull key"
       },
       "Suburbs (MAP16) - Red skull key": {
         "name": "Suburbs (MAP16) - Red skull key",
-        "hint_text": "Suburbs (MAP16)   Red skull key",
         "id": 360232,
         "groups": [
           "Everything",
@@ -9842,11 +9841,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Suburbs (MAP16)   Red skull key"
       },
       "Tenements (MAP17) - Red keycard": {
         "name": "Tenements (MAP17) - Red keycard",
-        "hint_text": "Tenements (MAP17)   Red keycard",
         "id": 360233,
         "groups": [
           "Everything",
@@ -9855,11 +9854,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tenements (MAP17)   Red keycard"
       },
       "Tenements (MAP17) - Blue keycard": {
         "name": "Tenements (MAP17) - Blue keycard",
-        "hint_text": "Tenements (MAP17)   Blue keycard",
         "id": 360234,
         "groups": [
           "Everything",
@@ -9868,11 +9867,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tenements (MAP17)   Blue keycard"
       },
       "Tenements (MAP17) - Yellow skull key": {
         "name": "Tenements (MAP17) - Yellow skull key",
-        "hint_text": "Tenements (MAP17)   Yellow skull key",
         "id": 360235,
         "groups": [
           "Everything",
@@ -9881,11 +9880,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tenements (MAP17)   Yellow skull key"
       },
       "The Courtyard (MAP18) - Yellow skull key": {
         "name": "The Courtyard (MAP18) - Yellow skull key",
-        "hint_text": "The Courtyard (MAP18)   Yellow skull key",
         "id": 360236,
         "groups": [
           "Everything",
@@ -9894,11 +9893,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Courtyard (MAP18)   Yellow skull key"
       },
       "The Courtyard (MAP18) - Blue skull key": {
         "name": "The Courtyard (MAP18) - Blue skull key",
-        "hint_text": "The Courtyard (MAP18)   Blue skull key",
         "id": 360237,
         "groups": [
           "Everything",
@@ -9907,11 +9906,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Courtyard (MAP18)   Blue skull key"
       },
       "The Citadel (MAP19) - Blue skull key": {
         "name": "The Citadel (MAP19) - Blue skull key",
-        "hint_text": "The Citadel (MAP19)   Blue skull key",
         "id": 360238,
         "groups": [
           "Everything",
@@ -9920,11 +9919,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (MAP19)   Blue skull key"
       },
       "The Citadel (MAP19) - Red skull key": {
         "name": "The Citadel (MAP19) - Red skull key",
-        "hint_text": "The Citadel (MAP19)   Red skull key",
         "id": 360239,
         "groups": [
           "Everything",
@@ -9933,11 +9932,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (MAP19)   Red skull key"
       },
       "The Citadel (MAP19) - Yellow skull key": {
         "name": "The Citadel (MAP19) - Yellow skull key",
-        "hint_text": "The Citadel (MAP19)   Yellow skull key",
         "id": 360240,
         "groups": [
           "Everything",
@@ -9946,11 +9945,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (MAP19)   Yellow skull key"
       },
       "Nirvana (MAP21) - Yellow skull key": {
         "name": "Nirvana (MAP21) - Yellow skull key",
-        "hint_text": "Nirvana (MAP21)   Yellow skull key",
         "id": 360241,
         "groups": [
           "Everything",
@@ -9959,11 +9958,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Nirvana (MAP21)   Yellow skull key"
       },
       "Nirvana (MAP21) - Blue skull key": {
         "name": "Nirvana (MAP21) - Blue skull key",
-        "hint_text": "Nirvana (MAP21)   Blue skull key",
         "id": 360242,
         "groups": [
           "Everything",
@@ -9972,11 +9971,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Nirvana (MAP21)   Blue skull key"
       },
       "Nirvana (MAP21) - Red skull key": {
         "name": "Nirvana (MAP21) - Red skull key",
-        "hint_text": "Nirvana (MAP21)   Red skull key",
         "id": 360243,
         "groups": [
           "Everything",
@@ -9985,11 +9984,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Nirvana (MAP21)   Red skull key"
       },
       "The Catacombs (MAP22) - Blue skull key": {
         "name": "The Catacombs (MAP22) - Blue skull key",
-        "hint_text": "The Catacombs (MAP22)   Blue skull key",
         "id": 360244,
         "groups": [
           "Everything",
@@ -9998,11 +9997,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (MAP22)   Blue skull key"
       },
       "The Catacombs (MAP22) - Red skull key": {
         "name": "The Catacombs (MAP22) - Red skull key",
-        "hint_text": "The Catacombs (MAP22)   Red skull key",
         "id": 360245,
         "groups": [
           "Everything",
@@ -10011,11 +10010,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (MAP22)   Red skull key"
       },
       "Barrels o' Fun (MAP23) - Yellow skull key": {
         "name": "Barrels o' Fun (MAP23) - Yellow skull key",
-        "hint_text": "Barrels o' Fun (MAP23)   Yellow skull key",
         "id": 360246,
         "groups": [
           "Everything",
@@ -10024,11 +10023,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Barrels o' Fun (MAP23)   Yellow skull key"
       },
       "The Chasm (MAP24) - Blue keycard": {
         "name": "The Chasm (MAP24) - Blue keycard",
-        "hint_text": "The Chasm (MAP24)   Blue keycard",
         "id": 360247,
         "groups": [
           "Everything",
@@ -10037,11 +10036,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (MAP24)   Blue keycard"
       },
       "The Chasm (MAP24) - Red keycard": {
         "name": "The Chasm (MAP24) - Red keycard",
-        "hint_text": "The Chasm (MAP24)   Red keycard",
         "id": 360248,
         "groups": [
           "Everything",
@@ -10050,11 +10049,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (MAP24)   Red keycard"
       },
       "Bloodfalls (MAP25) - Blue skull key": {
         "name": "Bloodfalls (MAP25) - Blue skull key",
-        "hint_text": "Bloodfalls (MAP25)   Blue skull key",
         "id": 360249,
         "groups": [
           "Everything",
@@ -10063,11 +10062,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Bloodfalls (MAP25)   Blue skull key"
       },
       "The Abandoned Mines (MAP26) - Blue keycard": {
         "name": "The Abandoned Mines (MAP26) - Blue keycard",
-        "hint_text": "The Abandoned Mines (MAP26)   Blue keycard",
         "id": 360250,
         "groups": [
           "Everything",
@@ -10076,11 +10075,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Abandoned Mines (MAP26)   Blue keycard"
       },
       "The Abandoned Mines (MAP26) - Red keycard": {
         "name": "The Abandoned Mines (MAP26) - Red keycard",
-        "hint_text": "The Abandoned Mines (MAP26)   Red keycard",
         "id": 360251,
         "groups": [
           "Everything",
@@ -10089,11 +10088,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Abandoned Mines (MAP26)   Red keycard"
       },
       "The Abandoned Mines (MAP26) - Yellow keycard": {
         "name": "The Abandoned Mines (MAP26) - Yellow keycard",
-        "hint_text": "The Abandoned Mines (MAP26)   Yellow keycard",
         "id": 360252,
         "groups": [
           "Everything",
@@ -10102,11 +10101,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Abandoned Mines (MAP26)   Yellow keycard"
       },
       "Monster Condo (MAP27) - Yellow skull key": {
         "name": "Monster Condo (MAP27) - Yellow skull key",
-        "hint_text": "Monster Condo (MAP27)   Yellow skull key",
         "id": 360253,
         "groups": [
           "Everything",
@@ -10115,11 +10114,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Monster Condo (MAP27)   Yellow skull key"
       },
       "Monster Condo (MAP27) - Red skull key": {
         "name": "Monster Condo (MAP27) - Red skull key",
-        "hint_text": "Monster Condo (MAP27)   Red skull key",
         "id": 360254,
         "groups": [
           "Everything",
@@ -10128,11 +10127,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Monster Condo (MAP27)   Red skull key"
       },
       "Monster Condo (MAP27) - Blue skull key": {
         "name": "Monster Condo (MAP27) - Blue skull key",
-        "hint_text": "Monster Condo (MAP27)   Blue skull key",
         "id": 360255,
         "groups": [
           "Everything",
@@ -10141,11 +10140,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Monster Condo (MAP27)   Blue skull key"
       },
       "The Spirit World (MAP28) - Yellow skull key": {
         "name": "The Spirit World (MAP28) - Yellow skull key",
-        "hint_text": "The Spirit World (MAP28)   Yellow skull key",
         "id": 360256,
         "groups": [
           "Everything",
@@ -10154,11 +10153,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Spirit World (MAP28)   Yellow skull key"
       },
       "The Spirit World (MAP28) - Red skull key": {
         "name": "The Spirit World (MAP28) - Red skull key",
-        "hint_text": "The Spirit World (MAP28)   Red skull key",
         "id": 360257,
         "groups": [
           "Everything",
@@ -10167,7 +10166,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Spirit World (MAP28)   Red skull key"
       },
       "Entryway (MAP01)": {
         "name": "Entryway (MAP01)",
@@ -10183,7 +10183,6 @@
       },
       "Entryway (MAP01) - Complete": {
         "name": "Entryway (MAP01) - Complete",
-        "hint_text": "Entryway (MAP01)   Complete",
         "id": 360401,
         "groups": [
           "Everything"
@@ -10191,11 +10190,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Entryway (MAP01)   Complete"
       },
       "Entryway (MAP01) - Computer area map": {
         "name": "Entryway (MAP01) - Computer area map",
-        "hint_text": "Entryway (MAP01)   Computer area map",
         "id": 360402,
         "groups": [
           "Computer area maps",
@@ -10204,7 +10203,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Entryway (MAP01)   Computer area map"
       },
       "Underhalls (MAP02)": {
         "name": "Underhalls (MAP02)",
@@ -10220,7 +10220,6 @@
       },
       "Underhalls (MAP02) - Complete": {
         "name": "Underhalls (MAP02) - Complete",
-        "hint_text": "Underhalls (MAP02)   Complete",
         "id": 360404,
         "groups": [
           "Everything"
@@ -10228,11 +10227,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Underhalls (MAP02)   Complete"
       },
       "Underhalls (MAP02) - Computer area map": {
         "name": "Underhalls (MAP02) - Computer area map",
-        "hint_text": "Underhalls (MAP02)   Computer area map",
         "id": 360405,
         "groups": [
           "Computer area maps",
@@ -10241,7 +10240,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Underhalls (MAP02)   Computer area map"
       },
       "The Gantlet (MAP03)": {
         "name": "The Gantlet (MAP03)",
@@ -10257,7 +10257,6 @@
       },
       "The Gantlet (MAP03) - Complete": {
         "name": "The Gantlet (MAP03) - Complete",
-        "hint_text": "The Gantlet (MAP03)   Complete",
         "id": 360407,
         "groups": [
           "Everything"
@@ -10265,11 +10264,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gantlet (MAP03)   Complete"
       },
       "The Gantlet (MAP03) - Computer area map": {
         "name": "The Gantlet (MAP03) - Computer area map",
-        "hint_text": "The Gantlet (MAP03)   Computer area map",
         "id": 360408,
         "groups": [
           "Computer area maps",
@@ -10278,7 +10277,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Gantlet (MAP03)   Computer area map"
       },
       "The Focus (MAP04)": {
         "name": "The Focus (MAP04)",
@@ -10294,7 +10294,6 @@
       },
       "The Focus (MAP04) - Complete": {
         "name": "The Focus (MAP04) - Complete",
-        "hint_text": "The Focus (MAP04)   Complete",
         "id": 360410,
         "groups": [
           "Everything"
@@ -10302,11 +10301,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Focus (MAP04)   Complete"
       },
       "The Focus (MAP04) - Computer area map": {
         "name": "The Focus (MAP04) - Computer area map",
-        "hint_text": "The Focus (MAP04)   Computer area map",
         "id": 360411,
         "groups": [
           "Computer area maps",
@@ -10315,7 +10314,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Focus (MAP04)   Computer area map"
       },
       "The Waste Tunnels (MAP05)": {
         "name": "The Waste Tunnels (MAP05)",
@@ -10331,7 +10331,6 @@
       },
       "The Waste Tunnels (MAP05) - Complete": {
         "name": "The Waste Tunnels (MAP05) - Complete",
-        "hint_text": "The Waste Tunnels (MAP05)   Complete",
         "id": 360413,
         "groups": [
           "Everything"
@@ -10339,11 +10338,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Waste Tunnels (MAP05)   Complete"
       },
       "The Waste Tunnels (MAP05) - Computer area map": {
         "name": "The Waste Tunnels (MAP05) - Computer area map",
-        "hint_text": "The Waste Tunnels (MAP05)   Computer area map",
         "id": 360414,
         "groups": [
           "Computer area maps",
@@ -10352,7 +10351,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Waste Tunnels (MAP05)   Computer area map"
       },
       "The Crusher (MAP06)": {
         "name": "The Crusher (MAP06)",
@@ -10368,7 +10368,6 @@
       },
       "The Crusher (MAP06) - Complete": {
         "name": "The Crusher (MAP06) - Complete",
-        "hint_text": "The Crusher (MAP06)   Complete",
         "id": 360416,
         "groups": [
           "Everything"
@@ -10376,11 +10375,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crusher (MAP06)   Complete"
       },
       "The Crusher (MAP06) - Computer area map": {
         "name": "The Crusher (MAP06) - Computer area map",
-        "hint_text": "The Crusher (MAP06)   Computer area map",
         "id": 360417,
         "groups": [
           "Computer area maps",
@@ -10389,7 +10388,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Crusher (MAP06)   Computer area map"
       },
       "Dead Simple (MAP07)": {
         "name": "Dead Simple (MAP07)",
@@ -10405,7 +10405,6 @@
       },
       "Dead Simple (MAP07) - Complete": {
         "name": "Dead Simple (MAP07) - Complete",
-        "hint_text": "Dead Simple (MAP07)   Complete",
         "id": 360419,
         "groups": [
           "Everything"
@@ -10413,11 +10412,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Dead Simple (MAP07)   Complete"
       },
       "Dead Simple (MAP07) - Computer area map": {
         "name": "Dead Simple (MAP07) - Computer area map",
-        "hint_text": "Dead Simple (MAP07)   Computer area map",
         "id": 360420,
         "groups": [
           "Computer area maps",
@@ -10426,7 +10425,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Dead Simple (MAP07)   Computer area map"
       },
       "Tricks and Traps (MAP08)": {
         "name": "Tricks and Traps (MAP08)",
@@ -10442,7 +10442,6 @@
       },
       "Tricks and Traps (MAP08) - Complete": {
         "name": "Tricks and Traps (MAP08) - Complete",
-        "hint_text": "Tricks and Traps (MAP08)   Complete",
         "id": 360422,
         "groups": [
           "Everything"
@@ -10450,11 +10449,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tricks and Traps (MAP08)   Complete"
       },
       "Tricks and Traps (MAP08) - Computer area map": {
         "name": "Tricks and Traps (MAP08) - Computer area map",
-        "hint_text": "Tricks and Traps (MAP08)   Computer area map",
         "id": 360423,
         "groups": [
           "Computer area maps",
@@ -10463,7 +10462,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tricks and Traps (MAP08)   Computer area map"
       },
       "The Pit (MAP09)": {
         "name": "The Pit (MAP09)",
@@ -10479,7 +10479,6 @@
       },
       "The Pit (MAP09) - Complete": {
         "name": "The Pit (MAP09) - Complete",
-        "hint_text": "The Pit (MAP09)   Complete",
         "id": 360425,
         "groups": [
           "Everything"
@@ -10487,11 +10486,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Pit (MAP09)   Complete"
       },
       "The Pit (MAP09) - Computer area map": {
         "name": "The Pit (MAP09) - Computer area map",
-        "hint_text": "The Pit (MAP09)   Computer area map",
         "id": 360426,
         "groups": [
           "Computer area maps",
@@ -10500,7 +10499,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Pit (MAP09)   Computer area map"
       },
       "Refueling Base (MAP10)": {
         "name": "Refueling Base (MAP10)",
@@ -10516,7 +10516,6 @@
       },
       "Refueling Base (MAP10) - Complete": {
         "name": "Refueling Base (MAP10) - Complete",
-        "hint_text": "Refueling Base (MAP10)   Complete",
         "id": 360428,
         "groups": [
           "Everything"
@@ -10524,11 +10523,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Refueling Base (MAP10)   Complete"
       },
       "Refueling Base (MAP10) - Computer area map": {
         "name": "Refueling Base (MAP10) - Computer area map",
-        "hint_text": "Refueling Base (MAP10)   Computer area map",
         "id": 360429,
         "groups": [
           "Computer area maps",
@@ -10537,7 +10536,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Refueling Base (MAP10)   Computer area map"
       },
       "Circle of Death (MAP11)": {
         "name": "Circle of Death (MAP11)",
@@ -10553,7 +10553,6 @@
       },
       "Circle of Death (MAP11) - Complete": {
         "name": "Circle of Death (MAP11) - Complete",
-        "hint_text": "Circle of Death (MAP11)   Complete",
         "id": 360431,
         "groups": [
           "Everything"
@@ -10561,11 +10560,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Circle of Death (MAP11)   Complete"
       },
       "Circle of Death (MAP11) - Computer area map": {
         "name": "Circle of Death (MAP11) - Computer area map",
-        "hint_text": "Circle of Death (MAP11)   Computer area map",
         "id": 360432,
         "groups": [
           "Computer area maps",
@@ -10574,7 +10573,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Circle of Death (MAP11)   Computer area map"
       },
       "The Factory (MAP12)": {
         "name": "The Factory (MAP12)",
@@ -10590,7 +10590,6 @@
       },
       "The Factory (MAP12) - Complete": {
         "name": "The Factory (MAP12) - Complete",
-        "hint_text": "The Factory (MAP12)   Complete",
         "id": 360434,
         "groups": [
           "Everything"
@@ -10598,11 +10597,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Factory (MAP12)   Complete"
       },
       "The Factory (MAP12) - Computer area map": {
         "name": "The Factory (MAP12) - Computer area map",
-        "hint_text": "The Factory (MAP12)   Computer area map",
         "id": 360435,
         "groups": [
           "Computer area maps",
@@ -10611,7 +10610,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Factory (MAP12)   Computer area map"
       },
       "Downtown (MAP13)": {
         "name": "Downtown (MAP13)",
@@ -10627,7 +10627,6 @@
       },
       "Downtown (MAP13) - Complete": {
         "name": "Downtown (MAP13) - Complete",
-        "hint_text": "Downtown (MAP13)   Complete",
         "id": 360437,
         "groups": [
           "Everything"
@@ -10635,11 +10634,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Downtown (MAP13)   Complete"
       },
       "Downtown (MAP13) - Computer area map": {
         "name": "Downtown (MAP13) - Computer area map",
-        "hint_text": "Downtown (MAP13)   Computer area map",
         "id": 360438,
         "groups": [
           "Computer area maps",
@@ -10648,7 +10647,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Downtown (MAP13)   Computer area map"
       },
       "The Inmost Dens (MAP14)": {
         "name": "The Inmost Dens (MAP14)",
@@ -10664,7 +10664,6 @@
       },
       "The Inmost Dens (MAP14) - Complete": {
         "name": "The Inmost Dens (MAP14) - Complete",
-        "hint_text": "The Inmost Dens (MAP14)   Complete",
         "id": 360440,
         "groups": [
           "Everything"
@@ -10672,11 +10671,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Inmost Dens (MAP14)   Complete"
       },
       "The Inmost Dens (MAP14) - Computer area map": {
         "name": "The Inmost Dens (MAP14) - Computer area map",
-        "hint_text": "The Inmost Dens (MAP14)   Computer area map",
         "id": 360441,
         "groups": [
           "Computer area maps",
@@ -10685,7 +10684,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Inmost Dens (MAP14)   Computer area map"
       },
       "Industrial Zone (MAP15)": {
         "name": "Industrial Zone (MAP15)",
@@ -10701,7 +10701,6 @@
       },
       "Industrial Zone (MAP15) - Complete": {
         "name": "Industrial Zone (MAP15) - Complete",
-        "hint_text": "Industrial Zone (MAP15)   Complete",
         "id": 360443,
         "groups": [
           "Everything"
@@ -10709,11 +10708,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Industrial Zone (MAP15)   Complete"
       },
       "Industrial Zone (MAP15) - Computer area map": {
         "name": "Industrial Zone (MAP15) - Computer area map",
-        "hint_text": "Industrial Zone (MAP15)   Computer area map",
         "id": 360444,
         "groups": [
           "Computer area maps",
@@ -10722,7 +10721,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Industrial Zone (MAP15)   Computer area map"
       },
       "Suburbs (MAP16)": {
         "name": "Suburbs (MAP16)",
@@ -10738,7 +10738,6 @@
       },
       "Suburbs (MAP16) - Complete": {
         "name": "Suburbs (MAP16) - Complete",
-        "hint_text": "Suburbs (MAP16)   Complete",
         "id": 360446,
         "groups": [
           "Everything"
@@ -10746,11 +10745,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Suburbs (MAP16)   Complete"
       },
       "Suburbs (MAP16) - Computer area map": {
         "name": "Suburbs (MAP16) - Computer area map",
-        "hint_text": "Suburbs (MAP16)   Computer area map",
         "id": 360447,
         "groups": [
           "Computer area maps",
@@ -10759,7 +10758,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Suburbs (MAP16)   Computer area map"
       },
       "Tenements (MAP17)": {
         "name": "Tenements (MAP17)",
@@ -10775,7 +10775,6 @@
       },
       "Tenements (MAP17) - Complete": {
         "name": "Tenements (MAP17) - Complete",
-        "hint_text": "Tenements (MAP17)   Complete",
         "id": 360449,
         "groups": [
           "Everything"
@@ -10783,11 +10782,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tenements (MAP17)   Complete"
       },
       "Tenements (MAP17) - Computer area map": {
         "name": "Tenements (MAP17) - Computer area map",
-        "hint_text": "Tenements (MAP17)   Computer area map",
         "id": 360450,
         "groups": [
           "Computer area maps",
@@ -10796,7 +10795,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Tenements (MAP17)   Computer area map"
       },
       "The Courtyard (MAP18)": {
         "name": "The Courtyard (MAP18)",
@@ -10812,7 +10812,6 @@
       },
       "The Courtyard (MAP18) - Complete": {
         "name": "The Courtyard (MAP18) - Complete",
-        "hint_text": "The Courtyard (MAP18)   Complete",
         "id": 360452,
         "groups": [
           "Everything"
@@ -10820,11 +10819,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Courtyard (MAP18)   Complete"
       },
       "The Courtyard (MAP18) - Computer area map": {
         "name": "The Courtyard (MAP18) - Computer area map",
-        "hint_text": "The Courtyard (MAP18)   Computer area map",
         "id": 360453,
         "groups": [
           "Computer area maps",
@@ -10833,7 +10832,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Courtyard (MAP18)   Computer area map"
       },
       "The Citadel (MAP19)": {
         "name": "The Citadel (MAP19)",
@@ -10849,7 +10849,6 @@
       },
       "The Citadel (MAP19) - Complete": {
         "name": "The Citadel (MAP19) - Complete",
-        "hint_text": "The Citadel (MAP19)   Complete",
         "id": 360455,
         "groups": [
           "Everything"
@@ -10857,11 +10856,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (MAP19)   Complete"
       },
       "The Citadel (MAP19) - Computer area map": {
         "name": "The Citadel (MAP19) - Computer area map",
-        "hint_text": "The Citadel (MAP19)   Computer area map",
         "id": 360456,
         "groups": [
           "Computer area maps",
@@ -10870,7 +10869,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Citadel (MAP19)   Computer area map"
       },
       "Gotcha! (MAP20)": {
         "name": "Gotcha! (MAP20)",
@@ -10886,7 +10886,6 @@
       },
       "Gotcha! (MAP20) - Complete": {
         "name": "Gotcha! (MAP20) - Complete",
-        "hint_text": "Gotcha! (MAP20)   Complete",
         "id": 360458,
         "groups": [
           "Everything"
@@ -10894,11 +10893,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Gotcha! (MAP20)   Complete"
       },
       "Gotcha! (MAP20) - Computer area map": {
         "name": "Gotcha! (MAP20) - Computer area map",
-        "hint_text": "Gotcha! (MAP20)   Computer area map",
         "id": 360459,
         "groups": [
           "Computer area maps",
@@ -10907,7 +10906,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Gotcha! (MAP20)   Computer area map"
       },
       "Nirvana (MAP21)": {
         "name": "Nirvana (MAP21)",
@@ -10923,7 +10923,6 @@
       },
       "Nirvana (MAP21) - Complete": {
         "name": "Nirvana (MAP21) - Complete",
-        "hint_text": "Nirvana (MAP21)   Complete",
         "id": 360461,
         "groups": [
           "Everything"
@@ -10931,11 +10930,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Nirvana (MAP21)   Complete"
       },
       "Nirvana (MAP21) - Computer area map": {
         "name": "Nirvana (MAP21) - Computer area map",
-        "hint_text": "Nirvana (MAP21)   Computer area map",
         "id": 360462,
         "groups": [
           "Computer area maps",
@@ -10944,7 +10943,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Nirvana (MAP21)   Computer area map"
       },
       "The Catacombs (MAP22)": {
         "name": "The Catacombs (MAP22)",
@@ -10960,7 +10960,6 @@
       },
       "The Catacombs (MAP22) - Complete": {
         "name": "The Catacombs (MAP22) - Complete",
-        "hint_text": "The Catacombs (MAP22)   Complete",
         "id": 360464,
         "groups": [
           "Everything"
@@ -10968,11 +10967,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (MAP22)   Complete"
       },
       "The Catacombs (MAP22) - Computer area map": {
         "name": "The Catacombs (MAP22) - Computer area map",
-        "hint_text": "The Catacombs (MAP22)   Computer area map",
         "id": 360465,
         "groups": [
           "Computer area maps",
@@ -10981,7 +10980,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Catacombs (MAP22)   Computer area map"
       },
       "Barrels o' Fun (MAP23)": {
         "name": "Barrels o' Fun (MAP23)",
@@ -10997,7 +10997,6 @@
       },
       "Barrels o' Fun (MAP23) - Complete": {
         "name": "Barrels o' Fun (MAP23) - Complete",
-        "hint_text": "Barrels o' Fun (MAP23)   Complete",
         "id": 360467,
         "groups": [
           "Everything"
@@ -11005,11 +11004,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Barrels o' Fun (MAP23)   Complete"
       },
       "Barrels o' Fun (MAP23) - Computer area map": {
         "name": "Barrels o' Fun (MAP23) - Computer area map",
-        "hint_text": "Barrels o' Fun (MAP23)   Computer area map",
         "id": 360468,
         "groups": [
           "Computer area maps",
@@ -11018,7 +11017,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Barrels o' Fun (MAP23)   Computer area map"
       },
       "The Chasm (MAP24)": {
         "name": "The Chasm (MAP24)",
@@ -11034,7 +11034,6 @@
       },
       "The Chasm (MAP24) - Complete": {
         "name": "The Chasm (MAP24) - Complete",
-        "hint_text": "The Chasm (MAP24)   Complete",
         "id": 360470,
         "groups": [
           "Everything"
@@ -11042,11 +11041,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (MAP24)   Complete"
       },
       "The Chasm (MAP24) - Computer area map": {
         "name": "The Chasm (MAP24) - Computer area map",
-        "hint_text": "The Chasm (MAP24)   Computer area map",
         "id": 360471,
         "groups": [
           "Computer area maps",
@@ -11055,7 +11054,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Chasm (MAP24)   Computer area map"
       },
       "Bloodfalls (MAP25)": {
         "name": "Bloodfalls (MAP25)",
@@ -11071,7 +11071,6 @@
       },
       "Bloodfalls (MAP25) - Complete": {
         "name": "Bloodfalls (MAP25) - Complete",
-        "hint_text": "Bloodfalls (MAP25)   Complete",
         "id": 360473,
         "groups": [
           "Everything"
@@ -11079,11 +11078,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Bloodfalls (MAP25)   Complete"
       },
       "Bloodfalls (MAP25) - Computer area map": {
         "name": "Bloodfalls (MAP25) - Computer area map",
-        "hint_text": "Bloodfalls (MAP25)   Computer area map",
         "id": 360474,
         "groups": [
           "Computer area maps",
@@ -11092,7 +11091,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Bloodfalls (MAP25)   Computer area map"
       },
       "The Abandoned Mines (MAP26)": {
         "name": "The Abandoned Mines (MAP26)",
@@ -11108,7 +11108,6 @@
       },
       "The Abandoned Mines (MAP26) - Complete": {
         "name": "The Abandoned Mines (MAP26) - Complete",
-        "hint_text": "The Abandoned Mines (MAP26)   Complete",
         "id": 360476,
         "groups": [
           "Everything"
@@ -11116,11 +11115,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Abandoned Mines (MAP26)   Complete"
       },
       "The Abandoned Mines (MAP26) - Computer area map": {
         "name": "The Abandoned Mines (MAP26) - Computer area map",
-        "hint_text": "The Abandoned Mines (MAP26)   Computer area map",
         "id": 360477,
         "groups": [
           "Computer area maps",
@@ -11129,7 +11128,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Abandoned Mines (MAP26)   Computer area map"
       },
       "Monster Condo (MAP27)": {
         "name": "Monster Condo (MAP27)",
@@ -11145,7 +11145,6 @@
       },
       "Monster Condo (MAP27) - Complete": {
         "name": "Monster Condo (MAP27) - Complete",
-        "hint_text": "Monster Condo (MAP27)   Complete",
         "id": 360479,
         "groups": [
           "Everything"
@@ -11153,11 +11152,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Monster Condo (MAP27)   Complete"
       },
       "Monster Condo (MAP27) - Computer area map": {
         "name": "Monster Condo (MAP27) - Computer area map",
-        "hint_text": "Monster Condo (MAP27)   Computer area map",
         "id": 360480,
         "groups": [
           "Computer area maps",
@@ -11166,7 +11165,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Monster Condo (MAP27)   Computer area map"
       },
       "The Spirit World (MAP28)": {
         "name": "The Spirit World (MAP28)",
@@ -11182,7 +11182,6 @@
       },
       "The Spirit World (MAP28) - Complete": {
         "name": "The Spirit World (MAP28) - Complete",
-        "hint_text": "The Spirit World (MAP28)   Complete",
         "id": 360482,
         "groups": [
           "Everything"
@@ -11190,11 +11189,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Spirit World (MAP28)   Complete"
       },
       "The Spirit World (MAP28) - Computer area map": {
         "name": "The Spirit World (MAP28) - Computer area map",
-        "hint_text": "The Spirit World (MAP28)   Computer area map",
         "id": 360483,
         "groups": [
           "Computer area maps",
@@ -11203,7 +11202,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Spirit World (MAP28)   Computer area map"
       },
       "The Living End (MAP29)": {
         "name": "The Living End (MAP29)",
@@ -11219,7 +11219,6 @@
       },
       "The Living End (MAP29) - Complete": {
         "name": "The Living End (MAP29) - Complete",
-        "hint_text": "The Living End (MAP29)   Complete",
         "id": 360485,
         "groups": [
           "Everything"
@@ -11227,11 +11226,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Living End (MAP29)   Complete"
       },
       "The Living End (MAP29) - Computer area map": {
         "name": "The Living End (MAP29) - Computer area map",
-        "hint_text": "The Living End (MAP29)   Computer area map",
         "id": 360486,
         "groups": [
           "Computer area maps",
@@ -11240,7 +11239,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "The Living End (MAP29)   Computer area map"
       },
       "Icon of Sin (MAP30)": {
         "name": "Icon of Sin (MAP30)",
@@ -11256,7 +11256,6 @@
       },
       "Icon of Sin (MAP30) - Complete": {
         "name": "Icon of Sin (MAP30) - Complete",
-        "hint_text": "Icon of Sin (MAP30)   Complete",
         "id": 360488,
         "groups": [
           "Everything"
@@ -11264,11 +11263,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Icon of Sin (MAP30)   Complete"
       },
       "Icon of Sin (MAP30) - Computer area map": {
         "name": "Icon of Sin (MAP30) - Computer area map",
-        "hint_text": "Icon of Sin (MAP30)   Computer area map",
         "id": 360489,
         "groups": [
           "Computer area maps",
@@ -11277,7 +11276,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Icon of Sin (MAP30)   Computer area map"
       },
       "Wolfenstein (MAP31)": {
         "name": "Wolfenstein (MAP31)",
@@ -12083,8 +12083,10 @@
         "split_backpack": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "start_with_computer_area_maps": false
+        "start_with_computer_area_maps": false,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -12269,10 +12271,20 @@
           "default": 0,
           "display_name": "Split Backpack"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "start_with_computer_area_maps": {
           "type": "toggle",
           "default": 0,
           "display_name": "Start With Computer Area Maps"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "included_episodes": [
@@ -12334,7 +12346,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "DOOM2World"
     }
   },
   "game_info": {

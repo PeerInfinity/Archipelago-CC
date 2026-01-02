@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class AreaCost(Toggle):
     """Option for Area Cost Randomizer."""
     display_name = "Area Cost Randomizer"
@@ -51,6 +62,7 @@ class MusicRando(Toggle):
 class VVVVVVWorldGenOptions(PerGameCommonOptions):
     """Options for VVVVVV WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     area_cost: AreaCost
     area_rando: AreaRando
     death_link: DeathLink

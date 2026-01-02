@@ -1,73 +1,49 @@
 {
-  "settings": {
-    "game": "Subnautica",
-    "options": {
-      "accessibility": 0,
-      "creature_scan_logic": 0,
-      "creature_scans": 0,
-      "death_link": false,
-      "early_seaglide": true,
-      "empty_tanks": true,
-      "exclude_locations": [],
-      "filler_items_distribution": {
-        "Copper Ore": 1,
-        "Crystalline Sulfur": 1,
-        "Diamond": 1,
-        "Gold": 1,
-        "Kyanite": 1,
-        "Lead": 1,
-        "Lithium": 1,
-        "Magnetite": 1,
-        "Nickel Ore": 1,
-        "Reactor Rod": 1,
-        "Ruby": 1,
-        "Salt Deposit": 1,
-        "Silver Ore": 1,
-        "Titanium": 1
-      },
-      "free_samples": false,
-      "goal": 0,
-      "item_links": [],
-      "local_items": [],
-      "non_local_items": [],
-      "plando_items": [],
-      "priority_locations": [],
-      "progression_balancing": 50,
-      "start_hints": [],
-      "start_inventory": {},
-      "start_inventory_from_pool": {},
-      "start_location_hints": [],
-      "swim_rule": 0
+  "options": {
+    "accessibility": 0,
+    "creature_scan_logic": 0,
+    "creature_scans": 0,
+    "death_link": false,
+    "early_seaglide": true,
+    "empty_tanks": true,
+    "exclude_locations": [],
+    "filler_items_distribution": {
+      "Copper Ore": 1,
+      "Crystalline Sulfur": 1,
+      "Diamond": 1,
+      "Gold": 1,
+      "Kyanite": 1,
+      "Lead": 1,
+      "Lithium": 1,
+      "Magnetite": 1,
+      "Nickel Ore": 1,
+      "Reactor Rod": 1,
+      "Ruby": 1,
+      "Salt Deposit": 1,
+      "Silver Ore": 1,
+      "Titanium": 1
     },
-    "world_directory": "subnautica",
-    "use_resolved_items": false
+    "free_samples": false,
+    "goal": 0,
+    "item_links": [],
+    "local_items": [],
+    "non_local_items": [],
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_inventory_from_pool": {},
+    "start_location_hints": [],
+    "swim_rule": 0
   },
+  "exporter": {
+    "use_resolved_items": false,
+    "world_class_name": "SubnauticaWorld"
+  },
+  "game": "Subnautica",
+  "world_directory": "subnautica",
   "world_attributes": {
-    "creatures_to_scan": [],
-    "world_description": "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet.",
-    "slot_data": {
-      "goal": "launch",
-      "swim_rule": "easy",
-      "vanilla_tech": [],
-      "creatures_to_scan": [],
-      "death_link": 0,
-      "free_samples": 0,
-      "empty_tanks": 1
-    },
-    "web": {
-      "theme": "grass",
-      "tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Subnautica randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Berserker"
-          ]
-        }
-      ]
-    }
+    "creatures_to_scan": []
   }
 }

@@ -2114,7 +2114,8 @@
         "version": "1.0"
       },
       "use_resolved_items": false,
-      "add_sphere_items_upfront": true
+      "add_sphere_items_upfront": true,
+      "world_class_name": "YachtDiceWorldGenWorld"
     }
   },
   "game_info": {

@@ -11805,7 +11805,6 @@
       },
       "Hi-Potion": {
         "name": "Hi-Potion",
-        "hint_text": "Hi Potion",
         "id": 2641002,
         "groups": [
           "Everything",
@@ -11814,7 +11813,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "hint_text": "Hi Potion"
       },
       "Ether": {
         "name": "Ether",
@@ -11842,7 +11842,6 @@
       },
       "Mega-Potion": {
         "name": "Mega-Potion",
-        "hint_text": "Mega Potion",
         "id": 2641006,
         "groups": [
           "Everything",
@@ -11851,11 +11850,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 8,
+        "hint_text": "Mega Potion"
       },
       "Mega-Ether": {
         "name": "Mega-Ether",
-        "hint_text": "Mega Ether",
         "id": 2641007,
         "groups": [
           "Everything",
@@ -11864,7 +11863,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "Mega Ether"
       },
       "Megalixir": {
         "name": "Megalixir",
@@ -12768,7 +12768,6 @@
       },
       "One-Winged Angel": {
         "name": "One-Winged Angel",
-        "hint_text": "One Winged Angel",
         "id": 2641102,
         "groups": [
           "Everything",
@@ -12777,7 +12776,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "One Winged Angel"
       },
       "Morning Star": {
         "name": "Morning Star",
@@ -15692,7 +15692,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "KingdomHeartsWorldGenWorld"
     }
   },
   "game_info": {

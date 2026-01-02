@@ -162,17 +162,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Robbed: Victory", player),
-        And(And(CanReachRegion('Robbed'), Has('Thief')), Has('Rifleman'))
+        And(CanReachRegion('Robbed'), HasAll('Thief', 'Rifleman'))
     )
 
     world.set_rule(
         multiworld.get_location("Open Season: Caesar", player),
-        And(And(CanReachRegion('Open Season'), Has('Mage')), Has('Knight'))
+        And(CanReachRegion('Open Season'), HasAll('Mage', 'Knight'))
     )
 
     world.set_rule(
         multiworld.get_location("Open Season: Victory", player),
-        And(And(CanReachRegion('Open Season'), Has('Mage')), Has('Knight'))
+        And(CanReachRegion('Open Season'), HasAll('Mage', 'Knight'))
     )
 
     world.set_rule(
@@ -187,12 +187,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tenri's Fall: Victory", player),
-        And(And(CanReachRegion("Tenri's Fall"), Has('Mage')), Has('Thief'))
+        And(CanReachRegion("Tenri's Fall"), HasAll('Mage', 'Thief'))
     )
 
     world.set_rule(
         multiworld.get_location("Foolish Canal: Victory", player),
-        And(And(CanReachRegion('Foolish Canal'), Has('Mage')), Has('Spearman'))
+        And(CanReachRegion('Foolish Canal'), HasAll('Mage', 'Spearman'))
     )
 
     world.set_rule(

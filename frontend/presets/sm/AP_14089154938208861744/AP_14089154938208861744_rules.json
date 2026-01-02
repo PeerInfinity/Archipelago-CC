@@ -6153,25 +6153,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Landing Site"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -6260,91 +6255,81 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
+                      "rule": "SMBool",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
-                          "rule": "evalSMBool",
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "wand",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "haveItem",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
                               "rule": "Constant",
                               "args": {
-                                "value": 50
+                                "value": "Morph"
                               },
                               "_converted_from_ast": true
                             }
                           ]
                         },
                         {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Landing Site"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "wand",
+                          "rule": "traverse",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "haveItem",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Morph"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "traverse",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "FlywayRight"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
+                              "rule": "Constant",
+                              "args": {
+                                "value": "FlywayRight"
+                              },
+                              "_converted_from_ast": true
                             }
                           ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -6481,39 +6466,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wor",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wor",
+                      "rule": "False_"
+                    },
+                    {
+                      "rule": "traverse",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "traverse",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "MainShaftRight"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": "MainShaftRight"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Green Brinstar Elevator"
-                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Green Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -6609,25 +6589,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Big Pink"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Pink"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -6709,39 +6684,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wor",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wor",
+                      "rule": "True_"
+                    },
+                    {
+                      "rule": "traverse",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "True_"
-                        },
-                        {
-                          "rule": "traverse",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "ConstructionZoneRight"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": "ConstructionZoneRight"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Blue Brinstar Elevator Bottom"
-                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Blue Brinstar Elevator Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -6901,25 +6871,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Big Pink"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Pink"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7024,25 +6989,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Big Pink"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Pink"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7189,25 +7149,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Red Tower Top Left"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Red Tower Top Left"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7453,25 +7408,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "East Tunnel Right"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "East Tunnel Right"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7567,25 +7517,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Warehouse Zeela Room Left"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Warehouse Zeela Room Left"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7650,25 +7595,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "KraidRoomIn"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "KraidRoomIn"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7713,25 +7653,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "KraidRoomIn"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "KraidRoomIn"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7784,29 +7719,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "traverse",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "traverse",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "BusinessCenterTopLeft"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
+                      "rule": "Constant",
                       "args": {
-                        "region_name": "Business Center"
-                      }
+                        "value": "BusinessCenterTopLeft"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Business Center"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -7979,25 +7909,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Crocomire Room Top"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Crocomire Room Top"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -8113,84 +8038,74 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "wor",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "traverse",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "BusinessCenterBottomLeft"
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Business Center"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "wor",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "haveItem",
+                          "rule": "False_"
+                        },
+                        {
+                          "rule": "traverse",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
-                                "value": "Morph"
+                                "value": "BusinessCenterBottomLeft"
                               },
                               "_converted_from_ast": true
                             }
                           ]
-                        },
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Business Center"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "haveItem",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": 50
+                            "value": "Morph"
                           },
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -8267,100 +8182,149 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
+                      "rule": "SMBool",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
-                          "rule": "evalSMBool",
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Crocomire Room Top"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "wand",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "haveItem",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
                               "rule": "Constant",
                               "args": {
-                                "value": 50
+                                "value": "Crocomire"
                               },
                               "_converted_from_ast": true
                             }
                           ]
                         },
                         {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Crocomire Room Top"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "wand",
+                          "rule": "wor",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "haveItem",
+                              "rule": "wand",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
                               "args": [
                                 {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Crocomire"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "wor",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "wand",
+                                  "rule": "haveItem",
                                   "_original_ast_type": "helper",
                                   "_converted_from_ast": true,
                                   "args": [
                                     {
-                                      "rule": "haveItem",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true,
-                                      "args": [
-                                        {
-                                          "rule": "Constant",
-                                          "args": {
-                                            "value": "Morph"
-                                          },
-                                          "_converted_from_ast": true
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "canFly",
-                                      "_original_ast_type": "helper",
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "Morph"
+                                      },
                                       "_converted_from_ast": true
                                     }
                                   ]
                                 },
                                 {
-                                  "rule": "wand",
+                                  "rule": "canFly",
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_ast": true
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "wand",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "haveItem",
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_ast": true,
+                                  "args": [
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "SpeedBooster"
+                                      },
+                                      "_converted_from_ast": true
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "wor",
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_ast": true,
+                                  "args": [
+                                    {
+                                      "rule": "knowsShortCharge",
+                                      "_original_ast_type": "helper",
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "canUsePowerBombs",
+                                      "_original_ast_type": "helper",
+                                      "_converted_from_ast": true
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "wand",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "haveItem",
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_ast": true,
+                                  "args": [
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "Morph"
+                                      },
+                                      "_converted_from_ast": true
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "wor",
                                   "_original_ast_type": "helper",
                                   "_converted_from_ast": true,
                                   "args": [
@@ -8379,102 +8343,43 @@
                                       ]
                                     },
                                     {
-                                      "rule": "wor",
+                                      "rule": "canSpringBallJump",
                                       "_original_ast_type": "helper",
-                                      "_converted_from_ast": true,
-                                      "args": [
-                                        {
-                                          "rule": "knowsShortCharge",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "canUsePowerBombs",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        }
-                                      ]
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 },
                                 {
-                                  "rule": "wand",
+                                  "rule": "haveItem",
                                   "_original_ast_type": "helper",
                                   "_converted_from_ast": true,
                                   "args": [
                                     {
-                                      "rule": "haveItem",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true,
-                                      "args": [
-                                        {
-                                          "rule": "Constant",
-                                          "args": {
-                                            "value": "Morph"
-                                          },
-                                          "_converted_from_ast": true
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "wor",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true,
-                                      "args": [
-                                        {
-                                          "rule": "haveItem",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true,
-                                          "args": [
-                                            {
-                                              "rule": "Constant",
-                                              "args": {
-                                                "value": "SpeedBooster"
-                                              },
-                                              "_converted_from_ast": true
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "canSpringBallJump",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "haveItem",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true,
-                                      "args": [
-                                        {
-                                          "rule": "Constant",
-                                          "args": {
-                                            "value": "HiJump"
-                                          },
-                                          "_converted_from_ast": true
-                                        }
-                                      ]
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": "HiJump"
+                                      },
+                                      "_converted_from_ast": true
                                     }
                                   ]
-                                },
-                                {
-                                  "rule": "canGreenGateGlitch",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true
                                 }
                               ]
+                            },
+                            {
+                              "rule": "canGreenGateGlitch",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
                             }
                           ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -8768,60 +8673,55 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wor",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wor",
+                      "rule": "False_"
+                    },
+                    {
+                      "rule": "wand",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "wand",
+                          "rule": "traverse",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "traverse",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "BubbleMountainTopRight"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
+                              "rule": "Constant",
+                              "args": {
+                                "value": "BubbleMountainTopRight"
+                              },
+                              "_converted_from_ast": true
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "traverse",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true,
+                          "args": [
                             {
-                              "rule": "traverse",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "SpeedBoosterHallRight"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
+                              "rule": "Constant",
+                              "args": {
+                                "value": "SpeedBoosterHallRight"
+                              },
+                              "_converted_from_ast": true
                             }
                           ]
                         }
                       ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Bubble Mountain Top"
-                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bubble Mountain Top"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -8865,65 +8765,55 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "canAccessDoubleChamberItems",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bubble Mountain Top"
-                          }
-                        }
-                      ]
+                      "rule": "canAccessDoubleChamberItems",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
-                      "rule": "evalSMBool",
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bubble Mountain Top"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "traverse",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "traverse",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "DoubleChamberRight"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
                           "rule": "Constant",
                           "args": {
-                            "value": 50
+                            "value": "DoubleChamberRight"
                           },
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -8969,25 +8859,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "RidleyRoomIn"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "RidleyRoomIn"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -9067,64 +8952,59 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wand",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wand",
+                      "rule": "haveItem",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "haveItem",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "Ridley"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "canHellRun",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "LowerNorfair"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 1.0
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 8
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": "Ridley"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "RidleyRoomIn"
-                      }
+                      "rule": "canHellRun",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "LowerNorfair"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 1.0
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 8
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "RidleyRoomIn"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -9177,39 +9057,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "evalSMBool",
+                      "rule": "SMBool",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "SMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "True_"
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
+                          "rule": "True_"
                         }
                       ]
                     },
                     {
-                      "rule": "CanReachRegion",
+                      "rule": "Constant",
                       "args": {
-                        "region_name": "Screw Attack Bottom"
-                      }
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Screw Attack Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -9253,90 +9128,80 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
+                      "rule": "SMBool",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
-                          "rule": "evalSMBool",
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Firefleas"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "wor",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "False_"
+                        },
+                        {
+                          "rule": "haveItem",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
                               "rule": "Constant",
                               "args": {
-                                "value": 50
+                                "value": "Super"
                               },
                               "_converted_from_ast": true
                             }
                           ]
                         },
                         {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Firefleas"
-                          }
+                          "rule": "canPassBombPassages",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "canUseSpringBall",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
-                      "rule": "evalSMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "wor",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "False_"
-                            },
-                            {
-                              "rule": "haveItem",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Super"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "canPassBombPassages",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "canUseSpringBall",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -9434,25 +9299,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -9522,39 +9382,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wor",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wor",
+                      "rule": "False_"
+                    },
+                    {
+                      "rule": "traverse",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "traverse",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "ElectricDeathRoomTopLeft"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": "ElectricDeathRoomTopLeft"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Back"
-                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Back"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -9617,25 +9472,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "PhantoonRoomIn"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "PhantoonRoomIn"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -9680,29 +9530,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "bossDead",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "bossDead",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Phantoon"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
+                      "rule": "Constant",
                       "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                        "value": "Phantoon"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -9746,25 +9591,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -10075,70 +9915,60 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Toilet Top"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "SMBool",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "bossDead",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "Draygon"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Toilet Top"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "bossDead",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": 50
+                            "value": "Draygon"
                           },
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -10207,13 +10037,7 @@
                                             {
                                               "rule": "Arithmetic",
                                               "args": {
-                                                "left": {
-                                                  "rule": "Constant",
-                                                  "args": {
-                                                    "value": 10.0
-                                                  },
-                                                  "_converted_from_ast": true
-                                                },
+                                                "left": 10.0,
                                                 "op": "*",
                                                 "right": {
                                                   "rule": "getPiratesPseudoScrewCoeff",
@@ -10354,20 +10178,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "canClimbWestSandHole",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Left Sandpit"
-                      }
-                    }
-                  ]
+                  "rule": "canClimbWestSandHole",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Left Sandpit"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -10411,94 +10230,84 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "canTraverseSandPits",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Oasis Bottom"
-                          }
-                        }
-                      ]
+                      "rule": "canTraverseSandPits",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
-                      "rule": "evalSMBool",
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oasis Bottom"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "wand",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "wand",
+                          "rule": "canAccessShaktoolFromPantsRoom",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "canUsePowerBombs",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "wor",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "canAccessShaktoolFromPantsRoom",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "canUsePowerBombs",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "wor",
+                              "rule": "haveItem",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
                               "args": [
                                 {
-                                  "rule": "haveItem",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Gravity"
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "canUseSpringBall",
-                                  "_original_ast_type": "helper",
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": "Gravity"
+                                  },
                                   "_converted_from_ast": true
                                 }
                               ]
+                            },
+                            {
+                              "rule": "canUseSpringBall",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
                             }
                           ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -10603,20 +10412,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "canJumpUnderwater",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Post Botwoon"
-                      }
-                    }
-                  ]
+                  "rule": "canJumpUnderwater",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Post Botwoon"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -10708,39 +10512,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "evalSMBool",
+                      "rule": "SMBool",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "SMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "True_"
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
+                          "rule": "True_"
                         }
                       ]
                     },
                     {
-                      "rule": "CanReachRegion",
+                      "rule": "Constant",
                       "args": {
-                        "region_name": "Draygon Room Bottom"
-                      }
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Draygon Room Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -10793,20 +10592,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "canPassG4",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Golden Four"
-                      }
-                    }
-                  ]
+                  "rule": "canPassG4",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Golden Four"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -10861,25 +10655,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Big Pink"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Pink"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -10945,20 +10734,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "canJumpUnderwater",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Aqueduct Bottom"
-                      }
-                    }
-                  ]
+                  "rule": "canJumpUnderwater",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Aqueduct Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -11003,25 +10787,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Crocomire Room Top"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Crocomire Room Top"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -11066,25 +10845,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Screw Attack Bottom"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Screw Attack Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -11129,25 +10903,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Landing Site"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -11233,70 +11002,60 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "West Ocean Left"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "SMBool",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "haveItem",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "Morph"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "West Ocean Left"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "haveItem",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": 50
+                            "value": "Morph"
                           },
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -11342,25 +11101,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -11413,25 +11167,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -11557,25 +11306,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Landing Site"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -11818,25 +11562,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Landing Site"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -12070,25 +11809,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Landing Site"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Landing Site"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -12132,25 +11866,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Etecoons Bottom"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Etecoons Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -12215,101 +11944,74 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Big Pink"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "SMBool",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "wor",
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Pink"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "wor",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "wand",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "wand",
+                              "rule": "traverse",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
                               "args": [
                                 {
-                                  "rule": "traverse",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "BigPinkTopRight"
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "haveItem",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "SporeSpawn"
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": "BigPinkTopRight"
+                                  },
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
                             {
-                              "rule": "wand",
+                              "rule": "haveItem",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
                               "args": [
                                 {
-                                  "rule": "canOpenGreenDoors",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "canPassBombPassages",
-                                  "_original_ast_type": "helper",
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": "SporeSpawn"
+                                  },
                                   "_converted_from_ast": true
                                 }
                               ]
@@ -12317,13 +12019,30 @@
                           ]
                         },
                         {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
+                          "rule": "wand",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true,
+                          "args": [
+                            {
+                              "rule": "canOpenGreenDoors",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "canPassBombPassages",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
+                            }
+                          ]
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -12381,53 +12100,48 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "evalSMBool",
+                      "rule": "wor",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "wor",
+                          "rule": "False_"
+                        },
+                        {
+                          "rule": "traverse",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "False_"
-                            },
-                            {
-                              "rule": "traverse",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "MainShaftRight"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
+                              "rule": "Constant",
+                              "args": {
+                                "value": "MainShaftRight"
+                              },
+                              "_converted_from_ast": true
                             }
                           ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
-                      "rule": "CanReachRegion",
+                      "rule": "Constant",
                       "args": {
-                        "region_name": "Green Brinstar Elevator"
-                      }
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Green Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -12481,39 +12195,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wor",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wor",
+                      "rule": "False_"
+                    },
+                    {
+                      "rule": "traverse",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "traverse",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "MainShaftRight"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": "MainShaftRight"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Green Brinstar Elevator"
-                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Green Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -12578,39 +12287,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wor",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wor",
+                      "rule": "False_"
+                    },
+                    {
+                      "rule": "traverse",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "traverse",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "MainShaftRight"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": "MainShaftRight"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Green Brinstar Elevator"
-                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Green Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -12748,39 +12452,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wor",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wor",
+                      "rule": "False_"
+                    },
+                    {
+                      "rule": "traverse",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "traverse",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "MainShaftRight"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "Constant",
+                          "args": {
+                            "value": "MainShaftRight"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Green Brinstar Elevator"
-                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Green Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -12956,25 +12655,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Big Pink"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Pink"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13039,25 +12733,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Green Hill Zone Top Right"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Green Hill Zone Top Right"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13197,25 +12886,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Blue Brinstar Elevator Bottom"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Blue Brinstar Elevator Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13347,25 +13031,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Blue Brinstar Elevator Bottom"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Blue Brinstar Elevator Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13418,25 +13097,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Blue Brinstar Elevator Bottom"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Blue Brinstar Elevator Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13480,25 +13154,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Blue Brinstar Elevator Bottom"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Blue Brinstar Elevator Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13542,25 +13211,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Red Brinstar Elevator"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Red Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13625,25 +13289,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Red Brinstar Elevator"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Red Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13696,25 +13355,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Red Brinstar Elevator"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Red Brinstar Elevator"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13779,25 +13433,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Warehouse Zeela Room Left"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Warehouse Zeela Room Left"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -13841,25 +13490,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Cathedral"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Cathedral"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -14154,84 +13798,74 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "wor",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "traverse",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "BusinessCenterBottomLeft"
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Business Center"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "wor",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "haveItem",
+                          "rule": "False_"
+                        },
+                        {
+                          "rule": "traverse",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
-                                "value": "Morph"
+                                "value": "BusinessCenterBottomLeft"
                               },
                               "_converted_from_ast": true
                             }
                           ]
-                        },
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Business Center"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "haveItem",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": 50
+                            "value": "Morph"
                           },
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -14360,25 +13994,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Crocomire Room Top"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Crocomire Room Top"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -14584,25 +14213,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Crocomire Room Top"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Crocomire Room Top"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -14690,140 +14314,92 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
+                      "rule": "SMBool",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
                         {
-                          "rule": "evalSMBool",
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Crocomire Room Top"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "wand",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "haveItem",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
                             {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
                               "rule": "Constant",
                               "args": {
-                                "value": 50
+                                "value": "Crocomire"
                               },
                               "_converted_from_ast": true
                             }
                           ]
                         },
                         {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Crocomire Room Top"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "wand",
+                          "rule": "wor",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true,
                           "args": [
-                            {
-                              "rule": "haveItem",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Crocomire"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
                             {
                               "rule": "wor",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
                               "args": [
                                 {
-                                  "rule": "wor",
+                                  "rule": "wand",
                                   "_original_ast_type": "helper",
                                   "_converted_from_ast": true,
                                   "args": [
                                     {
-                                      "rule": "wand",
+                                      "rule": "haveItem",
                                       "_original_ast_type": "helper",
                                       "_converted_from_ast": true,
                                       "args": [
                                         {
-                                          "rule": "haveItem",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true,
-                                          "args": [
-                                            {
-                                              "rule": "Constant",
-                                              "args": {
-                                                "value": "Morph"
-                                              },
-                                              "_converted_from_ast": true
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "canFly",
-                                          "_original_ast_type": "helper",
+                                          "rule": "Constant",
+                                          "args": {
+                                            "value": "Morph"
+                                          },
                                           "_converted_from_ast": true
                                         }
                                       ]
                                     },
                                     {
-                                      "rule": "wand",
+                                      "rule": "canFly",
                                       "_original_ast_type": "helper",
-                                      "_converted_from_ast": true,
-                                      "args": [
-                                        {
-                                          "rule": "haveItem",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true,
-                                          "args": [
-                                            {
-                                              "rule": "Constant",
-                                              "args": {
-                                                "value": "SpeedBooster"
-                                              },
-                                              "_converted_from_ast": true
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "wor",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true,
-                                          "args": [
-                                            {
-                                              "rule": "knowsShortCharge",
-                                              "_original_ast_type": "helper",
-                                              "_converted_from_ast": true
-                                            },
-                                            {
-                                              "rule": "canUsePowerBombs",
-                                              "_original_ast_type": "helper",
-                                              "_converted_from_ast": true
-                                            }
-                                          ]
-                                        }
-                                      ]
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 },
@@ -14833,29 +14409,67 @@
                                   "_converted_from_ast": true,
                                   "args": [
                                     {
-                                      "rule": "canGreenGateGlitch",
+                                      "rule": "haveItem",
                                       "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
+                                      "_converted_from_ast": true,
+                                      "args": [
+                                        {
+                                          "rule": "Constant",
+                                          "args": {
+                                            "value": "SpeedBooster"
+                                          },
+                                          "_converted_from_ast": true
+                                        }
+                                      ]
                                     },
                                     {
-                                      "rule": "canFly",
+                                      "rule": "wor",
                                       "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
+                                      "_converted_from_ast": true,
+                                      "args": [
+                                        {
+                                          "rule": "knowsShortCharge",
+                                          "_original_ast_type": "helper",
+                                          "_converted_from_ast": true
+                                        },
+                                        {
+                                          "rule": "canUsePowerBombs",
+                                          "_original_ast_type": "helper",
+                                          "_converted_from_ast": true
+                                        }
+                                      ]
                                     }
                                   ]
                                 }
                               ]
+                            },
+                            {
+                              "rule": "wand",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "canGreenGateGlitch",
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_ast": true
+                                },
+                                {
+                                  "rule": "canFly",
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_ast": true
+                                }
+                              ]
                             }
                           ]
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15255,75 +14869,65 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "wor",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "traverse",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "BubbleMountainTopRight"
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bubble Mountain Top"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "wor",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "canHellRunToSpeedBooster",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
+                          "rule": "False_"
                         },
                         {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
+                          "rule": "traverse",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true,
+                          "args": [
+                            {
+                              "rule": "Constant",
+                              "args": {
+                                "value": "BubbleMountainTopRight"
+                              },
+                              "_converted_from_ast": true
+                            }
+                          ]
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bubble Mountain Top"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "canHellRunToSpeedBooster",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15402,84 +15006,74 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "LN Above GT"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "SMBool",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "canHellRun",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "MainUpperNorfair"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 1.0
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 2
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "LN Above GT"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "canHellRun",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "MainUpperNorfair"
+                          },
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": 50
+                            "value": 1.0
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 2
                           },
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15525,61 +15119,51 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "evalSMBool",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "SMBool",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 50
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Screw Attack Bottom"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "evalSMBool",
+                      "rule": "SMBool",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true,
                       "args": [
                         {
-                          "rule": "canDestroyBombWalls",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 50
-                          },
-                          "_converted_from_ast": true
+                          "rule": "True_"
                         }
                       ]
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Screw Attack Bottom"
+                  }
+                },
+                {
+                  "rule": "evalSMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "canDestroyBombWalls",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 50
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15625,32 +15209,27 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "wand",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "wand",
+                      "rule": "canUsePowerBombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "canUsePowerBombs",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "canPassWorstRoom",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "_converted_from_ast": true
                     },
                     {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "LN Entrance"
-                      }
+                      "rule": "canPassWorstRoom",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "LN Entrance"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -15844,25 +15423,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Firefleas"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Firefleas"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -15955,25 +15529,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16017,25 +15586,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16091,25 +15655,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16162,25 +15721,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wrecked Ship Main"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wrecked Ship Main"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16233,25 +15787,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Main Street Bottom"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Main Street Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16403,20 +15952,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "canDoOuterMaridia",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Main Street Bottom"
-                      }
-                    }
-                  ]
+                  "rule": "canDoOuterMaridia",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Main Street Bottom"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16673,20 +16217,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "canClimbWestSandHole",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Left Sandpit"
-                      }
-                    }
-                  ]
+                  "rule": "canClimbWestSandHole",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Left Sandpit"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16730,25 +16269,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "SMBool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "SMBool",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Right Sandpit"
-                      }
+                      "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Right Sandpit"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -16834,29 +16368,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "haveItem",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "haveItem",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Morph"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
+                      "rule": "Constant",
                       "args": {
-                        "region_name": "Right Sandpit"
-                      }
+                        "value": "Morph"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Right Sandpit"
+                  }
                 },
                 {
                   "rule": "evalSMBool",
@@ -20150,7 +19679,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SMWorld"
     }
   },
   "game_info": {

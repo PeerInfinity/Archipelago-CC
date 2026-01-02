@@ -8960,7 +8960,6 @@
       },
       "Hi-Jump Boots": {
         "name": "Hi-Jump Boots",
-        "hint_text": "Hi Jump Boots",
         "id": 83007,
         "groups": [
           "Everything"
@@ -8968,7 +8967,8 @@
         "classification": "progression",
         "event": false,
         "type": "HiJump",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Hi Jump Boots"
       },
       "Speed Booster": {
         "name": "Speed Booster",
@@ -9038,7 +9038,6 @@
       },
       "X-Ray Scope": {
         "name": "X-Ray Scope",
-        "hint_text": "X Ray Scope",
         "id": 83014,
         "groups": [
           "Everything"
@@ -9046,7 +9045,8 @@
         "classification": "progression",
         "event": false,
         "type": "XRayScope",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "X Ray Scope"
       },
       "Plasma Beam": {
         "name": "Plasma Beam",
@@ -10153,7 +10153,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SuperMetroidWorldGenWorld"
     }
   },
   "game_info": {

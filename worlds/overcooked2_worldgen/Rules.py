@@ -142,17 +142,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 5-4", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 24), HasAll('5-1 Level Complete', 'Purple Ramp'), Has('5-3 Level Complete'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 24), HasAll('5-3 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 5-5", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 38), HasAll('5-1 Level Complete', 'Purple Ramp'), Has('5-4 Level Complete'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 38), HasAll('5-4 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 5-6", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 56), HasAll('5-1 Level Complete', 'Purple Ramp'), Has('5-5 Level Complete'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 56), HasAll('5-5 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
@@ -162,12 +162,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-2", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 6), HasAll('5-1 Level Complete', 'Purple Ramp'), Has('6-1 Level Complete'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 6), HasAll('6-1 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-3", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 15), HasAll('5-1 Level Complete', 'Purple Ramp'), Has('6-2 Level Complete'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 15), HasAll('6-2 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
@@ -177,17 +177,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-5", player),
-        And(And(HasAll('5-1 Level Complete', 'Purple Ramp'), HasAll('6-1 Level Complete', 'Red Ramp')), Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 41), Has('6-4 Level Complete'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 41), HasAll('6-4 Level Complete', '5-1 Level Complete', 'Purple Ramp', '6-1 Level Complete', 'Red Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-6", player),
-        And(And(HasAll('5-1 Level Complete', 'Purple Ramp'), HasAll('6-1 Level Complete', 'Red Ramp')), Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 60), Has('6-5 Level Complete'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 60), HasAll('6-5 Level Complete', '5-1 Level Complete', 'Purple Ramp', '6-1 Level Complete', 'Red Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Kevin-1", player),
-        And(HasAll('Dark Green Ramp', 'Kevin-1'), Has('Kevin-1'))
+        HasAll('Kevin-1', 'Dark Green Ramp')
     )
 
     world.set_rule(
@@ -217,12 +217,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Kevin-7", player),
-        And(HasAll('5-1 Level Complete', 'Purple Ramp'), Has('Kevin-7'))
+        HasAll('Kevin-7', '5-1 Level Complete', 'Purple Ramp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Kevin-8", player),
-        And(And(HasAll('5-1 Level Complete', 'Purple Ramp'), HasAll('6-1 Level Complete', 'Red Ramp')), Has('Kevin-8'))
+        HasAll('Kevin-8', '5-1 Level Complete', 'Purple Ramp', '6-1 Level Complete', 'Red Ramp')
     )
     # Location rules
     world.set_rule(
@@ -262,7 +262,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("1-4 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Wok Wheels'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Wok Wheels', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -282,7 +282,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("1-6 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Progressive Throw/Catch'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Progressive Throw/Catch', 'Larger Tip Jar', 'Progressive Dash', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -332,7 +332,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("2-5 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Fire Extinguisher'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Fire Extinguisher', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -352,7 +352,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("3-1 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Progressive Throw/Catch'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Progressive Throw/Catch', 'Larger Tip Jar', 'Progressive Dash', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -377,7 +377,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("3-2 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Progressive Throw/Catch'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Progressive Throw/Catch', 'Larger Tip Jar', 'Progressive Dash', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -402,7 +402,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("3-3 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Progressive Throw/Catch'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Progressive Throw/Catch', 'Larger Tip Jar', 'Progressive Dash', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -427,7 +427,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("3-4 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Control Stick Batteries'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Control Stick Batteries', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -462,12 +462,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("4-2 (2-Star)", player),
-        And(HasAll('Faster Condiment/Drink Switch', 'Fire Extinguisher'), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]))
+        And(WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Faster Condiment/Drink Switch', 'Fire Extinguisher'))
     )
 
     world.set_rule(
         multiworld.get_location("4-2 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), HasAll('Faster Condiment/Drink Switch', 'Fire Extinguisher'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate', 'Faster Condiment/Drink Switch', 'Fire Extinguisher'))
     )
 
     world.set_rule(
@@ -492,7 +492,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("4-3 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Control Stick Batteries'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Control Stick Batteries', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -502,7 +502,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("4-4 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Wok Wheels'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Wok Wheels', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -537,7 +537,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("4-6 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Control Stick Batteries'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Control Stick Batteries', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -597,7 +597,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("5-6 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Wok Wheels'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Wok Wheels', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -632,7 +632,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("6-2 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Control Stick Batteries'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Control Stick Batteries', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -682,12 +682,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("6-6 (2-Star)", player),
-        And(HasAll('Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]))
+        And(WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
         multiworld.get_location("6-6 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), HasAll('Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate'))
     )
 
     world.set_rule(
@@ -772,5 +772,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Kevin-8 (3-Star)", player),
-        And(And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Larger Tip Jar', 'Progressive Dash', 'Progressive Throw/Catch', 'Spare Plate')), Has('Progressive Throw/Catch'))
+        And(WeightedSum(threshold=1.0, items=[('Dish Scrubber', 1.0), ('Sharp Knife', 1.0), ('Clean Dishes', 0.5), ('Burn Leniency', 0.25), ('Guest Patience', 0.25)]), WeightedSum(threshold=1.0, items=[('Progressive Throw/Catch', 0.4), ('Progressive Dash', 0.35), ('Sharp Knife', 0.3), ('Dish Scrubber', 0.25), ('Larger Tip Jar', 0.2), ('Spare Plate', 0.2), ('Burn Leniency', 0.15), ('Order Lookahead', 0.15), ('Clean Dishes', 0.1), ('Guest Patience', 0.1)]), HasAll('Progressive Throw/Catch', 'Larger Tip Jar', 'Progressive Dash', 'Spare Plate'))
     )

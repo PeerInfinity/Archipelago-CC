@@ -1,31 +1,32 @@
 {
-  "settings": {
-    "game": "Terraria",
-    "options": {
-      "accessibility": 0,
-      "calamity": false,
-      "death_link": false,
-      "early_achievements": true,
-      "exclude_locations": [],
-      "fill_extra_checks_with": 1,
-      "fishing_achievements": false,
-      "getfixedboi": false,
-      "goal": 0,
-      "grindy_achievements": false,
-      "item_links": [],
-      "local_items": [],
-      "non_local_items": [],
-      "normal_achievements": true,
-      "plando_items": [],
-      "priority_locations": [],
-      "progression_balancing": 50,
-      "start_hints": [],
-      "start_inventory": {},
-      "start_location_hints": []
-    },
-    "world_directory": "terraria",
-    "use_resolved_items": false
+  "options": {
+    "accessibility": 0,
+    "calamity": false,
+    "death_link": false,
+    "early_achievements": true,
+    "exclude_locations": [],
+    "fill_extra_checks_with": 1,
+    "fishing_achievements": false,
+    "getfixedboi": false,
+    "goal": 0,
+    "grindy_achievements": false,
+    "item_links": [],
+    "local_items": [],
+    "non_local_items": [],
+    "normal_achievements": true,
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_location_hints": []
   },
+  "exporter": {
+    "use_resolved_items": false,
+    "world_class_name": "TerrariaWorld"
+  },
+  "game": "Terraria",
+  "world_directory": "terraria",
   "world_attributes": {
     "armor_minions": {
       "Wulfrum Armor": 1,
@@ -558,39 +559,9 @@
       "Skeletron Prime"
     ],
     "ter_goals": {
-      "Post-The Destroyer": "The Destroyer",
       "Post-The Twins": "The Twins",
-      "Post-Skeletron Prime": "Skeletron Prime"
-    },
-    "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
-    "slot_data": {
-      "goal": [
-        "Skeletron Prime",
-        "The Destroyer",
-        "The Twins"
-      ],
-      "deathlink": false,
-      "calamity": 0,
-      "getfixedboi": 0,
-      "early_achievements": 1,
-      "normal_achievements": 1,
-      "grindy_achievements": 0,
-      "fishing_achievements": 0
-    },
-    "web": {
-      "theme": "grass",
-      "tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Seldom"
-          ]
-        }
-      ]
+      "Post-Skeletron Prime": "Skeletron Prime",
+      "Post-The Destroyer": "The Destroyer"
     }
   }
 }

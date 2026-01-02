@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "AquariaWorldGenWorld"
+    "1": "AquariaWorld"
   },
   "regions": {
     "1": {
@@ -4757,8 +4757,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Sun God beated",
-                      "Lumerean God beated"
+                      "Lumerean God beated",
+                      "Sun God beated"
                     ]
                   }
                 }
@@ -4786,8 +4786,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Sun God beated",
-                      "Lumerean God beated"
+                      "Lumerean God beated",
+                      "Sun God beated"
                     ]
                   }
                 }
@@ -7256,7 +7256,6 @@
       },
       "Vedha's Cure-All": {
         "name": "Vedha's Cure-All",
-        "hint_text": "Vedha's Cure All",
         "id": 698036,
         "groups": [
           "Everything"
@@ -7264,7 +7263,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Vedha's Cure All"
       },
       "Zuuna's Perogi": {
         "name": "Zuuna's Perogi",
@@ -8989,9 +8989,11 @@
         "skip_first_vision": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "turtle_randomizer": 2,
-        "unconfine_home_water": 0
+        "unconfine_home_water": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -9103,6 +9105,11 @@
           "default": 0,
           "display_name": "Skip Naija's first vision"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "turtle_randomizer": {
           "type": "choice",
           "name_lookup": {
@@ -9123,6 +9130,11 @@
           },
           "default": 0,
           "display_name": "Unconfine Home Waters Area"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "regions": {
@@ -9439,7 +9451,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "AquariaWorld"
     }
   },
   "game_info": {

@@ -722,72 +722,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "can_use_hookshot",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Snatcher's Contract - The Subcon Well"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Snatcher's Contract - Toilet of Doom"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Snatcher's Contract - Queen Vanessa's Manor"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Snatcher's Contract - Mail Delivery Service"
-                      }
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "True_"
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
                 }
               ]
             }
@@ -1370,42 +1318,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Mail Delivery Service"
-                      }
-                    },
-                    {
-                      "rule": "AST_location_rule_ref",
-                      "args": {
-                        "location": "Act Completion (Mail Delivery Service)",
-                        "_original_ast_type": "location_rule_ref"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Mail Delivery Service"
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Train Rush"
-                      }
-                    },
-                    {
-                      "rule": "AST_location_rule_ref",
-                      "args": {
-                        "location": "Act Completion (Train Rush)",
-                        "_original_ast_type": "location_rule_ref"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "AST_location_rule_ref",
+                  "args": {
+                    "location": "Act Completion (Mail Delivery Service)",
+                    "_original_ast_type": "location_rule_ref"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
+                  "rule": "AST_location_rule_ref",
+                  "args": {
+                    "location": "Act Completion (Train Rush)",
+                    "_original_ast_type": "location_rule_ref"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1540,23 +1478,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Heating Up Mafia Town"
-                      }
-                    },
-                    {
-                      "rule": "AST_location_rule_ref",
-                      "args": {
-                        "location": "Act Completion (Heating Up Mafia Town)",
-                        "_original_ast_type": "location_rule_ref"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Heating Up Mafia Town"
+                  }
+                },
+                {
+                  "rule": "AST_location_rule_ref",
+                  "args": {
+                    "location": "Act Completion (Heating Up Mafia Town)",
+                    "_original_ast_type": "location_rule_ref"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -1659,17 +1592,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "can_use_hookshot",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hat",
@@ -1695,17 +1620,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "can_use_hookshot",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hat",
@@ -1754,23 +1671,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Heating Up Mafia Town"
-                      }
-                    },
-                    {
-                      "rule": "AST_location_rule_ref",
-                      "args": {
-                        "location": "Act Completion (Heating Up Mafia Town)",
-                        "_original_ast_type": "location_rule_ref"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Heating Up Mafia Town"
+                  }
+                },
+                {
+                  "rule": "AST_location_rule_ref",
+                  "args": {
+                    "location": "Act Completion (Heating Up Mafia Town)",
+                    "_original_ast_type": "location_rule_ref"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -1788,72 +1700,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "can_use_hookshot",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Snatcher's Contract - The Subcon Well"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Snatcher's Contract - Toilet of Doom"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Snatcher's Contract - Queen Vanessa's Manor"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Snatcher's Contract - Mail Delivery Service"
-                      }
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "True_"
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
                 }
               ]
             }
@@ -1939,72 +1799,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "can_use_hookshot",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Snatcher's Contract - The Subcon Well"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Snatcher's Contract - Toilet of Doom"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Snatcher's Contract - Queen Vanessa's Manor"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Snatcher's Contract - Mail Delivery Service"
-                      }
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "True_"
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
                 }
               ]
             }
@@ -3174,72 +2982,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "can_use_hookshot",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Snatcher's Contract - The Subcon Well"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Snatcher's Contract - Toilet of Doom"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Snatcher's Contract - Queen Vanessa's Manor"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Snatcher's Contract - Mail Delivery Service"
-                      }
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "True_"
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
                 }
               ]
             }
@@ -3399,17 +3155,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "can_use_hookshot",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hat",
@@ -3435,17 +3183,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "can_use_hookshot",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hat",
@@ -3517,72 +3257,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "can_use_hookshot",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Snatcher's Contract - The Subcon Well"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Snatcher's Contract - Toilet of Doom"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Snatcher's Contract - Queen Vanessa's Manor"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Snatcher's Contract - Mail Delivery Service"
-                      }
-                    }
-                  ]
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "True_"
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
+                    ]
+                  }
                 }
               ]
             }
@@ -3641,19 +3329,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "can_hit",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "can_use_hookshot",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_relic_combo",
@@ -3955,28 +3638,12 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "rule": "can_hit",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "True_"
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "can_use_hookshot",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "AFR Access"
-                      }
+                      "rule": "True_"
                     }
                   ]
                 },
@@ -3984,6 +3651,17 @@
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "AFR Access"
+                  }
                 }
               ]
             },
@@ -8152,6 +7830,11 @@
           "range_end": 99,
           "default": 50,
           "display_name": "Progression Balancing"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         }
       },
       "act_connections": {
@@ -8352,7 +8035,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "HatInTimeWorld"
     }
   },
   "game_info": {
