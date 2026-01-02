@@ -368,6 +368,21 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if opt in path and original_value == '<missing>':
             return True
 
+    # World class names differ because WorldGen derives class name from game name
+    # (e.g., "DOOM II" -> "DOOMIIWorld") vs original's actual class (e.g., "DOOM2World")
+    if path.startswith('world_classes.'):
+        return True
+
+    # Options that original worlds may modify at runtime but WorldGen uses template defaults.
+    # Examples:
+    # - exclude_locations: Original may dynamically add locations (e.g., DOOM II adds
+    #   death_logic_locations when allow_death_logic is False)
+    # - start_inventory_from_pool: Common option that WorldGen may not export if empty
+    runtime_modified_options = {'exclude_locations', 'start_inventory_from_pool'}
+    for opt in runtime_modified_options:
+        if f'options.{opt}' in path:
+            return True
+
     return False
 
 
