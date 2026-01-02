@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "TheMessengerWorldGenWorld"
+    "1": "MessengerWorld"
   },
   "regions": {
     "1": {
@@ -1490,8 +1490,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Rope Dart",
-                      "Wingsuit"
+                      "Meditation",
+                      "Path of Resilience"
                     ]
                   }
                 },
@@ -1499,8 +1499,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Meditation",
-                      "Path of Resilience"
+                      "Rope Dart",
+                      "Wingsuit"
                     ]
                   }
                 },
@@ -2665,36 +2665,56 @@
             "name": "Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Crushing Pits Shop",
             "connected_region": "Howling Grotto - Crushing Pits Shop",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "region_reference",
+                        "region": "Howling Grotto - Emerald Golem Shop"
+                      },
+                      "attr": "can_reach"
+                    },
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
                   "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Meditation",
+                              "Path of Resilience"
+                            ]
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Second Wind"
+                          }
+                        }
+                      ]
+                    },
                     {
                       "rule": "HasAny",
                       "args": {
                         "items": [
-                          "Meditation",
-                          "Path of Resilience"
+                          "Strike of the Ninja",
+                          "Wingsuit"
                         ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Second Wind"
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Strike of the Ninja",
-                      "Wingsuit"
-                    ]
-                  }
                 }
               ]
             }
@@ -3829,8 +3849,8 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Wingsuit",
-                          "Second Wind"
+                          "Second Wind",
+                          "Wingsuit"
                         ]
                       }
                     }
@@ -4455,8 +4475,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Wingsuit",
-                      "Second Wind"
+                      "Second Wind",
+                      "Wingsuit"
                     ]
                   }
                 }
@@ -4770,10 +4790,10 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Rope Dart",
-                  "Wingsuit",
                   "Lightfoot Tabi",
-                  "Strike of the Ninja"
+                  "Rope Dart",
+                  "Strike of the Ninja",
+                  "Wingsuit"
                 ]
               }
             }
@@ -5607,9 +5627,9 @@
               "args": {
                 "items": [
                   "Aerobatics Warrior",
-                  "Wingsuit",
                   "Rope Dart",
-                  "Strike of the Ninja"
+                  "Strike of the Ninja",
+                  "Wingsuit"
                 ]
               }
             },
@@ -7128,7 +7148,9 @@
         "non_local_items": [],
         "notes_needed": 6,
         "percent_seals_required": 100,
+        "plando_connections": [],
         "plando_items": [],
+        "portal_plando": [],
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": false,
@@ -7140,7 +7162,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "total_seals": 45,
-        "traps": false
+        "traps": false,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -7211,6 +7234,16 @@
           "default": 100,
           "display_name": "Percent Seals Required"
         },
+        "plando_connections": {
+          "type": "plando_connections",
+          "default": [],
+          "display_name": "Plando Connections"
+        },
+        "portal_plando": {
+          "type": "plando_connections",
+          "default": [],
+          "display_name": "Plando Connections"
+        },
         "progression_balancing": {
           "type": "range",
           "range_start": 0,
@@ -7267,6 +7300,11 @@
           "type": "toggle",
           "default": 0,
           "display_name": "Include Traps"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "shop_prices": {
@@ -7418,7 +7456,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MessengerWorld"
     }
   },
   "game_info": {

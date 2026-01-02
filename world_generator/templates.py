@@ -1230,9 +1230,13 @@ class {class_name}(FreeText):
 
     elif option_type == 'plando_connections':
         # Plando connections - inherits from PlandoConnections
+        # Must define entrances and exits (required by PlandoConnections metaclass)
+        # Using empty sets since plando is not used in worldgen testing
         class_code = f'''
 class {class_name}(PlandoConnections):
     """Plando connections for {display_name}."""
+    entrances = frozenset()
+    exits = frozenset()
 '''
         return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections'
 

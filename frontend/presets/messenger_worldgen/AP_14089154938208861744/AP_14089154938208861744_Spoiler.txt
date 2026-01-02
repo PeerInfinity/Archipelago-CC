@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Available Starting Portals:      6
 Death Link:                      No
 Early Meditation:                No
@@ -26,6 +27,8 @@ Logic Level:                     Normal
 Music Box Gauntlet:              Yes
 Notes Needed:                    6
 Percent Seals Required:          100
+Plando Connections:              
+Plando Connections:              
 Shop Prices Modifier:            100
 Shuffle Portal Outputs:          None
 Shuffle Mega Time Shards:        No

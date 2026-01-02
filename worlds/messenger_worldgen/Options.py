@@ -80,9 +80,13 @@ class PercentSealsRequired(Range):
 
 class PlandoConnections(PlandoConnections):
     """Plando connections for Transition Plando Connections."""
+    entrances = frozenset()
+    exits = frozenset()
 
 class PortalPlando(PlandoConnections):
     """Plando connections for Portal Plando Connections."""
+    entrances = frozenset()
+    exits = frozenset()
 
 class ShopPrice(Range):
     """Option for Shop Prices Modifier."""
