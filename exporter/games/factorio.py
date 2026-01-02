@@ -41,32 +41,55 @@ class FactorioGameExportHandler(GenericGameExportHandler):
             return rule
 
         # Handle all_of rules that iterate over required_technologies
-        if rule.get('type') == 'all_of':
-            iterator_info = rule.get('iterator_info', {})
+        # Check both AST format (type: 'all_of') and Rule Builder format (rule: 'AST_all_of')
+        is_all_of = rule.get('type') == 'all_of'
+        is_ast_all_of = rule.get('rule') == 'AST_all_of'
+
+        if is_all_of or is_ast_all_of:
+            # For Rule Builder format, args contain the actual rule data
+            rule_data = rule.get('args', rule) if is_ast_all_of else rule
+            iterator_info = rule_data.get('iterator_info', {})
             iterator = iterator_info.get('iterator', {})
 
             # Simplify technology.name to just technology when iterating over required_technologies
             if self._is_required_tech_iterator(iterator):
-                element_rule = rule.get('element_rule', {})
+                element_rule = rule_data.get('element_rule', {})
                 target_name = iterator_info.get('target', {}).get('name')
                 simplified = self._simplify_technology_name_access(element_rule, target_name)
                 if simplified:
-                    rule['element_rule'] = simplified
+                    rule_data['element_rule'] = simplified
 
         # Let base class handle all standard processing
         return super().expand_rule(rule, _depth)
 
     def _is_required_tech_iterator(self, iterator: Dict[str, Any]) -> bool:
-        """Check if iterator is accessing required_technologies[something]."""
-        if iterator.get('type') != 'subscript':
-            return False
-        value = iterator.get('value', {})
-        # Case 1: required_technologies as name reference
-        if value.get('type') == 'name' and value.get('name') == 'required_technologies':
-            return True
-        # Case 2: required_technologies inlined as constant dict
-        if value.get('type') == 'constant' and isinstance(value.get('value'), dict):
-            return True
+        """Check if iterator is accessing required_technologies[something].
+
+        Handles multiple cases:
+        1. subscript type with required_technologies name reference
+        2. subscript type with inlined constant dict
+        3. constant type with array (already resolved)
+        """
+        iter_type = iterator.get('type')
+
+        # Case 1 & 2: subscript access to required_technologies
+        if iter_type == 'subscript':
+            value = iterator.get('value', {})
+            # required_technologies as name reference
+            if value.get('type') == 'name' and value.get('name') == 'required_technologies':
+                return True
+            # required_technologies inlined as constant dict
+            if value.get('type') == 'constant' and isinstance(value.get('value'), dict):
+                return True
+
+        # Case 3: already resolved to a constant array
+        # This happens when the rule analysis resolves required_technologies[ingredient]
+        # to the actual list (could be Technology objects or strings)
+        if iter_type == 'constant':
+            value = iterator.get('value')
+            if isinstance(value, list):
+                return True
+
         return False
 
     def _simplify_technology_name_access(self, rule: Dict[str, Any], iterator_var: str) -> Dict[str, Any]:
