@@ -105,9 +105,12 @@ class WorldGenerator:
         # Update game name
         self.data.metadata.game_name = new_name
 
-        # Update world class name: "My Game WorldGen" -> "MyGameWorldGenWorld"
-        class_base = sanitize_identifier(new_name)
-        self.data.metadata.world_class_name = class_base + 'World'
+        # Only update world class name if there's no original from the exporter
+        # This preserves the original class name (e.g., "ALTTPWorld") even when
+        # the game is renamed (e.g., to "A Link to the Past WorldGen")
+        if not self.data.metadata.original_world_class_name:
+            class_base = sanitize_identifier(new_name)
+            self.data.metadata.world_class_name = class_base + 'World'
 
         # Update game directory: "My Game WorldGen" -> "my_game_worldgen"
         # First remove non-alphanumeric chars except spaces and dashes, then convert to snake_case
@@ -147,56 +150,66 @@ class WorldGenerator:
             '__init__.py': generate_init_py(self.data, canonical_seed1=self.canonical_seed1),
         }
 
-        # Export settings and world_attributes for game-specific export handlers
-        # This allows worldgen exports to reproduce the same settings as the source
+        # Export options, exporter flags, and world_attributes for game-specific export handlers
+        # This allows worldgen exports to reproduce the same behavior as the source
         with open(self.json_path, 'r') as f:
             source_json = json.load(f)
 
-        # Build the worldgen settings file with separate sections
+        # Build the worldgen data file with clear separate sections:
+        # - options: game option values (from world[player].options)
+        # - exporter: exporter behavior flags (from exporter[player])
+        # - world_attributes: computed/runtime world attributes
         worldgen_data = {}
 
-        # Extract settings from world (options and game name) and exporter (behavior flags)
-        source_settings = source_json.get('world', {}).get(self.player_id, {})
+        # Extract from world section (contains options and other data)
+        source_world = source_json.get('world', {}).get(self.player_id, {})
         source_exporter = source_json.get('exporter', {}).get(self.player_id, {})
 
-        if source_settings or source_exporter:
-            # Start with world settings
-            world_settings_keys = {'game', 'options', 'world_directory'}
-            filtered_settings = {k: v for k, v in source_settings.items() if k in world_settings_keys}
+        # Extract options (game option values)
+        if source_world.get('options'):
+            worldgen_data['options'] = source_world['options']
 
-            # Add exporter settings (new location) or fall back to world settings (legacy)
-            exporter_keys = {'assume_bidirectional_exits', 'use_resolved_items',
-                           'use_auto_indirect_conditions', 'add_sphere_items_upfront'}
-            for key in exporter_keys:
-                # Prefer exporter section, fall back to world section for legacy
-                if key in source_exporter:
-                    filtered_settings[key] = source_exporter[key]
-                elif key in source_settings:
-                    filtered_settings[key] = source_settings[key]
+        # Extract exporter behavior flags
+        exporter_keys = {'assume_bidirectional_exits', 'use_resolved_items',
+                        'use_auto_indirect_conditions', 'add_sphere_items_upfront',
+                        'world_class_name'}
+        exporter_data = {}
+        for key in exporter_keys:
+            # Prefer exporter section, fall back to world section for legacy
+            if key in source_exporter:
+                exporter_data[key] = source_exporter[key]
+            elif key in source_world:
+                exporter_data[key] = source_world[key]
+        if exporter_data:
+            worldgen_data['exporter'] = exporter_data
 
-            if filtered_settings:
-                worldgen_data['settings'] = filtered_settings
+        # Include game and world_directory as metadata
+        if source_world.get('game'):
+            worldgen_data['game'] = source_world['game']
+        if source_world.get('world_directory'):
+            worldgen_data['world_directory'] = source_world['world_directory']
 
-        # Extract world_attributes (new format) or from legacy settings
+        # Extract world_attributes (new format) or from legacy mixed format
         source_world_attrs = source_json.get('world_attributes', {}).get(self.player_id, {})
         if source_world_attrs:
             worldgen_data['world_attributes'] = source_world_attrs
-        elif source_settings:
-            # Legacy format: extract world attributes from settings
+        elif source_world:
+            # Legacy format: extract world attributes from world section
             skip_keys = {
                 'game', 'options', 'option_definitions', 'world_directory',
                 'assume_bidirectional_exits', 'use_resolved_items',
                 'use_auto_indirect_conditions', 'add_sphere_items_upfront',
+                'base_id', 'web', 'world_description', 'slot_data', 'accessibility', 'mode',
             }
-            legacy_world_attrs = {k: v for k, v in source_settings.items() if k not in skip_keys}
+            legacy_world_attrs = {k: v for k, v in source_world.items() if k not in skip_keys}
             if legacy_world_attrs:
                 worldgen_data['world_attributes'] = legacy_world_attrs
 
         if worldgen_data:
-            settings_path = output_dir / '_worldgen_settings.json'
+            worldgen_path = output_dir / '_worldgen_settings.json'
             if not dry_run:
-                settings_path.write_text(json.dumps(worldgen_data, indent=2))
-                logger.info(f"Wrote settings to {settings_path}")
+                worldgen_path.write_text(json.dumps(worldgen_data, indent=2))
+                logger.info(f"Wrote worldgen data to {worldgen_path}")
 
         for filename, content in files.items():
             file_path = output_dir / filename

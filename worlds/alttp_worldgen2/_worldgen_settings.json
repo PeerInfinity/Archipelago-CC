@@ -56,6 +56,7 @@
     "progressive": 2,
     "quickswap": true,
     "randomize_cost_types": false,
+    "randomize_items": false,
     "randomize_shop_inventories": 0,
     "randomize_shop_prices": false,
     "red_clock_time": -2,
@@ -87,46 +88,19 @@
     "triforce_pieces_required": 20,
     "triforcehud": 0,
     "turtle_rock_medallion": 0,
+    "use_canonical_options": true,
     "uw_palettes": 0
   },
   "exporter": {
-    "use_resolved_items": false,
-    "world_class_name": "ALTTPWorld"
+    "world_class_name": "ALTTPWorld",
+    "use_resolved_items": false
   },
-  "game": "A Link to the Past",
-  "world_directory": "alttp",
+  "game": "A Link to the Past WorldGen",
+  "world_directory": "alttp_worldgen",
   "world_attributes": {
-    "has_progressive_bows": true,
-    "dungeons": {
-      "Hyrule Castle": "Hyrule Castle",
-      "Eastern Palace": "Eastern Palace",
-      "Desert Palace": "Desert Palace",
-      "Tower of Hera": "Tower of Hera",
-      "Agahnims Tower": "Agahnims Tower",
-      "Palace of Darkness": "Palace of Darkness",
-      "Thieves Town": "Thieves Town",
-      "Skull Woods": "Skull Woods",
-      "Swamp Palace": "Swamp Palace",
-      "Ice Palace": "Ice Palace",
-      "Misery Mire": "Misery Mire",
-      "Turtle Rock": "Turtle Rock",
-      "Ganons Tower": "Ganons Tower"
-    },
-    "waterfall_fairy_bottle_fill": "Bottle (Red Potion)",
-    "pyramid_fairy_bottle_fill": "Bottle (Good Bee)",
-    "fix_trock_doors": false,
-    "fix_skullwoods_exit": false,
-    "fix_palaceofdarkness_exit": false,
-    "fix_trock_exit": false,
-    "required_medallions": [
-      "Quake",
-      "Ether"
-    ],
-    "escape_assist": [],
     "shops": [
       {
         "region": "Cave Shop (Dark Death Mountain)",
-        "room_id": 274,
         "inventory": [
           {
             "item": "Red Potion",
@@ -156,6 +130,7 @@
             "player": 0
           }
         ],
+        "room_id": 274,
         "shopkeeper_config": 193,
         "custom": true,
         "locked": false,
@@ -163,7 +138,6 @@
       },
       {
         "region": "Red Shield Shop",
-        "room_id": 272,
         "inventory": [
           {
             "item": "Red Shield",
@@ -193,6 +167,7 @@
             "player": 0
           }
         ],
+        "room_id": 272,
         "shopkeeper_config": 193,
         "custom": true,
         "locked": false,
@@ -200,7 +175,6 @@
       },
       {
         "region": "Dark Lake Hylia Shop",
-        "room_id": 271,
         "inventory": [
           {
             "item": "Red Potion",
@@ -230,6 +204,7 @@
             "player": 0
           }
         ],
+        "room_id": 271,
         "shopkeeper_config": 193,
         "custom": true,
         "locked": false,
@@ -237,7 +212,6 @@
       },
       {
         "region": "Dark World Lumberjack Shop",
-        "room_id": 271,
         "inventory": [
           {
             "item": "Red Potion",
@@ -267,6 +241,7 @@
             "player": 0
           }
         ],
+        "room_id": 271,
         "shopkeeper_config": 193,
         "custom": true,
         "locked": false,
@@ -274,7 +249,6 @@
       },
       {
         "region": "Village of Outcasts Shop",
-        "room_id": 271,
         "inventory": [
           {
             "item": "Red Potion",
@@ -304,6 +278,7 @@
             "player": 0
           }
         ],
+        "room_id": 271,
         "shopkeeper_config": 193,
         "custom": true,
         "locked": false,
@@ -311,7 +286,6 @@
       },
       {
         "region": "Dark World Potion Shop",
-        "room_id": 271,
         "inventory": [
           {
             "item": "Red Potion",
@@ -341,6 +315,7 @@
             "player": 0
           }
         ],
+        "room_id": 271,
         "shopkeeper_config": 193,
         "custom": true,
         "locked": false,
@@ -348,7 +323,6 @@
       },
       {
         "region": "Light World Death Mountain Shop",
-        "room_id": 255,
         "inventory": [
           {
             "item": "Red Potion",
@@ -378,6 +352,7 @@
             "player": 0
           }
         ],
+        "room_id": 255,
         "shopkeeper_config": 160,
         "custom": true,
         "locked": false,
@@ -385,7 +360,6 @@
       },
       {
         "region": "Kakariko Shop",
-        "room_id": 287,
         "inventory": [
           {
             "item": "Red Potion",
@@ -415,6 +389,7 @@
             "player": 0
           }
         ],
+        "room_id": 287,
         "shopkeeper_config": 160,
         "custom": true,
         "locked": false,
@@ -422,7 +397,6 @@
       },
       {
         "region": "Cave Shop (Lake Hylia)",
-        "room_id": 274,
         "inventory": [
           {
             "item": "Red Potion",
@@ -452,6 +426,7 @@
             "player": 0
           }
         ],
+        "room_id": 274,
         "shopkeeper_config": 160,
         "custom": true,
         "locked": false,
@@ -459,7 +434,6 @@
       },
       {
         "region": "Potion Shop",
-        "room_id": 265,
         "inventory": [
           {
             "item": "Red Potion",
@@ -489,6 +463,7 @@
             "player": 0
           }
         ],
+        "room_id": 265,
         "shopkeeper_config": 160,
         "custom": true,
         "locked": true,
@@ -496,7 +471,6 @@
       },
       {
         "region": "Capacity Upgrade",
-        "room_id": 277,
         "inventory": [
           {
             "item": "Bomb Upgrade (+5)",
@@ -518,12 +492,40 @@
           },
           null
         ],
+        "room_id": 277,
         "shopkeeper_config": 4,
         "custom": true,
         "locked": true,
         "sram_offset": 30
       }
     ],
+    "has_progressive_bows": true,
+    "dungeons": {
+      "Hyrule Castle": "Hyrule Castle",
+      "Eastern Palace": "Eastern Palace",
+      "Desert Palace": "Desert Palace",
+      "Tower of Hera": "Tower of Hera",
+      "Agahnims Tower": "Agahnims Tower",
+      "Palace of Darkness": "Palace of Darkness",
+      "Thieves Town": "Thieves Town",
+      "Skull Woods": "Skull Woods",
+      "Swamp Palace": "Swamp Palace",
+      "Ice Palace": "Ice Palace",
+      "Misery Mire": "Misery Mire",
+      "Turtle Rock": "Turtle Rock",
+      "Ganons Tower": "Ganons Tower"
+    },
+    "waterfall_fairy_bottle_fill": "Bottle (Red Potion)",
+    "pyramid_fairy_bottle_fill": "Bottle (Good Bee)",
+    "fix_trock_doors": false,
+    "fix_skullwoods_exit": false,
+    "fix_palaceofdarkness_exit": false,
+    "fix_trock_exit": false,
+    "required_medallions": [
+      "Quake",
+      "Ether"
+    ],
+    "escape_assist": [],
     "logical_heart_containers": 10,
     "logical_heart_pieces": 24,
     "er_seed": "vanilla",

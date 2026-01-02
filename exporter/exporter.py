@@ -1382,7 +1382,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 # Store reference to dungeon instead of full dungeon data
                 if hasattr(region, 'dungeon') and region.dungeon:
-                    dungeon_name = getattr(region.dungeon, 'name', None)
+                    # Handle both Dungeon objects (have .name) and strings (from WorldGen)
+                    if hasattr(region.dungeon, 'name'):
+                        dungeon_name = region.dungeon.name
+                    else:
+                        dungeon_name = str(region.dungeon) if region.dungeon else None
                     if dungeon_name:
                         region_data['dungeon'] = dungeon_name
 
@@ -1689,6 +1693,13 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             region_data['locations'].append(location_data)
                         except Exception as e:
                             logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
+
+                # Auto-mark regions with no locations and no exits as dynamically_added
+                # These are structural regions that exist for navigation but have no content
+                if (not region_data.get('dynamically_added') and
+                    not region_data['locations'] and
+                    not region_data['exits']):
+                    region_data['dynamically_added'] = True
 
                 regions_data[region.name] = region_data
 
