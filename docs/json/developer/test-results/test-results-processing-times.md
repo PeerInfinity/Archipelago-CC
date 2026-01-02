@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-02 03:43:22
+**Generated:** 2026-01-02 03:55:47
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -106,8 +106,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Celeste (Open World) | 38.5s | 1 | Celeste (Open World).yaml |
+| 2 | Subnautica | 30.4s | 1 | Subnautica.yaml |
+| 3 | Dark Souls III | 28.8s | 1 | Dark Souls III.yaml |
+| 4 | Kingdom Hearts 2 | 21.8s | 1 | Kingdom Hearts 2.yaml |
+| 5 | A Link to the Past | 19.8s | 1 | A Link to the Past.yaml |
+| 6 | Choo-Choo Charles | 19.1s | 1 | Choo-Choo Charles.yaml |
+| 7 | Kingdom Hearts | 19.1s | 1 | Kingdom Hearts.yaml |
+| 8 | The Wind Waker | 18.3s | 1 | The Wind Waker.yaml |
+| 9 | Kirby's Dream Land 3 | 17.3s | 1 | Kirby's Dream Land 3.yaml |
+| 10 | Super Metroid | 16.5s | 1 | Super Metroid.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Bumper Stickers | 71.6s | 1 | Bumper Stickers.yaml |
+| 2 | Aquaria | 71.4s | 1 | Aquaria.yaml |
+| 3 | A Short Hike | 69.9s | 1 | A Short Hike.yaml |
+| 4 | Baking Adventure | 69.6s | 1 | Baking Adventure.yaml |
+| 5 | Adventure | 69.1s | 1 | Adventure.yaml |
+| 6 | A Link to the Past | 69.0s | 1 | A Link to the Past.yaml |
+| 7 | Bomb Rush Cyberfunk | 67.5s | 1 | Bomb Rush Cyberfunk.yaml |
+| 8 | APQuest | 67.1s | 1 | APQuest.yaml |
+| 9 | A Hat in Time | 66.9s | 1 | A Hat in Time.yaml |
+| 10 | Hylics 2 | 66.6s | 1 | Hylics 2.yaml |
