@@ -368,6 +368,23 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if opt in path and original_value == '<missing>':
             return True
 
+    # dynamically_added: Regions with no locations/exits may be auto-marked.
+    # Some exports have this marked, others don't. Both are semantically equivalent.
+    if '.dynamically_added' in path:
+        return True
+
+    # exclude_locations: Original worlds may dynamically add exclusions in set_rules()
+    # (e.g., DOOM games add death_logic_locations when allow_death_logic=false).
+    # WorldGen doesn't replicate this dynamic behavior, so counts may differ.
+    if 'options.exclude_locations' in path:
+        return True
+
+    # start_inventory_from_pool: Empty dict {} vs missing are semantically equivalent.
+    # Original exports include the empty dict, WorldGen may omit it.
+    if 'options.start_inventory_from_pool' in path:
+        if original_value == {} or worldgen_value == '<missing>':
+            return True
+
     return False
 
 
