@@ -1993,7 +1993,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "BumpStikWorld"
     }
   },
   "game_info": {

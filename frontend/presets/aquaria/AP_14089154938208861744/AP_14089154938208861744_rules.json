@@ -5038,25 +5038,17 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "_has_beast_and_soup_form",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lumerean God beated"
-                      }
-                    }
-                  ]
+                  "rule": "_has_beast_and_soup_form",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Sun God beated"
+                    "items": [
+                      "Lumerean God beated",
+                      "Sun God beated"
+                    ]
                   }
                 }
               ]
@@ -5077,25 +5069,17 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "_has_beast_and_soup_form",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lumerean God beated"
-                      }
-                    }
-                  ]
+                  "rule": "_has_beast_and_soup_form",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Sun God beated"
+                    "items": [
+                      "Lumerean God beated",
+                      "Sun God beated"
+                    ]
                   }
                 }
               ]
@@ -9299,6 +9283,11 @@
           "default": 0,
           "display_name": "Skip Naija's first vision"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "turtle_randomizer": {
           "type": "choice",
           "name_lookup": {
@@ -9635,7 +9624,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "AquariaWorld"
     }
   },
   "game_info": {

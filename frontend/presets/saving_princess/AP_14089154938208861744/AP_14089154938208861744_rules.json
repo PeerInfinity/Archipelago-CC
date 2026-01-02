@@ -1107,6 +1107,11 @@
           "default": 2,
           "display_name": "Sprint Availability"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "trap_chance": {
           "type": "range",
           "range_start": 0,
@@ -1168,7 +1173,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "SavingPrincessWorld"
     }
   },
   "game_info": {

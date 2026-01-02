@@ -1754,7 +1754,8 @@
       "Sunwarps": {
         "name": "Sunwarps",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Pilgrim Antechamber": {
         "name": "Pilgrim Antechamber",
@@ -5535,7 +5536,8 @@
       "Orange Tower": {
         "name": "Orange Tower",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Orange Tower First Floor": {
         "name": "Orange Tower First Floor",
@@ -7374,32 +7376,38 @@
       "Behind A Smile": {
         "name": "Behind A Smile",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Sixteen Colorful Squares": {
         "name": "Sixteen Colorful Squares",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Among Treetops": {
         "name": "Among Treetops",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Horizon's Edge": {
         "name": "Horizon's Edge",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Beneath The Lookout": {
         "name": "Beneath The Lookout",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Rooftop Staircase": {
         "name": "Rooftop Staircase",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Orange Tower Basement": {
         "name": "Orange Tower Basement",
@@ -16231,7 +16239,8 @@
       "The Artistic (Hint Room)": {
         "name": "The Artistic (Hint Room)",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "The Discerning": {
         "name": "The Discerning",
@@ -16386,7 +16395,8 @@
       "Far Window": {
         "name": "Far Window",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Wondrous Lobby": {
         "name": "Wondrous Lobby",
@@ -19184,12 +19194,14 @@
       "The Red": {
         "name": "The Red",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "The Ecstatic": {
         "name": "The Ecstatic",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Outside The Scientific": {
         "name": "Outside The Scientific",
@@ -23050,6 +23062,11 @@
           "type": "toggle",
           "default": 0,
           "display_name": "Speed Boost Mode"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         },
         "sunwarp_access": {
           "type": "choice",
@@ -37244,7 +37261,8 @@
         "version": "1.0"
       },
       "use_resolved_items": false,
-      "use_auto_indirect_conditions": true
+      "use_auto_indirect_conditions": true,
+      "world_class_name": "LingoWorld"
     }
   },
   "game_info": {

@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "DonkeyKongCountry3WorldGenWorld"
+    "1": "DKC3World"
   },
   "regions": {
     "1": {
@@ -45,16 +45,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Compare",
+                  "rule": "Has",
                   "args": {
-                    "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "DK Coin"
-                      }
-                    },
-                    "op": ">=",
-                    "right": 30
+                    "item_name": "DK Coin",
+                    "count": 30
                   }
                 },
                 {
@@ -644,16 +638,10 @@
             "name": "Stampede Sprint",
             "connected_region": "Stampede Sprint",
             "access_rule": {
-              "rule": "Compare",
+              "rule": "Has",
               "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": "Bonus Coin"
-                  }
-                },
-                "op": ">=",
-                "right": {
+                "item_name": "Bonus Coin",
+                "count": {
                   "rule": "Arithmetic",
                   "args": {
                     "left": 15,
@@ -675,16 +663,10 @@
             "name": "Criss Kross Cliffs",
             "connected_region": "Criss Kross Cliffs",
             "access_rule": {
-              "rule": "Compare",
+              "rule": "Has",
               "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": "Bonus Coin"
-                  }
-                },
-                "op": ">=",
-                "right": {
+                "item_name": "Bonus Coin",
+                "count": {
                   "rule": "Arithmetic",
                   "args": {
                     "left": 15,
@@ -706,16 +688,10 @@
             "name": "Tyrant Twin Tussle",
             "connected_region": "Tyrant Twin Tussle",
             "access_rule": {
-              "rule": "Compare",
+              "rule": "Has",
               "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": "Bonus Coin"
-                  }
-                },
-                "op": ">=",
-                "right": {
+                "item_name": "Bonus Coin",
+                "count": {
                   "rule": "Arithmetic",
                   "args": {
                     "left": 15,
@@ -737,16 +713,10 @@
             "name": "Swoopy Salvo",
             "connected_region": "Swoopy Salvo",
             "access_rule": {
-              "rule": "Compare",
+              "rule": "Has",
               "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": "Bonus Coin"
-                  }
-                },
-                "op": ">=",
-                "right": {
+                "item_name": "Bonus Coin",
+                "count": {
                   "rule": "Arithmetic",
                   "args": {
                     "left": 15,
@@ -768,16 +738,10 @@
             "name": "Rocket Rush",
             "connected_region": "Rocket Rush",
             "access_rule": {
-              "rule": "Compare",
+              "rule": "Has",
               "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": "Bonus Coin"
-                  }
-                },
-                "op": ">=",
-                "right": {
+                "item_name": "Bonus Coin",
+                "count": {
                   "rule": "Arithmetic",
                   "args": {
                     "left": 15,
@@ -4302,7 +4266,6 @@
       },
       "1-Up Balloon": {
         "name": "1-Up Balloon",
-        "hint_text": "1 Up Balloon",
         "id": 14430209,
         "groups": [
           "Everything"
@@ -4310,7 +4273,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 27
+        "max_count": 27,
+        "hint_text": "1 Up Balloon"
       },
       "Bear Coin": {
         "name": "Bear Coin",
@@ -4615,7 +4579,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "starting_life_count": 5
+        "starting_life_count": 5,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -4740,6 +4705,11 @@
           "range_end": 99,
           "default": 5,
           "display_name": "Starting Life Count"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "active_level_list": [
@@ -4865,7 +4835,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "DKC3World"
     }
   },
   "game_info": {

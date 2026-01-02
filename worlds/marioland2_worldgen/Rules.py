@@ -16,186 +16,186 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _supermarioland2worldgen_has_level_progression(state: "CollectionState", player: int, item = None, count = 1) -> bool:
+def has_level_progression(state: "CollectionState", player: int, item = None, count = 1) -> bool:
     return ((state.count(item, player) + (state.count((item + ' x2'), player) * 2)) >= count)
 
 
-def _supermarioland2worldgen_has_pipe_down(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Pipe Traversal', 'Pipe Traversal - Down'), player)
+def has_pipe_down(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Pipe Traversal', 'Pipe Traversal - Down'], player)
 
 
-def _supermarioland2worldgen_has_pipe_left(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Pipe Traversal', 'Pipe Traversal - Left'), player)
+def has_pipe_left(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Pipe Traversal', 'Pipe Traversal - Left'], player)
 
 
-def _supermarioland2worldgen_has_pipe_right(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Pipe Traversal', 'Pipe Traversal - Right'), player)
+def has_pipe_right(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Pipe Traversal', 'Pipe Traversal - Right'], player)
 
 
-def _supermarioland2worldgen_has_pipe_up(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Pipe Traversal', 'Pipe Traversal - Up'), player)
+def has_pipe_up(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Pipe Traversal', 'Pipe Traversal - Up'], player)
 
 
-def _supermarioland2worldgen_hippo_zone_normal_or_secret_exit(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Hippo Bubble', 'Water Physics'), player)) or ((state.has('Carrot', player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Hippo Zone'))))
+def hippo_zone_normal_or_secret_exit(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Hippo Bubble', 'Water Physics'], player)) or ((state.has('Carrot', player)) and (not (is_auto_scroll(state, player, 'Hippo Zone'))))
 
 
-def _supermarioland2worldgen_is_auto_scroll(state: "CollectionState", player: int, level = None) -> bool:
+def is_auto_scroll(state: "CollectionState", player: int, level = None) -> bool:
     level_id = {'Mushroom Zone': 0, 'Scenic Course': 25, 'Tree Zone 1': 1, 'Tree Zone 2': 2, 'Tree Zone 3': 4, 'Tree Zone 4': 3, 'Tree Zone 5': 5, 'Tree Zone Secret Course': 29, 'Hippo Zone': 17, 'Space Zone 1': 18, 'Space Zone Secret Course': 28, 'Space Zone 2': 19, 'Macro Zone 1': 20, 'Macro Zone 2': 21, 'Macro Zone 3': 22, 'Macro Zone 4': 23, 'Macro Zone Secret Course': 30, 'Pumpkin Zone 1': 6, 'Pumpkin Zone 2': 7, 'Pumpkin Zone 3': 8, 'Pumpkin Zone 4': 9, 'Pumpkin Zone Secret Course 1': 27, 'Pumpkin Zone Secret Course 2': 31, 'Mario Zone 1': 10, 'Mario Zone 2': 11, 'Mario Zone 3': 12, 'Mario Zone 4': 13, 'Turtle Zone 1': 14, 'Turtle Zone 2': 15, 'Turtle Zone 3': 16, 'Turtle Zone Secret Course': 26, "Mario's Castle": 24}[level]
-    if state.has_any(['Cancel Auto Scroll', f"Cancel Auto Scroll - {level}"], player):
+    if state.has_any(('Cancel Auto Scroll', f"Cancel Auto Scroll - {level}"), player):
         return False
     return ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][level_id] > 0)
 
 
-def _supermarioland2worldgen_macro_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_down(state, player)) or (state.has('Macro Zone 1 Midway Bell', player))
+def macro_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_down(state, player)) or (state.has('Macro Zone 1 Midway Bell', player))
 
 
-def _supermarioland2worldgen_macro_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_down(state, player)) or (state.has('Macro Zone 1 Midway Bell', player))
+def macro_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_down(state, player)) or (state.has('Macro Zone 1 Midway Bell', player))
 
 
-def _supermarioland2worldgen_macro_zone_1_secret_exit(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fire Flower', player)) and (_supermarioland2worldgen_has_pipe_up(state, player)) and (_supermarioland2worldgen_macro_zone_1_midway_bell(state, player))
+def macro_zone_1_secret_exit(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fire Flower', player)) and (has_pipe_up(state, player)) and (macro_zone_1_midway_bell(state, player))
 
 
-def _supermarioland2worldgen_macro_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
-    return ((_supermarioland2worldgen_has_pipe_down(state, player)) and (state.has('Water Physics', player))) or (state.has('Macro Zone 2 Midway Bell', player))
+def macro_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
+    return ((has_pipe_down(state, player)) and (state.has('Water Physics', player))) or (state.has('Macro Zone 2 Midway Bell', player))
 
 
-def _supermarioland2worldgen_macro_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
-    return ((_supermarioland2worldgen_has_pipe_down(state, player)) or (state.has('Macro Zone 2 Midway Bell', player))) and (state.has('Water Physics', player)) and (_supermarioland2worldgen_has_pipe_up(state, player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Macro Zone 2')))
+def macro_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
+    return ((has_pipe_down(state, player)) or (state.has('Macro Zone 2 Midway Bell', player))) and (state.has('Water Physics', player)) and (has_pipe_up(state, player)) and (not (is_auto_scroll(state, player, 'Macro Zone 2')))
 
 
-def _supermarioland2worldgen_macro_zone_3_midway_bell(state: "CollectionState", player: int) -> bool:
-    return _supermarioland2worldgen_macro_zone_3_normal_exit(state, player)
+def macro_zone_3_midway_bell(state: "CollectionState", player: int) -> bool:
+    return macro_zone_3_normal_exit(state, player)
 
 
-def _supermarioland2worldgen_macro_zone_3_normal_exit(state: "CollectionState", player: int) -> bool:
-    return ((_supermarioland2worldgen_has_pipe_down(state, player)) and (_supermarioland2worldgen_has_pipe_up(state, player))) or (state.has('Macro Zone 3 Midway Bell', player))
+def macro_zone_3_normal_exit(state: "CollectionState", player: int) -> bool:
+    return ((has_pipe_down(state, player)) and (has_pipe_up(state, player))) or (state.has('Macro Zone 3 Midway Bell', player))
 
 
-def _supermarioland2worldgen_macro_zone_4_boss(state: "CollectionState", player: int) -> bool:
-    return _supermarioland2worldgen_has_pipe_right(state, player)
+def macro_zone_4_boss(state: "CollectionState", player: int) -> bool:
+    return has_pipe_right(state, player)
 
 
-def _supermarioland2worldgen_mario_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
-    return ((state.has_any(('Carrot', 'Fire Flower', 'Mushroom'), player)) and (_supermarioland2worldgen_has_pipe_right(state, player))) or (state.has('Mario Zone 1 Midway Bell', player))
+def mario_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
+    return ((state.has_any(['Carrot', 'Fire Flower', 'Mushroom'], player)) and (has_pipe_right(state, player))) or (state.has('Mario Zone 1 Midway Bell', player))
 
 
-def _supermarioland2worldgen_mario_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_right(state, player)) and ((not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Mario Zone 1'))) or (state.has_any(('Carrot', 'Fire Flower', 'Mario Zone 1 Midway Bell', 'Mushroom'), player)))
+def mario_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_right(state, player)) and ((not (is_auto_scroll(state, player, 'Mario Zone 1'))) or (state.has_any(['Carrot', 'Fire Flower', 'Mario Zone 1 Midway Bell', 'Mushroom'], player)))
 
 
-def _supermarioland2worldgen_mario_zone_4_boss(state: "CollectionState", player: int) -> bool:
-    return _supermarioland2worldgen_has_pipe_right(state, player)
+def mario_zone_4_boss(state: "CollectionState", player: int) -> bool:
+    return has_pipe_right(state, player)
 
 
-def _supermarioland2worldgen_marios_castle_wario(state: "CollectionState", player: int) -> bool:
-    return ((_supermarioland2worldgen_has_pipe_right(state, player)) and (_supermarioland2worldgen_has_pipe_left(state, player))) or (state.has("Mario's Castle Midway Bell", player))
+def marios_castle_wario(state: "CollectionState", player: int) -> bool:
+    return ((has_pipe_right(state, player)) and (has_pipe_left(state, player))) or (state.has("Mario's Castle Midway Bell", player))
 
 
-def _supermarioland2worldgen_not_blocked_by_sharks(state: "CollectionState", player: int) -> bool:
-    sharks = tuple([[{'screen': 1, 'sprite': 'Owl Platform (Horizontal)/Cheep Cheep (Horizontal)', 'x': 2, 'y': 16, 'misc': 192}, {'screen': 1, 'sprite': 'Horizontal Blurp', 'x': 12, 'y': 21, 'misc': 64}, {'screen': 1, 'sprite': 'Mushroom Block', 'x': 13, 'y': 3, 'misc': 64}, {'screen': 2, 'sprite': 'Horizontal Blurp', 'x': 1, 'y': 18, 'misc': 64}, {'screen': 2, 'sprite': 'Spiny Cheep Cheep', 'x': 11, 'y': 26, 'misc': 64}, {'screen': 2, 'sprite': 'Cheep Cheep (Vertical)', 'x': 26, 'y': 28, 'misc': 192}, {'screen': 3, 'sprite': 'Goomba', 'x': 3, 'y': 8, 'misc': 64}, {'screen': 3, 'sprite': 'Goomba', 'x': 17, 'y': 8, 'misc': 64}, {'screen': 3, 'sprite': 'Star Block', 'x': 17, 'y': 1, 'misc': 64}, {'screen': 3, 'sprite': 'Cheep Cheep (Vertical)', 'x': 18, 'y': 28, 'misc': 192}, {'screen': 3, 'sprite': 'Heart Block', 'x': 19, 'y': 1, 'misc': 64}, {'screen': 3, 'sprite': 'Shark', 'x': 27, 'y': 26, 'misc': 192}, {'screen': 4, 'sprite': 'Paragoomba (Diagonal)', 'x': 1, 'y': 4, 'misc': 64}, {'screen': 4, 'sprite': 'Goomba', 'x': 10, 'y': 8, 'misc': 64}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 1, 'y': 16, 'misc': 64}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 9, 'y': 22, 'misc': 192}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 16, 'y': 26, 'misc': 64}, {'screen': 6, 'sprite': 'Shark', 'x': 12, 'y': 21, 'misc': 64}, {'screen': 6, 'sprite': 'Midway Bell', 'x': 21, 'y': 18, 'misc': 64}, {'screen': 6, 'sprite': 'Owl Platform (Horizontal)/Cheep Cheep (Horizontal)', 'x': 25, 'y': 16, 'misc': 64}, {'screen': 7, 'sprite': 'Spiny Cheep Cheep', 'x': 21, 'y': 17, 'misc': 64}, {'screen': 7, 'sprite': 'Horizontal Blurp', 'x': 25, 'y': 26, 'misc': 64}, {'screen': 8, 'sprite': 'Cheep Cheep (Vertical)', 'x': 7, 'y': 20, 'misc': 64}, {'screen': 8, 'sprite': 'Shark', 'x': 15, 'y': 14, 'misc': 192}, {'screen': 8, 'sprite': 'Spiny Cheep Cheep', 'x': 25, 'y': 24, 'misc': 192}, {'screen': 8, 'sprite': 'Mushroom Block', 'x': 31, 'y': 3, 'misc': 64}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 15, 'y': 24, 'misc': 64}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 23, 'y': 20, 'misc': 192}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 29, 'y': 26, 'misc': 192}, {'screen': 10, 'sprite': 'Shark', 'x': 10, 'y': 18, 'misc': 192}, {'screen': 10, 'sprite': 'Money Bag Block', 'x': 11, 'y': 31, 'misc': 32}, {'screen': 11, 'sprite': 'Shark', 'x': 5, 'y': 22, 'misc': 64}, {'screen': 11, 'sprite': 'Horizontal Blurp', 'x': 16, 'y': 28, 'misc': 192}, {'screen': 11, 'sprite': 'Bonus Bell', 'x': 21, 'y': 9, 'misc': 64}, {'screen': 11, 'sprite': 'Heart Block', 'x': 27, 'y': 23, 'misc': 64}][i]['sprite'] for i in [27, 28]]).count('Shark')
+def not_blocked_by_sharks(state: "CollectionState", player: int) -> bool:
+    sharks = tuple([state.multiworld.worlds[player].sprite_data['Turtle Zone 1'][i]['sprite'] for i in (27, 28)]).count('Shark')
     if (state.has('Carrot', player)) or (not (sharks)):
         return True
     if (sharks == 2):
-        return state.has_all(('Fire Flower', 'Mushroom'), player)
+        return state.has_all(['Fire Flower', 'Mushroom'], player)
     if (sharks == 1):
-        return state.has_any(('Fire Flower', 'Mushroom'), player)
+        return state.has_any(['Fire Flower', 'Mushroom'], player)
     return False
 
 
-def _supermarioland2worldgen_pumpkin_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
-    return ((_supermarioland2worldgen_has_pipe_down(state, player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Pumpkin Zone 1')))) or (state.has('Pumpkin Zone 1 Midway Bell', player))
+def pumpkin_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
+    return ((has_pipe_down(state, player)) and (not (is_auto_scroll(state, player, 'Pumpkin Zone 1')))) or (state.has('Pumpkin Zone 1 Midway Bell', player))
 
 
-def _supermarioland2worldgen_pumpkin_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
-    return _supermarioland2worldgen_pumpkin_zone_1_midway_bell(state, player)
+def pumpkin_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
+    return pumpkin_zone_1_midway_bell(state, player)
 
 
-def _supermarioland2worldgen_pumpkin_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_down(state, player)) and (_supermarioland2worldgen_has_pipe_up(state, player)) and (_supermarioland2worldgen_has_pipe_right(state, player)) and (state.has('Water Physics', player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Pumpkin Zone 2')))
+def pumpkin_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_down(state, player)) and (has_pipe_up(state, player)) and (has_pipe_right(state, player)) and (state.has('Water Physics', player)) and (not (is_auto_scroll(state, player, 'Pumpkin Zone 2')))
 
 
-def _supermarioland2worldgen_pumpkin_zone_2_secret_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_pumpkin_zone_2_normal_exit(state, player)) and (state.has_any(('Fire Flower', 'Mushroom'), player))
+def pumpkin_zone_2_secret_exit(state: "CollectionState", player: int) -> bool:
+    return (pumpkin_zone_2_normal_exit(state, player)) and (state.has_any(['Fire Flower', 'Mushroom'], player))
 
 
-def _supermarioland2worldgen_pumpkin_zone_3_secret_exit(state: "CollectionState", player: int) -> bool:
+def pumpkin_zone_3_secret_exit(state: "CollectionState", player: int) -> bool:
     return state.has('Carrot', player)
 
 
-def _supermarioland2worldgen_pumpkin_zone_4_boss(state: "CollectionState", player: int) -> bool:
-    return _supermarioland2worldgen_has_pipe_right(state, player)
+def pumpkin_zone_4_boss(state: "CollectionState", player: int) -> bool:
+    return has_pipe_right(state, player)
 
 
-def _supermarioland2worldgen_space_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Carrot', 'Space Physics'), player)
+def space_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Carrot', 'Space Physics'], player)
 
 
-def _supermarioland2worldgen_space_zone_1_secret_exit(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Carrot', 'Space Physics'), player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Space Zone 1')))
+def space_zone_1_secret_exit(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Carrot', 'Space Physics'], player)) and (not (is_auto_scroll(state, player, 'Space Zone 1')))
 
 
-def _supermarioland2worldgen_space_zone_2_boss(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Space Physics', player)) or (((True if state.has_any(('Carrot', 'Fire Flower', 'Mushroom'), player) else None) if (state.has('Space Zone 2 Midway Bell', player)) or (not (False)) else (True if (state.has('Mushroom', player)) and (state.has_any(('Carrot', 'Fire Flower'), player)) else None))) if _supermarioland2worldgen_has_pipe_right(state, player) else False)
+def space_zone_2_boss(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Space Physics', player)) or (((True if state.has_any(['Carrot', 'Fire Flower', 'Mushroom'], player) else None) if (state.has('Space Zone 2 Midway Bell', player)) or (not (state.multiworld.worlds[player].options.shuffle_midway_bells)) else (True if (state.has('Mushroom', player)) and (state.has_any(['Carrot', 'Fire Flower'], player)) else None))) if has_pipe_right(state, player) else False)
 
 
-def _supermarioland2worldgen_space_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Carrot', 'Fire Flower', 'Mushroom', 'Space Physics', 'Space Zone 2 Midway Bell'), player)
+def space_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Carrot', 'Fire Flower', 'Mushroom', 'Space Physics', 'Space Zone 2 Midway Bell'], player)
 
 
-def _supermarioland2worldgen_tree_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_right(state, player)) or (state.has('Tree Zone 2 Midway Bell', player))
+def tree_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_right(state, player)) or (state.has('Tree Zone 2 Midway Bell', player))
 
 
-def _supermarioland2worldgen_tree_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_right(state, player)) or (state.has('Tree Zone 2 Midway Bell', player))
+def tree_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_right(state, player)) or (state.has('Tree Zone 2 Midway Bell', player))
 
 
-def _supermarioland2worldgen_tree_zone_2_secret_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_right(state, player)) and (state.has('Carrot', player))
+def tree_zone_2_secret_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_right(state, player)) and (state.has('Carrot', player))
 
 
-def _supermarioland2worldgen_tree_zone_3_normal_exit(state: "CollectionState", player: int) -> bool:
-    return not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Tree Zone 3'))
+def tree_zone_3_normal_exit(state: "CollectionState", player: int) -> bool:
+    return not (is_auto_scroll(state, player, 'Tree Zone 3'))
 
 
-def _supermarioland2worldgen_tree_zone_4_midway_bell(state: "CollectionState", player: int) -> bool:
-    return ((_supermarioland2worldgen_has_pipe_right(state, player)) and (_supermarioland2worldgen_has_pipe_up(state, player))) or (state.has('Tree Zone 4 Midway Bell', player))
+def tree_zone_4_midway_bell(state: "CollectionState", player: int) -> bool:
+    return ((has_pipe_right(state, player)) and (has_pipe_up(state, player))) or (state.has('Tree Zone 4 Midway Bell', player))
 
 
-def _supermarioland2worldgen_tree_zone_4_normal_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_down(state, player)) and (_supermarioland2worldgen_tree_zone_4_midway_bell(state, player))
+def tree_zone_4_normal_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_down(state, player)) and (tree_zone_4_midway_bell(state, player))
 
 
-def _supermarioland2worldgen_tree_zone_5_boss(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_right(state, player)) and ((_supermarioland2worldgen_has_pipe_up(state, player)) or (state.has('Carrot', player)))
+def tree_zone_5_boss(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_right(state, player)) and ((has_pipe_up(state, player)) or (state.has('Carrot', player)))
 
 
-def _supermarioland2worldgen_turtle_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
-    return _supermarioland2worldgen_not_blocked_by_sharks(state, player)
+def turtle_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
+    return not_blocked_by_sharks(state, player)
 
 
-def _supermarioland2worldgen_turtle_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Water Physics', player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Turtle Zone 2')))) or (state.has('Turtle Zone 2 Midway Bell', player))
+def turtle_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Water Physics', player)) and (not (is_auto_scroll(state, player, 'Turtle Zone 2')))) or (state.has('Turtle Zone 2 Midway Bell', player))
 
 
-def _supermarioland2worldgen_turtle_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_up(state, player)) and (_supermarioland2worldgen_has_pipe_down(state, player)) and (_supermarioland2worldgen_has_pipe_right(state, player)) and (_supermarioland2worldgen_has_pipe_left(state, player)) and (state.has('Water Physics', player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Turtle Zone 2')))
+def turtle_zone_2_normal_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_up(state, player)) and (has_pipe_down(state, player)) and (has_pipe_right(state, player)) and (has_pipe_left(state, player)) and (state.has('Water Physics', player)) and (not (is_auto_scroll(state, player, 'Turtle Zone 2')))
 
 
-def _supermarioland2worldgen_turtle_zone_2_secret_exit(state: "CollectionState", player: int) -> bool:
-    return (_supermarioland2worldgen_has_pipe_up(state, player)) and (state.has('Water Physics', player)) and (not (_supermarioland2worldgen_is_auto_scroll(state, player, 'Turtle Zone 2')))
+def turtle_zone_2_secret_exit(state: "CollectionState", player: int) -> bool:
+    return (has_pipe_up(state, player)) and (state.has('Water Physics', player)) and (not (is_auto_scroll(state, player, 'Turtle Zone 2')))
 
 
-def _supermarioland2worldgen_turtle_zone_3_boss(state: "CollectionState", player: int) -> bool:
-    return _supermarioland2worldgen_has_pipe_right(state, player)
+def turtle_zone_3_boss(state: "CollectionState", player: int) -> bool:
+    return has_pipe_right(state, player)
 
 
-def _supermarioland2worldgen_turtle_zone_secret_course_normal_exit(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Carrot', 'Fire Flower'), player)
+def turtle_zone_secret_course_normal_exit(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Carrot', 'Fire Flower'], player)
 
 
 def set_rules(world: "World") -> None:
@@ -206,7 +206,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Menu -> Space Zone 1", player),
-        Or(And(Not(HelperCall(helper_func=_supermarioland2worldgen_is_auto_scroll, helper_name="is_auto_scroll", args=('Hippo Zone',))), Has('Carrot')), Has('Hippo Bubble'))
+        Or(And(Not(HelperCall(helper_func=is_auto_scroll, helper_name="is_auto_scroll", args=('Hippo Zone',))), Has('Carrot')), Has('Hippo Bubble'))
     )
 
     world.set_rule(
@@ -216,12 +216,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tree Zone 1 -> Tree Zone 2", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression',))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Tree Zone 2 -> Tree Zone 3", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 2,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 2,))
     )
 
     world.set_rule(
@@ -231,7 +231,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tree Zone 4 -> Tree Zone 5", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 3,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 3,))
     )
 
     world.set_rule(
@@ -241,12 +241,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Space Zone 1 -> Space Zone 2", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Space Zone Progression',))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Space Zone Progression',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone 1 -> Macro Zone 2", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Macro Zone Progression',))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Macro Zone Progression',))
     )
 
     world.set_rule(
@@ -256,12 +256,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone 2 -> Macro Zone 3", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Macro Zone Progression', 2,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Macro Zone Progression', 2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone 3 -> Macro Zone 4", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Macro Zone Progression', 3,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Macro Zone Progression', 3,))
     )
 
     world.set_rule(
@@ -276,12 +276,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 1 -> Pumpkin Zone 2", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Pumpkin Zone Progression',))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Pumpkin Zone Progression',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 2 -> Pumpkin Zone 3", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Pumpkin Zone Progression', 2,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Pumpkin Zone Progression', 2,))
     )
 
     world.set_rule(
@@ -291,7 +291,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 3 -> Pumpkin Zone 4", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Pumpkin Zone Progression', 3,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Pumpkin Zone Progression', 3,))
     )
 
     world.set_rule(
@@ -301,27 +301,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mario Zone 1 -> Mario Zone 2", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression',))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mario Zone 2 -> Mario Zone 3", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 2,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 2,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mario Zone 3 -> Mario Zone 4", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 3,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 3,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Zone 1 -> Turtle Zone 2", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Turtle Zone Progression',))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Turtle Zone Progression',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Zone 2 -> Turtle Zone 3", player),
-        HelperCall(helper_func=_supermarioland2worldgen_has_level_progression, helper_name="has_level_progression", args=('Turtle Zone Progression', 2,))
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Turtle Zone Progression', 2,))
     )
 
     world.set_rule(
@@ -331,180 +331,180 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Tree Zone 2 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_tree_zone_2_normal_exit, helper_name="tree_zone_2_normal_exit")
+        HelperCall(helper_func=tree_zone_2_normal_exit, helper_name="tree_zone_2_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 2 - Secret Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_tree_zone_2_secret_exit, helper_name="tree_zone_2_secret_exit")
+        HelperCall(helper_func=tree_zone_2_secret_exit, helper_name="tree_zone_2_secret_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 2 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_tree_zone_2_midway_bell, helper_name="tree_zone_2_midway_bell")
+        HelperCall(helper_func=tree_zone_2_midway_bell, helper_name="tree_zone_2_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 3 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_tree_zone_3_normal_exit, helper_name="tree_zone_3_normal_exit")
+        HelperCall(helper_func=tree_zone_3_normal_exit, helper_name="tree_zone_3_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 4 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_tree_zone_4_normal_exit, helper_name="tree_zone_4_normal_exit")
+        HelperCall(helper_func=tree_zone_4_normal_exit, helper_name="tree_zone_4_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 4 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_tree_zone_4_midway_bell, helper_name="tree_zone_4_midway_bell")
+        HelperCall(helper_func=tree_zone_4_midway_bell, helper_name="tree_zone_4_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 5 - Boss", player),
-        HelperCall(helper_func=_supermarioland2worldgen_tree_zone_5_boss, helper_name="tree_zone_5_boss")
+        HelperCall(helper_func=tree_zone_5_boss, helper_name="tree_zone_5_boss")
     )
 
     world.set_rule(
         multiworld.get_location("Hippo Zone - Normal or Secret Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_hippo_zone_normal_or_secret_exit, helper_name="hippo_zone_normal_or_secret_exit")
+        HelperCall(helper_func=hippo_zone_normal_or_secret_exit, helper_name="hippo_zone_normal_or_secret_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Space Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_space_zone_1_normal_exit, helper_name="space_zone_1_normal_exit")
+        HelperCall(helper_func=space_zone_1_normal_exit, helper_name="space_zone_1_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Space Zone 1 - Secret Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_space_zone_1_secret_exit, helper_name="space_zone_1_secret_exit")
+        HelperCall(helper_func=space_zone_1_secret_exit, helper_name="space_zone_1_secret_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Space Zone 2 - Boss", player),
-        HelperCall(helper_func=_supermarioland2worldgen_space_zone_2_boss, helper_name="space_zone_2_boss")
+        HelperCall(helper_func=space_zone_2_boss, helper_name="space_zone_2_boss")
     )
 
     world.set_rule(
         multiworld.get_location("Space Zone 2 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_space_zone_2_midway_bell, helper_name="space_zone_2_midway_bell")
+        HelperCall(helper_func=space_zone_2_midway_bell, helper_name="space_zone_2_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_1_normal_exit, helper_name="macro_zone_1_normal_exit")
+        HelperCall(helper_func=macro_zone_1_normal_exit, helper_name="macro_zone_1_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 1 - Secret Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_1_secret_exit, helper_name="macro_zone_1_secret_exit")
+        HelperCall(helper_func=macro_zone_1_secret_exit, helper_name="macro_zone_1_secret_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 1 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_1_midway_bell, helper_name="macro_zone_1_midway_bell")
+        HelperCall(helper_func=macro_zone_1_midway_bell, helper_name="macro_zone_1_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 2 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_2_normal_exit, helper_name="macro_zone_2_normal_exit")
+        HelperCall(helper_func=macro_zone_2_normal_exit, helper_name="macro_zone_2_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 2 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_2_midway_bell, helper_name="macro_zone_2_midway_bell")
+        HelperCall(helper_func=macro_zone_2_midway_bell, helper_name="macro_zone_2_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 3 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_3_normal_exit, helper_name="macro_zone_3_normal_exit")
+        HelperCall(helper_func=macro_zone_3_normal_exit, helper_name="macro_zone_3_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 3 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_3_midway_bell, helper_name="macro_zone_3_midway_bell")
+        HelperCall(helper_func=macro_zone_3_midway_bell, helper_name="macro_zone_3_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 4 - Boss", player),
-        HelperCall(helper_func=_supermarioland2worldgen_macro_zone_4_boss, helper_name="macro_zone_4_boss")
+        HelperCall(helper_func=macro_zone_4_boss, helper_name="macro_zone_4_boss")
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_pumpkin_zone_1_normal_exit, helper_name="pumpkin_zone_1_normal_exit")
+        HelperCall(helper_func=pumpkin_zone_1_normal_exit, helper_name="pumpkin_zone_1_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 1 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_pumpkin_zone_1_midway_bell, helper_name="pumpkin_zone_1_midway_bell")
+        HelperCall(helper_func=pumpkin_zone_1_midway_bell, helper_name="pumpkin_zone_1_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 2 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_pumpkin_zone_2_normal_exit, helper_name="pumpkin_zone_2_normal_exit")
+        HelperCall(helper_func=pumpkin_zone_2_normal_exit, helper_name="pumpkin_zone_2_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 2 - Secret Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_pumpkin_zone_2_secret_exit, helper_name="pumpkin_zone_2_secret_exit")
+        HelperCall(helper_func=pumpkin_zone_2_secret_exit, helper_name="pumpkin_zone_2_secret_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 3 - Secret Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_pumpkin_zone_3_secret_exit, helper_name="pumpkin_zone_3_secret_exit")
+        HelperCall(helper_func=pumpkin_zone_3_secret_exit, helper_name="pumpkin_zone_3_secret_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 4 - Boss", player),
-        HelperCall(helper_func=_supermarioland2worldgen_pumpkin_zone_4_boss, helper_name="pumpkin_zone_4_boss")
+        HelperCall(helper_func=pumpkin_zone_4_boss, helper_name="pumpkin_zone_4_boss")
     )
 
     world.set_rule(
         multiworld.get_location("Mario Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_mario_zone_1_normal_exit, helper_name="mario_zone_1_normal_exit")
+        HelperCall(helper_func=mario_zone_1_normal_exit, helper_name="mario_zone_1_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Mario Zone 1 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_mario_zone_1_midway_bell, helper_name="mario_zone_1_midway_bell")
+        HelperCall(helper_func=mario_zone_1_midway_bell, helper_name="mario_zone_1_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Mario Zone 4 - Boss", player),
-        HelperCall(helper_func=_supermarioland2worldgen_mario_zone_4_boss, helper_name="mario_zone_4_boss")
+        HelperCall(helper_func=mario_zone_4_boss, helper_name="mario_zone_4_boss")
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_turtle_zone_1_normal_exit, helper_name="turtle_zone_1_normal_exit")
+        HelperCall(helper_func=turtle_zone_1_normal_exit, helper_name="turtle_zone_1_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 2 - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_turtle_zone_2_normal_exit, helper_name="turtle_zone_2_normal_exit")
+        HelperCall(helper_func=turtle_zone_2_normal_exit, helper_name="turtle_zone_2_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 2 - Secret Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_turtle_zone_2_secret_exit, helper_name="turtle_zone_2_secret_exit")
+        HelperCall(helper_func=turtle_zone_2_secret_exit, helper_name="turtle_zone_2_secret_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 2 - Midway Bell", player),
-        HelperCall(helper_func=_supermarioland2worldgen_turtle_zone_2_midway_bell, helper_name="turtle_zone_2_midway_bell")
+        HelperCall(helper_func=turtle_zone_2_midway_bell, helper_name="turtle_zone_2_midway_bell")
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 3 - Boss", player),
-        HelperCall(helper_func=_supermarioland2worldgen_turtle_zone_3_boss, helper_name="turtle_zone_3_boss")
+        HelperCall(helper_func=turtle_zone_3_boss, helper_name="turtle_zone_3_boss")
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Zone Secret Course - Normal Exit", player),
-        HelperCall(helper_func=_supermarioland2worldgen_turtle_zone_secret_course_normal_exit, helper_name="turtle_zone_secret_course_normal_exit")
+        HelperCall(helper_func=turtle_zone_secret_course_normal_exit, helper_name="turtle_zone_secret_course_normal_exit")
     )
 
     world.set_rule(
         multiworld.get_location("Mario's Castle - Wario", player),
-        HelperCall(helper_func=_supermarioland2worldgen_marios_castle_wario, helper_name="marios_castle_wario")
+        HelperCall(helper_func=marios_castle_wario, helper_name="marios_castle_wario")
     )

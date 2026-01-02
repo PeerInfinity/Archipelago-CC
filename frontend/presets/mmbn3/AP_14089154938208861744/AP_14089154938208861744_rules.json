@@ -564,13 +564,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -595,13 +589,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -626,13 +614,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -657,13 +639,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -688,13 +664,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -719,13 +689,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -750,13 +714,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -781,13 +739,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -812,13 +764,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -843,13 +789,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -874,13 +814,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -905,13 +839,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -936,13 +864,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -967,13 +889,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -998,13 +914,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1029,13 +939,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1060,13 +964,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 8
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 8,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1091,13 +989,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 8
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 8,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1122,13 +1014,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 8
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 8,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1153,13 +1039,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 8
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 8,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1184,13 +1064,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 10
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 10,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1215,13 +1089,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 10
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 10,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1246,13 +1114,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 10
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 10,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2622,13 +2484,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 12
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 12,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -4501,13 +4357,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 8,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -8375,7 +8225,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MMBN3World"
     }
   },
   "game_info": {

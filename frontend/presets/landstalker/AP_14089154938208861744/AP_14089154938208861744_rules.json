@@ -34,39 +34,23 @@
             "name": "massan -> massan_cave",
             "connected_region": "Massan Cave",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Axe Magic",
-                      "Lantern"
-                    ]
-                  }
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Axe Magic",
+                  "Lantern"
+                ]
+              }
             }
           },
           {
             "name": "massan -> massan_after_swamp_shrine",
             "connected_region": "Massan (after Swamp Shrine)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_swamp_shrine"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_swamp_shrine"
+              }
             }
           },
           {
@@ -218,21 +202,13 @@
             "name": "massan_cave -> massan",
             "connected_region": "Massan",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Axe Magic",
-                      "Lantern"
-                    ]
-                  }
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Axe Magic",
+                  "Lantern"
+                ]
+              }
             }
           }
         ],
@@ -310,18 +286,10 @@
             "name": "route_massan_gumi -> swamp_shrine",
             "connected_region": "Swamp Shrine",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Idol Stone"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Idol Stone"
+              }
             }
           },
           {
@@ -440,18 +408,10 @@
             "name": "swamp_shrine -> route_massan_gumi",
             "connected_region": "Route between Massan and Gumi",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Idol Stone"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Idol Stone"
+              }
             }
           }
         ],
@@ -683,18 +643,10 @@
             "name": "gumi -> gumi_after_swamp_shrine",
             "connected_region": "Gumi (after Swamp Shrine)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_swamp_shrine"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_swamp_shrine"
+              }
             }
           },
           {
@@ -822,18 +774,10 @@
             "name": "route_gumi_ryuma -> mercator",
             "connected_region": "Mercator",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Safety Pass"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Safety Pass"
+              }
             }
           }
         ],
@@ -998,36 +942,20 @@
             "name": "ryuma -> ryuma_after_thieves_hideout",
             "connected_region": "Ryuma (after Thieves Hideout)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_thieves_hideout_post_key"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_thieves_hideout_post_key"
+              }
             }
           },
           {
             "name": "ryuma -> ryuma_lighthouse_repaired",
             "connected_region": "Ryuma (repaired lighthouse)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sun Stone"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Sun Stone"
+              }
             }
           },
           {
@@ -1202,18 +1130,10 @@
             "name": "ryuma_lighthouse_repaired -> ryuma",
             "connected_region": "Ryuma",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sun Stone"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Sun Stone"
+              }
             }
           }
         ],
@@ -1269,18 +1189,10 @@
             "name": "thieves_hideout_pre_key -> thieves_hideout_post_key",
             "connected_region": "Thieves Hideout (after keydoor)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Key"
+              }
             }
           }
         ],
@@ -1703,18 +1615,10 @@
             "name": "mercator -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Safety Pass"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Safety Pass"
+              }
             }
           },
           {
@@ -1735,36 +1639,20 @@
             "name": "mercator -> mercator_special_shop",
             "connected_region": "Mercator special shop",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Buyer Card"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Buyer Card"
+              }
             }
           },
           {
             "name": "mercator -> mercator_casino",
             "connected_region": "Mercator casino",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Casino Ticket"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Casino Ticket"
+              }
             }
           },
           {
@@ -1778,36 +1666,20 @@
             "name": "mercator -> greenmaze_pre_whistle",
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Key"
+              }
             }
           },
           {
             "name": "mercator -> mercator_repaired_docks",
             "connected_region": "Mercator (docks with repaired lighthouse)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_ryuma_lighthouse_repaired"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_ryuma_lighthouse_repaired"
+              }
             }
           }
         ],
@@ -2121,18 +1993,10 @@
             "name": "mercator_casino -> mercator",
             "connected_region": "Mercator",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Casino Ticket"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Casino Ticket"
+              }
             }
           }
         ],
@@ -2339,18 +2203,10 @@
             "name": "mercator_special_shop -> mercator",
             "connected_region": "Mercator",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Buyer Card"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Buyer Card"
+              }
             }
           }
         ],
@@ -2444,72 +2300,40 @@
             "name": "mir_tower_sector -> mir_tower_sector_tree_ledge",
             "connected_region": "Mir Tower sector (ledge behind sacred tree)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           },
           {
             "name": "mir_tower_sector -> mir_tower_sector_tree_coast",
             "connected_region": "Mir Tower sector (coast behind sacred tree)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           },
           {
             "name": "mir_tower_sector -> mir_tower_pre_garlic",
             "connected_region": "Mir Tower (pre-garlic)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Armlet"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Armlet"
+              }
             }
           },
           {
             "name": "mir_tower_sector -> verla_shore",
             "connected_region": "Verla shore",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_verla_mines"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_verla_mines"
+              }
             }
           }
         ],
@@ -2589,18 +2413,10 @@
             "name": "mir_tower_sector_tree_ledge -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           }
         ],
@@ -2632,18 +2448,10 @@
             "name": "mir_tower_sector_tree_coast -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           }
         ],
@@ -2746,18 +2554,10 @@
             "name": "mir_tower_pre_garlic -> mir_tower_post_garlic",
             "connected_region": "Mir Tower (post-garlic)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Garlic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Garlic"
+              }
             }
           }
         ],
@@ -3132,54 +2932,30 @@
             "name": "greenmaze_pre_whistle -> greenmaze_post_whistle",
             "connected_region": "Greenmaze (post-whistle)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Einstein Whistle"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Einstein Whistle"
+              }
             }
           },
           {
             "name": "greenmaze_pre_whistle -> greenmaze_cutter",
             "connected_region": "Greenmaze (Cutter hidden sector)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "EkeEke"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "EkeEke"
+              }
             }
           },
           {
             "name": "greenmaze_pre_whistle -> mountainous_area",
             "connected_region": "Mountainous Area",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           }
         ],
@@ -3323,18 +3099,10 @@
             "name": "greenmaze_cutter -> greenmaze_pre_whistle",
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "EkeEke"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "EkeEke"
+              }
             }
           }
         ],
@@ -3396,18 +3164,10 @@
             "name": "greenmaze_post_whistle -> greenmaze_pre_whistle",
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Einstein Whistle"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Einstein Whistle"
+              }
             }
           }
         ],
@@ -3491,18 +3251,10 @@
             "name": "verla_shore -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_verla_mines"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_verla_mines"
+              }
             }
           }
         ],
@@ -3611,18 +3363,10 @@
             "name": "verla -> verla_after_mines",
             "connected_region": "Verla (after mines)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_verla_mines"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_verla_mines"
+              }
             }
           }
         ],
@@ -3702,18 +3446,10 @@
             "name": "verla_after_mines -> verla",
             "connected_region": "Verla",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_verla_mines"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "event_visited_verla_mines"
+              }
             }
           }
         ],
@@ -3782,18 +3518,10 @@
             "name": "verla_mines -> verla_mines_behind_lava",
             "connected_region": "Verla Mines (behind lava)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fireproof"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Fireproof"
+              }
             }
           }
         ],
@@ -4002,18 +3730,10 @@
             "name": "verla_mines_behind_lava -> verla_mines",
             "connected_region": "Verla Mines",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fireproof"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Fireproof"
+              }
             }
           }
         ],
@@ -4697,18 +4417,10 @@
             "name": "route_lake_shrine -> lake_shrine",
             "connected_region": "Lake Shrine",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sword of Gaia"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Sword of Gaia"
+              }
             }
           }
         ],
@@ -4836,18 +4548,10 @@
             "name": "route_lake_shrine_cliff -> mountainous_area",
             "connected_region": "Mountainous Area",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           },
           {
@@ -5277,18 +4981,10 @@
             "name": "mountainous_area -> greenmaze_pre_whistle",
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           },
           {
@@ -5302,36 +4998,20 @@
             "name": "mountainous_area -> route_lake_shrine_cliff",
             "connected_region": "Route to Lake Shrine cliff",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           },
           {
             "name": "mountainous_area -> king_nole_cave",
             "connected_region": "King Nole's Cave",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gola's Eye"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Gola's Eye"
+              }
             }
           }
         ],
@@ -5602,18 +5282,10 @@
             "name": "king_nole_cave -> mountainous_area",
             "connected_region": "Mountainous Area",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gola's Eye"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Gola's Eye"
+              }
             }
           },
           {
@@ -5627,24 +5299,16 @@
             "name": "king_nole_cave -> kazalt",
             "connected_region": "Kazalt",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Blue Jewel",
-                      "Green Jewel",
-                      "Purple Jewel",
-                      "Red Jewel",
-                      "Yellow Jewel"
-                    ]
-                  }
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Jewel",
+                  "Green Jewel",
+                  "Purple Jewel",
+                  "Red Jewel",
+                  "Yellow Jewel"
+                ]
+              }
             }
           }
         ],
@@ -5866,36 +5530,20 @@
             "name": "king_nole_labyrinth_pre_door -> king_nole_labyrinth_post_door",
             "connected_region": "King Nole's Labyrinth (after door)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Key"
+              }
             }
           },
           {
             "name": "king_nole_labyrinth_pre_door -> king_nole_labyrinth_exterior",
             "connected_region": "King Nole's Labyrinth (exterior)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Iron Boots"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Iron Boots"
+              }
             }
           }
         ],
@@ -5998,36 +5646,20 @@
             "name": "king_nole_labyrinth_post_door -> king_nole_labyrinth_raft_entrance",
             "connected_region": "King Nole's Labyrinth (raft entrance)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Snow Spikes"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Snow Spikes"
+              }
             }
           },
           {
             "name": "king_nole_labyrinth_post_door -> king_nole_labyrinth_path_to_palace",
             "connected_region": "King Nole's Labyrinth (path to palace)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Snow Spikes"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Snow Spikes"
+              }
             }
           },
           {
@@ -6328,18 +5960,10 @@
             "name": "king_nole_labyrinth_exterior -> king_nole_labyrinth_fall_from_exterior",
             "connected_region": "King Nole's Labyrinth (fall from exterior)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Axe Magic"
+              }
             }
           }
         ],
@@ -6410,18 +6034,10 @@
             "name": "king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_raft",
             "connected_region": "King Nole's Labyrinth (raft)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logs"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logs"
+              }
             }
           }
         ],
@@ -6668,22 +6284,14 @@
             "name": "king_nole_palace -> end",
             "connected_region": "The End",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gola's Fang",
-                      "Gola's Horn",
-                      "Gola's Nail"
-                    ]
-                  }
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gola's Fang",
+                  "Gola's Horn",
+                  "Gola's Nail"
+                ]
+              }
             }
           }
         ],
@@ -7958,17 +7566,17 @@
         "seed": 2089113674,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Logs in Verla Mines.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Buyer Card among the trees.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (in Gumi boulder map)": "I can sense Gola's Nail on a route.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Idol Stone among the trees.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Lithograph in the village of Massan.",
-          "Foxy (in Destel)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Gola's Horn in the village of Massan.",
-          "Foxy (on Kazalt bridge)": "Have you found all of the 283 items in this universe?",
-          "Foxy (inside Mercator Crypt)": "I can sense Snow Spikes in King Nole's domain.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Einstein Whistle in the town of Mercator.",
+          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Buyer Card among the trees.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Axe Magic in Destel region.",
+          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Gola's Fang inside a tower.",
+          "Foxy (in Gumi boulder map)": "I can sense Logs in Verla Mines.",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Purple Jewel in Destel region.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Iron Boots in a mountainous area.",
+          "Foxy (in Destel)": "I can sense Armlet near a swamp.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Lithograph in the village of Massan.",
+          "Foxy (on Kazalt bridge)": "I can sense Idol Stone among the trees.",
+          "Foxy (inside Mercator Crypt)": "I can sense Yellow Jewel inside a tower.",
+          "Foxy (at Waterfall Shrine crossroads)": "I can sense Gola's Horn in the village of Massan.",
           "Foxy (in King Nole's Palace entrance room)": "I can sense Blue Jewel in Twinkle village.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
@@ -8070,7 +7678,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "world_class_name": "LandstalkerWorld"
     }
   },
   "game_info": {

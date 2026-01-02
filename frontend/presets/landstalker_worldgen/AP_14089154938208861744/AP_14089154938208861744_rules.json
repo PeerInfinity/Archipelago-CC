@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "LandstalkerTheTreasuresofKingNoleWorldGenWorld"
+    "1": "LandstalkerWorld"
   },
   "regions": {
     "1": {
@@ -7065,7 +7065,6 @@
       },
       "event_visited_massan": {
         "name": "event_visited_massan",
-        "hint_text": "event visited massan",
         "id": null,
         "groups": [
           "Event"
@@ -7073,11 +7072,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "event visited massan"
       },
       "event_visited_swamp_shrine": {
         "name": "event_visited_swamp_shrine",
-        "hint_text": "event visited swamp shrine",
         "id": null,
         "groups": [
           "Event"
@@ -7085,11 +7084,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "event visited swamp shrine"
       },
       "event_visited_ryuma_lighthouse_repaired": {
         "name": "event_visited_ryuma_lighthouse_repaired",
-        "hint_text": "event visited ryuma lighthouse repaired",
         "id": null,
         "groups": [
           "Event"
@@ -7097,11 +7096,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "event visited ryuma lighthouse repaired"
       },
       "event_visited_thieves_hideout_post_key": {
         "name": "event_visited_thieves_hideout_post_key",
-        "hint_text": "event visited thieves hideout post key",
         "id": null,
         "groups": [
           "Event"
@@ -7109,11 +7108,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "event visited thieves hideout post key"
       },
       "event_visited_verla_mines": {
         "name": "event_visited_verla_mines",
-        "hint_text": "event visited verla mines",
         "id": null,
         "groups": [
           "Event"
@@ -7121,11 +7120,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "event visited verla mines"
       },
       "event_visited_king_nole_labyrinth_raft_entrance": {
         "name": "event_visited_king_nole_labyrinth_raft_entrance",
-        "hint_text": "event visited king nole labyrinth raft entrance",
         "id": null,
         "groups": [
           "Event"
@@ -7133,7 +7132,8 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "event visited king nole labyrinth raft entrance"
       },
       "King Nole's Treasure": {
         "name": "King Nole's Treasure",
@@ -7562,6 +7562,7 @@
         "start_inventory": {},
         "start_location_hints": [],
         "teleport_tree_requirements": 3,
+        "use_canonical_options": true,
         "use_record_book": true,
         "use_spell_book": true
       },
@@ -7706,6 +7707,11 @@
           },
           "default": 3,
           "display_name": "Teleportation Trees Requirements"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         },
         "use_record_book": {
           "type": "default_on_toggle",
@@ -7870,17 +7876,17 @@
         "seed": 2089113674,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Logs in Verla Mines.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Buyer Card among the trees.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (in Gumi boulder map)": "I can sense Gola's Nail on a route.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Idol Stone among the trees.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Lithograph in the village of Massan.",
-          "Foxy (in Destel)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Gola's Horn in the village of Massan.",
-          "Foxy (on Kazalt bridge)": "Have you found all of the 283 items in this universe?",
-          "Foxy (inside Mercator Crypt)": "I can sense Snow Spikes in King Nole's domain.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Einstein Whistle in the town of Mercator.",
+          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Buyer Card among the trees.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Axe Magic in Destel region.",
+          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Gola's Fang inside a tower.",
+          "Foxy (in Gumi boulder map)": "I can sense Logs in Verla Mines.",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Purple Jewel in Destel region.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Iron Boots in a mountainous area.",
+          "Foxy (in Destel)": "I can sense Armlet near a swamp.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Lithograph in the village of Massan.",
+          "Foxy (on Kazalt bridge)": "I can sense Idol Stone among the trees.",
+          "Foxy (inside Mercator Crypt)": "I can sense Yellow Jewel inside a tower.",
+          "Foxy (at Waterfall Shrine crossroads)": "I can sense Gola's Horn in the village of Massan.",
           "Foxy (in King Nole's Palace entrance room)": "I can sense Blue Jewel in Twinkle village.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
@@ -7982,7 +7988,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "world_class_name": "LandstalkerWorld"
     }
   },
   "game_info": {

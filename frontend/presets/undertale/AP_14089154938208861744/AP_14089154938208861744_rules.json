@@ -35,7 +35,8 @@
       "???": {
         "name": "???",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Hub": {
         "name": "Hub",
@@ -236,7 +237,8 @@
       "Old Home": {
         "name": "Old Home",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Snowdin Forest": {
         "name": "Snowdin Forest",
@@ -960,12 +962,14 @@
       "News Show": {
         "name": "News Show",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "True Lab": {
         "name": "True Lab",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Core": {
         "name": "Core",
@@ -1147,7 +1151,8 @@
       "Barrier": {
         "name": "Barrier",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -2375,7 +2380,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "UndertaleWorld"
     }
   },
   "game_info": {

@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "TerrariaWorldGenWorld"
+    "1": "TerrariaWorld"
   },
   "regions": {
     "1": {
@@ -133,10 +133,34 @@
             "name": "DPS Meter",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Traveling Merchant"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wire"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Traveling Merchant"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "DPS Meter",
@@ -266,10 +290,23 @@
             "name": "Bug Net",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Merchant"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Merchant"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Bug Net",
@@ -1638,8 +1675,15 @@
               "children": [
                 {
                   "rule": "Not",
-                  "child": {
-                    "rule": "False_"
+                  "args": {
+                    "condition": {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    }
                   }
                 },
                 {
@@ -1781,8 +1825,15 @@
                   "children": [
                     {
                       "rule": "Not",
-                      "child": {
-                        "rule": "False_"
+                      "args": {
+                        "condition": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        }
                       }
                     },
                     {
@@ -1948,13 +1999,37 @@
             "name": "Meteorite Bar",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Meteor Staff",
-                  "Meteorite"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Astral Infection"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meteor Staff",
+                      "Meteorite"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Meteorite Bar",
@@ -2040,6 +2115,8 @@
                   "Evil Pickaxe",
                   "Gelpick",
                   "Genesis Pickaxe",
+                  "Hardmode",
+                  "Hellstone Bar",
                   "Laser Drill",
                   "Luminite Pickaxe",
                   "Molten Pickaxe",
@@ -2050,9 +2127,7 @@
                   "Shardlight Pickaxe",
                   "Shroomite Digging Claw",
                   "Skyfringe Pickaxe",
-                  "Spectre Pickaxe",
-                  "Hardmode",
-                  "Hellstone Bar"
+                  "Spectre Pickaxe"
                 ]
               }
             },
@@ -2158,13 +2233,34 @@
             "name": "Hot Reels!",
             "id": 8257789,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Bug Net",
-                  "Hellstone Bar"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Bug Net"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hellstone Bar"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Reward: Flying Carpet",
@@ -2226,13 +2322,37 @@
             "name": "Mana Flower",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Nature's Gift",
-                  "Tinkerer's Workshop"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Nature's Gift",
+                      "Tinkerer's Workshop"
+                    ]
+                  }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ethereal Talisman"
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Mana Flower",
@@ -2572,10 +2692,34 @@
             "name": "Pygmy Necklace",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Witch Doctor"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Statis' Blessing"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Witch Doctor"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Pygmy Necklace",
@@ -2655,10 +2799,23 @@
             "name": "Bone",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dungeon"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dungeon"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Bone",
@@ -2738,14 +2895,66 @@
             "name": "Cell Phone",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Magic Mirror",
-                  "PDA",
-                  "Tinkerer's Workshop"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Ancient Manipulator",
+                              "Polterplasm"
+                            ]
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Post-Moon Lord"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dungeon"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Magic Mirror",
+                      "PDA",
+                      "Tinkerer's Workshop"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cell Phone",
@@ -2834,10 +3043,34 @@
             "name": "Wire",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Mechanic"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Electrician's Glove"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Mechanic"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Wire",
@@ -2888,10 +3121,34 @@
             "name": "Cobalt Shield",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dungeon"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cobalt Bar"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dungeon"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cobalt Shield",
@@ -2968,8 +3225,15 @@
                   "children": [
                     {
                       "rule": "Not",
-                      "child": {
-                        "rule": "False_"
+                      "args": {
+                        "condition": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "calamity",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        }
                       }
                     },
                     {
@@ -3041,13 +3305,41 @@
             "name": "Emblem",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Avenger Emblem",
-                  "Guide"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Celestial Emblem",
+                          "Mechanical Glove",
+                          "Statis' Blessing"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Avenger Emblem",
+                      "Guide"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Emblem",
@@ -3062,13 +3354,41 @@
             "name": "Fast Clock",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Hardmode",
-                  "Trifold Map"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Pixie Dust",
+                          "Soul of Light",
+                          "Wire"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Trifold Map"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Fast Clock",
@@ -3144,10 +3464,34 @@
             "name": "Magic Quiver",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hardmode"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Elemental Quiver"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hardmode"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Magic Quiver",
@@ -3194,13 +3538,40 @@
             "name": "Armor Polish",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Hardmode",
-                  "Vitamins"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Ancient Bone Dust",
+                          "Bone"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Vitamins"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Armor Polish",
@@ -3215,10 +3586,23 @@
             "name": "Adhesive Bandage",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hardmode"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hardmode"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Adhesive Bandage",
@@ -3255,13 +3639,40 @@
             "name": "Megaphone",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Hardmode",
-                  "Nazar"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Cobalt Bar",
+                          "Wire"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Nazar"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Megaphone",
@@ -3276,13 +3687,40 @@
             "name": "Pocket Mirror",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Blindfold",
-                  "Hardmode"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Crystal Shard",
+                          "Soul of Night"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Blindfold",
+                      "Hardmode"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Pocket Mirror",
@@ -3297,13 +3735,40 @@
             "name": "Trifold Map",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Fast Clock",
-                  "Hardmode"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Soul of Light",
+                          "Soul of Night"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Fast Clock",
+                      "Hardmode"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Trifold Map",
@@ -3340,13 +3805,26 @@
             "name": "Tax Collector",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hardmode",
-                  "Purification Powder"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Purification Powder"
+                    ]
+                  }
+                },
+                {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "getfixedboi",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Tax Collector",
@@ -3477,6 +3955,54 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Not",
+                              "args": {
+                                "condition": {
+                                  "rule": "AST_setting_value",
+                                  "args": {
+                                    "setting": "calamity",
+                                    "_original_ast_type": "setting_value"
+                                  },
+                                  "_converted_from_ast": true
+                                }
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Altar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Hardmode"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
                       "rule": "HasAny",
                       "args": {
                         "items": [
@@ -3500,18 +4026,6 @@
                           "Shroomite Digging Claw",
                           "Spectre Pickaxe"
                         ]
-                      }
-                    },
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Altar"
                       }
                     }
                   ]
@@ -3563,13 +4077,37 @@
             "name": "Cobalt Bar",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cobalt Ore",
-                  "Hardmode"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Lunic Eye"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cobalt Ore",
+                      "Hardmode"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cobalt Bar",
@@ -3602,13 +4140,26 @@
             "name": "Blindfold",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Hardmode",
-                  "Pocket Mirror"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Pocket Mirror"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Blindfold",
@@ -3645,13 +4196,40 @@
             "name": "Vitamins",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Armor Polish",
-                  "Hardmode"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Alchemy Table",
+                          "Blood Orb"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Armor Polish",
+                      "Hardmode"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Vitamins",
@@ -3688,13 +4266,37 @@
             "name": "Nazar",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Hardmode",
-                  "Megaphone"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Soul of Night"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Megaphone"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Nazar",
@@ -3778,10 +4380,93 @@
             "name": "Soul of Night",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hardmode"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Or",
+                              "children": [
+                                {
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Bug Net",
+                                      "Hardmode"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "rule": "And",
+                                  "children": [
+                                    {
+                                      "rule": "AST_setting_value",
+                                      "args": {
+                                        "setting": "calamity",
+                                        "_original_ast_type": "setting_value"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "AST_setting_value",
+                                      "args": {
+                                        "setting": "getfixedboi",
+                                        "_original_ast_type": "setting_value"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Titan Heart"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "getfixedboi",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Altar"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hardmode"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Soul of Night",
@@ -3836,13 +4521,37 @@
             "name": "Holy Water",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hallowed Seeds",
-                  "Pixie Dust"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hallowed Seeds",
+                      "Pixie Dust"
+                    ]
+                  }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Statis' Blessing"
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Holy Water",
@@ -3893,14 +4602,130 @@
             "name": "Soul of Light",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Hallow",
-                  "Light Disc",
-                  "Meteor Staff"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Or",
+                              "children": [
+                                {
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Bug Net",
+                                      "Hardmode"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "rule": "And",
+                                  "children": [
+                                    {
+                                      "rule": "AST_setting_value",
+                                      "args": {
+                                        "setting": "calamity",
+                                        "_original_ast_type": "setting_value"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "AST_setting_value",
+                                      "args": {
+                                        "setting": "getfixedboi",
+                                        "_original_ast_type": "setting_value"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Titan Heart"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "getfixedboi",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "getfixedboi",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Auric Bar",
+                                  "Brimstone Slag",
+                                  "Core of Calamity",
+                                  "Cosmic Anvil",
+                                  "Fabsol's Vodka"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Hallow"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hallow",
+                      "Light Disc",
+                      "Meteor Staff"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Soul of Light",
@@ -4076,12 +4901,35 @@
                                   }
                                 },
                                 {
+                                  "rule": "And",
+                                  "children": [
+                                    {
+                                      "rule": "AST_setting_value",
+                                      "args": {
+                                        "setting": "calamity",
+                                        "_original_ast_type": "setting_value"
+                                      },
+                                      "_converted_from_ast": true
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Essence of Sunlight",
+                                          "Hardmode Anvil",
+                                          "Lihzahrd Temple"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
                                   "rule": "HasFromListUnique",
                                   "args": {
                                     "items": [
-                                      "Post-Skeletron Prime",
+                                      "Post-The Twins",
                                       "Post-The Destroyer",
-                                      "Post-The Twins"
+                                      "Post-Skeletron Prime"
                                     ],
                                     "count": 1
                                   }
@@ -4127,14 +4975,70 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Post-Plantera",
-                      "Hallow",
-                      "Hardmode"
-                    ]
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "calamity",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Post-Plantera"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Hallow",
+                          "Hardmode"
+                        ]
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "HasAll",
@@ -4144,6 +5048,41 @@
                       "Hardmode"
                     ]
                   }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Titan Heart"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "grindy_achievements",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAny",
@@ -4297,10 +5236,48 @@
             "name": "Queen Slime",
             "id": 8257813,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hallow"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hallow"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Post-Queen Bee",
@@ -4314,10 +5291,48 @@
             "name": "Sparkle Slime Balloon",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hallow"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hallow"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Sparkle Slime Balloon",
@@ -4382,6 +5397,59 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Not",
+                              "args": {
+                                "condition": {
+                                  "rule": "AST_setting_value",
+                                  "args": {
+                                    "setting": "calamity",
+                                    "_original_ast_type": "setting_value"
+                                  },
+                                  "_converted_from_ast": true
+                                }
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Altar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "HasFromListUnique",
+                              "args": {
+                                "items": [
+                                  "Post-The Twins",
+                                  "Post-The Destroyer",
+                                  "Post-Skeletron Prime"
+                                ],
+                                "count": 1
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
                       "rule": "HasAny",
                       "args": {
                         "items": [
@@ -4403,18 +5471,6 @@
                           "Shroomite Digging Claw",
                           "Spectre Pickaxe"
                         ]
-                      }
-                    },
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Altar"
                       }
                     }
                   ]
@@ -4444,13 +5500,37 @@
             "name": "Mythril Bar",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Hardmode",
-                  "Mythril Ore"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Electrician's Glove"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Mythril Ore"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Mythril Bar",
@@ -4511,8 +5591,15 @@
                   "children": [
                     {
                       "rule": "Not",
-                      "child": {
-                        "rule": "False_"
+                      "args": {
+                        "condition": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "calamity",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        }
                       }
                     },
                     {
@@ -4526,6 +5613,59 @@
                 {
                   "rule": "And",
                   "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Not",
+                              "args": {
+                                "condition": {
+                                  "rule": "AST_setting_value",
+                                  "args": {
+                                    "setting": "calamity",
+                                    "_original_ast_type": "setting_value"
+                                  },
+                                  "_converted_from_ast": true
+                                }
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Altar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "HasFromListUnique",
+                              "args": {
+                                "items": [
+                                  "Post-The Twins",
+                                  "Post-The Destroyer",
+                                  "Post-Skeletron Prime"
+                                ],
+                                "count": 2
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
                     {
                       "rule": "HasAny",
                       "args": {
@@ -4548,17 +5688,24 @@
                           "Spectre Pickaxe"
                         ]
                       }
-                    },
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
                     {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Altar"
+                        "item_name": "Hallowed Ore"
                       }
                     }
                   ]
@@ -4684,13 +5831,34 @@
             "name": "Mechanical Eye",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hardmode Anvil",
-                  "Soul of Light"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hardmode Anvil"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Soul of Light"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Mechanical Eye",
@@ -4705,13 +5873,34 @@
             "name": "Mechanical Worm",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hardmode Anvil",
-                  "Soul of Night"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hardmode Anvil"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Soul of Night"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Mechanical Worm",
@@ -4726,15 +5915,38 @@
             "name": "Mechanical Skull",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hardmode Anvil",
-                  "Bone",
-                  "Soul of Light",
-                  "Soul of Night"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hardmode Anvil"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Bone",
+                      "Soul of Light",
+                      "Soul of Night"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Mechanical Skull",
@@ -4749,19 +5961,50 @@
             "name": "The Twins",
             "id": 8257818,
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Mechanical Eye"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mechanical Eye"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ocram's Razor"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4777,19 +6020,50 @@
             "name": "The Destroyer",
             "id": 8257820,
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Mechanical Worm"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mechanical Worm"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ocram's Razor"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4805,19 +6079,50 @@
             "name": "Skeletron Prime",
             "id": 8257822,
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "AST_setting_value",
+                          "args": {
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Mechanical Skull"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mechanical Skull"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ocram's Razor"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4856,7 +6161,6 @@
       },
       "Post-King Slime": {
         "name": "Post-King Slime",
-        "hint_text": "Post King Slime",
         "id": 8257537,
         "groups": [
           "Everything"
@@ -4864,7 +6168,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post King Slime"
       },
       "Post-Desert Scourge": {
         "name": "Post-Desert Scourge",
@@ -4890,7 +6195,6 @@
       },
       "Post-Eye of Cthulhu": {
         "name": "Post-Eye of Cthulhu",
-        "hint_text": "Post Eye of Cthulhu",
         "id": 8257540,
         "groups": [
           "Everything"
@@ -4898,7 +6202,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Eye of Cthulhu"
       },
       "Post-Acid Rain Tier 1": {
         "name": "Post-Acid Rain Tier 1",
@@ -4924,7 +6229,6 @@
       },
       "Post-Evil Boss": {
         "name": "Post-Evil Boss",
-        "hint_text": "Post Evil Boss",
         "id": 8257543,
         "groups": [
           "Everything"
@@ -4932,11 +6236,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Evil Boss"
       },
       "Post-Old One's Army Tier 1": {
         "name": "Post-Old One's Army Tier 1",
-        "hint_text": "Post Old One's Army Tier 1",
         "id": 8257544,
         "groups": [
           "Everything"
@@ -4944,11 +6248,11 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Old One's Army Tier 1"
       },
       "Post-Goblin Army": {
         "name": "Post-Goblin Army",
-        "hint_text": "Post Goblin Army",
         "id": 8257545,
         "groups": [
           "Everything"
@@ -4956,11 +6260,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Goblin Army"
       },
       "Post-Queen Bee": {
         "name": "Post-Queen Bee",
-        "hint_text": "Post Queen Bee",
         "id": 8257546,
         "groups": [
           "Everything"
@@ -4968,7 +6272,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Queen Bee"
       },
       "Post-The Hive Mind": {
         "name": "Post-The Hive Mind",
@@ -4994,7 +6299,6 @@
       },
       "Post-Skeletron": {
         "name": "Post-Skeletron",
-        "hint_text": "Post Skeletron",
         "id": 8257549,
         "groups": [
           "Everything"
@@ -5002,11 +6306,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Skeletron"
       },
       "Post-Deerclops": {
         "name": "Post-Deerclops",
-        "hint_text": "Post Deerclops",
         "id": 8257550,
         "groups": [
           "Everything"
@@ -5014,7 +6318,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Deerclops"
       },
       "Post-The Slime God": {
         "name": "Post-The Slime God",
@@ -5062,7 +6367,6 @@
       },
       "Post-Pirate Invasion": {
         "name": "Post-Pirate Invasion",
-        "hint_text": "Post Pirate Invasion",
         "id": 8257555,
         "groups": [
           "Everything"
@@ -5070,11 +6374,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Pirate Invasion"
       },
       "Post-Queen Slime": {
         "name": "Post-Queen Slime",
-        "hint_text": "Post Queen Slime",
         "id": 8257556,
         "groups": [
           "Everything"
@@ -5082,7 +6386,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Queen Slime"
       },
       "Post-Aquatic Scourge": {
         "name": "Post-Aquatic Scourge",
@@ -5119,7 +6424,6 @@
       },
       "Post-The Twins": {
         "name": "Post-The Twins",
-        "hint_text": "Post The Twins",
         "id": 8257560,
         "groups": [
           "Everything"
@@ -5127,7 +6431,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post The Twins"
       },
       "Post-Brimstone Elemental": {
         "name": "Post-Brimstone Elemental",
@@ -5142,7 +6447,6 @@
       },
       "Post-The Destroyer": {
         "name": "Post-The Destroyer",
-        "hint_text": "Post The Destroyer",
         "id": 8257562,
         "groups": [
           "Everything"
@@ -5150,7 +6454,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post The Destroyer"
       },
       "Post-Cryogen": {
         "name": "Post-Cryogen",
@@ -5165,7 +6470,6 @@
       },
       "Post-Skeletron Prime": {
         "name": "Post-Skeletron Prime",
-        "hint_text": "Post Skeletron Prime",
         "id": 8257564,
         "groups": [
           "Everything"
@@ -5173,7 +6477,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Post Skeletron Prime"
       },
       "Post-Old One's Army Tier 2": {
         "name": "Post-Old One's Army Tier 2",
@@ -9449,7 +10754,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -9538,6 +10844,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "armor_minions": {
@@ -10071,9 +11382,9 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-The Destroyer": "The Destroyer",
         "Post-The Twins": "The Twins",
-        "Post-Skeletron Prime": "Skeletron Prime"
+        "Post-Skeletron Prime": "Skeletron Prime",
+        "Post-The Destroyer": "The Destroyer"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
       "slot_data": {
@@ -10113,7 +11424,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "TerrariaWorld"
     }
   },
   "game_info": {

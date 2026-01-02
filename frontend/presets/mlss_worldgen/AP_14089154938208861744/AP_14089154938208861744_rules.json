@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "MarioLuigiSuperstarSagaWorldGenWorld"
+    "1": "MLSSWorld"
   },
   "regions": {
     "1": {
@@ -1504,15 +1504,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "canDig",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "thunder",
                   "_original_ast_type": "helper"
                 },
                 {
                   "rule": "ultra",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "canDig",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -11197,7 +11197,6 @@
       },
       "1-UP Mushroom": {
         "name": "1-UP Mushroom",
-        "hint_text": "1 UP Mushroom",
         "id": 77771013,
         "groups": [
           "Everything"
@@ -11205,11 +11204,11 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "hint_text": "1 UP Mushroom"
       },
       "1-UP Super": {
         "name": "1-UP Super",
-        "hint_text": "1 UP Super",
         "id": 77771014,
         "groups": [
           "Everything"
@@ -11217,7 +11216,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "1 UP Super"
       },
       "Golden Mushroom": {
         "name": "Golden Mushroom",
@@ -12056,7 +12056,6 @@
       },
       "Mari-Lui Badge": {
         "name": "Mari-Lui Badge",
-        "hint_text": "Mari Lui Badge",
         "id": 77771089,
         "groups": [
           "Everything"
@@ -12064,7 +12063,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Mari Lui Badge"
       },
       "Muscle Badge": {
         "name": "Muscle Badge",
@@ -12167,7 +12167,6 @@
       },
       "Oh-Pah Badge": {
         "name": "Oh-Pah Badge",
-        "hint_text": "Oh Pah Badge",
         "id": 77771099,
         "groups": [
           "Everything"
@@ -12175,7 +12174,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Oh Pah Badge"
       },
       "Brilliant Badge": {
         "name": "Brilliant Badge",
@@ -12245,7 +12245,6 @@
       },
       "High-End Badge": {
         "name": "High-End Badge",
-        "hint_text": "High End Badge",
         "id": 77771106,
         "groups": [
           "Everything"
@@ -12253,7 +12252,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "High End Badge"
       },
       "Bean Pants": {
         "name": "Bean Pants",
@@ -13438,6 +13438,7 @@
         "exclude_locations": [],
         "extra_pipes": false,
         "goal": 0,
+        "harhalls_pants": "",
         "item_links": [],
         "local_items": [],
         "luigi_color": 1,
@@ -13458,8 +13459,10 @@
         "skip_minecart": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "tattle_hp": false,
+        "use_canonical_options": true,
         "xp_multiplier": 1
       },
       "option_definitions": {
@@ -13544,6 +13547,10 @@
           },
           "default": 0,
           "display_name": "Goal"
+        },
+        "harhalls_pants": {
+          "type": "removed",
+          "default": ""
         },
         "luigi_color": {
           "type": "choice",
@@ -13685,10 +13692,20 @@
           "default": 0,
           "display_name": "Skip Minecart Minigame"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "tattle_hp": {
           "type": "toggle",
           "default": 0,
           "display_name": "Tattle HP"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         },
         "xp_multiplier": {
           "type": "range",
@@ -13731,7 +13748,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MLSSWorld"
     }
   },
   "game_info": {

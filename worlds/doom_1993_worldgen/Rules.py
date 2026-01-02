@@ -57,7 +57,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Phobos Anomaly (E1M8) Start", player),
-        And(HasAll('Chaingun', 'Phobos Anomaly (E1M8)', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Phobos Anomaly (E1M8)', 'Shotgun'))
     )
 
     world.set_rule(
@@ -72,12 +72,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Containment Area (E2M2) Main", player),
-        And(HasAll('Containment Area (E2M2)', 'Shotgun'), HasAny('Chaingun', 'Plasma gun'))
+        And(HasAny('Chaingun', 'Plasma gun'), HasAll('Containment Area (E2M2)', 'Shotgun'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Refinery (E2M3) Main", player),
-        And(HasAll('Refinery (E2M3)', 'Shotgun'), HasAny('Chaingun', 'Plasma gun'))
+        And(HasAny('Chaingun', 'Plasma gun'), HasAll('Refinery (E2M3)', 'Shotgun'))
     )
 
     world.set_rule(
@@ -107,7 +107,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Fortress of Mystery (E2M9) Main", player),
-        And(HasAll('Chaingun', 'Fortress of Mystery (E2M9)', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Fortress of Mystery (E2M9)', 'Shotgun'))
     )
 
     world.set_rule(
@@ -122,12 +122,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Pandemonium (E3M3) Main", player),
-        And(HasAll('Chaingun', 'Pandemonium (E3M3)', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Pandemonium (E3M3)', 'Shotgun'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> House of Pain (E3M4) Main", player),
-        And(HasAll('Chaingun', 'House of Pain (E3M4)', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'House of Pain (E3M4)', 'Shotgun'))
     )
 
     world.set_rule(
@@ -142,17 +142,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Limbo (E3M7) Main", player),
-        And(HasAll('Chaingun', 'Limbo (E3M7)', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Limbo (E3M7)', 'Shotgun'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Dis (E3M8) Main", player),
-        And(HasAll('Chaingun', 'Dis (E3M8)', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Dis (E3M8)', 'Shotgun'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Warrens (E3M9) Main", player),
-        And(HasAll('Chaingun', 'Plasma gun', 'Shotgun', 'Warrens (E3M9)'), HasAny('BFG9000', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Rocket launcher'), HasAll('Chaingun', 'Plasma gun', 'Shotgun', 'Warrens (E3M9)'))
     )
 
     world.set_rule(
@@ -452,7 +452,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tower of Babel (E2M8) Start -> Tower of Babel (E2M8) Main", player),
-        And(HasAll('Chaingun', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun'))
     )
 
     world.set_rule(
@@ -562,7 +562,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Unholy Cathedral (E3M5) Start -> Unholy Cathedral (E3M5) Main", player),
-        And(HasAll('Chaingun', 'Shotgun'), HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'))
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun'))
     )
 
     world.set_rule(

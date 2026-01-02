@@ -16,6 +16,17 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+
+class UseCanonicalOptions(Toggle):
+    """Use canonical options for seed 1.
+
+    When enabled and generating seed 1, options will be loaded from the
+    _worldgen_settings.json file to reproduce the exact original seed.
+    This ensures deterministic output matching the original world export.
+    """
+    display_name = "Use Canonical Options"
+    default = True
+
 class AmountOfStars(Range):
     """Option for Total Power Stars."""
     display_name = "Total Power Stars"
@@ -126,6 +137,7 @@ class StrictMoveRequirements(DefaultOnToggle):
 class SuperMario64WorldGenOptions(PerGameCommonOptions):
     """Options for Super Mario 64 WorldGen."""
     randomize_items: RandomizeItems
+    use_canonical_options: UseCanonicalOptions
     amount_of_stars: AmountOfStars
     area_rando: AreaRando
     basement_star_door_cost: BasementStarDoorCost

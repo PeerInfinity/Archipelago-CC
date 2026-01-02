@@ -32,8 +32,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Chaining Extractor",
-                  "Extractor"
+                  "Extractor",
+                  "Chaining Extractor"
                 ]
               }
             }
@@ -55,30 +55,30 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Balancer",
                   "Belt",
-                  "Belt Reader",
-                  "Chaining Extractor",
-                  "Color Mixer",
+                  "Balancer",
                   "Compact Merger",
                   "Compact Splitter",
-                  "Cutter",
-                  "Display",
-                  "Double Painter",
-                  "Extractor",
-                  "Item Filter",
-                  "Painter",
-                  "Quad Cutter",
-                  "Quad Painter",
-                  "Rotator",
-                  "Rotator (180\u00b0)",
-                  "Rotator (CCW)",
-                  "Stacker",
-                  "Storage",
-                  "Switch",
-                  "Trash",
                   "Tunnel",
                   "Tunnel Tier II",
+                  "Extractor",
+                  "Chaining Extractor",
+                  "Cutter",
+                  "Quad Cutter",
+                  "Rotator",
+                  "Rotator (CCW)",
+                  "Rotator (180\u00b0)",
+                  "Stacker",
+                  "Painter",
+                  "Double Painter",
+                  "Quad Painter",
+                  "Color Mixer",
+                  "Trash",
+                  "Belt Reader",
+                  "Storage",
+                  "Switch",
+                  "Item Filter",
+                  "Display",
                   "Wires"
                 ]
               }
@@ -228,8 +228,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Double Painter",
-                  "Painter"
+                  "Painter",
+                  "Double Painter"
                 ]
               }
             }
@@ -4332,6 +4332,11 @@
           "default": false,
           "display_name": "Allow floating layers"
         },
+        "complexity_growth_gradient": {
+          "type": "freetext",
+          "default": "0.5",
+          "display_name": "Complexity growth gradient"
+        },
         "early_balancer_tunnel_and_trash": {
           "type": "choice",
           "name_lookup": {
@@ -5271,7 +5276,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "ShapezWorld"
     }
   },
   "game_info": {
@@ -5321,7 +5327,15 @@
                 },
                 {
                   "type": "item_check",
+                  "item": "Storage"
+                },
+                {
+                  "type": "item_check",
                   "item": "Item Filter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Wires"
                 },
                 {
                   "type": "item_check",
@@ -5329,15 +5343,7 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Storage"
-                },
-                {
-                  "type": "item_check",
                   "item": "Virtual Processing"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Wires"
                 }
               ]
             }
@@ -5391,10 +5397,16 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Cutter",
-                  "Quad Cutter"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Cutter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Quad Cutter"
+                  }
                 ]
               }
             ]
@@ -5413,10 +5425,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Quad Cutter",
-                  "Stacker"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Quad Cutter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Stacker"
+                  }
                 ]
               }
             ]
@@ -5483,10 +5501,16 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Double Painter",
-                  "Painter"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Painter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Double Painter"
+                  }
                 ]
               }
             ]
@@ -5502,11 +5526,20 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Rotator",
-              "Rotator (180\u00b0)",
-              "Rotator (CCW)"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Rotator"
+              },
+              {
+                "type": "constant",
+                "value": "Rotator (CCW)"
+              },
+              {
+                "type": "constant",
+                "value": "Rotator (180\u00b0)"
+              }
             ]
           }
         ]
@@ -5516,10 +5549,16 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Rotator",
-              "Rotator (CCW)"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Rotator"
+              },
+              {
+                "type": "constant",
+                "value": "Rotator (CCW)"
+              }
             ]
           }
         ]
@@ -5536,10 +5575,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Quad Painter",
-                  "Wires"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Quad Painter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Wires"
+                  }
                 ]
               }
             ]
@@ -5549,10 +5594,16 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Constant Signal",
-                  "Switch"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Switch"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Constant Signal"
+                  }
                 ]
               }
             ]
@@ -5571,10 +5622,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Compact Merger",
-                  "Compact Splitter"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Compact Merger"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Compact Splitter"
+                  }
                 ]
               }
             ]
@@ -5688,10 +5745,16 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Cutter",
-                      "Quad Cutter"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Cutter"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Quad Cutter"
+                      }
                     ]
                   }
                 ]
@@ -5814,10 +5877,16 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Tunnel",
-              "Tunnel Tier II"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Tunnel"
+              },
+              {
+                "type": "constant",
+                "value": "Tunnel Tier II"
+              }
             ]
           }
         ]

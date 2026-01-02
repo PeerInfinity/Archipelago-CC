@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "CodingAdventureWorldGenWorld"
+    "1": "CodingAdventureWorld"
   },
   "regions": {
     "1": {
@@ -1971,7 +1971,6 @@
       },
       "Full-Stack Complete": {
         "name": "Full-Stack Complete",
-        "hint_text": "Full Stack Complete",
         "id": 400100043,
         "groups": [
           "Everything"
@@ -1979,7 +1978,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Full Stack Complete"
       },
       "HTTPS": {
         "name": "HTTPS",
@@ -2230,7 +2230,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -2253,6 +2254,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "Coding Adventure is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.",
@@ -2267,7 +2273,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "CodingAdventureWorld"
     }
   },
   "game_info": {

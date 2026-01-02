@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, False_, Has, HasAll, HelperCall, Or
+from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,575 +16,575 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _thewindwakerworldgen_can_access_boss_entrance_in_dragon_roost_cavern(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs(state, player)) and (state.has('DRC Big Key', player))
+def can_access_boss_entrance_in_dragon_roost_cavern(state: "CollectionState", player: int) -> bool:
+    return (can_reach_dragon_roost_cavern_boss_stairs(state, player)) and (state.has('DRC Big Key', player))
 
 
-def _thewindwakerworldgen_can_access_boss_entrance_in_earth_temple(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_tall_vine_room(state, player)) and (state.has('ET Big Key', player))
+def can_access_boss_entrance_in_earth_temple(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_tall_vine_room(state, player)) and (state.has('ET Big Key', player))
 
 
-def _thewindwakerworldgen_can_access_boss_entrance_in_forbidden_woods(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (_thewindwakerworldgen_can_defeat_boko_babas(state, player)) and ((_thewindwakerworldgen_can_defeat_door_flowers(state, player)) or (state.has('Grappling Hook', player))) and (_thewindwakerworldgen_can_defeat_mothulas(state, player)) and (state.has('FW Big Key', player))
+def can_access_boss_entrance_in_forbidden_woods(state: "CollectionState", player: int) -> bool:
+    return (can_fly_with_deku_leaf_indoors(state, player)) and (can_defeat_boko_babas(state, player)) and ((can_defeat_door_flowers(state, player)) or (state.has('Grappling Hook', player))) and (can_defeat_mothulas(state, player)) and (state.has('FW Big Key', player))
 
 
-def _thewindwakerworldgen_can_access_boss_entrance_in_forsaken_fortress(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_get_inside_forsaken_fortress(state, player)) and (state.has('Skull Hammer', player)) and ((_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) or (state.has('Hookshot', player)) or ((False) and (False))) and ((_thewindwakerworldgen_can_defeat_bokoblins(state, player)) or (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player)) or (state.has('Grappling Hook', player)))
+def can_access_boss_entrance_in_forsaken_fortress(state: "CollectionState", player: int) -> bool:
+    return (can_get_inside_forsaken_fortress(state, player)) and (state.has('Skull Hammer', player)) and ((can_fly_with_deku_leaf_indoors(state, player)) or (state.has('Hookshot', player)) or ((state.multiworld.worlds[player].logic_obscure_2) and (state.multiworld.worlds[player].logic_precise_2))) and ((can_defeat_bokoblins(state, player)) or (can_fly_with_deku_leaf_outdoors(state, player)) or (state.has('Grappling Hook', player)))
 
 
-def _thewindwakerworldgen_can_access_boss_entrance_in_tower_of_the_gods(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_tower_of_the_gods_third_floor(state, player)) and (_thewindwakerworldgen_can_defeat_armos(state, player)) and (state.has('TotG Big Key', player))
+def can_access_boss_entrance_in_tower_of_the_gods(state: "CollectionState", player: int) -> bool:
+    return (can_reach_tower_of_the_gods_third_floor(state, player)) and (can_defeat_armos(state, player)) and (state.has('TotG Big Key', player))
 
 
-def _thewindwakerworldgen_can_access_boss_entrance_in_wind_temple(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_wind_temple_tall_basement_room(state, player)) and (state.has_all(('Hookshot', 'Iron Boots', 'WT Big Key'), player)) and (_thewindwakerworldgen_can_play_command_melody(state, player)) and (_thewindwakerworldgen_can_play_wind_gods_aria(state, player))
+def can_access_boss_entrance_in_wind_temple(state: "CollectionState", player: int) -> bool:
+    return (can_reach_wind_temple_tall_basement_room(state, player)) and (state.has_all(['Hookshot', 'Iron Boots', 'WT Big Key'], player)) and (can_play_command_melody(state, player)) and (can_play_wind_gods_aria(state, player))
 
 
-def _thewindwakerworldgen_can_access_dungeon_entrance_in_forest_haven_sector(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_access_forest_haven(state, player)) and ((state.has('Grappling Hook', player)) or ((_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player)) and (False) and (False))) and (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player)) and ((_thewindwakerworldgen_can_cut_grass(state, player)) or (_thewindwakerworldgen_has_magic_meter_upgrade(state, player)))
+def can_access_dungeon_entrance_in_forest_haven_sector(state: "CollectionState", player: int) -> bool:
+    return (can_access_forest_haven(state, player)) and ((state.has('Grappling Hook', player)) or ((can_fly_with_deku_leaf_indoors(state, player)) and (can_fly_with_deku_leaf_outdoors(state, player)) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_1))) and (can_fly_with_deku_leaf_outdoors(state, player)) and ((can_cut_grass(state, player)) or (has_magic_meter_upgrade(state, player)))
 
 
-def _thewindwakerworldgen_can_access_dungeon_entrance_in_tower_of_the_gods_sector(state: "CollectionState", player: int) -> bool:
+def can_access_dungeon_entrance_in_tower_of_the_gods_sector(state: "CollectionState", player: int) -> bool:
     return state.has_group_unique('Pearls', player, 3)
 
 
-def _thewindwakerworldgen_can_access_dungeon_entrance_on_dragon_roost_island(state: "CollectionState", player: int) -> bool:
+def can_access_dungeon_entrance_on_dragon_roost_island(state: "CollectionState", player: int) -> bool:
     return True
 
 
-def _thewindwakerworldgen_can_access_dungeon_entrance_on_gale_isle(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('Iron Boots', 'Skull Hammer'), player)
+def can_access_dungeon_entrance_on_gale_isle(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['Iron Boots', 'Skull Hammer'], player)
 
 
-def _thewindwakerworldgen_can_access_dungeon_entrance_on_headstone_island(state: "CollectionState", player: int) -> bool:
+def can_access_dungeon_entrance_on_headstone_island(state: "CollectionState", player: int) -> bool:
     return state.has('Power Bracelets', player)
 
 
-def _thewindwakerworldgen_can_access_fairy_fountain_entrance_on_eastern_fairy_island(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_move_boulders(state, player)
+def can_access_fairy_fountain_entrance_on_eastern_fairy_island(state: "CollectionState", player: int) -> bool:
+    return can_move_boulders(state, player)
 
 
-def _thewindwakerworldgen_can_access_fairy_fountain_entrance_on_northern_fairy_island(state: "CollectionState", player: int) -> bool:
+def can_access_fairy_fountain_entrance_on_northern_fairy_island(state: "CollectionState", player: int) -> bool:
     return True
 
 
-def _thewindwakerworldgen_can_access_fairy_fountain_entrance_on_outset_island(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_access_forest_of_fairies(state, player)) and (_thewindwakerworldgen_can_move_boulders(state, player))
+def can_access_fairy_fountain_entrance_on_outset_island(state: "CollectionState", player: int) -> bool:
+    return (can_access_forest_of_fairies(state, player)) and (can_move_boulders(state, player))
 
 
-def _thewindwakerworldgen_can_access_fairy_fountain_entrance_on_southern_fairy_island(state: "CollectionState", player: int) -> bool:
-    return (state.has('Bombs', player)) or (_thewindwakerworldgen_has_fire_arrows(state, player))
+def can_access_fairy_fountain_entrance_on_southern_fairy_island(state: "CollectionState", player: int) -> bool:
+    return (state.has('Bombs', player)) or (has_fire_arrows(state, player))
 
 
-def _thewindwakerworldgen_can_access_fairy_fountain_entrance_on_thorned_fairy_island(state: "CollectionState", player: int) -> bool:
+def can_access_fairy_fountain_entrance_on_thorned_fairy_island(state: "CollectionState", player: int) -> bool:
     return state.has('Skull Hammer', player)
 
 
-def _thewindwakerworldgen_can_access_fairy_fountain_entrance_on_western_fairy_island(state: "CollectionState", player: int) -> bool:
+def can_access_fairy_fountain_entrance_on_western_fairy_island(state: "CollectionState", player: int) -> bool:
     return state.has('Skull Hammer', player)
 
 
-def _thewindwakerworldgen_can_access_forest_haven(state: "CollectionState", player: int) -> bool:
-    return (state.has('Grappling Hook', player)) or (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player))
+def can_access_forest_haven(state: "CollectionState", player: int) -> bool:
+    return (state.has('Grappling Hook', player)) or (can_fly_with_deku_leaf_outdoors(state, player))
 
 
-def _thewindwakerworldgen_can_access_forest_of_fairies(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_outset_island_upper_level(state, player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player))
+def can_access_forest_of_fairies(state: "CollectionState", player: int) -> bool:
+    return (can_reach_outset_island_upper_level(state, player)) and (can_fly_with_deku_leaf_outdoors(state, player))
 
 
-def _thewindwakerworldgen_can_access_ganons_tower(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_get_past_hyrule_barrier(state, player)) and ((state.has('Hookshot', player)) or (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)))
+def can_access_ganons_tower(state: "CollectionState", player: int) -> bool:
+    return (can_get_past_hyrule_barrier(state, player)) and ((state.has('Hookshot', player)) or (can_fly_with_deku_leaf_indoors(state, player)))
 
 
-def _thewindwakerworldgen_can_access_hyrule(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_has_all_8_triforce_shards(state, player)
+def can_access_hyrule(state: "CollectionState", player: int) -> bool:
+    return has_all_8_triforce_shards(state, player)
 
 
-def _thewindwakerworldgen_can_access_inner_entrance_in_cliff_plateau_isles_secret_cave(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_defeat_boko_babas(state, player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player))
+def can_access_inner_entrance_in_cliff_plateau_isles_secret_cave(state: "CollectionState", player: int) -> bool:
+    return (can_defeat_boko_babas(state, player)) and (can_fly_with_deku_leaf_indoors(state, player))
 
 
-def _thewindwakerworldgen_can_access_inner_entrance_in_ice_ring_isle_secret_cave(state: "CollectionState", player: int) -> bool:
+def can_access_inner_entrance_in_ice_ring_isle_secret_cave(state: "CollectionState", player: int) -> bool:
     return state.has('Iron Boots', player)
 
 
-def _thewindwakerworldgen_can_access_miniboss_entrance_in_earth_temple(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room(state, player)) and (state.has('ET Small Key', player, 3))
+def can_access_miniboss_entrance_in_earth_temple(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_moblins_and_poes_room(state, player)) and (state.has('ET Small Key', player, 3))
 
 
-def _thewindwakerworldgen_can_access_miniboss_entrance_in_forbidden_woods(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (_thewindwakerworldgen_can_defeat_boko_babas(state, player)) and (state.has_all(('FW Small Key', 'Grappling Hook'), player))
+def can_access_miniboss_entrance_in_forbidden_woods(state: "CollectionState", player: int) -> bool:
+    return (can_fly_with_deku_leaf_indoors(state, player)) and (can_defeat_boko_babas(state, player)) and (state.has_all(['FW Small Key', 'Grappling Hook'], player))
 
 
-def _thewindwakerworldgen_can_access_miniboss_entrance_in_hyrule_castle(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_access_hyrule(state, player)
+def can_access_miniboss_entrance_in_hyrule_castle(state: "CollectionState", player: int) -> bool:
+    return can_access_hyrule(state, player)
 
 
-def _thewindwakerworldgen_can_access_miniboss_entrance_in_tower_of_the_gods(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor(state, player)) and ((state.has('Grappling Hook', player)) or (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player))) and ((_thewindwakerworldgen_can_play_command_melody(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player)))
+def can_access_miniboss_entrance_in_tower_of_the_gods(state: "CollectionState", player: int) -> bool:
+    return (can_reach_tower_of_the_gods_second_floor(state, player)) and ((state.has('Grappling Hook', player)) or (can_fly_with_deku_leaf_indoors(state, player))) and ((can_play_command_melody(state, player)) or (has_heros_bow(state, player)))
 
 
-def _thewindwakerworldgen_can_access_miniboss_entrance_in_wind_temple(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate(state, player)) and (state.has('WT Small Key', player, 2))
+def can_access_miniboss_entrance_in_wind_temple(state: "CollectionState", player: int) -> bool:
+    return (can_open_wind_temple_upper_giant_grate(state, player)) and (state.has('WT Small Key', player, 2))
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_angular_isles(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player)) or (state.has('Hookshot', player))
+def can_access_secret_cave_entrance_on_angular_isles(state: "CollectionState", player: int) -> bool:
+    return (can_fly_with_deku_leaf_outdoors(state, player)) or (state.has('Hookshot', player))
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_birds_peak_rock(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_birds_peak_rock(state: "CollectionState", player: int) -> bool:
     return state.has('Bait Bag', player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_boating_course(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player)) or (state.has('Hookshot', player))
+def can_access_secret_cave_entrance_on_boating_course(state: "CollectionState", player: int) -> bool:
+    return (can_fly_with_deku_leaf_outdoors(state, player)) or (state.has('Hookshot', player))
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_bomb_island(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_move_boulders(state, player)
+def can_access_secret_cave_entrance_on_bomb_island(state: "CollectionState", player: int) -> bool:
+    return can_move_boulders(state, player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_cliff_plateau_isles(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_cliff_plateau_isles(state: "CollectionState", player: int) -> bool:
     return True
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_diamond_steppe_island(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_diamond_steppe_island(state: "CollectionState", player: int) -> bool:
     return state.has('Hookshot', player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_dragon_roost_island(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_move_boulders(state, player)
+def can_access_secret_cave_entrance_on_dragon_roost_island(state: "CollectionState", player: int) -> bool:
+    return can_move_boulders(state, player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_fire_mountain(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_has_ice_arrows(state, player)
+def can_access_secret_cave_entrance_on_fire_mountain(state: "CollectionState", player: int) -> bool:
+    return has_ice_arrows(state, player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_horseshoe_island(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_fan_with_deku_leaf(state, player)
+def can_access_secret_cave_entrance_on_horseshoe_island(state: "CollectionState", player: int) -> bool:
+    return can_fan_with_deku_leaf(state, player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_ice_ring_isle(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_has_fire_arrows(state, player)
+def can_access_secret_cave_entrance_on_ice_ring_isle(state: "CollectionState", player: int) -> bool:
+    return has_fire_arrows(state, player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_needle_rock_isle(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_has_fire_arrows(state, player)
+def can_access_secret_cave_entrance_on_needle_rock_isle(state: "CollectionState", player: int) -> bool:
+    return has_fire_arrows(state, player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_outset_island(state: "CollectionState", player: int) -> bool:
-    return (((_thewindwakerworldgen_can_reach_outset_island_upper_level(state, player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player))) or (state.has('Hookshot', player))) and (state.has('Power Bracelets', player))
+def can_access_secret_cave_entrance_on_outset_island(state: "CollectionState", player: int) -> bool:
+    return (((can_reach_outset_island_upper_level(state, player)) and (can_fly_with_deku_leaf_outdoors(state, player))) or (state.has('Hookshot', player))) and (state.has('Power Bracelets', player))
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_overlook_island(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_overlook_island(state: "CollectionState", player: int) -> bool:
     return state.has('Hookshot', player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_pawprint_isle(state: "CollectionState", player: int) -> bool:
     return True
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle_side_isle(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_pawprint_isle_side_isle(state: "CollectionState", player: int) -> bool:
     return state.has('Hookshot', player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_private_oasis(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('Cabana Deed', 'Delivery Bag', 'Grappling Hook'), player)
+def can_access_secret_cave_entrance_on_private_oasis(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['Cabana Deed', 'Delivery Bag', 'Grappling Hook'], player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_rock_spire_isle(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_rock_spire_isle(state: "CollectionState", player: int) -> bool:
     return state.has('Bombs', player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_shark_island(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('Iron Boots', 'Skull Hammer'), player)
+def can_access_secret_cave_entrance_on_shark_island(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['Iron Boots', 'Skull Hammer'], player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_star_island(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_move_boulders(state, player)
+def can_access_secret_cave_entrance_on_star_island(state: "CollectionState", player: int) -> bool:
+    return can_move_boulders(state, player)
 
 
-def _thewindwakerworldgen_can_access_secret_cave_entrance_on_stone_watcher_island(state: "CollectionState", player: int) -> bool:
+def can_access_secret_cave_entrance_on_stone_watcher_island(state: "CollectionState", player: int) -> bool:
     return state.has('Power Bracelets', player)
 
 
-def _thewindwakerworldgen_can_activate_wind_temple_giant_fan(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate(state, player)) and (_thewindwakerworldgen_can_play_command_melody(state, player))
+def can_activate_wind_temple_giant_fan(state: "CollectionState", player: int) -> bool:
+    return (can_open_wind_temple_upper_giant_grate(state, player)) and (can_play_command_melody(state, player))
 
 
-def _thewindwakerworldgen_can_aim_mirror_shield(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_has_mirror_shield(state, player)) and ((state.has_any(('Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player)))
+def can_aim_mirror_shield(state: "CollectionState", player: int) -> bool:
+    return (has_mirror_shield(state, player)) and ((state.has_any(['Boomerang', 'Deku Leaf', 'Grappling Hook', 'Hookshot', 'Wind Waker'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player)))
 
 
-def _thewindwakerworldgen_can_bring_north_servant_of_the_tower(state: "CollectionState", player: int) -> bool:
-    return (state.has('TotG Small Key', player, 2)) and ((_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) or (False)) and (_thewindwakerworldgen_can_play_command_melody(state, player))
+def can_bring_north_servant_of_the_tower(state: "CollectionState", player: int) -> bool:
+    return (state.has('TotG Small Key', player, 2)) and ((can_fly_with_deku_leaf_indoors(state, player)) or (state.multiworld.worlds[player].logic_obscure_1)) and (can_play_command_melody(state, player))
 
 
-def _thewindwakerworldgen_can_bring_west_servant_of_the_tower(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Grappling Hook', player)) or (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player))) and (_thewindwakerworldgen_can_play_command_melody(state, player)) and (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_bring_west_servant_of_the_tower(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Grappling Hook', player)) or (can_fly_with_deku_leaf_indoors(state, player))) and (can_play_command_melody(state, player)) and (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_complete_all_memory_dungeons_and_bosses(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_complete_memory_dragon_roost_cavern_and_gohma(state, player)) and (_thewindwakerworldgen_can_complete_memory_forbidden_woods_and_kalle_demos(state, player)) and (_thewindwakerworldgen_can_complete_memory_earth_temple_and_jalhalla(state, player)) and (_thewindwakerworldgen_can_complete_memory_wind_temple_and_molgera(state, player))
+def can_complete_all_memory_dungeons_and_bosses(state: "CollectionState", player: int) -> bool:
+    return (can_complete_memory_dragon_roost_cavern_and_gohma(state, player)) and (can_complete_memory_forbidden_woods_and_kalle_demos(state, player)) and (can_complete_memory_earth_temple_and_jalhalla(state, player)) and (can_complete_memory_wind_temple_and_molgera(state, player))
 
 
-def _thewindwakerworldgen_can_complete_memory_dragon_roost_cavern_and_gohma(state: "CollectionState", player: int) -> bool:
-    return (state.has('Grappling Hook', player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (_thewindwakerworldgen_can_defeat_gohma(state, player))
+def can_complete_memory_dragon_roost_cavern_and_gohma(state: "CollectionState", player: int) -> bool:
+    return (state.has('Grappling Hook', player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (can_defeat_gohma(state, player))
 
 
-def _thewindwakerworldgen_can_complete_memory_earth_temple_and_jalhalla(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_defeat_jalhalla(state, player)
+def can_complete_memory_earth_temple_and_jalhalla(state: "CollectionState", player: int) -> bool:
+    return can_defeat_jalhalla(state, player)
 
 
-def _thewindwakerworldgen_can_complete_memory_forbidden_woods_and_kalle_demos(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (_thewindwakerworldgen_can_defeat_kalle_demos(state, player))
+def can_complete_memory_forbidden_woods_and_kalle_demos(state: "CollectionState", player: int) -> bool:
+    return (can_fan_with_deku_leaf(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (can_defeat_kalle_demos(state, player))
 
 
-def _thewindwakerworldgen_can_complete_memory_wind_temple_and_molgera(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (_thewindwakerworldgen_can_defeat_molgera(state, player))
+def can_complete_memory_wind_temple_and_molgera(state: "CollectionState", player: int) -> bool:
+    return (can_fly_with_deku_leaf_indoors(state, player)) and (can_defeat_molgera(state, player))
 
 
-def _thewindwakerworldgen_can_cut_down_hanging_drc_platform(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player)) or ((state.has('Hookshot', player)) and (False)) or ((state.has('Grappling Hook', player)) and (False))
+def can_cut_down_hanging_drc_platform(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player)) or ((state.has('Hookshot', player)) and (state.multiworld.worlds[player].logic_precise_1)) or ((state.has('Grappling Hook', player)) and (state.multiworld.worlds[player].logic_precise_1))
 
 
-def _thewindwakerworldgen_can_cut_down_outset_trees(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Boomerang', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or ((state.has('Power Bracelets', player)) and (False))
+def can_cut_down_outset_trees(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Boomerang', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or ((state.has('Power Bracelets', player)) and (state.multiworld.worlds[player].logic_obscure_3))
 
 
-def _thewindwakerworldgen_can_cut_grass(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Boomerang', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player))
+def can_cut_grass(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Boomerang', 'Skull Hammer'], player)) or (has_heros_sword(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_armos(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Hookshot', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_armos(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Hookshot', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_blue_bubbles(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_has_ice_arrows(state, player)) or (state.has('Bombs', player)) or (((_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) or (state.has('Hookshot', player))) and ((state.has_any(('Grappling Hook', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))))
+def can_defeat_blue_bubbles(state: "CollectionState", player: int) -> bool:
+    return (has_ice_arrows(state, player)) or (state.has('Bombs', player)) or (((can_fan_with_deku_leaf(state, player)) or (state.has('Hookshot', player))) and ((state.has_any(['Grappling Hook', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))))
 
 
-def _thewindwakerworldgen_can_defeat_boko_babas(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player)) or ((_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) and (state.has('Grappling Hook', player)))
+def can_defeat_boko_babas(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player)) or ((can_fan_with_deku_leaf(state, player)) and (state.has('Grappling Hook', player)))
 
 
-def _thewindwakerworldgen_can_defeat_bokoblins(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_bokoblins(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_darknuts(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_light_arrows(state, player)) or (state.has('Skull Hammer', player))
+def can_defeat_darknuts(state: "CollectionState", player: int) -> bool:
+    return (has_heros_sword(state, player)) or (has_light_arrows(state, player)) or (state.has('Skull Hammer', player))
 
 
-def _thewindwakerworldgen_can_defeat_darknuts_easily(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_light_arrows(state, player))
+def can_defeat_darknuts_easily(state: "CollectionState", player: int) -> bool:
+    return (has_heros_sword(state, player)) or (has_light_arrows(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_door_flowers(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Boomerang', 'Hookshot'), player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_door_flowers(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Boomerang', 'Hookshot'], player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_floormasters(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player)) or ((state.has('Skull Hammer', player)) and (False))
+def can_defeat_floormasters(state: "CollectionState", player: int) -> bool:
+    return (has_heros_sword(state, player)) or (has_heros_bow(state, player)) or ((state.has('Skull Hammer', player)) and (state.multiworld.worlds[player].logic_precise_1))
 
 
-def _thewindwakerworldgen_can_defeat_ganondorf(state: "CollectionState", player: int) -> bool:
-    return ((_thewindwakerworldgen_has_heros_sword(state, player)) or (False)) and ((_thewindwakerworldgen_has_heros_shield(state, player)) or ((state.has('Skull Hammer', player)) and (False)))
+def can_defeat_ganondorf(state: "CollectionState", player: int) -> bool:
+    return ((has_heros_sword(state, player)) or (state.multiworld.worlds[player].logic_in_swordless_mode)) and ((has_heros_shield(state, player)) or ((state.has('Skull Hammer', player)) and (state.multiworld.worlds[player].logic_obscure_2)))
 
 
-def _thewindwakerworldgen_can_defeat_gohdan(state: "CollectionState", player: int) -> bool:
-    return ((_thewindwakerworldgen_has_heros_bow(state, player)) or ((state.has('Hookshot', player)) and (False) and (False))) and (state.has('Bombs', player))
+def can_defeat_gohdan(state: "CollectionState", player: int) -> bool:
+    return ((has_heros_bow(state, player)) or ((state.has('Hookshot', player)) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_2))) and (state.has('Bombs', player))
 
 
-def _thewindwakerworldgen_can_defeat_gohma(state: "CollectionState", player: int) -> bool:
+def can_defeat_gohma(state: "CollectionState", player: int) -> bool:
     return state.has('Grappling Hook', player)
 
 
-def _thewindwakerworldgen_can_defeat_green_chuchus(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_defeat_red_chuchus(state, player)
+def can_defeat_green_chuchus(state: "CollectionState", player: int) -> bool:
+    return can_defeat_red_chuchus(state, player)
 
 
-def _thewindwakerworldgen_can_defeat_helmaroc_king(state: "CollectionState", player: int) -> bool:
+def can_defeat_helmaroc_king(state: "CollectionState", player: int) -> bool:
     return state.has('Skull Hammer', player)
 
 
-def _thewindwakerworldgen_can_defeat_jalhalla(state: "CollectionState", player: int) -> bool:
-    return ((_thewindwakerworldgen_can_aim_mirror_shield(state, player)) or (_thewindwakerworldgen_has_light_arrows(state, player))) and (state.has('Power Bracelets', player)) and (_thewindwakerworldgen_can_defeat_jalhalla_poes(state, player))
+def can_defeat_jalhalla(state: "CollectionState", player: int) -> bool:
+    return ((can_aim_mirror_shield(state, player)) or (has_light_arrows(state, player))) and (state.has('Power Bracelets', player)) and (can_defeat_jalhalla_poes(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_jalhalla_poes(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_jalhalla_poes(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_kalle_demos(state: "CollectionState", player: int) -> bool:
+def can_defeat_kalle_demos(state: "CollectionState", player: int) -> bool:
     return state.has('Boomerang', player)
 
 
-def _thewindwakerworldgen_can_defeat_mighty_darknuts(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_defeat_darknuts_easily(state, player)) or ((state.has('Skull Hammer', player)) and (False))
+def can_defeat_mighty_darknuts(state: "CollectionState", player: int) -> bool:
+    return (can_defeat_darknuts_easily(state, player)) or ((state.has('Skull Hammer', player)) and (state.multiworld.worlds[player].logic_precise_3))
 
 
-def _thewindwakerworldgen_can_defeat_moblins(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_moblins(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_molgera(state: "CollectionState", player: int) -> bool:
-    return (state.has('Hookshot', player)) and ((state.has_any(('Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player)))
+def can_defeat_molgera(state: "CollectionState", player: int) -> bool:
+    return (state.has('Hookshot', player)) and ((state.has_any(['Bombs', 'Boomerang', 'Grappling Hook', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player)))
 
 
-def _thewindwakerworldgen_can_defeat_morths(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Boomerang', 'Hookshot'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_morths(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Boomerang', 'Hookshot'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_mothulas(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_mothulas(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_peahats(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Boomerang', 'Skull Hammer'), player)) or ((state.has('Hookshot', player)) and (_thewindwakerworldgen_has_heros_sword(state, player))) or ((_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) and (_thewindwakerworldgen_has_heros_sword(state, player))) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_peahats(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Boomerang', 'Skull Hammer'], player)) or ((state.has('Hookshot', player)) and (has_heros_sword(state, player))) or ((can_fan_with_deku_leaf(state, player)) and (has_heros_sword(state, player))) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_phantom_ganon(state: "CollectionState", player: int) -> bool:
-    return ((not (None)) and (_thewindwakerworldgen_has_any_master_sword(state, player))) or ((False) and (state.has('Skull Hammer', player)))
+def can_defeat_phantom_ganon(state: "CollectionState", player: int) -> bool:
+    return ((not (None)) and (has_any_master_sword(state, player))) or ((state.multiworld.worlds[player].logic_in_swordless_mode) and (state.has('Skull Hammer', player)))
 
 
-def _thewindwakerworldgen_can_defeat_puppet_ganon(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_has_light_arrows(state, player)) and ((state.has('Boomerang', player)) or (False))
+def can_defeat_puppet_ganon(state: "CollectionState", player: int) -> bool:
+    return (has_light_arrows(state, player)) and ((state.has('Boomerang', player)) or (state.multiworld.worlds[player].logic_precise_2))
 
 
-def _thewindwakerworldgen_can_defeat_red_bubbles(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player)) or (((_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) or (state.has('Hookshot', player))) and (state.has('Grappling Hook', player)))
+def can_defeat_red_bubbles(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player)) or (((can_fan_with_deku_leaf(state, player)) or (state.has('Hookshot', player))) and (state.has('Grappling Hook', player)))
 
 
-def _thewindwakerworldgen_can_defeat_red_chuchus(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_red_chuchus(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_stalfos(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_light_arrows(state, player))
+def can_defeat_stalfos(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_light_arrows(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_winged_mothulas(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_winged_mothulas(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_wizzrobes(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Hookshot', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_defeat_wizzrobes(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Hookshot', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_defeat_yellow_chuchus(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Skull Hammer'), player)) or ((state.has('Boomerang', player)) and (_thewindwakerworldgen_has_heros_sword(state, player))) or (_thewindwakerworldgen_has_heros_bow(state, player)) or ((_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) and (_thewindwakerworldgen_has_heros_sword(state, player))) or ((state.has('Grappling Hook', player)) and (_thewindwakerworldgen_has_heros_sword(state, player)) and (False) and (False))
+def can_defeat_yellow_chuchus(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Skull Hammer'], player)) or ((state.has('Boomerang', player)) and (has_heros_sword(state, player))) or (has_heros_bow(state, player)) or ((can_fan_with_deku_leaf(state, player)) and (has_heros_sword(state, player))) or ((state.has('Grappling Hook', player)) and (has_heros_sword(state, player)) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_2))
 
 
-def _thewindwakerworldgen_can_destroy_seeds_hanging_by_vines(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Boomerang', 'Hookshot'), player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_destroy_seeds_hanging_by_vines(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Boomerang', 'Hookshot'], player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_fan_with_deku_leaf(state: "CollectionState", player: int) -> bool:
+def can_fan_with_deku_leaf(state: "CollectionState", player: int) -> bool:
     return state.has('Deku Leaf', player)
 
 
-def _thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state: "CollectionState", player: int) -> bool:
-    return (state.has('Deku Leaf', player)) and (_thewindwakerworldgen_has_magic_meter(state, player))
+def can_fly_with_deku_leaf_indoors(state: "CollectionState", player: int) -> bool:
+    return (state.has('Deku Leaf', player)) and (has_magic_meter(state, player))
 
 
-def _thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state: "CollectionState", player: int) -> bool:
-    return (state.has('Deku Leaf', player)) and (_thewindwakerworldgen_has_magic_meter(state, player)) and (_thewindwakerworldgen_can_play_winds_requiem(state, player))
+def can_fly_with_deku_leaf_outdoors(state: "CollectionState", player: int) -> bool:
+    return (state.has('Deku Leaf', player)) and (has_magic_meter(state, player)) and (can_play_winds_requiem(state, player))
 
 
-def _thewindwakerworldgen_can_get_inside_forsaken_fortress(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_get_past_forsaken_fortress_gate(state, player)) and (state.has('Skull Hammer', player))
+def can_get_inside_forsaken_fortress(state: "CollectionState", player: int) -> bool:
+    return (can_get_past_forsaken_fortress_gate(state, player)) and (state.has('Skull Hammer', player))
 
 
-def _thewindwakerworldgen_can_get_past_forsaken_fortress_gate(state: "CollectionState", player: int) -> bool:
-    return (state.has('Bombs', player)) or ((False) and (False)) or ((_thewindwakerworldgen_can_open_ganons_tower_dark_portal(state, player)) and (False))
+def can_get_past_forsaken_fortress_gate(state: "CollectionState", player: int) -> bool:
+    return (state.has('Bombs', player)) or ((state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_1)) or ((can_open_ganons_tower_dark_portal(state, player)) and (state.multiworld.worlds[player].logic_obscure_1))
 
 
-def _thewindwakerworldgen_can_get_past_hyrule_barrier(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_access_hyrule(state, player)) and ((_thewindwakerworldgen_has_full_power_master_sword(state, player)) or (False))
+def can_get_past_hyrule_barrier(state: "CollectionState", player: int) -> bool:
+    return (can_access_hyrule(state, player)) and ((has_full_power_master_sword(state, player)) or (state.multiworld.worlds[player].logic_in_swordless_mode))
 
 
-def _thewindwakerworldgen_can_move_boulders(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Bombs', 'Power Bracelets'), player)
+def can_move_boulders(state: "CollectionState", player: int) -> bool:
+    return state.has_any(['Bombs', 'Power Bracelets'], player)
 
 
-def _thewindwakerworldgen_can_open_ganons_tower_dark_portal(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_ganons_tower_phantom_ganon_room(state, player)) and (state.has('Boomerang', player))
+def can_open_ganons_tower_dark_portal(state: "CollectionState", player: int) -> bool:
+    return (can_reach_ganons_tower_phantom_ganon_room(state, player)) and (state.has('Boomerang', player))
 
 
-def _thewindwakerworldgen_can_open_wind_temple_lower_giant_grate(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room(state, player)) and (state.has('Hookshot', player)) and (_thewindwakerworldgen_can_defeat_blue_bubbles(state, player))
+def can_open_wind_temple_lower_giant_grate(state: "CollectionState", player: int) -> bool:
+    return (can_reach_wind_temple_kidnapping_room(state, player)) and (state.has('Hookshot', player)) and (can_defeat_blue_bubbles(state, player))
 
 
-def _thewindwakerworldgen_can_open_wind_temple_upper_giant_grate(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_end_of_wind_temple_many_cyclones_room(state, player)) and (state.has('Iron Boots', player))
+def can_open_wind_temple_upper_giant_grate(state: "CollectionState", player: int) -> bool:
+    return (can_reach_end_of_wind_temple_many_cyclones_room(state, player)) and (state.has('Iron Boots', player))
 
 
-def _thewindwakerworldgen_can_play_command_melody(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('Command Melody', 'Wind Waker'), player)
+def can_play_command_melody(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['Command Melody', 'Wind Waker'], player)
 
 
-def _thewindwakerworldgen_can_play_earth_gods_lyric(state: "CollectionState", player: int) -> bool:
-    return state.has_all(("Earth God's Lyric", 'Wind Waker'), player)
+def can_play_earth_gods_lyric(state: "CollectionState", player: int) -> bool:
+    return state.has_all(["Earth God's Lyric", 'Wind Waker'], player)
 
 
-def _thewindwakerworldgen_can_play_wind_gods_aria(state: "CollectionState", player: int) -> bool:
-    return state.has_all(("Wind God's Aria", 'Wind Waker'), player)
+def can_play_wind_gods_aria(state: "CollectionState", player: int) -> bool:
+    return state.has_all(["Wind God's Aria", 'Wind Waker'], player)
 
 
-def _thewindwakerworldgen_can_play_winds_requiem(state: "CollectionState", player: int) -> bool:
-    return state.has_all(('Wind Waker', "Wind's Requiem"), player)
+def can_play_winds_requiem(state: "CollectionState", player: int) -> bool:
+    return state.has_all(['Wind Waker', "Wind's Requiem"], player)
 
 
-def _thewindwakerworldgen_can_reach_and_defeat_ganondorf(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_and_defeat_puppet_ganon(state, player)) and (state.has_all(('Grappling Hook', 'Hookshot'), player)) and (_thewindwakerworldgen_can_defeat_ganondorf(state, player))
+def can_reach_and_defeat_ganondorf(state: "CollectionState", player: int) -> bool:
+    return (can_reach_and_defeat_puppet_ganon(state, player)) and (state.has_all(['Grappling Hook', 'Hookshot'], player)) and (can_defeat_ganondorf(state, player))
 
 
-def _thewindwakerworldgen_can_reach_and_defeat_phantom_ganon(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_get_past_forsaken_fortress_gate(state, player)) and (_thewindwakerworldgen_can_defeat_phantom_ganon(state, player))
+def can_reach_and_defeat_phantom_ganon(state: "CollectionState", player: int) -> bool:
+    return (can_get_past_forsaken_fortress_gate(state, player)) and (can_defeat_phantom_ganon(state, player))
 
 
-def _thewindwakerworldgen_can_reach_and_defeat_puppet_ganon(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_ganons_tower_phantom_ganon_room(state, player)) and (_thewindwakerworldgen_has_light_arrows(state, player)) and (_thewindwakerworldgen_can_unlock_puppet_ganon_door(state, player)) and (_thewindwakerworldgen_can_defeat_puppet_ganon(state, player))
+def can_reach_and_defeat_puppet_ganon(state: "CollectionState", player: int) -> bool:
+    return (can_reach_ganons_tower_phantom_ganon_room(state, player)) and (has_light_arrows(state, player)) and (can_unlock_puppet_ganon_door(state, player)) and (can_defeat_puppet_ganon(state, player))
 
 
-def _thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs(state: "CollectionState", player: int) -> bool:
-    return (state.has('DRC Small Key', player, 4)) and ((state.has_any(('Grappling Hook', 'Hookshot'), player)) or (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) or (_thewindwakerworldgen_has_ice_arrows(state, player)))
+def can_reach_dragon_roost_cavern_boss_stairs(state: "CollectionState", player: int) -> bool:
+    return (state.has('DRC Small Key', player, 4)) and ((state.has_any(['Grappling Hook', 'Hookshot'], player)) or (can_fly_with_deku_leaf_indoors(state, player)) or (has_ice_arrows(state, player)))
 
 
-def _thewindwakerworldgen_can_reach_dragon_roost_cavern_gaping_maw(state: "CollectionState", player: int) -> bool:
-    return (state.has('DRC Small Key', player)) and (((state.has('DRC Small Key', player, 4)) and (_thewindwakerworldgen_can_cut_down_hanging_drc_platform(state, player))) or ((_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (False)) or ((_thewindwakerworldgen_has_ice_arrows(state, player)) and (False) and (False)))
+def can_reach_dragon_roost_cavern_gaping_maw(state: "CollectionState", player: int) -> bool:
+    return (state.has('DRC Small Key', player)) and (((state.has('DRC Small Key', player, 4)) and (can_cut_down_hanging_drc_platform(state, player))) or ((can_fly_with_deku_leaf_indoors(state, player)) and (state.multiworld.worlds[player].logic_obscure_2)) or ((has_ice_arrows(state, player)) and (state.multiworld.worlds[player].logic_obscure_2) and (state.multiworld.worlds[player].logic_precise_1)))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_basement(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_sun_statue_room(state, player)) and (_thewindwakerworldgen_can_play_command_melody(state, player)) and (_thewindwakerworldgen_can_aim_mirror_shield(state, player))
+def can_reach_earth_temple_basement(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_sun_statue_room(state, player)) and (can_play_command_melody(state, player)) and (can_aim_mirror_shield(state, player))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_left_path(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_sun_statue_room(state, player)) and (state.has('ET Small Key', player, 2))
+def can_reach_earth_temple_left_path(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_sun_statue_room(state, player)) and (state.has('ET Small Key', player, 2))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room(state: "CollectionState", player: int) -> bool:
-    return _thewindwakerworldgen_can_reach_earth_temple_tall_vine_room(state, player)
+def can_reach_earth_temple_many_mirrors_room(state: "CollectionState", player: int) -> bool:
+    return can_reach_earth_temple_tall_vine_room(state, player)
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_left_path(state, player)) and (_thewindwakerworldgen_has_fire_arrows(state, player)) and (state.has('Power Bracelets', player)) and (_thewindwakerworldgen_can_defeat_floormasters(state, player)) and ((_thewindwakerworldgen_can_play_command_melody(state, player)) or (_thewindwakerworldgen_has_mirror_shield(state, player)))
+def can_reach_earth_temple_moblins_and_poes_room(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_left_path(state, player)) and (has_fire_arrows(state, player)) and (state.has('Power Bracelets', player)) and (can_defeat_floormasters(state, player)) and ((can_play_command_melody(state, player)) or (has_mirror_shield(state, player)))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_redead_hub_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_basement(state, player)) and (_thewindwakerworldgen_can_play_earth_gods_lyric(state, player))
+def can_reach_earth_temple_redead_hub_room(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_basement(state, player)) and (can_play_earth_gods_lyric(state, player))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_right_path(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_sun_statue_room(state, player)) and (_thewindwakerworldgen_can_play_command_melody(state, player)) and (state.has('Skull Hammer', player))
+def can_reach_earth_temple_right_path(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_sun_statue_room(state, player)) and (can_play_command_melody(state, player)) and (state.has('Skull Hammer', player))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_sun_statue_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_play_command_melody(state, player)) and (_thewindwakerworldgen_can_defeat_red_chuchus(state, player)) and (_thewindwakerworldgen_can_defeat_green_chuchus(state, player))
+def can_reach_earth_temple_sun_statue_room(state: "CollectionState", player: int) -> bool:
+    return (can_play_command_melody(state, player)) and (can_defeat_red_chuchus(state, player)) and (can_defeat_green_chuchus(state, player))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_tall_vine_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_third_crypt(state, player)) and (_thewindwakerworldgen_can_play_earth_gods_lyric(state, player))
+def can_reach_earth_temple_tall_vine_room(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_third_crypt(state, player)) and (can_play_earth_gods_lyric(state, player))
 
 
-def _thewindwakerworldgen_can_reach_earth_temple_third_crypt(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_earth_temple_redead_hub_room(state, player)) and ((_thewindwakerworldgen_can_play_command_melody(state, player)) or (_thewindwakerworldgen_can_aim_mirror_shield(state, player))) and (state.has_all_counts({'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}, player)) and ((_thewindwakerworldgen_can_defeat_red_bubbles(state, player)) or (False)) and (_thewindwakerworldgen_can_play_command_melody(state, player)) and (_thewindwakerworldgen_can_aim_mirror_shield(state, player))
+def can_reach_earth_temple_third_crypt(state: "CollectionState", player: int) -> bool:
+    return (can_reach_earth_temple_redead_hub_room(state, player)) and ((can_play_command_melody(state, player)) or (can_aim_mirror_shield(state, player))) and (state.has_all_counts({'ET Small Key': 3, 'Power Bracelets': 1, 'Skull Hammer': 1}, player)) and ((can_defeat_red_bubbles(state, player)) or (state.multiworld.worlds[player].logic_precise_2)) and (can_play_command_melody(state, player)) and (can_aim_mirror_shield(state, player))
 
 
-def _thewindwakerworldgen_can_reach_end_of_wind_temple_many_cyclones_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room(state, player)) and (((state.has('Iron Boots', player)) and (_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (_thewindwakerworldgen_can_cut_grass(state, player))) or ((state.has('Hookshot', player)) and (_thewindwakerworldgen_can_defeat_blue_bubbles(state, player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player))) or ((state.has('Hookshot', player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player)) and (False) and (False)))
+def can_reach_end_of_wind_temple_many_cyclones_room(state: "CollectionState", player: int) -> bool:
+    return (can_reach_wind_temple_kidnapping_room(state, player)) and (((state.has('Iron Boots', player)) and (can_fan_with_deku_leaf(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (can_cut_grass(state, player))) or ((state.has('Hookshot', player)) and (can_defeat_blue_bubbles(state, player)) and (can_fly_with_deku_leaf_indoors(state, player))) or ((state.has('Hookshot', player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_2)))
 
 
-def _thewindwakerworldgen_can_reach_ganons_tower_phantom_ganon_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_access_ganons_tower(state, player)) and (_thewindwakerworldgen_can_unlock_ganons_tower_four_boss_door(state, player))
+def can_reach_ganons_tower_phantom_ganon_room(state: "CollectionState", player: int) -> bool:
+    return (can_access_ganons_tower(state, player)) and (can_unlock_ganons_tower_four_boss_door(state, player))
 
 
-def _thewindwakerworldgen_can_reach_outset_island_upper_level(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_cut_down_outset_trees(state, player)) or ((_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors(state, player)) and (False))
+def can_reach_outset_island_upper_level(state: "CollectionState", player: int) -> bool:
+    return (can_cut_down_outset_trees(state, player)) or ((can_fly_with_deku_leaf_outdoors(state, player)) and (state.multiworld.worlds[player].logic_obscure_1))
 
 
-def _thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(('Bombs', 'TotG Small Key'), player)) and (_thewindwakerworldgen_can_defeat_yellow_chuchus(state, player))
+def can_reach_tower_of_the_gods_second_floor(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Bombs', 'TotG Small Key'], player)) and (can_defeat_yellow_chuchus(state, player))
 
 
-def _thewindwakerworldgen_can_reach_tower_of_the_gods_third_floor(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor(state, player)) and (_thewindwakerworldgen_can_bring_west_servant_of_the_tower(state, player)) and (_thewindwakerworldgen_can_bring_north_servant_of_the_tower(state, player)) and (state.has('Wind Waker', player))
+def can_reach_tower_of_the_gods_third_floor(state: "CollectionState", player: int) -> bool:
+    return (can_reach_tower_of_the_gods_second_floor(state, player)) and (can_bring_west_servant_of_the_tower(state, player)) and (can_bring_north_servant_of_the_tower(state, player)) and (state.has('Wind Waker', player))
 
 
-def _thewindwakerworldgen_can_reach_wind_temple_kidnapping_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_play_command_melody(state, player)) and (state.has('Iron Boots', player)) and (_thewindwakerworldgen_can_fly_with_deku_leaf_indoors(state, player))
+def can_reach_wind_temple_kidnapping_room(state: "CollectionState", player: int) -> bool:
+    return (can_play_command_melody(state, player)) and (state.has('Iron Boots', player)) and (can_fly_with_deku_leaf_indoors(state, player))
 
 
-def _thewindwakerworldgen_can_reach_wind_temple_tall_basement_room(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate(state, player)) and (_thewindwakerworldgen_can_open_wind_temple_lower_giant_grate(state, player)) and (state.has('WT Small Key', player, 2))
+def can_reach_wind_temple_tall_basement_room(state: "CollectionState", player: int) -> bool:
+    return (can_open_wind_temple_upper_giant_grate(state, player)) and (can_open_wind_temple_lower_giant_grate(state, player)) and (state.has('WT Small Key', player, 2))
 
 
-def _thewindwakerworldgen_can_remove_peahat_armor(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer'), player)) or (_thewindwakerworldgen_can_fan_with_deku_leaf(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_remove_peahat_armor(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Boomerang', 'Hookshot', 'Skull Hammer'], player)) or (can_fan_with_deku_leaf(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_stun_magtails(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Bombs', 'Boomerang', 'Grappling Hook', 'Hookshot', 'Skull Hammer'), player)) or (_thewindwakerworldgen_has_heros_sword(state, player)) or (_thewindwakerworldgen_has_heros_bow(state, player))
+def can_stun_magtails(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Bombs', 'Boomerang', 'Grappling Hook', 'Hookshot', 'Skull Hammer'], player)) or (has_heros_sword(state, player)) or (has_heros_bow(state, player))
 
 
-def _thewindwakerworldgen_can_unlock_ganons_tower_four_boss_door(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_complete_all_memory_dungeons_and_bosses(state, player)) or (True)
+def can_unlock_ganons_tower_four_boss_door(state: "CollectionState", player: int) -> bool:
+    return (can_complete_all_memory_dungeons_and_bosses(state, player)) or (state.multiworld.worlds[player].logic_rematch_bosses_skipped)
 
 
-def _thewindwakerworldgen_can_unlock_puppet_ganon_door(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_defeat_moblins(state, player)) and (_thewindwakerworldgen_can_defeat_mighty_darknuts(state, player)) and ((not (None)) or ((False) and (True)))
+def can_unlock_puppet_ganon_door(state: "CollectionState", player: int) -> bool:
+    return (can_defeat_moblins(state, player)) and (can_defeat_mighty_darknuts(state, player)) and ((not (None)) or ((state.multiworld.worlds[player].logic_in_required_bosses_mode) and (True)))
 
 
-def _thewindwakerworldgen_has_all_8_triforce_shards(state: "CollectionState", player: int) -> bool:
+def has_all_8_triforce_shards(state: "CollectionState", player: int) -> bool:
     return state.has_group_unique('Shards', player, 8)
 
 
-def _thewindwakerworldgen_has_any_master_sword(state: "CollectionState", player: int) -> bool:
+def has_any_master_sword(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Sword', player, 2)
 
 
-def _thewindwakerworldgen_has_any_wallet_upgrade(state: "CollectionState", player: int) -> bool:
+def has_any_wallet_upgrade(state: "CollectionState", player: int) -> bool:
     return state.has('Wallet Capacity Upgrade', player)
 
 
-def _thewindwakerworldgen_has_fire_arrows(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Bow', player, 2)) and (_thewindwakerworldgen_has_magic_meter(state, player))
+def has_fire_arrows(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Bow', player, 2)) and (has_magic_meter(state, player))
 
 
-def _thewindwakerworldgen_has_full_power_master_sword(state: "CollectionState", player: int) -> bool:
+def has_full_power_master_sword(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Sword', player, 4)
 
 
-def _thewindwakerworldgen_has_heros_bow(state: "CollectionState", player: int) -> bool:
+def has_heros_bow(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Bow', player)
 
 
-def _thewindwakerworldgen_has_heros_shield(state: "CollectionState", player: int) -> bool:
+def has_heros_shield(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Shield', player)
 
 
-def _thewindwakerworldgen_has_heros_sword(state: "CollectionState", player: int) -> bool:
+def has_heros_sword(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Sword', player)
 
 
-def _thewindwakerworldgen_has_ice_arrows(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Bow', player, 2)) and (_thewindwakerworldgen_has_magic_meter(state, player))
+def has_ice_arrows(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Bow', player, 2)) and (has_magic_meter(state, player))
 
 
-def _thewindwakerworldgen_has_light_arrows(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Bow', player, 3)) and (_thewindwakerworldgen_has_magic_meter(state, player))
+def has_light_arrows(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Bow', player, 3)) and (has_magic_meter(state, player))
 
 
-def _thewindwakerworldgen_has_magic_meter(state: "CollectionState", player: int) -> bool:
+def has_magic_meter(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Magic Meter', player)
 
 
-def _thewindwakerworldgen_has_magic_meter_upgrade(state: "CollectionState", player: int) -> bool:
+def has_magic_meter_upgrade(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Magic Meter', player, 2)
 
 
-def _thewindwakerworldgen_has_mirror_shield(state: "CollectionState", player: int) -> bool:
+def has_mirror_shield(state: "CollectionState", player: int) -> bool:
     return state.has('Progressive Shield', player, 2)
 
 
@@ -596,257 +596,255 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_dragon_roost_island, helper_name="can_access_dungeon_entrance_on_dragon_roost_island")
+        HelperCall(helper_func=can_access_dungeon_entrance_on_dragon_roost_island, helper_name="can_access_dungeon_entrance_on_dragon_roost_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Forest Haven Sector -> Forbidden Woods", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_in_forest_haven_sector, helper_name="can_access_dungeon_entrance_in_forest_haven_sector")
+        HelperCall(helper_func=can_access_dungeon_entrance_in_forest_haven_sector, helper_name="can_access_dungeon_entrance_in_forest_haven_sector")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_in_tower_of_the_gods_sector, helper_name="can_access_dungeon_entrance_in_tower_of_the_gods_sector")
+        HelperCall(helper_func=can_access_dungeon_entrance_in_tower_of_the_gods_sector, helper_name="can_access_dungeon_entrance_in_tower_of_the_gods_sector")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Headstone Island -> Earth Temple", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_headstone_island, helper_name="can_access_dungeon_entrance_on_headstone_island")
+        HelperCall(helper_func=can_access_dungeon_entrance_on_headstone_island, helper_name="can_access_dungeon_entrance_on_headstone_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Gale Isle -> Wind Temple", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle")
+        HelperCall(helper_func=can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Hyrule Castle -> Master Sword Chamber", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_hyrule_castle, helper_name="can_access_miniboss_entrance_in_hyrule_castle")
+        HelperCall(helper_func=can_access_miniboss_entrance_in_hyrule_castle, helper_name="can_access_miniboss_entrance_in_hyrule_castle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_forsaken_fortress, helper_name="can_access_boss_entrance_in_forsaken_fortress")
+        HelperCall(helper_func=can_access_boss_entrance_in_forsaken_fortress, helper_name="can_access_boss_entrance_in_forsaken_fortress")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Outset Island -> Savage Labyrinth", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_outset_island, helper_name="can_access_secret_cave_entrance_on_outset_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_outset_island, helper_name="can_access_secret_cave_entrance_on_outset_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Dragon Roost Island -> Dragon Roost Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_dragon_roost_island, helper_name="can_access_secret_cave_entrance_on_dragon_roost_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_dragon_roost_island, helper_name="can_access_secret_cave_entrance_on_dragon_roost_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Fire Mountain -> Fire Mountain Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_fire_mountain, helper_name="can_access_secret_cave_entrance_on_fire_mountain")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_fire_mountain, helper_name="can_access_secret_cave_entrance_on_fire_mountain")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Ice Ring Isle -> Ice Ring Isle Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_ice_ring_isle, helper_name="can_access_secret_cave_entrance_on_ice_ring_isle")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_ice_ring_isle, helper_name="can_access_secret_cave_entrance_on_ice_ring_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Private Oasis -> Cabana Labyrinth", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Needle Rock Isle -> Needle Rock Isle Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_needle_rock_isle, helper_name="can_access_secret_cave_entrance_on_needle_rock_isle")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_needle_rock_isle, helper_name="can_access_secret_cave_entrance_on_needle_rock_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_angular_isles, helper_name="can_access_secret_cave_entrance_on_angular_isles")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_angular_isles, helper_name="can_access_secret_cave_entrance_on_angular_isles")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Boating Course -> Boating Course Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_boating_course, helper_name="can_access_secret_cave_entrance_on_boating_course")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_boating_course, helper_name="can_access_secret_cave_entrance_on_boating_course")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_stone_watcher_island, helper_name="can_access_secret_cave_entrance_on_stone_watcher_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_stone_watcher_island, helper_name="can_access_secret_cave_entrance_on_stone_watcher_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_overlook_island, helper_name="can_access_secret_cave_entrance_on_overlook_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_overlook_island, helper_name="can_access_secret_cave_entrance_on_overlook_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_birds_peak_rock, helper_name="can_access_secret_cave_entrance_on_birds_peak_rock")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_birds_peak_rock, helper_name="can_access_secret_cave_entrance_on_birds_peak_rock")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_pawprint_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle_side_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle_side_isle")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_pawprint_isle_side_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle_side_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_diamond_steppe_island, helper_name="can_access_secret_cave_entrance_on_diamond_steppe_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_diamond_steppe_island, helper_name="can_access_secret_cave_entrance_on_diamond_steppe_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bomb Island -> Bomb Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_bomb_island, helper_name="can_access_secret_cave_entrance_on_bomb_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_bomb_island, helper_name="can_access_secret_cave_entrance_on_bomb_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_rock_spire_isle, helper_name="can_access_secret_cave_entrance_on_rock_spire_isle")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_rock_spire_isle, helper_name="can_access_secret_cave_entrance_on_rock_spire_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Shark Island -> Shark Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_cliff_plateau_isles, helper_name="can_access_secret_cave_entrance_on_cliff_plateau_isles")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_cliff_plateau_isles, helper_name="can_access_secret_cave_entrance_on_cliff_plateau_isles")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Horseshoe Island -> Horseshoe Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_horseshoe_island, helper_name="can_access_secret_cave_entrance_on_horseshoe_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_horseshoe_island, helper_name="can_access_secret_cave_entrance_on_horseshoe_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Star Island -> Star Island Secret Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_star_island, helper_name="can_access_secret_cave_entrance_on_star_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_star_island, helper_name="can_access_secret_cave_entrance_on_star_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_outset_island, helper_name="can_access_fairy_fountain_entrance_on_outset_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_outset_island, helper_name="can_access_fairy_fountain_entrance_on_outset_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_thorned_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_thorned_fairy_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_thorned_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_thorned_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Eastern Fairy Island -> Eastern Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_eastern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_eastern_fairy_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_eastern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_eastern_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_western_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_western_fairy_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_western_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_western_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_southern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_southern_fairy_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_southern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_southern_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_northern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_northern_fairy_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_northern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_northern_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_dragon_roost_cavern, helper_name="can_access_boss_entrance_in_dragon_roost_cavern")
+        HelperCall(helper_func=can_access_boss_entrance_in_dragon_roost_cavern, helper_name="can_access_boss_entrance_in_dragon_roost_cavern")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_forbidden_woods, helper_name="can_access_miniboss_entrance_in_forbidden_woods")
+        HelperCall(helper_func=can_access_miniboss_entrance_in_forbidden_woods, helper_name="can_access_miniboss_entrance_in_forbidden_woods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_forbidden_woods, helper_name="can_access_boss_entrance_in_forbidden_woods")
+        HelperCall(helper_func=can_access_boss_entrance_in_forbidden_woods, helper_name="can_access_boss_entrance_in_forbidden_woods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_tower_of_the_gods, helper_name="can_access_miniboss_entrance_in_tower_of_the_gods")
+        HelperCall(helper_func=can_access_miniboss_entrance_in_tower_of_the_gods, helper_name="can_access_miniboss_entrance_in_tower_of_the_gods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Tower of the Gods -> Gohdan Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_tower_of_the_gods, helper_name="can_access_boss_entrance_in_tower_of_the_gods")
+        HelperCall(helper_func=can_access_boss_entrance_in_tower_of_the_gods, helper_name="can_access_boss_entrance_in_tower_of_the_gods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_earth_temple, helper_name="can_access_miniboss_entrance_in_earth_temple")
+        HelperCall(helper_func=can_access_miniboss_entrance_in_earth_temple, helper_name="can_access_miniboss_entrance_in_earth_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Earth Temple -> Jalhalla Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_earth_temple, helper_name="can_access_boss_entrance_in_earth_temple")
+        HelperCall(helper_func=can_access_boss_entrance_in_earth_temple, helper_name="can_access_boss_entrance_in_earth_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_wind_temple, helper_name="can_access_miniboss_entrance_in_wind_temple")
+        HelperCall(helper_func=can_access_miniboss_entrance_in_wind_temple, helper_name="can_access_miniboss_entrance_in_wind_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Wind Temple -> Molgera Boss Arena", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_wind_temple, helper_name="can_access_boss_entrance_in_wind_temple")
+        HelperCall(helper_func=can_access_boss_entrance_in_wind_temple, helper_name="can_access_boss_entrance_in_wind_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_inner_entrance_in_ice_ring_isle_secret_cave, helper_name="can_access_inner_entrance_in_ice_ring_isle_secret_cave")
+        HelperCall(helper_func=can_access_inner_entrance_in_ice_ring_isle_secret_cave, helper_name="can_access_inner_entrance_in_ice_ring_isle_secret_cave")
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_access_inner_entrance_in_cliff_plateau_isles_secret_cave, helper_name="can_access_inner_entrance_in_cliff_plateau_isles_secret_cave")
+        HelperCall(helper_func=can_access_inner_entrance_in_cliff_plateau_isles_secret_cave, helper_name="can_access_inner_entrance_in_cliff_plateau_isles_secret_cave")
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Defeat Ganondorf", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_and_defeat_ganondorf, helper_name="can_reach_and_defeat_ganondorf")
+        HelperCall(helper_func=can_reach_and_defeat_ganondorf, helper_name="can_reach_and_defeat_ganondorf")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Guarded By Bokoblin", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
+        HelperCall(helper_func=can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Inside Lower Jail Cell", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
+        HelperCall(helper_func=can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
     )
 
-    world.set_rule(
-        multiworld.get_location("Forsaken Fortress - Chest Outside Upper Jail Cell", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), False_(), Has('Hookshot')))
-    )
+    multiworld.get_location("Forsaken Fortress - Chest Outside Upper Jail Cell", player).access_rule = \
+        lambda state: ((can_get_inside_forsaken_fortress(state, player)) and (((can_fly_with_deku_leaf_indoors(state, player)) or (state.multiworld.worlds[player].logic_obscure_1) or (state.has('Hookshot', player)))))
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest on Bed", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
+        HelperCall(helper_func=can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Phantom Ganon", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_and_defeat_phantom_ganon, helper_name="can_reach_and_defeat_phantom_ganon")
+        HelperCall(helper_func=can_reach_and_defeat_phantom_ganon, helper_name="can_reach_and_defeat_phantom_ganon")
     )
 
     world.set_rule(
         multiworld.get_location("Ganon's Tower - Maze Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_phantom_ganon, helper_name="can_defeat_phantom_ganon"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_ganons_tower_phantom_ganon_room, helper_name="can_reach_ganons_tower_phantom_ganon_room"))
+        And(HelperCall(helper_func=can_defeat_phantom_ganon, helper_name="can_defeat_phantom_ganon"), HelperCall(helper_func=can_reach_ganons_tower_phantom_ganon_room, helper_name="can_reach_ganons_tower_phantom_ganon_room"))
     )
 
     world.set_rule(
@@ -856,17 +854,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
+        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
+        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
+        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
     )
 
     world.set_rule(
@@ -881,7 +879,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Big Key Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_gaping_maw, helper_name="can_reach_dragon_roost_cavern_gaping_maw"), HelperCall(helper_func=_thewindwakerworldgen_can_stun_magtails, helper_name="can_stun_magtails"), Has('Grappling Hook'))
+        And(HelperCall(helper_func=can_reach_dragon_roost_cavern_gaping_maw, helper_name="can_reach_dragon_roost_cavern_gaping_maw"), HelperCall(helper_func=can_stun_magtails, helper_name="can_stun_magtails"), Has('Grappling Hook'))
     )
 
     world.set_rule(
@@ -896,18 +894,16 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boss Stairs Left Chest", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs")
+        HelperCall(helper_func=can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs")
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boss Stairs Right Chest", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs")
+        HelperCall(helper_func=can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs")
     )
 
-    world.set_rule(
-        multiworld.get_location("Dragon Roost Cavern - Chest Across Lava Pit", player),
-        And(Or(And(False_(), Has('Hookshot')), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook')), Has('DRC Small Key', 2))
-    )
+    multiworld.get_location("Dragon Roost Cavern - Chest Across Lava Pit", player).access_rule = \
+        lambda state: ((((((state.multiworld.worlds[player].logic_obscure_1) and (state.has('Hookshot', player)))) or (can_fly_with_deku_leaf_indoors(state, player)) or (state.has('Grappling Hook', player)))) and (state.has('DRC Small Key', player, 2)))
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Dark Room", player),
@@ -936,72 +932,68 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Under Rope Bridge", player),
-        And(Or(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors, helper_name="can_fly_with_deku_leaf_outdoors"), Has('Grappling Hook')), Has('DRC Small Key', 4))
+        And(Or(HelperCall(helper_func=can_fly_with_deku_leaf_outdoors, helper_name="can_fly_with_deku_leaf_outdoors"), Has('Grappling Hook')), Has('DRC Small Key', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Big Key Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest Across Red Hanging Flower", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest in Locked Tree Trunk", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Climb to Top Using Boko Baba Bulbs", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"))
+        And(HelperCall(helper_func=can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Double Mothula Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_mothulas, helper_name="can_defeat_mothulas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), Has('Grappling Hook')))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_defeat_mothulas, helper_name="can_defeat_mothulas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), Has('Grappling Hook')))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Hole in Tree", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Inside Hollow Tree's Mouth", player),
-        Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"))
+        Or(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_defeat_door_flowers, helper_name="can_defeat_door_flowers"))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Morth Pit", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Forbidden Woods - Past Seeds Hanging by Vines", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_destroy_seeds_hanging_by_vines, helper_name="can_destroy_seeds_hanging_by_vines"), False_()), HasAll('FW Small Key', 'Grappling Hook'))
-    )
+    multiworld.get_location("Forbidden Woods - Past Seeds Hanging by Vines", player).access_rule = \
+        lambda state: ((can_defeat_boko_babas(state, player)) and (can_defeat_door_flowers(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (((can_destroy_seeds_hanging_by_vines(state, player)) or (state.multiworld.worlds[player].logic_precise_1))) and (state.has_all(['FW Small Key', 'Grappling Hook'], player)))
 
-    world.set_rule(
-        multiworld.get_location("Forbidden Woods - Tall Room Before Miniboss", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_peahats, helper_name="can_defeat_peahats"), False_()), HasAll('FW Small Key', 'Grappling Hook'))
-    )
+    multiworld.get_location("Forbidden Woods - Tall Room Before Miniboss", player).access_rule = \
+        lambda state: ((can_defeat_boko_babas(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (((can_defeat_peahats(state, player)) or (state.multiworld.worlds[player].logic_precise_2))) and (state.has_all(['FW Small Key', 'Grappling Hook'], player)))
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Left Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Right Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
+        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Big Key Chest", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_third_floor, helper_name="can_reach_tower_of_the_gods_third_floor")
+        HelperCall(helper_func=can_reach_tower_of_the_gods_third_floor, helper_name="can_reach_tower_of_the_gods_third_floor")
     )
 
     world.set_rule(
@@ -1011,13 +1003,11 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - First Chest Guarded by Armos Knights", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"))
+        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"))
     )
 
-    world.set_rule(
-        multiworld.get_location("Tower of the Gods - Floating Platforms Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Or(And(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), False_()), And(False_(), Has('Hookshot')), HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow")))
-    )
+    multiworld.get_location("Tower of the Gods - Floating Platforms Room", player).access_rule = \
+        lambda state: ((can_reach_tower_of_the_gods_second_floor(state, player)) and (((((can_fly_with_deku_leaf_indoors(state, player)) and (state.multiworld.worlds[player].logic_precise_1))) or (((state.multiworld.worlds[player].logic_obscure_1) and (state.has('Hookshot', player)))) or (has_heros_bow(state, player)))))
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Light Two Torches", player),
@@ -1026,12 +1016,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Second Chest Guarded by Armos Knights", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Bombs'))
+        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem"), HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Bombs'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Shoot Eye Above Skulls Room Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"), Has('Bombs'))
+        And(HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"), Has('Bombs'))
     )
 
     world.set_rule(
@@ -1041,187 +1031,183 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Stone Tablet", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Wind Waker'))
+        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Wind Waker'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Top of Floating Platforms Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"))
+        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"))
     )
 
-    world.set_rule(
-        multiworld.get_location("Earth Temple - Big Key Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Or(And(HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"), False_()), And(Or(HelperCall(helper_func=_thewindwakerworldgen_has_any_master_sword, helper_name="has_any_master_sword"), HelperCall(helper_func=_thewindwakerworldgen_has_heros_sword, helper_name="has_heros_sword"), Has('Skull Hammer')), False_(), False_()), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles")), Has('Power Bracelets'))
-    )
+    multiworld.get_location("Earth Temple - Big Key Chest", player).access_rule = \
+        lambda state: ((can_aim_mirror_shield(state, player)) and (can_defeat_darknuts(state, player)) and (can_play_command_melody(state, player)) and (can_reach_earth_temple_many_mirrors_room(state, player)) and (((((has_heros_bow(state, player)) and (state.multiworld.worlds[player].logic_obscure_1))) or (((((has_any_master_sword(state, player)) or (has_heros_sword(state, player)) or (state.has('Skull Hammer', player)))) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_1))) or (can_defeat_blue_bubbles(state, player)))) and (state.has('Power Bracelets', player)))
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Casket in Second Crypt", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room")
+        HelperCall(helper_func=can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Destructible Walls", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), HelperCall(helper_func=_thewindwakerworldgen_has_mirror_shield, helper_name="has_mirror_shield"))
+        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield"))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Statues", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")))
+        And(HelperCall(helper_func=can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest In Three Blocks Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path"), HelperCall(helper_func=_thewindwakerworldgen_has_fire_arrows, helper_name="has_fire_arrows"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path"), HelperCall(helper_func=has_fire_arrows, helper_name="has_fire_arrows"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest in Third Crypt", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_third_crypt, helper_name="can_reach_earth_temple_third_crypt")
+        HelperCall(helper_func=can_reach_earth_temple_third_crypt, helper_name="can_reach_earth_temple_third_crypt")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - End of Foggy Room With Floormasters", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")))
+        And(HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Kill All Floormasters in Foggy Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")))
+        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Left Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Right Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
+        And(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Crypt Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
+        And(HelperCall(helper_func=can_defeat_stalfos, helper_name="can_defeat_stalfos"), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest In Warp Pot Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")
+        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest in First Crypt", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_has_mirror_shield, helper_name="has_mirror_shield")), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), Or(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield")), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Big Key Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=_thewindwakerworldgen_can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
+        And(HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria"), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Seven Armos", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_armos, helper_name="can_defeat_armos"))
+        And(HelperCall(helper_func=can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan"), HelperCall(helper_func=can_defeat_armos, helper_name="can_defeat_armos"))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Stone Head", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), HasAll('Hookshot', 'Iron Boots'))
+        And(HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), HasAll('Hookshot', 'Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Between Two Dirt Patches", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")
+        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")
     )
 
-    world.set_rule(
-        multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Or(And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Hookshot')), And(HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_cut_grass, helper_name="can_cut_grass"), HelperCall(helper_func=_thewindwakerworldgen_has_magic_meter_upgrade, helper_name="has_magic_meter_upgrade")), Has('Iron Boots')), And(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), False_(), False_(), Has('Hookshot'))))
-    )
+    multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player).access_rule = \
+        lambda state: ((can_reach_wind_temple_kidnapping_room(state, player)) and (((((can_defeat_blue_bubbles(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (state.has('Hookshot', player)))) or (((can_fan_with_deku_leaf(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (((can_cut_grass(state, player)) or (has_magic_meter_upgrade(state, player)))) and (state.has('Iron Boots', player)))) or (((can_fly_with_deku_leaf_indoors(state, player)) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_2) and (state.has('Hookshot', player)))))))
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest In Middle Of Hub Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate")
+        HelperCall(helper_func=can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate")
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest at Top of Hub Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan")
+        HelperCall(helper_func=can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan")
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest in Left Alcove", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
+        And(HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Kill All Enemies in Tall Basement Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_morths, helper_name="can_defeat_morths"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_wizzrobes, helper_name="can_defeat_wizzrobes"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_tall_basement_room, helper_name="can_reach_wind_temple_tall_basement_room"))
+        And(HelperCall(helper_func=can_defeat_morths, helper_name="can_defeat_morths"), HelperCall(helper_func=can_defeat_stalfos, helper_name="can_defeat_stalfos"), HelperCall(helper_func=can_defeat_wizzrobes, helper_name="can_defeat_wizzrobes"), HelperCall(helper_func=can_reach_wind_temple_tall_basement_room, helper_name="can_reach_wind_temple_tall_basement_room"))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - Destroy All Cracked Floors", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate"), Has('Iron Boots'))
+        And(HelperCall(helper_func=can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - First Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate"), Has('Iron Boots'))
+        And(HelperCall(helper_func=can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Mothula Miniboss Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_winged_mothulas, helper_name="can_defeat_winged_mothulas")
+        HelperCall(helper_func=can_defeat_winged_mothulas, helper_name="can_defeat_winged_mothulas")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Darknut Miniboss Room", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts")
+        HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Miniboss Room", player),
-        Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos"), Has('Hookshot'))
+        Or(HelperCall(helper_func=can_defeat_stalfos, helper_name="can_defeat_stalfos"), Has('Hookshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Wizzrobe Miniboss Room", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=_thewindwakerworldgen_can_remove_peahat_armor, helper_name="can_remove_peahat_armor"))
+        And(HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=can_remove_peahat_armor, helper_name="can_remove_peahat_armor"))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule - Master Sword Chamber", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_mighty_darknuts, helper_name="can_defeat_mighty_darknuts")
+        HelperCall(helper_func=can_defeat_mighty_darknuts, helper_name="can_defeat_mighty_darknuts")
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Gohma Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_gohma, helper_name="can_defeat_gohma")
+        HelperCall(helper_func=can_defeat_gohma, helper_name="can_defeat_gohma")
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Kalle Demos Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_kalle_demos, helper_name="can_defeat_kalle_demos")
+        HelperCall(helper_func=can_defeat_kalle_demos, helper_name="can_defeat_kalle_demos")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Gohdan Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_gohdan, helper_name="can_defeat_gohdan")
+        HelperCall(helper_func=can_defeat_gohdan, helper_name="can_defeat_gohdan")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Helmaroc King Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_helmaroc_king, helper_name="can_defeat_helmaroc_king")
+        HelperCall(helper_func=can_defeat_helmaroc_king, helper_name="can_defeat_helmaroc_king")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Jalhalla Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_jalhalla, helper_name="can_defeat_jalhalla")
+        HelperCall(helper_func=can_defeat_jalhalla, helper_name="can_defeat_jalhalla")
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Molgera Heart Container", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_molgera, helper_name="can_defeat_molgera")
+        HelperCall(helper_func=can_defeat_molgera, helper_name="can_defeat_molgera")
     )
 
     world.set_rule(
@@ -1231,32 +1217,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Upper Floor Chest", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem"), Has('Skull Hammer'))
+        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem"), Has('Skull Hammer'))
     )
 
     world.set_rule(
         multiworld.get_location("Needle Rock Isle - Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_has_fire_arrows, helper_name="has_fire_arrows")
+        HelperCall(helper_func=has_fire_arrows, helper_name="has_fire_arrows")
     )
 
     world.set_rule(
         multiworld.get_location("Angular Isles - Cave", player),
-        And(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Hookshot')))
+        And(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), Or(HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Hookshot')))
     )
 
     world.set_rule(
         multiworld.get_location("Bird's Peak Rock - Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem")
+        HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem")
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Left Boulder", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_move_boulders, helper_name="can_move_boulders")
+        HelperCall(helper_func=can_move_boulders, helper_name="can_move_boulders")
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Right Boulder", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_move_boulders, helper_name="can_move_boulders")
+        HelperCall(helper_func=can_move_boulders, helper_name="can_move_boulders")
     )
 
     world.set_rule(
@@ -1266,10 +1252,8 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bomb Island - Cave", player),
-        HelperCall(helper_func=_thewindwakerworldgen_can_stun_magtails, helper_name="can_stun_magtails")
+        HelperCall(helper_func=can_stun_magtails, helper_name="can_stun_magtails")
     )
 
-    world.set_rule(
-        multiworld.get_location("Cliff Plateau Isles - Cave", player),
-        Or(And(False_(), False_(), Has('Grappling Hook')), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"))
-    )
+    multiworld.get_location("Cliff Plateau Isles - Cave", player).access_rule = \
+        lambda state: ((((state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_1) and (state.has('Grappling Hook', player)))) or (can_defeat_boko_babas(state, player)))

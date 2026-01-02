@@ -88,13 +88,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 1,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -167,13 +161,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -246,13 +234,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 3,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -325,13 +307,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 4,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -404,13 +380,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 5,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -483,13 +453,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 6
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 6,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -562,13 +526,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 7
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 7,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -641,13 +599,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 8
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 8,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -720,13 +672,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 9
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 9,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -799,13 +745,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 10
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 10,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -878,13 +818,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 11
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 11,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -957,13 +891,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 12
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 12,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1036,13 +964,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 13
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 13,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1115,13 +1037,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 14
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 14,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1194,13 +1110,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 15
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 15,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1273,13 +1183,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 17
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 17,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1352,13 +1256,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 19
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 19,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1431,13 +1329,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 22
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 22,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1510,13 +1402,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 25
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 25,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1589,13 +1475,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 28
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 28,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1668,13 +1548,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 32
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 32,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1747,13 +1621,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 36
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 36,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1826,13 +1694,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 40
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 40,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1905,13 +1767,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 44
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 44,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -1984,13 +1840,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 48
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 48,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2063,13 +1913,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 53
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 53,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2142,13 +1986,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 58
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 58,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2221,13 +2059,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 63
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 63,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2300,13 +2132,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 69
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 69,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2379,13 +2205,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 74
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 74,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2458,13 +2278,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 80
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 80,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2537,13 +2351,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 87
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 87,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2616,13 +2424,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 93
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 93,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2695,13 +2497,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 100
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 100,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2774,13 +2570,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 107
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 107,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2853,13 +2643,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 114
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 114,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -2932,13 +2716,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 122
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 122,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3011,13 +2789,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 130
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 130,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3090,13 +2862,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 138
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 138,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3169,13 +2935,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 146
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 146,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3248,13 +3008,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 155
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 155,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3327,13 +3081,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 164
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 164,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3406,13 +3154,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 173
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 173,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3485,13 +3227,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 183
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 183,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3564,13 +3300,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 193
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 193,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3643,13 +3373,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 203
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 203,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3722,13 +3446,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 214
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 214,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3801,13 +3519,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 224
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 224,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3880,13 +3592,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 236
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 236,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -3959,13 +3665,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 247
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 247,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4038,13 +3738,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 259
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 259,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4117,13 +3811,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 271
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 271,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4196,13 +3884,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 283
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 283,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4275,13 +3957,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 296
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 296,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4354,13 +4030,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 309
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 309,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4433,13 +4103,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 322
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 322,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4512,13 +4176,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 336
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 336,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4591,13 +4249,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 350
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 350,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4670,13 +4322,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 364
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 364,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4749,13 +4395,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 378
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 378,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4828,13 +4468,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 393
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 393,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4907,13 +4541,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 408
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 408,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -4986,13 +4614,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 424
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 424,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5065,13 +4687,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 440
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 440,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5144,13 +4760,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 456
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 456,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5223,13 +4833,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 473
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 473,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5302,13 +4906,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 490
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 490,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5381,13 +4979,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 507
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 507,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5460,13 +5052,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 524
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 524,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5539,13 +5125,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 542
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 542,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5618,13 +5198,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 560
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 560,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5697,13 +5271,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 579
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 579,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5776,13 +5344,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 598
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 598,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5855,13 +5417,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 617
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 617,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -5934,13 +5490,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 637
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 637,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6013,13 +5563,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 657
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 657,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6092,13 +5636,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 677
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 677,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6171,13 +5709,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 698
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 698,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6250,13 +5782,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 719
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 719,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6329,13 +5855,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 740
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 740,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6408,13 +5928,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 762
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 762,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6487,13 +6001,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 777
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 777,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6567,13 +6075,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 806
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 806,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6646,13 +6148,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 829
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 829,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6725,13 +6221,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 852
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 852,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6804,13 +6294,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 876
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 876,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6883,13 +6367,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 899
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 899,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -6962,13 +6440,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 924
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 924,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -7041,13 +6513,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 948
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 948,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -7120,13 +6586,7 @@
                   ]
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1000
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 1000,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -8170,7 +7630,8 @@
         "version": "1.0"
       },
       "use_resolved_items": false,
-      "add_sphere_items_upfront": true
+      "add_sphere_items_upfront": true,
+      "world_class_name": "YachtDiceWorld"
     }
   },
   "game_info": {

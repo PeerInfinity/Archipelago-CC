@@ -15,17 +15,20 @@
       "Abyss Orb Room": {
         "name": "Abyss Orb Room",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Ancient Laboratory": {
         "name": "Ancient Laboratory",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Below Lava Lake": {
         "name": "Below Lava Lake",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Coal Pits": {
         "name": "Coal Pits",
@@ -297,22 +300,26 @@
       "Collapsed Mines": {
         "name": "Collapsed Mines",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Desert": {
         "name": "Desert",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Dragoncave": {
         "name": "Dragoncave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Floating Island": {
         "name": "Floating Island",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Forest": {
         "name": "Forest",
@@ -351,7 +358,8 @@
       "Friend Cave": {
         "name": "Friend Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Frozen Vault": {
         "name": "Frozen Vault",
@@ -369,7 +377,8 @@
       "Fungal Caverns": {
         "name": "Fungal Caverns",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Hiisi Base": {
         "name": "Hiisi Base",
@@ -739,7 +748,8 @@
       "Lake": {
         "name": "Lake",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Lava Lake": {
         "name": "Lava Lake",
@@ -757,17 +767,20 @@
       "Lukki Lair": {
         "name": "Lukki Lair",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Magical Temple": {
         "name": "Magical Temple",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Meat Realm": {
         "name": "Meat Realm",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Menu": {
         "name": "Menu",
@@ -980,12 +993,14 @@
       "Pyramid": {
         "name": "Pyramid",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Sandcave": {
         "name": "Sandcave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Secret Shop": {
         "name": "Secret Shop",
@@ -1052,7 +1067,8 @@
       "Snow Chasm": {
         "name": "Snow Chasm",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Snowy Depths": {
         "name": "Snowy Depths",
@@ -1324,7 +1340,8 @@
       "Snowy Wasteland": {
         "name": "Snowy Wasteland",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Temple of the Art": {
         "name": "Temple of the Art",
@@ -1637,12 +1654,14 @@
       "The Sky": {
         "name": "The Sky",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "The Tower": {
         "name": "The Tower",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "The Vault": {
         "name": "The Vault",
@@ -1830,7 +1849,8 @@
       "The Work (Hell)": {
         "name": "The Work (Hell)",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Underground Jungle": {
         "name": "Underground Jungle",
@@ -2221,7 +2241,8 @@
       "West Meat Realm": {
         "name": "West Meat Realm",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Wizards' Den": {
         "name": "Wizards' Den",
@@ -2903,6 +2924,11 @@
           "default": 100,
           "display_name": "Shop Price Reduction"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "victory_condition": {
           "type": "choice",
           "name_lookup": {
@@ -2951,7 +2977,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "NoitaWorld"
     }
   },
   "game_info": {

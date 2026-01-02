@@ -1,52 +1,28 @@
 {
-  "settings": {
-    "game": "Hylics 2",
-    "options": {
-      "accessibility": 0,
-      "death_link": false,
-      "exclude_locations": [],
-      "extra_items_in_logic": true,
-      "gesture_shuffle": 0,
-      "item_links": [],
-      "local_items": [],
-      "medallion_shuffle": false,
-      "non_local_items": [],
-      "party_shuffle": false,
-      "plando_items": [],
-      "priority_locations": [],
-      "progression_balancing": 50,
-      "random_start": "",
-      "start_hints": [],
-      "start_inventory": {},
-      "start_location": 0,
-      "start_location_hints": []
-    },
-    "world_directory": "hylics2",
+  "options": {
+    "accessibility": 0,
+    "death_link": false,
+    "exclude_locations": [],
+    "extra_items_in_logic": true,
+    "gesture_shuffle": 0,
+    "item_links": [],
+    "local_items": [],
+    "medallion_shuffle": false,
+    "non_local_items": [],
+    "party_shuffle": false,
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "random_start": "",
+    "start_hints": [],
+    "start_inventory": {},
+    "start_location": 0,
+    "start_location_hints": []
+  },
+  "exporter": {
+    "world_class_name": "Hylics2World",
     "use_resolved_items": false
   },
-  "world_attributes": {
-    "world_description": "Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,\ntravel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!",
-    "slot_data": {
-      "party_shuffle": 0,
-      "medallion_shuffle": 0,
-      "random_start": 0,
-      "start_location": "Waynehouse",
-      "death_link": 0
-    },
-    "web": {
-      "theme": "ocean",
-      "tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to settings up the Hylics 2 randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "TRPG"
-          ]
-        }
-      ]
-    }
-  }
+  "game": "Hylics 2",
+  "world_directory": "hylics2"
 }

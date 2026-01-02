@@ -4579,6 +4579,11 @@
           "type": "default_on_toggle",
           "default": 1,
           "display_name": "Shuffle Goody Hut Rewards"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         }
       },
       "location_by_era": {
@@ -5683,7 +5688,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "CivVIWorld"
     }
   },
   "game_info": {

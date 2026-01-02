@@ -1,73 +1,56 @@
 {
-  "settings": {
-    "game": "Lufia II Ancient Cave",
-    "options": {
-      "accessibility": 0,
-      "blue_chest_chance": 25,
-      "blue_chest_count": 25,
-      "boss": 38,
-      "capsule_cravings_jp_style": false,
-      "capsule_starting_form": 1,
-      "capsule_starting_level": 1,
-      "crowded_floor_chance": 16,
-      "custom_item_pool": {},
-      "death_link": false,
-      "default_capsule": 0,
-      "default_party": "M",
-      "enemy_floor_numbers": 0,
-      "enemy_movement_patterns": 0,
-      "enemy_sprites": 0,
-      "exclude_locations": [],
-      "exp_modifier": 100,
-      "final_floor": 99,
-      "gear_variety_after_b9": false,
-      "goal": 1,
-      "gold_modifier": 100,
-      "healing_floor_chance": 16,
-      "inactive_exp_gain": 0,
-      "initial_floor": 1,
-      "iris_floor_chance": 5,
-      "iris_treasures_required": 9,
-      "item_links": [],
-      "local_items": [],
-      "master_hp": 9980,
-      "non_local_items": [],
-      "party_starting_level": 1,
-      "plando_items": [],
-      "priority_locations": [],
-      "progression_balancing": 50,
-      "run_speed": 8,
-      "shop_interval": 0,
-      "shop_inventory": {
-        "gear": 45,
-        "spell": 30,
-        "weapon": 82
-      },
-      "shuffle_capsule_monsters": false,
-      "shuffle_party_members": false,
-      "start_hints": [],
-      "start_inventory": {},
-      "start_location_hints": []
+  "options": {
+    "accessibility": 0,
+    "blue_chest_chance": 25,
+    "blue_chest_count": 25,
+    "boss": 38,
+    "capsule_cravings_jp_style": false,
+    "capsule_starting_form": 1,
+    "capsule_starting_level": 1,
+    "crowded_floor_chance": 16,
+    "custom_item_pool": {},
+    "death_link": false,
+    "default_capsule": 0,
+    "default_party": "M",
+    "enemy_floor_numbers": 0,
+    "enemy_movement_patterns": 0,
+    "enemy_sprites": 0,
+    "exclude_locations": [],
+    "exp_modifier": 100,
+    "final_floor": 99,
+    "gear_variety_after_b9": false,
+    "goal": 1,
+    "gold_modifier": 100,
+    "healing_floor_chance": 16,
+    "inactive_exp_gain": 0,
+    "initial_floor": 1,
+    "iris_floor_chance": 5,
+    "iris_treasures_required": 9,
+    "item_links": [],
+    "local_items": [],
+    "master_hp": 9980,
+    "non_local_items": [],
+    "party_starting_level": 1,
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "run_speed": 8,
+    "shop_interval": 0,
+    "shop_inventory": {
+      "gear": 45,
+      "spell": 30,
+      "weapon": 82
     },
-    "world_directory": "lufia2ac",
-    "use_resolved_items": false
+    "shuffle_capsule_monsters": false,
+    "shuffle_party_members": false,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_location_hints": []
   },
-  "world_attributes": {
-    "world_description": "The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Royal\nJelly in the end. Can you beat it?",
-    "web": {
-      "theme": "dirt",
-      "tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up Lufia II Ancient Cave for MultiWorld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "word_fcuk"
-          ]
-        }
-      ]
-    }
-  }
+  "exporter": {
+    "use_resolved_items": false,
+    "world_class_name": "L2ACWorld"
+  },
+  "game": "Lufia II Ancient Cave",
+  "world_directory": "lufia2ac"
 }

@@ -540,6 +540,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
@@ -549,13 +556,6 @@
                       "Sky Spring Flow",
                       "Tower of Fortress Spring Flow"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 2
                   }
                 }
               ]
@@ -2715,6 +2715,11 @@
           "type": "toggle",
           "default": 0,
           "display_name": "Require Dragon Slayer"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         }
       },
       "filler_ratios": {
@@ -2758,7 +2763,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "FaxanaduWorld"
     }
   },
   "game_info": {

@@ -67,13 +67,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 6
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 6,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -98,13 +92,7 @@
                   "_converted_from_ast": true
                 },
                 "op": ">",
-                "right": {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                },
+                "right": 2,
                 "_original_ast_type": "compare"
               },
               "_converted_from_ast": true
@@ -149,15 +137,7 @@
             "name": "Burn a Log",
             "id": 458828,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "True_"
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Area: South of Varrock",
@@ -199,32 +179,18 @@
             "name": "Activate the \"Protect Item\" Prayer",
             "id": 458777,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "compare"
-                  },
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "quest_points",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
-                {
-                  "rule": "True_"
-                }
-              ]
+                "op": ">",
+                "right": 2,
+                "_original_ast_type": "compare"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Progressive Weapons",
@@ -293,18 +259,10 @@
             "name": "Lumbridge->South of Varrock",
             "connected_region": "South of Varrock",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: South of Varrock"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Area: South of Varrock"
+              }
             }
           },
           {
@@ -335,21 +293,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -364,18 +317,7 @@
             "name": "Lumbridge->Wilderness",
             "connected_region": "Wilderness",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Wilderness"
-                  }
-                }
-              ]
+              "rule": "False_"
             }
           },
           {
@@ -458,21 +400,16 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Oak Tree"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Willow Tree"
-                          }
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Oak Tree"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Willow Tree"
+                      }
                     },
                     {
                       "rule": "CanReachRegion",
@@ -483,32 +420,10 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wilderness"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "South of Varrock"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
                 },
                 {
                   "rule": "And",
@@ -567,43 +482,28 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Lumbridge"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Wheat"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Windmill"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Egg"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wheat"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Windmill"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Egg"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -646,21 +546,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge Swamp"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge Swamp"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -703,21 +598,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wizard Tower"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wizard Tower"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -760,21 +650,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Draynor Village"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Draynor Village"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -932,18 +817,10 @@
             "name": "Kill a Giant Frog",
             "id": 458839,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Lumbridge Swamp"
-                  }
-                }
-              ]
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Lumbridge Swamp"
+              }
             },
             "item": {
               "name": "Area: Lumbridge Farms",
@@ -1319,36 +1196,20 @@
             "name": "South of Varrock->Lumbridge",
             "connected_region": "Lumbridge",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Lumbridge"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Area: Lumbridge"
+              }
             }
           },
           {
             "name": "South of Varrock->Barbarian Village",
             "connected_region": "Barbarian Village",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Barbarian Village"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Area: Barbarian Village"
+              }
             }
           },
           {
@@ -1358,21 +1219,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1387,18 +1243,7 @@
             "name": "South of Varrock->Wilderness",
             "connected_region": "Wilderness",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Wilderness"
-                  }
-                }
-              ]
+              "rule": "False_"
             }
           },
           {
@@ -1474,21 +1319,16 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Oak Tree"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Willow Tree"
-                          }
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Oak Tree"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Willow Tree"
+                      }
                     },
                     {
                       "rule": "CanReachRegion",
@@ -1499,32 +1339,16 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Barbarian Village"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Barbarian Village"
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
                 },
                 {
                   "rule": "And",
@@ -1773,32 +1597,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Central Varrock"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Varrock Palace"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wizard Tower"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Varrock Palace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wizard Tower"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -1841,32 +1655,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Central Varrock"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Varrock Palace"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "South of Varrock"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Varrock Palace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -1909,32 +1713,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Central Varrock"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Varrock Palace"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "South of Varrock"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Varrock Palace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -1977,21 +1771,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Central Varrock"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Red Spider Eggs"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Red Spider Eggs"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -2194,83 +1983,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "Or",
+                      "rule": "And",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Fly Fishing Spot"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Port Sarim"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Shrimp Spot"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Fly Fishing Spot"
-                              }
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Fly Fishing Spot"
+                          }
                         },
                         {
                           "rule": "CanReachRegion",
                           "args": {
                             "region_name": "Port Sarim"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Wheat"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Windmill"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Egg"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Milk"
                           }
                         },
                         {
@@ -2278,8 +2005,60 @@
                           "args": {
                             "region_name": "Shrimp Spot"
                           }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Fly Fishing Spot"
+                          }
                         }
                       ]
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Port Sarim"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Wheat"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Windmill"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Egg"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Milk"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Shrimp Spot"
+                      }
                     }
                   ]
                 },
@@ -2394,83 +2173,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "Or",
+                      "rule": "And",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Fly Fishing Spot"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Port Sarim"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Shrimp Spot"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Fly Fishing Spot"
-                              }
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Fly Fishing Spot"
+                          }
                         },
                         {
                           "rule": "CanReachRegion",
                           "args": {
                             "region_name": "Port Sarim"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Wheat"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Windmill"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Egg"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Milk"
                           }
                         },
                         {
@@ -2478,8 +2195,60 @@
                           "args": {
                             "region_name": "Shrimp Spot"
                           }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Fly Fishing Spot"
+                          }
                         }
                       ]
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Port Sarim"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Wheat"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Windmill"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Egg"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Milk"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Shrimp Spot"
+                      }
                     }
                   ]
                 },
@@ -2562,21 +2331,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2660,21 +2424,16 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Oak Tree"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Willow Tree"
-                          }
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Oak Tree"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Willow Tree"
+                      }
                     },
                     {
                       "rule": "CanReachRegion",
@@ -2685,32 +2444,16 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Barbarian Village"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Barbarian Village"
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Wilderness"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wilderness"
+                  }
                 },
                 {
                   "rule": "And",
@@ -2883,32 +2626,16 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Edgeville"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Edgeville"
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "South of Varrock"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
                 },
                 {
                   "rule": "And",
@@ -3191,71 +2918,51 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Clay Ore"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dwarven Mountain Pass"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bronze Ores"
+                  }
+                },
+                {
+                  "rule": "Or",
                   "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Clay Ore"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Dwarven Mountain Pass"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
-                    },
                     {
                       "rule": "CanReachRegion",
                       "args": {
                         "region_name": "Bronze Ores"
                       }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Clay Ore"
-                          }
-                        }
-                      ]
                     },
                     {
                       "rule": "CanReachRegion",
                       "args": {
-                        "region_name": "Iron Ore"
+                        "region_name": "Clay Ore"
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
                 }
               ]
             },
@@ -3385,65 +3092,34 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Dwarven Mines"
-                                      }
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Falador"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Monastery"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Ice Mountain"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Falador Farms"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Armor"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dwarven Mines"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Falador"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Monastery"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Ice Mountain"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Falador Farms"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -3454,16 +3130,16 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 12
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 12,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Armor"
+                  }
                 }
               ]
             },
@@ -3500,76 +3176,46 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "CanReachRegion",
-                                          "args": {
-                                            "region_name": "Dwarven Mines"
-                                          }
-                                        },
-                                        {
-                                          "rule": "CanReachRegion",
-                                          "args": {
-                                            "region_name": "Dwarven Mountain Pass"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Ice Mountain"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Barbarian Village"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Falador"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Central Varrock"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Edgeville"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dwarven Mines"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dwarven Mountain Pass"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Ice Mountain"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Barbarian Village"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Falador"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Edgeville"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -3580,13 +3226,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 16
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 16,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -3660,43 +3300,28 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Draynor Village"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Goblin Village"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Falador"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "South of Varrock"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Draynor Village"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Goblin Village"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Falador"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -3989,119 +3614,84 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Falador"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Varrock Palace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Mudskipper Point"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Windmill"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Pie Dish"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Port Sarim"
+                  }
+                },
+                {
+                  "rule": "Or",
                   "children": [
                     {
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "And",
-                                          "children": [
-                                            {
-                                              "rule": "CanReachRegion",
-                                              "args": {
-                                                "region_name": "Falador"
-                                              }
-                                            },
-                                            {
-                                              "rule": "CanReachRegion",
-                                              "args": {
-                                                "region_name": "Varrock Palace"
-                                              }
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "CanReachRegion",
-                                          "args": {
-                                            "region_name": "Mudskipper Point"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "South of Varrock"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Windmill"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Pie Dish"
-                              }
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Wheat"
+                          }
                         },
                         {
                           "rule": "CanReachRegion",
                           "args": {
-                            "region_name": "Port Sarim"
+                            "region_name": "Windmill"
                           }
                         }
                       ]
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Wheat"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Windmill"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Egg"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Milk"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Shrimp Spot"
-                          }
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Egg"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Milk"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Shrimp Spot"
+                      }
                     }
                   ]
                 },
@@ -4317,98 +3907,52 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "And",
-                                          "children": [
-                                            {
-                                              "rule": "And",
-                                              "children": [
-                                                {
-                                                  "rule": "CanReachRegion",
-                                                  "args": {
-                                                    "region_name": "South of Varrock"
-                                                  }
-                                                },
-                                                {
-                                                  "rule": "Has",
-                                                  "args": {
-                                                    "item_name": "Area: Crandor"
-                                                  }
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "rule": "CanReachRegion",
-                                              "args": {
-                                                "region_name": "Edgeville"
-                                              }
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "CanReachRegion",
-                                          "args": {
-                                            "region_name": "Lumbridge"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Rimmington"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Monastery"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Dwarven Mines"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Draynor Village"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Edgeville"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Rimmington"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Monastery"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dwarven Mines"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Port Sarim"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Draynor Village"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -4419,16 +3963,16 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 32
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 32,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Area: Crandor"
+                  }
                 }
               ]
             }
@@ -4505,32 +4049,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Karamja"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Falador"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Karamja"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Port Sarim"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Falador"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -4682,98 +4216,52 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "And",
-                                          "children": [
-                                            {
-                                              "rule": "And",
-                                              "children": [
-                                                {
-                                                  "rule": "CanReachRegion",
-                                                  "args": {
-                                                    "region_name": "South of Varrock"
-                                                  }
-                                                },
-                                                {
-                                                  "rule": "Has",
-                                                  "args": {
-                                                    "item_name": "Area: Crandor"
-                                                  }
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "rule": "CanReachRegion",
-                                              "args": {
-                                                "region_name": "Edgeville"
-                                              }
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "CanReachRegion",
-                                          "args": {
-                                            "region_name": "Lumbridge"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Rimmington"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Monastery"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Dwarven Mines"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Draynor Village"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Edgeville"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Rimmington"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Monastery"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dwarven Mines"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Port Sarim"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Draynor Village"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -4784,16 +4272,16 @@
                       "_converted_from_ast": true
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 32
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 32,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Area: Crandor"
+                  }
                 }
               ]
             }
@@ -4938,98 +4426,58 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "And",
-                                          "children": [
-                                            {
-                                              "rule": "And",
-                                              "children": [
-                                                {
-                                                  "rule": "CanReachRegion",
-                                                  "args": {
-                                                    "region_name": "Crandor"
-                                                  }
-                                                },
-                                                {
-                                                  "rule": "CanReachRegion",
-                                                  "args": {
-                                                    "region_name": "South of Varrock"
-                                                  }
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "rule": "CanReachRegion",
-                                              "args": {
-                                                "region_name": "Edgeville"
-                                              }
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "CanReachRegion",
-                                          "args": {
-                                            "region_name": "Lumbridge"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Rimmington"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Monastery"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Dwarven Mines"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Draynor Village"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Crandor"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "South of Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Edgeville"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lumbridge"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Rimmington"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Monastery"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dwarven Mines"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Port Sarim"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Draynor Village"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -5040,13 +4488,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 32
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 32,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -5274,21 +4716,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Falador Farms"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Rimmington"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Falador Farms"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Rimmington"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -5379,107 +4816,86 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "Or",
+                      "rule": "And",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Coal Ore"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_gold",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Anvil"
+                          }
                         },
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_silver",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Bronze Ores"
+                          }
                         },
                         {
-                          "rule": "can_tan",
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Coal Ore"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Furnace"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Iron Ore"
+                          }
+                        },
+                        {
+                          "rule": "can_gold",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true
                         }
                       ]
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Area: Crafting Guild"
-                      }
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Anvil"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Bronze Ores"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Furnace"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Iron Ore"
+                          }
+                        },
+                        {
+                          "rule": "can_silver",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "can_tan",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5487,6 +4903,12 @@
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Area: Crafting Guild"
                   }
                 }
               ]
@@ -5533,107 +4955,86 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "Or",
+                      "rule": "And",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Coal Ore"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_gold",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Anvil"
+                          }
                         },
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_silver",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Bronze Ores"
+                          }
                         },
                         {
-                          "rule": "can_tan",
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Coal Ore"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Furnace"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Iron Ore"
+                          }
+                        },
+                        {
+                          "rule": "can_gold",
                           "_original_ast_type": "helper",
                           "_converted_from_ast": true
                         }
                       ]
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Area: Crafting Guild"
-                      }
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Anvil"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Bronze Ores"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Furnace"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Iron Ore"
+                          }
+                        },
+                        {
+                          "rule": "can_silver",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "can_tan",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5641,6 +5042,12 @@
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Area: Crafting Guild"
                   }
                 }
               ]
@@ -5827,21 +5234,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Central Varrock"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Draynor Village"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Draynor Village"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -6153,65 +5555,40 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Al Kharid"
-                                      }
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Central Varrock"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Clay Ore"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Sheep"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Spinning Wheel"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Al Kharid"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Central Varrock"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bronze Ores"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Clay Ore"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Sheep"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Spinning Wheel"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -6429,21 +5806,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -6458,18 +5830,7 @@
             "name": "Wilderness->Lumbridge",
             "connected_region": "Lumbridge",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Area: Lumbridge"
-                  }
-                }
-              ]
+              "rule": "False_"
             }
           },
           {
@@ -6552,21 +5913,16 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Oak Tree"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Willow Tree"
-                          }
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Oak Tree"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Willow Tree"
+                      }
                     },
                     {
                       "rule": "CanReachRegion",
@@ -6577,32 +5933,10 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "False_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lumbridge"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Edgeville"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Edgeville"
+                  }
                 },
                 {
                   "rule": "And",
@@ -6707,22 +6041,26 @@
       "Mind Runes": {
         "name": "Mind Runes",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Spinning Wheel": {
         "name": "Spinning Wheel",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Sheep": {
         "name": "Sheep",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Furnace": {
         "name": "Furnace",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chisel": {
         "name": "Chisel",
@@ -6735,304 +6073,29 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Coal Ore"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_gold",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_silver",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "can_tan",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Chisel"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 8
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "Area: Falador",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Cut a Ruby",
-            "id": 458799,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Coal Ore"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_gold",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Bronze Ores"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Furnace"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Iron Ore"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "can_silver",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "can_tan",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Chisel"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "quest_points",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "Progressive Armor",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Bronze Ores": {
-        "name": "Bronze Ores",
-        "exits": [],
-        "locations": []
-      },
-      "Iron Ore": {
-        "name": "Iron Ore",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Smelt an Iron Bar",
-            "id": 458812,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "And",
+                  "rule": "Or",
                   "children": [
                     {
                       "rule": "And",
                       "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Anvil"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Bronze Ores"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Coal Ore"
+                          }
+                        },
                         {
                           "rule": "CanReachRegion",
                           "args": {
@@ -7044,6 +6107,11 @@
                           "args": {
                             "region_name": "Iron Ore"
                           }
+                        },
+                        {
+                          "rule": "can_gold",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -7073,17 +6141,69 @@
                           "args": {
                             "region_name": "Iron Ore"
                           }
+                        },
+                        {
+                          "rule": "can_silver",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "can_tan",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Chisel"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "quest_points",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    "op": ">",
+                    "right": 8,
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "Area: Falador",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Cut a Ruby",
+            "id": 458799,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "Or",
+                      "rule": "And",
                       "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Anvil"
+                          }
+                        },
                         {
                           "rule": "CanReachRegion",
                           "args": {
@@ -7093,18 +6213,175 @@
                         {
                           "rule": "CanReachRegion",
                           "args": {
-                            "region_name": "Clay Ore"
+                            "region_name": "Coal Ore"
                           }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Furnace"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Iron Ore"
+                          }
+                        },
+                        {
+                          "rule": "can_gold",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Anvil"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Bronze Ores"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Furnace"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Iron Ore"
+                          }
+                        },
+                        {
+                          "rule": "can_silver",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "can_tan",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Chisel"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "quest_points",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    "op": ">",
+                    "right": 4,
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "Progressive Armor",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Bronze Ores": {
+        "name": "Bronze Ores",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Iron Ore": {
+        "name": "Iron Ore",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Smelt an Iron Bar",
+            "id": 458812,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Furnace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Anvil"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bronze Ores"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Furnace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
                       "rule": "CanReachRegion",
                       "args": {
-                        "region_name": "Iron Ore"
+                        "region_name": "Bronze Ores"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Clay Ore"
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
                 }
               ]
             },
@@ -7129,32 +6406,27 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Bronze Ores"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Clay Ore"
-                          }
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Bronze Ores"
+                      }
                     },
                     {
                       "rule": "CanReachRegion",
                       "args": {
-                        "region_name": "Iron Ore"
+                        "region_name": "Clay Ore"
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -7177,7 +6449,8 @@
       "Coal Ore": {
         "name": "Coal Ore",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Gold Ore": {
         "name": "Gold Ore",
@@ -7190,94 +6463,69 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Furnace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Gold Ore"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Anvil"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bronze Ores"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Coal Ore"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Furnace"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
+                },
+                {
+                  "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Furnace"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Gold Ore"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Anvil"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Bronze Ores"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Coal Ore"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Furnace"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Iron Ore"
-                              }
-                            }
-                          ]
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Bronze Ores"
+                      }
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Bronze Ores"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Clay Ore"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Iron Ore"
-                          }
-                        }
-                      ]
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Clay Ore"
+                      }
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Iron Ore"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -7288,13 +6536,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7314,17 +6556,20 @@
       "Bronze Anvil": {
         "name": "Bronze Anvil",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Anvil": {
         "name": "Anvil",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Shrimp Spot": {
         "name": "Shrimp Spot",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Fly Fishing Spot": {
         "name": "Fly Fishing Spot",
@@ -7337,27 +6582,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Fly Fishing Spot"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Port Sarim"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Shrimp Spot"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Fly Fishing Spot"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Port Sarim"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shrimp Spot"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -7388,38 +6628,28 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Fly Fishing Spot"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Port Sarim"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Shrimp Spot"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Lobster Spot"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Fly Fishing Spot"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Port Sarim"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shrimp Spot"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Lobster Spot"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -7430,13 +6660,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7464,43 +6688,28 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Redberry Bush"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Wheat"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Windmill"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Pie Dish"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Redberry Bush"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wheat"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Windmill"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Pie Dish"
+                  }
                 },
                 {
                   "rule": "Or",
@@ -7557,27 +6766,32 @@
       "Bowl": {
         "name": "Bowl",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Meat": {
         "name": "Meat",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cooking Apple": {
         "name": "Cooking Apple",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Pie Dish": {
         "name": "Pie Dish",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cake Tin": {
         "name": "Cake Tin",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Wheat": {
         "name": "Wheat",
@@ -7590,147 +6804,112 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Wheat"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Windmill"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Egg"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Milk"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Cake Tin"
+                  }
+                },
+                {
+                  "rule": "Or",
                   "children": [
                     {
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Wheat"
-                                      }
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Windmill"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Egg"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Milk"
-                              }
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Fly Fishing Spot"
+                          }
                         },
                         {
                           "rule": "CanReachRegion",
                           "args": {
-                            "region_name": "Cake Tin"
+                            "region_name": "Port Sarim"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Shrimp Spot"
+                          }
+                        },
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Fly Fishing Spot"
                           }
                         }
                       ]
                     },
                     {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Port Sarim"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Fly Fishing Spot"
-                                      }
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Port Sarim"
-                                      }
-                                    },
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Shrimp Spot"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Fly Fishing Spot"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Port Sarim"
-                              }
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Wheat"
+                          }
                         },
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Wheat"
-                                  }
-                                },
-                                {
-                                  "rule": "CanReachRegion",
-                                  "args": {
-                                    "region_name": "Windmill"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Egg"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Milk"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Shrimp Spot"
-                              }
-                            }
-                          ]
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Windmill"
+                          }
                         }
                       ]
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Egg"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Milk"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Shrimp Spot"
+                      }
                     }
                   ]
                 },
@@ -7743,13 +6922,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 6
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 6,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -7769,27 +6942,32 @@
       "Windmill": {
         "name": "Windmill",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Egg": {
         "name": "Egg",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Milk": {
         "name": "Milk",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cheese": {
         "name": "Cheese",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Tomato": {
         "name": "Tomato",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Oak Tree": {
         "name": "Oak Tree",
@@ -7802,32 +6980,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Oak Tree"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Oak Tree"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
                 },
                 {
                   "rule": "CanReachRegion",
@@ -7858,60 +7026,40 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Oak Tree"
-                              }
-                            },
-                            {
-                              "rule": "CanReachRegion",
-                              "args": {
-                                "region_name": "Willow Tree"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Willow Tree"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Oak Tree"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Willow Tree"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Oak Tree"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Willow Tree"
+                  }
                 }
               ]
             },
@@ -7928,12 +7076,14 @@
       "Canoe Tree": {
         "name": "Canoe Tree",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Goblin": {
         "name": "Goblin",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Barbarian": {
         "name": "Barbarian",
@@ -7943,18 +7093,10 @@
             "name": "Kill a Barbarian",
             "id": 458838,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Barbarian"
-                  }
-                }
-              ]
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Barbarian"
+              }
             },
             "item": {
               "name": "Area: Wilderness",
@@ -7974,18 +7116,10 @@
             "name": "Kill a Zombie",
             "id": 458840,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Zombie"
-                  }
-                }
-              ]
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Zombie"
+              }
             },
             "item": {
               "name": "Progressive Weapons",
@@ -8000,7 +7134,8 @@
       "Guard": {
         "name": "Guard",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Hill Giant": {
         "name": "Hill Giant",
@@ -8013,18 +7148,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "True_"
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Hill Giant"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Hill Giant"
+                  }
                 },
                 {
                   "rule": "Compare",
@@ -8035,13 +7162,7 @@
                       "_converted_from_ast": true
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
+                    "right": 2,
                     "_original_ast_type": "compare"
                   },
                   "_converted_from_ast": true
@@ -8061,32 +7182,38 @@
       "Deadly Red Spider": {
         "name": "Deadly Red Spider",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Moss Giant": {
         "name": "Moss Giant",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Ice Giant": {
         "name": "Ice Giant",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Lesser Demon": {
         "name": "Lesser Demon",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Rune Essence": {
         "name": "Rune Essence",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Crafting Moulds": {
         "name": "Crafting Moulds",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Nature Runes": {
         "name": "Nature Runes",
@@ -8125,32 +7252,38 @@
       "Law Runes": {
         "name": "Law Runes",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Imps": {
         "name": "Imps",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Clay Ore": {
         "name": "Clay Ore",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Onion": {
         "name": "Onion",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Potato": {
         "name": "Potato",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Big Bones": {
         "name": "Big Bones",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Duck": {
         "name": "Duck",
@@ -8160,18 +7293,10 @@
             "name": "Kill a Duck",
             "id": 458834,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Duck"
-                  }
-                }
-              ]
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Duck"
+              }
             },
             "item": {
               "name": "Area: Crafting Guild",
@@ -8186,17 +7311,20 @@
       "Makeover": {
         "name": "Makeover",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Limpwurt Root": {
         "name": "Limpwurt Root",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Bar": {
         "name": "Bar",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Haystack": {
         "name": "Haystack",
@@ -8224,7 +7352,8 @@
       "Red Spider Eggs": {
         "name": "Red Spider Eggs",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -12302,7 +11431,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "OSRSWorld"
     }
   },
   "game_info": {

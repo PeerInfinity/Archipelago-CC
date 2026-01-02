@@ -1212,7 +1212,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "AdventureWorld"
     }
   },
   "game_info": {
@@ -1659,7 +1660,7 @@
               "op": "!=",
               "right": {
                 "type": "constant",
-                "value": "no_glitches"
+                "value": 0
               }
             },
             "body": [
@@ -1754,8 +1755,8 @@
           },
           "op": "==",
           "right": {
-            "type": "list",
-            "value": [
+            "type": "tuple",
+            "elements": [
               {
                 "type": "constant",
                 "value": "Small Key (Hyrule Castle)"
@@ -2063,7 +2064,7 @@
                         "op": "==",
                         "right": {
                           "type": "constant",
-                          "value": "hard"
+                          "value": 2
                         }
                       },
                       {
@@ -2123,7 +2124,7 @@
                           "op": "==",
                           "right": {
                             "type": "constant",
-                            "value": "expert"
+                            "value": 3
                           }
                         },
                         {
@@ -2610,15 +2611,15 @@
                     },
                     "op": "in",
                     "right": {
-                      "type": "list",
-                      "value": [
+                      "type": "tuple",
+                      "elements": [
                         {
                           "type": "constant",
-                          "value": "easy"
+                          "value": 0
                         },
                         {
                           "type": "constant",
-                          "value": "default"
+                          "value": 1
                         }
                       ]
                     }
@@ -3265,7 +3266,7 @@
               "op": "!=",
               "right": {
                 "type": "constant",
-                "value": "inverted"
+                "value": 2
               }
             },
             "if_true": {
@@ -3314,8 +3315,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Small Key (Turtle Rock)"
@@ -3352,8 +3353,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Big Key (Turtle Rock)"

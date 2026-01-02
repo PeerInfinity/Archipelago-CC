@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "MegaMan2WorldGenWorld"
+    "1": "MM2World"
   },
   "regions": {
     "1": {
@@ -1124,7 +1124,6 @@
       },
       "Item 1 - Propeller": {
         "name": "Item 1 - Propeller",
-        "hint_text": "Item 1   Propeller",
         "id": 8912913,
         "groups": [
           "Everything",
@@ -1133,11 +1132,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Item 1   Propeller"
       },
       "Item 2 - Rocket": {
         "name": "Item 2 - Rocket",
-        "hint_text": "Item 2   Rocket",
         "id": 8912914,
         "groups": [
           "Everything",
@@ -1146,11 +1145,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Item 2   Rocket"
       },
       "Item 3 - Bouncy": {
         "name": "Item 3 - Bouncy",
-        "hint_text": "Item 3   Bouncy",
         "id": 8912915,
         "groups": [
           "Everything",
@@ -1159,11 +1158,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Item 3   Bouncy"
       },
       "1-Up": {
         "name": "1-Up",
-        "hint_text": "1 Up",
         "id": 8912928,
         "groups": [
           "Everything"
@@ -1171,7 +1170,8 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "hint_text": "1 Up"
       },
       "Weapon Energy (L)": {
         "name": "Weapon Energy (L)",
@@ -1197,7 +1197,6 @@
       },
       "E-Tank": {
         "name": "E-Tank",
-        "hint_text": "E Tank",
         "id": 8912931,
         "groups": [
           "Everything"
@@ -1205,7 +1204,8 @@
         "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "hint_text": "E Tank"
       },
       "Heat Man Access Codes": {
         "name": "Heat Man Access Codes",
@@ -1305,7 +1305,6 @@
       },
       "Wily Stage 1 - Completed": {
         "name": "Wily Stage 1 - Completed",
-        "hint_text": "Wily Stage 1   Completed",
         "id": null,
         "groups": [
           "Event"
@@ -1313,11 +1312,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Wily Stage 1   Completed"
       },
       "Wily Stage 2 - Completed": {
         "name": "Wily Stage 2 - Completed",
-        "hint_text": "Wily Stage 2   Completed",
         "id": null,
         "groups": [
           "Event"
@@ -1325,11 +1324,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Wily Stage 2   Completed"
       },
       "Wily Stage 3 - Completed": {
         "name": "Wily Stage 3 - Completed",
-        "hint_text": "Wily Stage 3   Completed",
         "id": null,
         "groups": [
           "Event"
@@ -1337,11 +1336,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Wily Stage 3   Completed"
       },
       "Wily Stage 4 - Completed": {
         "name": "Wily Stage 4 - Completed",
-        "hint_text": "Wily Stage 4   Completed",
         "id": null,
         "groups": [
           "Event"
@@ -1349,11 +1348,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Wily Stage 4   Completed"
       },
       "Wily Stage 5 - Completed": {
         "name": "Wily Stage 5 - Completed",
-        "hint_text": "Wily Stage 5   Completed",
         "id": null,
         "groups": [
           "Event"
@@ -1361,7 +1360,8 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Wily Stage 5   Completed"
       },
       "Victory": {
         "name": "Victory",
@@ -1508,6 +1508,7 @@
         "start_location_hints": [],
         "starting_robot_master": 1,
         "strict_weakness": false,
+        "use_canonical_options": true,
         "wily_5_requirement": 8,
         "yoku_jumps": false
       },
@@ -1631,6 +1632,11 @@
           "type": "toggle",
           "default": 0,
           "display_name": "Strict Boss Weaknesses"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         },
         "wily_5_requirement": {
           "type": "range",
@@ -1986,7 +1992,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "MM2World"
     }
   },
   "game_info": {

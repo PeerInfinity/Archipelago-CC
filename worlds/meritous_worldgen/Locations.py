@@ -25,8 +25,8 @@ class LocationData:
         self.event = event
         self.progress_type = progress_type
         self.show_in_spoiler = show_in_spoiler
-        self.access = access  # Game-specific access data (e.g., Lingo AccessRequirements)
-        self.extra_attributes = extra_attributes or {}  # Game-specific attributes (e.g., type_string, price)
+        self.access = access  # Game-specific access data
+        self.extra_attributes = extra_attributes or {}  # Game-specific attributes
 
 
 location_table: Dict[str, LocationData] = {

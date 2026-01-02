@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "LinksAwakeningDXWorldGenWorld"
+    "1": "LinksAwakeningWorld"
   },
   "regions": {
     "1": {
@@ -339,11 +339,11 @@
                   "Boomerang",
                   "Bow",
                   "Hookshot",
-                  "Magic Rod",
-                  "Progressive Sword",
                   "Magic Powder",
+                  "Magic Rod",
                   "Progressive Power Bracelet",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -680,11 +680,11 @@
                   "Boomerang",
                   "Bow",
                   "Hookshot",
-                  "Magic Rod",
-                  "Progressive Sword",
                   "Magic Powder",
+                  "Magic Rod",
                   "Progressive Power Bracelet",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -1576,10 +1576,10 @@
               "args": {
                 "items": [
                   "Ballad of the Wind Fish",
-                  "Ocarina",
                   "Conch Horn",
                   "Coral Triangle",
                   "Full Moon Cello",
+                  "Ocarina",
                   "Organ of Evening Calm",
                   "Sea Lily's Bell",
                   "Surf Harp",
@@ -2288,9 +2288,9 @@
                   "args": {
                     "items": [
                       "Bomb",
-                      "Progressive Sword",
                       "Bow",
-                      "Magic Rod"
+                      "Magic Rod",
+                      "Progressive Sword"
                     ]
                   }
                 },
@@ -2971,9 +2971,9 @@
               "rule": "HasAny",
               "args": {
                 "items": [
+                  "Bow",
                   "Magic Powder",
-                  "Magic Rod",
-                  "Bow"
+                  "Magic Rod"
                 ]
               }
             }
@@ -3003,9 +3003,9 @@
               "rule": "HasAny",
               "args": {
                 "items": [
+                  "Bow",
                   "Magic Powder",
-                  "Magic Rod",
-                  "Bow"
+                  "Magic Rod"
                 ]
               }
             }
@@ -3105,9 +3105,9 @@
                   "args": {
                     "items": [
                       "Bomb",
-                      "Progressive Sword",
                       "Bow",
-                      "Magic Rod"
+                      "Magic Rod",
+                      "Progressive Sword"
                     ]
                   }
                 },
@@ -4844,8 +4844,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Nightmare Key (Angler's Tunnel)",
-                      "Flippers"
+                      "Flippers",
+                      "Nightmare Key (Angler's Tunnel)"
                     ]
                   }
                 }
@@ -4914,8 +4914,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Nightmare Key (Angler's Tunnel)",
-                      "Flippers"
+                      "Flippers",
+                      "Nightmare Key (Angler's Tunnel)"
                     ]
                   }
                 }
@@ -5745,8 +5745,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -5763,8 +5763,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -5787,8 +5787,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -5846,8 +5846,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -9830,10 +9830,10 @@
               "args": {
                 "items": [
                   "Ballad of the Wind Fish",
-                  "Ocarina",
                   "Conch Horn",
                   "Coral Triangle",
                   "Full Moon Cello",
+                  "Ocarina",
                   "Organ of Evening Calm",
                   "Sea Lily's Bell",
                   "Surf Harp",
@@ -10335,8 +10335,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -10478,8 +10478,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -10663,8 +10663,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -10755,8 +10755,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -11194,8 +11194,8 @@
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Pegasus Boots"
+                  "Pegasus Boots",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -11277,8 +11277,8 @@
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Pegasus Boots"
+                  "Pegasus Boots",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -12366,9 +12366,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Nightmare Key (Key Cavern)",
                   "Pegasus Boots",
-                  "Progressive Sword",
-                  "Nightmare Key (Key Cavern)"
+                  "Progressive Sword"
                 ]
               }
             }
@@ -12403,9 +12403,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Nightmare Key (Key Cavern)",
                   "Pegasus Boots",
-                  "Progressive Sword",
-                  "Nightmare Key (Key Cavern)"
+                  "Progressive Sword"
                 ]
               }
             }
@@ -13926,8 +13926,8 @@
               "args": {
                 "items": [
                   "Hookshot",
-                  "Progressive Sword",
-                  "Nightmare Key (Catfish's Maw)"
+                  "Nightmare Key (Catfish's Maw)",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -13947,8 +13947,8 @@
               "args": {
                 "items": [
                   "Hookshot",
-                  "Progressive Sword",
-                  "Nightmare Key (Catfish's Maw)"
+                  "Nightmare Key (Catfish's Maw)",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -14910,8 +14910,8 @@
               "args": {
                 "items": [
                   "Bomb",
-                  "Magic Rod",
-                  "Bow"
+                  "Bow",
+                  "Magic Rod"
                 ]
               }
             }
@@ -14973,8 +14973,8 @@
               "args": {
                 "items": [
                   "Bomb",
-                  "Magic Rod",
-                  "Bow"
+                  "Bow",
+                  "Magic Rod"
                 ]
               }
             }
@@ -16531,11 +16531,11 @@
               "rule": "HasAny",
               "args": {
                 "items": [
+                  "Bomb",
                   "Boomerang",
                   "Hookshot",
                   "Progressive Shield",
-                  "Progressive Sword",
-                  "Bomb"
+                  "Progressive Sword"
                 ]
               }
             }
@@ -16553,8 +16553,8 @@
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -16587,8 +16587,8 @@
                       "Boomerang",
                       "Bow",
                       "Hookshot",
-                      "Progressive Sword",
-                      "Progressive Shield"
+                      "Progressive Shield",
+                      "Progressive Sword"
                     ]
                   }
                 }
@@ -16716,11 +16716,11 @@
               "rule": "HasAny",
               "args": {
                 "items": [
+                  "Bomb",
                   "Boomerang",
                   "Hookshot",
                   "Progressive Shield",
-                  "Progressive Sword",
-                  "Bomb"
+                  "Progressive Sword"
                 ]
               }
             }
@@ -16761,8 +16761,8 @@
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -16818,8 +16818,8 @@
                       "Boomerang",
                       "Bow",
                       "Hookshot",
-                      "Progressive Sword",
-                      "Progressive Shield"
+                      "Progressive Shield",
+                      "Progressive Sword"
                     ]
                   }
                 }
@@ -16999,8 +16999,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -17062,8 +17062,8 @@
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
-                  "Progressive Sword",
-                  "Progressive Shield"
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -18887,7 +18887,6 @@
       },
       "ANGLER_KEYHOLE": {
         "name": "ANGLER_KEYHOLE",
-        "hint_text": "ANGLER KEYHOLE",
         "id": null,
         "groups": [
           "Event"
@@ -18895,11 +18894,11 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "ANGLER KEYHOLE"
       },
       "CASTLE_BUTTON": {
         "name": "CASTLE_BUTTON",
-        "hint_text": "CASTLE BUTTON",
         "id": null,
         "groups": [
           "Event"
@@ -18907,7 +18906,8 @@
         "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "CASTLE BUTTON"
       },
       "RAFT": {
         "name": "RAFT",
@@ -19339,6 +19339,7 @@
       "game": "Links Awakening DX WorldGen",
       "options": {
         "accessibility": 0,
+        "additional_warp_points": "",
         "ap_title_screen": true,
         "boots_controls": 0,
         "exclude_locations": [],
@@ -19377,6 +19378,7 @@
         "stabilize_item_pool": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "stealing": 2,
         "tarins_gift": 0,
@@ -19384,6 +19386,8 @@
         "text_shuffle": false,
         "tradequest": false,
         "trendy_game": 1,
+        "use_canonical_options": true,
+        "warp_improvements": "",
         "warps": 0
       },
       "option_definitions": {
@@ -19395,6 +19399,10 @@
           },
           "default": 0,
           "display_name": "Accessibility"
+        },
+        "additional_warp_points": {
+          "type": "removed",
+          "default": ""
         },
         "ap_title_screen": {
           "type": "default_on_toggle",
@@ -19666,6 +19674,11 @@
           "default": 0,
           "display_name": "Stabilize Item Pool"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "stealing": {
           "type": "choice",
           "name_lookup": {
@@ -19717,6 +19730,15 @@
           },
           "default": 1,
           "display_name": "Trendy Game"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        },
+        "warp_improvements": {
+          "type": "removed",
+          "default": ""
         },
         "warps": {
           "type": "choice",
@@ -26202,7 +26224,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "world_class_name": "LinksAwakeningWorld"
     }
   },
   "game_info": {
