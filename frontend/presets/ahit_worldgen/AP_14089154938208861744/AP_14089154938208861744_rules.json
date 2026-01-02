@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "AHatinTimeWorldGenWorld"
+    "1": "HatInTimeWorld"
   },
   "regions": {
     "1": {
@@ -685,8 +685,8 @@
                     "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
-                      "Snatcher's Contract - Toilet of Doom",
-                      "Snatcher's Contract - The Subcon Well"
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
                     ]
                   }
                 }
@@ -1399,12 +1399,6 @@
                 {
                   "rule": "CanReachRegion",
                   "args": {
-                    "region_name": "Alpine Free Roam"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
                     "region_name": "Heating Up Mafia Town"
                   }
                 },
@@ -1412,6 +1406,12 @@
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": "Act Completion (Heating Up Mafia Town)"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Alpine Free Roam"
                   }
                 }
               ]
@@ -1581,12 +1581,6 @@
                 {
                   "rule": "CanReachRegion",
                   "args": {
-                    "region_name": "Alpine Free Roam"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
                     "region_name": "Heating Up Mafia Town"
                   }
                 },
@@ -1594,6 +1588,12 @@
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": "Act Completion (Heating Up Mafia Town)"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Alpine Free Roam"
                   }
                 }
               ]
@@ -1615,8 +1615,8 @@
                     "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
-                      "Snatcher's Contract - Toilet of Doom",
-                      "Snatcher's Contract - The Subcon Well"
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
                     ]
                   }
                 }
@@ -1711,8 +1711,8 @@
                     "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
-                      "Snatcher's Contract - Toilet of Doom",
-                      "Snatcher's Contract - The Subcon Well"
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
                     ]
                   }
                 }
@@ -2841,8 +2841,8 @@
                     "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
-                      "Snatcher's Contract - Toilet of Doom",
-                      "Snatcher's Contract - The Subcon Well"
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
                     ]
                   }
                 }
@@ -3101,8 +3101,8 @@
                     "items": [
                       "Snatcher's Contract - Mail Delivery Service",
                       "Snatcher's Contract - Queen Vanessa's Manor",
-                      "Snatcher's Contract - Toilet of Doom",
-                      "Snatcher's Contract - The Subcon Well"
+                      "Snatcher's Contract - The Subcon Well",
+                      "Snatcher's Contract - Toilet of Doom"
                     ]
                   }
                 }
@@ -3161,6 +3161,14 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "has_relic_combo",
                   "_original_ast_type": "helper",
                   "args": [
@@ -3171,14 +3179,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "can_hit",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -3452,10 +3452,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper",
                   "args": [
@@ -3463,6 +3459,10 @@
                       "rule": "True_"
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_use_hookshot",
@@ -6341,7 +6341,6 @@
       },
       "Relic (Tin-foil Hat Cow)": {
         "name": "Relic (Tin-foil Hat Cow)",
-        "hint_text": "Relic (Tin foil Hat Cow)",
         "id": 2000300013,
         "groups": [
           "Everything",
@@ -6350,7 +6349,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Relic (Tin foil Hat Cow)"
       },
       "Relic (Crayon Box)": {
         "name": "Relic (Crayon Box)",
@@ -6793,7 +6793,6 @@
       },
       "Snatcher's Contract - The Subcon Well": {
         "name": "Snatcher's Contract - The Subcon Well",
-        "hint_text": "Snatcher's Contract   The Subcon Well",
         "id": 2000300200,
         "groups": [
           "Everything"
@@ -6801,11 +6800,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Snatcher's Contract   The Subcon Well"
       },
       "Snatcher's Contract - Toilet of Doom": {
         "name": "Snatcher's Contract - Toilet of Doom",
-        "hint_text": "Snatcher's Contract   Toilet of Doom",
         "id": 2000300201,
         "groups": [
           "Everything"
@@ -6813,11 +6812,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Snatcher's Contract   Toilet of Doom"
       },
       "Snatcher's Contract - Queen Vanessa's Manor": {
         "name": "Snatcher's Contract - Queen Vanessa's Manor",
-        "hint_text": "Snatcher's Contract   Queen Vanessa's Manor",
         "id": 2000300202,
         "groups": [
           "Everything"
@@ -6825,11 +6824,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Snatcher's Contract   Queen Vanessa's Manor"
       },
       "Snatcher's Contract - Mail Delivery Service": {
         "name": "Snatcher's Contract - Mail Delivery Service",
-        "hint_text": "Snatcher's Contract   Mail Delivery Service",
         "id": 2000300203,
         "groups": [
           "Everything"
@@ -6837,7 +6836,8 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Snatcher's Contract   Mail Delivery Service"
       },
       "Zipline Unlock - The Birdhouse Path": {
         "name": "Zipline Unlock - The Birdhouse Path",
@@ -7365,7 +7365,9 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "ActRandomizer": {
@@ -7817,6 +7819,16 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "act_connections": {
@@ -8017,7 +8029,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "HatInTimeWorld"
     }
   },
   "game_info": {
@@ -8184,8 +8197,49 @@
           "umbrella_only"
         ],
         "body": {
-          "type": "constant",
-          "value": true
+          "type": "conditional",
+          "test": {
+            "type": "not",
+            "condition": {
+              "type": "setting_value",
+              "setting": "UmbrellaLogic"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Umbrella"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "umbrella_only"
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_use_hat",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
         },
         "defaults": {
           "umbrella_only": false
@@ -8198,46 +8252,73 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "compare",
-            "left": {
+            "type": "setting_value",
+            "setting": "HatItems"
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": {
               "type": "subscript",
               "value": {
                 "type": "constant",
                 "value": {
-                  "0": 8,
-                  "1": 4,
-                  "2": 8,
-                  "3": 6,
-                  "4": 5
+                  "0": "Sprint Hat",
+                  "1": "Brewing Hat",
+                  "2": "Ice Hat",
+                  "3": "Dweller Mask",
+                  "4": "Time Stop Hat"
                 }
               },
               "index": {
                 "type": "name",
                 "name": "hat"
               }
-            },
-            "op": "<=",
-            "right": {
-              "type": "constant",
-              "value": 0
             }
           },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
           "if_false": {
-            "type": "item_check",
-            "item": "Yarn",
-            "count": {
-              "type": "helper",
-              "name": "get_hat_cost",
-              "args": [
-                {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "constant",
+                  "value": {
+                    "0": 8,
+                    "1": 4,
+                    "2": 8,
+                    "3": 6,
+                    "4": 5
+                  }
+                },
+                "index": {
                   "type": "name",
                   "name": "hat"
                 }
-              ]
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Yarn",
+              "count": {
+                "type": "helper",
+                "name": "get_hat_cost",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "hat"
+                  }
+                ]
+              }
             }
           }
         }
@@ -8251,8 +8332,8 @@
         "name": "Difficulty",
         "args": [
           {
-            "type": "constant",
-            "value": -1
+            "type": "setting_value",
+            "setting": "LogicDifficulty"
           }
         ]
       },
@@ -8378,8 +8459,11 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "not",
+                  "condition": {
+                    "type": "setting_value",
+                    "setting": "NoPaintingSkips"
+                  }
                 },
                 {
                   "type": "name",
@@ -8462,8 +8546,8 @@
         "name": "bool",
         "args": [
           {
-            "type": "constant",
-            "value": false
+            "type": "setting_value",
+            "setting": "ShuffleSubconPaintings"
           }
         ]
       }

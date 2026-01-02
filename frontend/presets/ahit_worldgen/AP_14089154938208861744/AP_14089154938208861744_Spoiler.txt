@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Shuffle Acts:                    Light
 Baby Trap Weight:                40
 Badge Seller Maximum Items:      8
@@ -81,6 +82,7 @@ Minimum Yarn Cost:               4
 Death Link:                      No
 Death Link Amnesty:              0
 Death Wish Amnesty:              5
+Start Inventory from Pool:       
 
 
 Starting Items:
