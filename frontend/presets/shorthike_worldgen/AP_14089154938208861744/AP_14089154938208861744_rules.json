@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "AShortHikeWorldGenWorld"
+    "1": "ShortHikeWorld"
   },
   "regions": {
     "1": {
@@ -2835,9 +2835,11 @@
         "silver_feathers": 2,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "sticks": 8,
-        "toy_shovels": 5
+        "toy_shovels": 5,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -2966,6 +2968,11 @@
           "default": 2,
           "display_name": "Silver Feathers"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "sticks": {
           "type": "range",
           "range_start": 1,
@@ -2979,6 +2986,11 @@
           "range_end": 5,
           "default": 5,
           "display_name": "Toy Shovels"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you.",
@@ -3015,7 +3027,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "ShortHikeWorld"
     }
   },
   "game_info": {
