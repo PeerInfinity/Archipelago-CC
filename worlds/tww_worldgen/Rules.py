@@ -829,10 +829,8 @@ def set_rules(world: "World") -> None:
         HelperCall(helper_func=can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
     )
 
-    world.set_rule(
-        multiworld.get_location("Forsaken Fortress - Chest Outside Upper Jail Cell", player),
-        And(HelperCall(helper_func=can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress"), Or(HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), state.multiworld.worlds[player].logic_obscure_1, Has('Hookshot')))
-    )
+    multiworld.get_location("Forsaken Fortress - Chest Outside Upper Jail Cell", player).access_rule = \
+        lambda state: ((can_get_inside_forsaken_fortress(state, player)) and (((can_fly_with_deku_leaf_indoors(state, player)) or (state.multiworld.worlds[player].logic_obscure_1) or (state.has('Hookshot', player)))))
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest on Bed", player),
@@ -904,10 +902,8 @@ def set_rules(world: "World") -> None:
         HelperCall(helper_func=can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs")
     )
 
-    world.set_rule(
-        multiworld.get_location("Dragon Roost Cavern - Chest Across Lava Pit", player),
-        And(Or(And(state.multiworld.worlds[player].logic_obscure_1, Has('Hookshot')), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook')), Has('DRC Small Key', 2))
-    )
+    multiworld.get_location("Dragon Roost Cavern - Chest Across Lava Pit", player).access_rule = \
+        lambda state: ((((((state.multiworld.worlds[player].logic_obscure_1) and (state.has('Hookshot', player)))) or (can_fly_with_deku_leaf_indoors(state, player)) or (state.has('Grappling Hook', player)))) and (state.has('DRC Small Key', player, 2)))
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Dark Room", player),
@@ -979,15 +975,11 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Forbidden Woods - Past Seeds Hanging by Vines", player),
-        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=can_destroy_seeds_hanging_by_vines, helper_name="can_destroy_seeds_hanging_by_vines"), state.multiworld.worlds[player].logic_precise_1), HasAll('FW Small Key', 'Grappling Hook'))
-    )
+    multiworld.get_location("Forbidden Woods - Past Seeds Hanging by Vines", player).access_rule = \
+        lambda state: ((can_defeat_boko_babas(state, player)) and (can_defeat_door_flowers(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (((can_destroy_seeds_hanging_by_vines(state, player)) or (state.multiworld.worlds[player].logic_precise_1))) and (state.has_all(['FW Small Key', 'Grappling Hook'], player)))
 
-    world.set_rule(
-        multiworld.get_location("Forbidden Woods - Tall Room Before Miniboss", player),
-        And(HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=can_defeat_peahats, helper_name="can_defeat_peahats"), state.multiworld.worlds[player].logic_precise_2), HasAll('FW Small Key', 'Grappling Hook'))
-    )
+    multiworld.get_location("Forbidden Woods - Tall Room Before Miniboss", player).access_rule = \
+        lambda state: ((can_defeat_boko_babas(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (((can_defeat_peahats(state, player)) or (state.multiworld.worlds[player].logic_precise_2))) and (state.has_all(['FW Small Key', 'Grappling Hook'], player)))
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Left Chest", player),
@@ -1014,10 +1006,8 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"))
     )
 
-    world.set_rule(
-        multiworld.get_location("Tower of the Gods - Floating Platforms Room", player),
-        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Or(And(HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), state.multiworld.worlds[player].logic_precise_1), And(state.multiworld.worlds[player].logic_obscure_1, Has('Hookshot')), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow")))
-    )
+    multiworld.get_location("Tower of the Gods - Floating Platforms Room", player).access_rule = \
+        lambda state: ((can_reach_tower_of_the_gods_second_floor(state, player)) and (((((can_fly_with_deku_leaf_indoors(state, player)) and (state.multiworld.worlds[player].logic_precise_1))) or (((state.multiworld.worlds[player].logic_obscure_1) and (state.has('Hookshot', player)))) or (has_heros_bow(state, player)))))
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Light Two Torches", player),
@@ -1049,10 +1039,8 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"))
     )
 
-    world.set_rule(
-        multiworld.get_location("Earth Temple - Big Key Chest", player),
-        And(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Or(And(HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"), state.multiworld.worlds[player].logic_obscure_1), And(Or(HelperCall(helper_func=has_any_master_sword, helper_name="has_any_master_sword"), HelperCall(helper_func=has_heros_sword, helper_name="has_heros_sword"), Has('Skull Hammer')), state.multiworld.worlds[player].logic_obscure_1, state.multiworld.worlds[player].logic_precise_1), HelperCall(helper_func=can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles")), Has('Power Bracelets'))
-    )
+    multiworld.get_location("Earth Temple - Big Key Chest", player).access_rule = \
+        lambda state: ((can_aim_mirror_shield(state, player)) and (can_defeat_darknuts(state, player)) and (can_play_command_melody(state, player)) and (can_reach_earth_temple_many_mirrors_room(state, player)) and (((((has_heros_bow(state, player)) and (state.multiworld.worlds[player].logic_obscure_1))) or (((((has_any_master_sword(state, player)) or (has_heros_sword(state, player)) or (state.has('Skull Hammer', player)))) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_1))) or (can_defeat_blue_bubbles(state, player)))) and (state.has('Power Bracelets', player)))
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Casket in Second Crypt", player),
@@ -1134,10 +1122,8 @@ def set_rules(world: "World") -> None:
         HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")
     )
 
-    world.set_rule(
-        multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player),
-        And(HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Or(And(HelperCall(helper_func=can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Hookshot')), And(HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=can_cut_grass, helper_name="can_cut_grass"), HelperCall(helper_func=has_magic_meter_upgrade, helper_name="has_magic_meter_upgrade")), Has('Iron Boots')), And(HelperCall(helper_func=can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), state.multiworld.worlds[player].logic_obscure_1, state.multiworld.worlds[player].logic_precise_2, Has('Hookshot'))))
-    )
+    multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player).access_rule = \
+        lambda state: ((can_reach_wind_temple_kidnapping_room(state, player)) and (((((can_defeat_blue_bubbles(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (state.has('Hookshot', player)))) or (((can_fan_with_deku_leaf(state, player)) and (can_fly_with_deku_leaf_indoors(state, player)) and (((can_cut_grass(state, player)) or (has_magic_meter_upgrade(state, player)))) and (state.has('Iron Boots', player)))) or (((can_fly_with_deku_leaf_indoors(state, player)) and (state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_2) and (state.has('Hookshot', player)))))))
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest In Middle Of Hub Room", player),
@@ -1269,7 +1255,5 @@ def set_rules(world: "World") -> None:
         HelperCall(helper_func=can_stun_magtails, helper_name="can_stun_magtails")
     )
 
-    world.set_rule(
-        multiworld.get_location("Cliff Plateau Isles - Cave", player),
-        Or(And(state.multiworld.worlds[player].logic_obscure_1, state.multiworld.worlds[player].logic_precise_1, Has('Grappling Hook')), HelperCall(helper_func=can_defeat_boko_babas, helper_name="can_defeat_boko_babas"))
-    )
+    multiworld.get_location("Cliff Plateau Isles - Cave", player).access_rule = \
+        lambda state: ((((state.multiworld.worlds[player].logic_obscure_1) and (state.multiworld.worlds[player].logic_precise_1) and (state.has('Grappling Hook', player)))) or (can_defeat_boko_babas(state, player)))
