@@ -1029,7 +1029,7 @@
     "exporter_path": "exporter/games/sc2.py",
     "exporter_size": 29356,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
-    "game_logic_size": 89488,
+    "game_logic_size": 89569,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "sc2"

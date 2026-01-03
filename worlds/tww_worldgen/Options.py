@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,22 +30,27 @@ class UseCanonicalOptions(Toggle):
 class AddShortcutWarpsBetweenDungeons(Toggle):
     """Option for Add Shortcut Warps Between Dungeons."""
     display_name = "Add Shortcut Warps Between Dungeons"
+    default = False
 
 class ChestTypeMatchesContents(Toggle):
     """Option for Chest Type Matches Contents."""
     display_name = "Chest Type Matches Contents"
+    default = False
 
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EnableTunerLogic(Toggle):
     """Option for Enable Tuner Logic."""
     display_name = "Enable Tuner Logic"
+    default = False
 
 class HeroMode(Toggle):
     """Option for Hero Mode."""
     display_name = "Hero Mode"
+    default = False
 
 class InstantTextBoxes(DefaultOnToggle):
     """Option for Instant Text Boxes."""
@@ -86,18 +91,22 @@ class NumRequiredBosses(Range):
 class ProgressionBattlesquid(Toggle):
     """Option for Battlesquid Minigame."""
     display_name = "Battlesquid Minigame"
+    default = False
 
 class ProgressionBigOctosGunboats(Toggle):
     """Option for Big Octos and Gunboats."""
     display_name = "Big Octos and Gunboats"
+    default = False
 
 class ProgressionCombatSecretCaves(Toggle):
     """Option for Combat Secret Caves."""
     display_name = "Combat Secret Caves"
+    default = False
 
 class ProgressionDungeonSecrets(Toggle):
     """Option for Dungeon Secrets."""
     display_name = "Dungeon Secrets"
+    default = False
 
 class ProgressionDungeons(DefaultOnToggle):
     """Option for Dungeons."""
@@ -110,6 +119,7 @@ class ProgressionExpensivePurchases(DefaultOnToggle):
 class ProgressionEyeReefChests(Toggle):
     """Option for Eye Reef Chests."""
     display_name = "Eye Reef Chests"
+    default = False
 
 class ProgressionFreeGifts(DefaultOnToggle):
     """Option for Free Gifts."""
@@ -122,26 +132,32 @@ class ProgressionGreatFairies(DefaultOnToggle):
 class ProgressionIslandPuzzles(Toggle):
     """Option for Island Puzzles."""
     display_name = "Island Puzzles"
+    default = False
 
 class ProgressionLongSidequests(Toggle):
     """Option for Long Sidequests."""
     display_name = "Long Sidequests"
+    default = False
 
 class ProgressionMail(Toggle):
     """Option for Mail."""
     display_name = "Mail"
+    default = False
 
 class ProgressionMinigames(Toggle):
     """Option for Minigames."""
     display_name = "Minigames"
+    default = False
 
 class ProgressionMisc(Toggle):
     """Option for Miscellaneous."""
     display_name = "Miscellaneous"
+    default = False
 
 class ProgressionPlatformsRafts(Toggle):
     """Option for Lookout Platforms and Rafts."""
     display_name = "Lookout Platforms and Rafts"
+    default = False
 
 class ProgressionPuzzleSecretCaves(DefaultOnToggle):
     """Option for Puzzle Secret Caves."""
@@ -150,30 +166,37 @@ class ProgressionPuzzleSecretCaves(DefaultOnToggle):
 class ProgressionSavageLabyrinth(Toggle):
     """Option for Savage Labyrinth."""
     display_name = "Savage Labyrinth"
+    default = False
 
 class ProgressionShortSidequests(Toggle):
     """Option for Short Sidequests."""
     display_name = "Short Sidequests"
+    default = False
 
 class ProgressionSpoilsTrading(Toggle):
     """Option for Spoils Trading."""
     display_name = "Spoils Trading"
+    default = False
 
 class ProgressionSubmarines(Toggle):
     """Option for Submarines."""
     display_name = "Submarines"
+    default = False
 
 class ProgressionTingleChests(Toggle):
     """Option for Tingle Chests."""
     display_name = "Tingle Chests"
+    default = False
 
 class ProgressionTreasureCharts(Toggle):
     """Option for Sunken Treasure (From Treasure Charts)."""
     display_name = "Sunken Treasure (From Treasure Charts)"
+    default = False
 
 class ProgressionTriforceCharts(Toggle):
     """Option for Sunken Treasure (From Triforce Charts)."""
     display_name = "Sunken Treasure (From Triforce Charts)"
+    default = False
 
 class RandomizeBigkeys(Choice):
     """Option for Randomize Big Keys."""
@@ -189,22 +212,27 @@ class RandomizeBigkeys(Choice):
 class RandomizeBossEntrances(Toggle):
     """Option for Randomize Nested Bosses."""
     display_name = "Randomize Nested Bosses"
+    default = False
 
 class RandomizeCharts(Toggle):
     """Option for Randomize Charts."""
     display_name = "Randomize Charts"
+    default = False
 
 class RandomizeDungeonEntrances(Toggle):
     """Option for Randomize Dungeons."""
     display_name = "Randomize Dungeons"
+    default = False
 
 class RandomizeEnemies(Toggle):
     """Option for Randomize Enemies."""
     display_name = "Randomize Enemies"
+    default = False
 
 class RandomizeFairyFountainEntrances(Toggle):
     """Option for Randomize Fairy Fountains."""
     display_name = "Randomize Fairy Fountains"
+    default = False
 
 class RandomizeMapcompass(Choice):
     """Option for Randomize Maps & Compasses."""
@@ -220,14 +248,17 @@ class RandomizeMapcompass(Choice):
 class RandomizeMinibossEntrances(Toggle):
     """Option for Randomize Nested Minibosses."""
     display_name = "Randomize Nested Minibosses"
+    default = False
 
 class RandomizeSecretCaveEntrances(Toggle):
     """Option for Randomize Secret Caves."""
     display_name = "Randomize Secret Caves"
+    default = False
 
 class RandomizeSecretCaveInnerEntrances(Toggle):
     """Option for Randomize Inner Secret Caves."""
     display_name = "Randomize Inner Secret Caves"
+    default = False
 
 class RandomizeSmallkeys(Choice):
     """Option for Randomize Small Keys."""
@@ -243,14 +274,17 @@ class RandomizeSmallkeys(Choice):
 class RandomizeStartingIsland(Toggle):
     """Option for Randomize Starting Island."""
     display_name = "Randomize Starting Island"
+    default = False
 
 class RemoveMusic(Toggle):
     """Option for Remove Music."""
     display_name = "Remove Music"
+    default = False
 
 class RequiredBosses(Toggle):
     """Option for Required Bosses Mode."""
     display_name = "Required Bosses Mode"
+    default = False
 
 class RevealFullSeaChart(DefaultOnToggle):
     """Option for Reveal Full Sea Chart."""
