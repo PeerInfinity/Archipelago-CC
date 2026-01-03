@@ -335,6 +335,16 @@ def main():
         action='store_true',
         help='Test generation consistency by comparing rules.json and sphere_log.jsonl files from multiple generation runs'
     )
+    parser.add_argument(
+        '--builtin-worlds-only',
+        action='store_true',
+        help='Only test games from the built-in worlds directory, excluding games from custom_worlds'
+    )
+    parser.add_argument(
+        '--custom-worlds-only',
+        action='store_true',
+        help='Only test games loaded from the custom_worlds directory (apworld files)'
+    )
 
     args = parser.parse_args()
 
@@ -442,6 +452,10 @@ def main():
 
     if args.include_pattern and args.exclude_pattern:
         print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
+        sys.exit(1)
+
+    if args.builtin_worlds_only and args.custom_worlds_only:
+        print("Error: --builtin-worlds-only and --custom-worlds-only are mutually exclusive")
         sys.exit(1)
 
     # Set default skip list based on test type if not explicitly provided
@@ -978,6 +992,33 @@ def main():
     
     # Build world mapping once at startup
     world_mapping = build_and_load_world_mapping(project_root)
+
+    # Apply --builtin-worlds-only or --custom-worlds-only filtering
+    if args.builtin_worlds_only or args.custom_worlds_only:
+        before_filter = len(yaml_files)
+        filtered_yaml_files = []
+
+        for yaml_file in yaml_files:
+            # Derive game name from yaml filename (remove .yaml extension)
+            game_name = yaml_file[:-5] if yaml_file.endswith('.yaml') else yaml_file
+
+            # Look up in world mapping
+            world_info = world_mapping.get(game_name, {})
+            is_custom_world = 'apworld_path' in world_info and world_info['apworld_path'] is not None
+
+            if args.builtin_worlds_only and not is_custom_world:
+                filtered_yaml_files.append(yaml_file)
+            elif args.custom_worlds_only and is_custom_world:
+                filtered_yaml_files.append(yaml_file)
+
+        yaml_files = filtered_yaml_files
+        filter_type = "custom_worlds only" if args.custom_worlds_only else "builtin worlds only"
+        excluded_count = before_filter - len(yaml_files)
+        print(f"World source filter ({filter_type}): {len(yaml_files)} templates included, {excluded_count} excluded")
+
+        if not yaml_files:
+            print(f"Error: No templates remaining after {filter_type} filter")
+            sys.exit(1)
 
     # Display seed information
     if len(seed_list) == 1:
