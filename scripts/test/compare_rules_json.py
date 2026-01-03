@@ -209,6 +209,160 @@ def normalize_rule_format(obj: Any) -> Any:
         return obj
 
 
+def normalize_state_method_to_rule(obj: Any) -> Any:
+    """
+    Normalize StateMethod rules to their equivalent Rule Builder rules.
+
+    Examples:
+        StateMethod(has_any, items) -> HasAny(items)
+        StateMethod(has_all, items) -> HasAll(items)
+        StateMethod(has, item) -> Has(item)
+
+    This handles the case where the original exporter exports AST-style
+    StateMethod calls while WorldGen exports Rule Builder rules.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_state_method_to_rule(v) for k, v in obj.items()}
+
+        # Check if this is a StateMethod rule
+        if normalized.get('rule') == 'StateMethod':
+            args = normalized.get('args', {})
+            method = args.get('method')
+            method_args = args.get('args', [])
+
+            # StateMethod(has_any, items) -> HasAny(items)
+            if method == 'has_any' and len(method_args) == 1:
+                arg = method_args[0]
+                # Handle subscript lookups (item_groups['GroupName'])
+                if isinstance(arg, dict) and arg.get('type') == 'subscript':
+                    # Extract item group from subscript value
+                    value = arg.get('value', {})
+                    index = arg.get('index', {})
+                    if isinstance(value, dict) and value.get('type') == 'constant':
+                        item_groups = value.get('value', {})
+                        # Get the group name from the index
+                        group_name = None
+                        if isinstance(index, dict):
+                            if index.get('type') == 'binary_op':
+                                # Handle 'Axe' + 's' -> 'Axes'
+                                left = index.get('left', {}).get('value', '')
+                                right = index.get('right', {}).get('value', '')
+                                group_name = left + right
+                            elif index.get('type') == 'constant':
+                                group_name = index.get('value')
+                        if group_name and group_name in item_groups:
+                            items = item_groups[group_name]
+                            return {
+                                'rule': 'HasAny',
+                                'args': {'items': items}
+                            }
+                # Handle constant list directly
+                elif isinstance(arg, dict) and arg.get('type') == 'constant':
+                    items = arg.get('value', [])
+                    if isinstance(items, list):
+                        return {
+                            'rule': 'HasAny',
+                            'args': {'items': items}
+                        }
+
+            # StateMethod(has_all, []) -> always true (can be simplified away)
+            # StateMethod(has_all, items) -> HasAll(items)
+            if method == 'has_all' and len(method_args) == 1:
+                arg = method_args[0]
+                if isinstance(arg, dict) and arg.get('type') == 'constant':
+                    items = arg.get('value', [])
+                    if isinstance(items, list):
+                        if len(items) == 0:
+                            # has_all([]) is always true
+                            return {'rule': 'True_', 'args': {}}
+                        return {
+                            'rule': 'HasAll',
+                            'args': {'items': items}
+                        }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_state_method_to_rule(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_and_with_true(obj: Any) -> Any:
+    """
+    Normalize And rules by removing True_ children.
+
+    Examples:
+        And(True_(), X) -> X
+        And(X, True_()) -> X
+        And(True_(), True_()) -> True_()
+
+    This handles the case where has_all([]) (always true) is converted to True_
+    and can be removed from And rules.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_with_true(v) for k, v in obj.items()}
+
+        # Check if this is an And rule with True_ children
+        if normalized.get('rule') == 'And':
+            children = normalized.get('children', [])
+            if children:
+                # Filter out True_ children
+                filtered_children = []
+                for child in children:
+                    if isinstance(child, dict) and child.get('rule') == 'True_':
+                        continue  # Skip True_ rule
+                    filtered_children.append(child)
+
+                # If we filtered some children
+                if len(filtered_children) < len(children):
+                    if len(filtered_children) == 0:
+                        # All children were True_ - return True_
+                        return {'rule': 'True_', 'args': {}}
+                    elif len(filtered_children) == 1:
+                        # Only one child left - return it directly
+                        return filtered_children[0]
+                    else:
+                        # Multiple children left - return simplified And
+                        normalized['children'] = filtered_children
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_with_true(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_hasall_single_item(obj: Any) -> Any:
+    """
+    Normalize HasAll with a single item to Has.
+
+    Examples:
+        HasAll(['item']) -> Has('item')
+
+    This handles the case where WorldGen simplifies single-item HasAll to Has.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_hasall_single_item(v) for k, v in obj.items()}
+
+        # Check if this is a HasAll with a single item
+        if normalized.get('rule') == 'HasAll':
+            items = normalized.get('args', {}).get('items', [])
+            if len(items) == 1:
+                return {
+                    'rule': 'Has',
+                    'args': {'item_name': items[0]}
+                }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_hasall_single_item(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_and_has_patterns(obj: Any) -> Any:
     """
     Normalize And patterns containing only Has/HasAll into a single HasAll.
@@ -776,6 +930,21 @@ def main():
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)
     worldgen_normalized = normalize_rule_format(worldgen_normalized)
+
+    # Normalize StateMethod rules to Rule Builder equivalents
+    # (e.g., StateMethod(has_any, items) -> HasAny(items))
+    original_normalized = normalize_state_method_to_rule(original_normalized)
+    worldgen_normalized = normalize_state_method_to_rule(worldgen_normalized)
+
+    # Normalize And rules by removing True_ children
+    # (e.g., And(True_(), X) -> X, handles has_all([]) -> True_ case)
+    original_normalized = normalize_and_with_true(original_normalized)
+    worldgen_normalized = normalize_and_with_true(worldgen_normalized)
+
+    # Normalize HasAll with single item to Has
+    # (e.g., HasAll(['item']) -> Has('item'))
+    original_normalized = normalize_hasall_single_item(original_normalized)
+    worldgen_normalized = normalize_hasall_single_item(worldgen_normalized)
 
     # Normalize Or(Constant(0), X) and Or(False_(), X) to just X
     original_normalized = normalize_or_with_false(original_normalized)
