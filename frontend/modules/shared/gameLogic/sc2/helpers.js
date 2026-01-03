@@ -2181,8 +2181,9 @@ export default {
             );
     },
     terran_gates_of_hell_requirement: function(snapshot, staticData) {
+        // Python: terran_defense_rating(state, True) uses default air_enemy=True
         return terran_competent_comp(snapshot, staticData)
-            && terran_defense_rating(snapshot, staticData, true, false) > 6;
+            && terran_defense_rating(snapshot, staticData, true, true) > 6;
     },
     terran_all_in_requirement: function(snapshot, staticData) {
         const advancedTactics = isAdvancedTactics(staticData, snapshot);
