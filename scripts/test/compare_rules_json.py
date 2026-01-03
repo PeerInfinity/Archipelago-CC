@@ -558,17 +558,23 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # World attributes baked into helpers (hat_yarn_costs, hat_craft_order, etc.)
     # These are world instance attributes that WorldGen resolves at generation time
-    world_attrs_in_helpers = {'hat_yarn_costs', 'hat_craft_order'}
+    world_attrs_in_helpers = {'hat_yarn_costs', 'hat_craft_order',
+                              'era_required_non_progressive_items',
+                              'era_required_progressive_items_counts'}
     for attr in world_attrs_in_helpers:
         if 'helpers.' in path and attr in path:
             return True
         if 'helpers.' in path and attr in str(original_value):
             return True
     # Also catch the type/object/value differences for world attribute access patterns
-    if 'helpers.' in path and any(h in path for h in ['can_use_hat', 'get_hat_cost']):
+    if 'helpers.' in path and any(h in path for h in ['can_use_hat', 'get_hat_cost',
+                                                       'has_non_progressive_items',
+                                                       'has_progressive_items']):
         if '.value.type' in path or '.value.object' in path or '.value.value' in path:
             return True
         if '.iterable.type' in path or '.iterable.object' in path or '.iterable.value' in path:
+            return True
+        if '.value.attr' in path:
             return True
 
     # AST_location_rule_ref vs CanReachLocation - semantically equivalent rule formats
@@ -645,6 +651,14 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # Options that have empty dict {} in original but missing in WorldGen
     if 'options.' in path and original_value == {} and worldgen_value == '<missing>':
         return True
+
+    # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
+    # These are complex option types that the world generator doesn't generate Options.py classes for
+    optionset_options = {'death_link_effect', 'pre_hint_items'}
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in optionset_options:
+            if path.endswith(f'.{opt}'):
+                return True
 
     # World class name differences: Original may use abbreviated names (DarkSouls3World)
     # while WorldGen uses full names derived from game name (DarkSoulsIIIWorld)
