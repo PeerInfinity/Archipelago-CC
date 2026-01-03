@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "timestamp": "2026-01-03T20:22:57.860718",
+    "seed": 1,
+    "phase": "regenerate-templates",
+    "canonical_seed1": false,
+    "total_templates": 1,
+    "successful_generations": 0,
+    "failed_generations": 0,
+    "successful_test_worlds": 0,
+    "failed_test_worlds": 0,
+    "rules_comparison_passed": 0,
+    "rules_comparison_failed": 0,
+    "cross_validation_passed": 0,
+    "cross_validation_failed": 0
+  },
+  "results": {}
+}
