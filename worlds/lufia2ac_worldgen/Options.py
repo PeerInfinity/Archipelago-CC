@@ -129,6 +129,55 @@ class DefaultParty(TextChoice):
 
     default = "M"
 
+# Preserve original name_lookup for export
+DefaultParty.name_lookup = {
+        'M': 'm',
+        'MA': 'ma',
+        'MAD': 'mad',
+        'MADG': 'madg',
+        'MADL': 'madl',
+        'MADS': 'mads',
+        'MADT': 'madt',
+        'MAG': 'mag',
+        'MAGL': 'magl',
+        'MAGS': 'mags',
+        'MAGT': 'magt',
+        'MAL': 'mal',
+        'MALS': 'mals',
+        'MALT': 'malt',
+        'MAS': 'mas',
+        'MAST': 'mast',
+        'MAT': 'mat',
+        'MD': 'md',
+        'MDG': 'mdg',
+        'MDGL': 'mdgl',
+        'MDGS': 'mdgs',
+        'MDGT': 'mdgt',
+        'MDL': 'mdl',
+        'MDLS': 'mdls',
+        'MDLT': 'mdlt',
+        'MDS': 'mds',
+        'MDST': 'mdst',
+        'MDT': 'mdt',
+        'MG': 'mg',
+        'MGL': 'mgl',
+        'MGLS': 'mgls',
+        'MGLT': 'mglt',
+        'MGS': 'mgs',
+        'MGST': 'mgst',
+        'MGT': 'mgt',
+        'ML': 'ml',
+        'MLS': 'mls',
+        'MLST': 'mlst',
+        'MLT': 'mlt',
+        'MS': 'ms',
+        'MST': 'mst',
+        'MT': 'mt',
+        'random-2p': 'random-2p',
+        'random-3p': 'random-3p',
+        'random-4p': 'random-4p'
+}
+
 class EnemyFloorNumbers(Choice):
     """Option for Enemy floor numbers."""
     display_name = "Enemy floor numbers"
@@ -268,6 +317,44 @@ class ShufflePartyMembers(Toggle):
     """Option for Shuffle party members."""
     display_name = "Shuffle party members"
     default = False
+
+# Preserve original option names in name_lookup (before sanitization)
+Boss.name_lookup = {
+    1: 'lizard_man',
+    2: 'big_catfish',
+    5: 'regal_goblin',
+    6: 'follower_x2',
+    7: 'camu',
+    8: 'tarantula',
+    9: 'pierre',
+    10: 'daniele',
+    11: 'gades_a',
+    12: 'mummy_x4',
+    13: 'troll_x3',
+    14: 'gades_b',
+    15: 'idura_a',
+    18: 'lion_x2',
+    19: 'idura_b',
+    20: 'idura_c',
+    21: 'rogue_flower',
+    22: 'soldier_x4',
+    23: 'gargoyle_x4',
+    24: 'venge_ghost',
+    25: 'white_dragon_x3',
+    26: 'fire_dragon',
+    27: 'ghost_ship',
+    30: 'tank',
+    31: 'gades_c',
+    32: 'amon',
+    35: 'erim',
+    36: 'daos',
+    37: 'egg_dragon',
+    38: 'master',
+    39: 'random-middle',
+    40: 'random-high',
+    41: 'random-low',
+    42: 'random-sinistral'
+}
 
 
 @dataclass
