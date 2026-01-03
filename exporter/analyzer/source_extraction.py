@@ -12,10 +12,53 @@ import logging
 import textwrap
 import tokenize
 import io
+import zipfile
 from typing import Optional, Callable
 import astunparse
 
 from .cache import file_content_cache, ast_cache
+
+
+def _read_source_from_path(filename: str) -> Optional[str]:
+    """
+    Read source code from a file path, handling both regular files and
+    files inside .apworld zip archives.
+
+    Args:
+        filename: The file path, which may be inside an apworld zip
+                  (e.g., '/path/to/game.apworld/game/Rules.py')
+
+    Returns:
+        The file content as a string, or None if reading failed
+    """
+    # Check if this is a path inside an apworld zip file
+    if '.apworld' in filename:
+        # Split the path at .apworld to get the zip path and internal path
+        # e.g., '/path/to/game.apworld/game/Rules.py' ->
+        #       zip_path = '/path/to/game.apworld'
+        #       internal_path = 'game/Rules.py'
+        parts = filename.split('.apworld')
+        if len(parts) >= 2:
+            zip_path = parts[0] + '.apworld'
+            # Remove leading slash from internal path
+            internal_path = parts[1].lstrip('/')
+
+            try:
+                with zipfile.ZipFile(zip_path, 'r') as zf:
+                    content = zf.read(internal_path).decode('utf-8')
+                    logging.debug(f"Read source from apworld: {zip_path}!{internal_path}")
+                    return content
+            except Exception as e:
+                logging.error(f"Failed to read from apworld {zip_path}!{internal_path}: {e}")
+                return None
+
+    # Regular file - read from disk
+    try:
+        with open(filename, 'r', encoding='utf-8-sig') as f:
+            return f.read()
+    except Exception as e:
+        logging.error(f"Failed to read source file {filename}: {e}")
+        return None
 
 
 def remove_comments_from_source(source: str) -> str:
@@ -124,9 +167,10 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
             if filename in file_content_cache:
                 source_code = file_content_cache[filename]
             else:
-                # 3. Read from disk as a last resort
-                with open(filename, 'r', encoding='utf-8-sig') as f:
-                    source_code = f.read()
+                # 3. Read from disk (or apworld zip) as a last resort
+                source_code = _read_source_from_path(filename)
+                if source_code is None:
+                    return None
                 file_content_cache[filename] = source_code
 
             # 4. Parse the source and populate the AST cache
@@ -171,14 +215,21 @@ def _read_multiline_lambda(func: Callable) -> Optional[str]:
         start_line = func.__code__.co_firstlineno
 
         if filename in file_content_cache:
-            lines = file_content_cache[filename]
+            cached = file_content_cache[filename]
+            # Cache may contain string (from get_multiline_lambda_source) or list (from here)
+            if isinstance(cached, str):
+                lines = cached.splitlines(keepends=True)
+            else:
+                lines = cached
             logging.debug(f"_read_multiline_lambda: Using cached content for {filename}")
         else:
             logging.debug(f"_read_multiline_lambda: Reading and caching content for {filename}")
-            with open(filename, 'r', encoding='utf-8-sig') as f:
-                # Read the file line by line
-                lines = f.readlines()
-            file_content_cache[filename] = lines  # Store in cache
+            # Read from disk (or apworld zip)
+            source_content = _read_source_from_path(filename)
+            if source_content is None:
+                return None
+            lines = source_content.splitlines(keepends=True)
+            file_content_cache[filename] = source_content  # Store as string for consistency
 
         # Start with the line containing the lambda
         # Correct for 0-based list index vs 1-based line number
