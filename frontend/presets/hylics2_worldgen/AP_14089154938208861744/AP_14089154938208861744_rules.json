@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Hylics2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -3739,6 +3736,7 @@
   "world": {
     "1": {
       "game": "Hylics 2 WorldGen",
+      "world_class_name": "Hylics2World",
       "options": {
         "accessibility": 0,
         "death_link": false,
@@ -3773,7 +3771,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "extra_items_in_logic": {
@@ -3793,12 +3791,12 @@
         },
         "medallion_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Red Medallions"
         },
         "party_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Party Members"
         },
         "progression_balancing": {
@@ -3860,15 +3858,7 @@
       "world_directory": "hylics2_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "Hylics2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "accumulator_rules": [

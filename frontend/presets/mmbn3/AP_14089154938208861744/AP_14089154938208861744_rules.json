@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MMBN3World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -8111,6 +8108,7 @@
   "world": {
     "1": {
       "game": "MegaMan Battle Network 3",
+      "world_class_name": "MMBN3World",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -8220,15 +8218,7 @@
       "world_directory": "mmbn3"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MMBN3World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

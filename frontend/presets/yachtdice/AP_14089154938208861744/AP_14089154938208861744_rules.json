@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "YachtDiceWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -7236,6 +7233,7 @@
   "world": {
     "1": {
       "game": "Yacht Dice",
+      "world_class_name": "YachtDiceWorld",
       "options": {
         "accessibility": 0,
         "add_bonus_points": 2,
@@ -7626,12 +7624,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "add_sphere_items_upfront": true,
-      "world_class_name": "YachtDiceWorld"
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "DKC3World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4553,6 +4550,7 @@
   "world": {
     "1": {
       "game": "Donkey Kong Country 3 WorldGen",
+      "world_class_name": "DKC3World",
       "options": {
         "accessibility": 0,
         "autosave": true,
@@ -4641,7 +4639,7 @@
         },
         "kongsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "KONGsanity"
         },
         "krematoa_bonus_coin_cost": {
@@ -4653,17 +4651,17 @@
         },
         "level_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Level Shuffle"
         },
         "merry": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "MERRY"
         },
         "music_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Music Shuffle"
         },
         "number_of_banana_birds": {
@@ -4830,15 +4828,7 @@
       "world_directory": "dkc3_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "DKC3World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

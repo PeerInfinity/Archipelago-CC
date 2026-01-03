@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -47,6 +47,7 @@ class CreatureScans(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EarlySeaglide(DefaultOnToggle):
     """Option for Early Seaglide."""
@@ -59,6 +60,7 @@ class EmptyTanks(DefaultOnToggle):
 class FreeSamples(Toggle):
     """Option for Free Samples."""
     display_name = "Free Samples"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "FaxanaduWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -2731,6 +2728,7 @@
   "world": {
     "1": {
       "game": "Faxanadu WorldGen",
+      "world_class_name": "FaxanaduWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -2752,7 +2750,9 @@
         "require_dragon_slayer": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -2766,7 +2766,7 @@
         },
         "include_pendant": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Pendant"
         },
         "include_poisons": {
@@ -2776,7 +2776,7 @@
         },
         "keep_shop_red_potions": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Keep Shop Red Potions"
         },
         "progression_balancing": {
@@ -2801,22 +2801,22 @@
         },
         "random_musics": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Musics"
         },
         "random_npcs": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random NPCs"
         },
         "random_rewards": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Rewards"
         },
         "random_sounds": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Sounds"
         },
         "randomize_items": {
@@ -2826,8 +2826,18 @@
         },
         "require_dragon_slayer": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Require Dragon Slayer"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "filler_ratios": {
@@ -2866,14 +2876,7 @@
       "world_directory": "faxanadu_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

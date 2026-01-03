@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "YoshisIslandWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -6846,6 +6843,7 @@
   "world": {
     "1": {
       "game": "Yoshi's Island",
+      "world_class_name": "YoshisIslandWorld",
       "options": {
         "accessibility": 0,
         "add_secretlens": false,
@@ -8094,15 +8092,7 @@
       "world_directory": "yoshisisland"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "YoshisIslandWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -37,10 +37,12 @@ class AvailablePortals(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EarlyMeditation(Toggle):
     """Option for Early Meditation."""
     display_name = "Early Meditation"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -52,6 +54,7 @@ class Goal(Choice):
 class LimitedMovement(Toggle):
     """Option for Limited Movement."""
     display_name = "Limited Movement"
+    default = False
 
 class LogicLevel(Choice):
     """Option for Logic Level."""
@@ -107,6 +110,7 @@ class ShufflePortals(Choice):
 class ShuffleShards(Toggle):
     """Option for Shuffle Mega Time Shards."""
     display_name = "Shuffle Mega Time Shards"
+    default = False
 
 class ShuffleTransitions(Choice):
     """Option for Shuffle Level Transitions."""
@@ -126,6 +130,7 @@ class TotalSeals(Range):
 class Traps(Toggle):
     """Option for Include Traps."""
     display_name = "Include Traps"
+    default = False
 
 
 @dataclass

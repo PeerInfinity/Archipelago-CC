@@ -515,6 +515,7 @@ class Overcooked2World(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'Overcooked2World'
         self.star_threshold_scale = 0.35
         self.level_unlock_counts = {'1': 0, '7': 0, '13': 0, '19': 0, '25': 1, '31': 1, '2': 2, '8': 2, '14': 3, '20': 4, '26': 5, '32': 6, '3': 7, '9': 9, '15': 10, '21': 11, '27': 13, '33': 15, '4': 16, '10': 18, '16': 20, '22': 22, '28': 24, '34': 26, '5': 28, '11': 31, '17': 33, '23': 36, '29': 38, '35': 41, '6': 44, '12': 47, '18': 50, '24': 53, '30': 56, '36': 60, '37': 0, '38': 0, '39': 0, '40': 0, '41': 0, '42': 0, '43': 0, '44': 0, '45': 0}
         self.itempool = ['Spare Plate', 'Fire Extinguisher', 'Clean Dishes', 'Larger Tip Jar', 'Larger Tip Jar', 'Progressive Dash', 'Progressive Dash', 'Progressive Throw/Catch', 'Progressive Throw/Catch', 'Coin Purse', 'Control Stick Batteries', 'Wok Wheels', 'Dish Scrubber', 'Burn Leniency', 'Sharp Knife', 'Order Lookahead', 'Order Lookahead', 'Faster Respawn Time', 'Faster Condiment/Drink Switch', 'Guest Patience', 'Kevin-1', 'Kevin-2', 'Kevin-3', 'Kevin-4', 'Kevin-5', 'Kevin-6', 'Kevin-7', 'Kevin-8', 'Calmer Unbread', 'Green Ramp', 'Yellow Ramp', 'Blue Ramp', 'Pink Ramp', 'Dark Green Ramp', 'Red Ramp', 'Purple Ramp', 'Emote Wheel', 'Bonus Star', 'Bonus Star', 'Bonus Star', 'Bonus Star', 'Bonus Star', 'Bonus Star']
@@ -530,25 +531,24 @@ class Overcooked2World(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 

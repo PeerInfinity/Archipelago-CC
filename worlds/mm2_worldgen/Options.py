@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -39,18 +39,22 @@ class Consumables(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EnableLasers(Toggle):
     """Option for Enable Lasers."""
     display_name = "Enable Lasers"
+    default = False
 
 class EnemyWeakness(Toggle):
     """Option for Random Enemy Weaknesses."""
     display_name = "Random Enemy Weaknesses"
+    default = False
 
 class EnergyLink(Toggle):
     """Option for EnergyLink."""
     display_name = "EnergyLink"
+    default = False
 
 class PaletteShuffle(Choice):
     """Option for Palette Shuffle."""
@@ -107,6 +111,7 @@ class StartingRobotMaster(Choice):
 class StrictWeakness(Toggle):
     """Option for Strict Boss Weaknesses."""
     display_name = "Strict Boss Weaknesses"
+    default = False
 
 class Wily5Requirement(Range):
     """Option for Wily 5 Requirement."""
@@ -118,6 +123,7 @@ class Wily5Requirement(Range):
 class YokuJumps(Toggle):
     """Option for Yoku Block Jumps."""
     display_name = "Yoku Block Jumps"
+    default = False
 
 
 @dataclass

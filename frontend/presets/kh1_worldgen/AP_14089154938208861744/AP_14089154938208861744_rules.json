@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "KingdomHeartsWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -15149,6 +15146,7 @@
   "world": {
     "1": {
       "game": "Kingdom Hearts WorldGen",
+      "world_class_name": "KingdomHeartsWorldGenWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -15186,33 +15184,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "end_of_the_world_unlock": 1,
-      "super_bosses": 0,
-      "atlantica": 0,
-      "hundred_acre_wood": 0,
-      "cups": 0,
-      "starting_worlds": 4,
-      "keyblades_unlock_chests": 0,
-      "interact_in_battle": 1,
-      "exp_multiplier": 64,
-      "extra_shared_abilities": 1,
-      "exp_zero_in_pool": 0,
-      "donald_death_link": 0,
-      "goofy_death_link": 0,
-      "bad_starting_weapons": 0,
-      "keyblade_min_str": 3,
-      "keyblade_max_str": 14,
-      "keyblade_min_mp": -2,
-      "keyblade_max_mp": 3,
-      "level_checks": 99,
-      "force_stats_on_levels": 2,
-      "strength_increase": 24,
-      "defense_increase": 24,
-      "hp_increase": 23,
-      "ap_increase": 18,
-      "mp_increase": 7,
-      "accessory_slot_increase": 1,
-      "item_slot_increase": 3,
       "world_description": "Kingdom Hearts is an action RPG following Sora on his journey\nthrough many worlds to find Riku and Kairi.",
       "slot_data": {
         "atlantica": false,
@@ -15687,15 +15658,7 @@
       "world_directory": "kh1_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "KingdomHeartsWorldGenWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

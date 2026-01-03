@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "LinksAwakeningWorld"
-  },
   "regions": {
     "1": {
       "Start House": {
@@ -19337,6 +19334,7 @@
   "world": {
     "1": {
       "game": "Links Awakening DX WorldGen",
+      "world_class_name": "LinksAwakeningWorld",
       "options": {
         "accessibility": 0,
         "additional_warp_points": "",
@@ -19422,7 +19420,7 @@
         },
         "experimental_dungeon_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Dungeon Shuffle"
         },
         "experimental_entrance_shuffle": {
@@ -19445,7 +19443,7 @@
         },
         "gfxmod": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "GFX Modification"
         },
         "goal": {
@@ -19539,7 +19537,7 @@
         },
         "nag_messages": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Nag Messages"
         },
         "no_flash": {
@@ -19671,7 +19669,7 @@
         },
         "stabilize_item_pool": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Stabilize Item Pool"
         },
         "start_inventory_from_pool": {
@@ -19710,12 +19708,12 @@
         },
         "text_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Text Shuffle"
         },
         "tradequest": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Trade Quest"
         },
         "trendy_game": {
@@ -26221,11 +26219,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": true,
-      "world_class_name": "LinksAwakeningWorld"
+      "use_resolved_items": true
     }
   },
   "game_info": {

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "RaftWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Raft": {
@@ -6859,6 +6856,7 @@
   "world": {
     "1": {
       "game": "Raft WorldGen",
+      "world_class_name": "RaftWorldGenWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -6923,12 +6921,8 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
       "use_resolved_items": true,
-      "add_sphere_items_upfront": true,
-      "world_class_name": "RaftWorldGenWorld"
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {

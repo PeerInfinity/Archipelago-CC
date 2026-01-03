@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "LufiaIIAncientCaveWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -5506,6 +5503,7 @@
   "world": {
     "1": {
       "game": "Lufia II Ancient Cave WorldGen",
+      "world_class_name": "L2ACWorld",
       "options": {
         "accessibility": 0,
         "blue_chest_chance": 25,
@@ -5547,7 +5545,8 @@
         "shuffle_party_members": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -5606,9 +5605,9 @@
             "36": "daos",
             "37": "egg_dragon",
             "38": "master",
-            "39": "random_low",
-            "40": "random_middle",
-            "41": "random_high",
+            "39": "random_middle",
+            "40": "random_high",
+            "41": "random_low",
             "42": "random_sinistral"
           },
           "default": 38,
@@ -5616,7 +5615,7 @@
         },
         "capsule_cravings_jp_style": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Capsule cravings JP style"
         },
         "capsule_starting_form": {
@@ -5642,7 +5641,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "default_capsule": {
@@ -5715,7 +5714,7 @@
         },
         "gear_variety_after_b9": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Increase gear variety after B9"
         },
         "goal": {
@@ -5820,13 +5819,18 @@
         },
         "shuffle_capsule_monsters": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle capsule monsters"
         },
         "shuffle_party_members": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle party members"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Royal\nJelly in the end. Can you beat it?",
@@ -5848,14 +5852,7 @@
       "world_directory": "lufia2ac_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

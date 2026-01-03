@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -34,10 +34,12 @@ class AdvisorShowProgressionItems(DefaultOnToggle):
 class Boostsanity(Toggle):
     """Option for Boostsanity."""
     display_name = "Boostsanity"
+    default = False
 
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DeathLinkEffectPercent(Range):
     """Option for Death Link Effect Percent."""
@@ -49,6 +51,7 @@ class DeathLinkEffectPercent(Range):
 class HideItemNames(Toggle):
     """Option for Hide Item Names."""
     display_name = "Hide Item Names"
+    default = False
 
 class ProgressionStyle(Choice):
     """Option for Progression Style."""

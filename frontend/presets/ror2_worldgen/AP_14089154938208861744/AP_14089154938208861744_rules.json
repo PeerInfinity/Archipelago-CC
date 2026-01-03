@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "RiskofRain2WorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -5493,6 +5490,7 @@
   "world": {
     "1": {
       "game": "Risk of Rain 2 WorldGen",
+      "world_class_name": "RiskOfRainWorld",
       "options": {
         "accessibility": 0,
         "altars_per_stage": 1,
@@ -5541,6 +5539,7 @@
         "total_locations": 40,
         "total_revivals": 4,
         "uncommon_item": 32,
+        "use_canonical_options": true,
         "victory": 0,
         "void_item": 16,
         "white_scrap": 32,
@@ -5593,12 +5592,12 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "dlc_sotv": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable DLC - SOTV"
         },
         "enable_lunar": {
@@ -5608,7 +5607,7 @@
         },
         "enable_trap": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable Trap Items"
         },
         "equipment": {
@@ -5627,7 +5626,7 @@
         },
         "final_stage_death": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Final Stage Death is Win"
         },
         "goal": {
@@ -5655,7 +5654,7 @@
         },
         "item_pool_presets": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Use Item Weight Presets"
         },
         "item_weights": {
@@ -5807,6 +5806,11 @@
           "default": 32,
           "display_name": "Uncommon Items"
         },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        },
         "victory": {
           "type": "choice",
           "name_lookup": {
@@ -5881,14 +5885,7 @@
       "world_directory": "ror2_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

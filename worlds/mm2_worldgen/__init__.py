@@ -172,6 +172,7 @@ class MM2World(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'MM2World'
         self.weapon_damage = {'0': [2, 2, 1, 1, 2, 2, 1, 1, 1, 7, 1, 0, 1, -1], '1': [-1, 6, 14, 0, 10, 6, 4, 6, 8, 13, 8, 0, 14, -1], '2': [2, 0, 4, 0, 2, 0, 0, 10, 0, 0, 0, 0, 1, -1], '3': [0, 8, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], '4': [6, 0, 0, -1, 0, 2, 0, 1, 0, 14, 1, 0, 0, 1], '5': [2, 2, 0, 2, 0, 0, 4, 1, 1, 7, 2, 0, 1, -1], '6': [-1, 0, 2, 2, 4, 3, 0, 0, 1, 0, 1, 20, 1, -1], '7': [1, 0, 2, 4, 0, 4, 14, 0, 0, 7, 0, 0, 1, -1], '8': [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
         self.wily_5_weapons = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '12': []}
         self.world_description = 'In the year 200X, following his prior defeat by Mega Man, the evil Dr. Wily has returned to take over the world with\nhis own group of Robot Masters. Mega Man once again sets out to defeat the eight Robot Masters and stop Dr. Wily.'
@@ -186,25 +187,24 @@ class MM2World(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 

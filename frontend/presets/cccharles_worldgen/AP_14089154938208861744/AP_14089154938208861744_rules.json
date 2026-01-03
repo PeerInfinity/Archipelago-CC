@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ChooChooCharlesWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -11904,6 +11901,7 @@
   "world": {
     "1": {
       "game": "Choo-Choo Charles WorldGen",
+      "world_class_name": "CCCharlesWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -11916,7 +11914,9 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -11939,6 +11939,16 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "An independent 3D horror game, taking place on an island.\nThe main gameplay consists of traveling and fighting a monster on board a train.\nUpgrading the train requires leaving the train to gather resources with the threat of encountering the monster.",
@@ -11970,14 +11980,7 @@
       "world_directory": "cccharles_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

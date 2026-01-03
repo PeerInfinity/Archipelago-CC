@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -54,6 +54,7 @@ class BadEndingCondition(Choice):
 class BigToss(Toggle):
     """Option for Big Toss."""
     display_name = "Big Toss"
+    default = False
 
 class BossesRequired(Range):
     """Option for Bosses Required."""
@@ -65,6 +66,7 @@ class BossesRequired(Range):
 class CarrieLogic(Toggle):
     """Option for Carrie Logic."""
     display_name = "Carrie Logic"
+    default = False
 
 class CharacterStages(Choice):
     """Option for Character Stages."""
@@ -78,6 +80,7 @@ class CharacterStages(Choice):
 class CinematicExperience(Toggle):
     """Option for Cinematic Experience."""
     display_name = "Cinematic Experience"
+    default = False
 
 class Countdown(Choice):
     """Option for Countdown."""
@@ -98,6 +101,7 @@ class DeathLink(Choice):
 class DisableTimeRestrictions(Toggle):
     """Option for Disable Time Requirements."""
     display_name = "Disable Time Requirements"
+    default = False
 
 class DraculasCondition(Choice):
     """Option for Dracula's Condition."""
@@ -111,22 +115,27 @@ class DraculasCondition(Choice):
 class DropPreviousSubWeapon(Toggle):
     """Option for Drop Previous Sub-weapon."""
     display_name = "Drop Previous Sub-weapon"
+    default = False
 
 class EmptyBreakables(Toggle):
     """Option for Empty Breakables."""
     display_name = "Empty Breakables"
+    default = False
 
 class FallGuard(Toggle):
     """Option for Fall Guard."""
     display_name = "Fall Guard"
+    default = False
 
 class HardItemPool(Toggle):
     """Option for Hard Item Pool."""
     display_name = "Hard Item Pool"
+    default = False
 
 class HardLogic(Toggle):
     """Option for Hard Logic."""
     display_name = "Hard Logic"
+    default = False
 
 class IceTrapAppearance(Choice):
     """Option for Ice Trap Appearance."""
@@ -150,6 +159,7 @@ class IncreaseItemLimit(DefaultOnToggle):
 class IncreaseShimmySpeed(Toggle):
     """Option for Increase Shimmy Speed."""
     display_name = "Increase Shimmy Speed"
+    default = False
 
 class InvisibleItems(Choice):
     """Option for Invisible Items."""
@@ -163,6 +173,7 @@ class InvisibleItems(Choice):
 class LizardLockerItems(Toggle):
     """Option for Lizard Locker Items."""
     display_name = "Lizard Locker Items"
+    default = False
 
 class LoadingZoneHeals(DefaultOnToggle):
     """Option for Loading Zone Heals."""
@@ -192,10 +203,12 @@ class MinimumGoldPrice(Range):
 class MultiHitBreakables(Toggle):
     """Option for Multi-hit Breakables."""
     display_name = "Multi-hit Breakables"
+    default = False
 
 class NerfHealingItems(Toggle):
     """Option for Nerf Healing Items."""
     display_name = "Nerf Healing Items"
+    default = False
 
 class PantherDash(Choice):
     """Option for Panther Dash."""
@@ -215,6 +228,7 @@ class PercentSpecial2sRequired(Range):
 class PermanentPowerups(Toggle):
     """Option for Permanent PowerUps."""
     display_name = "Permanent PowerUps"
+    default = False
 
 class PostBehemothBoss(Choice):
     """Option for Post-Behemoth Boss."""
@@ -252,14 +266,17 @@ class ShopPrices(Choice):
 class Shopsanity(Toggle):
     """Option for Shopsanity."""
     display_name = "Shopsanity"
+    default = False
 
 class SkipGondolas(Toggle):
     """Option for Skip Gondolas."""
     display_name = "Skip Gondolas"
+    default = False
 
 class SkipWaterwayBlocks(Toggle):
     """Option for Skip Waterway Blocks."""
     display_name = "Skip Waterway Blocks"
+    default = False
 
 class SpareKeys(Choice):
     """Option for Spare Keys."""
@@ -279,6 +296,7 @@ class Special1sPerWarp(Range):
 class StageShuffle(Toggle):
     """Option for Stage Shuffle."""
     display_name = "Stage Shuffle"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""

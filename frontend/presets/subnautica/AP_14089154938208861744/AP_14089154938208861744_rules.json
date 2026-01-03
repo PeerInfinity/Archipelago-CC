@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SubnauticaWorld"
-  },
   "regions": {
     "1": {
       "Planet 4546B": {
@@ -5913,6 +5910,7 @@
   "world": {
     "1": {
       "game": "Subnautica",
+      "world_class_name": "SubnauticaWorld",
       "options": {
         "accessibility": 0,
         "creature_scan_logic": 0,
@@ -6065,15 +6063,7 @@
       "world_directory": "subnautica"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SubnauticaWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -6509,8 +6499,8 @@
             "type": "assign",
             "name": "swim_rule",
             "value": {
-              "type": "setting_value",
-              "setting": "swim_rule"
+              "type": "option_value",
+              "option": "swim_rule"
             }
           },
           {

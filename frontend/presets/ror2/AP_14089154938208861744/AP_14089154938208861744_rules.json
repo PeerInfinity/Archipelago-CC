@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "RiskOfRainWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -5286,6 +5283,7 @@
   "world": {
     "1": {
       "game": "Risk of Rain 2",
+      "world_class_name": "RiskOfRainWorld",
       "options": {
         "accessibility": 0,
         "altars_per_stage": 1,
@@ -5668,15 +5666,7 @@
       "world_directory": "ror2"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "RiskOfRainWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

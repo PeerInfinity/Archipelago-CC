@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "AdventureWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -868,6 +865,7 @@
   "world": {
     "1": {
       "game": "Adventure WorldGen",
+      "world_class_name": "AdventureWorld",
       "options": {
         "accessibility": 0,
         "bat_logic": 1,
@@ -894,6 +892,7 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
+        "use_canonical_options": true,
         "yorgle_min_speed": 1,
         "yorgle_speed": 2
       },
@@ -919,12 +918,12 @@
         },
         "connector_multi_slot": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Connector Multi-Slot"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "difficulty_switch_a": {
@@ -1020,6 +1019,11 @@
           "default": 0,
           "display_name": "Start Castle"
         },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        },
         "yorgle_min_speed": {
           "type": "range",
           "range_start": 1,
@@ -1093,14 +1097,7 @@
       "world_directory": "adventure_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

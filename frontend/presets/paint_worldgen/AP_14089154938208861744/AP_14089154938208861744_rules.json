@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "PaintWorld"
-  },
   "regions": {
     "1": {
       "Canvas": {
@@ -3370,6 +3367,7 @@
   "world": {
     "1": {
       "game": "Paint WorldGen",
+      "world_class_name": "PaintWorld",
       "options": {
         "accessibility": 0,
         "canvas_size_increment": 100,
@@ -3417,7 +3415,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "goal_image": {
@@ -3527,15 +3525,7 @@
       "world_directory": "paint_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "PaintWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -3894,8 +3884,8 @@
                             },
                             "op": "*",
                             "right": {
-                              "type": "setting_value",
-                              "setting": "canvas_size_increment"
+                              "type": "option_value",
+                              "option": "canvas_size_increment"
                             }
                           }
                         },
@@ -3925,8 +3915,8 @@
                           },
                           "op": "*",
                           "right": {
-                            "type": "setting_value",
-                            "setting": "canvas_size_increment"
+                            "type": "option_value",
+                            "option": "canvas_size_increment"
                           }
                         }
                       },
@@ -3939,8 +3929,8 @@
                 },
                 "op": "*",
                 "right": {
-                  "type": "setting_value",
-                  "setting": "logic_percent"
+                  "type": "option_value",
+                  "option": "logic_percent"
                 }
               },
               "op": "/",

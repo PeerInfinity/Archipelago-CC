@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -65,10 +65,12 @@ class CommonItem(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DlcSotv(Toggle):
     """Option for Enable DLC - SOTV."""
     display_name = "Enable DLC - SOTV"
+    default = False
 
 class EnableLunar(DefaultOnToggle):
     """Option for Enable Lunar Item Shuffling."""
@@ -77,6 +79,7 @@ class EnableLunar(DefaultOnToggle):
 class EnableTrap(Toggle):
     """Option for Enable Trap Items."""
     display_name = "Enable Trap Items"
+    default = False
 
 class Equipment(Range):
     """Option for Equipment."""
@@ -95,6 +98,7 @@ class Experience(Range):
 class FinalStageDeath(Toggle):
     """Option for Final Stage Death is Win."""
     display_name = "Final Stage Death is Win"
+    default = False
 
 class Goal(Choice):
     """Option for Game Mode."""
@@ -120,6 +124,7 @@ class ItemPickupStep(Range):
 class ItemPoolPresets(Toggle):
     """Option for Use Item Weight Presets."""
     display_name = "Use Item Weight Presets"
+    default = False
 
 class ItemWeights(Choice):
     """Option for Item Weights."""

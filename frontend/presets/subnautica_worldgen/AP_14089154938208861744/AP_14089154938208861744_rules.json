@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SubnauticaWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Planet 4546B": {
@@ -5122,6 +5119,7 @@
   "world": {
     "1": {
       "game": "Subnautica WorldGen",
+      "world_class_name": "SubnauticaWorld",
       "options": {
         "accessibility": 0,
         "creature_scan_logic": 0,
@@ -5141,8 +5139,10 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "swim_rule": 0
+        "swim_rule": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -5175,7 +5175,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "early_seaglide": {
@@ -5190,7 +5190,7 @@
         },
         "free_samples": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Free Samples"
         },
         "goal": {
@@ -5216,6 +5216,11 @@
           "default": true,
           "display_name": "Randomize Items"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "swim_rule": {
           "type": "choice",
           "name_lookup": {
@@ -5228,6 +5233,11 @@
           },
           "default": 0,
           "display_name": "Swim Rule"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "creatures_to_scan": [],
@@ -5259,14 +5269,7 @@
       "world_directory": "subnautica_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -5702,8 +5705,8 @@
             "type": "assign",
             "name": "swim_rule",
             "value": {
-              "type": "constant",
-              "value": 0
+              "type": "option_value",
+              "option": "swim_rule"
             }
           },
           {

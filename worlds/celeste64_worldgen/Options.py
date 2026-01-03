@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -51,14 +51,17 @@ class BadelineChaserSpeed(Range):
 class Carsanity(Toggle):
     """Option for Carsanity."""
     display_name = "Carsanity"
+    default = False
 
 class Checkpointsanity(Toggle):
     """Option for Checkpointsanity."""
     display_name = "Checkpointsanity"
+    default = False
 
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DeathLinkAmnesty(Range):
     """Option for Death Link Amnesty."""
@@ -70,6 +73,7 @@ class DeathLinkAmnesty(Range):
 class Friendsanity(Toggle):
     """Option for Friendsanity."""
     display_name = "Friendsanity"
+    default = False
 
 class LogicDifficulty(Choice):
     """Option for Logic Difficulty."""
@@ -173,10 +177,12 @@ class MadelineTwoDashHairColor(Choice):
 class MoveShuffle(Toggle):
     """Option for Move Shuffle."""
     display_name = "Move Shuffle"
+    default = False
 
 class Signsanity(Toggle):
     """Option for Signsanity."""
     display_name = "Signsanity"
+    default = False
 
 class StrawberriesRequiredPercentage(Range):
     """Option for Strawberries Required Percentage."""

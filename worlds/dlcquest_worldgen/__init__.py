@@ -186,6 +186,7 @@ class DLCqworld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'DLCqworld'
         self.world_description = 'DLCQuest is a metroid ish game where everything is an in-game dlc.'
         self.slot_data = types.SimpleNamespace(death_link=0, ending_choice=1, campaign=0, coinsanity=0, item_shuffle=0, permanent_coins=0, coinbundlerange=20, seed=71185160)
 

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "TheWitnessWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -9772,6 +9769,7 @@
   "world": {
     "1": {
       "game": "The Witness WorldGen",
+      "world_class_name": "TheWitnessWorldGenWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -12102,12 +12100,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "add_sphere_items_upfront": true,
-      "world_class_name": "TheWitnessWorldGenWorld"
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {

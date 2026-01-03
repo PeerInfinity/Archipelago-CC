@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SA2BWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -6589,6 +6586,7 @@
   "world": {
     "1": {
       "game": "Sonic Adventure 2 Battle WorldGen",
+      "world_class_name": "SA2BWorld",
       "options": {
         "accessibility": 0,
         "animalsanity": false,
@@ -6730,7 +6728,7 @@
         },
         "animalsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Animalsanity"
         },
         "bee_trap_weight": {
@@ -6762,7 +6760,7 @@
         },
         "bigsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bigsanity"
         },
         "black_market_price_multiplier": {
@@ -6840,12 +6838,12 @@
         },
         "chao_animal_parts": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Chao Animal Parts"
         },
         "chao_entrance_randomization": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Chao Entrance Randomization"
         },
         "chao_karate_difficulty": {
@@ -6906,12 +6904,12 @@
         },
         "chao_stats_hidden": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Chao Stats - Luck and Intelligence"
         },
         "chao_stats_stamina": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Chao Stats - Stamina"
         },
         "confusion_trap_weight": {
@@ -6949,7 +6947,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "eggman_mission_2": {
@@ -7248,7 +7246,7 @@
         },
         "mission_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Mission Shuffle"
         },
         "music_shuffle": {
@@ -7311,7 +7309,7 @@
         },
         "omosanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Omosanity"
         },
         "pinball_trap_weight": {
@@ -7415,7 +7413,7 @@
         },
         "ring_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Ring Link"
         },
         "ring_loss": {
@@ -7604,7 +7602,7 @@
         },
         "trap_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Trap Link"
         },
         "trivia_trap_weight": {
@@ -11163,15 +11161,7 @@
       "world_directory": "sa2b_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SA2BWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

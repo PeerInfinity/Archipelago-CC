@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MetamathWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1739,6 +1736,7 @@
   "world": {
     "1": {
       "game": "Metamath",
+      "world_class_name": "MetamathWorld",
       "options": {
         "accessibility": 0,
         "auto_download_database": true,
@@ -2012,15 +2010,7 @@
       "world_directory": "metamath"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MetamathWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

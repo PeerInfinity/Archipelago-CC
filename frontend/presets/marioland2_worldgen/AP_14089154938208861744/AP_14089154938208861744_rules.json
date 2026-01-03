@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SuperMarioLand2WorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -32009,14 +32006,15 @@
   "world": {
     "1": {
       "game": "Super Mario Land 2 WorldGen",
+      "world_class_name": "MarioLand2World",
       "options": {
-        "accessibility": 0,
+        "accessibility": 1,
         "auto_scroll_chances": -1,
         "auto_scroll_mode": 0,
         "coinsanity": false,
         "coinsanity_checks": 150,
         "difficulty_mode": 0,
-        "energy_link": false,
+        "energy_link": true,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -32037,16 +32035,18 @@
         "shuffle_pipe_traversal": 0,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
           "type": "choice",
           "name_lookup": {
             "0": "full",
+            "1": "items",
             "2": "minimal"
           },
-          "default": 0,
+          "default": 1,
           "display_name": "Accessibility"
         },
         "auto_scroll_chances": {
@@ -32071,7 +32071,7 @@
         },
         "coinsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Coinsanity"
         },
         "coinsanity_checks": {
@@ -32094,7 +32094,7 @@
         },
         "energy_link": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Energy Link"
         },
         "mario_coin_fragment_percentage": {
@@ -32113,7 +32113,7 @@
         },
         "marios_castle_midway_bell": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Mario's Castle Midway Bell"
         },
         "progression_balancing": {
@@ -32125,7 +32125,7 @@
         },
         "randomize_enemies": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Enemies"
         },
         "randomize_items": {
@@ -32135,12 +32135,12 @@
         },
         "randomize_music": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Music"
         },
         "randomize_platforms": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Platforms"
         },
         "required_golden_coins": {
@@ -32162,7 +32162,7 @@
         },
         "shuffle_midway_bells": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Midway Bells"
         },
         "shuffle_pipe_traversal": {
@@ -32174,6 +32174,11 @@
           },
           "default": 0,
           "display_name": "Shuffle Pipe Traversal"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "auto_scroll_levels": [
@@ -38943,14 +38948,7 @@
       "world_directory": "marioland2_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "accumulator_rules": [
@@ -39179,8 +39177,8 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Cancel Auto Scroll"
@@ -39626,359 +39624,9 @@
                         "value": {
                           "type": "subscript",
                           "value": {
-                            "type": "list",
-                            "value": [
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 1,
-                                  "sprite": "Owl Platform (Horizontal)/Cheep Cheep (Horizontal)",
-                                  "x": 2,
-                                  "y": 16,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 1,
-                                  "sprite": "Horizontal Blurp",
-                                  "x": 12,
-                                  "y": 21,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 1,
-                                  "sprite": "Mushroom Block",
-                                  "x": 13,
-                                  "y": 3,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 2,
-                                  "sprite": "Horizontal Blurp",
-                                  "x": 1,
-                                  "y": 18,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 2,
-                                  "sprite": "Spiny Cheep Cheep",
-                                  "x": 11,
-                                  "y": 26,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 2,
-                                  "sprite": "Cheep Cheep (Vertical)",
-                                  "x": 26,
-                                  "y": 28,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 3,
-                                  "sprite": "Goomba",
-                                  "x": 3,
-                                  "y": 8,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 3,
-                                  "sprite": "Goomba",
-                                  "x": 17,
-                                  "y": 8,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 3,
-                                  "sprite": "Star Block",
-                                  "x": 17,
-                                  "y": 1,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 3,
-                                  "sprite": "Cheep Cheep (Vertical)",
-                                  "x": 18,
-                                  "y": 28,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 3,
-                                  "sprite": "Heart Block",
-                                  "x": 19,
-                                  "y": 1,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 3,
-                                  "sprite": "Shark",
-                                  "x": 27,
-                                  "y": 26,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 4,
-                                  "sprite": "Paragoomba (Diagonal)",
-                                  "x": 1,
-                                  "y": 4,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 4,
-                                  "sprite": "Goomba",
-                                  "x": 10,
-                                  "y": 8,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 5,
-                                  "sprite": "Horizontal Blurp",
-                                  "x": 1,
-                                  "y": 16,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 5,
-                                  "sprite": "Horizontal Blurp",
-                                  "x": 9,
-                                  "y": 22,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 5,
-                                  "sprite": "Horizontal Blurp",
-                                  "x": 16,
-                                  "y": 26,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 6,
-                                  "sprite": "Shark",
-                                  "x": 12,
-                                  "y": 21,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 6,
-                                  "sprite": "Midway Bell",
-                                  "x": 21,
-                                  "y": 18,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 6,
-                                  "sprite": "Owl Platform (Horizontal)/Cheep Cheep (Horizontal)",
-                                  "x": 25,
-                                  "y": 16,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 7,
-                                  "sprite": "Spiny Cheep Cheep",
-                                  "x": 21,
-                                  "y": 17,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 7,
-                                  "sprite": "Horizontal Blurp",
-                                  "x": 25,
-                                  "y": 26,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 8,
-                                  "sprite": "Cheep Cheep (Vertical)",
-                                  "x": 7,
-                                  "y": 20,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 8,
-                                  "sprite": "Shark",
-                                  "x": 15,
-                                  "y": 14,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 8,
-                                  "sprite": "Spiny Cheep Cheep",
-                                  "x": 25,
-                                  "y": 24,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 8,
-                                  "sprite": "Mushroom Block",
-                                  "x": 31,
-                                  "y": 3,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 9,
-                                  "sprite": "Cheep Cheep (Vertical)",
-                                  "x": 15,
-                                  "y": 24,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 9,
-                                  "sprite": "Cheep Cheep (Vertical)",
-                                  "x": 23,
-                                  "y": 20,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 9,
-                                  "sprite": "Cheep Cheep (Vertical)",
-                                  "x": 29,
-                                  "y": 26,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 10,
-                                  "sprite": "Shark",
-                                  "x": 10,
-                                  "y": 18,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 10,
-                                  "sprite": "Money Bag Block",
-                                  "x": 11,
-                                  "y": 31,
-                                  "misc": 32
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 11,
-                                  "sprite": "Shark",
-                                  "x": 5,
-                                  "y": 22,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 11,
-                                  "sprite": "Horizontal Blurp",
-                                  "x": 16,
-                                  "y": 28,
-                                  "misc": 192
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 11,
-                                  "sprite": "Bonus Bell",
-                                  "x": 21,
-                                  "y": 9,
-                                  "misc": 64
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": {
-                                  "screen": 11,
-                                  "sprite": "Heart Block",
-                                  "x": 27,
-                                  "y": 23,
-                                  "misc": 64
-                                }
-                              }
-                            ]
+                            "type": "world_attribute",
+                            "attribute": "sprite_data",
+                            "index": "Turtle Zone 1"
                           },
                           "index": {
                             "type": "name",
@@ -39997,8 +39645,8 @@
                           "name": "i"
                         },
                         "iterator": {
-                          "type": "list",
-                          "value": [
+                          "type": "tuple",
+                          "elements": [
                             {
                               "type": "constant",
                               "value": 27
@@ -40292,8 +39940,11 @@
                     "item": "Space Zone 2 Midway Bell"
                   },
                   {
-                    "type": "constant",
-                    "value": true
+                    "type": "not",
+                    "condition": {
+                      "type": "option_value",
+                      "option": "shuffle_midway_bells"
+                    }
                   }
                 ]
               },

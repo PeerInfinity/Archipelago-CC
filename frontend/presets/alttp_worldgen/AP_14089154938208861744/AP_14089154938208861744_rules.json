@@ -19817,7 +19817,7 @@
         },
         "bombless_start": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bombless Start"
         },
         "boss_shuffle": {
@@ -19834,7 +19834,7 @@
         },
         "bush_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bush Shuffle"
         },
         "compass_shuffle": {
@@ -19883,7 +19883,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "dungeon_counters": {
@@ -19920,7 +19920,7 @@
         },
         "enemy_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enemy Shuffle"
         },
         "entrance_shuffle": {
@@ -20039,7 +20039,7 @@
         },
         "include_witch_hut": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Witch's Hut"
         },
         "item_functionality": {
@@ -20071,7 +20071,7 @@
         },
         "killable_thieves": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Killable Thieves"
         },
         "map_shuffle": {
@@ -20164,7 +20164,7 @@
         },
         "pot_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Pot Shuffle"
         },
         "progression_balancing": {
@@ -20191,7 +20191,7 @@
         },
         "randomize_cost_types": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Cost Types"
         },
         "randomize_items": {
@@ -20211,7 +20211,7 @@
         },
         "randomize_shop_prices": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Shop Prices"
         },
         "red_clock_time": {
@@ -20228,17 +20228,17 @@
         },
         "restrict_dungeon_item_on_boss": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Prevent Dungeon Item on Boss"
         },
         "retro_bow": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Retro Bow"
         },
         "retro_caves": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Retro Caves"
         },
         "scams": {
@@ -20305,7 +20305,7 @@
         },
         "shuffle_shop_inventories": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Shop Inventories"
         },
         "small_key_shuffle": {
@@ -20349,12 +20349,12 @@
         },
         "swordless": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Swordless"
         },
         "tile_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tile Shuffle"
         },
         "timer": {

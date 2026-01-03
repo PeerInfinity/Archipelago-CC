@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "WargrooveWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1083,8 +1080,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Thief",
-                      "Mage"
+                      "Mage",
+                      "Thief"
                     ]
                   }
                 }
@@ -1120,8 +1117,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Spearman",
-                      "Mage"
+                      "Mage",
+                      "Spearman"
                     ]
                   }
                 }
@@ -1749,6 +1746,7 @@
   "world": {
     "1": {
       "game": "Wargroove WorldGen",
+      "world_class_name": "WargrooveWorld",
       "options": {
         "accessibility": 0,
         "ai_sacrifice_limit": 0,
@@ -1769,7 +1767,9 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1814,7 +1814,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "income_boost": {
@@ -1849,6 +1849,16 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "Command an army, in this retro style turn based strategy game!",
@@ -1883,14 +1893,7 @@
       "world_directory": "wargroove_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

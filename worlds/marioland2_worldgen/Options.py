@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -57,6 +57,7 @@ class AutoScrollMode(Choice):
 class Coinsanity(Toggle):
     """Option for Coinsanity."""
     display_name = "Coinsanity"
+    default = False
 
 class CoinsanityChecks(Range):
     """Option for Coinsanity Checks."""
@@ -77,6 +78,7 @@ class DifficultyMode(Choice):
 class EnergyLink(Toggle):
     """Option for Energy Link."""
     display_name = "Energy Link"
+    default = True
 
 class MarioCoinFragmentPercentage(Range):
     """Option for Mario Coin Fragment Percentage."""
@@ -95,18 +97,22 @@ class MarioCoinFragmentsRequiredPercentage(Range):
 class MariosCastleMidwayBell(Toggle):
     """Option for Mario's Castle Midway Bell."""
     display_name = "Mario's Castle Midway Bell"
+    default = False
 
 class RandomizeEnemies(Toggle):
     """Option for Randomize Enemies."""
     display_name = "Randomize Enemies"
+    default = False
 
 class RandomizeMusic(Toggle):
     """Option for Randomize Music."""
     display_name = "Randomize Music"
+    default = False
 
 class RandomizePlatforms(Toggle):
     """Option for Randomize Platforms."""
     display_name = "Randomize Platforms"
+    default = False
 
 class RequiredGoldenCoins(Range):
     """Option for Golden Coins Required."""
@@ -126,6 +132,7 @@ class ShuffleGoldenCoins(Choice):
 class ShuffleMidwayBells(Toggle):
     """Option for Shuffle Midway Bells."""
     display_name = "Shuffle Midway Bells"
+    default = False
 
 class ShufflePipeTraversal(Choice):
     """Option for Shuffle Pipe Traversal."""

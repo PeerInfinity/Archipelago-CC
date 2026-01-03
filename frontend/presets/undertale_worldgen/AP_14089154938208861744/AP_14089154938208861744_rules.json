@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "UndertaleWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1047,16 +1044,10 @@
                   }
                 },
                 {
-                  "rule": "Compare",
+                  "rule": "Has",
                   "args": {
-                    "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Key Piece"
-                      }
-                    },
-                    "op": ">=",
-                    "right": 5
+                    "item_name": "Key Piece",
+                    "count": 5
                   }
                 }
               ]
@@ -2264,6 +2255,7 @@
   "world": {
     "1": {
       "game": "Undertale WorldGen",
+      "world_class_name": "UndertaleWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -2288,7 +2280,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "starting_area": 0,
-        "temy_include": false
+        "temy_include": true,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -2302,7 +2295,7 @@
         },
         "key_hunt": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Key Piece Hunt"
         },
         "key_pieces": {
@@ -2314,22 +2307,22 @@
         },
         "no_equips": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "No Equippables"
         },
         "only_flakes": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Only Temmie Flakes"
         },
         "prog_armor": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Progressive Armor"
         },
         "prog_weapons": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Progressive Weapons"
         },
         "progression_balancing": {
@@ -2341,17 +2334,17 @@
         },
         "rando_item_button": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Item Button"
         },
         "rando_love": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize LOVE"
         },
         "rando_stats": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Stats"
         },
         "randomize_items": {
@@ -2384,8 +2377,13 @@
         },
         "temy_include": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Include Temy Armor"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.",
@@ -2433,14 +2431,7 @@
       "world_directory": "undertale_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

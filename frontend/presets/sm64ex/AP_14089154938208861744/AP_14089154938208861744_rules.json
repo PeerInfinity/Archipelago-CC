@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SM64World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -3425,6 +3422,7 @@
   "world": {
     "1": {
       "game": "Super Mario 64",
+      "world_class_name": "SM64World",
       "options": {
         "accessibility": 0,
         "amount_of_stars": 120,
@@ -3698,15 +3696,7 @@
       "world_directory": "sm64ex"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SM64World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

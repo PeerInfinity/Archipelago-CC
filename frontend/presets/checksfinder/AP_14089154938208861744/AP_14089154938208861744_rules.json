@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ChecksFinderWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -612,6 +609,7 @@
   "world": {
     "1": {
       "game": "ChecksFinder",
+      "world_class_name": "ChecksFinderWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -670,15 +668,7 @@
       "world_directory": "checksfinder"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "ChecksFinderWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

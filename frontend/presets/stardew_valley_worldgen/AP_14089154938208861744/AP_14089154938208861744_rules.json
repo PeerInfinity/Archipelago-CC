@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "StardewValleyWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -22521,6 +22518,7 @@
   "world": {
     "1": {
       "game": "Stardew Valley WorldGen",
+      "world_class_name": "StardewValleyWorldGenWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -22932,15 +22930,7 @@
       "world_directory": "stardew_valley_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "StardewValleyWorldGenWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "accumulator_rules": [

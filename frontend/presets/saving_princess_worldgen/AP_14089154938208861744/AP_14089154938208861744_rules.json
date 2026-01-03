@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SavingPrincessWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1029,6 +1026,7 @@
   "world": {
     "1": {
       "game": "Saving Princess WorldGen",
+      "world_class_name": "SavingPrincessWorld",
       "options": {
         "accessibility": 0,
         "ace_weapon_upgrade": 1,
@@ -1050,8 +1048,10 @@
         "sprint_availability": 2,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "trap_chance": 50
+        "trap_chance": 50,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1085,7 +1085,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "expanded_pool": {
@@ -1107,7 +1107,7 @@
         },
         "music_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Music Shuffle"
         },
         "progression_balancing": {
@@ -1139,12 +1139,22 @@
           "default": 2,
           "display_name": "Sprint Availability"
         },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
         "trap_chance": {
           "type": "range",
           "range_start": 0,
           "range_end": 100,
           "default": 50,
           "display_name": "Trap Chance"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "is_pool_expanded": true,
@@ -1195,14 +1205,7 @@
       "world_directory": "saving_princess_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

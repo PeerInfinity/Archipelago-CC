@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "YoshisIslandWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -6938,6 +6935,7 @@
   "world": {
     "1": {
       "game": "Yoshi's Island WorldGen",
+      "world_class_name": "YoshisIslandWorld",
       "options": {
         "accessibility": 0,
         "add_secretlens": false,
@@ -6992,7 +6990,7 @@
         },
         "add_secretlens": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Add Secret Lens"
         },
         "baby_mario_sound": {
@@ -7007,7 +7005,7 @@
         },
         "boss_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Boss Shuffle"
         },
         "bowser_door_mode": {
@@ -7039,17 +7037,17 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "disable_autoscroll": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Disable Autoscrolling"
         },
         "extras_enabled": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Extra Stages"
         },
         "goal": {
@@ -7074,7 +7072,7 @@
         },
         "item_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Consumable Logic"
         },
         "level_shuffle": {
@@ -7126,7 +7124,7 @@
         },
         "shuffle_midrings": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Middle Rings"
         },
         "softlock_prevention": {
@@ -7136,12 +7134,12 @@
         },
         "split_bonus": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Split Bonus Games"
         },
         "split_extras": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Split Extra Stages"
         },
         "stage_logic": {
@@ -7183,7 +7181,7 @@
         },
         "traps_enabled": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Traps Enabled"
         },
         "use_canonical_options": {
@@ -8198,15 +8196,7 @@
       "world_directory": "yoshisisland_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "YoshisIslandWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

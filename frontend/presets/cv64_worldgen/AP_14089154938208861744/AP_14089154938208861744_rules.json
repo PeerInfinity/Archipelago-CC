@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Castlevania64WorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -725,20 +722,130 @@
             "name": "To Storeroom door",
             "connected_region": "Villa: storeroom",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Storeroom Key"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Villa: Storeroom - Left",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Villa: Storeroom - Right",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Villa: Storeroom statue",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Storeroom Key"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "To Archives door",
             "connected_region": "Villa: archives",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Archives Key"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Villa: Archives rear corner",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Archives Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Villa: Archives table",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Archives Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Archives Key"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2085,10 +2192,95 @@
             "name": "Torture Chamber door",
             "connected_region": "Castle Center: torture chamber",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chamber Key"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Castle Center: Mandragora shelf - Left",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Castle Center: Mandragora shelf - Right",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Castle Center: Torture chamber instrument rack",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Castle Center: Torture chamber rafters",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Chamber Key"
+                  }
+                }
+              ]
             }
           },
           {
@@ -3146,10 +3338,35 @@
             "name": "Science Door 1",
             "connected_region": "Tower of Science: locked key1 room",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Science Key1"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Tower of Science: Pick-a-door hallway locked middle room",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Science Key1",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Science Key1"
+                  }
+                }
+              ]
             }
           },
           {
@@ -3245,10 +3462,55 @@
             "name": "Science Door 3",
             "connected_region": "Tower of Science: locked key3 room",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Science Key3"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Tower of Science: Locked Key3 room - Left",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Science Key3",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "AST_placement_lookup",
+                      "args": {
+                        "location": "Tower of Science: Locked Key3 room - Right",
+                        "_original_ast_type": "placement_lookup"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "op": "==",
+                    "right": [
+                      "Science Key3",
+                      1
+                    ],
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Science Key3"
+                  }
+                }
+              ]
             }
           },
           {
@@ -4466,8 +4728,9 @@
   "world": {
     "1": {
       "game": "Castlevania 64 WorldGen",
+      "world_class_name": "CV64World",
       "options": {
-        "accessibility": 0,
+        "accessibility": 1,
         "background_music": 0,
         "bad_ending_condition": 1,
         "big_toss": false,
@@ -4519,11 +4782,13 @@
         "stage_shuffle": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "starting_stage": 10,
+        "starting_stage": 1,
         "sub_weapon_shuffle": 0,
         "total_special1s": 7,
         "total_special2s": 25,
+        "use_canonical_options": true,
         "vincent_fight_condition": 1,
         "warp_order": 0,
         "window_color_a": 8,
@@ -4536,9 +4801,10 @@
           "type": "choice",
           "name_lookup": {
             "0": "full",
+            "1": "items",
             "2": "minimal"
           },
-          "default": 0,
+          "default": 1,
           "display_name": "Accessibility"
         },
         "background_music": {
@@ -4563,7 +4829,7 @@
         },
         "big_toss": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Big Toss"
         },
         "bosses_required": {
@@ -4575,7 +4841,7 @@
         },
         "carrie_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Carrie Logic"
         },
         "character_stages": {
@@ -4591,7 +4857,7 @@
         },
         "cinematic_experience": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Cinematic Experience"
         },
         "countdown": {
@@ -4616,7 +4882,7 @@
         },
         "disable_time_restrictions": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Disable Time Requirements"
         },
         "draculas_condition": {
@@ -4632,27 +4898,27 @@
         },
         "drop_previous_sub_weapon": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Drop Previous Sub-weapon"
         },
         "empty_breakables": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Empty Breakables"
         },
         "fall_guard": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Fall Guard"
         },
         "hard_item_pool": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hard Item Pool"
         },
         "hard_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hard Logic"
         },
         "ice_trap_appearance": {
@@ -4679,7 +4945,7 @@
         },
         "increase_shimmy_speed": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Increase Shimmy Speed"
         },
         "invisible_items": {
@@ -4695,7 +4961,7 @@
         },
         "lizard_locker_items": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Lizard Locker Items"
         },
         "loading_zone_heals": {
@@ -4728,12 +4994,12 @@
         },
         "multi_hit_breakables": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Multi-hit Breakables"
         },
         "nerf_healing_items": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Nerf Healing Items"
         },
         "panther_dash": {
@@ -4755,7 +5021,7 @@
         },
         "permanent_powerups": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Permanent PowerUps"
         },
         "post_behemoth_boss": {
@@ -4813,17 +5079,17 @@
         },
         "shopsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shopsanity"
         },
         "skip_gondolas": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Gondolas"
         },
         "skip_waterway_blocks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Waterway Blocks"
         },
         "spare_keys": {
@@ -4845,8 +5111,13 @@
         },
         "stage_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Stage Shuffle"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         },
         "starting_stage": {
           "type": "choice",
@@ -4890,6 +5161,11 @@
           "range_end": 70,
           "default": 25,
           "display_name": "Total Special2s"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         },
         "vincent_fight_condition": {
           "type": "choice",
@@ -5065,14 +5341,7 @@
       "world_directory": "cv64_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "accumulator_rules": [

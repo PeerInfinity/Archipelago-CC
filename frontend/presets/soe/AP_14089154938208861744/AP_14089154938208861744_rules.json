@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SoEWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -15443,6 +15440,7 @@
   "world": {
     "1": {
       "game": "Secret of Evermore",
+      "world_class_name": "SoEWorld",
       "options": {
         "accessibility": 0,
         "available_fragments": 11,
@@ -15737,11 +15735,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": true,
-      "world_class_name": "SoEWorld"
+      "use_resolved_items": true
     }
   },
   "game_info": {

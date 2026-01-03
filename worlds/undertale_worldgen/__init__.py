@@ -192,6 +192,7 @@ class UndertaleWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'UndertaleWorld'
         self.world_description = 'Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.'
         self.slot_data = types.SimpleNamespace(world_seed=3777206549, seed_name='14089154938208861744', player_name='Player1', player_id=1, client_version=[0, 1, 6], race=False, route='neutral', starting_area='ruins', temy_armor_include=True, only_flakes=False, no_equips=False, key_hunt=False, key_pieces=5, rando_love=False, rando_stats=False, prog_armor=False, prog_weapons=False, rando_item_button=False, route_required=0, temy_include=1)
 
@@ -204,25 +205,24 @@ class UndertaleWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -336,8 +336,6 @@ class UndertaleWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = UndertaleWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

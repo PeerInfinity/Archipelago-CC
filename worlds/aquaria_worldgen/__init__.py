@@ -501,6 +501,7 @@ class AquariaWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'AquariaWorld'
         self.regions = types.SimpleNamespace(player=1, menu='Menu', verse_cave_r='Verse Cave right area', verse_cave_l='Verse Cave left area', home_water='Home Waters', home_water_nautilus='Home Waters, Nautilus nest', home_water_transturtle='Home Waters, turtle room', home_water_behind_rocks='Home Waters, behind rock', naija_home="Naija's Home", song_cave='Song Cave', energy_temple_1='Energy Temple first area', energy_temple_2='Energy Temple second area', energy_temple_3='Energy Temple third area', energy_temple_altar='Energy Temple bottom entrance', energy_temple_boss='Energy Temple fallen God room', energy_temple_idol='Energy Temple Idol room', energy_temple_blaster_room='Energy Temple blaster room', energy_temple_4='Energy Temple after boss path', openwater_tl='Open Waters top left area', openwater_tr='Open Waters top right area', openwater_tr_turtle='Open Waters top right area, turtle room', openwater_tr_urns='Open Waters top right area, Mithalas entrance', openwater_bl='Open Waters bottom left area', openwater_br='Open Waters bottom right area', skeleton_path='Open Waters skeleton path', skeleton_path_sc='Open Waters skeleton path spirit crystal', arnassi='Arnassi Ruins', arnassi_cave='Arnassi Ruins cave', arnassi_cave_transturtle='Arnassi Ruins cave, transturtle area', arnassi_crab_boss='Arnassi Ruins, Crabbius Maximus lair', mithalas_city='Mithalas City', mithalas_city_urns='Mithalas City urns', mithalas_city_fishpass='Mithalas City fish pass', mithalas_city_top_path='Mithalas City top path', mithalas_castle='Mithalas castle', mithalas_castle_urns='Mithalas castle urns', mithalas_castle_tube='Mithalas castle, plant tube entrance', mithalas_castle_sc='Mithalas castle spirit crystal', cathedral_top_start='Mithalas Cathedral start', cathedral_top_start_urns='Mithalas Cathedral start urns', cathedral_top_end='Mithalas Cathedral end', cathedral_underground='Mithalas Cathedral underground', cathedral_boss_l='Mithalas Cathedral, after Mithalan God', cathedral_boss_r='Mithalas Cathedral, before Mithalan God', forest_tl='Kelp Forest top left area', forest_tl_verse_egg_room='Kelp Forest top left area fish pass', forest_tr='Kelp Forest top right area', forest_tr_fp='Kelp Forest top right area fish pass', forest_bl='Kelp Forest bottom left area', forest_bl_sc='Kelp Forest bottom left area, spirit crystals', forest_br='Kelp Forest bottom right area', sprite_cave='Sprite cave', sprite_cave_tube='Sprite cave after the plant tube', forest_boss='Kelp Forest Drunian God room', forest_boss_entrance='Kelp Forest Drunian God room entrance', mermog_cave='Mermog cave', mermog_boss='Mermog cave boss', forest_fish_cave='Kelp Forest fish cave', simon='Simon Says area', veil_tl='The Veil top left area', veil_tl_fp='The Veil top left area fish pass', turtle_cave='The Veil top left area, turtle cave', turtle_cave_bubble='The Veil top left area, turtle cave Bubble Cliff', veil_tr_l='The Veil top right area, left of temple', veil_tr_l_fp='The Veil top right area, fish pass left of temple', veil_tr_r='The Veil top right area, right of temple', octo_cave_t='Octopus Cave top entrance', octo_cave_b='Octopus Cave bottom entrance', veil_b='The Veil bottom left area', veil_b_sc='The Veil bottom spirit crystal area', veil_b_fp='The Veil bottom left area, in the sunken ship', veil_br='The Veil bottom right area', sun_temple_l='Sun Temple left area', sun_temple_l_entrance='Sun Temple left area entrance', sun_temple_r='Sun Temple right area', sun_temple_boss_path='Sun Temple before boss area', sun_temple_boss='Sun Temple boss area', abyss_l='Abyss left area', abyss_lb='Abyss left bottom area', abyss_r='Abyss right area', abyss_r_transturtle='Abyss right area, transturtle', abyss_r_whale='Abyss right area, outside the whale', ice_cave='Ice Cavern', frozen_feil='Frozen Veil', bubble_cave='Bubble Cave', bubble_cave_boss='Bubble Cave boss area', king_jellyfish_cave='Abyss left area, King jellyfish cave', whale='Inside the whale', first_secret='First Secret area', sunken_city_l='Sunken City left area', sunken_city_l_crates='Sunken City left area crates', sunken_city_l_bedroom='Sunken City left area, bedroom', sunken_city_r='Sunken City right area', sunken_city_r_crates='Sunken City right area crates', sunken_city_boss='Sunken City boss area', body_c='The Body center area', body_l='The Body left area', body_rt='The Body right area, top path', body_rb='The Body right area, bottom path', body_b='The Body bottom area', final_boss_loby='The Body, before final boss', final_boss_tube='The Body, final boss area turtle room', final_boss='The Body, final boss', final_boss_end='The Body, final boss area')
         self.ingredients_substitution = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75]
         self.exclude = ['Transturtle Final Boss']
@@ -517,25 +518,24 @@ class AquariaWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 

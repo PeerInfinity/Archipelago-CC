@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "DarkSouls3World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -35724,6 +35721,7 @@
   "world": {
     "1": {
       "game": "Dark Souls III",
+      "world_class_name": "DarkSouls3World",
       "options": {
         "accessibility": 0,
         "all_chests_are_mimics": false,
@@ -39503,15 +39501,7 @@
       "world_directory": "dark_souls_3"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "DarkSouls3World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

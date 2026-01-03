@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "StardewValleyWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -66365,6 +66362,7 @@
   "world": {
     "1": {
       "game": "Stardew Valley",
+      "world_class_name": "StardewValleyWorld",
       "options": {
         "accessibility": 0,
         "arcade_machine_locations": 3,
@@ -67720,15 +67718,7 @@
       "world_directory": "stardew_valley"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "StardewValleyWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "total_progression_items": 322

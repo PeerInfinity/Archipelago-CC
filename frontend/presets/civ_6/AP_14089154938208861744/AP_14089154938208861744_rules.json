@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "CivVIWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4488,6 +4485,7 @@
   "world": {
     "1": {
       "game": "Civilization VI",
+      "world_class_name": "CivVIWorld",
       "options": {
         "accessibility": 0,
         "advisor_show_progression_items": true,
@@ -5683,15 +5681,7 @@
       "world_directory": "civ_6"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "CivVIWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

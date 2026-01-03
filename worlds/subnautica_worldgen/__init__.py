@@ -305,6 +305,7 @@ class SubnauticaWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'SubnauticaWorld'
         self.creatures_to_scan = []
         self.world_description = "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet."
         self.slot_data = types.SimpleNamespace(goal='launch', swim_rule='easy', vanilla_tech=[], creatures_to_scan=[], death_link=0, free_samples=0, empty_tanks=1)
@@ -318,25 +319,24 @@ class SubnauticaWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -468,8 +468,6 @@ class SubnauticaWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = SubnauticaWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

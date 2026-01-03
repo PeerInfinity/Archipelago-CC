@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "LinksAwakeningWorld"
-  },
   "regions": {
     "1": {
       "Start House": {
@@ -19626,6 +19623,7 @@
   "world": {
     "1": {
       "game": "Links Awakening DX",
+      "world_class_name": "LinksAwakeningWorld",
       "options": {
         "accessibility": 0,
         "additional_warp_points": "",
@@ -26498,11 +26496,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": true,
-      "world_class_name": "LinksAwakeningWorld"
+      "use_resolved_items": true
     }
   },
   "game_info": {

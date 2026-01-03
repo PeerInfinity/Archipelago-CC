@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "UndertaleWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1053,9 +1050,9 @@
                   "args": {
                     "item_name": "Key Piece",
                     "count": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "key_pieces"
+                        "option": "key_pieces"
                       }
                     }
                   }
@@ -2212,6 +2209,7 @@
   "world": {
     "1": {
       "game": "Undertale",
+      "world_class_name": "UndertaleWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -2375,15 +2373,7 @@
       "world_directory": "undertale"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "UndertaleWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

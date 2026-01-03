@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "InscryptionWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -50,9 +47,9 @@
                   "args": {
                     "items": [
                       "Camera Replica",
-                      "Pile Of Meat",
                       "Film Roll",
-                      "Monocle"
+                      "Monocle",
+                      "Pile Of Meat"
                     ]
                   }
                 }
@@ -76,13 +73,13 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Camera Replica",
+                      "Film Roll",
                       "Gems Module",
                       "Inspectometer Battery",
-                      "Quill",
-                      "Camera Replica",
+                      "Monocle",
                       "Pile Of Meat",
-                      "Film Roll",
-                      "Monocle"
+                      "Quill"
                     ]
                   }
                 }
@@ -1731,8 +1728,8 @@
                 "items": [
                   "Gems Module",
                   "Inspectometer Battery",
-                  "Quill",
-                  "Mycologists Holo Key"
+                  "Mycologists Holo Key",
+                  "Quill"
                 ]
               }
             },
@@ -1863,8 +1860,8 @@
               "args": {
                 "items": [
                   "Gems Module",
-                  "Inspectometer Battery",
-                  "Holo Pelt"
+                  "Holo Pelt",
+                  "Inspectometer Battery"
                 ]
               }
             },
@@ -2920,6 +2917,7 @@
   "world": {
     "1": {
       "game": "Inscryption WorldGen",
+      "world_class_name": "InscryptionWorld",
       "options": {
         "accessibility": 0,
         "act1_death_link_behaviour": 0,
@@ -2943,7 +2941,9 @@
         "skip_tutorial": true,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -2966,7 +2966,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "epitaph_pieces_randomization": {
@@ -3018,7 +3018,7 @@
         },
         "randomize_codes": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Codes"
         },
         "randomize_deck": {
@@ -3049,13 +3049,23 @@
         },
         "skip_epilogue": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Epilogue"
         },
         "skip_tutorial": {
           "type": "default_on_toggle",
           "default": 1,
           "display_name": "Skip Tutorial"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "all_items": [
@@ -3313,14 +3323,7 @@
       "world_directory": "inscryption_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -3392,29 +3395,10 @@
       },
       "has_all_epitaph_pieces": {
         "type": "item_check",
-        "item": {
-          "type": "attribute",
-          "object": {
-            "type": "attribute",
-            "object": {
-              "type": "name",
-              "name": "self"
-            },
-            "attr": "world"
-          },
-          "attr": "required_epitaph_pieces_name"
-        },
+        "item": "Epitaph Piece",
         "count": {
-          "type": "attribute",
-          "object": {
-            "type": "attribute",
-            "object": {
-              "type": "name",
-              "name": "self"
-            },
-            "attr": "world"
-          },
-          "attr": "required_epitaph_pieces_count"
+          "type": "constant",
+          "value": 9
         }
       },
       "has_camera_and_meat": {

@@ -231,6 +231,7 @@ class SMWWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'SMWWorld'
         self.active_level_dict = {'3': 40, '41': 41, '20': 20, '42': 42, '39': 39, '38': 38, '37': 37, '21': 21, '9': 9, '10': 10, '8': 8, '4': 4, '19': 19, '5': 5, '6': 6, '47': 47, '7': 7, '40': 3, '22': 22, '62': 62, '60': 60, '45': 45, '43': 43, '46': 46, '61': 61, '63': 63, '1': 1, '2': 2, '11': 11, '64': 64, '44': 44, '12': 12, '13': 13, '15': 15, '17': 17, '16': 16, '14': 14, '18': 18, '66': 66, '68': 68, '71': 71, '67': 67, '65': 65, '70': 70, '69': 69, '31': 31, '32': 32, '30': 30, '34': 34, '36': 36, '35': 35, '29': 29, '28': 28, '33': 33, '27': 27, '59': 59, '26': 26, '24': 24, '58': 58, '57': 57, '55': 55, '51': 51, '56': 56, '53': 53, '52': 52, '49': 49, '50': 50, '48': 48, '91': 91, '88': 88, '83': 83, '84': 84, '82': 82, '86': 86, '87': 87, '89': 89, '92': 92, '90': 90, '85': 85, '77': 77, '78': 78, '79': 79, '80': 80, '81': 81, '76': 76, '75': 75, '74': 74, '73': 73, '72': 72}
         self.actual_egg_count = 0
         self.required_egg_count = 0
@@ -247,25 +248,24 @@ class SMWWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
