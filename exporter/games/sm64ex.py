@@ -7,6 +7,7 @@ converted to lambdas, then converts them to JSON format.
 
 from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
+from ..analyzer.source_extraction import _read_source_from_path
 import inspect
 import logging
 import os
@@ -45,13 +46,11 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
             module_file = inspect.getfile(world_module)
             rules_file = os.path.join(os.path.dirname(module_file), 'Rules.py')
 
-            if not os.path.exists(rules_file):
+            # Read from disk or apworld zip archive
+            content = _read_source_from_path(rules_file)
+            if content is None:
                 logger.error(f"Rules.py not found at {rules_file}")
                 return
-
-            # Parse the file for rf.assign_rule calls
-            with open(rules_file, 'r', encoding='utf-8') as f:
-                content = f.read()
 
             # Pattern: rf.assign_rule("location/region name", "rule expression")
             pattern = r'rf\.assign_rule\(\s*["\']([^"\']+)["\']\s*,\s*["\']([^"\']+)["\']\s*\)'
