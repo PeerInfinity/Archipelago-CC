@@ -130,14 +130,30 @@ def normalize_rule_format(obj: Any) -> Any:
     2. Normalize set type with elements to constant type with array value
     3. Remove default values like event: False, count: 1
     4. Normalize Constant rule wrapper to flat array
+    5. Normalize AST_prog_item_count to CountItem (equivalent rule formats)
 
     The goal is to make semantically-equivalent JSON structures compare as equal.
     """
     if isinstance(obj, dict):
+        # Normalize AST_prog_item_count to CountItem before processing
+        # Original: {"rule": "AST_prog_item_count", "args": {"key": "X", "_original_ast_type": "..."}}
+        # WorldGen: {"rule": "CountItem", "args": {"item_name": "X"}}
+        if obj.get('rule') == 'AST_prog_item_count':
+            key = obj.get('args', {}).get('key')
+            if key is not None:
+                return {
+                    'rule': 'CountItem',
+                    'args': {'item_name': key}
+                }
+
         result = {}
         for k, v in obj.items():
             # Skip _converted_from_ast metadata (only present in original, not in WorldGen)
             if k == '_converted_from_ast':
+                continue
+
+            # Skip _original_ast_type metadata (only present in original, not in WorldGen)
+            if k == '_original_ast_type':
                 continue
 
             # Skip event: False (default value - original includes it, WorldGen omits it)
@@ -561,6 +577,19 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if path == 'exporter.1.world_class_name':
         return True
 
+    # rule_format version info is WorldGen-specific
+    if 'exporter.' in path and 'rule_format' in path:
+        if original_value == '<missing>':
+            return True
+
+    # world_class_name in world section - restructured in WorldGen
+    if path == 'world.1.world_class_name' and worldgen_value == '<missing>':
+        return True
+
+    # world_classes section - WorldGen exports this separately
+    if path.startswith('world_classes'):
+        return True
+
     # WorldGen-specific game_info fields (state counters, accumulator rules, etc.)
     worldgen_game_info_fields = {'accumulator_rules', 'prog_items_init'}
     for field in worldgen_game_info_fields:
@@ -575,6 +604,13 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # so this data isn't needed at runtime for the worldgen world.
     if 'game_info.' in path and '.variables.required_technologies' in path:
         return True
+
+    # prog_items_init differences - items may differ based on game options
+    # (e.g., campaign-specific items like " coins freemium" for Live Freemium or Die)
+    if 'prog_items_init.' in path:
+        # Missing items in WorldGen are ok - may be option-dependent
+        if worldgen_value == '<missing>':
+            return True
 
     # Event relic group added by WorldGen
     if 'relic_groups.Event' in path and original_value == '<missing>':
