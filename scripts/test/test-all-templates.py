@@ -1458,23 +1458,27 @@ def main():
         print(f"{'='*60}")
 
         # Identify templates that need retesting:
-        # - Passed the first pass (multiworld_test.success == True)
+        # - Passed or were skipped in first pass (success == True or None, not False)
         # - Were tested with fewer than max_templates players (total_players_in_multiworld < max_templates)
+        # Note: Templates skipped due to "Waiting for 2+ templates" have success=None and should be included
         templates_for_second_pass = []
         for template_filename, template_result in results['results'].items():
             multiworld_test = template_result.get('multiworld_test', {})
-            # Skip templates that failed in the first pass
-            if not multiworld_test.get('success', False):
+            # Skip templates that explicitly failed in the first pass
+            # Note: success=None means skipped (e.g., waiting for 2+ templates), which should be included
+            if multiworld_test.get('success') is False:
                 continue
             # Skip templates that already had a second pass
             if multiworld_test.get('is_second_pass', False):
                 continue
             # Check if tested with fewer than max_templates players
             total_players_in_multiworld = multiworld_test.get('total_players_in_multiworld', 0)
+            was_skipped = multiworld_test.get('success') is None
             if total_players_in_multiworld < args.multiworld_max_templates:
                 templates_for_second_pass.append({
                     'filename': template_filename,
-                    'first_pass_players': total_players_in_multiworld
+                    'first_pass_players': total_players_in_multiworld,
+                    'was_skipped': was_skipped
                 })
 
         if not templates_for_second_pass:
@@ -1482,7 +1486,10 @@ def main():
         else:
             print(f"Found {len(templates_for_second_pass)} template(s) to retest with full multiworld:")
             for t in templates_for_second_pass:
-                print(f"  - {t['filename']} (tested with {t['first_pass_players']} players)")
+                if t.get('was_skipped'):
+                    print(f"  - {t['filename']} (skipped in first pass)")
+                else:
+                    print(f"  - {t['filename']} (tested with {t['first_pass_players']} players)")
 
             # Get current multiworld player count
             actual_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
@@ -1493,16 +1500,18 @@ def main():
             second_pass_count = 0
             for template_info in templates_for_second_pass:
                 yaml_file = template_info['filename']
+                was_skipped = template_info.get('was_skipped', False)
                 second_pass_count += 1
                 print(f"\n[Second Pass {second_pass_count}/{len(templates_for_second_pass)}] Testing {yaml_file}")
 
                 try:
                     # Run multiworld test in second pass mode
+                    # For skipped templates, we need to regenerate since no generation output exists
                     second_pass_result = test_template_multiworld(
                         yaml_file, templates_dir, project_root, world_mapping,
                         str(seed_list[0]), multiworld_dir, existing_results,
                         current_player_count, export_only=args.export_only,
-                        test_only=True,  # Use existing generation output
+                        test_only=not was_skipped,  # Use existing output unless first pass was skipped
                         headed=args.headed,
                         keep_templates=False,  # Allow template management in second pass
                         test_all_players=False,  # Only test this player
