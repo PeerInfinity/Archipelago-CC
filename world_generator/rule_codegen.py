@@ -2297,6 +2297,26 @@ class RuleCodeGenerator:
 
         return base_path
 
+    def _expr_option_value(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access an option at runtime.
+
+        Options are accessed via the world's options attribute at runtime.
+        This generates: state.multiworld.worlds[player].options.<name>
+        This pattern is recognized by the exporter's _is_world_options_pattern().
+        """
+        option = expr.get('option', '')
+        base_path = f'state.multiworld.worlds[player].options.{option}'
+
+        # Handle indexed access (not common for options, but supported)
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
+
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
 
