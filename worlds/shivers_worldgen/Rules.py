@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall, Or
+from rule_builder import True_, False_, And, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall, OptionValue, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -161,7 +161,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Victory", player),
-        Compare(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(HelperCall(helper_func=water_capturable, helper_name="water_capturable"), "+", HelperCall(helper_func=wax_capturable, helper_name="wax_capturable")), "+", HelperCall(helper_func=ash_capturable, helper_name="ash_capturable")), "+", HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")), "+", HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")), "+", HelperCall(helper_func=wood_capturable, helper_name="wood_capturable")), "+", HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable")), "+", HelperCall(helper_func=sand_capturable, helper_name="sand_capturable")), "+", HelperCall(helper_func=metal_capturable, helper_name="metal_capturable")), "+", HelperCall(helper_func=lightning_capturable, helper_name="lightning_capturable")), ">=", 10)
+        Compare(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(HelperCall(helper_func=water_capturable, helper_name="water_capturable"), "+", HelperCall(helper_func=wax_capturable, helper_name="wax_capturable")), "+", HelperCall(helper_func=ash_capturable, helper_name="ash_capturable")), "+", HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")), "+", HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")), "+", HelperCall(helper_func=wood_capturable, helper_name="wood_capturable")), "+", HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable")), "+", HelperCall(helper_func=sand_capturable, helper_name="sand_capturable")), "+", HelperCall(helper_func=metal_capturable, helper_name="metal_capturable")), "+", HelperCall(helper_func=lightning_capturable, helper_name="lightning_capturable")), ">=", OptionValue('ixupi_captures_needed'))
     )
 
     world.set_rule(
@@ -181,7 +181,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Beth's Body From Generator", player),
-        And(And(CanReachRegion('Theater'), Has('Viewed Norse Stone')), HelperCall(helper_func=beths_body_available, helper_name="beths_body_available"))
+        And(Conditional(test=OptionValue('puzzle_hints_required'), if_true=And(CanReachRegion('Theater'), Has('Viewed Norse Stone')), if_false=True_()), HelperCall(helper_func=beths_body_available, helper_name="beths_body_available"))
     )
 
     world.set_rule(
@@ -201,7 +201,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player),
-        CanReachRegion('Bedroom')
+        Conditional(test=OptionValue('puzzle_hints_required'), if_true=CanReachRegion('Bedroom'), if_false=True_())
     )
 
     world.set_rule(
@@ -336,7 +336,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Guillotine From Torture", player),
-        And(Has('Viewed Egyptian Hieroglyphics Explained', 1), Has('Viewed Page 17'))
+        And(Conditional(test=OptionValue('puzzle_hints_required'), if_true=Has('Viewed Egyptian Hieroglyphics Explained', 1), if_false=True_()), Has('Viewed Page 17'))
     )
 
     world.set_rule(
@@ -396,7 +396,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jukebox", player),
-        And(CanReachRegion('Anansi'), CanReachRegion('Clock Tower'))
+        And(Conditional(test=OptionValue('puzzle_hints_required'), if_true=CanReachRegion('Anansi'), if_false=True_()), CanReachRegion('Clock Tower'))
     )
 
     world.set_rule(

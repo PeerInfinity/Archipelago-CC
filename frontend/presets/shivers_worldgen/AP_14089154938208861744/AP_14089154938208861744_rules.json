@@ -897,7 +897,9 @@
                   }
                 },
                 "op": ">=",
-                "right": 10
+                "right": {
+                  "rule": "OptionValue"
+                }
               }
             }
           }
@@ -1176,20 +1178,36 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
+                      "rule": "OptionValue"
+                    },
+                    "if_true": {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "CanReachRegion",
+                          "args": {
+                            "region_name": "Theater"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Viewed Norse Stone"
+                          }
+                        }
+                      ]
+                    },
+                    "if_false": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
                   "rule": "beths_body_available",
                   "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Theater"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Viewed Norse Stone"
-                  }
                 }
               ]
             }
@@ -1376,9 +1394,20 @@
             "name": "To Clock Chains From Clock Tower Staircase",
             "connected_region": "Clock Chains",
             "access_rule": {
-              "rule": "CanReachRegion",
+              "rule": "Conditional",
               "args": {
-                "region_name": "Bedroom"
+                "test": {
+                  "rule": "OptionValue"
+                },
+                "if_true": {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bedroom"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                }
               }
             }
           }
@@ -1494,9 +1523,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "Conditional",
                   "args": {
-                    "region_name": "Anansi"
+                    "test": {
+                      "rule": "OptionValue"
+                    },
+                    "if_true": {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Anansi"
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_"
+                    }
                   }
                 },
                 {
@@ -2965,13 +3005,32 @@
             "name": "To Guillotine From Torture",
             "connected_region": "Guillotine",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Viewed Egyptian Hieroglyphics Explained",
-                  "Viewed Page 17"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
+                      "rule": "OptionValue"
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Viewed Egyptian Hieroglyphics Explained"
+                      }
+                    },
+                    "if_false": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Viewed Page 17"
+                  }
+                }
+              ]
             }
           }
         ],

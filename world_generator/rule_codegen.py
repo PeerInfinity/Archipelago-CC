@@ -960,12 +960,11 @@ class RuleCodeGenerator:
             return self._convert_setting_value(setting_rule)
 
         if rb_rule == 'OptionValue':
-            # Convert Rule Builder format OptionValue
-            option_rule = {
-                'type': 'option_value',
-                'option': args.get('option', '')
-            }
-            return self._expr_option_value(option_rule)
+            # Convert Rule Builder format OptionValue to OptionValue Rule
+            # This allows runtime evaluation of options in set_rules context
+            option_name = args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         if rb_rule == 'WorldAttribute':
             # Convert Rule Builder format WorldAttribute
@@ -1953,17 +1952,10 @@ class RuleCodeGenerator:
             return '0'
 
         if rb_rule == 'OptionValue':
-            # Handle OptionValue in Compare operand - preserve numeric value
-            option = rb_args.get('option', '')
-            if option in self.settings:
-                value = self.settings[option]
-                if isinstance(value, (int, float)):
-                    return repr(value)
-                if isinstance(value, bool):
-                    self.required_imports.add('True_' if value else 'False_')
-                    return 'True_()' if value else 'False_()'
-                return repr(value)
-            return '0'
+            # Handle OptionValue in Compare operand - use OptionValue rule for runtime evaluation
+            option_name = rb_args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         if rb_rule == 'WorldAttribute':
             # Handle WorldAttribute in Compare operand - preserve value
@@ -2116,12 +2108,9 @@ class RuleCodeGenerator:
         # Handle Rule Builder format OptionValue in arithmetic operand
         if rb_rule == 'OptionValue':
             rb_args = operand.get('args', {})
-            option = rb_args.get('option', '')
-            if option in self.settings:
-                value = self.settings[option]
-                if isinstance(value, (int, float)):
-                    return repr(value)
-            return '0'
+            option_name = rb_args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         # Handle Rule Builder format WorldAttribute in arithmetic operand
         if rb_rule == 'WorldAttribute':
@@ -4029,30 +4018,17 @@ class RuleCodeGenerator:
             # Option-filtered rule - just return the if_true branch
             return self._convert_rule(if_true)
 
-        # Check if test is an OptionValue - resolve at generation time
-        # OptionValue rules can't be evaluated at rule-setting time because
-        # 'state' is not available in the set_rules function scope
+        # Check if test is an OptionValue - generate OptionValue rule for runtime evaluation
         test_rb_rule = test.get('rule', '') if isinstance(test, dict) else ''
         test_type = test.get('type', '') if isinstance(test, dict) else ''
         if test_rb_rule == 'OptionValue' or test_type == 'option_value':
-            # Get the option name
+            # Get the option name and generate OptionValue rule
             test_args = test.get('args', {}) if isinstance(test, dict) else {}
             option_name = test_args.get('option', '') or test.get('option', '')
-            # Look up the option value in settings
-            if option_name in self.settings:
-                option_value = self.settings[option_name]
-                # If option is truthy, return if_true branch
-                # If option is falsy, return if_false branch
-                if option_value:
-                    return self._convert_rule(if_true)
-                else:
-                    return self._convert_rule(if_false)
-            # If option not found in settings, default to if_true (assume enabled)
-            # This matches typical Archipelago behavior where options default to
-            # their most restrictive values for rule generation
-            return self._convert_rule(if_true)
-
-        test_code = self._convert_rule(test)
+            self.required_imports.add('OptionValue')
+            test_code = f"OptionValue('{option_name}')"
+        else:
+            test_code = self._convert_rule(test)
         if_true_code = self._convert_rule(if_true)
         if_false_code = self._convert_rule(if_false)
 

@@ -70,6 +70,7 @@ from .rules import (
     Conditional,
     HelperCall,
     WeightedSum,
+    OptionValue,
 )
 
 from .ast_format import (
@@ -119,6 +120,7 @@ __all__ = [
     'Conditional',
     'HelperCall',
     'WeightedSum',
+    'OptionValue',
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',
