@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-02 18:00:44
+**Generated:** 2026-01-03 04:02:07
 
-**Source Data Created:** 2026-01-02T22:46:58.808386
+**Source Data Created:** 2026-01-03T03:36:28.708628
 
-**Source Data Last Updated:** 2026-01-02T22:46:58.808391
+**Source Data Last Updated:** 2026-01-03T03:36:28.708634
 
 ## Summary
 
 - **Total Games:** 73
 - **Passed:** 73 (100.0%)
 - **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Games with Intermittent Failures:** 3
+- **Total Intermittent Failures:** 3
 
 ### Generic Exporter/Logic Statistics
 
@@ -82,7 +82,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 28.7KB | 87.5KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 12.4KB | ✅ |
@@ -103,6 +103,17 @@
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 3.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Choo-Choo Charles | 1 | 2026-01-03 03:31 | Previously failed, now passing |
+| Donkey Kong Country 3 | 1 | 2026-01-03 03:30 | Previously failed, now passing |
+| Kirby's Dream Land 3 | 1 | 2026-01-03 03:36 | Previously failed, now passing |
+
 
 ## Notes
 

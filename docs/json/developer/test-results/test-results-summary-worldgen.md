@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-02 18:00:44
+**Generated:** 2026-01-03 04:02:07
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -45,8 +45,8 @@ Of the 61 templates passing all 4 tests:
 **Combined Custom Code Size:**
 
 - **Total Exporter Code:** 146.3KB
-- **Total Game Logic Code:** 87.4KB
-- **Combined Total:** 233.7KB
+- **Total Game Logic Code:** 87.5KB
+- **Combined Total:** 233.8KB
 
 ## Test Results
 
@@ -97,7 +97,7 @@ Of the 61 templates passing all 4 tests:
 | Saving Princess WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.9KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 150.0KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 275.2KB |
-| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 28.7KB | 87.4KB | 1608.7KB |
+| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 28.7KB | 87.5KB | 1608.7KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.2KB | ✅ | 183.1KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.4KB | ✅ | 100.6KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 880.2KB |
@@ -161,7 +161,7 @@ Of the 61 templates passing all 4 tests:
 
 | Rank | Game Name | GameLogic Size |
 |------|-----------|----------------|
-| 1 | Starcraft 2 WorldGen | 87.4KB |
+| 1 | Starcraft 2 WorldGen | 87.5KB |
 
 ## Excluded Templates
 
