@@ -218,9 +218,10 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # AST_function_call is included because it may reference 'location' or 'entrance'
     # variables that are substituted at generation time via set_context(), and
     # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
-    # WorldAttribute also needs lambda because it generates state.multiworld.worlds[player].attr
-    # which requires 'state' to be defined (only available in lambda context).
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute'):
+    # WorldAttribute and OptionValue also need lambda because they generate
+    # state.multiworld.worlds[player].attr/options.xxx which requires 'state'
+    # to be defined (only available in lambda context).
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'OptionValue'):
         return True
 
     # Recursively check all dict and list values
