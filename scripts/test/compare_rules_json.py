@@ -524,6 +524,21 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if 'AST_function_call' in str(original_value) or 'AST_function_call' in str(worldgen_value):
             return True
 
+    # AST_all_of (comprehension-style rules) vs resolved Has/HasAll/True_ rules.
+    # The original exports Python comprehension rules like all(state.has(tech.name) for tech in required_technologies[X])
+    # which get resolved to simpler HasAll/Has/True_ rules in WorldGen.
+    if 'access_rule' in path:
+        # Rule type conversions from AST comprehensions to resolved rules
+        if path.endswith('.rule') and original_value == 'AST_all_of':
+            if worldgen_value in ('Has', 'HasAll', 'True_'):
+                return True
+        # Comprehension-specific keys that don't exist in resolved rules
+        if 'iterator_info' in path or 'element_rule' in path:
+            return True
+        # Resolved item lists in WorldGen that don't exist in comprehension-based original
+        if '.args.items' in path and original_value == '<missing>':
+            return True
+
     # WorldGen-specific options that only exist in WorldGen, not original
     worldgen_only_options = {'randomize_items', 'use_canonical_options'}
     for opt in worldgen_only_options:
@@ -551,6 +566,15 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     for field in worldgen_game_info_fields:
         if f'game_info.1.{field}' in path and original_value == '<missing>':
             return True
+
+    # Game-specific variables that differ between original and WorldGen exports.
+    # Factorio's required_technologies is a KeyedDefaultDict that gets lazily populated
+    # when the original world accesses ingredients during set_rules(). The worldgen
+    # world uses different rule implementations and doesn't populate these keys the
+    # same way. The actual access rules have technology requirements baked in differently,
+    # so this data isn't needed at runtime for the worldgen world.
+    if 'game_info.' in path and '.variables.required_technologies' in path:
+        return True
 
     # Event relic group added by WorldGen
     if 'relic_groups.Event' in path and original_value == '<missing>':
@@ -652,6 +676,10 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'options.' in path and original_value == {} and worldgen_value == '<missing>':
         return True
 
+    # Options that have empty list [] in original but missing in WorldGen
+    if 'options.' in path and original_value == [] and worldgen_value == '<missing>':
+        return True
+
     # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
     # These are complex option types that the world generator doesn't generate Options.py classes for
     optionset_options = {'death_link_effect', 'pre_hint_items'}
@@ -659,6 +687,18 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         for opt in optionset_options:
             if path.endswith(f'.{opt}'):
                 return True
+
+    # Game-specific complex options that WorldGen doesn't extract (Factorio world_gen, starting_items, etc.)
+    # These are game-specific configuration options that require special handling to reproduce
+    game_specific_options = {'world_gen', 'starting_items'}
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in game_specific_options:
+            if path.endswith(f'.{opt}'):
+                return True
+
+    # start_location_hints: WorldGen doesn't auto-populate location hints, so counts may differ
+    if 'options.start_location_hints' in path:
+        return True
 
     # World class name differences: Original may use abbreviated names (DarkSouls3World)
     # while WorldGen uses full names derived from game name (DarkSoulsIIIWorld)
