@@ -780,6 +780,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             return True
         if 'helpers.' in path and attr in str(original_value):
             return True
+    # Helpers that use world attributes to check items/counts dynamically.
+    # WorldGen resolves these to literal values at generation time.
+    # has_all_epitaph_pieces: uses self.world.required_epitaph_pieces_name/count
+    if 'helpers.' in path and 'has_all_epitaph_pieces' in path:
+        return True
+
     # Also catch the type/object/value differences for world attribute access patterns
     if 'helpers.' in path and any(h in path for h in ['can_use_hat', 'get_hat_cost',
                                                        'has_non_progressive_items',
