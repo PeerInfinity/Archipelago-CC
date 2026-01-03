@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -45,6 +45,7 @@ class AvailableTrapTypes(Removed):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class GradeNeeded(Choice):
     """Option for Grade Needed."""
@@ -107,6 +108,7 @@ class StartingSongCount(Range):
 class StreamerModeEnabled(Toggle):
     """Option for Streamer Mode Only Songs."""
     display_name = "Streamer Mode Only Songs"
+    default = False
 
 class TrapCountPercentage(Range):
     """Option for Trap Percentage."""

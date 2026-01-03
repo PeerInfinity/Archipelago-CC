@@ -226,6 +226,7 @@ class OSRSWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'OSRSWorld'
         self.qp_items = {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}
         self.region_name_to_data = {'Menu': 'Menu', 'Lumbridge': 'Lumbridge', 'Lumbridge Swamp': 'Lumbridge Swamp', 'HAM Hideout': 'HAM Hideout', 'Lumbridge Farms West': 'Lumbridge Farms West', 'Lumbridge Farms East': 'Lumbridge Farms East', "Sourhog's Lair": "Sourhog's Lair", 'South of Varrock': 'South of Varrock', 'Lumberyard': 'Lumberyard', 'Central Varrock': 'Central Varrock', 'Varrock Palace': 'Varrock Palace', 'West Varrock': 'West Varrock', "Cook's Guild": "Cook's Guild", 'Edgeville': 'Edgeville', 'Barbarian Village': 'Barbarian Village', 'Draynor Manor Outskirts': 'Draynor Manor Outskirts', 'Draynor Manor': 'Draynor Manor', 'Falador East Outskirts': 'Falador East Outskirts', 'Dwarven Mountain Pass': 'Dwarven Mountain Pass', 'Dwarven Mines': 'Dwarven Mines', 'Goblin Village': 'Goblin Village', 'Ice Mountain': 'Ice Mountain', 'Camdozaal': 'Camdozaal', 'Monastery': 'Monastery', 'Falador': 'Falador', 'Falador Farms': 'Falador Farms', 'Port Sarim': 'Port Sarim', 'Karamja Docks': 'Karamja Docks', 'Mudskipper Point': 'Mudskipper Point', 'Karamja': 'Karamja', 'Crandor': 'Crandor', 'Rimmington': 'Rimmington', 'Crafting Guild Peninsula': 'Crafting Guild Peninsula', 'Crafting Guild Outskirts': 'Crafting Guild Outskirts', 'Crafting Guild': 'Crafting Guild', 'Draynor Village': 'Draynor Village', 'Wizard Tower': 'Wizard Tower', 'Corsair Cove': 'Corsair Cove', 'Al Kharid': 'Al Kharid', 'Citharede Abbey': 'Citharede Abbey', 'Wilderness': 'Wilderness', 'Mind Runes': 'Mind Runes', 'Spinning Wheel': 'Spinning Wheel', 'Sheep': 'Sheep', 'Furnace': 'Furnace', 'Chisel': 'Chisel', 'Bronze Ores': 'Bronze Ores', 'Iron Ore': 'Iron Ore', 'Silver Ore': 'Silver Ore', 'Coal Ore': 'Coal Ore', 'Gold Ore': 'Gold Ore', 'Bronze Anvil': 'Bronze Anvil', 'Anvil': 'Anvil', 'Shrimp Spot': 'Shrimp Spot', 'Fly Fishing Spot': 'Fly Fishing Spot', 'Lobster Spot': 'Lobster Spot', 'Redberry Bush': 'Redberry Bush', 'Bowl': 'Bowl', 'Meat': 'Meat', 'Cooking Apple': 'Cooking Apple', 'Pie Dish': 'Pie Dish', 'Cake Tin': 'Cake Tin', 'Wheat': 'Wheat', 'Windmill': 'Windmill', 'Egg': 'Egg', 'Milk': 'Milk', 'Cheese': 'Cheese', 'Tomato': 'Tomato', 'Oak Tree': 'Oak Tree', 'Willow Tree': 'Willow Tree', 'Canoe Tree': 'Canoe Tree', 'Goblin': 'Goblin', 'Barbarian': 'Barbarian', 'Zombie': 'Zombie', 'Guard': 'Guard', 'Hill Giant': 'Hill Giant', 'Deadly Red Spider': 'Deadly Red Spider', 'Moss Giant': 'Moss Giant', 'Ice Giant': 'Ice Giant', 'Lesser Demon': 'Lesser Demon', 'Rune Essence': 'Rune Essence', 'Crafting Moulds': 'Crafting Moulds', 'Nature Runes': 'Nature Runes', 'Law Runes': 'Law Runes', 'Imps': 'Imps', 'Clay Ore': 'Clay Ore', 'Onion': 'Onion', 'Potato': 'Potato', 'Big Bones': 'Big Bones', 'Duck': 'Duck', 'Makeover': 'Makeover', 'Limpwurt Root': 'Limpwurt Root', 'Bar': 'Bar', 'Haystack': 'Haystack', 'Red Spider Eggs': 'Red Spider Eggs'}
         self.location_name_to_data = {"Quest: Cook's Assistant": "Quest: Cook's Assistant", "Points: Cook's Assistant": "Points: Cook's Assistant", 'Quest: Demon Slayer': 'Quest: Demon Slayer', 'Points: Demon Slayer': 'Points: Demon Slayer', 'Quest: The Restless Ghost': 'Quest: The Restless Ghost', 'Points: The Restless Ghost': 'Points: The Restless Ghost', 'Quest: Romeo & Juliet': 'Quest: Romeo & Juliet', 'Points: Romeo & Juliet': 'Points: Romeo & Juliet', 'Quest: Sheep Shearer': 'Quest: Sheep Shearer', 'Points: Sheep Shearer': 'Points: Sheep Shearer', 'Quest: Shield of Arrav': 'Quest: Shield of Arrav', 'Points: Shield of Arrav': 'Points: Shield of Arrav', 'Quest: Ernest the Chicken': 'Quest: Ernest the Chicken', 'Points: Ernest the Chicken': 'Points: Ernest the Chicken', 'Quest: Vampyre Slayer': 'Quest: Vampyre Slayer', 'Points: Vampyre Slayer': 'Points: Vampyre Slayer', 'Quest: Imp Catcher': 'Quest: Imp Catcher', 'Points: Imp Catcher': 'Points: Imp Catcher', 'Quest: Prince Ali Rescue': 'Quest: Prince Ali Rescue', 'Points: Prince Ali Rescue': 'Points: Prince Ali Rescue', "Quest: Doric's Quest": "Quest: Doric's Quest", "Points: Doric's Quest": "Points: Doric's Quest", "Quest: Black Knights' Fortress": "Quest: Black Knights' Fortress", "Points: Black Knights' Fortress": "Points: Black Knights' Fortress", "Quest: Witch's Potion": "Quest: Witch's Potion", "Points: Witch's Potion": "Points: Witch's Potion", "Quest: The Knight's Sword": "Quest: The Knight's Sword", "Points: The Knight's Sword": "Points: The Knight's Sword", 'Quest: Goblin Diplomacy': 'Quest: Goblin Diplomacy', 'Points: Goblin Diplomacy': 'Points: Goblin Diplomacy', "Quest: Pirate's Treasure": "Quest: Pirate's Treasure", "Points: Pirate's Treasure": "Points: Pirate's Treasure", 'Quest: Rune Mysteries': 'Quest: Rune Mysteries', 'Points: Rune Mysteries': 'Points: Rune Mysteries', 'Quest: Misthalin Mystery': 'Quest: Misthalin Mystery', 'Points: Misthalin Mystery': 'Points: Misthalin Mystery', 'Quest: The Corsair Curse': 'Quest: The Corsair Curse', 'Points: The Corsair Curse': 'Points: The Corsair Curse', 'Quest: X Marks the Spot': 'Quest: X Marks the Spot', 'Points: X Marks the Spot': 'Points: X Marks the Spot', 'Quest: Below Ice Mountain': 'Quest: Below Ice Mountain', 'Points: Below Ice Mountain': 'Points: Below Ice Mountain', 'Quest: Dragon Slayer': 'Quest: Dragon Slayer', 'Reach a Level 10': 'Reach a Level 10', 'Have the Apothecary Make a Strength Potion': 'Have the Apothecary Make a Strength Potion', 'Reach a Level 20': 'Reach a Level 20', 'Get Sent to Jail in Shantay Pass': 'Get Sent to Jail in Shantay Pass', 'Total XP 125,000': 'Total XP 125,000', 'Total Level 150': 'Total Level 150', 'Get Prompted to Buy Membership': 'Get Prompted to Buy Membership', 'Total Level 50': 'Total Level 50', 'Open an Ornate Lockbox': 'Open an Ornate Lockbox', 'Equip an Orange Cape': 'Equip an Orange Cape', 'Smelt an Iron Bar': 'Smelt an Iron Bar', 'Kill a Hill Giant': 'Kill a Hill Giant', 'Burn some Willow Logs': 'Burn some Willow Logs', 'Kill a Duck': 'Kill a Duck', 'Mine Silver': 'Mine Silver', 'Burn a Log': 'Burn a Log', 'Kill a Giant Frog': 'Kill a Giant Frog', 'Cast Bones To Bananas': 'Cast Bones To Bananas', 'Catch a Lobster': 'Catch a Lobster', 'Burn some Oak Logs': 'Burn some Oak Logs', 'Bake a Cake': 'Bake a Cake', 'Kill a Barbarian': 'Kill a Barbarian', 'Find a Needle in a Haystack': 'Find a Needle in a Haystack', 'Bake a Redberry Pie': 'Bake a Redberry Pie', 'Cut a Diamond': 'Cut a Diamond', 'Cut a Ruby': 'Cut a Ruby', 'Catch a Trout': 'Catch a Trout', 'Combat Level 15': 'Combat Level 15', 'Smelt a Gold Bar': 'Smelt a Gold Bar', "Enter the Cook's Guild": "Enter the Cook's Guild", 'Total XP 25,000': 'Total XP 25,000', 'Activate the "Protect Item" Prayer': 'Activate the "Protect Item" Prayer', 'Kill a Zombie': 'Kill a Zombie'}
@@ -245,25 +246,24 @@ class OSRSWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -395,8 +395,6 @@ class OSRSWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = OldSchoolRunescapeWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

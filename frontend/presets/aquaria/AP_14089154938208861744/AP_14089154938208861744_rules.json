@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "AquariaWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -9149,6 +9146,7 @@
   "world": {
     "1": {
       "game": "Aquaria",
+      "world_class_name": "AquariaWorld",
       "options": {
         "accessibility": 0,
         "aquarian_translation": false,
@@ -9619,15 +9617,7 @@
       "world_directory": "aquaria"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "AquariaWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

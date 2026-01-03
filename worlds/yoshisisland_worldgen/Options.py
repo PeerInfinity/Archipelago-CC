@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class AddSecretlens(Toggle):
     """Option for Add Secret Lens."""
     display_name = "Add Secret Lens"
+    default = False
 
 class BabyMarioSound(Choice):
     """Option for Mario Sound Effect."""
@@ -42,6 +43,7 @@ class BabyMarioSound(Choice):
 class BossShuffle(Toggle):
     """Option for Boss Shuffle."""
     display_name = "Boss Shuffle"
+    default = False
 
 class BowserDoorMode(Choice):
     """Option for Bowser's Castle Doors."""
@@ -71,14 +73,17 @@ class CastleOpenCondition(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DisableAutoscroll(Toggle):
     """Option for Disable Autoscrolling."""
     display_name = "Disable Autoscrolling"
+    default = False
 
 class ExtrasEnabled(Toggle):
     """Option for Include Extra Stages."""
     display_name = "Include Extra Stages"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -99,6 +104,7 @@ class HiddenObjectVisibility(Choice):
 class ItemLogic(Toggle):
     """Option for Consumable Logic."""
     display_name = "Consumable Logic"
+    default = False
 
 class LevelShuffle(Choice):
     """Option for Level Shuffle."""
@@ -134,6 +140,7 @@ class MinigameChecks(Choice):
 class ShuffleMidrings(Toggle):
     """Option for Shuffle Middle Rings."""
     display_name = "Shuffle Middle Rings"
+    default = False
 
 class SoftlockPrevention(DefaultOnToggle):
     """Option for Softlock Prevention Code."""
@@ -142,10 +149,12 @@ class SoftlockPrevention(DefaultOnToggle):
 class SplitBonus(Toggle):
     """Option for Split Bonus Games."""
     display_name = "Split Bonus Games"
+    default = False
 
 class SplitExtras(Toggle):
     """Option for Split Extra Stages."""
     display_name = "Split Extra Stages"
+    default = False
 
 class StageLogic(Choice):
     """Option for Stage Logic."""
@@ -183,6 +192,7 @@ class TrapPercent(Range):
 class TrapsEnabled(Toggle):
     """Option for Traps Enabled."""
     display_name = "Traps Enabled"
+    default = False
 
 class YoshiColors(Choice):
     """Option for Yoshi Colors."""

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "TimespinnerWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -74,13 +71,20 @@
             "name": "Lake desolation -> Lower lake desolation",
             "connected_region": "Lower lake desolation",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Talaria Attachment",
-                  "Timestop"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_timestop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Talaria Attachment"
+                  }
+                }
+              ]
             }
           },
           {
@@ -90,15 +94,14 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "has_fire",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Upper Lake Serene"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -108,10 +111,9 @@
             "name": "Lake desolation -> Skeleton Shaft",
             "connected_region": "Skeleton Shaft",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Doublejump"
-              }
+              "rule": "has_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -121,12 +123,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -202,15 +202,14 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "has_fire",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Upper Lake Serene"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -287,12 +286,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -440,12 +437,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -502,12 +497,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -539,15 +532,14 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "has_fire",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Upper Lake Serene"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -585,13 +577,20 @@
             "name": "Library -> Library top",
             "connected_region": "Library top",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Doublejump",
-                  "Talaria Attachment"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Talaria Attachment"
+                  }
+                }
+              ]
             }
           },
           {
@@ -601,12 +600,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -637,12 +634,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -718,12 +713,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -761,12 +754,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -804,12 +795,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -1071,12 +1060,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -1106,12 +1093,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -1137,13 +1122,20 @@
             "name": "Varndagroth tower left -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Elevator Keycard",
-                  "Keycard_B"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_keycard_B",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Elevator Keycard"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1196,12 +1188,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -1238,12 +1228,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -1325,13 +1313,20 @@
             "name": "Varndagroth Towers (Right): Elevator card chest",
             "id": 1337038,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Doublejump",
-                  "Elevator Keycard"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Elevator Keycard"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Max HP",
@@ -1345,13 +1340,20 @@
             "name": "Varndagroth Towers (Right): Air vents right chest",
             "id": 1337039,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Doublejump",
-                  "Elevator Keycard"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Elevator Keycard"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Max Sand",
@@ -1365,13 +1367,20 @@
             "name": "Varndagroth Towers (Right): Air vents left chest",
             "id": 1337040,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Doublejump",
-                  "Elevator Keycard"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Elevator Keycard"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Plasma Orb",
@@ -1393,12 +1402,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -1434,13 +1441,20 @@
             "name": "Varndagroth tower right (lower) -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Elevator Keycard",
-                  "Keycard_B"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_keycard_B",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Elevator Keycard"
+                  }
+                }
+              ]
             }
           },
           {
@@ -1450,12 +1464,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "prism_break",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "prism_break"
+                  }
                 },
                 "if_true": {
                   "rule": "HasAll",
@@ -1489,12 +1501,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1563,12 +1573,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "specific_keycards",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "specific_keycards"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -1619,13 +1627,20 @@
             "name": "Varndagroth Towers (Right): Medbay terminal (Bleakness Research)",
             "id": 1337164,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Keycard_B",
-                  "Tablet"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_keycard_B",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tablet"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Max Sand",
@@ -1667,12 +1682,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1776,12 +1789,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "prism_break",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "prism_break"
+                  }
                 },
                 "if_true": {
                   "rule": "HasAll",
@@ -1815,13 +1826,8 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "kill_all_3_bosses",
-                    "inferred": true,
-                    "description": "Requires ability to kill all 3 bosses",
-                    "_original_ast_type": "capability"
-                  },
+                  "rule": "can_kill_all_3_bosses",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
@@ -1853,13 +1859,20 @@
             "name": "Military Fortress: Bomber chest",
             "id": 1337058,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Doublejump_Of_Npc",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_doublejump_of_npc",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Timespinner Wheel"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Empire Orb",
@@ -1899,10 +1912,9 @@
             "name": "Military Fortress (hangar) -> Lab Entrance",
             "connected_region": "Lab Entrance",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Doublejump"
-              }
+              "rule": "has_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1953,13 +1965,19 @@
             "name": "Military Fortress: B door chest 2",
             "id": 1337063,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Doublejump",
-                  "Keycard_B"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_keycard_B",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Icicle Ring",
@@ -1973,13 +1991,19 @@
             "name": "Military Fortress: B door chest 1",
             "id": 1337064,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Doublejump",
-                  "Keycard_B"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_keycard_B",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Bombardment",
@@ -1993,13 +2017,19 @@
             "name": "Military Fortress: Pedestal",
             "id": 1337065,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Doublejump_Of_Npc",
-                  "Forwarddash_Doublejump"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump_of_npc",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_forwarddash_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Dark Flames",
@@ -2018,10 +2048,9 @@
             "name": "Lab Entrance -> Main Lab",
             "connected_region": "Main Lab",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Keycard_B"
-              }
+              "rule": "has_keycard_B",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -2048,10 +2077,9 @@
             "name": "Main Lab -> Lab Research",
             "connected_region": "Lab Research",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Doublejump_Of_Npc"
-              }
+              "rule": "has_doublejump_of_npc",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -2060,6 +2088,11 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "has_forwarddash_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
                 {
                   "rule": "Or",
                   "children": [
@@ -2082,12 +2115,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Forwarddash_Doublejump"
-                  }
                 }
               ]
             }
@@ -2133,10 +2160,9 @@
             "name": "Lab: Lower trash left",
             "id": 1337068,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Upwarddash"
-              }
+              "rule": "has_upwarddash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Shiny Rock",
@@ -2174,6 +2200,11 @@
               "rule": "Or",
               "children": [
                 {
+                  "rule": "has_doublejump_of_npc",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Not",
                   "args": {
                     "condition": {
@@ -2183,12 +2214,6 @@
                       },
                       "_converted_from_ast": true
                     }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump_Of_Npc"
                   }
                 }
               ]
@@ -2245,14 +2270,25 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "AST_capability",
-                      "args": {
-                        "capability": "teleport_to",
-                        "inferred": true,
-                        "description": "Requires ability to teleport to",
-                        "_original_ast_type": "capability"
-                      },
-                      "_converted_from_ast": true
+                      "rule": "can_teleport_to",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "Time"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "GateDadsTower"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
                     },
                     {
                       "rule": "Not",
@@ -2337,13 +2373,20 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Lab Access Dynamo",
-                      "Upwarddash"
-                    ]
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_upwarddash",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Lab Access Dynamo"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Not",
@@ -2371,10 +2414,9 @@
             "name": "Lab: Spider Hell",
             "id": 1337076,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Keycard_A"
-              }
+              "rule": "has_keycard_A",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Goddess Brooch",
@@ -2452,19 +2494,25 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Doublejump",
-                      "Talaria Attachment"
-                    ]
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_doublejump",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Talaria Attachment"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2522,12 +2570,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -2630,20 +2676,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "break_walls",
-                    "inferred": true,
-                    "description": "Requires ability to break walls",
-                    "_original_ast_type": "capability"
-                  },
+                  "rule": "can_break_walls",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2659,10 +2699,9 @@
             "name": "Emperor's Tower: Courtyard upper chest",
             "id": 1337079,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Upwarddash"
-              }
+              "rule": "has_upwarddash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Empire Crown",
@@ -2707,19 +2746,25 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Doublejump",
-                      "Timespinner Wheel"
-                    ]
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_doublejump",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Timespinner Wheel"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2817,12 +2862,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2868,12 +2911,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2929,19 +2970,25 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Doublejump",
-                      "Talaria Attachment"
-                    ]
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_doublejump",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Talaria Attachment"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2974,12 +3021,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -3114,12 +3159,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3204,13 +3247,20 @@
             "name": "Forest -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Talaria Attachment",
-                  "Timestop"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_timestop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Talaria Attachment"
+                  }
+                }
+              ]
             }
           },
           {
@@ -3227,6 +3277,11 @@
               "rule": "Or",
               "children": [
                 {
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Not",
                   "args": {
                     "condition": {
@@ -3239,12 +3294,9 @@
                   }
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Drawbridge Key",
-                      "Upwarddash"
-                    ]
+                    "item_name": "Drawbridge Key"
                   }
                 }
               ]
@@ -3270,14 +3322,24 @@
             "name": "Forest: Bat jump ledge",
             "id": 1337091,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Doublejump_Of_Npc",
-                  "Fastjump_On_Npc",
-                  "Forwarddash_Doublejump"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump_of_npc",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_fastjump_on_npc",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_forwarddash_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Buckle Hat",
@@ -3294,12 +3356,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -3442,12 +3502,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3588,12 +3646,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -3735,12 +3791,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -3820,12 +3874,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3842,10 +3894,9 @@
             "name": "Caves of Banishment (Maw): Shroom jump room",
             "id": 1337112,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Doublejump"
-              }
+              "rule": "has_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Max Aura",
@@ -3859,13 +3910,8 @@
             "name": "Caves of Banishment (Maw): Secret room",
             "id": 1337113,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "break_walls",
-                "inferred": true,
-                "description": "Requires ability to break walls",
-                "_original_ast_type": "capability"
-              },
+              "rule": "can_break_walls",
+              "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
             "item": {
@@ -3908,10 +3954,9 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 1",
             "id": 1337116,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Forwarddash_Doublejump"
-              }
+              "rule": "has_forwarddash_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hi-Potion",
@@ -3925,10 +3970,9 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 2",
             "id": 1337117,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Forwarddash_Doublejump"
-              }
+              "rule": "has_forwarddash_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Galaxy Stone",
@@ -3942,10 +3986,9 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 3",
             "id": 1337118,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Forwarddash_Doublejump"
-              }
+              "rule": "has_forwarddash_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Max HP",
@@ -3959,10 +4002,9 @@
             "name": "Caves of Banishment (Maw): Jackpot room chest 4",
             "id": 1337119,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Forwarddash_Doublejump"
-              }
+              "rule": "has_forwarddash_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Pendulum",
@@ -3995,10 +4037,9 @@
             "name": "Caves of Banishment (Maw) -> Caves of Banishment (upper)",
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Doublejump"
-              }
+              "rule": "has_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -4031,12 +4072,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -4053,10 +4092,9 @@
             "name": "Caves of Banishment (Maw): Last chance before Maw",
             "id": 1337121,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Doublejump"
-              }
+              "rule": "has_doublejump",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Timespinner Gear 1",
@@ -4266,12 +4304,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -4288,13 +4324,20 @@
             "name": "Castle Ramparts: Bomber chest",
             "id": 1337128,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Timespinner Wheel",
-                  "Upwarddash"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Timespinner Wheel"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Berry Pick-Mi-Up+",
@@ -4308,13 +4351,20 @@
             "name": "Castle Ramparts: Freeze the engineer",
             "id": 1337129,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Talaria Attachment",
-                  "Timestop"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_timestop",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Talaria Attachment"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Empress Robe",
@@ -4392,8 +4442,18 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Or",
                   "children": [
+                    {
+                      "rule": "has_pink",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
                     {
                       "rule": "Not",
                       "args": {
@@ -4405,20 +4465,8 @@
                           "_converted_from_ast": true
                         }
                       }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pink"
-                      }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
                 }
               ]
             }
@@ -4430,12 +4478,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -4533,13 +4579,19 @@
             "name": "Castle Keep: Royal guard tiny room",
             "id": 1337141,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Doublejump",
-                  "Fastjump_On_Npc"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_fastjump_on_npc",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Max Sand",
@@ -4562,12 +4614,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "eye_spy",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "eye_spy"
+                  }
                 },
                 "if_true": {
                   "rule": "Has",
@@ -4662,13 +4712,20 @@
             "name": "Royal towers (lower) -> Royal towers",
             "connected_region": "Royal towers",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Forwarddash_Doublejump",
-                  "Timespinner Wheel"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_forwarddash_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Timespinner Wheel"
+                  }
+                }
+              ]
             }
           },
           {
@@ -4678,12 +4735,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -4724,20 +4779,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "break_walls",
-                    "inferred": true,
-                    "description": "Requires ability to break walls",
-                    "_original_ast_type": "capability"
-                  },
+                  "rule": "can_break_walls",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4809,10 +4858,9 @@
             "name": "Royal Towers: Past bottom struggle juggle",
             "id": 1337145,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Doublejump_Of_Npc"
-              }
+              "rule": "has_doublejump_of_npc",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Eternal Brooch",
@@ -4829,19 +4877,25 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Doublejump",
-                      "Timespinner Wheel"
-                    ]
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_doublejump",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Timespinner Wheel"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4888,19 +4942,25 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Doublejump",
-                      "Timespinner Wheel"
-                    ]
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_doublejump",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Timespinner Wheel"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Upwarddash"
-                  }
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5070,12 +5130,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -5118,10 +5176,9 @@
             "name": "Ancient Pyramid (left) -> Ancient Pyramid (right)",
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Upwarddash"
-              }
+              "rule": "has_upwarddash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -5131,12 +5188,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -5167,13 +5222,8 @@
             "name": "Ancient Pyramid: Pit secret room",
             "id": 1337248,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "break_walls",
-                "inferred": true,
-                "description": "Requires ability to break walls",
-                "_original_ast_type": "capability"
-              },
+              "rule": "can_break_walls",
+              "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
             "item": {
@@ -5191,20 +5241,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "break_walls",
-                    "inferred": true,
-                    "description": "Requires ability to break walls",
-                    "_original_ast_type": "capability"
-                  },
+                  "rule": "can_break_walls",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Doublejump"
-                  }
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5225,10 +5269,9 @@
             "name": "Ancient Pyramid (right) -> Ancient Pyramid (left)",
             "connected_region": "Ancient Pyramid (left)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Upwarddash"
-              }
+              "rule": "has_upwarddash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -5238,12 +5281,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "unchained_keys",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "unchained_keys"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -5310,238 +5351,425 @@
             "name": "Space time continuum -> Lake desolation",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateLakeDesolation"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Lower lake desolation",
             "connected_region": "Lower lake desolation",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateKittyBoss"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Library",
             "connected_region": "Library",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateLeftLibrary"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateMilitaryGate"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Skeleton Shaft",
             "connected_region": "Skeleton Shaft",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateSealedCaves"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateSealedSirensCave"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Sealed Caves (Xarion)",
             "connected_region": "Sealed Caves (Xarion)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateXarion"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Upper Lake Serene",
             "connected_region": "Upper Lake Serene",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateLakeSereneLeft"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateLakeSereneRight"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Refugee Camp",
             "connected_region": "Refugee Camp",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateAccessToPast"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateCastleRamparts"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Castle Keep",
             "connected_region": "Castle Keep",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateCastleKeep"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Royal towers (lower)",
             "connected_region": "Royal towers (lower)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateRoyalTowers"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Caves of Banishment (Maw)",
             "connected_region": "Caves of Banishment (Maw)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateMaw"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Caves of Banishment (upper)",
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Past"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateCavesOfBanishment"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> Military Fortress (hangar)",
             "connected_region": "Military Fortress (hangar)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateLabEntrance"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Space time continuum -> The lab (upper)",
             "connected_region": "The lab (upper)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Present"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateDadsTower"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
@@ -5575,24 +5803,46 @@
                   ]
                 },
                 {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "teleport_to",
-                    "inferred": true,
-                    "description": "Requires ability to teleport to",
-                    "_original_ast_type": "capability"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "can_teleport_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Time"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "GateGyre"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "AST_capability",
-                  "args": {
-                    "capability": "teleport_to",
-                    "inferred": true,
-                    "description": "Requires ability to teleport to",
-                    "_original_ast_type": "capability"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "can_teleport_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Time"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "GateLeftPyramid"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 }
               ]
             }
@@ -5601,14 +5851,25 @@
             "name": "Space time continuum -> Ancient Pyramid (right)",
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "teleport_to",
-                "inferred": true,
-                "description": "Requires ability to teleport to",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_teleport_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Time"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "GateRightPyramid"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -8281,6 +8542,7 @@
   "world": {
     "1": {
       "game": "Timespinner",
+      "world_class_name": "TimespinnerWorld",
       "options": {
         "BossHealing": true,
         "BossRando": 0,
@@ -9613,15 +9875,7 @@
       "world_directory": "timespinner"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "TimespinnerWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -9630,8 +9884,8 @@
       "can_break_walls": {
         "type": "conditional",
         "test": {
-          "type": "setting_value",
-          "setting": "eye_spy"
+          "type": "option_value",
+          "option": "eye_spy"
         },
         "if_true": {
           "type": "item_check",
@@ -9645,8 +9899,8 @@
       "can_kill_all_3_bosses": {
         "type": "conditional",
         "test": {
-          "type": "setting_value",
-          "setting": "prism_break"
+          "type": "option_value",
+          "option": "prism_break"
         },
         "if_true": {
           "type": "state_method",
@@ -9705,15 +9959,15 @@
           "test": {
             "type": "not",
             "condition": {
-              "type": "setting_value",
-              "setting": "unchained_keys"
+              "type": "option_value",
+              "option": "unchained_keys"
             }
           },
           "if_true": {
             "type": "compare",
             "left": {
-              "type": "setting_value",
-              "setting": "pyramid_keys_unlock"
+              "type": "option_value",
+              "option": "pyramid_keys_unlock"
             },
             "op": "==",
             "right": {
@@ -9741,8 +9995,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "setting_value",
-                    "setting": "present_keys_unlock"
+                    "type": "option_value",
+                    "option": "present_keys_unlock"
                   },
                   "op": "==",
                   "right": {
@@ -9776,8 +10030,8 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "setting_value",
-                      "setting": "past_keys_unlock"
+                      "type": "option_value",
+                      "option": "past_keys_unlock"
                     },
                     "op": "==",
                     "right": {
@@ -9811,8 +10065,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "setting_value",
-                        "setting": "time_keys_unlock"
+                        "type": "option_value",
+                        "option": "time_keys_unlock"
                       },
                       "op": "==",
                       "right": {
@@ -9853,10 +10107,8 @@
         "type": "or",
         "conditions": [
           {
-            "type": "item_check",
-            "item": "Upwarddash",
-            "inferred": true,
-            "description": "Requires having Upwarddash"
+            "type": "helper",
+            "name": "has_upwarddash"
           },
           {
             "type": "and",
@@ -9866,10 +10118,8 @@
                 "item": "Timespinner Wheel"
               },
               {
-                "type": "item_check",
-                "item": "Doublejump",
-                "inferred": true,
-                "description": "Requires having Doublejump"
+                "type": "helper",
+                "name": "has_doublejump"
               }
             ]
           }
@@ -9913,10 +10163,8 @@
         "type": "or",
         "conditions": [
           {
-            "type": "item_check",
-            "item": "Upwarddash",
-            "inferred": true,
-            "description": "Requires having Upwarddash"
+            "type": "helper",
+            "name": "has_upwarddash"
           },
           {
             "type": "and",
@@ -9926,10 +10174,8 @@
                 "item": "Talaria Attachment"
               },
               {
-                "type": "item_check",
-                "item": "Doublejump",
-                "inferred": true,
-                "description": "Requires having Doublejump"
+                "type": "helper",
+                "name": "has_doublejump"
               }
             ]
           }
@@ -9942,8 +10188,8 @@
       "has_keycard_B": {
         "type": "conditional",
         "test": {
-          "type": "setting_value",
-          "setting": "specific_keycards"
+          "type": "option_value",
+          "option": "specific_keycards"
         },
         "if_true": {
           "type": "item_check",

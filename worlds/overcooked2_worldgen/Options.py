@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -46,6 +46,7 @@ class Deathlink(Choice):
 class DisplayLeaderboardScores(Toggle):
     """Option for Display Leaderboard Scores."""
     display_name = "Display Leaderboard Scores"
+    default = False
 
 class FixBugs(DefaultOnToggle):
     """Option for Fix Bugs."""
@@ -78,6 +79,7 @@ class PrepLevels(Choice):
 class RampTricks(Toggle):
     """Option for Overworld Tricks."""
     display_name = "Overworld Tricks"
+    default = False
 
 class ShortHordeLevels(DefaultOnToggle):
     """Option for Shorter Horde Levels."""

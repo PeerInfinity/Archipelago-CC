@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "KDL3World"
-  },
   "regions": {
     "1": {
       "Grass Land 1 - 0": {
@@ -2883,15 +2880,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -2974,9 +2971,9 @@
               "args": {
                 "item_name": "Grass Land - Stage Completion",
                 "count": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "ow_boss_requirement"
+                    "option": "ow_boss_requirement"
                   }
                 }
               }
@@ -3010,15 +3007,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -6902,15 +6899,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -6993,9 +6990,9 @@
               "args": {
                 "item_name": "Ripple Field - Stage Completion",
                 "count": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "ow_boss_requirement"
+                    "option": "ow_boss_requirement"
                   }
                 }
               }
@@ -7029,15 +7026,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -13593,15 +13590,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -13684,9 +13681,9 @@
               "args": {
                 "item_name": "Sand Canyon - Stage Completion",
                 "count": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "ow_boss_requirement"
+                    "option": "ow_boss_requirement"
                   }
                 }
               }
@@ -13720,15 +13717,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -17792,15 +17789,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -17883,9 +17880,9 @@
               "args": {
                 "item_name": "Cloudy Park - Stage Completion",
                 "count": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "ow_boss_requirement"
+                    "option": "ow_boss_requirement"
                   }
                 }
               }
@@ -17919,15 +17916,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -23873,15 +23870,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -23964,9 +23961,9 @@
               "args": {
                 "item_name": "Iceberg - Stage Completion",
                 "count": {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "ow_boss_requirement"
+                    "option": "ow_boss_requirement"
                   }
                 }
               }
@@ -24000,15 +23997,15 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "open_world"
+                        "option": "open_world"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "ow_boss_requirement"
+                        "option": "ow_boss_requirement"
                       }
                     },
                     {
@@ -25198,6 +25195,7 @@
   "world": {
     "1": {
       "game": "Kirby's Dream Land 3",
+      "world_class_name": "KDL3World",
       "options": {
         "ability_trap_weight": 50,
         "accessibility": 0,
@@ -26169,15 +26167,7 @@
       "world_directory": "kdl3"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "KDL3World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -26193,8 +26183,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "open_world"
+            "type": "option_value",
+            "option": "open_world"
           },
           "if_true": {
             "type": "item_check",
@@ -26228,8 +26218,8 @@
               "value": "{...} - Stage Completion"
             },
             "count": {
-              "type": "setting_value",
-              "setting": "ow_boss_requirement"
+              "type": "option_value",
+              "option": "ow_boss_requirement"
             }
           },
           "if_false": {

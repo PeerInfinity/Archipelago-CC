@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Celeste64World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1608,6 +1605,7 @@
   "world": {
     "1": {
       "game": "Celeste 64 WorldGen",
+      "world_class_name": "Celeste64World",
       "options": {
         "accessibility": 0,
         "badeline_chaser_frequency": 0,
@@ -1675,17 +1673,17 @@
         },
         "carsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Carsanity"
         },
         "checkpointsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Checkpointsanity"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "death_link_amnesty": {
@@ -1697,7 +1695,7 @@
         },
         "friendsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Friendsanity"
         },
         "logic_difficulty": {
@@ -1811,7 +1809,7 @@
         },
         "move_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Move Shuffle"
         },
         "progression_balancing": {
@@ -1828,7 +1826,7 @@
         },
         "signsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Signsanity"
         },
         "strawberries_required_percentage": {
@@ -2138,15 +2136,7 @@
       "world_directory": "celeste64_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "Celeste64World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

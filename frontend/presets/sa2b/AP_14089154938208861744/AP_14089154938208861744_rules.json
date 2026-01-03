@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SA2BWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -6380,6 +6377,7 @@
   "world": {
     "1": {
       "game": "Sonic Adventure 2 Battle",
+      "world_class_name": "SA2BWorld",
       "options": {
         "accessibility": 0,
         "animalsanity": false,
@@ -10942,15 +10940,7 @@
       "world_directory": "sa2b"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SA2BWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

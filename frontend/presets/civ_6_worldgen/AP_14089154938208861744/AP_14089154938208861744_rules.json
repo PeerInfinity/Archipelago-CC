@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "CivilizationVIWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4607,6 +4604,7 @@
   "world": {
     "1": {
       "game": "Civilization VI WorldGen",
+      "world_class_name": "CivVIWorld",
       "options": {
         "accessibility": 0,
         "advisor_show_progression_items": true,
@@ -4627,7 +4625,9 @@
         "shuffle_goody_hut_rewards": true,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -4646,12 +4646,12 @@
         },
         "boostsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Boostsanity"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "death_link_effect_percent": {
@@ -4663,7 +4663,7 @@
         },
         "hide_item_names": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hide Item Names"
         },
         "progression_balancing": {
@@ -4699,6 +4699,16 @@
           "type": "default_on_toggle",
           "default": 1,
           "display_name": "Shuffle Goody Hut Rewards"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "location_by_era": {
@@ -5798,14 +5808,7 @@
       "world_directory": "civ_6_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

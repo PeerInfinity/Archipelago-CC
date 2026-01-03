@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class Animalsanity(Toggle):
     """Option for Animalsanity."""
     display_name = "Animalsanity"
+    default = False
 
 class BeeTrapWeight(Choice):
     """Option for Bee Trap Weight."""
@@ -56,6 +57,7 @@ class BigFishingDifficulty(Choice):
 class Bigsanity(Toggle):
     """Option for Bigsanity."""
     display_name = "Bigsanity"
+    default = False
 
 class BlackMarketPriceMultiplier(Range):
     """Option for Black Market Price Multiplier."""
@@ -123,10 +125,12 @@ class CannonsCoreMissionCount(Range):
 class ChaoAnimalParts(Toggle):
     """Option for Chao Animal Parts."""
     display_name = "Chao Animal Parts"
+    default = False
 
 class ChaoEntranceRandomization(Toggle):
     """Option for Chao Entrance Randomization."""
     display_name = "Chao Entrance Randomization"
+    default = False
 
 class ChaoKarateDifficulty(Choice):
     """Option for Chao Karate Difficulty."""
@@ -179,10 +183,12 @@ class ChaoStatsFrequency(Range):
 class ChaoStatsHidden(Toggle):
     """Option for Chao Stats - Luck and Intelligence."""
     display_name = "Chao Stats - Luck and Intelligence"
+    default = False
 
 class ChaoStatsStamina(Toggle):
     """Option for Chao Stats - Stamina."""
     display_name = "Chao Stats - Stamina"
+    default = False
 
 class ConfusionTrapWeight(Choice):
     """Option for Confusion Trap Weight."""
@@ -214,6 +220,7 @@ class CutsceneTrapWeight(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class EggmanMission2(DefaultOnToggle):
     """Option for Eggman Mission 2."""
@@ -467,6 +474,7 @@ class MinigameTrapDifficulty(Choice):
 class MissionShuffle(Toggle):
     """Option for Mission Shuffle."""
     display_name = "Mission Shuffle"
+    default = False
 
 class MusicShuffle(Choice):
     """Option for Music Shuffle Type."""
@@ -521,6 +529,7 @@ class OmochaoTrapWeight(Choice):
 class Omosanity(Toggle):
     """Option for Omosanity."""
     display_name = "Omosanity"
+    default = False
 
 class PinballTrapWeight(Choice):
     """Option for Pinball Trap Weight."""
@@ -596,6 +605,7 @@ class ReverseTrapWeight(Choice):
 class RingLink(Toggle):
     """Option for Ring Link."""
     display_name = "Ring Link"
+    default = False
 
 class RingLoss(Choice):
     """Option for Ring Loss."""
@@ -755,6 +765,7 @@ class TrapFillPercentage(Range):
 class TrapLink(Toggle):
     """Option for Trap Link."""
     display_name = "Trap Link"
+    default = False
 
 class TriviaTrapWeight(Choice):
     """Option for Trivia Trap Weight."""

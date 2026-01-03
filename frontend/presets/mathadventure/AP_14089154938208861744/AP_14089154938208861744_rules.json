@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MathAdventureWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -479,6 +476,7 @@
   "world": {
     "1": {
       "game": "Math Adventure",
+      "world_class_name": "MathAdventureWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -535,15 +533,7 @@
       "world_directory": "mathadventure"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MathAdventureWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

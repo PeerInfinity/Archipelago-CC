@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -122,6 +122,7 @@ class CompanionsLocations(Choice):
 class CrestShuffle(Toggle):
     """Option for Crest Shuffle."""
     display_name = "Crest Shuffle"
+    default = False
 
 class DoomCastleMode(Choice):
     """Option for Doom Castle."""
@@ -134,6 +135,7 @@ class DoomCastleMode(Choice):
 class DoomCastleShortcut(Toggle):
     """Option for Doom Castle Shortcut."""
     display_name = "Doom Castle Shortcut"
+    default = False
 
 class EnemiesDensity(Choice):
     """Option for Enemies Density."""
@@ -194,6 +196,7 @@ class EnemizerGroups(Choice):
 class KaelisMomFightMinotaur(Toggle):
     """Option for Kaeli's Mom Fights Minotaur."""
     display_name = "Kaeli's Mom Fights Minotaur"
+    default = False
 
 class LevelingCurve(Choice):
     """Option for Leveling Curve."""
@@ -241,6 +244,7 @@ class ProgressiveFormations(Choice):
 class ProgressiveGear(Toggle):
     """Option for Progressive Gear."""
     display_name = "Progressive Gear"
+    default = False
 
 class ShatteredSkyCoinQuantity(Choice):
     """Option for Shattered Sky Coin."""
@@ -255,14 +259,17 @@ class ShatteredSkyCoinQuantity(Choice):
 class ShuffleBattlefieldRewards(Toggle):
     """Option for Shuffle Battlefield Rewards."""
     display_name = "Shuffle Battlefield Rewards"
+    default = False
 
 class ShuffleEnemiesPosition(Toggle):
     """Option for Shuffle Enemies' Positions."""
     display_name = "Shuffle Enemies' Positions"
+    default = True
 
 class ShuffleResWeakTypes(Toggle):
     """Option for Shuffle Resistance/Weakness Types."""
     display_name = "Shuffle Resistance/Weakness Types"
+    default = False
 
 class SkyCoinMode(Choice):
     """Option for Sky Coin Mode."""
@@ -297,6 +304,7 @@ class StartingWeapon(Choice):
 class TweakFrustratingDungeons(Toggle):
     """Option for Tweak Frustrating Dungeons."""
     display_name = "Tweak Frustrating Dungeons"
+    default = False
 
 
 @dataclass

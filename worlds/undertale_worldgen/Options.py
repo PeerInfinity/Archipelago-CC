@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class KeyHunt(Toggle):
     """Option for Key Piece Hunt."""
     display_name = "Key Piece Hunt"
+    default = False
 
 class KeyPieces(Range):
     """Option for Key Piece Amount."""
@@ -41,30 +42,37 @@ class KeyPieces(Range):
 class NoEquips(Toggle):
     """Option for No Equippables."""
     display_name = "No Equippables"
+    default = False
 
 class OnlyFlakes(Toggle):
     """Option for Only Temmie Flakes."""
     display_name = "Only Temmie Flakes"
+    default = False
 
 class ProgArmor(Toggle):
     """Option for Progressive Armor."""
     display_name = "Progressive Armor"
+    default = False
 
 class ProgWeapons(Toggle):
     """Option for Progressive Weapons."""
     display_name = "Progressive Weapons"
+    default = False
 
 class RandoItemButton(Toggle):
     """Option for Randomize Item Button."""
     display_name = "Randomize Item Button"
+    default = False
 
 class RandoLove(Toggle):
     """Option for Randomize LOVE."""
     display_name = "Randomize LOVE"
+    default = False
 
 class RandoStats(Toggle):
     """Option for Randomize Stats."""
     display_name = "Randomize Stats"
+    default = False
 
 class RouteRequired(Choice):
     """Option for Required Route."""
@@ -88,6 +96,7 @@ class StartingArea(Choice):
 class TemyInclude(Toggle):
     """Option for Include Temy Armor."""
     display_name = "Include Temy Armor"
+    default = True
 
 
 @dataclass

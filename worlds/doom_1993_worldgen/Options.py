@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -58,6 +58,7 @@ class AddedAmmoShells(Range):
 class AllowDeathLogic(Toggle):
     """Option for Allow Death Logic."""
     display_name = "Allow Death Logic"
+    default = False
 
 class BackpackCount(Range):
     """Option for Backpack Count."""
@@ -69,6 +70,7 @@ class BackpackCount(Range):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class Difficulty(Choice):
     """Option for Difficulty."""
@@ -95,6 +97,7 @@ class Episode3(DefaultOnToggle):
 class Episode4(Toggle):
     """Option for Episode 4."""
     display_name = "Episode 4"
+    default = False
 
 class FlipLevels(Choice):
     """Option for Flip Levels."""
@@ -142,6 +145,7 @@ class MaxAmmoShells(Range):
 class Pro(Toggle):
     """Option for Pro Doom."""
     display_name = "Pro Doom"
+    default = False
 
 class RandomMonsters(Choice):
     """Option for Random Monsters."""
@@ -175,6 +179,7 @@ class ResetLevelOnDeath(DefaultOnToggle):
 class SplitBackpack(Toggle):
     """Option for Split Backpack."""
     display_name = "Split Backpack"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""
@@ -182,6 +187,7 @@ class StartInventoryFromPool(StartInventoryPool):
 class StartWithComputerAreaMaps(Toggle):
     """Option for Start With Computer Area Maps."""
     display_name = "Start With Computer Area Maps"
+    default = False
 
 
 @dataclass

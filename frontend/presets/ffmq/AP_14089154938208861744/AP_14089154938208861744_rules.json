@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "FFMQWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -32083,6 +32080,7 @@
   "world": {
     "1": {
       "game": "Final Fantasy Mystic Quest",
+      "world_class_name": "FFMQWorld",
       "options": {
         "accessibility": 1,
         "available_companions": 4,
@@ -40681,15 +40679,7 @@
       "world_directory": "ffmq"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "FFMQWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "APQuestWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Overworld": {
@@ -355,6 +352,7 @@
   "world": {
     "1": {
       "game": "APQuest WorldGen",
+      "world_class_name": "APQuestWorld",
       "options": {
         "accessibility": 0,
         "confetti_explosiveness": 3,
@@ -374,7 +372,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "start_with_one_confetti_cannon": false,
-        "trap_chance": 0
+        "trap_chance": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -395,17 +394,17 @@
         },
         "extra_starting_chest": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Extra Starting Chest"
         },
         "hammer": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hammer"
         },
         "hard_mode": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hard Mode"
         },
         "player_sprite": {
@@ -433,7 +432,7 @@
         },
         "start_with_one_confetti_cannon": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Start With One Confetti Cannon"
         },
         "trap_chance": {
@@ -442,6 +441,11 @@
           "range_end": 100,
           "default": 0,
           "display_name": "Trap Chance"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",
@@ -480,14 +484,7 @@
       "world_directory": "apquest_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

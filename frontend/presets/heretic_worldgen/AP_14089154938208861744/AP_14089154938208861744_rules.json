@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "HereticWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -13670,6 +13667,7 @@
   "world": {
     "1": {
       "game": "Heretic WorldGen",
+      "world_class_name": "HereticWorld",
       "options": {
         "accessibility": 0,
         "added_ammo_arrows": 50,
@@ -13770,7 +13768,7 @@
         },
         "allow_death_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Allow Death Logic"
         },
         "bag_of_holding_count": {
@@ -13782,12 +13780,12 @@
         },
         "check_sanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Check Sanity"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "difficulty": {
@@ -13819,12 +13817,12 @@
         },
         "episode4": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Episode 4"
         },
         "episode5": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Episode 5"
         },
         "goal": {
@@ -13880,7 +13878,7 @@
         },
         "pro": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Pro Heretic"
         },
         "progression_balancing": {
@@ -13933,7 +13931,7 @@
         },
         "split_bag_of_holding": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Split Bag of Holding"
         },
         "start_inventory_from_pool": {
@@ -13943,7 +13941,7 @@
         },
         "start_with_map_scrolls": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Start With Map Scrolls"
         },
         "use_canonical_options": {
@@ -14013,15 +14011,7 @@
       "world_directory": "heretic_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "HereticWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

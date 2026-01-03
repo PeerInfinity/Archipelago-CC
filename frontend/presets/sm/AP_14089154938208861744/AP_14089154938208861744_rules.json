@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SMWorld"
-  },
   "regions": {
     "1": {
       "Ceres": {
@@ -17022,6 +17019,7 @@
   "world": {
     "1": {
       "game": "Super Metroid",
+      "world_class_name": "SMWorld",
       "options": {
         "accessibility": 0,
         "allow_grey_doors": false,
@@ -19674,15 +19672,7 @@
       "world_directory": "sm"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SMWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "doors": {

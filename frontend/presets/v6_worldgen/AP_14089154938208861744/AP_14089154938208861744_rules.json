@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "VVVVVVWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -733,6 +730,7 @@
   "world": {
     "1": {
       "game": "VVVVVV WorldGen",
+      "world_class_name": "V6World",
       "options": {
         "accessibility": 0,
         "area_cost": false,
@@ -751,7 +749,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -765,17 +764,17 @@
         },
         "area_cost": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Area Cost Randomizer"
         },
         "area_rando": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Area Randomizer"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "death_link_amnesty": {
@@ -794,7 +793,7 @@
         },
         "music_rando": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Music Randomizer"
         },
         "progression_balancing": {
@@ -808,6 +807,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "area_connections": {
@@ -880,14 +884,7 @@
       "world_directory": "v6_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

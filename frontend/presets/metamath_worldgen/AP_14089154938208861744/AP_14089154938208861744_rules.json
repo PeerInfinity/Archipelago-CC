@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MetamathWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1741,9 +1738,10 @@
   "world": {
     "1": {
       "game": "Metamath WorldGen",
+      "world_class_name": "MetamathWorld",
       "options": {
         "accessibility": 0,
-        "auto_download_database": false,
+        "auto_download_database": true,
         "complexity": 1,
         "exclude_locations": [],
         "item_links": [],
@@ -1757,7 +1755,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "starting_statements": 0,
-        "theorem": "2p2e4"
+        "theorem": "2p2e4",
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1771,7 +1770,7 @@
         },
         "auto_download_database": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Auto-Download Database"
         },
         "complexity": {
@@ -1808,6 +1807,11 @@
           "name_lookup": {},
           "default": "2p2e4",
           "display_name": "Theorem to Prove"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "proof_structure": {
@@ -2006,7 +2010,7 @@
           1
         ],
         "theorem": "2p2e4",
-        "randomize_items": false
+        "randomize_items": 0
       },
       "web": {
         "theme": "grass"
@@ -2014,14 +2018,7 @@
       "world_directory": "metamath_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

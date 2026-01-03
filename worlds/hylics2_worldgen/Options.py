@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class ExtraItemsInLogic(DefaultOnToggle):
     """Option for Extra Items in Logic."""
@@ -46,10 +47,12 @@ class GestureShuffle(Choice):
 class MedallionShuffle(Toggle):
     """Option for Shuffle Red Medallions."""
     display_name = "Shuffle Red Medallions"
+    default = False
 
 class PartyShuffle(Toggle):
     """Option for Shuffle Party Members."""
     display_name = "Shuffle Party Members"
+    default = False
 
 class RandomStart(Removed):
     """Deprecated option for Random Start."""

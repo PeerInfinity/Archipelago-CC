@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "InscryptionWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -2819,6 +2816,7 @@
   "world": {
     "1": {
       "game": "Inscryption",
+      "world_class_name": "InscryptionWorld",
       "options": {
         "accessibility": 0,
         "act1_death_link_behaviour": 0,
@@ -3212,15 +3210,7 @@
       "world_directory": "inscryption"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "InscryptionWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

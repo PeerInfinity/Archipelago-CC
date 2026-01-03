@@ -242,6 +242,7 @@ class InscryptionWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'InscryptionWorld'
         self.all_items = [{'name': 'Stinkbug Card', 'count': 1, 'classification': 2}, {'name': 'Stunted Wolf Card', 'count': 1, 'classification': 2}, {'name': 'Wardrobe Key', 'count': 1, 'classification': 1}, {'name': 'Skink Card', 'count': 1, 'classification': 2}, {'name': 'Ant Cards', 'count': 1, 'classification': 2}, {'name': 'Caged Wolf Card', 'count': 1, 'classification': 1}, {'name': 'Squirrel Totem Head', 'count': 1, 'classification': 1}, {'name': 'Dagger', 'count': 1, 'classification': 1}, {'name': 'Film Roll', 'count': 1, 'classification': 1}, {'name': 'Ring', 'count': 1, 'classification': 2}, {'name': 'Magnificus Eye', 'count': 1, 'classification': 1}, {'name': "Oil Painting's Clover Plant", 'count': 1, 'classification': 1}, {'name': 'Extra Candle', 'count': 1, 'classification': 2}, {'name': 'Bee Figurine', 'count': 1, 'classification': 2}, {'name': 'Greater Smoke', 'count': 1, 'classification': 2}, {'name': 'Angler Hook', 'count': 1, 'classification': 2}, {'name': 'Camera Replica', 'count': 1, 'classification': 1}, {'name': 'Pile Of Meat', 'count': 1, 'classification': 1}, {'name': 'Epitaph Piece', 'count': 9, 'classification': 1}, {'name': 'Epitaph Pieces', 'count': 3, 'classification': 1}, {'name': 'Monocle', 'count': 1, 'classification': 1}, {'name': 'Bone Lord Femur', 'count': 1, 'classification': 2}, {'name': 'Bone Lord Horn', 'count': 1, 'classification': 2}, {'name': 'Bone Lord Holo Key', 'count': 1, 'classification': 1}, {'name': 'Mycologists Holo Key', 'count': 1, 'classification': 1}, {'name': 'Ancient Obol', 'count': 1, 'classification': 1}, {'name': 'Great Kraken Card', 'count': 1, 'classification': 2}, {'name': 'Drowned Soul Card', 'count': 1, 'classification': 2}, {'name': 'Salmon Card', 'count': 1, 'classification': 2}, {'name': "Dock's Clover Plant", 'count': 1, 'classification': 2}, {'name': 'Extra Battery', 'count': 1, 'classification': 2}, {'name': 'Nano Armor Generator', 'count': 1, 'classification': 2}, {'name': "Mrs. Bomb's Remote", 'count': 1, 'classification': 2}, {'name': 'Inspectometer Battery', 'count': 1, 'classification': 1}, {'name': 'Gems Module', 'count': 1, 'classification': 1}, {'name': 'Lonely Wizbot Card', 'count': 1, 'classification': 2}, {'name': 'Fishbot Card', 'count': 1, 'classification': 2}, {'name': 'Ourobot Card', 'count': 1, 'classification': 2}, {'name': 'Holo Pelt', 'count': 5, 'classification': 1}, {'name': 'Quill', 'count': 1, 'classification': 1}, {'name': 'Currency', 'count': 1, 'classification': 0}, {'name': 'Card Pack', 'count': 1, 'classification': 0}]
         self.required_epitaph_pieces_name = 'Epitaph Piece'
         self.required_epitaph_pieces_count = 9
@@ -257,25 +258,24 @@ class InscryptionWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 

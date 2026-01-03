@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MeritousWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -2257,6 +2254,7 @@
   "world": {
     "1": {
       "game": "Meritous WorldGen",
+      "world_class_name": "MeritousWorld",
       "options": {
         "accessibility": 0,
         "death_link": false,
@@ -2274,7 +2272,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -2288,7 +2287,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "goal": {
@@ -2303,7 +2302,7 @@
         },
         "include_evolution_traps": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Evolution Traps"
         },
         "include_psi_keys": {
@@ -2332,6 +2331,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "goal": 0,
@@ -2367,14 +2371,7 @@
       "world_directory": "meritous_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

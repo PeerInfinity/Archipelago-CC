@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "BumperStickersWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1976,6 +1973,7 @@
   "world": {
     "1": {
       "game": "Bumper Stickers WorldGen",
+      "world_class_name": "BumpStikWorld",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -1995,7 +1993,8 @@
         "start_location_hints": [],
         "task_advances": 4,
         "trap_count": 5,
-        "turners": 3
+        "turners": 3,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -2067,6 +2066,11 @@
           "range_end": 5,
           "default": 3,
           "display_name": "Turners"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "task_advances": 4,
@@ -2095,14 +2099,7 @@
       "world_directory": "bumpstik_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

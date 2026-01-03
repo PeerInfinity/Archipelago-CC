@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SMWWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -6274,6 +6271,7 @@
   "world": {
     "1": {
       "game": "Super Mario World WorldGen",
+      "world_class_name": "SMWWorld",
       "options": {
         "accessibility": 0,
         "autosave": true,
@@ -6342,12 +6340,12 @@
         },
         "blocksanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Blocksanity"
         },
         "bonus_block_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bonus Block Checks"
         },
         "boss_shuffle": {
@@ -6392,7 +6390,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "display_received_item_popups": {
@@ -6408,17 +6406,17 @@
         },
         "dragon_coin_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Dragon Coin Checks"
         },
         "early_climb": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Early Climb"
         },
         "exclude_special_zone": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Exclude Special Zone"
         },
         "goal": {
@@ -6432,7 +6430,7 @@
         },
         "hidden_1up_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hidden 1-Up Checks"
         },
         "ice_trap_weight": {
@@ -6465,7 +6463,7 @@
         },
         "level_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Level Shuffle"
         },
         "literature_trap_weight": {
@@ -6503,7 +6501,7 @@
         },
         "moon_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "3up Moon Checks"
         },
         "music_shuffle": {
@@ -6569,7 +6567,7 @@
         },
         "ring_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Ring Link"
         },
         "sfx_shuffle": {
@@ -6602,7 +6600,7 @@
         },
         "swap_donut_gh_exits": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Swap Donut GH Exits"
         },
         "thwimp_trap_weight": {
@@ -6636,7 +6634,7 @@
         },
         "trap_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Trap Link"
         },
         "use_canonical_options": {
@@ -6864,15 +6862,7 @@
       "world_directory": "smw_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "SMWWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

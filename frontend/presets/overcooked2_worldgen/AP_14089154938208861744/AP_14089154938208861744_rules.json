@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Overcooked2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -14738,6 +14735,7 @@
   "world": {
     "1": {
       "game": "Overcooked! 2 WorldGen",
+      "world_class_name": "Overcooked2World",
       "options": {
         "accessibility": 0,
         "always_preserve_cooking_progress": true,
@@ -14800,7 +14798,7 @@
         },
         "display_leaderboard_scores": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Display Leaderboard Scores"
         },
         "fix_bugs": {
@@ -14847,7 +14845,7 @@
         },
         "ramp_tricks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Overworld Tricks"
         },
         "randomize_items": {
@@ -14984,7 +14982,6 @@
         "Bonus Star"
       ],
       "world_description": "Overcooked! 2 is a frantically paced arcade cooking game where\nplayers race against the clock to complete orders for points. Bring\npeace to the Onion Kingdom once again by recovering lost items and abilities,\nearning stars to unlock levels, and defeating the unbread horde. Levels are\nrandomized to increase gameplay variety. Play with up to 4 friends.",
-      "player_name": "Player1",
       "slot_data": {
         "DisableAllMods": false,
         "UnlockAllChefs": true,
@@ -15666,15 +15663,7 @@
       "world_directory": "overcooked2_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "Overcooked2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "level_logic": {

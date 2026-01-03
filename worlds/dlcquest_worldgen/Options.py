@@ -52,6 +52,7 @@ class Coinsanity(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DoubleJumpGlitch(Choice):
     """Option for Double Jump glitch."""

@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -70,6 +70,7 @@ class KongPaletteSwap(Choice):
 class Kongsanity(Toggle):
     """Option for KONGsanity."""
     display_name = "KONGsanity"
+    default = False
 
 class KrematoaBonusCoinCost(Range):
     """Option for Krematoa Bonus Coins Cost."""
@@ -81,14 +82,17 @@ class KrematoaBonusCoinCost(Range):
 class LevelShuffle(Toggle):
     """Option for Level Shuffle."""
     display_name = "Level Shuffle"
+    default = False
 
 class Merry(Toggle):
     """Option for MERRY."""
     display_name = "MERRY"
+    default = False
 
 class MusicShuffle(Toggle):
     """Option for Music Shuffle."""
     display_name = "Music Shuffle"
+    default = False
 
 class NumberOfBananaBirds(Range):
     """Option for Number of Banana Birds."""

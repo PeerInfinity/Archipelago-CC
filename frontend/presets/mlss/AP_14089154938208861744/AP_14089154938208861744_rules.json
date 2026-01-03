@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MLSSWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4546,9 +4543,9 @@
                   "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "goal"
+                        "option": "goal"
                       }
                     }
                   ]
@@ -9221,9 +9218,9 @@
               "_converted_from_ast": true,
               "args": [
                 {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "goal"
+                    "option": "goal"
                   }
                 }
               ]
@@ -9822,9 +9819,9 @@
                   "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "goal"
+                        "option": "goal"
                       }
                     }
                   ]
@@ -13560,6 +13557,7 @@
   "world": {
     "1": {
       "game": "Mario & Luigi Superstar Saga",
+      "world_class_name": "MLSSWorld",
       "options": {
         "accessibility": 0,
         "block_visibility": 0,
@@ -13867,15 +13865,7 @@
       "world_directory": "mlss"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MLSSWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

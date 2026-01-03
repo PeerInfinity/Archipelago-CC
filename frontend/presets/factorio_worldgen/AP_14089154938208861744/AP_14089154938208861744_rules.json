@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "Factorio"
-  },
   "regions": {
     "1": {
       "Nauvis": {
@@ -7826,6 +7823,7 @@
   "world": {
     "1": {
       "game": "Factorio WorldGen",
+      "world_class_name": "Factorio",
       "options": {
         "accessibility": 0,
         "artillery_traps": 0,
@@ -7919,12 +7917,12 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "energy_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Energy Link"
         },
         "evolution_trap_increase": {
@@ -8039,7 +8037,7 @@
         },
         "ramping_tech_costs": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Ramping Tech Costs"
         },
         "randomize_items": {
@@ -8634,11 +8632,7 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": true,
-      "world_class_name": "Factorio"
+      "use_resolved_items": true
     }
   },
   "game_info": {

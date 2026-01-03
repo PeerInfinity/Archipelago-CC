@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -38,6 +38,7 @@ class BlockVisibility(Choice):
 class CastleSkip(Toggle):
     """Option for Skip Bowser's Castle."""
     display_name = "Skip Bowser's Castle"
+    default = False
 
 class ChuckleBeans(Choice):
     """Option for Chuckle Beans."""
@@ -50,18 +51,22 @@ class ChuckleBeans(Choice):
 class Coins(Toggle):
     """Option for Coin Blocks."""
     display_name = "Coin Blocks"
+    default = False
 
 class DifficultLogic(Toggle):
     """Option for Difficult Logic."""
     display_name = "Difficult Logic"
+    default = False
 
 class DisableHarhallsPants(Toggle):
     """Option for Remove Harhall's Pants."""
     display_name = "Remove Harhall's Pants"
+    default = False
 
 class DisableSurf(Toggle):
     """Option for Disable Surf Minigame."""
     display_name = "Disable Surf Minigame"
+    default = False
 
 class EmblemsAmount(Range):
     """Option for Emblems Available."""
@@ -80,6 +85,7 @@ class EmblemsRequired(Range):
 class ExtraPipes(Toggle):
     """Option for Start With Extra Pipes."""
     display_name = "Start With Extra Pipes"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -173,6 +179,7 @@ class MusicOptions(Choice):
 class RandomizeBackgrounds(Toggle):
     """Option for Randomize Battle Backgrounds."""
     display_name = "Randomize Battle Backgrounds"
+    default = False
 
 class RandomizeBosses(Choice):
     """Option for Randomize Bosses."""
@@ -193,14 +200,17 @@ class RandomizeEnemies(Choice):
 class RandomizeSounds(Toggle):
     """Option for Randomize Sounds."""
     display_name = "Randomize Sounds"
+    default = False
 
 class ScaleStats(Toggle):
     """Option for Scale Enemy Stats."""
     display_name = "Scale Enemy Stats"
+    default = False
 
 class SkipMinecart(Toggle):
     """Option for Skip Minecart Minigame."""
     display_name = "Skip Minecart Minigame"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""
@@ -208,6 +218,7 @@ class StartInventoryFromPool(StartInventoryPool):
 class TattleHp(Toggle):
     """Option for Tattle HP."""
     display_name = "Tattle HP"
+    default = False
 
 class XpMultiplier(Range):
     """Option for XP Multiplier."""

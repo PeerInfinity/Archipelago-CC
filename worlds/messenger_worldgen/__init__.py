@@ -284,6 +284,7 @@ class MessengerWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'MessengerWorld'
         self.shop_prices = {'Karuta Plates': 27, 'Serendipitous Bodies': 291, 'Path of Resilience': 149, 'Kusari Jacket': 357, 'Energy Shuriken': 92, 'Serendipitous Minds': 109, 'Prepared Mind': 345, 'Meditation': 147, 'Rejuvenative Spirit': 513, 'Centered Mind': 772, 'Strike of the Ninja': 67, 'Second Wind': 170, 'Currents Master': 506, 'Aerobatics Warrior': 381, "Demon's Bane": 527, "Devil's Due": 56, 'Time Sense': 142, 'Power Sense': 479, 'Focused Power Sense': 413}
         self.figurine_prices = {'Green Kappa Figurine': 236, 'Blue Kappa Figurine': 106, 'Ountarde Figurine': 264, 'Red Kappa Figurine': 348, 'Demon King Figurine': 1271, 'Quillshroom Figurine': 193, 'Jumping Quillshroom Figurine': 208, 'Scurubu Figurine': 108, 'Jumping Scurubu Figurine': 267, 'Wallaxer Figurine': 265, "Barmath'azel Figurine": 714, 'Queen of Quills Figurine': 406, 'Demon Hive Figurine': 357}
         self.starting_portals = ['Autumn Hills Portal', 'Howling Grotto Portal', 'Glacial Peak Portal', 'Sunken Shrine Portal', 'Riviere Turquoise Portal', 'Searing Crags Portal']
@@ -310,25 +311,24 @@ class MessengerWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 

@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -34,10 +34,12 @@ class Autosave(DefaultOnToggle):
 class Blocksanity(Toggle):
     """Option for Blocksanity."""
     display_name = "Blocksanity"
+    default = False
 
 class BonusBlockChecks(Toggle):
     """Option for Bonus Block Checks."""
     display_name = "Bonus Block Checks"
+    default = False
 
 class BossShuffle(Choice):
     """Option for Boss Shuffle."""
@@ -76,6 +78,7 @@ class BowserCastleRooms(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DisplayReceivedItemPopups(Choice):
     """Option for Display Received Item Popups."""
@@ -89,14 +92,17 @@ class DisplayReceivedItemPopups(Choice):
 class DragonCoinChecks(Toggle):
     """Option for Dragon Coin Checks."""
     display_name = "Dragon Coin Checks"
+    default = False
 
 class EarlyClimb(Toggle):
     """Option for Early Climb."""
     display_name = "Early Climb"
+    default = False
 
 class ExcludeSpecialZone(Toggle):
     """Option for Exclude Special Zone."""
     display_name = "Exclude Special Zone"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -108,6 +114,7 @@ class Goal(Choice):
 class Hidden1upChecks(Toggle):
     """Option for Hidden 1-Up Checks."""
     display_name = "Hidden 1-Up Checks"
+    default = False
 
 class IceTrapWeight(Choice):
     """Option for Ice Trap Weight."""
@@ -136,6 +143,7 @@ class LevelPaletteShuffle(Choice):
 class LevelShuffle(Toggle):
     """Option for Level Shuffle."""
     display_name = "Level Shuffle"
+    default = False
 
 class LiteratureTrapWeight(Choice):
     """Option for Literature Trap Weight."""
@@ -169,6 +177,7 @@ class MaxYoshiEggCap(Range):
 class MoonChecks(Toggle):
     """Option for 3up Moon Checks."""
     display_name = "3up Moon Checks"
+    default = False
 
 class MusicShuffle(Choice):
     """Option for Music Shuffle."""
@@ -214,6 +223,7 @@ class ReverseTrapWeight(Choice):
 class RingLink(Toggle):
     """Option for Ring Link."""
     display_name = "Ring Link"
+    default = False
 
 class SfxShuffle(Choice):
     """Option for Sound Effect Shuffle."""
@@ -242,6 +252,7 @@ class StunTrapWeight(Choice):
 class SwapDonutGhExits(Toggle):
     """Option for Swap Donut GH Exits."""
     display_name = "Swap Donut GH Exits"
+    default = False
 
 class ThwimpTrapWeight(Choice):
     """Option for Thwimp Trap Weight."""
@@ -271,6 +282,7 @@ class TrapFillPercentage(Range):
 class TrapLink(Toggle):
     """Option for Trap Link."""
     display_name = "Trap Link"
+    default = False
 
 
 @dataclass

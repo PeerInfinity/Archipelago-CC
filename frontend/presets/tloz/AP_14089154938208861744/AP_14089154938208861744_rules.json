@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "TLoZWorld"
-  },
   "regions": {
     "1": {
       "Level 1": {
@@ -17497,6 +17494,7 @@
   "world": {
     "1": {
       "game": "The Legend of Zelda",
+      "world_class_name": "TLoZWorld",
       "options": {
         "ExpandedPool": true,
         "StartingPosition": 0,
@@ -17594,15 +17592,7 @@
       "world_directory": "tloz"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "TLoZWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

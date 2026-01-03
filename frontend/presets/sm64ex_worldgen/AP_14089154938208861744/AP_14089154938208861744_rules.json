@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "SuperMario64WorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -3575,6 +3572,7 @@
   "world": {
     "1": {
       "game": "Super Mario 64 WorldGen",
+      "world_class_name": "SM64World",
       "options": {
         "accessibility": 0,
         "amount_of_stars": 120,
@@ -3605,7 +3603,8 @@
         "start_location_hints": [],
         "strict_cannon_requirements": true,
         "strict_cap_requirements": true,
-        "strict_move_requirements": true
+        "strict_move_requirements": true,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -3644,7 +3643,7 @@
         },
         "buddy_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bob-omb Buddy Checks"
         },
         "completion_type": {
@@ -3658,7 +3657,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "enable_coin_stars": {
@@ -3673,12 +3672,12 @@
         },
         "enable_move_rando": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable Move Randomizer"
         },
         "exclamation_boxes": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize 1Up !-Blocks"
         },
         "first_bowser_star_door_cost": {
@@ -3747,6 +3746,11 @@
           "type": "default_on_toggle",
           "default": 1,
           "display_name": "Strict Move Requirements"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "move_rando_bitvec": 0,
@@ -3842,14 +3846,7 @@
       "world_directory": "sm64ex_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

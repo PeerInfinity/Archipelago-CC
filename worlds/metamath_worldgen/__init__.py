@@ -103,6 +103,7 @@ class MetamathWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'MetamathWorld'
         self.proof_structure = {'label_to_index': {'2cn': 1, 'ax-1cn': 2, 'addassi': 3, 'df-2': 4, 'df-3': 5, 'df-4': 6, 'oveq1i': 7, '3eqtri': 8, 'oveq2i': 9, 'eqtr4i': 10}}
         self.num_statements = 10
         self.location_dependencies = {'Prove Statement 3': ['Statement 1', 'Statement 2'], 'Prove Statement 7': ['Statement 5'], 'Prove Statement 8': ['Statement 3', 'Statement 6', 'Statement 7'], 'Prove Statement 9': ['Statement 4'], 'Prove Statement 10': ['Statement 8', 'Statement 9']}
@@ -120,25 +121,24 @@ class MetamathWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -252,8 +252,6 @@ class MetamathWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = MetamathWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

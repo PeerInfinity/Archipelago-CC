@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,18 +30,22 @@ class UseCanonicalOptions(Toggle):
 class IncludeAchievements(Toggle):
     """Option for Include Achievements."""
     display_name = "Include Achievements"
+    default = False
 
 class IncludeBasto(Toggle):
     """Option for Include Basto."""
     display_name = "Include Basto"
+    default = False
 
 class IncludeCasettes(Toggle):
     """Option for Include Casettes."""
     display_name = "Include Casettes"
+    default = True
 
 class IncludeItems(Toggle):
     """Option for Include Items."""
     display_name = "Include Items"
+    default = True
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""

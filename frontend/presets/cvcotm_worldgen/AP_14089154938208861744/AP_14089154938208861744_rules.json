@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "CastlevaniaCircleoftheMoonWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Catacomb": {
@@ -3196,6 +3193,7 @@
   "world": {
     "1": {
       "game": "Castlevania - Circle of the Moon WorldGen",
+      "world_class_name": "CVCotMWorld",
       "options": {
         "accessibility": 0,
         "always_allow_speed_dash": false,
@@ -3231,8 +3229,10 @@
         "skip_tutorials": false,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "sub_weapon_shuffle": false
+        "sub_weapon_shuffle": false,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -3246,12 +3246,12 @@
         },
         "always_allow_speed_dash": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Always Allow Speed Dash"
         },
         "auto_run": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Auto Run"
         },
         "available_last_keys": {
@@ -3288,17 +3288,17 @@
         },
         "buff_ranged_familiars": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Buff Ranged Familiars"
         },
         "buff_shooter_strength": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Buff Shooter Strength"
         },
         "buff_sub_weapons": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Buff Sub-weapons"
         },
         "completion_goal": {
@@ -3333,12 +3333,12 @@
         },
         "disable_battle_arena_mp_drain": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Disable Battle Arena MP Drain"
         },
         "dss_patch": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "DSS Patch"
         },
         "early_escape_item": {
@@ -3354,12 +3354,12 @@
         },
         "halve_dss_cards_placed": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Halve DSS Cards Placed"
         },
         "ignore_cleansing": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Ignore Cleansing"
         },
         "iron_maiden_behavior": {
@@ -3384,12 +3384,12 @@
         },
         "nerf_roc_wing": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Nerf Roc Wing"
         },
         "pluto_griffin_air_speed": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "DSS Pluto and Griffin Run Speed in Air"
         },
         "progression_balancing": {
@@ -3423,18 +3423,28 @@
         },
         "skip_dialogues": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Cutscene Dialogue"
         },
         "skip_tutorials": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Magic Item Tutorials"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         },
         "sub_weapon_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Sub-weapon Shuffle"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "total_last_keys": 1,
@@ -3467,14 +3477,7 @@
       "world_directory": "cvcotm_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

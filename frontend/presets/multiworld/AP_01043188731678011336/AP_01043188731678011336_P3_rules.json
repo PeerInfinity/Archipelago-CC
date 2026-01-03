@@ -11,12 +11,6 @@
     "3": "Player3",
     "4": "Player4"
   },
-  "world_classes": {
-    "1": "HatInTimeWorld",
-    "2": "ALTTPWorld",
-    "3": "ShortHikeWorld",
-    "4": "AdventureWorld"
-  },
   "regions": {
     "3": {
       "Menu": {
@@ -3074,6 +3068,7 @@
   "world": {
     "3": {
       "game": "A Short Hike",
+      "world_class_name": "ShortHikeWorld",
       "options": {
         "accessibility": 0,
         "buckets": 2,
@@ -3273,15 +3268,6 @@
       "world_directory": "shorthike"
     }
   },
-  "exporter": {
-    "3": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "ShortHikeWorld"
-    }
-  },
   "game_info": {
     "3": {}
   },
@@ -3326,8 +3312,8 @@
           "test": {
             "type": "not",
             "condition": {
-              "type": "setting_value",
-              "setting": "UmbrellaLogic"
+              "type": "option_value",
+              "option": "UmbrellaLogic"
             }
           },
           "if_true": {
@@ -3377,8 +3363,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "HatItems"
+            "type": "option_value",
+            "option": "HatItems"
           },
           "if_true": {
             "type": "item_check",
@@ -3455,8 +3441,8 @@
         "name": "Difficulty",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "LogicDifficulty"
+            "type": "option_value",
+            "option": "LogicDifficulty"
           }
         ]
       },
@@ -3565,8 +3551,8 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "setting_value",
-                    "setting": "NoPaintingSkips"
+                    "type": "option_value",
+                    "option": "NoPaintingSkips"
                   }
                 },
                 {
@@ -3647,8 +3633,8 @@
         "name": "bool",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "ShuffleSubconPaintings"
+            "type": "option_value",
+            "option": "ShuffleSubconPaintings"
           }
         ]
       }
@@ -3660,8 +3646,8 @@
           {
             "type": "if_statement",
             "test": {
-              "type": "setting_value",
-              "setting": "swordless"
+              "type": "option_value",
+              "option": "swordless"
             },
             "body": [
               {
@@ -3720,8 +3706,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "setting_value",
-                "setting": "glitches_required"
+                "type": "option_value",
+                "option": "glitches_required"
               },
               "op": "!=",
               "right": {
@@ -4124,8 +4110,8 @@
                       {
                         "type": "compare",
                         "left": {
-                          "type": "setting_value",
-                          "setting": "item_functionality"
+                          "type": "option_value",
+                          "option": "item_functionality"
                         },
                         "op": "==",
                         "right": {
@@ -4184,8 +4170,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "setting_value",
-                            "setting": "item_functionality"
+                            "type": "option_value",
+                            "option": "item_functionality"
                           },
                           "op": "==",
                           "right": {
@@ -4368,8 +4354,8 @@
             {
               "type": "if_statement",
               "test": {
-                "type": "setting_value",
-                "setting": "shuffle_capacity_upgrades"
+                "type": "option_value",
+                "option": "shuffle_capacity_upgrades"
               },
               "body": [
                 {
@@ -4567,8 +4553,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "enemy_shuffle"
+            "type": "option_value",
+            "option": "enemy_shuffle"
           },
           "if_true": {
             "type": "and",
@@ -4672,8 +4658,8 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "setting_value",
-                      "setting": "enemy_health"
+                      "type": "option_value",
+                      "option": "enemy_health"
                     },
                     "op": "in",
                     "right": {
@@ -4752,8 +4738,8 @@
                 "type": "or",
                 "conditions": [
                   {
-                    "type": "setting_value",
-                    "setting": "swordless"
+                    "type": "option_value",
+                    "option": "swordless"
                   },
                   {
                     "type": "helper",
@@ -4783,8 +4769,8 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "setting_value",
-                    "setting": "swordless"
+                    "type": "option_value",
+                    "option": "swordless"
                   },
                   {
                     "type": "item_check",
@@ -4803,8 +4789,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "retro_bow"
+            "type": "option_value",
+            "option": "retro_bow"
           },
           "if_true": {
             "type": "and",
@@ -4880,8 +4866,8 @@
               "value": {
                 "type": "conditional",
                 "test": {
-                  "type": "setting_value",
-                  "setting": "bombless_start"
+                  "type": "option_value",
+                  "option": "bombless_start"
                 },
                 "if_true": {
                   "type": "constant",
@@ -5008,8 +4994,8 @@
                   {
                     "type": "not",
                     "condition": {
-                      "type": "setting_value",
-                      "setting": "shuffle_capacity_upgrades"
+                      "type": "option_value",
+                      "option": "shuffle_capacity_upgrades"
                     }
                   },
                   {
@@ -5169,8 +5155,8 @@
       "has_misery_mire_medallion": {
         "type": "item_check",
         "item": {
-          "type": "setting_value",
-          "setting": "required_medallions",
+          "type": "world_attribute",
+          "attribute": "required_medallions",
           "index": 0
         }
       },
@@ -5198,8 +5184,8 @@
       "has_turtle_rock_medallion": {
         "type": "item_check",
         "item": {
-          "type": "setting_value",
-          "setting": "required_medallions",
+          "type": "world_attribute",
+          "attribute": "required_medallions",
           "index": 1
         }
       },
@@ -5326,8 +5312,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "setting_value",
-                "setting": "mode"
+                "type": "option_value",
+                "option": "mode"
               },
               "op": "!=",
               "right": {

@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "shapezWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -4300,17 +4297,19 @@
   "world": {
     "1": {
       "game": "shapez WorldGen",
+      "world_class_name": "ShapezWorld",
       "options": {
         "accessibility": 0,
         "allow_floating_layers": false,
+        "complexity_growth_gradient": "0.5",
         "early_balancer_tunnel_and_trash": 2,
         "exclude_locations": [],
-        "exclude_long_playtime_achievements": false,
-        "exclude_progression_unreasonable": false,
-        "exclude_softlock_achievements": false,
+        "exclude_long_playtime_achievements": true,
+        "exclude_progression_unreasonable": true,
+        "exclude_softlock_achievements": true,
         "goal": 0,
         "goal_amount": 27,
-        "include_achievements": false,
+        "include_achievements": true,
         "include_whacky_upgrades": false,
         "item_links": [],
         "local_items": [],
@@ -4321,19 +4320,20 @@
         "progression_balancing": 50,
         "randomize_items": false,
         "randomize_level_logic": 2,
-        "randomize_level_requirements": false,
+        "randomize_level_requirements": true,
         "randomize_upgrade_logic": 1,
-        "randomize_upgrade_requirements": false,
+        "randomize_upgrade_requirements": true,
         "required_shapes_multiplier": 10,
-        "same_late_upgrade_requirements": false,
+        "same_late_upgrade_requirements": true,
         "shapesanity_amount": 50,
         "split_inventory_draining_trap": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
         "throughput_levels_ratio": 0,
-        "toolbar_shuffling": false,
-        "traps_percentage": 0
+        "toolbar_shuffling": true,
+        "traps_percentage": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -4347,8 +4347,13 @@
         },
         "allow_floating_layers": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Allow floating layers"
+        },
+        "complexity_growth_gradient": {
+          "type": "freetext",
+          "default": "0.5",
+          "display_name": "Complexity growth gradient"
         },
         "early_balancer_tunnel_and_trash": {
           "type": "choice",
@@ -4363,17 +4368,17 @@
         },
         "exclude_long_playtime_achievements": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Exclude long playtime achievements"
         },
         "exclude_progression_unreasonable": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Exclude progression items in softlock and long playtime achievements"
         },
         "exclude_softlock_achievements": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Exclude softlock achievements"
         },
         "goal": {
@@ -4396,17 +4401,17 @@
         },
         "include_achievements": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Include Achievements"
         },
         "include_whacky_upgrades": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Whacky Upgrades"
         },
         "lock_belt_and_extractor": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Lock Belt and Extractor"
         },
         "progression_balancing": {
@@ -4441,7 +4446,7 @@
         },
         "randomize_level_requirements": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Randomize level requirements"
         },
         "randomize_upgrade_logic": {
@@ -4458,7 +4463,7 @@
         },
         "randomize_upgrade_requirements": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Randomize upgrade requirements"
         },
         "required_shapes_multiplier": {
@@ -4470,7 +4475,7 @@
         },
         "same_late_upgrade_requirements": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Same late upgrade requirements"
         },
         "shapesanity_amount": {
@@ -4482,7 +4487,7 @@
         },
         "split_inventory_draining_trap": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Split Inventory Draining Trap"
         },
         "throughput_levels_ratio": {
@@ -4494,7 +4499,7 @@
         },
         "toolbar_shuffling": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Toolbar Shuffling"
         },
         "traps_percentage": {
@@ -4503,6 +4508,11 @@
           "range_end": 100,
           "default": 0,
           "display_name": "Traps Percentage"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "location_count": 139,
@@ -5289,14 +5299,7 @@
       "world_directory": "shapez_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -5344,7 +5347,15 @@
                 },
                 {
                   "type": "item_check",
+                  "item": "Storage"
+                },
+                {
+                  "type": "item_check",
                   "item": "Item Filter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Wires"
                 },
                 {
                   "type": "item_check",
@@ -5352,15 +5363,7 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Storage"
-                },
-                {
-                  "type": "item_check",
                   "item": "Virtual Processing"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Wires"
                 }
               ]
             }
@@ -5414,10 +5417,16 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Cutter",
-                  "Quad Cutter"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Cutter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Quad Cutter"
+                  }
                 ]
               }
             ]
@@ -5436,10 +5445,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Quad Cutter",
-                  "Stacker"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Quad Cutter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Stacker"
+                  }
                 ]
               }
             ]
@@ -5506,10 +5521,16 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Double Painter",
-                  "Painter"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Painter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Double Painter"
+                  }
                 ]
               }
             ]
@@ -5525,11 +5546,20 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Rotator",
-              "Rotator (180\u00b0)",
-              "Rotator (CCW)"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Rotator"
+              },
+              {
+                "type": "constant",
+                "value": "Rotator (CCW)"
+              },
+              {
+                "type": "constant",
+                "value": "Rotator (180\u00b0)"
+              }
             ]
           }
         ]
@@ -5539,10 +5569,16 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Rotator",
-              "Rotator (CCW)"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Rotator"
+              },
+              {
+                "type": "constant",
+                "value": "Rotator (CCW)"
+              }
             ]
           }
         ]
@@ -5559,10 +5595,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Quad Painter",
-                  "Wires"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Quad Painter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Wires"
+                  }
                 ]
               }
             ]
@@ -5572,10 +5614,16 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Constant Signal",
-                  "Switch"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Switch"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Constant Signal"
+                  }
                 ]
               }
             ]
@@ -5594,10 +5642,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Compact Merger",
-                  "Compact Splitter"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Compact Merger"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Compact Splitter"
+                  }
                 ]
               }
             ]
@@ -5711,10 +5765,16 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Cutter",
-                      "Quad Cutter"
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Cutter"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Quad Cutter"
+                      }
                     ]
                   }
                 ]
@@ -5840,10 +5900,16 @@
         "method": "has_any",
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Tunnel",
-              "Tunnel Tier II"
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Tunnel"
+              },
+              {
+                "type": "constant",
+                "value": "Tunnel Tier II"
+              }
             ]
           }
         ]

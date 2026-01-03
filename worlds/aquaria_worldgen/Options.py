@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,6 +30,7 @@ class UseCanonicalOptions(Toggle):
 class AquarianTranslation(Toggle):
     """Option for Translate Aquarian."""
     display_name = "Translate Aquarian"
+    default = False
 
 class BigBossesToBeat(Range):
     """Option for Big bosses to beat."""
@@ -45,10 +46,12 @@ class BindSongNeededToGetUnderRockBulb(DefaultOnToggle):
 class BlindGoal(Toggle):
     """Option for Hide the goal's requirements."""
     display_name = "Hide the goal's requirements"
+    default = False
 
 class DishRandomizer(Toggle):
     """Option for Dish Randomizer."""
     display_name = "Dish Randomizer"
+    default = False
 
 class EarlyBindSong(Choice):
     """Option for Early Bind song."""
@@ -88,6 +91,7 @@ class MiniBossesToBeat(Range):
 class NoProgressionHardOrHiddenLocations(Toggle):
     """Option for No progression in hard or hidden locations."""
     display_name = "No progression in hard or hidden locations"
+    default = False
 
 class Objective(Choice):
     """Option for Objective."""
@@ -99,6 +103,7 @@ class Objective(Choice):
 class SkipFirstVision(Toggle):
     """Option for Skip Naija's first vision."""
     display_name = "Skip Naija's first vision"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""

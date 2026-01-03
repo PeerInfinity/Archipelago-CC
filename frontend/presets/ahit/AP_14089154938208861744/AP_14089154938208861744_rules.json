@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "HatInTimeWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -7305,6 +7302,7 @@
   "world": {
     "1": {
       "game": "A Hat in Time",
+      "world_class_name": "HatInTimeWorld",
       "options": {
         "ActBlacklist": {},
         "ActPlando": {},
@@ -8030,15 +8028,7 @@
       "world_directory": "ahit"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "HatInTimeWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {
       "chapter_costs": {
@@ -8185,8 +8175,8 @@
           "test": {
             "type": "not",
             "condition": {
-              "type": "setting_value",
-              "setting": "UmbrellaLogic"
+              "type": "option_value",
+              "option": "UmbrellaLogic"
             }
           },
           "if_true": {
@@ -8236,8 +8226,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "HatItems"
+            "type": "option_value",
+            "option": "HatItems"
           },
           "if_true": {
             "type": "item_check",
@@ -8314,8 +8304,8 @@
         "name": "Difficulty",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "LogicDifficulty"
+            "type": "option_value",
+            "option": "LogicDifficulty"
           }
         ]
       },
@@ -8424,8 +8414,8 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "setting_value",
-                    "setting": "NoPaintingSkips"
+                    "type": "option_value",
+                    "option": "NoPaintingSkips"
                   }
                 },
                 {
@@ -8506,8 +8496,8 @@
         "name": "bool",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "ShuffleSubconPaintings"
+            "type": "option_value",
+            "option": "ShuffleSubconPaintings"
           }
         ]
       }

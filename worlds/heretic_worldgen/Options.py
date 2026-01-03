@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -72,6 +72,7 @@ class AddedAmmoSpheres(Range):
 class AllowDeathLogic(Toggle):
     """Option for Allow Death Logic."""
     display_name = "Allow Death Logic"
+    default = False
 
 class BagOfHoldingCount(Range):
     """Option for Bag of Holding Count."""
@@ -83,10 +84,12 @@ class BagOfHoldingCount(Range):
 class CheckSanity(Toggle):
     """Option for Check Sanity."""
     display_name = "Check Sanity"
+    default = False
 
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class Difficulty(Choice):
     """Option for Difficulty."""
@@ -113,10 +116,12 @@ class Episode3(DefaultOnToggle):
 class Episode4(Toggle):
     """Option for Episode 4."""
     display_name = "Episode 4"
+    default = False
 
 class Episode5(Toggle):
     """Option for Episode 5."""
     display_name = "Episode 5"
+    default = False
 
 class Goal(Choice):
     """Option for Goal."""
@@ -170,6 +175,7 @@ class MaxAmmoSpheres(Range):
 class Pro(Toggle):
     """Option for Pro Heretic."""
     display_name = "Pro Heretic"
+    default = False
 
 class RandomMonsters(Choice):
     """Option for Random Monsters."""
@@ -203,6 +209,7 @@ class ResetLevelOnDeath(DefaultOnToggle):
 class SplitBagOfHolding(Toggle):
     """Option for Split Bag of Holding."""
     display_name = "Split Bag of Holding"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""
@@ -210,6 +217,7 @@ class StartInventoryFromPool(StartInventoryPool):
 class StartWithMapScrolls(Toggle):
     """Option for Start With Map Scrolls."""
     display_name = "Start With Map Scrolls"
+    default = False
 
 
 @dataclass

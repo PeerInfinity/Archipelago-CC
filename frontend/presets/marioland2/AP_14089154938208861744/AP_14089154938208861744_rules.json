@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "MarioLand2World"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -32032,6 +32029,7 @@
   "world": {
     "1": {
       "game": "Super Mario Land 2",
+      "world_class_name": "MarioLand2World",
       "options": {
         "accessibility": 1,
         "auto_scroll_chances": -1,
@@ -38961,15 +38959,7 @@
       "world_directory": "marioland2"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "MarioLand2World"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -39504,8 +39494,8 @@
                     "value": {
                       "type": "subscript",
                       "value": {
-                        "type": "setting_value",
-                        "setting": "sprite_data",
+                        "type": "world_attribute",
+                        "attribute": "sprite_data",
                         "index": "Turtle Zone 1"
                       },
                       "index": {
@@ -39820,8 +39810,8 @@
                   {
                     "type": "not",
                     "condition": {
-                      "type": "setting_value",
-                      "setting": "shuffle_midway_bells"
+                      "type": "option_value",
+                      "option": "shuffle_midway_bells"
                     }
                   }
                 ]

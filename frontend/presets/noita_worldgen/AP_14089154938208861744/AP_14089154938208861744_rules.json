@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "NoitaWorld"
-  },
   "regions": {
     "1": {
       "Abyss Orb Room": {
@@ -2928,6 +2925,7 @@
   "world": {
     "1": {
       "game": "Noita WorldGen",
+      "world_class_name": "NoitaWorld",
       "options": {
         "accessibility": 0,
         "bad_effects": true,
@@ -2982,7 +2980,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "extra_orbs": {
@@ -3103,15 +3101,7 @@
       "world_directory": "noita_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "NoitaWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },

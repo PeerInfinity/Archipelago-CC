@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -30,10 +30,12 @@ class UseCanonicalOptions(Toggle):
 class AlwaysAllowSpeedDash(Toggle):
     """Option for Always Allow Speed Dash."""
     display_name = "Always Allow Speed Dash"
+    default = False
 
 class AutoRun(Toggle):
     """Option for Auto Run."""
     display_name = "Auto Run"
+    default = False
 
 class AvailableLastKeys(Range):
     """Option for Available Last Keys."""
@@ -68,14 +70,17 @@ class BattleArenaMusic(Choice):
 class BuffRangedFamiliars(Toggle):
     """Option for Buff Ranged Familiars."""
     display_name = "Buff Ranged Familiars"
+    default = False
 
 class BuffShooterStrength(Toggle):
     """Option for Buff Shooter Strength."""
     display_name = "Buff Shooter Strength"
+    default = False
 
 class BuffSubWeapons(Toggle):
     """Option for Buff Sub-weapons."""
     display_name = "Buff Sub-weapons"
+    default = False
 
 class CompletionGoal(Choice):
     """Option for Completion Goal."""
@@ -104,10 +109,12 @@ class DeathLink(Choice):
 class DisableBattleArenaMpDrain(Toggle):
     """Option for Disable Battle Arena MP Drain."""
     display_name = "Disable Battle Arena MP Drain"
+    default = False
 
 class DssPatch(Toggle):
     """Option for DSS Patch."""
     display_name = "DSS Patch"
+    default = False
 
 class EarlyEscapeItem(Choice):
     """Option for Early Escape Item."""
@@ -121,10 +128,12 @@ class EarlyEscapeItem(Choice):
 class HalveDssCardsPlaced(Toggle):
     """Option for Halve DSS Cards Placed."""
     display_name = "Halve DSS Cards Placed"
+    default = False
 
 class IgnoreCleansing(Toggle):
     """Option for Ignore Cleansing."""
     display_name = "Ignore Cleansing"
+    default = False
 
 class IronMaidenBehavior(Choice):
     """Option for Iron Maiden Behavior."""
@@ -145,10 +154,12 @@ class ItemDropRandomization(Choice):
 class NerfRocWing(Toggle):
     """Option for Nerf Roc Wing."""
     display_name = "Nerf Roc Wing"
+    default = False
 
 class PlutoGriffinAirSpeed(Toggle):
     """Option for DSS Pluto and Griffin Run Speed in Air."""
     display_name = "DSS Pluto and Griffin Run Speed in Air"
+    default = False
 
 class RequiredLastKeys(Range):
     """Option for Required Last Keys."""
@@ -168,10 +179,12 @@ class RequiredSkirmishes(Choice):
 class SkipDialogues(Toggle):
     """Option for Skip Cutscene Dialogue."""
     display_name = "Skip Cutscene Dialogue"
+    default = False
 
 class SkipTutorials(Toggle):
     """Option for Skip Magic Item Tutorials."""
     display_name = "Skip Magic Item Tutorials"
+    default = False
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""
@@ -179,6 +192,7 @@ class StartInventoryFromPool(StartInventoryPool):
 class SubWeaponShuffle(Toggle):
     """Option for Sub-weapon Shuffle."""
     display_name = "Sub-weapon Shuffle"
+    default = False
 
 
 @dataclass
