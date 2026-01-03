@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-03 04:02:07
+**Generated:** 2026-01-03 07:22:13
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -53,7 +53,7 @@ Of the 61 templates passing all 4 tests:
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.6KB | ✅ | 238.0KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 663.8KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 665.1KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.1KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.8KB |
 | Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 27.3KB |
@@ -124,7 +124,7 @@ Of the 61 templates passing all 4 tests:
 | 2 | Dark Souls III WorldGen | 1089.9KB |
 | 3 | Super Mario Land 2 WorldGen | 880.2KB |
 | 4 | Links Awakening DX WorldGen | 714.1KB |
-| 5 | A Link to the Past WorldGen | 663.8KB |
+| 5 | A Link to the Past WorldGen | 665.1KB |
 | 6 | Final Fantasy Mystic Quest WorldGen | 558.2KB |
 | 7 | Overcooked! 2 WorldGen | 486.4KB |
 | 8 | The Legend of Zelda WorldGen | 439.9KB |
