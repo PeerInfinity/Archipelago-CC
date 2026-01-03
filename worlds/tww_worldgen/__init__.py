@@ -301,6 +301,7 @@ class TWWWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'TWWWorld'
         self.dungeons = {'Dragon Roost Cavern': 'Dragon Roost Cavern', 'Forbidden Woods': 'Forbidden Woods', 'Tower of the Gods': 'Tower of the Gods', 'Forsaken Fortress': 'Forsaken Fortress', 'Earth Temple': 'Earth Temple', 'Wind Temple': 'Wind Temple'}
         self.item_classification_overrides = {'Dragon Tingle Statue': 0, 'Earth Tingle Statue': 0, 'Forbidden Tingle Statue': 0, 'Goddess Tingle Statue': 0, "Maggie's Letter": 0, "Moblin's Letter": 0, 'Progressive Picto Box': 0, 'Quiver Capacity Upgrade': 2, 'Spoils Bag': 0, 'Tingle Tuner': 2, 'Treasure Chart 1': 0, 'Treasure Chart 10': 0, 'Treasure Chart 11': 0, 'Treasure Chart 12': 0, 'Treasure Chart 13': 0, 'Treasure Chart 14': 0, 'Treasure Chart 15': 0, 'Treasure Chart 16': 0, 'Treasure Chart 17': 0, 'Treasure Chart 18': 0, 'Treasure Chart 19': 0, 'Treasure Chart 2': 0, 'Treasure Chart 20': 0, 'Treasure Chart 21': 0, 'Treasure Chart 22': 0, 'Treasure Chart 23': 0, 'Treasure Chart 24': 0, 'Treasure Chart 25': 0, 'Treasure Chart 26': 0, 'Treasure Chart 27': 0, 'Treasure Chart 28': 0, 'Treasure Chart 29': 0, 'Treasure Chart 3': 0, 'Treasure Chart 30': 0, 'Treasure Chart 31': 0, 'Treasure Chart 32': 0, 'Treasure Chart 33': 0, 'Treasure Chart 34': 0, 'Treasure Chart 35': 0, 'Treasure Chart 36': 0, 'Treasure Chart 37': 0, 'Treasure Chart 38': 0, 'Treasure Chart 39': 0, 'Treasure Chart 4': 0, 'Treasure Chart 40': 0, 'Treasure Chart 41': 0, 'Treasure Chart 5': 0, 'Treasure Chart 6': 0, 'Treasure Chart 7': 0, 'Treasure Chart 8': 0, 'Treasure Chart 9': 0, 'Triforce Chart 1': 0, 'Triforce Chart 2': 0, 'Triforce Chart 3': 0, 'Triforce Chart 4': 0, 'Triforce Chart 5': 0, 'Triforce Chart 6': 0, 'Triforce Chart 7': 0, 'Triforce Chart 8': 0, 'Wind Tingle Statue': 0}
         self.useful_pool = ['Piece of Heart', 'Bomb Bag Capacity Upgrade', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Silver Rupee', 'Silver Rupee', 'Piece of Heart', 'Piece of Heart', 'Orange Rupee', 'Piece of Heart', 'Piece of Heart', 'Silver Rupee', 'Piece of Heart', 'Silver Rupee', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Heart Container', 'Piece of Heart', 'Piece of Heart', 'Rainbow Rupee', 'Piece of Heart', 'Silver Rupee', 'Piece of Heart', 'Silver Rupee', 'Silver Rupee', 'Silver Rupee', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Silver Rupee', 'Quiver Capacity Upgrade', 'Piece of Heart', 'Piece of Heart', 'Heart Container', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Fill-Up Coupon', 'Orange Rupee', 'Heart Container', 'Orange Rupee', 'Silver Rupee', 'Orange Rupee', 'Orange Rupee', 'Piece of Heart', 'Piece of Heart', 'Orange Rupee', 'Heart Container', 'Orange Rupee', 'Piece of Heart', 'Piece of Heart', 'Heart Container', 'Silver Rupee', 'Quiver Capacity Upgrade', 'Piece of Heart', 'Piece of Heart', 'Silver Rupee', 'Orange Rupee', 'Piece of Heart', 'Piece of Heart']
@@ -329,25 +330,24 @@ class TWWWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -480,8 +480,6 @@ class TWWWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = TheWindWakerWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

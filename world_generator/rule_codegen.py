@@ -2274,6 +2274,29 @@ class RuleCodeGenerator:
         self.required_imports.add('False_')
         return 'False_()'
 
+    def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access a world attribute at runtime.
+
+        World attributes are properties on the world object that are set
+        during game generation. Examples include logic settings like
+        'logic_obscure_1' in The Wind Waker.
+
+        Always generates: state.multiworld.worlds[player].<name>
+        This pattern is recognized by the exporter's pattern detection.
+        """
+        attribute = expr.get('attribute', '')
+        base_path = f'state.multiworld.worlds[player].{attribute}'
+
+        # Handle indexed access (e.g., required_medallions[0])
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
+
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
 
