@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Add Shortcut Warps Between Dungeons:No
 Chest Type Matches Contents:     No
 Death Link:                      No
@@ -66,6 +67,7 @@ Remove Music:                    No
 Required Bosses Mode:            No
 Reveal Full Sea Chart:           Yes
 Skip Boss Rematches:             Yes
+Start Inventory from Pool:       
 Swift Sail:                      Yes
 Sword Mode:                      Start With Sword
 
