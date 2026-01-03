@@ -212,7 +212,7 @@ _can_defeat_Skull_Woods_default._internal_function = True
 
 def _can_defeat_Ice_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Kholdstare in Ice Palace."""
-    return ((((((can_extend_magic(state, player, 16)) and (True) and (state.has_all(['Bombos', 'Fire Rod'], player)))) or (((can_extend_magic(state, player, 20)) and (state.has('Fire Rod', player)))) or (has_melee_weapon(state, player)))) and (((((((has_sword(state, player)) or (True))) and (state.has('Bombos', player)))) or (state.has('Fire Rod', player)))))
+    return ((((((can_extend_magic(state, player, 16)) and (state.multiworld.worlds[player].options.swordless) and (state.has_all(['Bombos', 'Fire Rod'], player)))) or (((can_extend_magic(state, player, 20)) and (state.has('Fire Rod', player)))) or (has_melee_weapon(state, player)))) and (((((((has_sword(state, player)) or (state.multiworld.worlds[player].options.swordless))) and (state.has('Bombos', player)))) or (state.has('Fire Rod', player)))))
 _can_defeat_Ice_Palace_default._internal_function = True
 
 

@@ -2274,6 +2274,29 @@ class RuleCodeGenerator:
         self.required_imports.add('False_')
         return 'False_()'
 
+    def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access a world attribute at runtime.
+
+        World attributes are properties on the world object that are set
+        during game generation. Examples include logic settings like
+        'logic_obscure_1' in The Wind Waker.
+
+        Always generates: state.multiworld.worlds[player].<name>
+        This pattern is recognized by the exporter's pattern detection.
+        """
+        attribute = expr.get('attribute', '')
+        base_path = f'state.multiworld.worlds[player].{attribute}'
+
+        # Handle indexed access (e.g., required_medallions[0])
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
+
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
 
@@ -4588,6 +4611,19 @@ class HelperCodeGenerator:
             if rule_type == 'False_':
                 return 'False'
 
+            # Handle OptionValue rules (Rule Builder format) - preserve as runtime check
+            # This is critical for boss defeat rules that depend on game options like 'swordless'
+            if rule_type == 'OptionValue':
+                args = expr.get('args', {})
+                option = args.get('option', '')
+                return f'state.multiworld.worlds[player].options.{option}'
+
+            # Handle SettingValue rules (Rule Builder format - legacy)
+            if rule_type == 'SettingValue':
+                args = expr.get('args', {})
+                setting = args.get('setting', '')
+                return self._expr_setting_value({'setting': setting})
+
             # Handle Tuple rules (Rule Builder format)
             if rule_type == 'Tuple':
                 args = expr.get('args', {})
@@ -4681,6 +4717,28 @@ class HelperCodeGenerator:
                 if index is not None:
                     setting_expr['index'] = index
                 return self._expr_setting_value(setting_expr)
+
+            # Handle OptionValue (Rule Builder format for option_value)
+            if rule_type == 'OptionValue':
+                args = expr.get('args', {})
+                option = args.get('option', '')
+                index = args.get('index')
+                # Build an option_value dict and use the existing handler
+                option_expr = {'option': option}
+                if index is not None:
+                    option_expr['index'] = index
+                return self._expr_option_value(option_expr)
+
+            # Handle WorldAttribute (Rule Builder format for world_attribute)
+            if rule_type == 'WorldAttribute':
+                args = expr.get('args', {})
+                attribute = args.get('attribute', '')
+                index = args.get('index')
+                # Build a world_attribute dict and use the existing handler
+                attr_expr = {'attribute': attribute}
+                if index is not None:
+                    attr_expr['index'] = index
+                return self._expr_world_attribute(attr_expr)
 
             # Handle AST_placement_lookup (Rule Builder format for placement_lookup)
             if rule_type == 'AST_placement_lookup':
