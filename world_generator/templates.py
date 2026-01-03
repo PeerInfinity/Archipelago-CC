@@ -220,7 +220,9 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
     # WorldAttribute also needs lambda because it generates state.multiworld.worlds[player].attr
     # which requires 'state' to be defined (only available in lambda context).
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute'):
+    # AST_capability needs lambda because it calls helper functions with runtime arguments
+    # from options/world attributes.
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'AST_capability'):
         return True
 
     # Recursively check all dict and list values
@@ -771,6 +773,16 @@ def generate_rules_py(data: ExtractedData) -> str:
     )
     helper_generator.set_known_helpers(set(data.helpers.keys()))
     helper_generator.set_placements(data.original_placements)
+
+    # Build helper data dict with param_mappings for AST_capability resolution
+    helper_data_dict = {}
+    for helper_name, helper_obj in data.helpers.items():
+        helper_data_dict[helper_name] = {
+            'params': helper_obj.params,
+            'param_mappings': helper_obj.param_mappings,
+            'defaults': helper_obj.defaults,
+        }
+    helper_generator.set_helper_data(helper_data_dict)
 
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)

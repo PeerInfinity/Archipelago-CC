@@ -661,6 +661,21 @@ class RuleCodeGenerator:
                 if rb_rule == 'AST_function_call':
                     return self._convert_ast_function_call(rule)
 
+                # Check if this is an AST_capability rule (capability check converted from can_X helpers)
+                # AST_capability with capability "defeat_enough_rbms" -> can_defeat_enough_rbms(state, player)
+                if rb_rule == 'AST_capability':
+                    args = rule.get('args', {})
+                    capability = args.get('capability', '')
+                    if capability:
+                        helper_name = f'can_{capability}'
+                        # Check if this helper exists in known_helpers
+                        if helper_name in self.known_helpers:
+                            self.required_imports.add('HelperCall')
+                            func_name = self.get_function_name(helper_name)
+                            # Generate a HelperCall for the helper function
+                            return f'HelperCall({func_name})'
+                    # Unknown capability - fall through to True_()
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
@@ -4100,6 +4115,7 @@ class HelperCodeGenerator:
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
+        self.helper_data: Dict[str, Any] = {}  # Full helper data including param_mappings
         self.uses_math: bool = False  # Track if math functions are used
         self.uses_placement_lookup: bool = False  # Track if placement_lookup is used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
@@ -4116,6 +4132,18 @@ class HelperCodeGenerator:
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
         self.known_helpers = helper_names
+
+    def set_helper_data(self, helper_data: Dict[str, Any]) -> None:
+        """Set the full helper data including param_mappings.
+
+        Args:
+            helper_data: Dict mapping helper names to their data, including:
+                - params: List of parameter names
+                - param_mappings: Dict mapping param names to setting/attribute names
+                - body: The helper body
+                - defaults: Default parameter values
+        """
+        self.helper_data = helper_data or {}
 
     def set_placements(self, placements: Dict[str, str]) -> None:
         """Set the placement data for resolving placement_lookup rules."""
@@ -4537,6 +4565,8 @@ class HelperCodeGenerator:
             'generator_expression': self._expr_generator_expression,
             'region_reference': self._expr_region_reference,
             'region_attribute': self._expr_region_attribute,
+            'map': self._expr_map,
+            'lambda': self._expr_lambda,
         }
 
         handler = handlers.get(expr_type)
@@ -4800,6 +4830,42 @@ class HelperCodeGenerator:
                     return f'{func_expr}({", ".join(arg_exprs)})'
                 return 'True'
 
+            # Handle AST_capability (converts to helper function call)
+            # Original: {"rule": "AST_capability", "args": {"capability": "defeat_enough_rbms", ...}}
+            # Converts to: can_defeat_enough_rbms(state, player, ...)
+            if rule_type == 'AST_capability':
+                args = expr.get('args', {})
+                capability = args.get('capability', '')
+                if capability:
+                    helper_name = f'can_{capability}'
+                    func_name = self.get_function_name(helper_name)
+
+                    # Get helper data including param_mappings
+                    helper_info = self.helper_data.get(helper_name, {})
+                    params = helper_info.get('params', [])
+                    param_mappings = helper_info.get('param_mappings', {})
+
+                    # Build argument list based on param_mappings
+                    arg_exprs = []
+                    for param in params:
+                        if param in param_mappings:
+                            setting_name = param_mappings[param]
+                            # Check if it's an option or a world attribute
+                            if setting_name in self.option_definitions:
+                                # Option: access via state.multiworld.worlds[player].options.<name>.value
+                                arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
+                            else:
+                                # World attribute: access via state.multiworld.worlds[player].<name>
+                                arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
+                        else:
+                            # No mapping, use None as default
+                            arg_exprs.append('None')
+
+                    if arg_exprs:
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+                    return f'{func_name}(state, player)'
+                return 'True'
+
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown types are typically progression checks that evaluate to true
@@ -4944,14 +5010,12 @@ class HelperCodeGenerator:
                     val_reprs.append(self._generate_expression({'type': 'constant', 'value': v}))
                 return f"{class_name}({', '.join(val_reprs)})"
 
-            # Handle dict constants - convert string keys that look like integers
+            # Handle dict constants - preserve string keys from JSON
+            # JSON always uses string keys, and the worldgen data structures (from JSON)
+            # also use string keys, so we keep them as strings for consistency.
             items = []
             for k, v in value.items():
-                # Try to convert string keys that look like integers
-                try:
-                    key_repr = str(int(k))
-                except (ValueError, TypeError):
-                    key_repr = repr(k)
+                key_repr = repr(k)
                 # Check if dict value is an AST node (has 'type' key) - process as expression
                 if isinstance(v, dict) and 'type' in v:
                     val_repr = self._generate_expression(v)
@@ -5970,3 +6034,37 @@ class HelperCodeGenerator:
             result = f"[{element} for {target_name} in {iterator} if {cond_expr}]"
 
         return result
+
+    def _expr_map(self, expr: Dict[str, Any]) -> str:
+        """Generate a Python map() call.
+
+        Structure: {"type": "map", "function": <lambda_expr>, "iterable": <expr>}
+
+        This is used for expressions like:
+            map(lambda x: weapons_to_name[x], reqs)
+
+        Which maps elements of an iterable through a function.
+        """
+        function = expr.get('function', {})
+        iterable = expr.get('iterable', {})
+
+        func_expr = self._generate_expression(function)
+        iter_expr = self._generate_expression(iterable)
+
+        return f"map({func_expr}, {iter_expr})"
+
+    def _expr_lambda(self, expr: Dict[str, Any]) -> str:
+        """Generate a Python lambda expression.
+
+        Structure: {"type": "lambda", "params": ["x", ...], "body": <expr>}
+
+        This is used for expressions like:
+            lambda x: weapons_to_name[x]
+        """
+        params = expr.get('params', [])
+        body = expr.get('body', {})
+
+        params_str = ', '.join(params)
+        body_expr = self._generate_expression(body)
+
+        return f"lambda {params_str}: {body_expr}"
