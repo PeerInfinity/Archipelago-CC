@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-02 23:12:24
+**Generated:** 2026-01-03 01:26:45
 
 ## Summary
 
@@ -16,8 +16,8 @@
 - **Skipped (Prerequisites):** 10 (13.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 62
-- **Second Pass Passed:** 62
+- **Second Pass Tested:** 72
+- **Second Pass Passed:** 72
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
@@ -30,16 +30,16 @@
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ⚫ Skipped | — | 1 | 1 | 4.6KB | ✅ |
-| A Link to the Past | ⚫ Skipped | — | 1 | 1 | ✅ | ✅ |
-| A Short Hike | ⚫ Skipped | — | 1 | 1 | ✅ | ✅ |
-| APQuest | ⚫ Skipped | — | 1 | 1 | ✅ | ✅ |
-| Adventure | ⚫ Skipped | — | 1 | 1 | ✅ | ✅ |
-| Aquaria | ⚫ Skipped | — | 1 | 1 | 1.8KB | ✅ |
-| Baking Adventure | ⚫ Skipped | — | 1 | 1 | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ⚫ Skipped | — | 1 | 1 | 1.4KB | 40.3KB |
-| Bumper Stickers | ⚫ Skipped | — | 1 | 1 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ⚫ Skipped | — | 1 | 1 | 4.0KB | ✅ |
+| A Hat in Time | ⚫ Skipped | ✅ Passed | 1 | 1 | 4.6KB | ✅ |
+| A Link to the Past | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| A Short Hike | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| APQuest | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Adventure | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Aquaria | ⚫ Skipped | ✅ Passed | 1 | 1 | 1.8KB | ✅ |
+| Baking Adventure | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Bomb Rush Cyberfunk | ⚫ Skipped | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
+| Bumper Stickers | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Castlevania - Circle of the Moon | ⚫ Skipped | ✅ Passed | 1 | 1 | 4.0KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 4.1KB | ✅ |
@@ -799,6 +799,16 @@ Templates tested in the first pass with fewer than the maximum number of players
 
 | Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |
 |-----------|-------------------|---------------------|---------------------|--------------------|
+| A Hat in Time | 1 | 8 | 1 | ✅ Passed |
+| A Link to the Past | 1 | 8 | 1 | ✅ Passed |
+| A Short Hike | 1 | 7 | 1 | ✅ Passed |
+| APQuest | 1 | 7 | 1 | ✅ Passed |
+| Adventure | 1 | 7 | 1 | ✅ Passed |
+| Aquaria | 1 | 7 | 1 | ✅ Passed |
+| Baking Adventure | 1 | 7 | 1 | ✅ Passed |
+| Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
+| Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
+| Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 2 | 8 | 2 | ✅ Passed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 7 | 2 | ✅ Passed |
@@ -865,6 +875,128 @@ Templates tested in the first pass with fewer than the maximum number of players
 ### Second Pass Templates in Multiworld
 
 Shows which templates were in the multiworld when each game was tested in the second pass:
+
+#### A Hat in Time ✅ (Split 1)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
+| 2 | Castlevania 64.yaml |
+| 3 | Dark Souls III.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Shivers.yaml |
+| 7 | TOEM rule builder.yaml |
+| 8 | Wargroove.yaml |
+
+#### A Link to the Past ✅ (Split 2)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Link to the Past.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Landstalker - The Treasures of King Nole.yaml |
+| 5 | Muse Dash.yaml |
+| 6 | Sonic Adventure 2 Battle.yaml |
+| 7 | TUNIC.yaml |
+| 8 | Yoshi's Island.yaml |
+
+#### A Short Hike ✅ (Split 3)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Celeste 64.yaml |
+| 3 | Factorio.yaml |
+| 4 | Lingo.yaml |
+| 5 | Noita.yaml |
+| 6 | Terraria.yaml |
+| 7 | shapez.yaml |
+
+#### APQuest ✅ (Split 4)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest.yaml |
+| 2 | ChecksFinder.yaml |
+| 3 | Faxanadu.yaml |
+| 4 | Links Awakening DX.yaml |
+| 5 | Old School Runescape.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
+
+#### Adventure ✅ (Split 5)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+
+#### Aquaria ✅ (Split 6)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Heretic.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Super Mario 64.yaml |
+| 7 | The Wind Waker.yaml |
+
+#### Baking Adventure ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
+
+#### Bomb Rush Cyberfunk ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
+
+#### Bumper Stickers ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | MegaMan Battle Network 3.yaml |
+| 5 | Saving Princess.yaml |
+| 6 | Super Metroid.yaml |
+| 7 | Undertale.yaml |
+
+#### Castlevania - Circle of the Moon ✅ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | Kingdom Hearts.yaml |
+| 4 | Meritous.yaml |
+| 5 | Secret of Evermore.yaml |
+| 6 | TOEM original.yaml |
+| 7 | VVVVVV.yaml |
 
 #### Castlevania 64 ✅ (Split 1)
 
