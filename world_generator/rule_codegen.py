@@ -4682,6 +4682,28 @@ class HelperCodeGenerator:
                     setting_expr['index'] = index
                 return self._expr_setting_value(setting_expr)
 
+            # Handle OptionValue (Rule Builder format for option_value)
+            if rule_type == 'OptionValue':
+                args = expr.get('args', {})
+                option = args.get('option', '')
+                index = args.get('index')
+                # Build an option_value dict and use the existing handler
+                option_expr = {'option': option}
+                if index is not None:
+                    option_expr['index'] = index
+                return self._expr_option_value(option_expr)
+
+            # Handle WorldAttribute (Rule Builder format for world_attribute)
+            if rule_type == 'WorldAttribute':
+                args = expr.get('args', {})
+                attribute = args.get('attribute', '')
+                index = args.get('index')
+                # Build a world_attribute dict and use the existing handler
+                attr_expr = {'attribute': attribute}
+                if index is not None:
+                    attr_expr['index'] = index
+                return self._expr_world_attribute(attr_expr)
+
             # Handle AST_placement_lookup (Rule Builder format for placement_lookup)
             if rule_type == 'AST_placement_lookup':
                 args = expr.get('args', {})
