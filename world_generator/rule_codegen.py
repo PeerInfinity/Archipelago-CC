@@ -4588,6 +4588,19 @@ class HelperCodeGenerator:
             if rule_type == 'False_':
                 return 'False'
 
+            # Handle OptionValue rules (Rule Builder format) - preserve as runtime check
+            # This is critical for boss defeat rules that depend on game options like 'swordless'
+            if rule_type == 'OptionValue':
+                args = expr.get('args', {})
+                option = args.get('option', '')
+                return f'state.multiworld.worlds[player].options.{option}'
+
+            # Handle SettingValue rules (Rule Builder format - legacy)
+            if rule_type == 'SettingValue':
+                args = expr.get('args', {})
+                setting = args.get('setting', '')
+                return self._expr_setting_value({'setting': setting})
+
             # Handle Tuple rules (Rule Builder format)
             if rule_type == 'Tuple':
                 args = expr.get('args', {})
