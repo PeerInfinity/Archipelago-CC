@@ -4029,6 +4029,29 @@ class RuleCodeGenerator:
             # Option-filtered rule - just return the if_true branch
             return self._convert_rule(if_true)
 
+        # Check if test is an OptionValue - resolve at generation time
+        # OptionValue rules can't be evaluated at rule-setting time because
+        # 'state' is not available in the set_rules function scope
+        test_rb_rule = test.get('rule', '') if isinstance(test, dict) else ''
+        test_type = test.get('type', '') if isinstance(test, dict) else ''
+        if test_rb_rule == 'OptionValue' or test_type == 'option_value':
+            # Get the option name
+            test_args = test.get('args', {}) if isinstance(test, dict) else {}
+            option_name = test_args.get('option', '') or test.get('option', '')
+            # Look up the option value in settings
+            if option_name in self.settings:
+                option_value = self.settings[option_name]
+                # If option is truthy, return if_true branch
+                # If option is falsy, return if_false branch
+                if option_value:
+                    return self._convert_rule(if_true)
+                else:
+                    return self._convert_rule(if_false)
+            # If option not found in settings, default to if_true (assume enabled)
+            # This matches typical Archipelago behavior where options default to
+            # their most restrictive values for rule generation
+            return self._convert_rule(if_true)
+
         test_code = self._convert_rule(test)
         if_true_code = self._convert_rule(if_true)
         if_false_code = self._convert_rule(if_false)

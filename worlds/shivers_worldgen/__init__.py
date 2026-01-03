@@ -306,6 +306,7 @@ class ShiversWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
+        self.world_class_name = 'ShiversWorld'
         self.pot_completed_list = []
         self.storage_placements = {'Workshop Drawers': 'Metal Pot Bottom', 'Anansi Music Box': 'Empty', 'Greenhouse': 'Cloth Pot Top', 'Theater': 'Empty', 'Shaman Hut': 'Empty', 'Alchemy': 'Oil Pot Bottom', 'Ocean': 'Lightning Pot Top', 'Janitor Closet': 'Lightning Pot Bottom', 'Lyre': 'Metal Pot Top', 'Gallows': 'Crystal Pot Top', 'Slide': 'Ash Pot Bottom', 'Chinese Solitaire': 'Sand Pot Top', 'UFO': 'Wood Pot Bottom', 'Skull Bridge': 'Ash Pot Top', 'Egypt': 'Cloth Pot Bottom', 'Desk Drawer': 'Crystal Pot Bottom', 'Eagles Nest': 'Wax Pot Top', 'Skeleton': 'Wood Pot Top', 'Tar River': 'Wax Pot Bottom', 'Clock Tower': 'Water Pot Bottom', 'Library Cabinet': 'Oil Pot Top', 'Transforming Mask': 'Water Pot Top', 'Library Statue': 'Sand Pot Bottom'}
         self.world_description = "Shivers is a horror themed point and click adventure.\nExplore the mysteries of Windlenot's Museum of the Strange and Unusual."
@@ -320,25 +321,24 @@ class ShiversWorld(RuleWorldMixin, World):
                 self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
-        """Load options from _worldgen_settings.json for canonical seed generation.
+        """Load options from _worldgen_options.json for canonical seed generation.
 
         This ensures that when generating seed 1, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the settings file in the same directory as this module
+        # Find the options file in the same directory as this module
         world_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(world_dir, '_worldgen_settings.json')
+        options_path = os.path.join(world_dir, '_worldgen_options.json')
 
-        if not os.path.exists(settings_path):
-            return  # No settings file, use defaults
+        if not os.path.exists(options_path):
+            return  # No options file, use defaults
 
         try:
-            with open(settings_path, 'r') as f:
-                settings = json.load(f)
+            with open(options_path, 'r') as f:
+                options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
-            return  # Can't read settings, use defaults
+            return  # Can't read options, use defaults
 
-        options_data = settings.get('options', {})
         if not options_data:
             return
 
@@ -453,8 +453,6 @@ class ShiversWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = ShiversWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

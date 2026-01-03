@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ShiversWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1179,36 +1176,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "beths_body_available",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "CanReachRegion",
                   "args": {
-                    "test": {
-                      "rule": "True_"
-                    },
-                    "if_true": {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Theater"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Viewed Norse Stone"
-                          }
-                        }
-                      ]
-                    },
-                    "if_false": {
-                      "rule": "True_"
-                    }
+                    "region_name": "Theater"
                   }
                 },
                 {
-                  "rule": "beths_body_available",
-                  "_original_ast_type": "helper"
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Viewed Norse Stone"
+                  }
                 }
               ]
             }
@@ -1395,20 +1376,9 @@
             "name": "To Clock Chains From Clock Tower Staircase",
             "connected_region": "Clock Chains",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "CanReachRegion",
               "args": {
-                "test": {
-                  "rule": "True_"
-                },
-                "if_true": {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bedroom"
-                  }
-                },
-                "if_false": {
-                  "rule": "True_"
-                }
+                "region_name": "Bedroom"
               }
             }
           }
@@ -1524,20 +1494,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "CanReachRegion",
                   "args": {
-                    "test": {
-                      "rule": "True_"
-                    },
-                    "if_true": {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Anansi"
-                      }
-                    },
-                    "if_false": {
-                      "rule": "True_"
-                    }
+                    "region_name": "Anansi"
                   }
                 },
                 {
@@ -3006,32 +2965,13 @@
             "name": "To Guillotine From Torture",
             "connected_region": "Guillotine",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "True_"
-                    },
-                    "if_true": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Viewed Egyptian Hieroglyphics Explained"
-                      }
-                    },
-                    "if_false": {
-                      "rule": "True_"
-                    }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Viewed Page 17"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Viewed Egyptian Hieroglyphics Explained",
+                  "Viewed Page 17"
+                ]
+              }
             }
           }
         ],
@@ -4987,6 +4927,7 @@
   "world": {
     "1": {
       "game": "Shivers WorldGen",
+      "world_class_name": "ShiversWorld",
       "options": {
         "accessibility": 0,
         "early_beth": true,
@@ -5011,7 +4952,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -5030,7 +4972,7 @@
         },
         "early_lightning": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Early Lightning"
         },
         "elevators_stay_solved": {
@@ -5040,7 +4982,7 @@
         },
         "front_door_usable": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Front Door Usable"
         },
         "full_pots": {
@@ -5055,7 +4997,7 @@
         },
         "include_information_plaques": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Information Plaques"
         },
         "ixupi_captures_needed": {
@@ -5116,6 +5058,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "pot_completed_list": [],
@@ -5198,14 +5145,7 @@
       "world_directory": "shivers_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -5269,8 +5209,8 @@
             "name": "first_nine_ixupi_capturable"
           },
           {
-            "type": "constant",
-            "value": true
+            "type": "option_value",
+            "option": "early_beth"
           }
         ]
       },
@@ -5392,8 +5332,8 @@
                 "name": "first_nine_ixupi_capturable"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "option_value",
+                "option": "early_lightning"
               }
             ]
           },

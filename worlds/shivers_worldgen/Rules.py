@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall, Or, True_
+from rule_builder import True_, False_, And, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -181,7 +181,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Beth's Body From Generator", player),
-        And(Conditional(test=True_(), if_true=And(CanReachRegion('Theater'), Has('Viewed Norse Stone')), if_false=True_()), HelperCall(helper_func=beths_body_available, helper_name="beths_body_available"))
+        And(And(CanReachRegion('Theater'), Has('Viewed Norse Stone')), HelperCall(helper_func=beths_body_available, helper_name="beths_body_available"))
     )
 
     world.set_rule(
@@ -201,7 +201,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player),
-        Conditional(test=True_(), if_true=CanReachRegion('Bedroom'), if_false=True_())
+        CanReachRegion('Bedroom')
     )
 
     world.set_rule(
@@ -336,7 +336,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Guillotine From Torture", player),
-        And(Conditional(test=True_(), if_true=Has('Viewed Egyptian Hieroglyphics Explained', 1), if_false=True_()), Has('Viewed Page 17'))
+        And(Has('Viewed Egyptian Hieroglyphics Explained', 1), Has('Viewed Page 17'))
     )
 
     world.set_rule(
@@ -396,7 +396,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jukebox", player),
-        And(Conditional(test=True_(), if_true=CanReachRegion('Anansi'), if_false=True_()), CanReachRegion('Clock Tower'))
+        And(CanReachRegion('Anansi'), CanReachRegion('Clock Tower'))
     )
 
     world.set_rule(
