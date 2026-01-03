@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-01-02 18:00:44
+**Generated:** 2026-01-03 03:44:25
 
 ## Summary
 
@@ -78,7 +78,7 @@
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 28.7KB | 87.5KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 12.4KB | ✅ |
