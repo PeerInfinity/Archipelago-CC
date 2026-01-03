@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -42,10 +42,12 @@ class Bossrando(Choice):
 class Cantoran(Toggle):
     """Option for Cantoran."""
     display_name = "Cantoran"
+    default = False
 
 class Dadpercent(Toggle):
     """Option for Dad Percent."""
     display_name = "Dad Percent"
+    default = False
 
 class Damagerando(Choice):
     """Option for Damage Rando."""
@@ -62,6 +64,7 @@ class Damagerando(Choice):
 class Deathlink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class Downloadableitems(DefaultOnToggle):
     """Option for Downloadable items."""
@@ -89,6 +92,7 @@ class Enemyrando(Choice):
 class Entersandman(Toggle):
     """Option for Enter Sandman."""
     display_name = "Enter Sandman"
+    default = False
 
 class Extraearringsxp(Range):
     """Option for Extra Earrings XP."""
@@ -100,6 +104,7 @@ class Extraearringsxp(Range):
 class Eyespy(Toggle):
     """Option for Eye Spy."""
     display_name = "Eye Spy"
+    default = False
 
 class Fixeddroprate(Range):
     """Option for Fixed Drop Rate."""
@@ -111,6 +116,7 @@ class Fixeddroprate(Range):
 class Gyrearchives(Toggle):
     """Option for Gyre Archives."""
     display_name = "Gyre Archives"
+    default = False
 
 class Hpcap(Range):
     """Option for HP Cap."""
@@ -122,6 +128,7 @@ class Hpcap(Range):
 class Inverted(Toggle):
     """Option for Inverted."""
     display_name = "Inverted"
+    default = False
 
 class Levelcap(Range):
     """Option for Level Cap."""
@@ -149,18 +156,22 @@ class Loottierdistro(Choice):
 class Lorechecks(Toggle):
     """Option for Lore Checks."""
     display_name = "Lore Checks"
+    default = False
 
 class Presentaccesswithwheelandspindle(Toggle):
     """Option for Back to the future."""
     display_name = "Back to the future"
+    default = False
 
 class Quickseed(Toggle):
     """Option for Quick seed."""
     display_name = "Quick seed"
+    default = False
 
 class Risingtides(Toggle):
     """Option for Rising Tides."""
     display_name = "Rising Tides"
+    default = False
 
 class Shopfill(Choice):
     """Option for Shop Inventory."""
@@ -185,22 +196,27 @@ class Shopwarpshards(DefaultOnToggle):
 class Showbestiary(Toggle):
     """Option for Show Bestiary Entries."""
     display_name = "Show Bestiary Entries"
+    default = False
 
 class Showdrops(Toggle):
     """Option for Show Bestiary Item Drops."""
     display_name = "Show Bestiary Item Drops"
+    default = False
 
 class Specifickeycards(Toggle):
     """Option for Specific Keycards."""
     display_name = "Specific Keycards"
+    default = False
 
 class Startwithjewelrybox(Toggle):
     """Option for Start with Jewelry Box."""
     display_name = "Start with Jewelry Box"
+    default = False
 
 class Startwithmeyef(Toggle):
     """Option for Start with Meyef."""
     display_name = "Start with Meyef"
+    default = False
 
 class Trapchance(Range):
     """Option for Trap Chance."""
@@ -212,6 +228,7 @@ class Trapchance(Range):
 class Unchainedkeys(Toggle):
     """Option for Unchained Keys."""
     display_name = "Unchained Keys"
+    default = False
 
 class AuraCap(Range):
     """Option for Aura Cap."""
@@ -223,6 +240,7 @@ class AuraCap(Range):
 class BackToTheFuture(Toggle):
     """Option for Back to the future."""
     display_name = "Back to the future"
+    default = False
 
 class BossHealing(DefaultOnToggle):
     """Option for Heal After Bosses."""
@@ -248,10 +266,12 @@ class BossRandoType(Choice):
 class Cantoran(Toggle):
     """Option for Cantoran."""
     display_name = "Cantoran"
+    default = False
 
 class DadPercent(Toggle):
     """Option for Dad Percent."""
     display_name = "Dad Percent"
+    default = False
 
 class DamageRando(Choice):
     """Option for Damage Rando."""
@@ -268,6 +288,7 @@ class DamageRando(Choice):
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
+    default = False
 
 class DownloadableItems(DefaultOnToggle):
     """Option for Downloadable items."""
@@ -295,6 +316,7 @@ class EnemyRando(Choice):
 class EnterSandman(Toggle):
     """Option for Enter Sandman."""
     display_name = "Enter Sandman"
+    default = False
 
 class ExtraEarringsXp(Range):
     """Option for Extra Earrings XP."""
@@ -306,10 +328,12 @@ class ExtraEarringsXp(Range):
 class EyeSpy(Toggle):
     """Option for Eye Spy."""
     display_name = "Eye Spy"
+    default = False
 
 class FindTheFlame(Toggle):
     """Option for Find the Flame."""
     display_name = "Find the Flame"
+    default = False
 
 class FixedDropRate(Range):
     """Option for Fixed Drop Rate."""
@@ -321,14 +345,17 @@ class FixedDropRate(Range):
 class GateKeep(Toggle):
     """Option for Gate Keep."""
     display_name = "Gate Keep"
+    default = False
 
 class GyreArchives(Toggle):
     """Option for Gyre Archives."""
     display_name = "Gyre Archives"
+    default = False
 
 class HasReplacedOptions(Toggle):
     """Option for Has Replaced Options."""
     display_name = "Has Replaced Options"
+    default = False
 
 class HpCap(Range):
     """Option for HP Cap."""
@@ -340,6 +367,7 @@ class HpCap(Range):
 class Inverted(Toggle):
     """Option for Inverted."""
     display_name = "Inverted"
+    default = False
 
 class LevelCap(Range):
     """Option for Level Cap."""
@@ -351,6 +379,7 @@ class LevelCap(Range):
 class LockKeyAmadeus(Toggle):
     """Option for Lock Key Amadeus."""
     display_name = "Lock Key Amadeus"
+    default = False
 
 class LootPool(Choice):
     """Option for Loot Pool."""
@@ -371,34 +400,42 @@ class LootTierDistro(Choice):
 class LoreChecks(Toggle):
     """Option for Lore Checks."""
     display_name = "Lore Checks"
+    default = False
 
 class PrismBreak(Toggle):
     """Option for Prism Break."""
     display_name = "Prism Break"
+    default = False
 
 class PureTorcher(Toggle):
     """Option for Pure Torcher."""
     display_name = "Pure Torcher"
+    default = False
 
 class PyramidStart(Toggle):
     """Option for Pyramid Start."""
     display_name = "Pyramid Start"
+    default = False
 
 class QuickSeed(Toggle):
     """Option for Quick seed."""
     display_name = "Quick seed"
+    default = False
 
 class RisingTides(Toggle):
     """Option for Rising Tides."""
     display_name = "Rising Tides"
+    default = False
 
 class RiskyWarps(Toggle):
     """Option for Risky Warps."""
     display_name = "Risky Warps"
+    default = False
 
 class RoyalRoadblock(Toggle):
     """Option for Royal Roadblock."""
     display_name = "Royal Roadblock"
+    default = False
 
 class ShopFill(Choice):
     """Option for Shop Inventory."""
@@ -423,22 +460,27 @@ class ShopWarpShards(DefaultOnToggle):
 class ShowBestiary(Toggle):
     """Option for Show Bestiary Entries."""
     display_name = "Show Bestiary Entries"
+    default = False
 
 class ShowDrops(Toggle):
     """Option for Show Bestiary Item Drops."""
     display_name = "Show Bestiary Item Drops"
+    default = False
 
 class SpecificKeycards(Toggle):
     """Option for Specific Keycards."""
     display_name = "Specific Keycards"
+    default = False
 
 class StartWithJewelryBox(Toggle):
     """Option for Start with Jewelry Box."""
     display_name = "Start with Jewelry Box"
+    default = False
 
 class StartWithMeyef(Toggle):
     """Option for Start with Meyef."""
     display_name = "Start with Meyef"
+    default = False
 
 class TrapChance(Range):
     """Option for Trap Chance."""
@@ -450,6 +492,7 @@ class TrapChance(Range):
 class UnchainedKeys(Toggle):
     """Option for Unchained Keys."""
     display_name = "Unchained Keys"
+    default = False
 
 
 @dataclass

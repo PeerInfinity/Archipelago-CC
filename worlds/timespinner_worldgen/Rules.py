@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, False_, Has, HasAll, HasAny, Not, Or
+from rule_builder import True_, False_, And, CanReachRegion, False_, Has, HasAll, HasAny, HelperCall, Not, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -33,7 +33,7 @@ def has_doublejump(state: "CollectionState", player: int) -> bool:
 
 
 def has_doublejump_of_npc(state: "CollectionState", player: int) -> bool:
-    return (state.has('Upwarddash', player)) or ((state.has('Timespinner Wheel', player)) and (state.has('Doublejump', player)))
+    return (has_upwarddash(state, player)) or ((state.has('Timespinner Wheel', player)) and (has_doublejump(state, player)))
 
 
 def has_fastjump_on_npc(state: "CollectionState", player: int) -> bool:
@@ -45,7 +45,7 @@ def has_fire(state: "CollectionState", player: int) -> bool:
 
 
 def has_forwarddash_doublejump(state: "CollectionState", player: int) -> bool:
-    return (state.has('Upwarddash', player)) or ((state.has('Talaria Attachment', player)) and (state.has('Doublejump', player)))
+    return (has_upwarddash(state, player)) or ((state.has('Talaria Attachment', player)) and (has_doublejump(state, player)))
 
 
 def has_keycard_A(state: "CollectionState", player: int) -> bool:
@@ -76,17 +76,17 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Lower lake desolation", player),
-        HasAny('Talaria Attachment', 'Timestop')
+        Or(HelperCall(helper_func=has_timestop, helper_name="has_timestop"), Has('Talaria Attachment'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Upper lake desolation", player),
-        And(CanReachRegion('Upper Lake Serene'), Has('Fire'))
+        And(HelperCall(helper_func=has_fire, helper_name="has_fire"), CanReachRegion('Upper Lake Serene'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake desolation -> Skeleton Shaft", player),
-        Has('Doublejump', 1)
+        HelperCall(helper_func=has_doublejump, helper_name="has_doublejump")
     )
 
     multiworld.get_entrance("Lake desolation -> Space time continuum", player).access_rule = \
@@ -97,12 +97,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Eastern lake desolation -> Upper lake desolation", player),
-        And(CanReachRegion('Upper Lake Serene'), Has('Fire'))
+        And(HelperCall(helper_func=has_fire, helper_name="has_fire"), CanReachRegion('Upper Lake Serene'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Library -> Library top", player),
-        HasAny('Doublejump', 'Talaria Attachment')
+        Or(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Talaria Attachment'))
     )
 
     multiworld.get_entrance("Library -> Varndagroth tower left", player).access_rule = \
@@ -119,7 +119,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Sealed Caves (Sirens)", player),
-        HasAll('Elevator Keycard', 'Keycard_B')
+        And(HelperCall(helper_func=has_keycard_B, helper_name="has_keycard_B"), Has('Elevator Keycard'))
     )
 
     world.set_rule(
@@ -142,7 +142,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Sealed Caves (Sirens)", player),
-        HasAll('Elevator Keycard', 'Keycard_B')
+        And(HelperCall(helper_func=has_keycard_B, helper_name="has_keycard_B"), Has('Elevator Keycard'))
     )
 
     multiworld.get_entrance("Varndagroth tower right (lower) -> Military Fortress", player).access_rule = \
@@ -169,7 +169,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress -> Temporal Gyre", player),
-        And(True_(), Has('Timespinner Wheel'))
+        And(HelperCall(helper_func=can_kill_all_3_bosses, helper_name="can_kill_all_3_bosses"), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
@@ -179,22 +179,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Military Fortress (hangar) -> Lab Entrance", player),
-        Has('Doublejump', 1)
+        HelperCall(helper_func=has_doublejump, helper_name="has_doublejump")
     )
 
     world.set_rule(
         multiworld.get_entrance("Lab Entrance -> Main Lab", player),
-        Has('Keycard_B', 1)
+        HelperCall(helper_func=has_keycard_B, helper_name="has_keycard_B")
     )
 
     world.set_rule(
         multiworld.get_entrance("Main Lab -> Lab Research", player),
-        Has('Doublejump_Of_Npc', 1)
+        HelperCall(helper_func=has_doublejump_of_npc, helper_name="has_doublejump_of_npc")
     )
 
     world.set_rule(
         multiworld.get_entrance("Main Lab -> The lab (upper)", player),
-        And(Or(Not(False_()), Has('Lab Access Genza')), Has('Forwarddash_Doublejump'))
+        And(HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"), Or(Not(False_()), Has('Lab Access Genza')))
     )
 
     world.set_rule(
@@ -204,7 +204,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The lab (upper) -> Emperors tower (courtyard)", player),
-        Or(HasAll('Doublejump', 'Talaria Attachment'), Has('Upwarddash'))
+        Or(And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Talaria Attachment')), HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"))
     )
 
     world.set_rule(
@@ -238,12 +238,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Left Side forest Caves", player),
-        HasAny('Talaria Attachment', 'Timestop')
+        Or(HelperCall(helper_func=has_timestop, helper_name="has_timestop"), Has('Talaria Attachment'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Castle Ramparts", player),
-        Or(Not(False_()), HasAny('Drawbridge Key', 'Upwarddash'))
+        Or(HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"), Not(False_()), Has('Drawbridge Key'))
     )
 
     world.set_rule(
@@ -274,7 +274,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Caves of Banishment (Maw) -> Caves of Banishment (upper)", player),
-        Has('Doublejump', 1)
+        HelperCall(helper_func=has_doublejump, helper_name="has_doublejump")
     )
 
     world.set_rule(
@@ -295,7 +295,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Royal towers (lower)", player),
-        And(Or(Not(False_()), Has('Pink')), Has('Doublejump'))
+        And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Or(HelperCall(helper_func=has_pink, helper_name="has_pink"), Not(False_())))
     )
 
     multiworld.get_entrance("Castle Keep -> Space time continuum", player).access_rule = \
@@ -303,7 +303,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Royal towers (lower) -> Royal towers", player),
-        HasAny('Forwarddash_Doublejump', 'Timespinner Wheel')
+        Or(HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"), Has('Timespinner Wheel'))
     )
 
     multiworld.get_entrance("Royal towers (lower) -> Space time continuum", player).access_rule = \
@@ -324,7 +324,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (left) -> Ancient Pyramid (right)", player),
-        Has('Upwarddash', 1)
+        HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash")
     )
 
     multiworld.get_entrance("Ancient Pyramid (left) -> Space time continuum", player).access_rule = \
@@ -332,7 +332,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ancient Pyramid (right) -> Ancient Pyramid (left)", player),
-        Has('Upwarddash', 1)
+        HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash")
     )
 
     multiworld.get_entrance("Ancient Pyramid (right) -> Space time continuum", player).access_rule = \
@@ -340,102 +340,102 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Lake desolation", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateLakeDesolation',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Lower lake desolation", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateKittyBoss',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Library", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateLeftLibrary',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Varndagroth tower right (lower)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateMilitaryGate',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Skeleton Shaft", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateSealedCaves',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Sealed Caves (Sirens)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateSealedSirensCave',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Sealed Caves (Xarion)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateXarion',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Upper Lake Serene", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateLakeSereneLeft',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Left Side forest Caves", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateLakeSereneRight',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Refugee Camp", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateAccessToPast',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Forest", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateCastleRamparts',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Castle Keep", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateCastleKeep',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Royal towers (lower)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateRoyalTowers',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Caves of Banishment (Maw)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateMaw',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Caves of Banishment (upper)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Past', 'GateCavesOfBanishment',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Military Fortress (hangar)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateLabEntrance',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> The lab (upper)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Present', 'GateDadsTower',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (entrance)", player),
-        Or(And(False_(), Not(False_())), True_(), True_())
+        Or(And(False_(), Not(False_())), HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateGyre',)), HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateLeftPyramid',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (right)", player),
-        True_()
+        HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateRightPyramid',))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Lake Desolation: Forget me not chest", player),
-        And(CanReachRegion('Upper Lake Serene'), Has('Fire'))
+        And(HelperCall(helper_func=has_fire, helper_name="has_fire"), CanReachRegion('Upper Lake Serene'))
     )
 
     world.set_rule(
@@ -526,17 +526,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Elevator card chest", player),
-        HasAny('Doublejump', 'Elevator Keycard')
+        Or(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Elevator Keycard'))
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Air vents right chest", player),
-        HasAny('Doublejump', 'Elevator Keycard')
+        Or(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Elevator Keycard'))
     )
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Air vents left chest", player),
-        HasAny('Doublejump', 'Elevator Keycard')
+        Or(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Elevator Keycard'))
     )
 
     multiworld.get_location("Varndagroth Towers (Right): Varndagroth", player).access_rule = \
@@ -549,7 +549,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Medbay terminal (Bleakness Research)", player),
-        HasAll('Keycard_B', 'Tablet')
+        And(HelperCall(helper_func=has_keycard_B, helper_name="has_keycard_B"), Has('Tablet'))
     )
 
     world.set_rule(
@@ -569,22 +569,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Military Fortress: Bomber chest", player),
-        HasAll('Doublejump_Of_Npc', 'Timespinner Wheel')
+        And(HelperCall(helper_func=has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: B door chest 2", player),
-        HasAll('Doublejump', 'Keycard_B')
+        And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), HelperCall(helper_func=has_keycard_B, helper_name="has_keycard_B"))
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: B door chest 1", player),
-        HasAll('Doublejump', 'Keycard_B')
+        And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), HelperCall(helper_func=has_keycard_B, helper_name="has_keycard_B"))
     )
 
     world.set_rule(
         multiworld.get_location("Military Fortress: Pedestal", player),
-        HasAny('Doublejump_Of_Npc', 'Forwarddash_Doublejump')
+        Or(HelperCall(helper_func=has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"))
     )
 
     world.set_rule(
@@ -594,7 +594,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Lower trash left", player),
-        Has('Upwarddash', 1)
+        HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash")
     )
 
     world.set_rule(
@@ -604,7 +604,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Trash jump room", player),
-        Or(Not(False_()), Has('Doublejump_Of_Npc'))
+        Or(HelperCall(helper_func=has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), Not(False_()))
     )
 
     world.set_rule(
@@ -614,7 +614,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Sentry platform terminal (Origins)", player),
-        And(Or(True_(), Not(False_()), Has('Lab Access Genza')), Has('Tablet'))
+        And(Or(HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateDadsTower',)), Not(False_()), Has('Lab Access Genza')), Has('Tablet'))
     )
 
     world.set_rule(
@@ -629,12 +629,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Dynamo Works", player),
-        Or(HasAll('Lab Access Dynamo', 'Upwarddash'), Not(False_()))
+        Or(And(HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"), Has('Lab Access Dynamo')), Not(False_()))
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Spider Hell", player),
-        Has('Keycard_A', 1)
+        HelperCall(helper_func=has_keycard_A, helper_name="has_keycard_A")
     )
 
     world.set_rule(
@@ -657,17 +657,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Emperor's Tower: Courtyard floor secret", player),
-        And(True_(), Has('Upwarddash'))
+        And(HelperCall(helper_func=can_break_walls, helper_name="can_break_walls"), HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"))
     )
 
     world.set_rule(
         multiworld.get_location("Emperor's Tower: Courtyard upper chest", player),
-        Has('Upwarddash', 1)
+        HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash")
     )
 
     world.set_rule(
         multiworld.get_location("Emperor's Tower: Wayyyy up there", player),
-        Or(HasAll('Doublejump', 'Timespinner Wheel'), Has('Upwarddash'))
+        Or(And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Timespinner Wheel')), HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"))
     )
 
     world.set_rule(
@@ -677,7 +677,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Jacksquat room", player),
-        Or(HasAll('Doublejump', 'Talaria Attachment'), Has('Upwarddash'))
+        Or(And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Talaria Attachment')), HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"))
     )
 
     multiworld.get_location("Sealed Caves (Xarion): Secret room", player).access_rule = \
@@ -690,7 +690,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Forest: Bat jump ledge", player),
-        HasAny('Doublejump_Of_Npc', 'Fastjump_On_Npc', 'Forwarddash_Doublejump')
+        Or(HelperCall(helper_func=has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), HelperCall(helper_func=has_fastjump_on_npc, helper_name="has_fastjump_on_npc"), HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"))
     )
 
     multiworld.get_location("Forest: Green platform secret", player).access_rule = \
@@ -729,37 +729,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Shroom jump room", player),
-        Has('Doublejump', 1)
+        HelperCall(helper_func=has_doublejump, helper_name="has_doublejump")
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Secret room", player),
-        True_()
+        HelperCall(helper_func=can_break_walls, helper_name="can_break_walls")
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 1", player),
-        Has('Forwarddash_Doublejump', 1)
+        HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump")
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 2", player),
-        Has('Forwarddash_Doublejump', 1)
+        HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump")
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 3", player),
-        Has('Forwarddash_Doublejump', 1)
+        HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump")
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Jackpot room chest 4", player),
-        Has('Forwarddash_Doublejump', 1)
+        HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump")
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Maw): Last chance before Maw", player),
-        Has('Doublejump', 1)
+        HelperCall(helper_func=has_doublejump, helper_name="has_doublejump")
     )
 
     world.set_rule(
@@ -799,12 +799,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: Bomber chest", player),
-        HasAny('Timespinner Wheel', 'Upwarddash')
+        Or(HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"), Has('Timespinner Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Ramparts: Freeze the engineer", player),
-        HasAny('Talaria Attachment', 'Timestop')
+        Or(HelperCall(helper_func=has_timestop, helper_name="has_timestop"), Has('Talaria Attachment'))
     )
 
     world.set_rule(
@@ -824,7 +824,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Castle Keep: Royal guard tiny room", player),
-        HasAny('Doublejump', 'Fastjump_On_Npc')
+        Or(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), HelperCall(helper_func=has_fastjump_on_npc, helper_name="has_fastjump_on_npc"))
     )
 
     multiworld.get_location("Castle Basement: Secret pedestal", player).access_rule = \
@@ -837,22 +837,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Floor secret", player),
-        And(True_(), Has('Doublejump'))
+        And(HelperCall(helper_func=can_break_walls, helper_name="can_break_walls"), HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"))
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Past bottom struggle juggle", player),
-        Has('Doublejump_Of_Npc', 1)
+        HelperCall(helper_func=has_doublejump_of_npc, helper_name="has_doublejump_of_npc")
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Bottom struggle juggle", player),
-        Or(HasAll('Doublejump', 'Timespinner Wheel'), Has('Upwarddash'))
+        Or(And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Timespinner Wheel')), HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"))
     )
 
     world.set_rule(
         multiworld.get_location("Royal Towers: Top struggle juggle", player),
-        Or(HasAll('Doublejump', 'Timespinner Wheel'), Has('Upwarddash'))
+        Or(And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"), Has('Timespinner Wheel')), HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash"))
     )
 
     world.set_rule(
@@ -862,12 +862,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Pit secret room", player),
-        True_()
+        HelperCall(helper_func=can_break_walls, helper_name="can_break_walls")
     )
 
     world.set_rule(
         multiworld.get_location("Ancient Pyramid: Regret chest", player),
-        And(True_(), Has('Doublejump'))
+        And(HelperCall(helper_func=can_break_walls, helper_name="can_break_walls"), HelperCall(helper_func=has_doublejump, helper_name="has_doublejump"))
     )
 
     world.set_rule(

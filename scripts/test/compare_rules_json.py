@@ -379,6 +379,83 @@ def normalize_hasall_single_item(obj: Any) -> Any:
         return obj
 
 
+def normalize_hasany_single_item(obj: Any) -> Any:
+    """
+    Normalize HasAny with a single item to Has.
+
+    Examples:
+        HasAny(['item']) -> Has('item')
+
+    This handles the case where WorldGen simplifies single-item HasAny to Has,
+    which is semantically equivalent (having any of one item = having that item).
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_hasany_single_item(v) for k, v in obj.items()}
+
+        # Check if this is a HasAny with a single item
+        if normalized.get('rule') == 'HasAny':
+            items = normalized.get('args', {}).get('items', [])
+            if len(items) == 1:
+                return {
+                    'rule': 'Has',
+                    'args': {'item_name': items[0]}
+                }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_hasany_single_item(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_hasall_duplicate_items(obj: Any) -> Any:
+    """
+    Normalize HasAll with duplicate items to deduplicated form.
+
+    Examples:
+        HasAll(['item', 'item']) -> Has('item')  (single unique item)
+        HasAll(['a', 'a', 'b']) -> HasAll(['a', 'b'])  (deduplicated)
+
+    This handles the case where WorldGen simplifies duplicate items,
+    which is semantically equivalent (having all of [x, x] = having x).
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_hasall_duplicate_items(v) for k, v in obj.items()}
+
+        # Check if this is a HasAll with items
+        if normalized.get('rule') == 'HasAll':
+            items = normalized.get('args', {}).get('items', [])
+            if items:
+                # Deduplicate while preserving order
+                seen = set()
+                unique_items = []
+                for item in items:
+                    if item not in seen:
+                        seen.add(item)
+                        unique_items.append(item)
+
+                if len(unique_items) == 1:
+                    # Single unique item -> Has
+                    return {
+                        'rule': 'Has',
+                        'args': {'item_name': unique_items[0]}
+                    }
+                elif len(unique_items) < len(items):
+                    # Has duplicates -> deduplicated HasAll
+                    return {
+                        'rule': 'HasAll',
+                        'args': {'items': unique_items}
+                    }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_hasall_duplicate_items(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_and_has_patterns(obj: Any) -> Any:
     """
     Normalize And patterns containing only Has/HasAll into a single HasAll.
@@ -572,6 +649,107 @@ def normalize_setting_types(obj: Any) -> Any:
         return {k: normalize_setting_types(v) for k, v in obj.items()}
     elif isinstance(obj, list):
         return [normalize_setting_types(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_sum_of_helpers(obj: Any) -> Any:
+    """
+    Normalize sum_of helper format differences between original and WorldGen exports.
+
+    DICT_SUM_HELPERS (original) produces:
+    {
+        "params": [],
+        "body": {
+            "type": "sum_of",
+            "iterator_info": {
+                "target": {...},
+                "iterator": {"type": "method_call", "object": {"type": "setting_value", "setting": "X"}, "method": "items", "args": []}
+            },
+            "element_rule": {...}
+        }
+    }
+
+    WorldGen analyzer produces:
+    {
+        "type": "sum_of",
+        "iterator_info": {
+            "type": "comprehension_details",
+            "target": {...},
+            "iterator": {"type": "function_call", "function": {"type": "attribute", ...}}
+        },
+        "element_rule": {...}
+    }
+
+    This function normalizes both to a common format by:
+    1. Unwrapping {"params": [], "body": X} to just X
+    2. Removing "type": "comprehension_details" from iterator_info
+    3. Converting function_call+attribute to method_call+setting_value
+    """
+    if isinstance(obj, dict):
+        result = obj
+
+        # Unwrap {"params": [], "body": X} to just X (for no-param helpers)
+        if 'params' in obj and 'body' in obj:
+            params = obj.get('params', [])
+            if params == [] and 'body' in obj:
+                # This is a no-param helper - normalize to just the body
+                result = obj['body']
+                # Recursively normalize the body
+                return normalize_sum_of_helpers(result)
+
+        # Check if this is a sum_of type
+        if obj.get('type') == 'sum_of':
+            result = dict(obj)
+            iterator_info = result.get('iterator_info', {})
+
+            if iterator_info:
+                new_iterator_info = dict(iterator_info)
+
+                # Remove "type": "comprehension_details" - it's metadata
+                if new_iterator_info.get('type') == 'comprehension_details':
+                    del new_iterator_info['type']
+
+                # Normalize the iterator structure
+                iterator = new_iterator_info.get('iterator', {})
+                if isinstance(iterator, dict):
+                    # Convert function_call+attribute chain to method_call+setting_value
+                    # function_call pattern: {"type": "function_call", "function": {"type": "attribute", "object": {...}, "attr": "items"}}
+                    # method_call pattern: {"type": "method_call", "object": {...}, "method": "items", "args": []}
+                    if iterator.get('type') == 'function_call':
+                        func = iterator.get('function', {})
+                        if func.get('type') == 'attribute' and func.get('attr') == 'items':
+                            # Extract the setting name from the attribute chain
+                            inner_obj = func.get('object', {})
+                            setting_name = None
+
+                            # Pattern: {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "qp_items"}
+                            if inner_obj.get('type') == 'attribute':
+                                # world.qp_items pattern
+                                if inner_obj.get('object', {}).get('type') == 'name':
+                                    setting_name = inner_obj.get('attr')
+
+                            if setting_name:
+                                new_iterator_info['iterator'] = {
+                                    'type': 'method_call',
+                                    'object': {'type': 'setting_value', 'setting': setting_name},
+                                    'method': 'items',
+                                    'args': []
+                                }
+
+                result['iterator_info'] = new_iterator_info
+
+            # Recursively normalize element_rule and other nested objects
+            for key in result:
+                if key not in ('type', 'iterator_info'):
+                    result[key] = normalize_sum_of_helpers(result[key])
+
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_sum_of_helpers(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_sum_of_helpers(item) for item in obj]
     else:
         return obj
 
@@ -796,6 +974,13 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             return True
         if '.value.attr' in path:
             return True
+
+    # param_mappings is exporter metadata that maps helper parameters to slot_data keys.
+    # WorldGen generates different Python code that doesn't use the same patterns, so
+    # this metadata isn't preserved during the roundtrip. It's used for frontend rule
+    # evaluation but the actual access rules work without it.
+    if 'helpers.' in path and '.param_mappings' in path:
+        return True
 
     # AST_location_rule_ref vs CanReachLocation - semantically equivalent rule formats
     if 'access_rule' in path and '.rule' in path:
@@ -1028,13 +1213,25 @@ def main():
     original_normalized = normalize_hasall_single_item(original_normalized)
     worldgen_normalized = normalize_hasall_single_item(worldgen_normalized)
 
+    # Normalize HasAny with single item to Has
+    # (e.g., HasAny(['item']) -> Has('item'))
+    original_normalized = normalize_hasany_single_item(original_normalized)
+    worldgen_normalized = normalize_hasany_single_item(worldgen_normalized)
+
     # Normalize Or(Constant(0), X) and Or(False_(), X) to just X
     original_normalized = normalize_or_with_false(original_normalized)
     worldgen_normalized = normalize_or_with_false(worldgen_normalized)
 
     # Normalize And+Has/HasAll patterns to single HasAll (cleaner format)
+    # (e.g., And(Has(A), Has(B)) -> HasAll([A, B]))
     original_normalized = normalize_and_has_patterns(original_normalized)
     worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
+
+    # Normalize HasAll with duplicate items (run AFTER normalize_and_has_patterns
+    # which may create HasAll with duplicates from And(Has(A), Has(A)))
+    # (e.g., HasAll(['item', 'item']) -> Has('item'))
+    original_normalized = normalize_hasall_duplicate_items(original_normalized)
+    worldgen_normalized = normalize_hasall_duplicate_items(worldgen_normalized)
 
     # Normalize And/Or structure (flatten nested, sort children)
     original_normalized = normalize_and_or_structure(original_normalized)
@@ -1043,6 +1240,10 @@ def main():
     # Normalize setting types (option_value/world_attribute -> setting_value)
     original_normalized = normalize_setting_types(original_normalized)
     worldgen_normalized = normalize_setting_types(worldgen_normalized)
+
+    # Normalize sum_of helper format (DICT_SUM_HELPERS format vs analyzer format)
+    original_normalized = normalize_sum_of_helpers(original_normalized)
+    worldgen_normalized = normalize_sum_of_helpers(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)

@@ -218,9 +218,12 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # AST_function_call is included because it may reference 'location' or 'entrance'
     # variables that are substituted at generation time via set_context(), and
     # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
-    # WorldAttribute also needs lambda because it generates state.multiworld.worlds[player].attr
-    # which requires 'state' to be defined (only available in lambda context).
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute'):
+    # WorldAttribute and OptionValue need lambda because they generate
+    # state.multiworld.worlds[player].attr/options.xxx which requires 'state'
+    # to be defined (only available in lambda context).
+    # AST_capability needs lambda because it calls helper functions with runtime arguments
+    # from options/world attributes.
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'OptionValue', 'AST_capability'):
         return True
 
     # Recursively check all dict and list values
@@ -772,6 +775,16 @@ def generate_rules_py(data: ExtractedData) -> str:
     helper_generator.set_known_helpers(set(data.helpers.keys()))
     helper_generator.set_placements(data.original_placements)
 
+    # Build helper data dict with param_mappings for AST_capability resolution
+    helper_data_dict = {}
+    for helper_name, helper_obj in data.helpers.items():
+        helper_data_dict[helper_name] = {
+            'params': helper_obj.params,
+            'param_mappings': helper_obj.param_mappings,
+            'defaults': helper_obj.defaults,
+        }
+    helper_generator.set_helper_data(helper_data_dict)
+
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)
     needs_lambda = False
@@ -1083,7 +1096,9 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
         option_def: The option definition dict with type, default, etc.
 
     Returns:
-        Tuple of (class_code, field_code, import_name) or (None, None, None) if unsupported.
+        Tuple of (class_code, field_code, import_name, name_lookup_override) or
+        (None, None, None, None) if unsupported.
+        name_lookup_override is optional code to set the name_lookup after class definition.
     """
     class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
     display_name = option_def.get('display_name', ' '.join(word.capitalize() for word in setting_name.split('_')))
@@ -1111,28 +1126,47 @@ class {class_name}(TextChoice):
 
     default = {default_repr}
 '''
-            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice', None
 
         # Check if all keys are numeric (convertible to int)
         # Some games use TextChoice with string keys (e.g., "random-2p", "M", "MA")
         try:
             sorted_items = sorted(name_lookup.items(), key=lambda x: int(x[0]))
+            has_numeric_keys = True
         except ValueError:
             # Non-numeric keys indicate a TextChoice or similar complex option
-            # Fall back to TextChoice for these cases
+            has_numeric_keys = False
+
+        if not has_numeric_keys:
+            # Non-numeric keys - generate TextChoice but preserve name_lookup
+            # Build the name_lookup dict representation
+            name_lookup_items = []
+            for key, value in sorted(name_lookup.items()):
+                name_lookup_items.append(f'        {repr(key)}: {repr(value)}')
+            name_lookup_str = ',\n'.join(name_lookup_items)
+
             class_code = f'''
 class {class_name}(TextChoice):
     """Option for {display_name}."""
     display_name = "{display_name_escaped}"
 
     default = {default_repr}
-'''
-            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
 
+# Preserve original name_lookup for export
+{class_name}.name_lookup = {{
+{name_lookup_str}
+}}
+'''
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice', None
+
+        # Numeric keys - generate normal Choice class
         option_lines = []
+        needs_name_lookup_override = False
         for value_str, name in sorted_items:
             # Sanitize the option name to be a valid Python identifier
             safe_name = sanitize_option_name(name)
+            if safe_name != name:
+                needs_name_lookup_override = True
             option_lines.append(f'    option_{safe_name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
@@ -1143,7 +1177,23 @@ class {class_name}(Choice):
 {options_code}
     default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Choice'
+
+        # If any option names were sanitized, we need to override name_lookup
+        # to preserve the original names (e.g., "random-middle" instead of "random_middle")
+        name_lookup_override = None
+        if needs_name_lookup_override:
+            name_lookup_items = []
+            for value_str, name in sorted_items:
+                name_lookup_items.append(f'    {value_str}: {repr(name)}')
+            name_lookup_str = ',\n'.join(name_lookup_items)
+            name_lookup_override = f'''
+# Preserve original option names in name_lookup (before sanitization)
+{class_name}.name_lookup = {{
+{name_lookup_str}
+}}
+'''
+
+        return class_code, f'    {setting_name}: {class_name}', 'Choice', name_lookup_override
 
     elif option_type == 'range':
         range_start = option_def.get('range_start', 0)
@@ -1172,7 +1222,7 @@ class {class_name}(NamedRange):
     default = {default_repr}
     special_range_names = {{"default": {default_repr}}}
 '''
-            return class_code, f'    {setting_name}: {class_name}', 'NamedRange'
+            return class_code, f'    {setting_name}: {class_name}', 'NamedRange', None
         else:
             class_code = f'''
 class {class_name}(Range):
@@ -1182,7 +1232,7 @@ class {class_name}(Range):
     range_end = {range_end}
     default = {default_repr}
 '''
-            return class_code, f'    {setting_name}: {class_name}', 'Range'
+            return class_code, f'    {setting_name}: {class_name}', 'Range', None
 
     elif option_type == 'default_on_toggle':
         class_code = f'''
@@ -1190,7 +1240,7 @@ class {class_name}(DefaultOnToggle):
     """Option for {display_name}."""
     display_name = "{display_name_escaped}"
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
+        return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle', None
 
     elif option_type == 'toggle':
         # Get the default value, preserving boolean type if present
@@ -1206,7 +1256,7 @@ class {class_name}(Toggle):
     display_name = "{display_name_escaped}"
     default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Toggle'
+        return class_code, f'    {setting_name}: {class_name}', 'Toggle', None
 
     elif option_type == 'removed':
         # Deprecated/removed options - use Removed class
@@ -1221,7 +1271,7 @@ class {class_name}(Removed):
     """Deprecated option for {display_name}."""
     default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Removed'
+        return class_code, f'    {setting_name}: {class_name}', 'Removed', None
 
     elif option_type == 'freetext':
         # Free text options (like entrance_shuffle_seed)
@@ -1236,7 +1286,7 @@ class {class_name}(FreeText):
     display_name = "{display_name_escaped}"
     default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'FreeText'
+        return class_code, f'    {setting_name}: {class_name}', 'FreeText', None
 
     elif option_type == 'plando_connections':
         # Plando connections - inherits from PlandoConnections
@@ -1248,7 +1298,7 @@ class {class_name}(PlandoConnections):
     entrances = frozenset()
     exits = frozenset()
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections'
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections', None
 
     elif option_type == 'plando_texts':
         # Plando texts - inherits from PlandoTexts
@@ -1256,7 +1306,7 @@ class {class_name}(PlandoConnections):
 class {class_name}(PlandoTexts):
     """Plando texts for {display_name}."""
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'PlandoTexts'
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoTexts', None
 
     elif option_type == 'start_inventory_pool':
         # Start inventory from pool option - inherits from StartInventoryPool
@@ -1264,9 +1314,9 @@ class {class_name}(PlandoTexts):
 class {class_name}(StartInventoryPool):
     """Start inventory from pool for {display_name}."""
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'StartInventoryPool'
+        return class_code, f'    {setting_name}: {class_name}', 'StartInventoryPool', None
 
-    return None, None, None
+    return None, None, None, None
 
 
 def generate_options_py(data: ExtractedData) -> str:
@@ -1328,19 +1378,23 @@ class Accessibility(Choice):
         skip_options.add('accessibility')
 
     # Generate option classes from definitions
+    name_lookup_overrides = []
     for setting_name in sorted(option_definitions.keys()):
         if setting_name in skip_options:
             continue
 
         option_def = option_definitions[setting_name]
-        class_code, field_code, import_name = _generate_option_class_from_definition(setting_name, option_def)
+        class_code, field_code, import_name, name_lookup_override = _generate_option_class_from_definition(setting_name, option_def)
         if class_code:
             option_classes.append(class_code)
             option_fields.append(field_code)
             imports_needed.add(import_name)
+            if name_lookup_override:
+                name_lookup_overrides.append(name_lookup_override)
 
     imports_str = ', '.join(sorted(imports_needed))
     option_classes_str = ''.join(option_classes)
+    name_lookup_overrides_str = ''.join(name_lookup_overrides)
     option_fields_str = ('\n' + '\n'.join(option_fields)) if option_fields else ''
 
     return f'''"""
@@ -1371,7 +1425,7 @@ class UseCanonicalOptions(Toggle):
     """
     display_name = "Use Canonical Options"
     default = True
-{option_classes_str}
+{option_classes_str}{name_lookup_overrides_str}
 
 @dataclass
 class {class_name}Options(PerGameCommonOptions):
