@@ -1207,11 +1207,21 @@ class ASTToRuleBuilder:
         - options.X → 'X'
         - self.options.X → 'X'
         - world.worlds[player].options.X → 'X'
+        - {type: 'option_value', option: 'X'} → 'X'
+        - {type: 'setting_value', setting: 'X'} → 'X'
         """
         if not isinstance(obj, dict):
             return None
 
         obj_type = obj.get('type')
+
+        # Handle option_value type (created by expression_visitors.py)
+        if obj_type == 'option_value':
+            return obj.get('option')
+
+        # Handle setting_value type (legacy format)
+        if obj_type == 'setting_value':
+            return obj.get('setting')
 
         # Direct name reference
         if obj_type == 'name':
