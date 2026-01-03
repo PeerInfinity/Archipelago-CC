@@ -5102,8 +5102,38 @@ class HelperCodeGenerator:
     def _expr_all_of(self, expr: Dict[str, Any]) -> str:
         """Generate all() expression for AND of conditions.
 
-        Used by SM helpers like wand() that need to AND variadic arguments.
+        Handles two formats:
+        1. Simple conditions list: {"type": "all_of", "conditions": [...]}
+        2. Comprehension style: {"type": "all_of", "element_rule": {...}, "iterator_info": {...}}
+
+        Used by SM helpers like wand() that need to AND variadic arguments,
+        and by helpers that use all() comprehensions.
         """
+        # Check for comprehension style (iterator_info present)
+        iterator_info = expr.get('iterator_info')
+        if iterator_info:
+            target = iterator_info.get('target', {})
+            iterator = iterator_info.get('iterator', {})
+            condition = iterator_info.get('condition')
+            element_rule = expr.get('element_rule', {'type': 'constant', 'value': True})
+
+            # Generate target variable names
+            target_expr = self._generate_expression(target)
+
+            # Generate iterator expression
+            iterator_expr = self._generate_expression(iterator)
+
+            # Generate element rule expression
+            element_expr = self._generate_expression(element_rule)
+
+            # Generate condition expression if present
+            if condition:
+                condition_expr = self._generate_expression(condition)
+                return f"all({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
+
+            return f"all({element_expr} for {target_expr} in {iterator_expr})"
+
+        # Simple conditions list format
         conditions = expr.get('conditions', [])
         if not conditions:
             return 'True'
