@@ -55,9 +55,19 @@ def extract_multiworld_chart_data(results: Dict[str, Any], world_mapping: Option
         # Extract second pass data if available
         second_pass = template_data.get('second_pass', None)
 
-        # Determine pass/fail status - check skip_reason first (actual skip),
-        # not just prerequisites (which may not have been required)
-        if skip_reason:
+        # Determine pass/fail status
+        # The final result considers both first and second pass:
+        # - If second pass exists, use its result (it's the final word)
+        # - If first pass was skipped (waiting for templates) but second pass passed → Passed
+        # - If first pass passed but second pass failed → Failed
+        if second_pass is not None:
+            # Second pass result is authoritative
+            if second_pass.get('success', False):
+                pass_fail = 'Passed'
+            else:
+                pass_fail = 'Failed'
+        elif skip_reason:
+            # First pass was skipped and no second pass ran
             pass_fail = 'Skipped (Prerequisites)'
         elif success:
             pass_fail = 'Passed'
