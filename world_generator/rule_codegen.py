@@ -3892,13 +3892,6 @@ class RuleCodeGenerator:
             # Check if we have this setting
             if option_name in self.settings:
                 value = self.settings[option_name]
-
-                # Special handling for ALTTP's open_pyramid option
-                # The to_bool() method has complex logic based on the goal setting
-                if option_name == 'open_pyramid' and isinstance(value, int):
-                    result = self._evaluate_open_pyramid_to_bool(value)
-                    return self._make_bool_constant(result)
-
                 # Convert to boolean
                 if isinstance(value, bool):
                     return self._make_bool_constant(value)
@@ -3914,61 +3907,6 @@ class RuleCodeGenerator:
         # This is for things like boss.can_defeat() which should be True
         # if you can reach the location (progression will handle item requirements)
         return self._make_bool_constant(True)
-
-    def _evaluate_open_pyramid_to_bool(self, open_pyramid_value: int) -> bool:
-        """Evaluate ALTTP's open_pyramid.to_bool() logic.
-
-        This replicates the logic from worlds/alttp/Options.py OpenPyramid.to_bool()
-
-        Option values:
-        - 0 (closed): Always False
-        - 1 (open): Always True
-        - 2 (goal): True if goal requires killing Ganon (crystals, ganon_pedestal,
-                    ganon_triforce_hunt, local_ganon_triforce_hunt)
-        - 3 (auto): Same as goal but also checks entrance shuffle
-
-        Goal values that open the pyramid:
-        - 1 (crystals)
-        - 4 (ganon_pedestal)
-        - 7 (ganon_triforce_hunt)
-        - 8 (local_ganon_triforce_hunt)
-        """
-        # Option values
-        OPTION_CLOSED = 0
-        OPTION_OPEN = 1
-        OPTION_GOAL = 2
-        OPTION_AUTO = 3
-
-        # Goal values that open the pyramid (from ALTTP Options.py)
-        # These are the numeric equivalents of: crystals, ganon_pedestal,
-        # ganon_triforce_hunt, local_ganon_triforce_hunt
-        GOALS_THAT_OPEN_PYRAMID = {1, 4, 7, 8}
-
-        if open_pyramid_value == OPTION_OPEN:
-            return True
-        elif open_pyramid_value == OPTION_CLOSED:
-            return False
-        elif open_pyramid_value in (OPTION_GOAL, OPTION_AUTO):
-            # Check if goal is one that opens the pyramid
-            goal = self.settings.get('goal', 0)
-            if isinstance(goal, int):
-                goal_opens_pyramid = goal in GOALS_THAT_OPEN_PYRAMID
-            else:
-                goal_opens_pyramid = False
-
-            if open_pyramid_value == OPTION_GOAL:
-                return goal_opens_pyramid
-            else:  # OPTION_AUTO
-                # Auto mode also requires vanilla or dungeon entrance shuffle
-                # and that Ganon's dropdown wasn't shuffled
-                # For worldgen, we simplify this to just check goal since
-                # entrance shuffle complexity is rare in worldgen contexts
-                entrance_shuffle = self.settings.get('entrance_shuffle', 0)
-                # entrance_shuffle values 0-3 are vanilla/dungeons variants
-                vanilla_entrances = entrance_shuffle in (0, 1, 2, 3) if isinstance(entrance_shuffle, int) else True
-                return goal_opens_pyramid and vanilla_entrances
-        else:
-            return False
 
     def _extract_option_name_from_function(self, function: Dict[str, Any]) -> Optional[str]:
         """Extract option name from a function call structure.
@@ -4149,53 +4087,6 @@ class HelperCodeGenerator:
         """
         self._current_location = location
         self._current_entrance = entrance
-
-    def _evaluate_open_pyramid_to_bool(self, open_pyramid_value: int) -> bool:
-        """Evaluate ALTTP's open_pyramid.to_bool() logic.
-
-        This replicates the logic from worlds/alttp/Options.py OpenPyramid.to_bool()
-
-        Option values:
-        - 0 (closed): Always False
-        - 1 (open): Always True
-        - 2 (goal): True if goal requires killing Ganon (crystals, ganon_pedestal,
-                    ganon_triforce_hunt, local_ganon_triforce_hunt)
-        - 3 (auto): Same as goal but also checks entrance shuffle
-
-        Goal values that open the pyramid:
-        - 1 (crystals)
-        - 4 (ganon_pedestal)
-        - 7 (ganon_triforce_hunt)
-        - 8 (local_ganon_triforce_hunt)
-        """
-        # Option values
-        OPTION_CLOSED = 0
-        OPTION_OPEN = 1
-        OPTION_GOAL = 2
-        OPTION_AUTO = 3
-
-        # Goal values that open the pyramid (from ALTTP Options.py)
-        GOALS_THAT_OPEN_PYRAMID = {1, 4, 7, 8}
-
-        if open_pyramid_value == OPTION_OPEN:
-            return True
-        elif open_pyramid_value == OPTION_CLOSED:
-            return False
-        elif open_pyramid_value in (OPTION_GOAL, OPTION_AUTO):
-            goal = self.settings.get('goal', 0)
-            if isinstance(goal, int):
-                goal_opens_pyramid = goal in GOALS_THAT_OPEN_PYRAMID
-            else:
-                goal_opens_pyramid = False
-
-            if open_pyramid_value == OPTION_GOAL:
-                return goal_opens_pyramid
-            else:  # OPTION_AUTO
-                entrance_shuffle = self.settings.get('entrance_shuffle', 0)
-                vanilla_entrances = entrance_shuffle in (0, 1, 2, 3) if isinstance(entrance_shuffle, int) else True
-                return goal_opens_pyramid and vanilla_entrances
-        else:
-            return False
 
     def _get_namedtuple_class_name(self, fields: tuple) -> str:
         """
@@ -4822,15 +4713,9 @@ class HelperCodeGenerator:
 
                     # Special case: .to_bool() calls on options
                     # Original ALTTP code uses option.to_bool() but Archipelago options don't have this method.
-                    # For options with complex to_bool() logic (like open_pyramid), pre-compute the result.
+                    # Convert to checking the option's truthiness by wrapping in bool().
                     if func_expr.endswith('.to_bool') and not arg_exprs:
-                        # Check if this is open_pyramid.to_bool() - it has complex logic
-                        if 'open_pyramid' in func_expr:
-                            open_pyramid = self.settings.get('open_pyramid', 0)
-                            if isinstance(open_pyramid, int):
-                                result = self._evaluate_open_pyramid_to_bool(open_pyramid)
-                                return 'True' if result else 'False'
-                        # For other options, fall back to wrapping in bool()
+                        # Remove '.to_bool' from the end and wrap in bool()
                         obj_expr = func_expr[:-8]  # len('.to_bool') == 8
                         return f'bool({obj_expr})'
 
@@ -5643,18 +5528,10 @@ class HelperCodeGenerator:
 
         # Special handling for .to_bool() calls on options
         # Original ALTTP code uses option.to_bool() but Archipelago options don't have this method.
-        # For options with complex to_bool() logic (like open_pyramid), pre-compute the result.
+        # Convert to checking the option's truthiness by wrapping in bool().
         if (isinstance(func, dict) and func.get('type') == 'attribute' and
                 func.get('attr') == 'to_bool' and len(arg_exprs) == 0):
-            obj = func.get('object', {})
-            # Check if this is open_pyramid.to_bool() - it has complex logic
-            if (obj.get('type') == 'option_value' and obj.get('option') == 'open_pyramid'):
-                open_pyramid = self.settings.get('open_pyramid', 0)
-                if isinstance(open_pyramid, int):
-                    result = self._evaluate_open_pyramid_to_bool(open_pyramid)
-                    return 'True' if result else 'False'
-            # For other options, fall back to wrapping in bool()
-            obj_code = self._generate_expression(obj)
+            obj_code = self._generate_expression(func.get('object', {}))
             return f"bool({obj_code})"
 
         return f"{func_code}({', '.join(arg_exprs)})"
