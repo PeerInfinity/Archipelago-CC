@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-03 01:26:45
+**Generated:** 2026-01-02 18:00:44
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -21,7 +21,7 @@ Additional test results:
 - **Minimal Test:** 73/73 passed (100.0%)
 - **Full Test:** 73/73 passed (100.0%)
 - **Multiclient Test:** 73/73 passed (100.0%)
-- **Multiworld Test:** 62/73 passed (84.9%)
+- **Multiworld Test:** 72/73 passed (98.6%)
 
 ### Intermittent Failures
 
@@ -32,19 +32,19 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 62/73 (84.9%)
-- **Templates passing 3 tests:** 11/73 (15.1%)
+- **Templates passing all 4 tests:** 72/73 (98.6%)
+- **Templates passing 3 tests:** 1/73 (1.4%)
 - **Templates passing 2 tests:** 0/73 (0.0%)
 - **Templates passing 1 test:** 0/73 (0.0%)
 - **Templates passing 0 tests:** 0/73 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 62 templates passing all 4 tests:
+Of the 72 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 37/62 (59.7%)
-- **Passing with Generic Logic:** 58/62 (93.5%)
-- **Passing with Both Generic:** 37/62 (59.7%)
+- **Passing with Generic Exporter:** 43/72 (59.7%)
+- **Passing with Generic Logic:** 67/72 (93.1%)
+- **Passing with Both Generic:** 43/72 (59.7%)
 
 **Combined Custom Code Size:**
 
@@ -56,16 +56,16 @@ Of the 62 templates passing all 4 tests:
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 4.6KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ | 655.1KB |
-| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ | 72.4KB |
-| APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ | 11.0KB |
-| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ | 25.9KB |
-| Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 1.8KB | ✅ | 275.4KB |
-| Baking Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ | 18.1KB |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 1.4KB | 40.3KB | 329.0KB |
-| Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ | 50.3KB |
-| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 4.0KB | ✅ | 94.4KB |
+| A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.6KB | ✅ | 235.0KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 655.1KB |
+| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 72.4KB |
+| APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
+| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 25.9KB |
+| Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.8KB | ✅ | 275.4KB |
+| Baking Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.1KB |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.4KB | 40.3KB | 329.0KB |
+| Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 50.3KB |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.0KB | ✅ | 94.4KB |
 | Castlevania 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 138.5KB |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1043.3KB |
 | Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ | 53.7KB |

@@ -24,11 +24,16 @@ def is_multiworld_test_passing(template_file, test_results):
     """Check if a multiworld test is passing for a template.
 
     Returns True if:
-    - The test passed (multiworld_test.success is True)
+    - The second pass exists and passed (second_pass.success is True)
+    - OR: The first pass passed (multiworld_test.success is True) and no second pass exists
 
     Returns False if:
-    - The test failed (multiworld_test.success is False)
-    - The template is not in the results
+    - The second pass exists and failed (second_pass.success is False)
+    - OR: The first pass failed and no second pass exists
+    - OR: The template is not in the results
+
+    Note: Second pass result is authoritative when it exists. This handles cases where
+    the first pass was skipped (e.g., waiting for 2+ templates) but second pass passed.
     """
     if template_file not in test_results:
         return False
@@ -37,6 +42,12 @@ def is_multiworld_test_passing(template_file, test_results):
     if not isinstance(result, dict):
         return False
 
+    # Check second pass first - it's authoritative when it exists
+    second_pass = result.get('second_pass')
+    if second_pass is not None:
+        return second_pass.get('success', False)
+
+    # Fall back to first pass result
     multiworld_test = result.get('multiworld_test', {})
     return multiworld_test.get('success', False)
 
@@ -49,6 +60,8 @@ def get_multiworld_bisection_info(template_file, test_results):
         - failing_pairs: list of template filenames that fail when paired
         - tested_pairs: list of dicts with pair test details
         - templates_in_multiworld: dict mapping player numbers to template names
+
+    Note: Prefers second pass data when available.
     """
     if template_file not in test_results:
         return {'has_bisection': False, 'failing_pairs': [], 'tested_pairs': [], 'templates_in_multiworld': {}}
@@ -57,14 +70,21 @@ def get_multiworld_bisection_info(template_file, test_results):
     if not isinstance(result, dict):
         return {'has_bisection': False, 'failing_pairs': [], 'tested_pairs': [], 'templates_in_multiworld': {}}
 
-    bisection_results = result.get('bisection_results', {})
-    multiworld_test = result.get('multiworld_test', {})
+    # Check second pass first for bisection results
+    second_pass = result.get('second_pass', {})
+    if second_pass and second_pass.get('bisection_results'):
+        bisection_results = second_pass.get('bisection_results', {})
+        templates_in_multiworld = second_pass.get('templates_in_multiworld', {})
+    else:
+        bisection_results = result.get('bisection_results', {})
+        multiworld_test = result.get('multiworld_test', {})
+        templates_in_multiworld = multiworld_test.get('templates_in_multiworld', {})
 
     return {
         'has_bisection': bisection_results.get('triggered', False),
         'failing_pairs': bisection_results.get('failing_pairs', []),
         'tested_pairs': bisection_results.get('tested_pairs', []),
-        'templates_in_multiworld': multiworld_test.get('templates_in_multiworld', {})
+        'templates_in_multiworld': templates_in_multiworld
     }
 
 
@@ -77,6 +97,8 @@ def get_multiworld_failure_details(template_file, test_results):
         - first_failure_player: which player failed first (if any)
         - generation_success: whether generation succeeded
         - intermittent_failures: list of intermittent failures (tests that failed initially but passed on retry)
+
+    Note: Prefers second pass data when available.
     """
     if template_file not in test_results:
         return None
@@ -85,6 +107,19 @@ def get_multiworld_failure_details(template_file, test_results):
     if not isinstance(result, dict):
         return None
 
+    # Check second pass first - it's authoritative when it exists
+    second_pass = result.get('second_pass')
+    if second_pass is not None:
+        return {
+            'player_number': second_pass.get('player_number'),
+            'player_results': second_pass.get('player_results', {}),
+            'first_failure_player': second_pass.get('first_failure_player'),
+            'generation_success': second_pass.get('generation', {}).get('success', False) if second_pass.get('generation') else True,
+            'templates_in_multiworld': second_pass.get('templates_in_multiworld', {}),
+            'intermittent_failures': second_pass.get('intermittent_failures', [])
+        }
+
+    # Fall back to first pass data
     multiworld_test = result.get('multiworld_test', {})
     generation = result.get('generation', {})
 

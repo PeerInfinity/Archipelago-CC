@@ -6,14 +6,14 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-03 01:26:45
+**Generated:** 2026-01-02 18:00:44
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 62 (84.9%)
+- **Passed:** 72 (98.6%)
 - **Failed:** 1 (1.4%)
-- **Skipped (Prerequisites):** 10 (13.7%)
+- **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 - **Second Pass Tested:** 72
@@ -22,24 +22,24 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 37/62 (59.7% of passed)
-- **Passing with Generic Logic:** 58/62 (93.5% of passed)
-- **Passing with Both Generic:** 37/62 (59.7% of passed)
+- **Passing with Generic Exporter:** 43/72 (59.7% of passed)
+- **Passing with Generic Logic:** 67/72 (93.1% of passed)
+- **Passing with Both Generic:** 43/72 (59.7% of passed)
 
 ## Test Results
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ⚫ Skipped | ✅ Passed | 1 | 1 | 4.6KB | ✅ |
-| A Link to the Past | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| A Short Hike | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| APQuest | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Adventure | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Aquaria | ⚫ Skipped | ✅ Passed | 1 | 1 | 1.8KB | ✅ |
-| Baking Adventure | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ⚫ Skipped | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
-| Bumper Stickers | ⚫ Skipped | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ⚫ Skipped | ✅ Passed | 1 | 1 | 4.0KB | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 4.6KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 1.8KB | ✅ |
+| Baking Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
+| Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 4.0KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 4.1KB | ✅ |
@@ -108,61 +108,61 @@
 
 Shows which templates were in the multiworld when each game was tested:
 
-### A Hat in Time ⚫ (Split 1)
+### A Hat in Time ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 
-### A Link to the Past ⚫ (Split 2)
+### A Link to the Past ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
 
-### A Short Hike ⚫ (Split 3)
+### A Short Hike ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 
-### APQuest ⚫ (Split 4)
+### APQuest ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest.yaml |
 
-### Adventure ⚫ (Split 5)
+### Adventure ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure.yaml |
 
-### Aquaria ⚫ (Split 6)
+### Aquaria ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 
-### Baking Adventure ⚫ (Split 7)
+### Baking Adventure ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Baking Adventure.yaml |
 
-### Bomb Rush Cyberfunk ⚫ (Split 8)
+### Bomb Rush Cyberfunk ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
 
-### Bumper Stickers ⚫ (Split 9)
+### Bumper Stickers ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 
-### Castlevania - Circle of the Moon ⚫ (Split 10)
+### Castlevania - Circle of the Moon ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
