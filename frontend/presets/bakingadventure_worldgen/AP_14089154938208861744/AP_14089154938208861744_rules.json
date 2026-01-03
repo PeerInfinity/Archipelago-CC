@@ -727,7 +727,7 @@
       "base_id": 300000000,
       "world_description": "Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
       "slot_data": {
-        "randomize_items": 0
+        "randomize_items": false
       },
       "web": {
         "theme": "partyTime",
