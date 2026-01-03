@@ -965,7 +965,7 @@ class RuleCodeGenerator:
                 'type': 'option_value',
                 'option': args.get('option', '')
             }
-            return self._expr_option_value(option_rule)
+            return self._convert_option_value(option_rule)
 
         if rb_rule == 'WorldAttribute':
             # Convert Rule Builder format WorldAttribute
@@ -975,7 +975,7 @@ class RuleCodeGenerator:
             }
             if 'index' in args:
                 attr_rule['index'] = args['index']
-            return self._expr_world_attribute(attr_rule)
+            return self._convert_world_attribute(attr_rule)
 
         if rb_rule == 'Conditional':
             # Convert Rule Builder format Conditional
@@ -2271,6 +2271,90 @@ class RuleCodeGenerator:
                 return repr(value)
 
         # Setting not found - return False as safe default
+        self.required_imports.add('False_')
+        return 'False_()'
+
+    def _convert_option_value(self, rule: Dict[str, Any]) -> str:
+        """Convert an option_value reference to its resolved value.
+
+        Options are resolved at generation time since worldgen worlds
+        don't have access to the original game options at runtime.
+        This works identically to _convert_setting_value.
+        """
+        option = rule.get('option', '')
+
+        # Look up the option value in our resolved settings
+        if option in self.settings:
+            value = self.settings[option]
+            # Handle boolean values
+            if isinstance(value, bool):
+                self.required_imports.add('True_' if value else 'False_')
+                return 'True_()' if value else 'False_()'
+            # Handle string 'true'/'false' which are boolean-like
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif value.lower() == 'false':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                # For other strings, return as string literal
+                return repr(value)
+            # Handle integer values - return as-is for use in count/arithmetic contexts
+            elif isinstance(value, int):
+                return repr(value)
+            else:
+                return repr(value)
+
+        # Option not found - return False as safe default
+        self.required_imports.add('False_')
+        return 'False_()'
+
+    def _convert_world_attribute(self, rule: Dict[str, Any]) -> str:
+        """Convert a world_attribute reference to its resolved value.
+
+        World attributes are resolved at generation time since worldgen worlds
+        don't have access to the original world attributes at runtime.
+        This works identically to _convert_setting_value.
+        """
+        attribute = rule.get('attribute', '')
+
+        # Look up the attribute value in our resolved settings
+        if attribute in self.settings:
+            value = self.settings[attribute]
+            # Handle boolean values
+            if isinstance(value, bool):
+                self.required_imports.add('True_' if value else 'False_')
+                return 'True_()' if value else 'False_()'
+            # Handle string 'true'/'false' which are boolean-like
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif value.lower() == 'false':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                # For other strings, return as string literal
+                return repr(value)
+            # Handle integer values - return as-is for use in count/arithmetic contexts
+            elif isinstance(value, int):
+                return repr(value)
+            # Handle lists (e.g., for indexed access patterns)
+            elif isinstance(value, (list, tuple)):
+                # Check for indexed access
+                if 'index' in rule:
+                    index = rule['index']
+                    if isinstance(index, int) and 0 <= index < len(value):
+                        indexed_value = value[index]
+                        if isinstance(indexed_value, bool):
+                            self.required_imports.add('True_' if indexed_value else 'False_')
+                            return 'True_()' if indexed_value else 'False_()'
+                        return repr(indexed_value)
+                return repr(value)
+            else:
+                return repr(value)
+
+        # Attribute not found - return False as safe default
         self.required_imports.add('False_')
         return 'False_()'
 
