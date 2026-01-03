@@ -653,6 +653,107 @@ def normalize_setting_types(obj: Any) -> Any:
         return obj
 
 
+def normalize_sum_of_helpers(obj: Any) -> Any:
+    """
+    Normalize sum_of helper format differences between original and WorldGen exports.
+
+    DICT_SUM_HELPERS (original) produces:
+    {
+        "params": [],
+        "body": {
+            "type": "sum_of",
+            "iterator_info": {
+                "target": {...},
+                "iterator": {"type": "method_call", "object": {"type": "setting_value", "setting": "X"}, "method": "items", "args": []}
+            },
+            "element_rule": {...}
+        }
+    }
+
+    WorldGen analyzer produces:
+    {
+        "type": "sum_of",
+        "iterator_info": {
+            "type": "comprehension_details",
+            "target": {...},
+            "iterator": {"type": "function_call", "function": {"type": "attribute", ...}}
+        },
+        "element_rule": {...}
+    }
+
+    This function normalizes both to a common format by:
+    1. Unwrapping {"params": [], "body": X} to just X
+    2. Removing "type": "comprehension_details" from iterator_info
+    3. Converting function_call+attribute to method_call+setting_value
+    """
+    if isinstance(obj, dict):
+        result = obj
+
+        # Unwrap {"params": [], "body": X} to just X (for no-param helpers)
+        if 'params' in obj and 'body' in obj:
+            params = obj.get('params', [])
+            if params == [] and 'body' in obj:
+                # This is a no-param helper - normalize to just the body
+                result = obj['body']
+                # Recursively normalize the body
+                return normalize_sum_of_helpers(result)
+
+        # Check if this is a sum_of type
+        if obj.get('type') == 'sum_of':
+            result = dict(obj)
+            iterator_info = result.get('iterator_info', {})
+
+            if iterator_info:
+                new_iterator_info = dict(iterator_info)
+
+                # Remove "type": "comprehension_details" - it's metadata
+                if new_iterator_info.get('type') == 'comprehension_details':
+                    del new_iterator_info['type']
+
+                # Normalize the iterator structure
+                iterator = new_iterator_info.get('iterator', {})
+                if isinstance(iterator, dict):
+                    # Convert function_call+attribute chain to method_call+setting_value
+                    # function_call pattern: {"type": "function_call", "function": {"type": "attribute", "object": {...}, "attr": "items"}}
+                    # method_call pattern: {"type": "method_call", "object": {...}, "method": "items", "args": []}
+                    if iterator.get('type') == 'function_call':
+                        func = iterator.get('function', {})
+                        if func.get('type') == 'attribute' and func.get('attr') == 'items':
+                            # Extract the setting name from the attribute chain
+                            inner_obj = func.get('object', {})
+                            setting_name = None
+
+                            # Pattern: {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "qp_items"}
+                            if inner_obj.get('type') == 'attribute':
+                                # world.qp_items pattern
+                                if inner_obj.get('object', {}).get('type') == 'name':
+                                    setting_name = inner_obj.get('attr')
+
+                            if setting_name:
+                                new_iterator_info['iterator'] = {
+                                    'type': 'method_call',
+                                    'object': {'type': 'setting_value', 'setting': setting_name},
+                                    'method': 'items',
+                                    'args': []
+                                }
+
+                result['iterator_info'] = new_iterator_info
+
+            # Recursively normalize element_rule and other nested objects
+            for key in result:
+                if key not in ('type', 'iterator_info'):
+                    result[key] = normalize_sum_of_helpers(result[key])
+
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_sum_of_helpers(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_sum_of_helpers(item) for item in obj]
+    else:
+        return obj
+
+
 def find_differences(obj1: Any, obj2: Any, path: str = "") -> List[Tuple[str, Any, Any]]:
     """
     Recursively find differences between two objects.
@@ -1139,6 +1240,10 @@ def main():
     # Normalize setting types (option_value/world_attribute -> setting_value)
     original_normalized = normalize_setting_types(original_normalized)
     worldgen_normalized = normalize_setting_types(worldgen_normalized)
+
+    # Normalize sum_of helper format (DICT_SUM_HELPERS format vs analyzer format)
+    original_normalized = normalize_sum_of_helpers(original_normalized)
+    worldgen_normalized = normalize_sum_of_helpers(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
