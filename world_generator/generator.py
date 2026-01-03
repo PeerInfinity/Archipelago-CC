@@ -150,6 +150,22 @@ class WorldGenerator:
             '__init__.py': generate_init_py(self.data, canonical_seed1=self.canonical_seed1),
         }
 
+        # Generate archipelago.json manifest for apworld packaging compatibility
+        manifest = {
+            "game": self.data.metadata.game_name,
+            "authors": ["World Generator"],
+            "minimum_ap_version": self.data.metadata.archipelago_version or "0.6.0",
+            "world_version": "1.0.0",
+            "version": 7,
+            "compatible_version": 7
+        }
+        manifest_path = output_dir / 'archipelago.json'
+        if not dry_run:
+            manifest_path.write_text(json.dumps(manifest, indent=4))
+            logger.info(f"Wrote manifest to {manifest_path}")
+        else:
+            logger.info(f"Would write: {manifest_path}")
+
         # Export options for canonical seed generation
         # This allows worldgen worlds to reproduce the exact original seed when seed=1
         with open(self.json_path, 'r') as f:
