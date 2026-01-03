@@ -2274,6 +2274,75 @@ class RuleCodeGenerator:
         self.required_imports.add('False_')
         return 'False_()'
 
+    def _expr_option_value(self, rule: Dict[str, Any]) -> str:
+        """Convert an option_value reference to its resolved value.
+
+        Options are resolved at generation time since worldgen worlds
+        don't have access to the original game options at runtime.
+        This is analogous to _convert_setting_value but for the 'option' key format.
+        """
+        option = rule.get('option', '')
+
+        # Look up the option value in our resolved settings
+        if option in self.settings:
+            value = self.settings[option]
+            # Handle boolean values
+            if isinstance(value, bool):
+                self.required_imports.add('True_' if value else 'False_')
+                return 'True_()' if value else 'False_()'
+            # Handle string 'true'/'false' which are boolean-like
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif value.lower() == 'false':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                # For other strings, return as string literal
+                return repr(value)
+            # Handle integer values - return as-is
+            elif isinstance(value, int):
+                return repr(value)
+            else:
+                return repr(value)
+
+        # Option not found - return False as safe default
+        self.required_imports.add('False_')
+        return 'False_()'
+
+    def _expr_world_attribute(self, rule: Dict[str, Any]) -> str:
+        """Convert a world_attribute reference to its resolved value.
+
+        World attributes are resolved at generation time since worldgen worlds
+        don't have access to the original world instance at runtime.
+        """
+        attribute = rule.get('attribute', '')
+
+        # Look up the attribute value in our resolved settings
+        if attribute in self.settings:
+            value = self.settings[attribute]
+            # Handle boolean values
+            if isinstance(value, bool):
+                self.required_imports.add('True_' if value else 'False_')
+                return 'True_()' if value else 'False_()'
+            # Handle string 'true'/'false' which are boolean-like
+            elif isinstance(value, str):
+                if value.lower() == 'true':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif value.lower() == 'false':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                # For other strings, return as string literal
+                return repr(value)
+            # Handle integer/list/other values - return as repr
+            else:
+                return repr(value)
+
+        # Attribute not found - return False as safe default
+        self.required_imports.add('False_')
+        return 'False_()'
+
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
 
