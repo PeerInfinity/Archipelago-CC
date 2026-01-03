@@ -4908,13 +4908,26 @@ class HelperCodeGenerator:
         return base_path
 
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access an option at runtime.
+        """Generate code to access an option or world attribute at runtime.
 
-        Always generates: state.multiworld.worlds[player].options.<name>
-        This pattern is recognized by the exporter's _is_world_options_pattern().
+        If the name is a known option (in option_definitions), generates:
+            state.multiworld.worlds[player].options.<name>
+
+        Otherwise, treats it as a world attribute and generates:
+            state.multiworld.worlds[player].<name>
+
+        This handles cases where the exporter marks world attributes as option_value
+        (e.g., pyramid_keys_unlock in Timespinner).
         """
         option = expr.get('option', '')
-        base_path = f'state.multiworld.worlds[player].options.{option}'
+
+        # Check if this is actually a known option or a world attribute
+        # Some games export world attributes with option_value type incorrectly
+        if option in self.option_definitions:
+            base_path = f'state.multiworld.worlds[player].options.{option}'
+        else:
+            # Not a known option - treat as world attribute
+            base_path = f'state.multiworld.worlds[player].{option}'
 
         # Handle indexed access (not common for options, but supported)
         if 'index' in expr:
