@@ -1,6 +1,6 @@
 # Archipelago Games Sheet
 Extracted from: https://docs.google.com/spreadsheets/d/1iuzDTOAvdoNe8Ne8i461qGNucg5OuEoF-Ikqs8aUQZw
-Last updated: 2026-01-04
+Last updated: 2026-01-04 07:35:23
 
 ## Files
 - `playable_worlds.csv` - Full list of playable worlds (APWorld Only, Merged, In Review, Stable, Unstable)
@@ -405,4 +405,3 @@ Last updated: 2026-01-04
 ---
 
 **Total Playable Worlds: 371**
-
