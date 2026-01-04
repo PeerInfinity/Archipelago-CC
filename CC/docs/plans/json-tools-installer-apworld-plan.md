@@ -491,12 +491,12 @@ The installer APWorld should have minimal dependencies:
 - `zipfile` for extraction (stdlib)
 - `hashlib` for checksums (stdlib)
 
-## Open Questions
+## Resolved Questions
 
-1. **Icon**: Need to create/obtain an icon for launcher components
-2. **Offline mode**: Should we support installing from a local zip file?
-3. **Partial updates**: Should we support updating individual components?
-4. **Settings sync**: How to handle host.yaml settings after install?
+1. **Icon**: Optional - will use default Archipelago icon for now
+2. **Offline mode**: Low priority - may add later if needed
+3. **Partial updates**: Yes - support updating individual components
+4. **Settings sync**: Use existing `scripts/setup/update_host_settings.py` script
 
 ## Related Documents
 
@@ -507,4 +507,5 @@ The installer APWorld should have minimal dependencies:
 ---
 
 **Created:** 2025-01-04
-**Status:** Draft - Awaiting Review
+**Updated:** 2025-01-04
+**Status:** Approved
