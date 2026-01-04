@@ -345,6 +345,11 @@ def main():
         action='store_true',
         help='Only test games loaded from the custom_worlds directory (apworld files)'
     )
+    parser.add_argument(
+        '--untested-only',
+        action='store_true',
+        help='Only test templates that do not have existing results in the output file'
+    )
 
     args = parser.parse_args()
 
@@ -456,6 +461,14 @@ def main():
 
     if args.builtin_worlds_only and args.custom_worlds_only:
         print("Error: --builtin-worlds-only and --custom-worlds-only are mutually exclusive")
+        sys.exit(1)
+
+    if args.untested_only and args.retest:
+        print("Error: --untested-only and --retest are mutually exclusive")
+        sys.exit(1)
+
+    if args.untested_only and args.include_list is not None:
+        print("Error: --untested-only and --include-list are mutually exclusive")
         sys.exit(1)
 
     # Set default skip list based on test type if not explicitly provided
@@ -954,9 +967,23 @@ def main():
 
     existing_results = load_existing_results(results_file)
 
+    # Apply --untested-only filtering if specified
+    if args.untested_only:
+        before_untested_filter = len(yaml_files)
+        tested_templates = set(existing_results.get('results', {}).keys())
+        yaml_files = [f for f in yaml_files if f not in tested_templates]
+        untested_filter_excluded = before_untested_filter - len(yaml_files)
+
+        if untested_filter_excluded > 0:
+            print(f"Untested-only filter: {len(yaml_files)} untested templates to test ({untested_filter_excluded} already have results)")
+
+        if not yaml_files:
+            print("No untested templates found - all templates already have results in the output file.")
+            sys.exit(0)
+
     # Determine if we should update metadata in merged results
-    # Only update metadata for full runs (no --include-list and no --retest)
-    update_metadata = args.include_list is None and not args.retest
+    # Only update metadata for full runs (no --include-list and no --retest and no --untested-only)
+    update_metadata = args.include_list is None and not args.retest and not args.untested_only
 
     # Create new results structure for this run
     results = {
