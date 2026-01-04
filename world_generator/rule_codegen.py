@@ -4629,6 +4629,10 @@ class HelperCodeGenerator:
                 args = expr.get('args', {})
                 item_name = args.get('item_name', '')
                 count = args.get('count', 1)
+                # If count is a dict (e.g., OptionValue), recursively convert it
+                if isinstance(count, dict):
+                    count_expr = self._generate_expression(count)
+                    return f"state.has({repr(item_name)}, player, {count_expr})"
                 if count == 1:
                     return f"state.has({repr(item_name)}, player)"
                 return f"state.has({repr(item_name)}, player, {count})"
