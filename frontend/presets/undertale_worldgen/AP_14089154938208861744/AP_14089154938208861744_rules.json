@@ -1047,7 +1047,12 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Key Piece",
-                    "count": 5
+                    "count": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "key_pieces.value"
+                      }
+                    }
                   }
                 }
               ]

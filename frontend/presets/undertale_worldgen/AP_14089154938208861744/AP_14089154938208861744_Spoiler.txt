@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Key Piece Hunt:                  No
 Key Piece Amount:                5
 No Equippables:                  No
@@ -28,7 +29,7 @@ Randomize LOVE:                  No
 Randomize Stats:                 No
 Required Route:                  Neutral
 Starting Area:                   Ruins
-Include Temy Armor:              No
+Include Temy Armor:              Yes
 
 
 Starting Items:
