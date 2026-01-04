@@ -331,3 +331,144 @@ def get_patch_summary(config: Optional[InstallerConfig] = None) -> Dict[str, any
         "applied_at": config.patches.applied_at,
         "files": status,
     }
+
+
+def get_bundled_patches_dir(version: str) -> Optional[Path]:
+    """
+    Get the path to bundled patches for a specific AP version.
+
+    Args:
+        version: AP version string (e.g., "0.6.5").
+
+    Returns:
+        Path to patches directory, or None if not found.
+    """
+    # Look for patches bundled with the installer
+    patches_dir = Path(__file__).parent / "patches" / version
+    if patches_dir.exists():
+        return patches_dir
+
+    # Try base version (without rc suffix)
+    base_version = version.split("-")[0]
+    patches_dir = Path(__file__).parent / "patches" / base_version
+    if patches_dir.exists():
+        return patches_dir
+
+    return None
+
+
+def get_available_patch_versions() -> List[str]:
+    """Get list of AP versions with bundled patches."""
+    patches_base = Path(__file__).parent / "patches"
+    if not patches_base.exists():
+        return []
+
+    versions = []
+    for item in patches_base.iterdir():
+        if item.is_dir():
+            manifest = item / "manifest.json"
+            if manifest.exists():
+                versions.append(item.name)
+
+    return sorted(versions)
+
+
+def apply_bundled_patches(
+    config: Optional[InstallerConfig] = None,
+    force: bool = False,
+) -> PatchResult:
+    """
+    Apply patches from bundled patch files.
+
+    This uses pre-made patched files included with the installer,
+    rather than extracting from a downloaded archive.
+
+    Args:
+        config: Installer configuration.
+        force: If True, overwrite even if already patched.
+
+    Returns:
+        PatchResult with status information.
+    """
+    import json
+
+    if config is None:
+        config = load_config()
+
+    result = PatchResult(success=True)
+    root = Path(local_path())
+
+    # Check version compatibility
+    version_info = detect_ap_version()
+    if version_info.support_level == SupportLevel.UNSUPPORTED:
+        result.success = False
+        result.errors.append(
+            f"AP version {version_info.version_string} is not supported"
+        )
+        return result
+
+    # Find bundled patches for this version
+    patches_dir = get_bundled_patches_dir(version_info.version_string)
+    if patches_dir is None:
+        result.success = False
+        result.errors.append(
+            f"No bundled patches available for AP version {version_info.version_string}. "
+            f"Available versions: {get_available_patch_versions()}"
+        )
+        return result
+
+    # Load manifest
+    manifest_path = patches_dir / "manifest.json"
+    if not manifest_path.exists():
+        result.success = False
+        result.errors.append(f"Manifest not found: {manifest_path}")
+        return result
+
+    try:
+        with open(manifest_path, "r") as f:
+            manifest = json.load(f)
+    except Exception as e:
+        result.success = False
+        result.errors.append(f"Failed to load manifest: {e}")
+        return result
+
+    # Apply each patch file
+    for filename in PATCH_FILES:
+        patch_file = patches_dir / filename
+        if not patch_file.exists():
+            result.warnings.append(f"Patch file not found: {filename}")
+            continue
+
+        target_path = root / filename
+
+        # Check current status
+        if target_path.exists():
+            current_status = check_patch_status(config).get(filename)
+
+            if current_status and current_status.is_patched and not force:
+                result.warnings.append(f"{filename} already patched, skipping")
+                continue
+
+            # Backup original
+            backup_path = backup_file(target_path, config)
+            if backup_path:
+                result.patched_files.append(f"{filename} (backed up)")
+            else:
+                result.warnings.append(f"Could not backup {filename}")
+
+        try:
+            # Copy patched file
+            shutil.copy2(patch_file, target_path)
+            if filename not in [p.split(" ")[0] for p in result.patched_files]:
+                result.patched_files.append(filename)
+        except Exception as e:
+            result.errors.append(f"Failed to apply patch for {filename}: {e}")
+            result.success = False
+
+    # Update config
+    if result.success and result.patched_files:
+        config.patches.method = "bundled"
+        config.patches.applied_at = datetime.now().isoformat()
+        save_config(config)
+
+    return result
