@@ -121,6 +121,54 @@ def normalize_toggle_defaults(obj: Any) -> Any:
         return obj
 
 
+def normalize_list_representation(obj: Any) -> Any:
+    """
+    Normalize list representations between original and WorldGen exports.
+
+    Original exports a list as:
+        {"type": "constant", "value": [200, 400, 600]}
+
+    WorldGen exports the same list as:
+        {"type": "list", "value": [
+            {"type": "constant", "value": 200},
+            {"type": "constant", "value": 400},
+            {"type": "constant", "value": 600}
+        ]}
+
+    Both are semantically equivalent. Normalize to the 'constant' format.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check if this is a list type that can be normalized to constant
+        if obj_type == 'list' and 'value' in obj:
+            value = obj.get('value', [])
+            if isinstance(value, list):
+                # Try to extract values from nested constants
+                extracted_values = []
+                can_simplify = True
+                for item in value:
+                    if isinstance(item, dict) and item.get('type') == 'constant':
+                        extracted_values.append(item.get('value'))
+                    else:
+                        # Not a simple constant, can't simplify
+                        can_simplify = False
+                        break
+
+                if can_simplify:
+                    return {
+                        'type': 'constant',
+                        'value': extracted_values
+                    }
+
+        # Recursively normalize nested objects
+        return {k: normalize_list_representation(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_list_representation(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_rule_format(obj: Any) -> Any:
     """
     Normalize rule format differences between original exports and WorldGen exports.
@@ -1069,6 +1117,14 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             if path.endswith(f'.{opt}'):
                 return True
 
+    # ItemDict options that WorldGen doesn't support (dict mapping items to weights/counts)
+    # These are complex option types requiring special handling that WorldGen doesn't implement
+    itemdict_options = {'filler_items_distribution'}
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in itemdict_options:
+            if path.endswith(f'.{opt}'):
+                return True
+
     # Game-specific complex options that WorldGen doesn't extract (Factorio world_gen, starting_items, etc.)
     # These are game-specific configuration options that require special handling to reproduce
     game_specific_options = {'world_gen', 'starting_items'}
@@ -1123,6 +1179,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # depending on whether the original uses ItemsAccessibility or Accessibility
         if 'accessibility' in path.lower():
             return True
+        # display_name: WorldGen may add display_name when original didn't have it,
+        # or vice versa. This is a presentational difference, not functional.
+        if path.endswith('.display_name'):
+            if original_value == '<missing>' or worldgen_value == '<missing>':
+                return True
 
     # Option value differences for options that may be resolved differently
     # during canonical generation (e.g., random -> specific value)
@@ -1244,6 +1305,10 @@ def main():
     # Normalize sum_of helper format (DICT_SUM_HELPERS format vs analyzer format)
     original_normalized = normalize_sum_of_helpers(original_normalized)
     worldgen_normalized = normalize_sum_of_helpers(worldgen_normalized)
+
+    # Normalize list representations (constant with list value vs list type)
+    original_normalized = normalize_list_representation(original_normalized)
+    worldgen_normalized = normalize_list_representation(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
