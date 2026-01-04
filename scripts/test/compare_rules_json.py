@@ -1063,11 +1063,16 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
     # These are complex option types that the world generator doesn't generate Options.py classes for
-    optionset_options = {'death_link_effect', 'pre_hint_items'}
+    optionset_options = {'death_link_effect', 'pre_hint_items', 'include_dlcs'}
     if 'options.' in path and worldgen_value == '<missing>':
         for opt in optionset_options:
             if path.endswith(f'.{opt}'):
                 return True
+
+    # World instance attributes that are metadata, not rules-related
+    # player_name is set from multiworld during generation and isn't reproduced in WorldGen
+    if path == 'world.1.player_name' and worldgen_value == '<missing>':
+        return True
 
     # Game-specific complex options that WorldGen doesn't extract (Factorio world_gen, starting_items, etc.)
     # These are game-specific configuration options that require special handling to reproduce
