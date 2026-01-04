@@ -112,10 +112,9 @@ def run_all_promptfiles(project_root, script_path=None):
         print(f"Running mode: {' '.join(mode_args)}")
         print(f"{'='*60}")
 
-        # Run the script with --promptfile and --loud to show progress
-        # Stream stdout to show progress, capture stderr for error checking
-        cmd = ['python', str(script_path), '--promptfile', '--loud'] + mode_args
-        result = subprocess.run(cmd, stdout=None, stderr=subprocess.PIPE, text=True, check=False)
+        # Run the script with --promptfile (quiet mode) and capture output
+        cmd = ['python', str(script_path), '--promptfile'] + mode_args
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
         if result.returncode != 0:
             print(f"  Warning: Mode {mode_args} returned non-zero exit code")
