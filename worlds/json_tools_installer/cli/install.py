@@ -91,9 +91,19 @@ def do_install(
     version: str,
     components: list,
     dry_run: bool = False,
+    use_monkey_patch: bool = False,
+    use_bundled_patches: bool = False,
 ) -> bool:
     """
     Perform the installation.
+
+    Args:
+        config: Installer configuration.
+        version: Version to install ("stable" or "dev").
+        components: List of component names to install.
+        dry_run: If True, only show what would be done.
+        use_monkey_patch: If True, use runtime patching instead of file patches.
+        use_bundled_patches: If True, use bundled patch files instead of downloading.
 
     Returns:
         True if successful.
@@ -160,25 +170,52 @@ def do_install(
         if extract_result.skipped_files:
             print(f"  [INFO] Skipped {len(extract_result.skipped_files)} existing files")
 
-        # Apply patches
-        print("\n  Applying patches...")
+        # Apply patches (unless using monkey patching)
+        if use_monkey_patch:
+            print("\n  Setting up monkey patching...")
+            from ..monkey_patches import install_hooks
+            hook_results = install_hooks()
+            success_count = sum(1 for v in hook_results.values() if v)
+            print(f"  [OK] Installed {success_count}/{len(hook_results)} runtime hooks")
+            config.patches.method = "monkey"
+        elif use_bundled_patches:
+            print("\n  Applying bundled patches...")
+            from ..installer.patcher import apply_bundled_patches
+            patch_result = apply_bundled_patches(config)
 
-        patch_result = apply_patches(archive_path, config)
+            if patch_result.warnings:
+                for warning in patch_result.warnings:
+                    print(f"  [WARN] {warning}")
 
-        if patch_result.warnings:
-            for warning in patch_result.warnings:
-                print(f"  [WARN] {warning}")
+            if not patch_result.success:
+                print("  [ERROR] Patching failed:")
+                for error in patch_result.errors:
+                    print(f"    - {error}")
+                return False
 
-        if not patch_result.success:
-            print("  [ERROR] Patching failed:")
-            for error in patch_result.errors:
-                print(f"    - {error}")
-            return False
+            if patch_result.patched_files:
+                print(f"  [OK] Patched {len(patch_result.patched_files)} files")
+                for f in patch_result.patched_files:
+                    print(f"    - {f}")
+        else:
+            print("\n  Applying patches from archive...")
 
-        if patch_result.patched_files:
-            print(f"  [OK] Patched {len(patch_result.patched_files)} files")
-            for f in patch_result.patched_files:
-                print(f"    - {f}")
+            patch_result = apply_patches(archive_path, config)
+
+            if patch_result.warnings:
+                for warning in patch_result.warnings:
+                    print(f"  [WARN] {warning}")
+
+            if not patch_result.success:
+                print("  [ERROR] Patching failed:")
+                for error in patch_result.errors:
+                    print(f"    - {error}")
+                return False
+
+            if patch_result.patched_files:
+                print(f"  [OK] Patched {len(patch_result.patched_files)} files")
+                for f in patch_result.patched_files:
+                    print(f"    - {f}")
 
     # Update config
     update_installation_info(config, version, components, commit_hash)
@@ -302,6 +339,16 @@ def main(args=None):
         action="store_true",
         help="Show what would be done without making changes",
     )
+    parser.add_argument(
+        "--monkey-patch",
+        action="store_true",
+        help="Use runtime monkey patching instead of file patches",
+    )
+    parser.add_argument(
+        "--use-bundled-patches",
+        action="store_true",
+        help="Use bundled patch files instead of downloading",
+    )
 
     parsed = parser.parse_args(args)
 
@@ -365,7 +412,14 @@ def main(args=None):
         version = config.installation.version
         print(f"\nUpdating existing {version} installation...")
 
-    success = do_install(config, version, components, parsed.dry_run)
+    success = do_install(
+        config,
+        version,
+        components,
+        parsed.dry_run,
+        parsed.monkey_patch,
+        parsed.use_bundled_patches,
+    )
     return 0 if success else 1
 
 
