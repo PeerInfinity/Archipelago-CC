@@ -653,6 +653,73 @@ def normalize_setting_types(obj: Any) -> Any:
         return obj
 
 
+def normalize_math_functions(obj: Any) -> Any:
+    """
+    Normalize math module function calls to helper format.
+
+    Original exports math functions as helpers:
+        {"type": "helper", "name": "sqrt", "args": [...]}
+
+    WorldGen exports them as function_call with math.sqrt:
+        {"type": "function_call", "function": {"type": "attribute", "object": {"type": "name", "name": "math"}, "attr": "sqrt"}, "args": [...]}
+
+    This function normalizes the function_call format to helper format for comparison.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Normalize math module function calls to helper format
+        if obj_type == 'function_call':
+            func = obj.get('function', {})
+            if isinstance(func, dict) and func.get('type') == 'attribute':
+                func_obj = func.get('object', {})
+                func_attr = func.get('attr', '')
+                # Check if it's math.X where X is sqrt, floor, ceil, etc.
+                if (isinstance(func_obj, dict) and func_obj.get('type') == 'name' and
+                        func_obj.get('name') == 'math' and
+                        func_attr in ('sqrt', 'floor', 'ceil', 'pow', 'log', 'log10', 'exp', 'sin', 'cos', 'tan')):
+                    # Convert to helper format
+                    args = obj.get('args', [])
+                    return {
+                        'type': 'helper',
+                        'name': func_attr,
+                        'args': [normalize_math_functions(arg) for arg in args]
+                    }
+
+        # Recursively normalize nested objects
+        return {k: normalize_math_functions(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_math_functions(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_option_display_name(obj: Any) -> Any:
+    """
+    Remove display_name from option definitions.
+
+    WorldGen may add display_name fields to option definitions that the original
+    doesn't have. These are just UI metadata and don't affect gameplay.
+    """
+    if isinstance(obj, dict):
+        # Check if this is an option definition (has type and name_lookup or default)
+        if 'type' in obj and ('name_lookup' in obj or 'default' in obj or 'values' in obj):
+            # Remove display_name if present
+            result = {}
+            for k, v in obj.items():
+                if k == 'display_name':
+                    continue
+                result[k] = normalize_option_display_name(v)
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_option_display_name(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_option_display_name(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_sum_of_helpers(obj: Any) -> Any:
     """
     Normalize sum_of helper format differences between original and WorldGen exports.
@@ -1240,6 +1307,14 @@ def main():
     # Normalize setting types (option_value/world_attribute -> setting_value)
     original_normalized = normalize_setting_types(original_normalized)
     worldgen_normalized = normalize_setting_types(worldgen_normalized)
+
+    # Normalize math function calls (math.sqrt function_call -> sqrt helper)
+    original_normalized = normalize_math_functions(original_normalized)
+    worldgen_normalized = normalize_math_functions(worldgen_normalized)
+
+    # Normalize option display_name (remove WorldGen-added display_name fields)
+    original_normalized = normalize_option_display_name(original_normalized)
+    worldgen_normalized = normalize_option_display_name(worldgen_normalized)
 
     # Normalize sum_of helper format (DICT_SUM_HELPERS format vs analyzer format)
     original_normalized = normalize_sum_of_helpers(original_normalized)
