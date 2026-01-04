@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Autosave:                        Yes
 Difficulty:                      Norml
 DK Coins for Gyrocopter:         30

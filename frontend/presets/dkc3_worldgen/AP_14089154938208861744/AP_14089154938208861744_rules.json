@@ -45,7 +45,12 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "DK Coin",
-                    "count": 30
+                    "count": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "dk_coins_for_gyrocopter"
+                      }
+                    }
                   }
                 },
                 {
@@ -641,7 +646,12 @@
                 "count": {
                   "rule": "Arithmetic",
                   "args": {
-                    "left": 15,
+                    "left": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "krematoa_bonus_coin_cost"
+                      }
+                    },
                     "op": "*",
                     "right": {
                       "rule": "Arithmetic",
@@ -666,7 +676,12 @@
                 "count": {
                   "rule": "Arithmetic",
                   "args": {
-                    "left": 15,
+                    "left": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "krematoa_bonus_coin_cost"
+                      }
+                    },
                     "op": "*",
                     "right": {
                       "rule": "Arithmetic",
@@ -691,7 +706,12 @@
                 "count": {
                   "rule": "Arithmetic",
                   "args": {
-                    "left": 15,
+                    "left": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "krematoa_bonus_coin_cost"
+                      }
+                    },
                     "op": "*",
                     "right": {
                       "rule": "Arithmetic",
@@ -716,7 +736,12 @@
                 "count": {
                   "rule": "Arithmetic",
                   "args": {
-                    "left": 15,
+                    "left": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "krematoa_bonus_coin_cost"
+                      }
+                    },
                     "op": "*",
                     "right": {
                       "rule": "Arithmetic",
@@ -741,7 +766,12 @@
                 "count": {
                   "rule": "Arithmetic",
                   "args": {
-                    "left": 15,
+                    "left": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "krematoa_bonus_coin_cost"
+                      }
+                    },
                     "op": "*",
                     "right": {
                       "rule": "Arithmetic",

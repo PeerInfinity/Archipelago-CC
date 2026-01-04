@@ -4631,6 +4631,10 @@ class HelperCodeGenerator:
                 count = args.get('count', 1)
                 if count == 1:
                     return f"state.has({repr(item_name)}, player)"
+                # If count is a complex expression (dict), generate the expression
+                if isinstance(count, dict):
+                    count_expr = self._generate_expression(count)
+                    return f"state.has({repr(item_name)}, player, {count_expr})"
                 return f"state.has({repr(item_name)}, player, {count})"
 
             # Handle HasAll rules (Rule Builder format)
@@ -4788,6 +4792,17 @@ class HelperCodeGenerator:
                 if index is not None:
                     attr_expr['index'] = index
                 return self._expr_world_attribute(attr_expr)
+
+            # Handle Arithmetic rules (Rule Builder format for binary operations)
+            if rule_type == 'Arithmetic':
+                args = expr.get('args', {})
+                left = args.get('left', 0)
+                op = args.get('op', '+')
+                right = args.get('right', 0)
+                # Recursively generate expressions for operands
+                left_expr = self._generate_expression(left) if isinstance(left, dict) else str(left)
+                right_expr = self._generate_expression(right) if isinstance(right, dict) else str(right)
+                return f"({left_expr} {op} {right_expr})"
 
             # Handle AST_placement_lookup (Rule Builder format for placement_lookup)
             if rule_type == 'AST_placement_lookup':
