@@ -4631,6 +4631,16 @@ class HelperCodeGenerator:
                 count = args.get('count', 1)
                 if count == 1:
                     return f"state.has({repr(item_name)}, player)"
+                # Handle dict counts (e.g., OptionValue rules)
+                if isinstance(count, dict):
+                    count_rule = count.get('rule', '')
+                    count_args = count.get('args', {})
+                    if count_rule == 'OptionValue':
+                        option = count_args.get('option', '')
+                        return f"state.has({repr(item_name)}, player, state.multiworld.worlds[player].options.{option}.value)"
+                    # For other complex expressions, use _convert_compare_operand
+                    count_expr = self._convert_compare_operand(count)
+                    return f"state.has({repr(item_name)}, player, {count_expr})"
                 return f"state.has({repr(item_name)}, player, {count})"
 
             # Handle HasAll rules (Rule Builder format)
