@@ -539,6 +539,15 @@
     "has_custom_game_logic": false,
     "world_directory": "inscryption_worldgen"
   },
+  "JSON Tools Installer": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "json_tools_installer"
+  },
   "Jak and Daxter The Precursor Legacy WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -1090,7 +1099,7 @@
   },
   "Super Mario 64": {
     "exporter_path": "exporter/games/sm64ex.py",
-    "exporter_size": 12650,
+    "exporter_size": 12655,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

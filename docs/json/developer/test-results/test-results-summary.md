@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-03 07:22:13
+**Generated:** 2026-01-04 22:32:48
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,7 +18,7 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 73/73 passed (100.0%)
+- **Minimal Test:** 73/74 passed (98.6%)
 - **Full Test:** 73/73 passed (100.0%)
 - **Multiclient Test:** 73/73 passed (100.0%)
 - **Multiworld Test:** 73/73 passed (100.0%)
@@ -32,11 +32,11 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 73/73 (100.0%)
-- **Templates passing 3 tests:** 0/73 (0.0%)
-- **Templates passing 2 tests:** 0/73 (0.0%)
-- **Templates passing 1 test:** 0/73 (0.0%)
-- **Templates passing 0 tests:** 0/73 (0.0%)
+- **Templates passing all 4 tests:** 73/74 (98.6%)
+- **Templates passing 3 tests:** 0/74 (0.0%)
+- **Templates passing 2 tests:** 0/74 (0.0%)
+- **Templates passing 1 test:** 0/74 (0.0%)
+- **Templates passing 0 tests:** 1/74 (1.4%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -107,6 +107,7 @@ Of the 73 templates passing all 4 tests:
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.5KB |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.2KB |
+| Shivers WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | 150.0KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 266.1KB |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.7KB | 87.5KB | 1136.1KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 18.8KB | 8.0KB | 2430.1KB |
@@ -216,6 +217,8 @@ These templates are excluded from testing:
 
 | Template | Reason |
 |----------|--------|
+| APWorld Manager WorldGen.yaml | Not a game. |
+| APWorld Manager.yaml | Not a game. |
 | Archipelago WorldGen.yaml | Not a game. |
 | Archipelago.yaml | Not a game. |
 | Blasphemous WorldGen.yaml | The spoiler test currently freezes. |

@@ -48,7 +48,7 @@
       ],
       "last_updated": "2026-01-03T06:07:02.020436"
     },
-    "last_updated": "2026-01-03T06:07:02.020433",
+    "last_updated": "2026-01-04T22:32:48.110729",
     "script_version": "1.0.0"
   },
   "results": {
@@ -37700,6 +37700,53 @@
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
         "world_directory": "soe"
+      }
+    },
+    "Shivers WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "shivers_worldgen",
+      "game_name_from_yaml": "Shivers WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 6.14,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Shivers WorldGen.yaml",
+      "timestamp": "2026-01-04T22:32:40.664474",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "shivers_worldgen",
+        "game_name_from_yaml": "Shivers WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "shivers_worldgen"
       }
     },
     "Shivers.yaml": {

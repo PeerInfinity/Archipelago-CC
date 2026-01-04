@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-03 07:22:13
+**Generated:** 2026-01-04 22:32:48
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,17 +10,17 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 748.4s | 888.7s | 1953.7s | 1577.7s |
-| Average | 10.3s | 12.2s | 26.8s | 21.6s |
+| Total | 754.5s | 888.7s | 1953.7s | 1577.7s |
+| Average | 10.2s | 12.0s | 26.8s | 21.6s |
 | Max | 42.3s | 59.0s | 300.1s | 158.8s |
-| Min | 3.8s | 5.7s | 5.6s | 12.1s |
+| Min | 3.8s | 0.0s | 5.6s | 12.1s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
 | Slowest | Celeste (Open World) (42.3s) | Kirby's Dream Land 3 (59.0s) | Dark Souls III (300.1s) | Dark Souls III (158.8s) |
-| Fastest | Paint (3.8s) | DLCQuest (5.7s) | APQuest (5.6s) | DLCQuest (12.1s) |
+| Fastest | Paint (3.8s) | Shivers WorldGen (0.0s) | APQuest (5.6s) | DLCQuest (12.1s) |
 
 ## Individual Game Processing Times
 
@@ -77,6 +77,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Saving Princess | 4.5s | 5.7s | 6.6s | 12.5s |
 | Secret of Evermore | 9.3s | 7.7s | 46.5s | 30.9s |
 | Shivers | 6.9s | 9.7s | 12.7s | 14.3s |
+| Shivers WorldGen | 6.1s | 0.0s | - | - |
 | Sonic Adventure 2 Battle | 9.9s | 13.7s | 19.7s | 16.4s |
 | Starcraft 2 | 12.7s | 27.8s | 38.9s | 39.7s |
 | Stardew Valley | 14.5s | 55.7s | 80.2s | 52.2s |

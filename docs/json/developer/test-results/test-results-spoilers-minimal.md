@@ -6,17 +6,17 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-03 07:22:13
+**Generated:** 2026-01-04 22:32:48
 
 **Source Data Created:** 2026-01-03T06:07:02.020423
 
-**Source Data Last Updated:** 2026-01-03T06:07:02.020433
+**Source Data Last Updated:** 2026-01-04T22:32:46.803741
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Total Games:** 74
+- **Passed:** 73 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 5
 - **Total Intermittent Failures:** 5
 
@@ -81,6 +81,7 @@
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
+| Shivers WorldGen | ❌ Failed | 3 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 87.5KB |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |

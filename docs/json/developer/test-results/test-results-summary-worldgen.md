@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-03 07:22:13
+**Generated:** 2026-01-04 22:32:48
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -169,6 +169,8 @@ These templates are excluded from testing:
 
 | Template | Reason |
 |----------|--------|
+| APWorld Manager WorldGen.yaml | Not a game. |
+| APWorld Manager.yaml | Not a game. |
 | Archipelago WorldGen.yaml | Not a game. |
 | Archipelago.yaml | Not a game. |
 | Blasphemous WorldGen.yaml | The spoiler test currently freezes. |
