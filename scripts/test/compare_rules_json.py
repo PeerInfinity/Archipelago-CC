@@ -1063,7 +1063,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
     # These are complex option types that the world generator doesn't generate Options.py classes for
-    optionset_options = {'death_link_effect', 'pre_hint_items'}
+    optionset_options = {'death_link_effect', 'move_rando_actions', 'pre_hint_items'}
     if 'options.' in path and worldgen_value == '<missing>':
         for opt in optionset_options:
             if path.endswith(f'.{opt}'):
