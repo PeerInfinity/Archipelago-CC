@@ -140,6 +140,10 @@ class PatternDetectionMixin:
                 # that needs to be evaluated at analysis time via call_visitor
                 if attrs[-1] == 'to_bool':
                     return None
+                # Strip .value suffix if present - the option value will be resolved at runtime
+                # This handles patterns like state.multiworld.worlds[player].options.bosses_required.value
+                if attrs[-1] == 'value':
+                    return '.'.join(attrs[1:-1])
                 # Remove 'options' prefix for .options.<setting> pattern
                 return '.'.join(attrs[1:])
             else:
