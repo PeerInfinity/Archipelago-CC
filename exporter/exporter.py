@@ -18,7 +18,11 @@ from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
 from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+from .profiling import profiler, auto_enable_from_env
 from BaseClasses import ItemClassification
+
+# Auto-enable profiling from environment variable
+auto_enable_from_env()
 
 logger = logging.getLogger(__name__)
 
@@ -762,6 +766,12 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
     Prepares complete game data for export to JSON format.
     Preserves as much of the Python backend's structure as possible.
     """
+    with profiler.section("prepare_export_data"):
+        return _prepare_export_data_impl(multiworld)
+
+
+def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
+    """Implementation of prepare_export_data (separated for profiling)."""
     export_data = {
         "schema_version": 3,  # Schema version for the export format
         "archipelago_version": Utils.__version__,
@@ -811,7 +821,8 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
         # Process all regions and their connections
         # Also extract dungeons to separate structure
-        regions_data, dungeons_data = process_regions(multiworld, player, game_handler, location_id_mappings.get(player, {}))
+        with profiler.section("process_regions"):
+            regions_data, dungeons_data = process_regions(multiworld, player, game_handler, location_id_mappings.get(player, {}))
         export_data['regions'][player_str] = regions_data
         
         # Only add dungeons if there's data
@@ -834,9 +845,12 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             }
 
         # Process items and groups, passing the itempool counts
-        export_data['items'][player_str] = process_items(multiworld, player, itempool_counts)
-        export_data['item_groups'][player_str] = process_item_groups(multiworld, player)
-        export_data['progression_mapping'][player_str] = process_progression_mapping(multiworld, player)
+        with profiler.section("process_items"):
+            export_data['items'][player_str] = process_items(multiworld, player, itempool_counts)
+        with profiler.section("process_item_groups"):
+            export_data['item_groups'][player_str] = process_item_groups(multiworld, player)
+        with profiler.section("process_progression_mapping"):
+            export_data['progression_mapping'][player_str] = process_progression_mapping(multiworld, player)
 
         # Get game-specific information if available using handler
         try:
@@ -898,15 +912,16 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             # Don't add error to export_data - exporter settings can fall back to defaults
 
         # Get helper definitions using handler
-        try:
-            helper_definitions = game_handler.get_helper_definitions(world)
-            if helper_definitions:
-                export_data['helpers'][player_str] = helper_definitions
-                logger.debug(f"Exported {len(helper_definitions)} helper definitions for player {player}")
-        except Exception as e:
-            error_msg = f"Error exporting helper definitions for player {player}: {str(e)}"
-            logger.error(error_msg)
-            # Don't add error to export_data - just skip helpers silently
+        with profiler.section("get_helper_definitions"):
+            try:
+                helper_definitions = game_handler.get_helper_definitions(world)
+                if helper_definitions:
+                    export_data['helpers'][player_str] = helper_definitions
+                    logger.debug(f"Exported {len(helper_definitions)} helper definitions for player {player}")
+            except Exception as e:
+                error_msg = f"Error exporting helper definitions for player {player}: {str(e)}"
+                logger.error(error_msg)
+                # Don't add error to export_data - just skip helpers silently
 
         # Normalize option constants in helpers and regions to match the export format
         # This ensures comparisons work correctly in JavaScript
@@ -2213,7 +2228,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     ]
 
     # Prepare the combined export data for all players using the helper
-    cleaned_data = _get_cleaned_rules_data(multiworld)
+    with profiler.section("get_cleaned_rules_data"):
+        cleaned_data = _get_cleaned_rules_data(multiworld)
     if not cleaned_data: # Handle potential errors from the helper
         logger.error("Failed to get cleaned data, cannot export game rules.")
         return {}
@@ -2231,22 +2247,23 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
     if rules_json_format in ("rule_builder", "both"):
         # Convert to Rule Builder format
-        try:
-            rb_data, conversion_warnings = convert_rules_file_to_rule_builder(cleaned_data)
-            if conversion_warnings:
-                logger.debug(f"Format conversion warnings: {len(conversion_warnings)} warnings")
-                for warning in conversion_warnings[:5]:  # Log first 5 warnings
-                    logger.debug(f"  - {warning}")
-                if len(conversion_warnings) > 5:
-                    logger.debug(f"  ... and {len(conversion_warnings) - 5} more warnings")
-        except Exception as e:
-            logger.error(f"Error converting to Rule Builder format: {e}")
-            if rules_json_format == "rule_builder":
-                logger.warning("Falling back to AST format due to conversion error")
-                rules_json_format = "ast"
-            else:
-                logger.warning("Skipping Rule Builder output due to conversion error")
-                rb_data = None
+        with profiler.section("convert_to_rule_builder"):
+            try:
+                rb_data, conversion_warnings = convert_rules_file_to_rule_builder(cleaned_data)
+                if conversion_warnings:
+                    logger.debug(f"Format conversion warnings: {len(conversion_warnings)} warnings")
+                    for warning in conversion_warnings[:5]:  # Log first 5 warnings
+                        logger.debug(f"  - {warning}")
+                    if len(conversion_warnings) > 5:
+                        logger.debug(f"  ... and {len(conversion_warnings) - 5} more warnings")
+            except Exception as e:
+                logger.error(f"Error converting to Rule Builder format: {e}")
+                if rules_json_format == "rule_builder":
+                    logger.warning("Falling back to AST format due to conversion error")
+                    rules_json_format = "ast"
+                else:
+                    logger.warning("Skipping Rule Builder output due to conversion error")
+                    rb_data = None
 
     # --- Helper function to create an ordered dictionary with proper field ordering ---
     def create_ordered_export_data(data, game_name=None, player_id=None):
@@ -2599,6 +2616,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # This is necessary because Region, World, Spoiler, and CollectionState
     # all hold references to multiworld, creating reference cycles
     _clear_multiworld_references(multiworld)
+
+    # Print profiling report if enabled
+    if profiler.enabled:
+        logger.info(profiler.report())
 
     return results
 
