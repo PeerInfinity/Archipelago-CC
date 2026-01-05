@@ -4886,6 +4886,35 @@ class HelperCodeGenerator:
                     return f'{func_name}(state, player)'
                 return 'True'
 
+            # Handle CanReachRegion rules (Rule Builder format)
+            # This is critical for lambda-based rules that contain region checks
+            if rule_type == 'CanReachRegion':
+                args = expr.get('args', {})
+                region = args.get('region_name', '')
+                if isinstance(region, dict):
+                    # Region name is an expression, generate it
+                    region_expr = self._generate_expression(region)
+                    return f'state.can_reach_region({region_expr}, player)'
+                return f'state.can_reach_region({repr(region)}, player)'
+
+            # Handle CanReachLocation rules (Rule Builder format)
+            if rule_type == 'CanReachLocation':
+                args = expr.get('args', {})
+                location = args.get('location_name', '')
+                if isinstance(location, dict):
+                    location_expr = self._generate_expression(location)
+                    return f'state.can_reach_location({location_expr}, player)'
+                return f'state.can_reach_location({repr(location)}, player)'
+
+            # Handle CanReachEntrance rules (Rule Builder format)
+            if rule_type == 'CanReachEntrance':
+                args = expr.get('args', {})
+                entrance = args.get('entrance_name', '')
+                if isinstance(entrance, dict):
+                    entrance_expr = self._generate_expression(entrance)
+                    return f'state.can_reach({entrance_expr}, "Entrance", player)'
+                return f'state.can_reach({repr(entrance)}, "Entrance", player)'
+
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown types are typically progression checks that evaluate to true
