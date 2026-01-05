@@ -30,6 +30,7 @@
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { profiler } from '../shared/profiler.js';
 
 const logger = createUniversalLogger('testSpoilerUI:TestOrchestrator');
 
@@ -325,6 +326,7 @@ export class TestOrchestrator {
 
     try {
       logger.info(`Starting main processing loop. Total events to process: ${spoilerLogData.length}`);
+      profiler.start('spoilerTest');
 
       while (this.currentLogIndex < spoilerLogData.length) {
         logger.debug(`Loop iteration: currentLogIndex=${this.currentLogIndex}, totalEvents=${spoilerLogData.length}`);
@@ -340,7 +342,9 @@ export class TestOrchestrator {
         // Set context for event processor
         this.eventProcessor.setContext(this.currentLogIndex, spoilerLogData, playerId);
 
+        profiler.start('processSingleEvent');
         const eventProcessingResult = await this.eventProcessor.processSingleEvent(event);
+        profiler.end('processSingleEvent');
         logger.debug(`Completed processing event ${this.currentLogIndex + 1}, result: ${JSON.stringify(eventProcessingResult)}`);
 
         // Capture detailed sphere results
@@ -434,6 +438,7 @@ export class TestOrchestrator {
       }
 
       // --- Final Result Determination ---
+      profiler.end('spoilerTest');
       logger.info(`Exited main processing loop. Final currentLogIndex: ${this.currentLogIndex}, Total events: ${spoilerLogData.length}`);
 
       if (currentAbortController.signal.aborted) {
@@ -497,6 +502,14 @@ export class TestOrchestrator {
           'info',
           'Detailed spoiler test results stored in window.__spoilerTestResults__'
         );
+
+        // Output profiling report if enabled
+        if (profiler.enabled) {
+          const profilingReport = profiler.report();
+          console.log(profilingReport);
+          this.uiCallbacks.log('info', 'Profiling data available in window.__profilingData__');
+          window.__profilingData__ = profiler.getData();
+        }
       }
 
       // Re-enable auto-collect events
