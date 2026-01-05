@@ -320,6 +320,9 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
         - world.options.<setting_name>.value -> setting_name
         - world.options.<setting_name> -> setting_name
         - world.<attribute_name> -> attribute_name
+        - state.multiworld.worlds[player].options.<setting_name>.value -> setting_name
+        - state.multiworld.worlds[player].options.<setting_name> -> setting_name
+        - state.multiworld.worlds[player].<attribute_name> -> attribute_name
 
         Args:
             arg_node: The AST node representing the argument
@@ -338,25 +341,53 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             current = current.value
 
         # Check if the chain starts with 'world'
-        if not isinstance(current, ast.Name) or current.id != 'world':
-            return None
+        if isinstance(current, ast.Name) and current.id == 'world':
+            return self._extract_key_from_chain(chain)
 
-        # Pattern: world.options.<setting>.value -> setting
+        # Check for state.multiworld.worlds[player] pattern
+        # current should be a Subscript with value = state.multiworld.worlds
+        if isinstance(current, ast.Subscript):
+            subscript_value = current.value
+            # Build the chain from the subscript value (should be state.multiworld.worlds)
+            sub_chain = []
+            sub_current = subscript_value
+            while isinstance(sub_current, ast.Attribute):
+                sub_chain.insert(0, sub_current.attr)
+                sub_current = sub_current.value
+
+            # Check if this is state.multiworld.worlds[player]
+            if (isinstance(sub_current, ast.Name) and sub_current.id == 'state' and
+                    sub_chain == ['multiworld', 'worlds']):
+                return self._extract_key_from_chain(chain)
+
+        return None
+
+    def _extract_key_from_chain(self, chain):
+        """
+        Extract the slot_data key from an attribute chain.
+
+        Args:
+            chain: List of attribute names after world/state.multiworld.worlds[player]
+
+        Returns:
+            The slot_data key string, or None if pattern not recognized
+        """
+        # Pattern: options.<setting>.value -> setting
         # chain would be ['options', '<setting>', 'value']
         if len(chain) >= 3 and chain[0] == 'options' and chain[-1] == 'value':
             return chain[1]  # The setting name
 
-        # Pattern: world.options.<setting> -> setting
+        # Pattern: options.<setting> -> setting
         # chain would be ['options', '<setting>']
         if len(chain) == 2 and chain[0] == 'options':
             return chain[1]
 
-        # Pattern: world.<attribute> -> attribute
+        # Pattern: <attribute> -> attribute
         # chain would be ['<attribute>']
         if len(chain) == 1:
             return chain[0]
 
-        # Pattern: world.<something>.<attribute> (like world.wily_5_weapons which might be deeper)
+        # Pattern: <something>.<attribute> (like wily_5_weapons which might be deeper)
         # For now, return the last attribute in the chain
         if len(chain) >= 1:
             return chain[-1]
