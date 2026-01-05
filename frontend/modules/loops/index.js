@@ -56,6 +56,14 @@ function log(level, message, ...data) {
 // Handler for rules loaded
 function handleRulesLoaded(eventData) {
   log('info', '[Loops Module] Received stateManager:rulesLoaded');
+
+  // Set start regions on playerState from static data
+  const staticData = stateManager.getStaticData();
+  if (staticData?.startRegions && _playerStateAPI?.setStartRegions) {
+    _playerStateAPI.setStartRegions(staticData.startRegions);
+    log('info', '[Loops Module] Set start regions:', staticData.startRegions);
+  }
+
   // Reset loop state now that new rules are loaded
   if (
     loopStateSingleton &&
@@ -192,7 +200,9 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     clearActionsAt: initializationApi.getModuleFunction('playerState', 'clearActionsAt'),
     removeAllActionsOfType: initializationApi.getModuleFunction('playerState', 'removeAllActionsOfType'),
     getCurrentRegion: initializationApi.getModuleFunction('playerState', 'getCurrentRegion'),
-    getRegionCounts: initializationApi.getModuleFunction('playerState', 'getRegionCounts')
+    getRegionCounts: initializationApi.getModuleFunction('playerState', 'getRegionCounts'),
+    setStartRegions: initializationApi.getModuleFunction('playerState', 'setStartRegions'),
+    isStartRegion: initializationApi.getModuleFunction('playerState', 'isStartRegion')
   };
   
   // Store the API for access by loopUI

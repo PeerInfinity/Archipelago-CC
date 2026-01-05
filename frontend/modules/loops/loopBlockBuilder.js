@@ -53,8 +53,9 @@ export class LoopBlockBuilder {
     regionBlock.dataset.region = regionName;
     regionBlock.classList.add(isExpanded ? 'expanded' : 'collapsed');
 
-    // Check if this is the initial Menu (starting position)
-    const isInitialMenu = regionName === 'Menu' &&
+    // Check if this is the initial start region (starting position)
+    const isStartRegion = this.loopUI.playerStateAPI?.isStartRegion?.(regionName) ?? (regionName === 'Menu');
+    const isInitialMenu = isStartRegion &&
                          actions.length === 1 &&
                          actions[0].index === 0 &&
                          actions[0].pathEntry.type === 'regionMove' &&
@@ -176,8 +177,9 @@ export class LoopBlockBuilder {
       const detailsEl = document.createElement('div');
       detailsEl.className = 'loop-region-details';
 
-      // Add explore button if in loop mode
-      if (this.loopUI.isLoopModeActive) {
+      // Add explore button if in loop mode (but not for start regions, which are already fully explored)
+      const isStartRegion = this.loopUI.playerStateAPI?.isStartRegion?.(regionName) ?? (regionName === 'Menu');
+      if (this.loopUI.isLoopModeActive && !isStartRegion) {
         this.addExploreButton(detailsEl, regionName);
       }
 
@@ -355,11 +357,11 @@ export class LoopBlockBuilder {
     let manaCost = 0;
 
     if (pathEntry.type === 'regionMove') {
-      actionText = `Move to ${pathEntry.region}`;
+      actionText = `Move to ${pathEntry.destinationRegion || pathEntry.region}`;
       if (pathEntry.exitUsed) {
         actionText += ` via ${pathEntry.exitUsed}`;
       }
-      manaCost = loopState._calculateActionCost({type: 'moveToRegion', destinationRegion: pathEntry.region});
+      manaCost = loopState._calculateActionCost({type: 'moveToRegion', destinationRegion: pathEntry.destinationRegion || pathEntry.region});
     } else if (pathEntry.type === 'locationCheck') {
       actionText = `Check: ${pathEntry.locationName}`;
       manaCost = loopState._calculateActionCost({type: 'checkLocation', locationName: pathEntry.locationName});

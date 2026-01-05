@@ -97,18 +97,32 @@ export class DiscoveryState {
 
       for (const regionName of startRegions) {
         const region = staticData.regions.get(regionName);
-        if (region && region.exits) {
-          const regionExits = this.discoveredExits.get(regionName);
-          region.exits.forEach((exit) => {
-            if (!regionExits.has(exit.name)) {
-              regionExits.add(exit.name);
-            }
-          });
-          log('info', `[DiscoveryState] Initialized ${regionName} exits:`, regionExits);
+        if (region) {
+          // Discover all exits in start regions
+          if (region.exits) {
+            const regionExits = this.discoveredExits.get(regionName);
+            region.exits.forEach((exit) => {
+              if (!regionExits.has(exit.name)) {
+                regionExits.add(exit.name);
+              }
+            });
+            log('info', `[DiscoveryState] Initialized ${regionName} exits:`, regionExits);
+          }
+
+          // Discover all locations in start regions (fully explored)
+          if (region.locations) {
+            region.locations.forEach((location) => {
+              if (location.name && !this.discoveredLocations.has(location.name)) {
+                this.discoveredLocations.add(location.name);
+              }
+            });
+            log('info', `[DiscoveryState] Initialized ${regionName} locations (fully explored):`,
+              region.locations.map(l => l.name));
+          }
         } else {
           log(
             'warn',
-            `[DiscoveryState] Region ${regionName} or its exits not found during initialization.`
+            `[DiscoveryState] Region ${regionName} not found during initialization.`
           );
         }
       }
