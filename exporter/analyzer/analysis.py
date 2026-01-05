@@ -6,19 +6,51 @@ point for analyzing rule functions and AST nodes.
 """
 
 import ast
+import inspect
 import json
 import logging
 import traceback
-from typing import Optional, Callable, Dict, Any
+from typing import Optional, Callable, Dict, Any, Tuple
 
 from .rule_analyzer import RuleAnalyzer
 from .source_extraction import _clean_source
 from .utils import make_json_serializable
+from .cache import parameterless_func_cache
 from exporter.constants import MAX_ANALYZE_RULE_CALLS
 from exporter.profiling import profiler
 
 # Global counter for detecting infinite loops
 _analyze_rule_call_count = 0
+
+# Standard parameters that don't affect cacheability
+_STANDARD_PARAMS = frozenset({'state', 'player', 'world', 'self'})
+
+
+def _is_cacheable_function(func: Callable) -> Optional[Tuple[str, int]]:
+    """
+    Check if a function is cacheable (parameterless beyond standard params).
+
+    Returns:
+        (filename, lineno) tuple if cacheable, None otherwise
+    """
+    try:
+        if not hasattr(func, '__code__'):
+            return None
+
+        code = func.__code__
+        all_params = code.co_varnames[:code.co_argcount]
+
+        # Check if all parameters are standard (state, player, world, self)
+        extra_params = [p for p in all_params if p not in _STANDARD_PARAMS]
+        if extra_params:
+            return None
+
+        # Get cache key
+        filename = inspect.getfile(func)
+        lineno = code.co_firstlineno
+        return (filename, lineno)
+    except (TypeError, AttributeError):
+        return None
 
 
 def reset_analyze_rule_counter():
@@ -87,6 +119,15 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
     _analyze_rule_call_count += 1
     if _analyze_rule_call_count > MAX_ANALYZE_RULE_CALLS:
         raise RuntimeError(f"analyze_rule called {_analyze_rule_call_count} times - likely infinite loop. Context: {context_info}")
+
+    # Check parameterless function cache for functions that only take state/player/world
+    # This avoids re-analyzing the same helper function multiple times
+    cache_key = None
+    if rule_func is not None and not preserve_parameter_names:
+        cache_key = _is_cacheable_function(rule_func)
+        if cache_key and cache_key in parameterless_func_cache:
+            logging.debug(f"analyze_rule: Cache hit for parameterless function at {cache_key}")
+            return parameterless_func_cache[cache_key]
 
     logging.debug("\n--- Starting Rule Analysis ---")
 
@@ -298,6 +339,11 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
         else:
             # Successful analysis
             final_result = analysis_result
+
+            # Cache successful results for parameterless functions
+            if cache_key is not None and final_result.get('type') != 'error':
+                parameterless_func_cache[cache_key] = final_result
+                logging.debug(f"analyze_rule: Cached result for parameterless function at {cache_key}")
 
         # Always log the final result (or error structure) being returned
         try:
