@@ -4631,8 +4631,14 @@ class HelperCodeGenerator:
                 count = args.get('count', 1)
                 if count == 1:
                     return f"state.has({repr(item_name)}, player)"
-                # If count is a complex expression (dict), generate the expression
+                # Handle dict counts (e.g., OptionValue rules)
                 if isinstance(count, dict):
+                    count_rule = count.get('rule', '')
+                    count_args = count.get('args', {})
+                    if count_rule == 'OptionValue':
+                        option = count_args.get('option', '')
+                        return f"state.has({repr(item_name)}, player, state.multiworld.worlds[player].options.{option}.value)"
+                    # For other complex expressions, use _generate_expression
                     count_expr = self._generate_expression(count)
                     return f"state.has({repr(item_name)}, player, {count_expr})"
                 return f"state.has({repr(item_name)}, player, {count})"
