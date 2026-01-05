@@ -2500,6 +2500,60 @@ export class StateManagerProxy {
       payload: {}
     });
   }
+
+  /**
+   * Run spoiler test entirely in worker
+   *
+   * Sends all sphere data to the worker and lets it process the entire test
+   * internally, eliminating round-trip communication overhead.
+   *
+   * Progress updates are sent via 'spoilerTestProgress' messages.
+   * Mismatch details are sent via 'spoilerTestMismatch' messages.
+   *
+   * @param {Array} sphereData - Pre-processed sphere data from sphereState
+   * @param {Object} config - Test configuration
+   * @param {number} config.playerId - Player ID
+   * @param {boolean} config.stopOnFirstError - Halt on first mismatch (default: true)
+   * @param {boolean} config.waitForMainThreadAnalysis - Wait for main thread analysis (default: false)
+   * @param {boolean} config.verboseMode - Enable verbose logging
+   * @param {boolean} config.focusedMode - Focused regression test mode
+   * @param {Array} config.focusLocations - Locations to focus on in focused mode
+   * @returns {Promise<Object>} Test results
+   */
+  async runSpoilerTest(sphereData, config) {
+    log('info', `[StateManagerProxy] Running worker-side spoiler test with ${sphereData.length} spheres`);
+    return this.sendQueryToWorker({
+      command: 'runSpoilerTest',
+      payload: { sphereData, config }
+    });
+  }
+
+  /**
+   * Abort a running spoiler test
+   *
+   * Signals the worker to stop processing the current spoiler test.
+   * The test will complete with aborted=true in the results.
+   *
+   * @returns {Promise<Object>} Result with { aborted: boolean }
+   */
+  async abortSpoilerTest() {
+    log('info', '[StateManagerProxy] Aborting spoiler test');
+    return this.sendQueryToWorker({
+      command: 'abortSpoilerTest',
+      payload: {}
+    });
+  }
+
+  /**
+   * Signal that main thread analysis is complete
+   *
+   * Used when waitForMainThreadAnalysis is enabled. Signals the worker
+   * to continue processing after main thread has completed its analysis.
+   */
+  signalAnalysisComplete() {
+    log('debug', '[StateManagerProxy] Signaling analysis complete');
+    this._sendCommand('signalAnalysisComplete', {}, false);
+  }
 }
 
 export default StateManagerProxy;

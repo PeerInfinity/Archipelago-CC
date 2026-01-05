@@ -505,6 +505,17 @@ this.postMessage({
 | UI-dependent analysis | Main Thread | Requires DOM/window access |
 | Detailed reporting | Main Thread | May need sphereState module |
 
+**Mismatch Handling Options:**
+
+| Option | Default | Behavior |
+|--------|---------|----------|
+| `stopOnFirstError` | `true` | Halt immediately on first mismatch |
+| `waitForMainThreadAnalysis` | `false` | Pause for main thread analysis before continuing (only if stopOnFirstError is false) |
+
+When `stopOnFirstError: true` (default), the worker immediately stops processing and returns results. This is useful for fast failure detection during development.
+
+When `stopOnFirstError: false` and `waitForMainThreadAnalysis: true`, the worker pauses after each mismatch, sends details to main thread, waits for analysis completion signal, then continues.
+
 **Synchronous Analysis Option:** Add a `waitForMainThreadAnalysis` config option (default: `false`). When enabled, the worker will pause after each mismatch and wait for the main thread to signal that it has completed its analysis before proceeding.
 
 ```javascript

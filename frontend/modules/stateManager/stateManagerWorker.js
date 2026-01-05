@@ -215,6 +215,8 @@ import { initializeWorkerLogger, updateWorkerLoggerConfig, createUniversalLogger
 import { CommandQueue } from './core/commandQueue.js';
 // Import profiler for worker-side profiling
 import { profiler } from '../shared/profiler.js';
+// Import worker-side spoiler test runner
+import { WorkerSpoilerTest } from './core/workerSpoilerTest.js';
 
 // Initialize worker logger with basic settings
 initializeWorkerLogger({
@@ -256,6 +258,7 @@ let stateManagerInstance = null;
 let workerConfig = null;
 let workerInitialized = false;
 const preInitQueue = [];
+let activeSpoilerTest = null;
 
 // Function to set the communication channel on the instance
 function setupCommunicationChannel(instance) {
@@ -1435,6 +1438,87 @@ async function handleMessage(message) {
               error: e.message
             });
           }
+        }
+        break;
+
+      case 'runSpoilerTest':
+        // Run spoiler test entirely within the worker
+        log('info', '[stateManagerWorker] Received runSpoilerTest command');
+        if (!workerInitialized || !stateManagerInstance) {
+          const errorMsg = 'Worker not initialized for runSpoilerTest';
+          log('error', `[stateManagerWorker] ${errorMsg}`);
+          if (message.queryId) {
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              error: errorMsg
+            });
+          }
+          break;
+        }
+        try {
+          const { sphereData, config } = message.payload;
+
+          // Create spoiler test instance
+          activeSpoilerTest = new WorkerSpoilerTest(
+            stateManagerInstance,
+            (msg) => self.postMessage(msg),
+            log
+          );
+
+          // Run the test
+          const testResult = await activeSpoilerTest.run(sphereData, config);
+
+          // Send completion response
+          if (message.queryId) {
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              result: testResult
+            });
+          }
+
+          // Also send a dedicated completion message for event-based handling
+          self.postMessage({
+            type: 'spoilerTestComplete',
+            result: testResult
+          });
+
+          activeSpoilerTest = null;
+        } catch (e) {
+          log('error', '[stateManagerWorker] Error running spoiler test:', e);
+          activeSpoilerTest = null;
+          if (message.queryId) {
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              error: e.message
+            });
+          }
+        }
+        break;
+
+      case 'abortSpoilerTest':
+        // Abort running spoiler test
+        log('info', '[stateManagerWorker] Received abortSpoilerTest command');
+        if (activeSpoilerTest) {
+          activeSpoilerTest.abort();
+          log('info', '[stateManagerWorker] Spoiler test abort signaled');
+        }
+        if (message.queryId) {
+          self.postMessage({
+            type: 'queryResponse',
+            queryId: message.queryId,
+            result: { aborted: !!activeSpoilerTest }
+          });
+        }
+        break;
+
+      case 'signalAnalysisComplete':
+        // Signal that main thread analysis is complete
+        log('debug', '[stateManagerWorker] Received signalAnalysisComplete command');
+        if (activeSpoilerTest) {
+          activeSpoilerTest.signalAnalysisComplete();
         }
         break;
 
