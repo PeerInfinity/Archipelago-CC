@@ -1434,130 +1434,48 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     }
 
                 # Process entrances
-                if hasattr(region, 'entrances'):
-                    for entrance in region.entrances:
-                        try:
-                            expanded_rule = None
-                            entrance_name = getattr(entrance, 'name', None)
-                            if hasattr(entrance, 'access_rule') and entrance.access_rule is not None:
-                                rule_to_analyze = entrance.access_rule
+                with profiler.section("process_entrances"):
+                    if hasattr(region, 'entrances'):
+                        for entrance in region.entrances:
+                            try:
+                                expanded_rule = None
+                                entrance_name = getattr(entrance, 'name', None)
+                                if hasattr(entrance, 'access_rule') and entrance.access_rule is not None:
+                                    rule_to_analyze = entrance.access_rule
 
-                                # Try special handling first for complex entrance rules
-                                # (e.g., LADX which uses custom entrance classes with condition attributes)
-                                if game_handler and hasattr(game_handler, 'handle_complex_entrance_rule'):
-                                    special_rule = game_handler.handle_complex_entrance_rule(entrance_name, rule_to_analyze)
-                                    if special_rule:
-                                        expanded_rule = game_handler.expand_rule(special_rule)
-                                        # Resolve any attribute nodes in item_check rules
-                                        expanded_rule = resolve_attribute_nodes_in_rule(expanded_rule, world)
+                                    # Try special handling first for complex entrance rules
+                                    # (e.g., LADX which uses custom entrance classes with condition attributes)
+                                    if game_handler and hasattr(game_handler, 'handle_complex_entrance_rule'):
+                                        special_rule = game_handler.handle_complex_entrance_rule(entrance_name, rule_to_analyze)
+                                        if special_rule:
+                                            expanded_rule = game_handler.expand_rule(special_rule)
+                                            # Resolve any attribute nodes in item_check rules
+                                            expanded_rule = resolve_attribute_nodes_in_rule(expanded_rule, world)
 
-                                # If no special handling, use normal analysis
-                                if expanded_rule is None:
-                                    expanded_rule = safe_expand_rule(
-                                        game_handler,
-                                        rule_to_analyze,
-                                        entrance_name,
-                                        target_type='Entrance',
-                                        world=world
-                                    )
+                                    # If no special handling, use normal analysis
+                                    if expanded_rule is None:
+                                        expanded_rule = safe_expand_rule(
+                                            game_handler,
+                                            rule_to_analyze,
+                                            entrance_name,
+                                            target_type='Entrance',
+                                            world=world
+                                        )
 
-                                # Post-process the entrance rule if the game handler supports it
-                                if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
-                                    # Check if the handler supports the new signature with connected_region
-                                    import inspect
-                                    sig = inspect.signature(game_handler.postprocess_entrance_rule)
-                                    params = list(sig.parameters.keys())
-
-                                    if 'connected_region' in params:
-                                        # Use new signature with connected_region
-                                        connected_region_name = getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None
-                                        expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name, connected_region_name)
-                                    else:
-                                        # Use old signature
-                                        expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)
-                                # Also call general postprocess_rule if available
-                                # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
-                                elif (expanded_rule and game_handler and
-                                      hasattr(game_handler, 'postprocess_rule') and
-                                      isinstance(expanded_rule, dict) and
-                                      'rule' not in expanded_rule):
-                                    expanded_rule = game_handler.postprocess_rule(expanded_rule)
-
-                            entrance_data = {
-                                'name': entrance_name,
-                                'parent_region': getattr(entrance.parent_region, 'name', None) if hasattr(entrance, 'parent_region') else None,
-                                'access_rule': expanded_rule,
-                                'connected_region': getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None,
-                            }
-                            region_data['entrances'].append(entrance_data)
-                        except Exception as e:
-                            logger.error(f"Error processing entrance {getattr(entrance, 'name', 'Unknown')}: {str(e)}")
-
-                # Process exits
-                if hasattr(region, 'exits'):
-                    # Set region context before processing exits (for handlers that need source region)
-                    region_name = getattr(region, 'name', 'Unknown')
-                    if hasattr(game_handler, 'set_context'):
-                        game_handler.set_context(region_name)
-
-                    for exit in region.exits:
-                        try:
-                            expanded_rule = None
-                            exit_name = getattr(exit, 'name', None)
-
-                            # Set exit context for game handlers that need it (e.g., SM for 'ret' variable resolution)
-                            if game_handler and hasattr(game_handler, 'set_exit_context'):
-                                game_handler.set_exit_context(exit_name)
-
-                            # Set full exit info for handlers that need connected_region (e.g., Lingo worldgen)
-                            connected_region = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
-                            if game_handler and hasattr(game_handler, 'set_exit_info'):
-                                game_handler.set_exit_info(exit_name, connected_region)
-
-                            if hasattr(exit, 'access_rule') and exit.access_rule is not None:
-                                # Check if the game handler can provide an unwrapped version of the lambda
-                                # (e.g., SM unwraps Cache.ldeco decorators to avoid 'ret' variables)
-                                rule_to_analyze = exit.access_rule
-                                if game_handler:
-                                    if hasattr(game_handler, 'get_unwrapped_exit_lambda'):
-                                        unwrapped = game_handler.get_unwrapped_exit_lambda(exit_name, exit.access_rule)
-                                        if unwrapped:
-                                            rule_to_analyze = unwrapped
-                                    elif game_name == "Super Metroid":
-                                        logger.warning(f"SM: game_handler exists but doesn't have get_unwrapped_exit_lambda method! Handler type: {type(game_handler)}")
-
-                                # Try special handling first for complex exit rules
-                                if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
-                                    special_rule = game_handler.handle_complex_exit_rule(exit_name, rule_to_analyze)
-                                    if special_rule:
-                                        expanded_rule = game_handler.expand_rule(special_rule)
-                                        # Resolve any attribute nodes in item_check rules
-                                        expanded_rule = resolve_attribute_nodes_in_rule(expanded_rule, world)
-
-                                # If no special handling, use normal analysis
-                                if expanded_rule is None:
-                                    expanded_rule = safe_expand_rule(
-                                        game_handler,
-                                        rule_to_analyze,
-                                        exit_name,
-                                        target_type='Exit',
-                                        world=world
-                                    )
-
-                                    # Post-process the exit rule if the game handler supports it
+                                    # Post-process the entrance rule if the game handler supports it
                                     if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
-                                        # Check if the handler supports the connected_region parameter
+                                        # Check if the handler supports the new signature with connected_region
                                         import inspect
                                         sig = inspect.signature(game_handler.postprocess_entrance_rule)
                                         params = list(sig.parameters.keys())
 
                                         if 'connected_region' in params:
-                                            # Pass connected_region for games that need it (e.g., Lingo)
-                                            connected_region_name = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
-                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name, connected_region_name)
+                                            # Use new signature with connected_region
+                                            connected_region_name = getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None
+                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name, connected_region_name)
                                         else:
-                                            # Use old signature for games that don't need connected_region
-                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)
+                                            # Use old signature
+                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)
                                     # Also call general postprocess_rule if available
                                     # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
                                     elif (expanded_rule and game_handler and
@@ -1566,46 +1484,140 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                           'rule' not in expanded_rule):
                                         expanded_rule = game_handler.postprocess_rule(expanded_rule)
 
-                            exit_data = {
-                                'name': exit_name,
-                                'connected_region': getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None,
-                                'access_rule': expanded_rule,
-                            }
-                            region_data['exits'].append(exit_data)
-                        except Exception as e:
-                            logger.error(f"Error processing exit {getattr(exit, 'name', 'Unknown')}: {str(e)}")
-                        finally:
-                            # Clear exit context after processing
-                            if game_handler and hasattr(game_handler, 'set_exit_context'):
-                                game_handler.set_exit_context(None)
+                                entrance_data = {
+                                    'name': entrance_name,
+                                    'parent_region': getattr(entrance.parent_region, 'name', None) if hasattr(entrance, 'parent_region') else None,
+                                    'access_rule': expanded_rule,
+                                    'connected_region': getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None,
+                                }
+                                region_data['entrances'].append(entrance_data)
+                            except Exception as e:
+                                logger.error(f"Error processing entrance {getattr(entrance, 'name', 'Unknown')}: {str(e)}")
+
+                # Process exits
+                with profiler.section("process_exits"):
+                    if hasattr(region, 'exits'):
+                        # Set region context before processing exits (for handlers that need source region)
+                        region_name = getattr(region, 'name', 'Unknown')
+                        if hasattr(game_handler, 'set_context'):
+                            game_handler.set_context(region_name)
+
+                        for exit in region.exits:
+                            try:
+                                expanded_rule = None
+                                exit_name = getattr(exit, 'name', None)
+
+                                # Set exit context for game handlers that need it (e.g., SM for 'ret' variable resolution)
+                                if game_handler and hasattr(game_handler, 'set_exit_context'):
+                                    game_handler.set_exit_context(exit_name)
+
+                                # Set full exit info for handlers that need connected_region (e.g., Lingo worldgen)
+                                connected_region = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
+                                if game_handler and hasattr(game_handler, 'set_exit_info'):
+                                    game_handler.set_exit_info(exit_name, connected_region)
+
+                                if hasattr(exit, 'access_rule') and exit.access_rule is not None:
+                                    # Check if the game handler can provide an unwrapped version of the lambda
+                                    # (e.g., SM unwraps Cache.ldeco decorators to avoid 'ret' variables)
+                                    rule_to_analyze = exit.access_rule
+                                    if game_handler:
+                                        if hasattr(game_handler, 'get_unwrapped_exit_lambda'):
+                                            unwrapped = game_handler.get_unwrapped_exit_lambda(exit_name, exit.access_rule)
+                                            if unwrapped:
+                                                rule_to_analyze = unwrapped
+                                        elif game_name == "Super Metroid":
+                                            logger.warning(f"SM: game_handler exists but doesn't have get_unwrapped_exit_lambda method! Handler type: {type(game_handler)}")
+
+                                    # Try special handling first for complex exit rules
+                                    if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
+                                        special_rule = game_handler.handle_complex_exit_rule(exit_name, rule_to_analyze)
+                                        if special_rule:
+                                            expanded_rule = game_handler.expand_rule(special_rule)
+                                            # Resolve any attribute nodes in item_check rules
+                                            expanded_rule = resolve_attribute_nodes_in_rule(expanded_rule, world)
+
+                                    # If no special handling, use normal analysis
+                                    if expanded_rule is None:
+                                        expanded_rule = safe_expand_rule(
+                                            game_handler,
+                                            rule_to_analyze,
+                                            exit_name,
+                                            target_type='Exit',
+                                            world=world
+                                        )
+
+                                        # Post-process the exit rule if the game handler supports it
+                                        if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
+                                            # Check if the handler supports the connected_region parameter
+                                            import inspect
+                                            sig = inspect.signature(game_handler.postprocess_entrance_rule)
+                                            params = list(sig.parameters.keys())
+
+                                            if 'connected_region' in params:
+                                                # Pass connected_region for games that need it (e.g., Lingo)
+                                                connected_region_name = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
+                                                expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name, connected_region_name)
+                                            else:
+                                                # Use old signature for games that don't need connected_region
+                                                expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)
+                                        # Also call general postprocess_rule if available
+                                        # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
+                                        elif (expanded_rule and game_handler and
+                                              hasattr(game_handler, 'postprocess_rule') and
+                                              isinstance(expanded_rule, dict) and
+                                              'rule' not in expanded_rule):
+                                            expanded_rule = game_handler.postprocess_rule(expanded_rule)
+
+                                exit_data = {
+                                    'name': exit_name,
+                                    'connected_region': getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None,
+                                    'access_rule': expanded_rule,
+                                }
+                                region_data['exits'].append(exit_data)
+                            except Exception as e:
+                                logger.error(f"Error processing exit {getattr(exit, 'name', 'Unknown')}: {str(e)}")
+                            finally:
+                                # Clear exit context after processing
+                                if game_handler and hasattr(game_handler, 'set_exit_context'):
+                                    game_handler.set_exit_context(None)
 
                 # Process locations
-                if hasattr(region, 'locations'):
-                    location_count = len(region.locations)
-                    logger.debug(f"Processing {location_count} locations in region '{region.name}'")
-                    for location in region.locations:
-                        try:
-                            location_name = getattr(location, 'name', None)
-                            
-                            # Process access and item rules
-                            access_rule_result = None
-                            item_rule_result = None
-                            
-                            # First check if game handler has special handling for this location
-                            logger.debug(f"Location '{location_name}' access_rule type: {type(getattr(location, 'access_rule', None))}")
-                            if hasattr(location, 'access_rule') and location.access_rule is not None:
-                                # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk, Super Metroid)
-                                if hasattr(game_handler, 'set_context'):
-                                    game_handler.set_context(location_name)
-                                if hasattr(game_handler, 'set_location_context'):
-                                    game_handler.set_location_context(location_name)
-                                # Check if game handler can extract custom access rule (e.g., Zillion)
-                                if game_handler and hasattr(game_handler, 'get_custom_location_access_rule'):
-                                    custom_rule = game_handler.get_custom_location_access_rule(location, world)
-                                    if custom_rule:
-                                        access_rule_result = game_handler.expand_rule(custom_rule)
+                with profiler.section("process_locations"):
+                    if hasattr(region, 'locations'):
+                        location_count = len(region.locations)
+                        logger.debug(f"Processing {location_count} locations in region '{region.name}'")
+                        for location in region.locations:
+                            try:
+                                location_name = getattr(location, 'name', None)
+
+                                # Process access and item rules
+                                access_rule_result = None
+                                item_rule_result = None
+
+                                # First check if game handler has special handling for this location
+                                logger.debug(f"Location '{location_name}' access_rule type: {type(getattr(location, 'access_rule', None))}")
+                                if hasattr(location, 'access_rule') and location.access_rule is not None:
+                                    # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk, Super Metroid)
+                                    if hasattr(game_handler, 'set_context'):
+                                        game_handler.set_context(location_name)
+                                    if hasattr(game_handler, 'set_location_context'):
+                                        game_handler.set_location_context(location_name)
+                                    # Check if game handler can extract custom access rule (e.g., Zillion)
+                                    if game_handler and hasattr(game_handler, 'get_custom_location_access_rule'):
+                                        custom_rule = game_handler.get_custom_location_access_rule(location, world)
+                                        if custom_rule:
+                                            access_rule_result = game_handler.expand_rule(custom_rule)
+                                        else:
+                                            # Fall back to normal analysis
+                                            access_rule_result = safe_expand_rule(
+                                                game_handler,
+                                                location.access_rule,
+                                                location_name,
+                                                target_type='Location',
+                                                world=world
+                                            )
                                     else:
-                                        # Fall back to normal analysis
+                                        # Use normal analysis
                                         access_rule_result = safe_expand_rule(
                                             game_handler,
                                             location.access_rule,
@@ -1613,101 +1625,92 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                             target_type='Location',
                                             world=world
                                         )
-                                else:
-                                    # Use normal analysis
-                                    access_rule_result = safe_expand_rule(
+
+                                    # Post-process the rule if the game handler supports it
+                                    # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
+                                    # Rule Builder rules are already in the correct format for export
+                                    if (access_rule_result and game_handler and
+                                        hasattr(game_handler, 'postprocess_rule') and
+                                        isinstance(access_rule_result, dict) and
+                                        'rule' not in access_rule_result):
+                                        access_rule_result = game_handler.postprocess_rule(access_rule_result)
+
+                                if hasattr(location, 'item_rule') and location.item_rule is not None:
+                                    item_rule_result = safe_expand_rule(
                                         game_handler,
-                                        location.access_rule,
-                                        location_name,
-                                        target_type='Location',
+                                        location.item_rule,
+                                        f"{location_name} Item Rule",
+                                        target_type='LocationItemRule',
                                         world=world
                                     )
-                                
-                                # Post-process the rule if the game handler supports it
-                                # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
-                                # Rule Builder rules are already in the correct format for export
-                                if (access_rule_result and game_handler and
-                                    hasattr(game_handler, 'postprocess_rule') and
-                                    isinstance(access_rule_result, dict) and
-                                    'rule' not in access_rule_result):
-                                    access_rule_result = game_handler.postprocess_rule(access_rule_result)
-                                
-                            if hasattr(location, 'item_rule') and location.item_rule is not None:
-                                item_rule_result = safe_expand_rule(
-                                    game_handler,
-                                    location.item_rule,
-                                    f"{location_name} Item Rule",
-                                    target_type='LocationItemRule',
-                                    world=world
-                                )
-                            
-                            
-                            # Get progress_type - only include if not DEFAULT
-                            progress_type = getattr(location, 'progress_type', None)
-                            progress_type_str = None
-                            if progress_type is not None:
-                                # Convert enum to string name
-                                progress_type_str = progress_type.name if hasattr(progress_type, 'name') else str(progress_type)
-                                # Only include if not DEFAULT
-                                if progress_type_str == 'DEFAULT':
-                                    progress_type_str = None
 
-                            # Get show_in_spoiler - only include if False (default is True)
-                            show_in_spoiler = getattr(location, 'show_in_spoiler', True)
 
-                            # Get location address, handling cases where it might be a list
-                            # (e.g., ALTTP prize locations have multiple ROM addresses)
-                            raw_address = getattr(location, 'address', None)
-                            location_id = raw_address if isinstance(raw_address, int) else None
+                                # Get progress_type - only include if not DEFAULT
+                                progress_type = getattr(location, 'progress_type', None)
+                                progress_type_str = None
+                                if progress_type is not None:
+                                    # Convert enum to string name
+                                    progress_type_str = progress_type.name if hasattr(progress_type, 'name') else str(progress_type)
+                                    # Only include if not DEFAULT
+                                    if progress_type_str == 'DEFAULT':
+                                        progress_type_str = None
 
-                            # Determine if this is an event location
-                            # Event locations have event=True or address=None
-                            is_event = getattr(location, 'event', False) or location_id is None
+                                # Get show_in_spoiler - only include if False (default is True)
+                                show_in_spoiler = getattr(location, 'show_in_spoiler', True)
 
-                            location_data = {
-                                'name': location_name,
-                                'id': location_id,  # Use actual location address (None for events or non-int addresses)
-                                'access_rule': access_rule_result,
-                                'item_rule': item_rule_result,
-                                'item': None,
-                                'locked': getattr(location, 'locked', False)  # True if item was placed via place_locked_item
-                            }
+                                # Get location address, handling cases where it might be a list
+                                # (e.g., ALTTP prize locations have multiple ROM addresses)
+                                raw_address = getattr(location, 'address', None)
+                                location_id = raw_address if isinstance(raw_address, int) else None
 
-                            # Only include event flag if True (to reduce JSON size)
-                            if is_event:
-                                location_data['event'] = True
+                                # Determine if this is an event location
+                                # Event locations have event=True or address=None
+                                is_event = getattr(location, 'event', False) or location_id is None
 
-                            # Only include progress_type if not DEFAULT
-                            if progress_type_str:
-                                location_data['progress_type'] = progress_type_str
-
-                            # Only include show_in_spoiler if False (to reduce JSON size)
-                            if not show_in_spoiler:
-                                location_data['show_in_spoiler'] = False
-
-                            # Add game-specific location attributes from the handler
-                            location_attributes = game_handler.get_location_attributes(location, world)
-                            location_data.update(location_attributes)
-                            
-                            if hasattr(location, 'item') and location.item:
-                                item_name = getattr(location.item, 'name', None)
-                                original_type = extract_type_value(getattr(location.item, 'type', None))
-                                effective_type = game_handler.get_effective_item_type(item_name, original_type) if game_handler and item_name else original_type
-                                
-                                location_data['item'] = {
-                                    'name': item_name,
-                                    'player': getattr(location.item, 'player', None),
-                                    'advancement': getattr(location.item, 'advancement', False),
-                                    'type': effective_type
+                                location_data = {
+                                    'name': location_name,
+                                    'id': location_id,  # Use actual location address (None for events or non-int addresses)
+                                    'access_rule': access_rule_result,
+                                    'item_rule': item_rule_result,
+                                    'item': None,
+                                    'locked': getattr(location, 'locked', False)  # True if item was placed via place_locked_item
                                 }
 
-                            # Allow game handler to post-process location data before adding to region
-                            if game_handler and hasattr(game_handler, 'post_process_location_data'):
-                                location_data = game_handler.post_process_location_data(location_data, location_name)
+                                # Only include event flag if True (to reduce JSON size)
+                                if is_event:
+                                    location_data['event'] = True
 
-                            region_data['locations'].append(location_data)
-                        except Exception as e:
-                            logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
+                                # Only include progress_type if not DEFAULT
+                                if progress_type_str:
+                                    location_data['progress_type'] = progress_type_str
+
+                                # Only include show_in_spoiler if False (to reduce JSON size)
+                                if not show_in_spoiler:
+                                    location_data['show_in_spoiler'] = False
+
+                                # Add game-specific location attributes from the handler
+                                location_attributes = game_handler.get_location_attributes(location, world)
+                                location_data.update(location_attributes)
+
+                                if hasattr(location, 'item') and location.item:
+                                    item_name = getattr(location.item, 'name', None)
+                                    original_type = extract_type_value(getattr(location.item, 'type', None))
+                                    effective_type = game_handler.get_effective_item_type(item_name, original_type) if game_handler and item_name else original_type
+
+                                    location_data['item'] = {
+                                        'name': item_name,
+                                        'player': getattr(location.item, 'player', None),
+                                        'advancement': getattr(location.item, 'advancement', False),
+                                        'type': effective_type
+                                    }
+
+                                # Allow game handler to post-process location data before adding to region
+                                if game_handler and hasattr(game_handler, 'post_process_location_data'):
+                                    location_data = game_handler.post_process_location_data(location_data, location_name)
+
+                                region_data['locations'].append(location_data)
+                            except Exception as e:
+                                logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
 
                 # Auto-mark regions with no locations and no exits as dynamically_added
                 # These are structural regions that exist for navigation but have no content
