@@ -465,14 +465,86 @@ async runFullSpoilerTest(spoilerLogData, playerId, logPath) {
 | Behavior differences | Extensive testing, parallel run comparison |
 | Memory usage (large sphere data) | Stream data if needed, test with large games |
 | Abort handling complexity | Clear abort flag checking, cleanup on abort |
-| UI responsiveness | Progress updates every N spheres, not every command |
+| UI responsiveness | One progress update per sphere (see Design Decisions) |
 
-## Open Questions
+## Design Decisions
 
-1. Should we keep the old implementation as a fallback?
-2. How frequently should progress updates be sent?
-3. Should mismatch analysis also move to worker, or stay on main thread?
-4. How to handle multiworld-specific logic (cross-player items)?
+### 1. Fallback to Old Implementation
+
+**Decision:** Keep the old implementation as a fallback, but only if it doesn't add significant complexity. If maintaining both paths becomes burdensome, remove the old implementation.
+
+**Implementation:** Add a configuration option (e.g., `useWorkerSideSpoilerTest: true`) that defaults to the new worker-side implementation but can be toggled to use the old main-thread implementation for debugging or compatibility.
+
+### 2. Progress Update Frequency
+
+**Decision:** Send one progress update per sphere.
+
+**Rationale:** This provides good granularity for UI updates without flooding the message channel. For a typical game with 50-150 spheres, this means 50-150 progress messages total.
+
+```javascript
+// After each sphere is processed
+this.postMessage({
+  type: 'spoilerTestProgress',
+  eventIndex: sphereIndex,
+  totalEvents: totalSpheres,
+  sphereIndex: sphere.sphereIndex,
+  passed: sphereResult.passed,
+  locationsChecked: sphereResult.locationsChecked,
+  itemsAdded: sphereResult.itemsAdded
+});
+```
+
+### 3. Mismatch Analysis Distribution
+
+**Decision:** Split analysis between worker and main thread based on data availability.
+
+| Analysis Type | Location | Rationale |
+|---------------|----------|-----------|
+| Location/region comparison | Worker | Has snapshot and static data |
+| Rule evaluation debugging | Worker | Has evaluateRule and context |
+| UI-dependent analysis | Main Thread | Requires DOM/window access |
+| Detailed reporting | Main Thread | May need sphereState module |
+
+**Synchronous Analysis Option:** Add a `waitForMainThreadAnalysis` config option (default: `false`). When enabled, the worker will pause after each mismatch and wait for the main thread to signal that it has completed its analysis before proceeding.
+
+```javascript
+// Worker-side (when waitForMainThreadAnalysis is enabled)
+if (config.waitForMainThreadAnalysis && !sphereResult.passed) {
+  this.postMessage({
+    type: 'spoilerTestMismatch',
+    ...mismatchDetails,
+    awaitingAnalysis: true
+  });
+
+  // Wait for main thread to signal analysis complete
+  await this.waitForAnalysisComplete();
+}
+```
+
+```javascript
+// Main thread handler
+eventBus.subscribe('spoilerTest:mismatch', async (data) => {
+  if (data.awaitingAnalysis) {
+    // Perform main-thread-only analysis
+    await this.analysisReporter.analyzeFailingLocations(...);
+
+    // Signal worker to continue
+    stateManager.signalAnalysisComplete();
+  }
+});
+```
+
+### 4. Multiworld Handling
+
+**Decision:** Keep the current multiworld logic as-is.
+
+**Rationale:** The existing `_processMultiworldLocations` method in eventProcessor.js already handles:
+- Checking locations owned by the current player
+- Adding cross-player items (items received from other players)
+- Filtering starting items at sphere 0
+- Handling resolved_items based on exporter settings
+
+This logic will be ported directly to the worker without modification.
 
 ## Timeline Estimate
 
