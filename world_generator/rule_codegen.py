@@ -5037,12 +5037,18 @@ class HelperCodeGenerator:
                     val_reprs.append(self._generate_expression({'type': 'constant', 'value': v}))
                 return f"{class_name}({', '.join(val_reprs)})"
 
-            # Handle dict constants - preserve string keys from JSON
-            # JSON always uses string keys, and the worldgen data structures (from JSON)
-            # also use string keys, so we keep them as strings for consistency.
+            # Handle dict constants - convert numeric string keys back to integers
+            # JSON always uses string keys, but if the original Python code used integer
+            # keys (e.g., from enums like HatType), they would be serialized as strings.
+            # We need to convert them back to integers so that lookups like dict[1] work
+            # (instead of requiring dict["1"]).
             items = []
             for k, v in value.items():
-                key_repr = repr(k)
+                # Convert numeric string keys to integers
+                if isinstance(k, str) and k.lstrip('-').isdigit():
+                    key_repr = k  # Use the integer directly (no quotes)
+                else:
+                    key_repr = repr(k)
                 # Check if dict value is an AST node (has 'type' key) - process as expression
                 if isinstance(v, dict) and 'type' in v:
                     val_repr = self._generate_expression(v)
