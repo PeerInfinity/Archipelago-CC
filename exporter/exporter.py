@@ -817,7 +817,8 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
 
         # Call game-specific preprocessing
         # This allows games to set up data and caches before region processing
-        game_handler.preprocess_world_data(world, export_data, player)
+        with profiler.section("preprocess_world_data"):
+            game_handler.preprocess_world_data(world, export_data, player)
 
         # Process all regions and their connections
         # Also extract dungeons to separate structure
@@ -881,25 +882,26 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         export_data['itempool_counts'][player_str] = itempool_counts
 
         # Get world data using handler (includes options and runtime-computed attributes)
-        try:
-            world_data = game_handler.get_world_data(world, multiworld, player)
-            # Add world_directory for handler lookup during cleanup (in case handler didn't add it)
-            if 'world_directory' not in world_data:
-                try:
-                    module_path = type(world).__module__
-                    parts = module_path.split('.')
-                    if len(parts) >= 2 and parts[0] == 'worlds':
-                        world_data['world_directory'] = parts[1]
-                except Exception:
-                    pass
-            export_data['world'][player_str] = world_data
-        except Exception as e:
-            error_msg = f"Error exporting world data for player {player}: {str(e)}"
-            logger.error(error_msg)
-            export_data['world'][player_str] = {
-                'error': error_msg,
-                'details': "Failed to read world data. Check logs for more information."
-            }
+        with profiler.section("get_world_data"):
+            try:
+                world_data = game_handler.get_world_data(world, multiworld, player)
+                # Add world_directory for handler lookup during cleanup (in case handler didn't add it)
+                if 'world_directory' not in world_data:
+                    try:
+                        module_path = type(world).__module__
+                        parts = module_path.split('.')
+                        if len(parts) >= 2 and parts[0] == 'worlds':
+                            world_data['world_directory'] = parts[1]
+                    except Exception:
+                        pass
+                export_data['world'][player_str] = world_data
+            except Exception as e:
+                error_msg = f"Error exporting world data for player {player}: {str(e)}"
+                logger.error(error_msg)
+                export_data['world'][player_str] = {
+                    'error': error_msg,
+                    'details': "Failed to read world data. Check logs for more information."
+                }
 
         # Get exporter-specific settings
         try:
