@@ -10,6 +10,7 @@ test.describe('Application End-to-End Tests', () => {
   const rulesOverride = process.env.RULES_OVERRIDE; // Optional rules file override
   const testLayout = process.env.TEST_LAYOUT; // Optional layout parameter (mobile/desktop)
   const testOrderSeed = process.env.TEST_ORDER_SEED; // Optional test order seed for reproducible randomization
+  const testProfiling = process.env.TEST_PROFILING; // Optional profiling flag (1 to enable)
 
   // Build URL with all optional parameters
   let APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
@@ -30,6 +31,9 @@ test.describe('Application End-to-End Tests', () => {
   }
   if (testOrderSeed) {
     APP_URL += `&testOrderSeed=${encodeURIComponent(testOrderSeed)}`;
+  }
+  if (testProfiling) {
+    APP_URL += `&profiling=${encodeURIComponent(testProfiling)}`;
   }
 
   test('run in-app tests and check results', async ({ page }) => {
@@ -62,6 +66,9 @@ test.describe('Application End-to-End Tests', () => {
     }
     if (testOrderSeed) {
       console.log(`  - testOrderSeed: ${testOrderSeed}`);
+    }
+    if (testProfiling) {
+      console.log(`  - profiling: ${testProfiling}`);
     }
     console.log(`PW DEBUG: URL: ${APP_URL}`);
     // Wait until network activity has ceased, giving SPA more time to initialize
@@ -242,6 +249,15 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`PW DEBUG: Detailed spoiler test results from localStorage: ${JSON.stringify(spoilerTestResults.localStorageResults, null, 2)}`);
     } else {
       console.log('PW DEBUG: No detailed spoiler test results found in localStorage.__spoilerTestResults__.');
+    }
+
+    // Capture and log profiling data if available
+    const profilingData = await page.evaluate(() => {
+      return typeof window !== 'undefined' && window.__profilingData__ ? window.__profilingData__ : null;
+    });
+    if (profilingData) {
+      console.log('PW DEBUG: Profiling data captured:');
+      console.log(JSON.stringify(profilingData, null, 2));
     }
 
     console.log('PW DEBUG: All Playwright assertions passed.');

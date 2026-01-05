@@ -41,6 +41,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { profiler } from '../shared/profiler.js';
 
 const logger = createUniversalLogger('testSpoilerUI:EventProcessor');
 
@@ -318,7 +319,9 @@ export class EventProcessor {
           // We use parseInt to handle both, and check for the integer part being 0
           const sphereNumberInt = parseInt(String(context.sphere_number), 10);
           if (sphereNumberInt === 0 && !this._sphere0Cleared) {
+            profiler.start('clearStateAndReset');
             await stateManager.clearStateAndReset();
+            profiler.end('clearStateAndReset');
             this._sphere0Cleared = true; // Prevent clearing again for sub-spheres (0.1, 0.2, etc.)
             if (this.verboseMode) {
               this.logCallback('debug', 'Full state cleared for sphere 0 (inventory, prog_items, and event items).');
@@ -495,6 +498,7 @@ export class EventProcessor {
             const locationsToCheck = sphereData.locations || [];
             if (locationsToCheck.length > 0) {
               this.logCallback('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
+              profiler.start('checkLocationsLoop');
 
               // Get initial snapshot and static data once (for logging)
               const initialSnapshot = await stateManager.getFullSnapshot();
@@ -543,6 +547,7 @@ export class EventProcessor {
                 await this.checkLocationViaEvent(locationName, locationRegion);
               }
 
+              profiler.end('checkLocationsLoop');
               this.logCallback('info', `Completed checking ${locationsToCheck.length} locations for sphere ${context.sphere_number}`);
             }
           }
@@ -558,10 +563,12 @@ export class EventProcessor {
           //   3. Use progression_mapping to convert StateManager inventory to resolved form
 
           // Ping worker to ensure all commands are processed and state is stable.
+          profiler.start('pingWorker');
           await stateManager.pingWorker(
             `spoiler_sphere_${context.sphere_number}_locations_checked`,
             180000  // Increased timeout to 180 seconds to handle very complex games like Yu-Gi-Oh! 2006
           );
+          profiler.end('pingWorker');
           if (this.verboseMode) {
             this.logCallback(
               'debug',
@@ -570,7 +577,9 @@ export class EventProcessor {
           }
 
           // Get the fresh snapshot from the worker.
+          profiler.start('getFullSnapshot');
           const freshSnapshot = await stateManager.getFullSnapshot();
+          profiler.end('getFullSnapshot');
           if (!freshSnapshot) {
             this.logCallback(
               'error',
@@ -601,12 +610,14 @@ export class EventProcessor {
             // Normal mode: Do full location and region comparison
 
             // Compare using the fresh snapshot.
+            profiler.start('compareLocations');
             const locationComparisonResult = await this.comparisonEngine.compareAccessibleLocations(
               accessible_from_log, // This is an array of location names
               freshSnapshot, // The authoritative snapshot from the worker
               this.playerId, // Pass player ID for context in comparison
               context // Original context for logging
             );
+            profiler.end('compareLocations');
 
             // If there was a location mismatch, trigger analysis and store details
             if (!locationComparisonResult) {
@@ -649,12 +660,14 @@ export class EventProcessor {
             }
 
             // Compare accessible regions using the fresh snapshot.
+            profiler.start('compareRegions');
             const regionComparisonResult = await this.comparisonEngine.compareAccessibleRegions(
               accessible_regions_from_log, // This is an array of region names
               freshSnapshot, // The authoritative snapshot from the worker
               this.playerId, // Pass player ID for context in comparison
               context // Original context for logging
             );
+            profiler.end('compareRegions');
 
             // If there was a region mismatch, trigger analysis and store details
             if (!regionComparisonResult) {
