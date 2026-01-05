@@ -192,7 +192,8 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
                 logging.debug("preserve_parameter_names is True, skipping default parameter extraction")
 
             # Clean the source
-            cleaned_source = _clean_source(rule_func)
+            with profiler.section("source_extraction"):
+                cleaned_source = _clean_source(rule_func)
             if cleaned_source is None:
                 logging.error("analyze_rule: Failed to clean source, returning error.")
                 # Need to initialize analyzer logs for the error result
@@ -230,12 +231,14 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
 
                 # Comprehensive parse and visit
                 try:
-                    tree = ast.parse(cleaned_source)
+                    with profiler.section("ast_parse"):
+                        tree = ast.parse(cleaned_source)
                     logging.debug(f"analyze_rule: Parsed AST = {ast.dump(tree)}")
                     logging.debug("AST parsed successfully")
 
                     # Always visit the full parsed tree
-                    analysis_result = analyzer.visit(tree)
+                    with profiler.section("ast_visit"):
+                        analysis_result = analyzer.visit(tree)
 
                 except SyntaxError as parse_err:
                     logging.error(f"analyze_rule: SyntaxError during parse: {parse_err}", exc_info=True)
