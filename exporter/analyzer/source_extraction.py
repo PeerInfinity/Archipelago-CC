@@ -16,7 +16,7 @@ import zipfile
 from typing import Optional, Callable
 import astunparse
 
-from .cache import file_content_cache, ast_cache
+from .cache import file_content_cache, ast_cache, clean_source_cache, unparsed_lambda_cache
 
 
 def _read_source_from_path(filename: str) -> Optional[str]:
@@ -147,7 +147,7 @@ class LambdaLineFinder(ast.NodeVisitor):
 def get_multiline_lambda_source(func: Callable) -> Optional[str]:
     """
     Robustly gets the full source code of a lambda function using full-file AST parsing.
-    Includes caching for both file content and the parsed AST to improve performance.
+    Includes caching for both file content, parsed AST, and unparsed lambda source.
 
     Args:
         func: The lambda function to extract source from
@@ -158,6 +158,12 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
     try:
         filename = inspect.getfile(func)
         start_line = func.__code__.co_firstlineno
+
+        # Check unparsed lambda cache first (fastest path)
+        cache_key = (filename, start_line)
+        if cache_key in unparsed_lambda_cache:
+            logging.debug(f"get_multiline_lambda_source: Cache hit for {filename}:{start_line}")
+            return unparsed_lambda_cache[cache_key]
 
         # 1. Check for a cached AST first (most performant)
         if filename in ast_cache:
@@ -185,9 +191,13 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
 
         if lambda_node:
             # "Un-parse" the found AST node back into a source string
-            return astunparse.unparse(lambda_node).strip()
+            result = astunparse.unparse(lambda_node).strip()
         else:
-            return inspect.getsource(func)  # Fallback
+            result = inspect.getsource(func)  # Fallback
+
+        # Cache the result
+        unparsed_lambda_cache[cache_key] = result
+        return result
 
     except Exception as e:
         logging.error(f"Failed to get multiline lambda source for {func}: {e}")
@@ -302,12 +312,39 @@ def _clean_source(func: Callable) -> Optional[str]:
     This function extracts the source code from a lambda or function, cleans it,
     and converts it to a format suitable for AST analysis.
 
+    Results are cached by (filename, lineno) to avoid repeated extraction
+    for the same function.
+
     Args:
         func: The function to extract and clean source from
 
     Returns:
         Cleaned source code as a string, or None if cleaning failed
     """
+    # Check cache first
+    try:
+        filename = inspect.getfile(func)
+        lineno = func.__code__.co_firstlineno
+        cache_key = (filename, lineno)
+
+        if cache_key in clean_source_cache:
+            logging.debug(f"_clean_source: Cache hit for {filename}:{lineno}")
+            return clean_source_cache[cache_key]
+    except (TypeError, AttributeError):
+        # Can't determine cache key, proceed without caching
+        cache_key = None
+
+    result = _clean_source_impl(func)
+
+    # Store in cache if we have a valid cache key
+    if cache_key is not None:
+        clean_source_cache[cache_key] = result
+
+    return result
+
+
+def _clean_source_impl(func: Callable) -> Optional[str]:
+    """Implementation of _clean_source (separated for caching)."""
     try:
         # Use the robust function to get the full lambda source
         source = get_multiline_lambda_source(func)

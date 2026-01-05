@@ -1,4 +1,5 @@
 import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
+import { profiler } from './profiler.js';
 
 /**
  * Rule Engine - Thread-Agnostic Rule Evaluation
@@ -430,6 +431,23 @@ function createBoundContext(context, iterator_info, value) {
 /**
  * Evaluates a rule against the provided state context (either StateManager or main thread snapshot).\n * @param {any} rule - The rule object (or primitive) to evaluate.\n * @param {object} context - Either the StateManager instance (or its interface) in the worker,\n *                           or the snapshot interface on the main thread.\n * @param {number} [depth=0] - Current recursion depth for debugging.\n * @returns {boolean|any} - The result of the rule evaluation.\n */
 export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
+  // Profile top-level calls only (depth 0) to minimize overhead
+  const shouldProfile = depth === 0 && profiler.enabled;
+  if (shouldProfile) {
+    profiler.start('evaluateRule');
+  }
+
+  try {
+    return _evaluateRuleImpl(rule, context, depth, localScope);
+  } finally {
+    if (shouldProfile) {
+      profiler.end('evaluateRule');
+    }
+  }
+};
+
+// Internal implementation of evaluateRule
+const _evaluateRuleImpl = (rule, context, depth, localScope) => {
   // Prevent infinite recursion by limiting depth
   if (depth > 100) {
     log('error', '[evaluateRule] Maximum recursion depth exceeded', {
