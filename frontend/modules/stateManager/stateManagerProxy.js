@@ -2464,6 +2464,42 @@ export class StateManagerProxy {
       false // Fire-and-forget, snapshot update will arrive via normal flow
     );
   }
+
+  /**
+   * Enable or disable worker-side profiling
+   *
+   * When enabled, the worker will track timing data for key operations:
+   * - computeReachableRegions
+   * - runBFSPass
+   * - isLocationAccessible
+   *
+   * @param {boolean} enabled - Whether to enable profiling
+   * @returns {Promise<Object>} Result with { success: boolean, enabled: boolean }
+   */
+  async setWorkerProfiling(enabled) {
+    log('info', `[StateManagerProxy] Setting worker profiling to ${enabled}`);
+    return this.sendQueryToWorker({
+      command: 'setWorkerProfiling',
+      payload: { enabled }
+    });
+  }
+
+  /**
+   * Get the worker-side profiling report
+   *
+   * Returns timing statistics for profiled operations in the worker.
+   *
+   * @returns {Promise<Object>} Object with { report: string, data: Object }
+   *   - report: Human-readable formatted report
+   *   - data: Machine-readable profiling data with stats per section
+   */
+  async getWorkerProfilingReport() {
+    log('info', '[StateManagerProxy] Getting worker profiling report');
+    return this.sendQueryToWorker({
+      command: 'getWorkerProfilingReport',
+      payload: {}
+    });
+  }
 }
 
 export default StateManagerProxy;

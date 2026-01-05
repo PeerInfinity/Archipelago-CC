@@ -328,6 +328,16 @@ export class TestOrchestrator {
       logger.info(`Starting main processing loop. Total events to process: ${spoilerLogData.length}`);
       profiler.start('spoilerTest');
 
+      // Enable worker-side profiling if profiling is enabled
+      if (profiler.enabled) {
+        try {
+          await stateManager.setWorkerProfiling(true);
+          logger.info('[TestOrchestrator] Worker profiling enabled');
+        } catch (error) {
+          logger.warn('[TestOrchestrator] Failed to enable worker profiling:', error);
+        }
+      }
+
       while (this.currentLogIndex < spoilerLogData.length) {
         logger.debug(`Loop iteration: currentLogIndex=${this.currentLogIndex}, totalEvents=${spoilerLogData.length}`);
 
@@ -507,8 +517,24 @@ export class TestOrchestrator {
         if (profiler.enabled) {
           const profilingReport = profiler.report();
           console.log(profilingReport);
+
+          // Get worker profiling data
+          let workerProfilingData = null;
+          try {
+            const workerResult = await stateManager.getWorkerProfilingReport();
+            if (workerResult && workerResult.data) {
+              workerProfilingData = workerResult.data;
+              console.log('\n' + workerResult.report);
+            }
+          } catch (error) {
+            logger.warn('[TestOrchestrator] Failed to get worker profiling report:', error);
+          }
+
           this.uiCallbacks.log('info', 'Profiling data available in window.__profilingData__');
-          window.__profilingData__ = profiler.getData();
+          window.__profilingData__ = {
+            main: profiler.getData(),
+            worker: workerProfilingData
+          };
         }
       }
 

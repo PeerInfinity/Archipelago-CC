@@ -248,6 +248,9 @@ if (typeof window !== 'undefined') {
     profiler.enabled = true;
     console.log('[Profiler] Auto-enabled via URL parameter');
   }
+} else if (typeof self !== 'undefined') {
+  // Worker context - expose on self
+  self.__profiler__ = profiler;
 }
 
 /**

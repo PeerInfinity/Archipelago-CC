@@ -213,6 +213,8 @@ import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js';
 import { initializeWorkerLogger, updateWorkerLoggerConfig, createUniversalLogger, workerLoggerInstance } from '../../app/core/universalLogger.js';
 // Import CommandQueue for Phase 8 command queue implementation
 import { CommandQueue } from './core/commandQueue.js';
+// Import profiler for worker-side profiling
+import { profiler } from '../shared/profiler.js';
 
 // Initialize worker logger with basic settings
 initializeWorkerLogger({
@@ -1382,6 +1384,57 @@ async function handleMessage(message) {
           stateManagerInstance._sendSnapshotUpdate();
         } catch (e) {
           log('error', '[stateManagerWorker] Error processing setProgItem:', e);
+        }
+        break;
+
+      case 'setWorkerProfiling':
+        // Enable or disable worker-side profiling
+        log('info', '[stateManagerWorker] Received setWorkerProfiling command', message.payload);
+        try {
+          const { enabled } = message.payload;
+          profiler.enabled = !!enabled;
+          log('info', `[stateManagerWorker] Worker profiling ${profiler.enabled ? 'enabled' : 'disabled'}`);
+          if (message.queryId) {
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              result: { success: true, enabled: profiler.enabled }
+            });
+          }
+        } catch (e) {
+          log('error', '[stateManagerWorker] Error processing setWorkerProfiling:', e);
+          if (message.queryId) {
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              error: e.message
+            });
+          }
+        }
+        break;
+
+      case 'getWorkerProfilingReport':
+        // Get the worker profiling report
+        log('info', '[stateManagerWorker] Received getWorkerProfilingReport command');
+        try {
+          const report = profiler.report();
+          const data = profiler.getData();
+          if (message.queryId) {
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              result: { report, data }
+            });
+          }
+        } catch (e) {
+          log('error', '[stateManagerWorker] Error processing getWorkerProfilingReport:', e);
+          if (message.queryId) {
+            self.postMessage({
+              type: 'queryResponse',
+              queryId: message.queryId,
+              error: e.message
+            });
+          }
         }
         break;
 
