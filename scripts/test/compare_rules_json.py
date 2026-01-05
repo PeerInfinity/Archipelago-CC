@@ -121,6 +121,54 @@ def normalize_toggle_defaults(obj: Any) -> Any:
         return obj
 
 
+def normalize_list_representation(obj: Any) -> Any:
+    """
+    Normalize list representations between original and WorldGen exports.
+
+    Original exports a list as:
+        {"type": "constant", "value": [200, 400, 600]}
+
+    WorldGen exports the same list as:
+        {"type": "list", "value": [
+            {"type": "constant", "value": 200},
+            {"type": "constant", "value": 400},
+            {"type": "constant", "value": 600}
+        ]}
+
+    Both are semantically equivalent. Normalize to the 'constant' format.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check if this is a list type that can be normalized to constant
+        if obj_type == 'list' and 'value' in obj:
+            value = obj.get('value', [])
+            if isinstance(value, list):
+                # Try to extract values from nested constants
+                extracted_values = []
+                can_simplify = True
+                for item in value:
+                    if isinstance(item, dict) and item.get('type') == 'constant':
+                        extracted_values.append(item.get('value'))
+                    else:
+                        # Not a simple constant, can't simplify
+                        can_simplify = False
+                        break
+
+                if can_simplify:
+                    return {
+                        'type': 'constant',
+                        'value': extracted_values
+                    }
+
+        # Recursively normalize nested objects
+        return {k: normalize_list_representation(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_list_representation(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_rule_format(obj: Any) -> Any:
     """
     Normalize rule format differences between original exports and WorldGen exports.
@@ -653,6 +701,73 @@ def normalize_setting_types(obj: Any) -> Any:
         return obj
 
 
+def normalize_math_functions(obj: Any) -> Any:
+    """
+    Normalize math module function calls to helper format.
+
+    Original exports math functions as helpers:
+        {"type": "helper", "name": "sqrt", "args": [...]}
+
+    WorldGen exports them as function_call with math.sqrt:
+        {"type": "function_call", "function": {"type": "attribute", "object": {"type": "name", "name": "math"}, "attr": "sqrt"}, "args": [...]}
+
+    This function normalizes the function_call format to helper format for comparison.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Normalize math module function calls to helper format
+        if obj_type == 'function_call':
+            func = obj.get('function', {})
+            if isinstance(func, dict) and func.get('type') == 'attribute':
+                func_obj = func.get('object', {})
+                func_attr = func.get('attr', '')
+                # Check if it's math.X where X is sqrt, floor, ceil, etc.
+                if (isinstance(func_obj, dict) and func_obj.get('type') == 'name' and
+                        func_obj.get('name') == 'math' and
+                        func_attr in ('sqrt', 'floor', 'ceil', 'pow', 'log', 'log10', 'exp', 'sin', 'cos', 'tan')):
+                    # Convert to helper format
+                    args = obj.get('args', [])
+                    return {
+                        'type': 'helper',
+                        'name': func_attr,
+                        'args': [normalize_math_functions(arg) for arg in args]
+                    }
+
+        # Recursively normalize nested objects
+        return {k: normalize_math_functions(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_math_functions(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_option_display_name(obj: Any) -> Any:
+    """
+    Remove display_name from option definitions.
+
+    WorldGen may add display_name fields to option definitions that the original
+    doesn't have. These are just UI metadata and don't affect gameplay.
+    """
+    if isinstance(obj, dict):
+        # Check if this is an option definition (has type and name_lookup or default)
+        if 'type' in obj and ('name_lookup' in obj or 'default' in obj or 'values' in obj):
+            # Remove display_name if present
+            result = {}
+            for k, v in obj.items():
+                if k == 'display_name':
+                    continue
+                result[k] = normalize_option_display_name(v)
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_option_display_name(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_option_display_name(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_sum_of_helpers(obj: Any) -> Any:
     """
     Normalize sum_of helper format differences between original and WorldGen exports.
@@ -1063,11 +1178,24 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
     # These are complex option types that the world generator doesn't generate Options.py classes for
-    optionset_options = {'death_link_effect', 'pre_hint_items'}
+    optionset_options = {'death_link_effect', 'include_dlcs', 'move_rando_actions', 'pre_hint_items'}
     if 'options.' in path and worldgen_value == '<missing>':
         for opt in optionset_options:
             if path.endswith(f'.{opt}'):
                 return True
+
+    # ItemDict options that WorldGen doesn't support (dict mapping items to weights/counts)
+    # These are complex option types requiring special handling that WorldGen doesn't implement
+    itemdict_options = {'filler_items_distribution'}
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in itemdict_options:
+            if path.endswith(f'.{opt}'):
+                return True
+
+    # World instance attributes that are metadata, not rules-related
+    # player_name is set from multiworld during generation and isn't reproduced in WorldGen
+    if path == 'world.1.player_name' and worldgen_value == '<missing>':
+        return True
 
     # Game-specific complex options that WorldGen doesn't extract (Factorio world_gen, starting_items, etc.)
     # These are game-specific configuration options that require special handling to reproduce
@@ -1123,6 +1251,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # depending on whether the original uses ItemsAccessibility or Accessibility
         if 'accessibility' in path.lower():
             return True
+        # display_name: WorldGen may add display_name when original didn't have it,
+        # or vice versa. This is a presentational difference, not functional.
+        if path.endswith('.display_name'):
+            if original_value == '<missing>' or worldgen_value == '<missing>':
+                return True
 
     # Option value differences for options that may be resolved differently
     # during canonical generation (e.g., random -> specific value)
@@ -1241,9 +1374,21 @@ def main():
     original_normalized = normalize_setting_types(original_normalized)
     worldgen_normalized = normalize_setting_types(worldgen_normalized)
 
+    # Normalize math function calls (math.sqrt function_call -> sqrt helper)
+    original_normalized = normalize_math_functions(original_normalized)
+    worldgen_normalized = normalize_math_functions(worldgen_normalized)
+
+    # Normalize option display_name (remove WorldGen-added display_name fields)
+    original_normalized = normalize_option_display_name(original_normalized)
+    worldgen_normalized = normalize_option_display_name(worldgen_normalized)
+
     # Normalize sum_of helper format (DICT_SUM_HELPERS format vs analyzer format)
     original_normalized = normalize_sum_of_helpers(original_normalized)
     worldgen_normalized = normalize_sum_of_helpers(worldgen_normalized)
+
+    # Normalize list representations (constant with list value vs list type)
+    original_normalized = normalize_list_representation(original_normalized)
+    worldgen_normalized = normalize_list_representation(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)

@@ -6,7 +6,12 @@ export class PlayerState {
     constructor(eventBus) {
         this.eventBus = eventBus;
         this.currentRegion = 'Menu';
-        
+
+        // Start regions - regions where the player begins (default to ['Menu'])
+        // These are treated specially: they are fully explored from the start
+        // and custom actions like 'explore' are not needed for them
+        this.startRegions = ['Menu'];
+
         // Path data - array of player actions/movements
         // Entry types:
         // - regionMove: { type: 'regionMove', region: string, exitUsed: string|null, instanceNumber: number }
@@ -15,15 +20,42 @@ export class PlayerState {
         this.path = [
             { type: 'regionMove', region: 'Menu', exitUsed: null, instanceNumber: 1 }
         ];
-        
+
         // Track instance counts for each region
         this.regionInstanceCounts = new Map();
         this.regionInstanceCounts.set('Menu', 1);
-        
+
         // Navigation behavior configuration
         // true: create loops when revisiting regions (default)
         // false: trim path on backward navigation
         this.allowLoops = true;
+    }
+
+    /**
+     * Set the start regions for this game
+     * @param {string[]} regions - Array of starting region names
+     */
+    setStartRegions(regions) {
+        if (Array.isArray(regions) && regions.length > 0) {
+            this.startRegions = regions;
+            // Update the initial path to use the first start region
+            const firstStartRegion = regions[0];
+            if (this.path.length === 1 && this.path[0].type === 'regionMove' && this.path[0].region === 'Menu') {
+                this.path[0].region = firstStartRegion;
+                this.currentRegion = firstStartRegion;
+                this.regionInstanceCounts.clear();
+                this.regionInstanceCounts.set(firstStartRegion, 1);
+            }
+        }
+    }
+
+    /**
+     * Check if a region is a start region
+     * @param {string} regionName - Name of the region to check
+     * @returns {boolean} True if the region is a start region
+     */
+    isStartRegion(regionName) {
+        return this.startRegions.includes(regionName);
     }
 
     /**
@@ -178,8 +210,8 @@ export class PlayerState {
      * @param {Object} params - Additional parameters for the action
      */
     addCustomAction(actionName, params = {}) {
-        if (!this.currentRegion || this.currentRegion === 'Menu') {
-            console.warn(`[PlayerState] Cannot add custom action when not in a valid region`);
+        if (!this.currentRegion || this.isStartRegion(this.currentRegion)) {
+            console.warn(`[PlayerState] Cannot add custom action when not in a valid region (start regions are already fully explored)`);
             return;
         }
         
@@ -446,18 +478,20 @@ export class PlayerState {
 
     /**
      * Trim the path at a specific region instance
-     * @param {string} regionName - Region to trim at (default: "Menu")
+     * @param {string} regionName - Region to trim at (default: first start region)
      * @param {number} instanceNumber - Which instance of the region (default: 1)
      */
-    trimPath(regionName = 'Menu', instanceNumber = 1) {
+    trimPath(regionName = null, instanceNumber = 1) {
+        // Default to first start region if not specified
+        const targetRegion = regionName || this.startRegions[0] || 'Menu';
         // Find the nth instance of the specified region (only counting regionMove entries)
         let foundCount = 0;
         let trimIndex = -1;
-        
+
         for (let i = 0; i < this.path.length; i++) {
             const entry = this.path[i];
             // Count only regionMove entries
-            if (entry.type === 'regionMove' && entry.region === regionName) {
+            if (entry.type === 'regionMove' && entry.region === targetRegion) {
                 foundCount++;
                 if (foundCount === instanceNumber) {
                     trimIndex = i;
@@ -465,9 +499,9 @@ export class PlayerState {
                 }
             }
         }
-        
+
         if (trimIndex === -1) {
-            console.warn(`[PlayerState] Region ${regionName} instance ${instanceNumber} not found in path`);
+            console.warn(`[PlayerState] Region ${targetRegion} instance ${instanceNumber} not found in path`);
             return;
         }
         
@@ -554,18 +588,19 @@ export class PlayerState {
      * Reset state to defaults
      */
     reset() {
-        this.currentRegion = 'Menu';
+        const firstStartRegion = this.startRegions[0] || 'Menu';
+        this.currentRegion = firstStartRegion;
         this.path = [
-            { type: 'regionMove', region: 'Menu', exitUsed: null, instanceNumber: 1 }
+            { type: 'regionMove', region: firstStartRegion, exitUsed: null, instanceNumber: 1 }
         ];
         this.regionInstanceCounts.clear();
-        this.regionInstanceCounts.set('Menu', 1);
-        
+        this.regionInstanceCounts.set(firstStartRegion, 1);
+
         // Emit events for the reset
         if (this.eventBus) {
             this.eventBus.publish('playerState:regionChanged', {
                 oldRegion: null,
-                newRegion: 'Menu'
+                newRegion: firstStartRegion
             }, 'playerState');
         }
         this.emitPathUpdated();
@@ -579,7 +614,8 @@ export class PlayerState {
         return {
             currentRegion: this.currentRegion,
             path: [...this.path],
-            regionInstanceCounts: Array.from(this.regionInstanceCounts.entries())
+            regionInstanceCounts: Array.from(this.regionInstanceCounts.entries()),
+            startRegions: [...this.startRegions]
         };
     }
 
@@ -589,6 +625,9 @@ export class PlayerState {
      */
     deserialize(data) {
         if (data) {
+            if (data.startRegions && Array.isArray(data.startRegions)) {
+                this.startRegions = [...data.startRegions];
+            }
             if (data.currentRegion) {
                 this.currentRegion = data.currentRegion;
             }
@@ -598,7 +637,7 @@ export class PlayerState {
             if (data.regionInstanceCounts) {
                 this.regionInstanceCounts = new Map(data.regionInstanceCounts);
             }
-            
+
             // Emit events for the loaded state
             this.emitPathUpdated();
         }

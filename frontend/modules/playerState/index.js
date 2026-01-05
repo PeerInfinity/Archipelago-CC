@@ -131,6 +131,16 @@ export async function register(registrationApi) {
         const playerState = getPlayerStateSingleton();
         return playerState.removeAllActionsOfType(actionType, specificName);
     });
+
+    registrationApi.registerPublicFunction(moduleId, 'setStartRegions', (regions) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.setStartRegions(regions);
+    });
+
+    registrationApi.registerPublicFunction(moduleId, 'isStartRegion', (regionName) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.isStartRegion(regionName);
+    });
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -182,6 +192,14 @@ function handleRulesLoaded(data, propagationOptions) {
     log('info', `[${moduleId} Module] Received stateManager:rulesLoaded event`);
 
     const playerState = getPlayerStateSingleton();
+
+    // Set start regions from static data BEFORE reset
+    const staticData = stateManagerProxySingleton.getStaticData();
+    if (staticData?.startRegions) {
+        playerState.setStartRegions(staticData.startRegions);
+        log('info', `[${moduleId} Module] Set start regions:`, staticData.startRegions);
+    }
+
     playerState.reset();
     
     // Propagate event to the next module (up direction)
@@ -238,11 +256,12 @@ function handleRegionMove(data, propagationOptions) {
 
 function handleTrimPath(data, propagationOptions) {
     log('info', `[${moduleId} Module] Received playerState:trimPath event`, data);
-    
+
     const playerState = getPlayerStateSingleton();
-    const regionName = data?.regionName || 'Menu';
+    // Use null to let trimPath use its default (first start region)
+    const regionName = data?.regionName || null;
     const instanceNumber = data?.instanceNumber || 1;
-    
+
     playerState.trimPath(regionName, instanceNumber);
     
     // Propagate event to the next module (up direction)

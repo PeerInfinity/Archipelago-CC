@@ -975,12 +975,11 @@ class RuleCodeGenerator:
             return self._convert_setting_value(setting_rule)
 
         if rb_rule == 'OptionValue':
-            # Convert Rule Builder format OptionValue
-            option_rule = {
-                'type': 'option_value',
-                'option': args.get('option', '')
-            }
-            return self._expr_option_value(option_rule)
+            # Convert Rule Builder format OptionValue to OptionValue Rule
+            # This allows runtime evaluation of options in set_rules context
+            option_name = args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         if rb_rule == 'WorldAttribute':
             # Convert Rule Builder format WorldAttribute
@@ -1968,17 +1967,10 @@ class RuleCodeGenerator:
             return '0'
 
         if rb_rule == 'OptionValue':
-            # Handle OptionValue in Compare operand - preserve numeric value
-            option = rb_args.get('option', '')
-            if option in self.settings:
-                value = self.settings[option]
-                if isinstance(value, (int, float)):
-                    return repr(value)
-                if isinstance(value, bool):
-                    self.required_imports.add('True_' if value else 'False_')
-                    return 'True_()' if value else 'False_()'
-                return repr(value)
-            return '0'
+            # Handle OptionValue in Compare operand - use OptionValue rule for runtime evaluation
+            option_name = rb_args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         if rb_rule == 'WorldAttribute':
             # Handle WorldAttribute in Compare operand - preserve value
@@ -2131,12 +2123,9 @@ class RuleCodeGenerator:
         # Handle Rule Builder format OptionValue in arithmetic operand
         if rb_rule == 'OptionValue':
             rb_args = operand.get('args', {})
-            option = rb_args.get('option', '')
-            if option in self.settings:
-                value = self.settings[option]
-                if isinstance(value, (int, float)):
-                    return repr(value)
-            return '0'
+            option_name = rb_args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         # Handle Rule Builder format WorldAttribute in arithmetic operand
         if rb_rule == 'WorldAttribute':
@@ -4044,7 +4033,17 @@ class RuleCodeGenerator:
             # Option-filtered rule - just return the if_true branch
             return self._convert_rule(if_true)
 
-        test_code = self._convert_rule(test)
+        # Check if test is an OptionValue - generate OptionValue rule for runtime evaluation
+        test_rb_rule = test.get('rule', '') if isinstance(test, dict) else ''
+        test_type = test.get('type', '') if isinstance(test, dict) else ''
+        if test_rb_rule == 'OptionValue' or test_type == 'option_value':
+            # Get the option name and generate OptionValue rule
+            test_args = test.get('args', {}) if isinstance(test, dict) else {}
+            option_name = test_args.get('option', '') or test.get('option', '')
+            self.required_imports.add('OptionValue')
+            test_code = f"OptionValue('{option_name}')"
+        else:
+            test_code = self._convert_rule(test)
         if_true_code = self._convert_rule(if_true)
         if_false_code = self._convert_rule(if_false)
 
@@ -4632,6 +4631,16 @@ class HelperCodeGenerator:
                 count = args.get('count', 1)
                 if count == 1:
                     return f"state.has({repr(item_name)}, player)"
+                # Handle dict counts (e.g., OptionValue rules)
+                if isinstance(count, dict):
+                    count_rule = count.get('rule', '')
+                    count_args = count.get('args', {})
+                    if count_rule == 'OptionValue':
+                        option = count_args.get('option', '')
+                        return f"state.has({repr(item_name)}, player, state.multiworld.worlds[player].options.{option}.value)"
+                    # For other complex expressions, use _generate_expression
+                    count_expr = self._generate_expression(count)
+                    return f"state.has({repr(item_name)}, player, {count_expr})"
                 return f"state.has({repr(item_name)}, player, {count})"
 
             # Handle HasAll rules (Rule Builder format)
@@ -4789,6 +4798,17 @@ class HelperCodeGenerator:
                 if index is not None:
                     attr_expr['index'] = index
                 return self._expr_world_attribute(attr_expr)
+
+            # Handle Arithmetic rules (Rule Builder format for binary operations)
+            if rule_type == 'Arithmetic':
+                args = expr.get('args', {})
+                left = args.get('left', 0)
+                op = args.get('op', '+')
+                right = args.get('right', 0)
+                # Recursively generate expressions for operands
+                left_expr = self._generate_expression(left) if isinstance(left, dict) else str(left)
+                right_expr = self._generate_expression(right) if isinstance(right, dict) else str(right)
+                return f"({left_expr} {op} {right_expr})"
 
             # Handle AST_placement_lookup (Rule Builder format for placement_lookup)
             if rule_type == 'AST_placement_lookup':
@@ -5023,12 +5043,18 @@ class HelperCodeGenerator:
                     val_reprs.append(self._generate_expression({'type': 'constant', 'value': v}))
                 return f"{class_name}({', '.join(val_reprs)})"
 
-            # Handle dict constants - preserve string keys from JSON
-            # JSON always uses string keys, and the worldgen data structures (from JSON)
-            # also use string keys, so we keep them as strings for consistency.
+            # Handle dict constants - convert numeric string keys back to integers
+            # JSON always uses string keys, but if the original Python code used integer
+            # keys (e.g., from enums like HatType), they would be serialized as strings.
+            # We need to convert them back to integers so that lookups like dict[1] work
+            # (instead of requiring dict["1"]).
             items = []
             for k, v in value.items():
-                key_repr = repr(k)
+                # Convert numeric string keys to integers
+                if isinstance(k, str) and k.lstrip('-').isdigit():
+                    key_repr = k  # Use the integer directly (no quotes)
+                else:
+                    key_repr = repr(k)
                 # Check if dict value is an AST node (has 'type' key) - process as expression
                 if isinstance(v, dict) and 'type' in v:
                     val_repr = self._generate_expression(v)
