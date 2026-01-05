@@ -1214,6 +1214,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if path.startswith('world_classes.'):
         return True
 
+    # world_description: WorldGen always generates a default docstring for worlds
+    # ("GAME for Archipelago.\n\nAuto-generated world implementation.") even when
+    # the original world doesn't have a docstring. This is expected.
+    if path == 'world.1.world_description' and original_value == '<missing>':
+        return True
+
     # And/Has/HasAll structural differences that are semantically equivalent
     # Original: And(And(_can_get, Has), HasAll) vs WorldGen: And(_can_get, HasAll)
     # These represent the same access requirements
