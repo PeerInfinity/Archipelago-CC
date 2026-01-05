@@ -1197,6 +1197,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if path == 'world.1.player_name' and worldgen_value == '<missing>':
         return True
 
+    # world_description: WorldGen auto-generates a default docstring when the original
+    # world doesn't have one. This is metadata that doesn't affect gameplay.
+    if path == 'world.1.world_description':
+        return True
+
     # Game-specific complex options that WorldGen doesn't extract (Factorio world_gen, starting_items, etc.)
     # These are game-specific configuration options that require special handling to reproduce
     game_specific_options = {'world_gen', 'starting_items'}
