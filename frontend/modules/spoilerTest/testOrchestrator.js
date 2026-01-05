@@ -49,6 +49,13 @@ export class TestOrchestrator {
     // Signature: (pythonEvent, sphereIndex, playerId) => void
     this.utComparisonCallback = null;
 
+    // Worker-side spoiler test configuration
+    // When true, runs the entire test in the worker thread for better performance
+    this.useWorkerSideSpoilerTest = true;
+
+    // Message handler for worker-side test progress
+    this._workerMessageHandler = null;
+
     logger.debug('TestOrchestrator constructor called');
   }
 
@@ -239,6 +246,271 @@ export class TestOrchestrator {
   }
 
   /**
+   * Get sphere data from sphereState module for worker-side execution
+   *
+   * @returns {Array|null} Array of sphere data objects or null if unavailable
+   */
+  getSphereDataForWorker() {
+    try {
+      if (!window.centralRegistry || typeof window.centralRegistry.getPublicFunction !== 'function') {
+        logger.warn('[TestOrchestrator] centralRegistry not available');
+        return null;
+      }
+
+      const getSphereData = window.centralRegistry.getPublicFunction('sphereState', 'getSphereData');
+      if (!getSphereData) {
+        logger.warn('[TestOrchestrator] sphereState getSphereData not available');
+        return null;
+      }
+
+      const sphereData = getSphereData();
+      if (!sphereData || sphereData.length === 0) {
+        logger.warn('[TestOrchestrator] No sphere data available from sphereState');
+        return null;
+      }
+
+      logger.info(`[TestOrchestrator] Got ${sphereData.length} spheres from sphereState`);
+      return sphereData;
+    } catch (error) {
+      logger.error('[TestOrchestrator] Error getting sphere data:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Run spoiler test entirely in worker thread
+   *
+   * This method sends all sphere data to the worker and lets it process
+   * the entire test internally, eliminating round-trip communication overhead.
+   *
+   * @param {Array} sphereData - Pre-processed sphere data from sphereState
+   * @param {number} playerId - Player ID
+   * @param {string} logPath - Path to log file (for logging)
+   * @returns {Promise<Object>} Test results
+   */
+  async runWorkerSideSpoilerTest(sphereData, playerId, logPath) {
+    logger.info(`[TestOrchestrator] Running worker-side spoiler test with ${sphereData.length} spheres`);
+
+    const currentAbortController = this.abortController;
+
+    // Disable buttons during test
+    this.uiCallbacks.setButtonsEnabled(false);
+
+    let testResult = null;
+
+    try {
+      profiler.start('spoilerTest');
+
+      // Enable worker-side profiling if profiling is enabled
+      if (profiler.enabled) {
+        try {
+          await stateManager.setWorkerProfiling(true);
+          logger.info('[TestOrchestrator] Worker profiling enabled');
+        } catch (error) {
+          logger.warn('[TestOrchestrator] Failed to enable worker profiling:', error);
+        }
+      }
+
+      // Set up message handler for progress updates
+      this._setupWorkerMessageHandler(currentAbortController);
+
+      // Build config for worker
+      const config = {
+        playerId: playerId,
+        stopOnFirstError: this.stateConfig.stopOnFirstError !== false, // Default true
+        waitForMainThreadAnalysis: false, // TODO: Add UI option for this
+        verboseMode: false
+      };
+
+      this.uiCallbacks.log('info', `Starting worker-side spoiler test (${sphereData.length} spheres)...`);
+
+      // Run the test in worker
+      testResult = await stateManager.runSpoilerTest(sphereData, config);
+
+      // Handle abort
+      if (testResult.aborted) {
+        this.uiCallbacks.log('info', 'Spoiler test aborted by user.');
+      } else if (testResult.passed) {
+        this.uiCallbacks.log('success', 'Spoiler test completed successfully. All spheres passed.');
+      } else {
+        this.uiCallbacks.log(
+          'error',
+          `Spoiler test completed with ${testResult.mismatchDetails?.length || 0} mismatch(es).`
+        );
+
+        // Log mismatch details
+        for (const mismatch of (testResult.mismatchDetails || [])) {
+          if (mismatch.type === 'locations') {
+            this.uiCallbacks.log('error', `Sphere ${mismatch.sphereIndex}: Location mismatch - ` +
+              `missing: ${mismatch.missingFromState?.length || 0}, extra: ${mismatch.extraInState?.length || 0}`);
+          } else if (mismatch.type === 'regions') {
+            this.uiCallbacks.log('error', `Sphere ${mismatch.sphereIndex}: Region mismatch - ` +
+              `missing: ${mismatch.missingFromState?.length || 0}, extra: ${mismatch.extraInState?.length || 0}`);
+          } else if (mismatch.type === 'pre_check_failure') {
+            this.uiCallbacks.log('error', `Sphere ${mismatch.sphereIndex}: ${mismatch.message}`);
+          }
+        }
+      }
+
+      profiler.end('spoilerTest');
+
+    } catch (error) {
+      profiler.end('spoilerTest');
+
+      if (error.name === 'AbortError' || currentAbortController?.signal.aborted) {
+        this.uiCallbacks.log('info', 'Spoiler test aborted.');
+        testResult = { passed: false, aborted: true };
+      } else {
+        this.uiCallbacks.log('error', `Error during worker-side spoiler test: ${error.message}`);
+        logger.error('[TestOrchestrator] Worker-side test error:', error);
+        testResult = { passed: false, error: error.message };
+      }
+    } finally {
+      // Clean up message handler
+      this._cleanupWorkerMessageHandler();
+
+      // Re-enable buttons
+      this.uiCallbacks.setButtonsEnabled(true);
+
+      // Store results
+      const detailedTestResults = {
+        passed: testResult?.passed || false,
+        aborted: testResult?.aborted || false,
+        mismatchDetails: testResult?.mismatchDetails || [],
+        totalEvents: sphereData.length,
+        processedEvents: testResult?.processedEvents || 0,
+        locationsChecked: testResult?.locationsChecked || 0,
+        itemsAdded: testResult?.itemsAdded || 0,
+        testLogPath: logPath,
+        playerId: playerId,
+        workerSide: true,
+        completedAt: new Date().toISOString()
+      };
+
+      if (typeof window !== 'undefined') {
+        window.__spoilerTestResults__ = detailedTestResults;
+        this.uiCallbacks.log('info', 'Detailed spoiler test results stored in window.__spoilerTestResults__');
+
+        // Output profiling report if enabled
+        if (profiler.enabled) {
+          const profilingReport = profiler.report();
+          console.log(profilingReport);
+
+          let workerProfilingData = null;
+          if (testResult?.profilingData) {
+            workerProfilingData = testResult.profilingData;
+            // Format and log worker profiling
+            const workerReport = this._formatWorkerProfilingReport(workerProfilingData);
+            if (workerReport) {
+              console.log('\n' + workerReport);
+            }
+          }
+
+          this.uiCallbacks.log('info', 'Profiling data available in window.__profilingData__');
+          window.__profilingData__ = {
+            main: profiler.getData(),
+            worker: workerProfilingData
+          };
+        }
+      }
+
+      // Re-enable auto-collect events
+      try {
+        await stateManager.setAutoCollectEventsConfig(true);
+        this.uiCallbacks.log('info', '[TestOrchestrator] Re-enabled auto-collect events.');
+      } catch (error) {
+        this.uiCallbacks.log('error', '[TestOrchestrator] Failed to re-enable auto-collect events:', error);
+      }
+
+      // Disable spoiler test mode
+      try {
+        await stateManager.setSpoilerTestMode(false);
+        this.uiCallbacks.log('info', '[TestOrchestrator] Disabled spoiler test mode.');
+      } catch (error) {
+        this.uiCallbacks.log('error', '[TestOrchestrator] Failed to disable spoiler test mode:', error);
+      }
+    }
+
+    return testResult;
+  }
+
+  /**
+   * Set up handler for worker-side test progress messages
+   * @private
+   */
+  _setupWorkerMessageHandler(abortController) {
+    // Get the worker from stateManager
+    const worker = stateManager.worker;
+    if (!worker) {
+      logger.warn('[TestOrchestrator] No worker available for message handling');
+      return;
+    }
+
+    this._workerMessageHandler = (event) => {
+      const message = event.data;
+
+      if (message.type === 'spoilerTestProgress') {
+        // Update UI with progress
+        this.currentLogIndex = message.eventIndex;
+        this.uiCallbacks.log(
+          message.passed ? 'info' : 'error',
+          `Sphere ${message.sphereIndex}: ${message.passed ? 'PASS' : 'FAIL'} ` +
+          `(${message.locationsChecked} locations, ${message.itemsAdded} items)`
+        );
+
+        // Check for abort
+        if (abortController?.signal.aborted) {
+          stateManager.abortSpoilerTest();
+        }
+      } else if (message.type === 'spoilerTestMismatch') {
+        // Log mismatch details as they happen
+        for (const mismatch of (message.mismatches || [])) {
+          if (mismatch.type === 'locations') {
+            if (mismatch.missingFromState?.length > 0) {
+              this.uiCallbacks.log('error', `  Missing locations: ${mismatch.missingFromState.slice(0, 5).join(', ')}` +
+                (mismatch.missingFromState.length > 5 ? ` (+${mismatch.missingFromState.length - 5} more)` : ''));
+            }
+            if (mismatch.extraInState?.length > 0) {
+              this.uiCallbacks.log('error', `  Extra locations: ${mismatch.extraInState.slice(0, 5).join(', ')}` +
+                (mismatch.extraInState.length > 5 ? ` (+${mismatch.extraInState.length - 5} more)` : ''));
+            }
+          }
+        }
+      }
+    };
+
+    worker.addEventListener('message', this._workerMessageHandler);
+  }
+
+  /**
+   * Clean up worker message handler
+   * @private
+   */
+  _cleanupWorkerMessageHandler() {
+    if (this._workerMessageHandler) {
+      const worker = stateManager.worker;
+      if (worker) {
+        worker.removeEventListener('message', this._workerMessageHandler);
+      }
+      this._workerMessageHandler = null;
+    }
+  }
+
+  /**
+   * Format worker profiling data into a readable report
+   * @private
+   */
+  _formatWorkerProfilingReport(data) {
+    if (!data || Object.keys(data).length === 0) return null;
+
+    let report = '=== Worker Profiling Report ===\n';
+    for (const [name, stats] of Object.entries(data)) {
+      report += `${name}: ${stats.total_ms.toFixed(1)}ms (${stats.count} calls, avg ${stats.avg_ms.toFixed(3)}ms)\n`;
+    }
+    return report;
+  }
+
+  /**
    * Runs the full test from current position to end
    *
    * DATA FLOW:
@@ -314,6 +586,19 @@ export class TestOrchestrator {
       return;
     }
 
+    // Check if we should use worker-side execution
+    if (this.useWorkerSideSpoilerTest) {
+      const sphereData = this.getSphereDataForWorker();
+      if (sphereData && sphereData.length > 0) {
+        this.uiCallbacks.log('info', 'Using worker-side spoiler test execution (faster)');
+        await this.runWorkerSideSpoilerTest(sphereData, playerId, logPath);
+        return;
+      } else {
+        this.uiCallbacks.log('warn', 'Worker-side execution unavailable, falling back to main-thread execution');
+      }
+    }
+
+    // Main-thread execution (fallback or when worker-side is disabled)
     this.uiCallbacks.log('step', '4. Processing all log events...');
 
     // Disable buttons during test

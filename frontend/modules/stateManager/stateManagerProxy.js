@@ -670,6 +670,33 @@ export class StateManagerProxy {
           correlationId: message.correlationId
         });
         break;
+      case 'spoilerTestProgress':
+        // Forward progress updates to eventBus for UI consumption
+        this.eventBus.publish('spoilerTest:progress', {
+          eventIndex: message.eventIndex,
+          totalEvents: message.totalEvents,
+          sphereIndex: message.sphereIndex,
+          passed: message.passed,
+          locationsChecked: message.locationsChecked,
+          itemsAdded: message.itemsAdded
+        }, 'stateManager');
+        break;
+      case 'spoilerTestMismatch':
+        // Forward mismatch details to eventBus for analysis
+        this.eventBus.publish('spoilerTest:mismatch', {
+          eventIndex: message.eventIndex,
+          sphereIndex: message.sphereIndex,
+          mismatches: message.mismatches,
+          awaitingAnalysis: message.awaitingAnalysis
+        }, 'stateManager');
+        break;
+      case 'spoilerTestComplete':
+        // Forward completion event to eventBus
+        // Note: The promise is resolved separately via queryResponse
+        this.eventBus.publish('spoilerTest:complete', {
+          result: message.result
+        }, 'stateManager');
+        break;
       default:
         log(
           'warn',

@@ -176,11 +176,12 @@ export class WorkerSpoilerTest {
     try {
       // Clear state at sphere 0
       if (sphereNumberInt === 0 && index === 0) {
-        this.sm.clearStateAndReset();
+        this.sm.clearState({ recomputeAndSendUpdate: true });
         this.log('debug', '[WorkerSpoilerTest] Cleared state for sphere 0');
 
-        // Add starting items
-        const startingItems = this.sm.staticData?.starting_items?.[this.playerIdKey] || [];
+        // Add starting items - use sm.rules, not sm.staticData
+        const startingItems = this.sm.rules?.starting_items?.[this.playerIdKey] || [];
+        this.log('info', `[WorkerSpoilerTest] Starting items for player ${this.playerIdKey}: ${startingItems.length} items`);
         if (startingItems.length > 0) {
           for (const itemName of startingItems) {
             this.sm.addItemToInventory(itemName, 1);
@@ -190,8 +191,8 @@ export class WorkerSpoilerTest {
         }
       }
 
-      // Get exporter settings
-      const exporterSettings = this.sm.staticData?.exporter?.[this.playerIdKey] || {};
+      // Get exporter settings - use sm.rules, not sm.staticData
+      const exporterSettings = this.sm.rules?.exporter?.[this.playerIdKey] || {};
       const addItemsUpfront = exporterSettings.add_sphere_items_upfront || false;
       const useResolvedItems = exporterSettings.use_resolved_items || false;
 
@@ -218,7 +219,7 @@ export class WorkerSpoilerTest {
 
         // Compare after adding items
         this.sm.invalidateCache();
-        const snapshot = this.sm.getStateSnapshot();
+        const snapshot = this.sm.getSnapshot();
 
         const locationResult = this.compareLocations(
           sphere.accessibleLocations || [],
@@ -249,9 +250,9 @@ export class WorkerSpoilerTest {
           this.log('info', `[WorkerSpoilerTest] Checking ${locationsToCheck.length} locations`);
 
           for (const locationName of locationsToCheck) {
-            // Get location definition
-            const locationDef = this.sm.staticData?.locations?.get?.(locationName) ||
-                               this.sm.staticData?.locations?.[locationName];
+            // Get location definition - use sm.locations directly
+            const locationDef = this.sm.locations?.get?.(locationName) ||
+                               this.sm.locations?.[locationName];
 
             if (!locationDef) {
               this.log('warn', `[WorkerSpoilerTest] Location "${locationName}" not found`);
@@ -259,12 +260,10 @@ export class WorkerSpoilerTest {
             }
 
             // Verify accessibility before checking
-            const preCheckSnapshot = this.sm.getStateSnapshot();
-            const snapshotInterface = createStateSnapshotInterface(
-              preCheckSnapshot,
-              this.sm.staticData,
-              { playerId: this.playerId }
-            );
+            // Use StateManager's internal method to create snapshot interface
+            const snapshotInterface = this.sm._createSelfSnapshotInterface({
+              playerId: this.playerId
+            });
             const isAccessible = snapshotInterface.isLocationAccessible(locationName);
 
             if (!isAccessible) {
@@ -292,7 +291,7 @@ export class WorkerSpoilerTest {
 
         // Invalidate cache and get fresh snapshot for comparison
         this.sm.invalidateCache();
-        const freshSnapshot = this.sm.getStateSnapshot();
+        const freshSnapshot = this.sm.getSnapshot();
 
         // Skip full comparison in focused mode
         if (this.focusedMode) {
@@ -347,15 +346,9 @@ export class WorkerSpoilerTest {
   compareLocations(expectedLocations, snapshot, sphereIndex) {
     const result = { passed: true, mismatch: null };
 
-    const snapshotInterface = createStateSnapshotInterface(
-      snapshot,
-      this.sm.staticData,
-      { playerId: this.playerId }
-    );
-
     // Get accessible unchecked locations from current state
     const stateAccessible = [];
-    const locations = this.sm.staticData?.locations;
+    const locations = this.sm.locations;
 
     if (locations) {
       const locationEntries = locations.entries ? [...locations.entries()] : Object.entries(locations);
@@ -364,21 +357,24 @@ export class WorkerSpoilerTest {
         // Skip checked locations
         if (snapshot.flags?.includes(locName)) continue;
 
-        // Skip event locations
-        if (locDef.item?.event) continue;
-
         // Check if location is accessible
-        const parentRegion = locDef.parent_region_name || locDef.parent_region || locDef.region;
+        const parentRegion = locDef.parent_region || locDef.region;
         const regionStatus = snapshot.regionReachability?.[parentRegion];
         const isRegionReachable = regionStatus === 'reachable' || regionStatus === 'checked';
 
         if (!isRegionReachable) continue;
 
-        // Evaluate access rule
+        // Evaluate access rule - create location-specific snapshotInterface
         let ruleResult = true;
         if (locDef.access_rule) {
           try {
-            ruleResult = evaluateRule(locDef.access_rule, snapshotInterface);
+            // Create location-specific snapshotInterface for rule evaluation
+            // (same as comparisonEngine.js does)
+            const locationSnapshotInterface = this.sm._createSelfSnapshotInterface({
+              location: locDef,
+              playerId: this.playerId
+            });
+            ruleResult = evaluateRule(locDef.access_rule, locationSnapshotInterface);
           } catch (e) {
             this.log('warn', `[WorkerSpoilerTest] Error evaluating rule for ${locName}: ${e.message}`);
             ruleResult = false;
@@ -491,7 +487,7 @@ export class WorkerSpoilerTest {
    * @param {Object} sphere - Current sphere data
    */
   updatePreviousInventory(sphere) {
-    const exporterSettings = this.sm.staticData?.exporter?.[this.playerIdKey] || {};
+    const exporterSettings = this.sm.rules?.exporter?.[this.playerIdKey] || {};
     const useResolvedItems = exporterSettings.use_resolved_items || false;
 
     const inventoryDetails = sphere.inventoryDetails || {};
