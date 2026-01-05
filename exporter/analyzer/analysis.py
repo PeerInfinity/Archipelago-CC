@@ -30,6 +30,13 @@ def _is_cacheable_function(func: Callable) -> Optional[Tuple[str, int]]:
     """
     Check if a function is cacheable (parameterless beyond standard params).
 
+    A function is cacheable only if:
+    1. It only takes standard parameters (state, player, world, self)
+    2. It has NO closure variables (captured from enclosing scope)
+
+    Functions with closure variables cannot be cached because different
+    invocations may have different bound values even at the same source location.
+
     Returns:
         (filename, lineno) tuple if cacheable, None otherwise
     """
@@ -43,6 +50,16 @@ def _is_cacheable_function(func: Callable) -> Optional[Tuple[str, int]]:
         # Check if all parameters are standard (state, player, world, self)
         extra_params = [p for p in all_params if p not in _STANDARD_PARAMS]
         if extra_params:
+            return None
+
+        # Check for closure variables - if present, don't cache
+        # Closure variables mean different instances of this function
+        # at the same source location may have different bound values
+        if hasattr(func, '__closure__') and func.__closure__:
+            return None
+
+        # Also check co_freevars which lists the names of free variables
+        if code.co_freevars:
             return None
 
         # Get cache key
