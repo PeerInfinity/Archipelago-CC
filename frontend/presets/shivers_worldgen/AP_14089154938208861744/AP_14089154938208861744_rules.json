@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ShiversWorldGenWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -900,7 +897,9 @@
                   }
                 },
                 "op": ">=",
-                "right": 10
+                "right": {
+                  "rule": "OptionValue"
+                }
               }
             }
           }
@@ -1182,7 +1181,7 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "True_"
+                      "rule": "OptionValue"
                     },
                     "if_true": {
                       "rule": "And",
@@ -1398,7 +1397,7 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "True_"
+                  "rule": "OptionValue"
                 },
                 "if_true": {
                   "rule": "CanReachRegion",
@@ -1527,7 +1526,7 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "True_"
+                      "rule": "OptionValue"
                     },
                     "if_true": {
                       "rule": "CanReachRegion",
@@ -3012,7 +3011,7 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "True_"
+                      "rule": "OptionValue"
                     },
                     "if_true": {
                       "rule": "Has",
@@ -4987,6 +4986,7 @@
   "world": {
     "1": {
       "game": "Shivers WorldGen",
+      "world_class_name": "ShiversWorld",
       "options": {
         "accessibility": 0,
         "early_beth": true,
@@ -5011,7 +5011,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -5116,6 +5117,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "pot_completed_list": [],
@@ -5198,14 +5204,7 @@
       "world_directory": "shivers_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -5269,8 +5268,8 @@
             "name": "first_nine_ixupi_capturable"
           },
           {
-            "type": "constant",
-            "value": true
+            "type": "option_value",
+            "option": "early_beth"
           }
         ]
       },
@@ -5392,8 +5391,8 @@
                 "name": "first_nine_ixupi_capturable"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "option_value",
+                "option": "early_lightning"
               }
             ]
           },

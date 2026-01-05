@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Early Beth:                      Yes
 Early Lightning:                 No
 Elevators Stay Solved:           Yes
