@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-05 20:55:30
+**Generated:** 2026-01-05 21:09:12
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -106,8 +106,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Celeste (Open World) | 13.7s | 2 | A Link to the Past.yaml, Celeste (Open World).yaml |
+| 2 | Shivers | 13.0s | 3 | A Hat in Time.yaml, Metamath.yaml, Shivers.yaml |
+| 3 | Metamath | 12.8s | 2 | A Hat in Time.yaml, Metamath.yaml |
+| 4 | Wargroove | 12.7s | 3 | A Hat in Time.yaml, Metamath.yaml, Wargroove.yaml |
+| 5 | TOEM rule builder | 12.4s | 3 | A Hat in Time.yaml, Metamath.yaml, TOEM rule builder.yaml |
+| 6 | TUNIC | 12.2s | 2 | A Link to the Past.yaml, TUNIC.yaml |
+| 7 | Sonic Adventure 2 Battle | 11.7s | 2 | A Link to the Past.yaml, Sonic Adventure 2 Battle.yaml |
+| 8 | Kingdom Hearts | 11.0s | 2 | Castlevania - Circle of the Moon.yaml, Kingdom Hearts.yaml |
+| 9 | Super Metroid | 10.9s | 2 | Bumper Stickers.yaml, Super Metroid.yaml |
+| 10 | Yoshi's Island | 10.4s | 2 | A Link to the Past.yaml, Yoshi's Island.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Raft | 125.7s | 5 | Baking Adventure.yaml, Coding Adventure.yaml, Hylics 2.yaml, Math Adventure.yaml, Raft.yaml |
+| 2 | TUNIC | 62.1s | 2 | A Link to the Past.yaml, TUNIC.yaml |
+| 3 | DOOM II | 50.5s | 2 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml |
+| 4 | Celeste (Open World) | 48.5s | 2 | A Link to the Past.yaml, Celeste (Open World).yaml |
+| 5 | ChecksFinder | 45.9s | 2 | APQuest.yaml, ChecksFinder.yaml |
+| 6 | Castlevania 64 | 45.8s | 2 | A Hat in Time.yaml, Castlevania 64.yaml |
+| 7 | Lingo | 45.4s | 2 | A Short Hike.yaml, Lingo.yaml |
+| 8 | Celeste 64 | 45.4s | 2 | A Short Hike.yaml, Celeste 64.yaml |
+| 9 | Starcraft 2 | 45.3s | 2 | A Short Hike.yaml, Starcraft 2.yaml |
+| 10 | Stardew Valley | 45.1s | 2 | APQuest.yaml, Stardew Valley.yaml |
