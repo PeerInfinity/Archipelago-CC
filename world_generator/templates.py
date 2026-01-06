@@ -45,6 +45,38 @@ def is_valid_identifier(name: str) -> bool:
     return name.isidentifier() and not keyword.iskeyword(name)
 
 
+def _format_dict_repr(value: Any) -> str:
+    """Format a value for use in Python source code, converting numeric string keys to integers.
+
+    JSON always uses string keys, but if the original Python code used integer keys,
+    they would be serialized as strings. This function converts numeric string keys
+    back to integers so that lookups like dict[1] work (instead of requiring dict["1"]).
+
+    Args:
+        value: The value to format (handles dicts, lists, and primitives)
+
+    Returns:
+        A string representation suitable for Python source code
+    """
+    if isinstance(value, dict):
+        items = []
+        for k, v in value.items():
+            # Convert numeric string keys to integers
+            if isinstance(k, str) and k.lstrip('-').isdigit():
+                key_repr = k  # Use as integer literal (no quotes)
+            else:
+                key_repr = repr(k)
+            # Recursively format the value
+            val_repr = _format_dict_repr(v)
+            items.append(f'{key_repr}: {val_repr}')
+        return '{' + ', '.join(items) + '}'
+    elif isinstance(value, list):
+        items = [_format_dict_repr(v) for v in value]
+        return '[' + ', '.join(items) + ']'
+    else:
+        return repr(value)
+
+
 def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = None, visited_helpers: Set[str] = None) -> List[str]:
     """Extract region names from can_reach calls in a rule.
 
@@ -1799,8 +1831,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                         init_attrs.append(f'        self.{attr_name} = types.SimpleNamespace(**{{{dict_items}}})')
                 else:
                     # Keep as dict for integer keys or nested dicts
-                    dict_items = ', '.join(f'{k!r}: {v!r}' for k, v in attr_value.items())
-                    init_attrs.append(f'        self.{attr_name} = {{{dict_items}}}')
+                    # Use _format_dict_repr to convert numeric string keys to integers
+                    init_attrs.append(f'        self.{attr_name} = {_format_dict_repr(attr_value)}')
             elif isinstance(attr_value, list):
                 # Special handling for shops - convert dicts to ShopWrapper objects
                 if attr_name == 'shops' and attr_value and isinstance(attr_value[0], dict):
@@ -2019,8 +2051,9 @@ class _ShopWrapper:
                 value_escaped = value.replace('\\', '\\\\').replace('"', '\\"')
                 slot_data_entries.append(f'            "{key_escaped}": "{value_escaped}",')
             else:
-                # For complex types, try to represent as string
-                slot_data_entries.append(f'            "{key_escaped}": {repr(value)},')
+                # For complex types (dicts, lists), use _format_dict_repr to handle
+                # numeric string keys from JSON (convert back to integers)
+                slot_data_entries.append(f'            "{key_escaped}": {_format_dict_repr(value)},')
         slot_data_content = '\n'.join(slot_data_entries)
         fill_slot_data_section = f'''
     def fill_slot_data(self) -> Dict[str, Any]:
