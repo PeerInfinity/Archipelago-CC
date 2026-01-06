@@ -10,8 +10,6 @@ import inspect
 import re
 import logging
 import textwrap
-import tokenize
-import io
 import zipfile
 from typing import Optional, Callable
 import astunparse
@@ -59,63 +57,6 @@ def _read_source_from_path(filename: str) -> Optional[str]:
     except Exception as e:
         logging.error(f"Failed to read source file {filename}: {e}")
         return None
-
-
-def remove_comments_from_source(source: str) -> str:
-    """
-    Remove Python comments from source code while preserving # characters in string literals.
-
-    Uses tokenize to properly distinguish between comments and string content.
-
-    Args:
-        source: Source code string
-
-    Returns:
-        Source code with comments removed
-    """
-    try:
-        # Convert source to bytes for tokenize
-        source_bytes = source.encode('utf-8')
-        tokens = tokenize.tokenize(io.BytesIO(source_bytes).readline)
-
-        result = []
-        prev_end = (1, 0)
-
-        for tok in tokens:
-            # Skip comments
-            if tok.type == tokenize.COMMENT:
-                continue
-
-            # Handle newlines and indentation
-            if tok.type in (tokenize.NEWLINE, tokenize.NL):
-                result.append(tok.string)
-                prev_end = tok.end
-                continue
-
-            # Add any whitespace between tokens
-            if tok.start[0] > prev_end[0]:
-                # New line - add newline only if previous token wasn't NL/NEWLINE
-                # (since those tokens already include the newline character)
-                if result and not result[-1].endswith('\n'):
-                    result.append('\n')
-                # Preserve indentation on the new line
-                if tok.start[1] > 0 and tok.type != tokenize.INDENT:
-                    result.append(' ' * tok.start[1])
-            elif tok.start[1] > prev_end[1] and tok.type != tokenize.INDENT:
-                # Same line, add spaces
-                result.append(' ' * (tok.start[1] - prev_end[1]))
-
-            # Add the token
-            if tok.type not in (tokenize.ENCODING, tokenize.ENDMARKER):
-                result.append(tok.string)
-
-            prev_end = tok.end
-
-        return ''.join(result).strip()
-    except Exception as e:
-        # Fallback to simple regex if tokenization fails
-        logging.warning(f"Tokenization failed for comment removal: {e}. Using fallback regex.")
-        return re.sub(r'#.*$', '', source, flags=re.MULTILINE).strip()
 
 
 class LambdaLineFinder(ast.NodeVisitor):
@@ -206,103 +147,6 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
         except Exception as fallback_e:
             logging.error(f"Fallback getsource also failed: {fallback_e}")
             return None
-
-
-def _read_multiline_lambda(func: Callable) -> Optional[str]:
-    """
-    Read a multiline lambda function using tokenize to properly handle
-    parentheses and indentation.
-
-    Args:
-        func: The lambda function to read
-
-    Returns:
-        The lambda source as a string, or None if reading failed
-    """
-    try:
-        # Get the file and line number where the lambda starts
-        filename = inspect.getfile(func)
-        start_line = func.__code__.co_firstlineno
-
-        if filename in file_content_cache:
-            cached = file_content_cache[filename]
-            # Cache may contain string (from get_multiline_lambda_source) or list (from here)
-            if isinstance(cached, str):
-                lines = cached.splitlines(keepends=True)
-            else:
-                lines = cached
-            logging.debug(f"_read_multiline_lambda: Using cached content for {filename}")
-        else:
-            logging.debug(f"_read_multiline_lambda: Reading and caching content for {filename}")
-            # Read from disk (or apworld zip)
-            source_content = _read_source_from_path(filename)
-            if source_content is None:
-                return None
-            lines = source_content.splitlines(keepends=True)
-            file_content_cache[filename] = source_content  # Store as string for consistency
-
-        # Start with the line containing the lambda
-        # Correct for 0-based list index vs 1-based line number
-        if start_line <= 0 or start_line > len(lines):
-            logging.error(
-                f"Error: start_line {start_line} is out of bounds for file {filename} "
-                f"with {len(lines)} lines."
-            )
-            return None  # Or handle error appropriately
-
-        lambda_text = lines[start_line - 1]
-        initial_indent = len(lambda_text) - len(lambda_text.lstrip())
-
-        # Track parentheses balance
-        paren_count = lambda_text.count('(') - lambda_text.count(')')
-        bracket_count = lambda_text.count('[') - lambda_text.count(']')
-        brace_count = lambda_text.count('{') - lambda_text.count('}')
-
-        # Continue reading lines until all parentheses/brackets/braces are balanced
-        # and we see a decrease in indentation
-        i = start_line
-        while i < len(lines):
-            line = lines[i]
-            current_indent = len(line) - len(line.lstrip())
-
-            # If we see a decrease in indentation, we're probably past the lambda
-            if current_indent < initial_indent:
-                break
-
-            # Update counts
-            paren_count += line.count('(') - line.count(')')
-            bracket_count += line.count('[') - line.count(']')
-            brace_count += line.count('{') - line.count('}')
-
-            # Add the line to our lambda text
-            lambda_text += line
-
-            # If all parentheses/brackets/braces are balanced, we might be done
-            if paren_count <= 0 and bracket_count <= 0 and brace_count <= 0:
-                # Check if the next line has less indentation
-                if i + 1 < len(lines):
-                    next_line = lines[i + 1]
-                    # Check if next_line is not empty or just whitespace before calculating indent
-                    if next_line.strip():
-                        next_indent = len(next_line) - len(next_line.lstrip())
-                        if next_indent < initial_indent:
-                            break
-                    else:
-                        # Skip empty/whitespace lines when checking indentation break
-                        pass
-
-            i += 1
-
-        # Clean up the lambda text
-        lambda_text = lambda_text.strip()
-
-        # Remove comments while preserving # in string literals
-        lambda_text = remove_comments_from_source(lambda_text)
-
-        return lambda_text
-    except Exception as e:
-        logging.error(f"Error reading multiline lambda: {e}", exc_info=True)
-        return None
 
 
 def _clean_source(func: Callable) -> Optional[str]:

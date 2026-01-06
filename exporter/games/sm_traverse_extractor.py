@@ -105,59 +105,6 @@ def get_accesspoint_traverse_funcs(world) -> Dict[str, Any]:
     return traverse_funcs
 
 
-def get_transitions_for_accesspoint(world, ap_name: str) -> Dict[str, Any]:
-    """Get all transitions for a specific AccessPoint.
-
-    Args:
-        world: The SM world instance
-        ap_name: The AccessPoint name
-
-    Returns:
-        Dict mapping destination name to transition function
-    """
-    try:
-        from worlds.sm.variaRandomizer.graph.vanilla.graph_access import accessPoints
-
-        for ap in accessPoints:
-            if ap.Name == ap_name:
-                # Return the transitions dictionary (includes both intra and inter-area)
-                return ap.transitions
-
-        logger.warning(f"SM: AccessPoint '{ap_name}' not found")
-        return {}
-
-    except Exception as e:
-        logger.error(f"SM: Failed to get transitions for '{ap_name}': {e}", exc_info=True)
-        return {}
-
-
-def get_all_transitions() -> Dict[str, Dict[str, Callable]]:
-    """Extract all transitions from all AccessPoints.
-
-    Returns:
-        Dict mapping AccessPoint name -> {destination name -> transition function}
-    """
-    all_transitions = {}
-
-    try:
-        from worlds.sm.variaRandomizer.graph.vanilla.graph_access import accessPoints
-
-        for ap in accessPoints:
-            ap_name = ap.Name
-            # Get the transitions dictionary (intraTransitions, not including connected areas)
-            transitions = ap.intraTransitions.copy()
-
-            all_transitions[ap_name] = transitions
-            logger.debug(f"SM: Extracted {len(transitions)} transitions for AccessPoint '{ap_name}'")
-
-        logger.debug(f"SM: Extracted transitions for {len(all_transitions)} AccessPoints")
-
-    except Exception as e:
-        logger.error(f"SM: Failed to extract all transitions: {e}", exc_info=True)
-
-    return all_transitions
-
-
 def get_transition_lambda(source_ap_name: str, dest_ap_name: str, unwrap: bool = True) -> Optional[Callable]:
     """Get the transition lambda for a specific exit.
 
