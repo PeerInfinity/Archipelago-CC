@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-06 05:41:17
+**Generated:** 2026-01-06 05:54:58
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -106,8 +106,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Celeste (Open World) | 13.7s | 2 | A Link to the Past.yaml, Celeste (Open World).yaml |
+| 2 | Metamath | 13.2s | 2 | A Hat in Time.yaml, Metamath.yaml |
+| 3 | Shivers | 13.1s | 3 | A Hat in Time.yaml, Metamath.yaml, Shivers.yaml |
+| 4 | TOEM rule builder | 12.9s | 3 | A Hat in Time.yaml, Metamath.yaml, TOEM rule builder.yaml |
+| 5 | Wargroove | 12.7s | 3 | A Hat in Time.yaml, Metamath.yaml, Wargroove.yaml |
+| 6 | TUNIC | 12.3s | 2 | A Link to the Past.yaml, TUNIC.yaml |
+| 7 | Sonic Adventure 2 Battle | 11.7s | 2 | A Link to the Past.yaml, Sonic Adventure 2 Battle.yaml |
+| 8 | Kingdom Hearts | 11.5s | 2 | Castlevania - Circle of the Moon.yaml, Kingdom Hearts.yaml |
+| 9 | Yoshi's Island | 10.4s | 2 | A Link to the Past.yaml, Yoshi's Island.yaml |
+| 10 | Super Metroid | 10.0s | 2 | Bumper Stickers.yaml, Super Metroid.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | TUNIC | 62.3s | 2 | A Link to the Past.yaml, TUNIC.yaml |
+| 2 | DOOM II | 48.9s | 2 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml |
+| 3 | Civilization VI | 46.9s | 2 | Aquaria.yaml, Civilization VI.yaml |
+| 4 | Stardew Valley | 45.7s | 2 | APQuest.yaml, Stardew Valley.yaml |
+| 5 | Castlevania 64 | 45.4s | 2 | A Hat in Time.yaml, Castlevania 64.yaml |
+| 6 | Celeste (Open World) | 45.3s | 2 | A Link to the Past.yaml, Celeste (Open World).yaml |
+| 7 | Final Fantasy Mystic Quest | 44.6s | 3 | Adventure.yaml, Choo-Choo Charles.yaml, Final Fantasy Mystic Quest.yaml |
+| 8 | Starcraft 2 | 44.5s | 2 | A Short Hike.yaml, Starcraft 2.yaml |
+| 9 | Kirby's Dream Land 3 | 44.4s | 2 | A Hat in Time.yaml, Kirby's Dream Land 3.yaml |
+| 10 | Dark Souls III | 44.3s | 2 | A Hat in Time.yaml, Dark Souls III.yaml |
