@@ -423,12 +423,21 @@ export class WorkerSpoilerTest {
   compareRegions(expectedRegions, snapshot, sphereIndex) {
     const result = { passed: true, mismatch: null };
 
-    // Get reachable regions from snapshot
+    // Get reachable regions from snapshot, excluding placeholder regions
+    // Placeholder regions are organizational regions that exist in rules.json
+    // but are filtered out of Python's multiworld (they have no locations and no exits)
+    // Since Python's sphere log doesn't track them, we exclude them from comparison
     const stateReachable = [];
     const regionReachability = snapshot.regionReachability || {};
 
     for (const [regionName, status] of Object.entries(regionReachability)) {
       if (status === 'reachable') {
+        // Check if this is a placeholder region
+        const regionDef = this.sm.regions?.get?.(regionName);
+        if (regionDef?.placeholder) {
+          // Skip placeholder regions - they don't exist in Python's multiworld
+          continue;
+        }
         stateReachable.push(regionName);
       }
     }
