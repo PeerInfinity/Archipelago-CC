@@ -2549,10 +2549,13 @@ export class StateManagerProxy {
    */
   async runSpoilerTest(sphereData, config) {
     log('info', `[StateManagerProxy] Running worker-side spoiler test with ${sphereData.length} spheres`);
+    // Use a longer timeout for spoiler tests - base 10s + 200ms per sphere
+    // This handles games with many spheres (e.g., SC2 has 135 spheres)
+    const timeoutMs = 10000 + (sphereData.length * 200);
     return this.sendQueryToWorker({
       command: 'runSpoilerTest',
       payload: { sphereData, config }
-    });
+    }, timeoutMs);
   }
 
   /**
