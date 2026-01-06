@@ -32631,35 +32631,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                    "value": "Roxas Event Location"
                   }
                 ]
               },
@@ -32715,7 +32687,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "Roxas Event Location"
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -32743,7 +32715,35 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },

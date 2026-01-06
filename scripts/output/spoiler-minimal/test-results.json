@@ -16,7 +16,7 @@
       ],
       "last_updated": "2026-01-05T20:39:59.813349"
     },
-    "last_updated": "2026-01-05T20:39:59.813346",
+    "last_updated": "2026-01-06T04:37:00.291603",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1678,27 +1678,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "7d2b7e75eec58334a4dc8ad54ba0f77005473b48fcaf807f64b44b35689ec18d",
-          "new_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "original_rules_hash": "4c19bc4027453d6af29fa9214fc539e81ee7222a42288ad5ebd475044ef20933",
-          "original_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2026-01-05T20:36:58.525381"
-        }
-      },
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.21,
+        "processing_time_seconds": 10.98,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1708,17 +1696,17 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 9,
-        "pass_fail": "failed",
-        "processing_time_seconds": 42.18,
-        "return_code": 1,
-        "sphere_reached": 0,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 34.85,
+        "return_code": 0,
+        "sphere_reached": 15.1,
+        "success": true,
         "total_spheres": 15.1,
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2026-01-05T20:35:50.835820",
+      "timestamp": "2026-01-06T04:36:14.045997",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
         "exporter_size": 20002,
