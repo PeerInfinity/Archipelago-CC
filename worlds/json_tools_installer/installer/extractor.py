@@ -4,6 +4,7 @@ File extractor for JSON Tools.
 Handles extracting specific components from downloaded archives.
 """
 
+import fnmatch
 import shutil
 import zipfile
 from dataclasses import dataclass, field
@@ -20,6 +21,7 @@ class Component:
     display_name: str
     description: str
     source_paths: List[str]  # Paths within the archive
+    source_patterns: List[str] = field(default_factory=list)  # Glob patterns for matching
     required: bool = False
     size_estimate_mb: float = 0.0
 
@@ -74,6 +76,62 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=["docs/json"],
         required=False,
         size_estimate_mb=0.2,
+    ),
+    "worldgen_worlds": Component(
+        name="worldgen_worlds",
+        display_name="WorldGen Worlds",
+        description="Auto-generated world packages from JSON rules (~15MB)",
+        source_paths=[],
+        source_patterns=["worlds/*_worldgen", "worlds/*_worldgen/*"],
+        required=False,
+        size_estimate_mb=15.0,
+    ),
+    "demo_worlds": Component(
+        name="demo_worlds",
+        display_name="Demo Worlds",
+        description="Example/demo worlds (bakingadventure, codingadventure, etc.)",
+        source_paths=[
+            "worlds/bakingadventure",
+            "worlds/codingadventure",
+            "worlds/mathadventure",
+            "worlds/metamath",
+            "worlds/toem_original",
+            "worlds/toem_rule_builder",
+        ],
+        required=False,
+        size_estimate_mb=1.0,
+    ),
+    "tracker": Component(
+        name="tracker",
+        display_name="Tracker Integration",
+        description="PopTracker integration world for auto-tracking",
+        source_paths=["worlds/tracker"],
+        required=False,
+        size_estimate_mb=0.5,
+    ),
+    "testing": Component(
+        name="testing",
+        display_name="Testing Infrastructure",
+        description="Test configuration files (package.json, playwright, vitest)",
+        source_paths=[
+            "package.json",
+            "package-lock.json",
+            "playwright.config.js",
+            "vitest.config.js",
+            "tests",
+        ],
+        required=False,
+        size_estimate_mb=1.0,
+    ),
+    "romless_patches": Component(
+        name="romless_patches",
+        display_name="ROM-less Generation Patches",
+        description="Patches for worlds to generate without ROM files (for testing)",
+        source_paths=[
+            "docs/json/developer/diffs",
+        ],
+        required=False,
+        size_estimate_mb=0.1,
     ),
 }
 
@@ -134,12 +192,19 @@ def should_extract_file(
         if comp_name not in COMPONENTS:
             continue
         comp = COMPONENTS[comp_name]
+
+        # Check exact source paths
         for source_path in comp.source_paths:
             if rel_path.startswith(source_path + "/") or rel_path == source_path:
                 # Special case: exclude presets from frontend if presets not selected
                 if comp_name == "frontend" and "presets" not in components:
                     if "presets" in rel_path:
                         return False
+                return True
+
+        # Check glob patterns
+        for pattern in comp.source_patterns:
+            if fnmatch.fnmatch(rel_path, pattern):
                 return True
 
     return False
@@ -267,12 +332,30 @@ def list_installed_components(root: Optional[Path] = None) -> List[str]:
     installed = []
 
     for comp_name, comp in COMPONENTS.items():
+        is_installed = False
+
         # Check if any source path exists
         for source_path in comp.source_paths:
             check_path = root / source_path
             if check_path.exists():
-                installed.append(comp_name)
+                is_installed = True
                 break
+
+        # Check if any source pattern matches existing files
+        if not is_installed and comp.source_patterns:
+            for pattern in comp.source_patterns:
+                # Skip recursive patterns (e.g., "worlds/*_worldgen/*")
+                # Only check top-level directory patterns
+                if pattern.endswith("/*"):
+                    continue
+                # Use glob to find matching paths
+                matches = list(root.glob(pattern))
+                if matches:
+                    is_installed = True
+                    break
+
+        if is_installed:
+            installed.append(comp_name)
 
     return installed
 

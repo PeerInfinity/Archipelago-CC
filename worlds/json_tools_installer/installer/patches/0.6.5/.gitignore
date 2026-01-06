@@ -1,0 +1,277 @@
+.idea
+.vscode
+
+*_Spoiler.txt
+*.bmbp
+*.apbp
+*.apcivvi
+*.apl2ac
+*.apm3
+*.apmc
+*.apz5
+*.aptloz
+*.aptww
+*.apemerald
+*.pyc
+*.pyd
+*.sfc
+*.z64
+*.n64
+*.nes
+*.smc
+*.sms
+*.gb
+*.gbc
+*.gba
+*.wixobj
+*.lck
+*.db3
+*multidata
+*multisave
+*.archipelago
+*.apsave
+*.BIN
+*.puml
+
+setups
+build
+bundle/components.wxs
+dist
+/prof/
+README.html
+.vs/
+EnemizerCLI/
+/Players/
+/SNI/
+/sni-*/
+/appimagetool*
+/host.yaml
+/options.yaml
+/config.yaml
+/logs/
+_persistent_storage.yaml
+mystery_result_*.yaml
+*-errors.txt
+success.txt
+/output/
+Output Logs/
+/factorio/
+/WebHostLib/static/generated
+/freeze_requirements.txt
+/Archipelago.zip
+/setup.ini
+/installdelete.iss
+/data/user.kv
+/datapackage
+/custom_worlds
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+*.dll
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+installer.log
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# vim editor
+*.swp
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv*
+env/
+venv/
+/venv*/
+ENV/
+env.bak/
+venv.bak/
+*.code-workspace
+shell.nix
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# Cython intermediates
+_speedups.c
+_speedups.cpp
+_speedups.html
+
+# pyenv
+.python-version
+
+#undertale stuff
+/Undertale/
+
+# OS General Files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+[Dd]esktop.ini
+
+# JSDoc generated API documentation
+/docs/json/api/
+
+# Don't ignore these in frontend and its subfolders
+!frontend/**/*.archipelago
+!frontend/**/*_Spoiler.txt
+
+# new stuff
+/Context.py
+Context.txt
+ContextList.txt
+ContextList2.txt
+missingFiles.txt
+FixedContextList.txt
+generate_output.txt
+pytest_output.txt
+pytest-list.txt
+test_output_raw_rules.txt
+debug_cleanup_data.txt
+debug_mode_settings.txt
+rule_analysis_debug.log
+server_log.txt
+playwright-report.json
+playwright-analysis.txt
+*-old.js
+*-old.py
+*-old/
+*-new.js
+*-new.py
+*-new/
+NewDocs/*
+test_results/
+test_files-full.json
+scrap/*
+trash/*
+node_modules/*
+test-results/*
+set.mm
+
+!scripts/build/
+!scripts/lib/
+!scripts/test/lib/
+!frontend/modules/spoilerTest/lib/
+
+scripts/output/spoiler-minimal/test-results-*
+scripts/output/spoiler-minimal/test-results_*
+scripts/output/spoiler-minimal-worldgen/test-results-*
+scripts/output/spoiler-minimal-worldgen/test-results_*
+scripts/output/spoiler-full/test-results-*
+scripts/output/spoiler-full/test-results_*
+scripts/output/spoiler-full-worldgen/test-results-*
+scripts/output/spoiler-full-worldgen/test-results_*
+scripts/output/multiclient/test-results-*
+scripts/output/multiclient/test-results_*
+scripts/output/multiclient-worldgen/test-results-*
+scripts/output/multiclient-worldgen/test-results_*
+scripts/output/multiworld/test-results-*
+scripts/output/multiworld/test-results_*
+scripts/output/multiworld-worldgen/test-results-*
+scripts/output/multiworld-worldgen/test-results_*
+scripts/output/multitemplate-minimal/test-results-*
+scripts/output/multitemplate-minimal/test-results_*
+scripts/output/multitemplate-full/test-results-*
+scripts/output/multitemplate-full/test-results_*
+
+!CC/scripts/prompts/gen-errors.txt
+
+coverage/
+benchmark-results.json
+
+test1/
+test2/
+test3/
+test4/
+frontend/modules/mazeGame-iframe/
+.git.disabled/
+worlds/apworld_manager/
+worlds_disabled/
+custom_worlds_disabled/

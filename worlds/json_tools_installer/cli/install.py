@@ -315,6 +315,31 @@ def main(args=None):
         action="store_true",
         help="Install documentation",
     )
+    parser.add_argument(
+        "--worldgen-worlds",
+        action="store_true",
+        help="Install auto-generated world packages from JSON rules",
+    )
+    parser.add_argument(
+        "--demo-worlds",
+        action="store_true",
+        help="Install example/demo worlds (bakingadventure, etc.)",
+    )
+    parser.add_argument(
+        "--tracker",
+        action="store_true",
+        help="Install PopTracker integration world",
+    )
+    parser.add_argument(
+        "--testing",
+        action="store_true",
+        help="Install testing infrastructure (package.json, playwright, vitest)",
+    )
+    parser.add_argument(
+        "--romless-patches",
+        action="store_true",
+        help="Install ROM-less generation patches (for testing without ROMs)",
+    )
 
     # Actions
     parser.add_argument(
@@ -402,6 +427,16 @@ def main(args=None):
                 components.append("frontend")
         if parsed.docs:
             components.append("docs")
+        if parsed.worldgen_worlds:
+            components.append("worldgen_worlds")
+        if parsed.demo_worlds:
+            components.append("demo_worlds")
+        if parsed.tracker:
+            components.append("tracker")
+        if parsed.testing:
+            components.append("testing")
+        if parsed.romless_patches:
+            components.append("romless_patches")
 
     if not components:
         components = ["core", "scripts"]
