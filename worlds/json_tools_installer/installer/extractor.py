@@ -35,23 +35,31 @@ class ExtractionResult:
     skipped_files: List[str] = field(default_factory=list)
 
 
-# Define available components
+# Define available components (order matters for GUI display)
 COMPONENTS: Dict[str, Component] = {
-    "core": Component(
-        name="core",
-        display_name="Core Tools",
-        description="Exporter, Rule Builder, and World Generator",
-        source_paths=["exporter", "rule_builder", "world_generator"],
-        required=True,
-        size_estimate_mb=2.0,
-    ),
-    "scripts": Component(
-        name="scripts",
-        display_name="Scripts",
-        description="Utility scripts for testing and setup",
-        source_paths=["scripts"],
+    "exporter": Component(
+        name="exporter",
+        display_name="Exporter",
+        description="Export game logic to JSON format",
+        source_paths=["exporter"],
         required=False,
         size_estimate_mb=0.5,
+    ),
+    "rule_builder": Component(
+        name="rule_builder",
+        display_name="Rule Builder",
+        description="Build access rules from JSON definitions",
+        source_paths=["rule_builder"],
+        required=False,
+        size_estimate_mb=0.5,
+    ),
+    "world_generator": Component(
+        name="world_generator",
+        display_name="World Generator",
+        description="Generate world packages from JSON rules",
+        source_paths=["world_generator"],
+        required=False,
+        size_estimate_mb=1.0,
     ),
     "frontend": Component(
         name="frontend",
@@ -63,7 +71,7 @@ COMPONENTS: Dict[str, Component] = {
     ),
     "presets": Component(
         name="presets",
-        display_name="Presets",
+        display_name="Frontend Presets",
         description="Pre-generated game data (~75MB)",
         source_paths=["frontend/presets"],
         required=False,
@@ -77,19 +85,28 @@ COMPONENTS: Dict[str, Component] = {
         required=False,
         size_estimate_mb=0.2,
     ),
-    "worldgen_worlds": Component(
-        name="worldgen_worlds",
-        display_name="WorldGen Worlds",
-        description="Auto-generated world packages from JSON rules (~15MB)",
-        source_paths=[],
-        source_patterns=["worlds/*_worldgen", "worlds/*_worldgen/*"],
+    "scripts": Component(
+        name="scripts",
+        display_name="Scripts",
+        description="Utility scripts for testing and setup",
+        source_paths=["scripts"],
         required=False,
-        size_estimate_mb=15.0,
+        size_estimate_mb=0.5,
+    ),
+    "romless_patches": Component(
+        name="romless_patches",
+        display_name="ROM-less Generation Patches",
+        description="Patches for worlds to generate without ROM files",
+        source_paths=[
+            "docs/json/developer/diffs",
+        ],
+        required=False,
+        size_estimate_mb=0.1,
     ),
     "demo_worlds": Component(
         name="demo_worlds",
         display_name="Demo Worlds",
-        description="Example/demo worlds (bakingadventure, codingadventure, etc.)",
+        description="Example worlds (bakingadventure, codingadventure, etc.)",
         source_paths=[
             "worlds/bakingadventure",
             "worlds/codingadventure",
@@ -112,7 +129,7 @@ COMPONENTS: Dict[str, Component] = {
     "testing": Component(
         name="testing",
         display_name="Testing Infrastructure",
-        description="Test configuration files (package.json, playwright, vitest)",
+        description="Test config files (package.json, playwright, vitest)",
         source_paths=[
             "package.json",
             "package-lock.json",
@@ -123,16 +140,27 @@ COMPONENTS: Dict[str, Component] = {
         required=False,
         size_estimate_mb=1.0,
     ),
-    "romless_patches": Component(
-        name="romless_patches",
-        display_name="ROM-less Generation Patches",
-        description="Patches for worlds to generate without ROM files (for testing)",
-        source_paths=[
-            "docs/json/developer/diffs",
-        ],
+    "worldgen_worlds": Component(
+        name="worldgen_worlds",
+        display_name="WorldGen Worlds",
+        description="Auto-generated world packages from JSON rules (~15MB)",
+        source_paths=[],
+        source_patterns=["worlds/*_worldgen", "worlds/*_worldgen/*"],
         required=False,
-        size_estimate_mb=0.1,
+        size_estimate_mb=15.0,
     ),
+}
+
+# Default components to install
+DEFAULT_COMPONENTS = {
+    "exporter",
+    "rule_builder",
+    "world_generator",
+    "frontend",
+    "docs",
+    "scripts",
+    "romless_patches",
+    "demo_worlds",
 }
 
 # Patterns to always exclude

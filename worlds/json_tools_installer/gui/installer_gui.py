@@ -27,7 +27,7 @@ from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 from ..config import load_config, save_config, InstallerConfig
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity
-from ..installer.extractor import extract_tools, COMPONENTS, list_installed_components
+from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
 from ..installer.patcher import apply_patches, revert_patches, get_patch_summary
 
 
@@ -42,16 +42,19 @@ class InstallerApp(App):
     version_stable = BooleanProperty(True)
     version_dev = BooleanProperty(False)
 
-    comp_core = BooleanProperty(True)
-    comp_scripts = BooleanProperty(True)
-    comp_frontend = BooleanProperty(False)
+    # Component properties (defaults set from DEFAULT_COMPONENTS)
+    comp_exporter = BooleanProperty(True)
+    comp_rule_builder = BooleanProperty(True)
+    comp_world_generator = BooleanProperty(True)
+    comp_frontend = BooleanProperty(True)
     comp_presets = BooleanProperty(False)
-    comp_docs = BooleanProperty(False)
-    comp_worldgen_worlds = BooleanProperty(False)
-    comp_demo_worlds = BooleanProperty(False)
+    comp_docs = BooleanProperty(True)
+    comp_scripts = BooleanProperty(True)
+    comp_romless_patches = BooleanProperty(True)
+    comp_demo_worlds = BooleanProperty(True)
     comp_tracker = BooleanProperty(False)
     comp_testing = BooleanProperty(False)
-    comp_romless_patches = BooleanProperty(False)
+    comp_worldgen_worlds = BooleanProperty(False)
 
     # Store checkbox references for updating
     component_checkboxes = {}
@@ -109,13 +112,32 @@ class InstallerApp(App):
 
         root.add_widget(version_box)
 
-        # Components section
+        # Components section header with Check All button
+        comp_header = BoxLayout(size_hint_y=None, height=35, spacing=10)
         comp_label = Label(
             text='Components:',
-            size_hint_y=None,
-            height=30,
+            size_hint_x=0.7,
+            halign='left',
+            valign='middle',
         )
-        root.add_widget(comp_label)
+        comp_label.bind(size=comp_label.setter('text_size'))
+        comp_header.add_widget(comp_label)
+
+        check_all_btn = Button(
+            text='Check All',
+            size_hint_x=0.15,
+        )
+        check_all_btn.bind(on_press=self.do_check_all)
+        comp_header.add_widget(check_all_btn)
+
+        uncheck_all_btn = Button(
+            text='Uncheck All',
+            size_hint_x=0.15,
+        )
+        uncheck_all_btn.bind(on_press=self.do_uncheck_all)
+        comp_header.add_widget(uncheck_all_btn)
+
+        root.add_widget(comp_header)
 
         # Component checkboxes in a scrollable container
         row_height = 40
@@ -130,9 +152,9 @@ class InstallerApp(App):
         for name, comp in COMPONENTS.items():
             row = BoxLayout(size_hint_y=None, height=row_height)
 
-            # Checkbox with fixed width
+            # Checkbox with fixed width, default based on DEFAULT_COMPONENTS
             cb = CheckBox(
-                active=name in ['core', 'scripts'],
+                active=name in DEFAULT_COMPONENTS,
                 size_hint_x=None,
                 width=40,
             )
@@ -165,7 +187,7 @@ class InstallerApp(App):
         # Wrap in ScrollView for when there are many components
         scroll_view = ScrollView(
             size_hint_y=None,
-            height=min(200, num_components * row_height),  # Max height of 200, scrollable if more
+            height=min(250, num_components * row_height),  # Max height of 250, scrollable if more
             do_scroll_x=False,
             bar_width=10,
         )
@@ -231,6 +253,18 @@ class InstallerApp(App):
         prop_name = f'comp_{name}'
         if hasattr(self, prop_name):
             setattr(self, prop_name, value)
+
+    def do_check_all(self, instance):
+        """Check all component checkboxes."""
+        for name, cb in self.component_checkboxes.items():
+            cb.active = True
+            self.on_component_toggle(name, True)
+
+    def do_uncheck_all(self, instance):
+        """Uncheck all component checkboxes."""
+        for name, cb in self.component_checkboxes.items():
+            cb.active = False
+            self.on_component_toggle(name, False)
 
     def get_selected_components(self) -> List[str]:
         """Get list of selected component names."""
