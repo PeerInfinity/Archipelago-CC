@@ -1117,6 +1117,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if opt in path and original_value == '<missing>':
             return True
 
+    # priority_locations: WorldGen skips this fill option since canonical placements are used.
+    # Original may have priority locations set, WorldGen has an empty list.
+    if 'priority_locations' in path:
+        return True
+
     # dynamically_added: Regions with no locations/exits may be auto-marked.
     # Some exports have this marked, others don't. Both are semantically equivalent.
     if '.dynamically_added' in path:
