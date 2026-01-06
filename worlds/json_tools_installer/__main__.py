@@ -25,6 +25,12 @@ def main():
     install_parser.add_argument("--all", "-a", action="store_true", help="Install all components")
     install_parser.add_argument("--frontend", action="store_true", help="Include frontend")
     install_parser.add_argument("--presets", action="store_true", help="Include presets")
+    install_parser.add_argument("--docs", action="store_true", help="Include documentation")
+    install_parser.add_argument("--worldgen-worlds", action="store_true", help="Include worldgen worlds")
+    install_parser.add_argument("--demo-worlds", action="store_true", help="Include demo worlds")
+    install_parser.add_argument("--tracker", action="store_true", help="Include tracker")
+    install_parser.add_argument("--testing", action="store_true", help="Include testing infrastructure")
+    install_parser.add_argument("--romless-patches", action="store_true", help="Include romless patches")
     install_parser.add_argument("--uninstall", action="store_true", help="Uninstall")
     install_parser.add_argument("--dry-run", "-n", action="store_true")
 
@@ -55,6 +61,18 @@ def main():
             install_args.append("--frontend")
         if args.presets:
             install_args.append("--presets")
+        if args.docs:
+            install_args.append("--docs")
+        if args.worldgen_worlds:
+            install_args.append("--worldgen-worlds")
+        if args.demo_worlds:
+            install_args.append("--demo-worlds")
+        if args.tracker:
+            install_args.append("--tracker")
+        if args.testing:
+            install_args.append("--testing")
+        if args.romless_patches:
+            install_args.append("--romless-patches")
         if args.uninstall:
             install_args.append("--uninstall")
         if args.dry_run:

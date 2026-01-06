@@ -25,6 +25,8 @@ PATCH_FILES = [
     "Main.py",
     "BaseClasses.py",
     "settings.py",
+    ".gitignore",
+    "requirements.txt",
 ]
 
 

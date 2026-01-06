@@ -47,6 +47,14 @@ class InstallerApp(App):
     comp_frontend = BooleanProperty(False)
     comp_presets = BooleanProperty(False)
     comp_docs = BooleanProperty(False)
+    comp_worldgen_worlds = BooleanProperty(False)
+    comp_demo_worlds = BooleanProperty(False)
+    comp_tracker = BooleanProperty(False)
+    comp_testing = BooleanProperty(False)
+    comp_romless_patches = BooleanProperty(False)
+
+    # Store checkbox references for updating
+    component_checkboxes = {}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -109,21 +117,60 @@ class InstallerApp(App):
         )
         root.add_widget(comp_label)
 
-        # Component checkboxes
-        components_box = BoxLayout(orientation='vertical', size_hint_y=None, height=150)
+        # Component checkboxes in a scrollable container
+        row_height = 40
+        num_components = len(COMPONENTS)
+        components_box = BoxLayout(
+            orientation='vertical',
+            size_hint_y=None,
+            height=num_components * row_height,
+            spacing=5,
+        )
 
         for name, comp in COMPONENTS.items():
-            row = BoxLayout(size_hint_y=None, height=30)
-            cb = CheckBox(active=name in ['core', 'scripts'])
+            row = BoxLayout(size_hint_y=None, height=row_height)
+
+            # Checkbox with fixed width
+            cb = CheckBox(
+                active=name in ['core', 'scripts'],
+                size_hint_x=None,
+                width=40,
+            )
             cb.bind(active=lambda instance, value, n=name: self.on_component_toggle(n, value))
+            self.component_checkboxes[name] = cb
             row.add_widget(cb)
-            row.add_widget(Label(
-                text=f'{comp.display_name} - {comp.description}',
+
+            # Label with proper text alignment
+            label = Label(
+                text=f'{comp.display_name} ({comp.size_estimate_mb:.1f}MB)',
                 halign='left',
-            ))
+                valign='middle',
+                size_hint_x=0.4,
+            )
+            label.bind(size=label.setter('text_size'))
+            row.add_widget(label)
+
+            # Description label
+            desc_label = Label(
+                text=comp.description,
+                halign='left',
+                valign='middle',
+                size_hint_x=0.6,
+            )
+            desc_label.bind(size=desc_label.setter('text_size'))
+            row.add_widget(desc_label)
+
             components_box.add_widget(row)
 
-        root.add_widget(components_box)
+        # Wrap in ScrollView for when there are many components
+        scroll_view = ScrollView(
+            size_hint_y=None,
+            height=min(200, num_components * row_height),  # Max height of 200, scrollable if more
+            do_scroll_x=False,
+            bar_width=10,
+        )
+        scroll_view.add_widget(components_box)
+        root.add_widget(scroll_view)
 
         # Status area
         self.status_label = Label(
@@ -180,30 +227,18 @@ class InstallerApp(App):
 
     def on_component_toggle(self, name: str, value: bool):
         """Handle component checkbox toggle."""
-        if name == 'core':
-            self.comp_core = value
-        elif name == 'scripts':
-            self.comp_scripts = value
-        elif name == 'frontend':
-            self.comp_frontend = value
-        elif name == 'presets':
-            self.comp_presets = value
-        elif name == 'docs':
-            self.comp_docs = value
+        # Map component name to property
+        prop_name = f'comp_{name}'
+        if hasattr(self, prop_name):
+            setattr(self, prop_name, value)
 
     def get_selected_components(self) -> List[str]:
         """Get list of selected component names."""
         components = []
-        if self.comp_core:
-            components.append('core')
-        if self.comp_scripts:
-            components.append('scripts')
-        if self.comp_frontend:
-            components.append('frontend')
-        if self.comp_presets:
-            components.append('presets')
-        if self.comp_docs:
-            components.append('docs')
+        for name in COMPONENTS.keys():
+            prop_name = f'comp_{name}'
+            if hasattr(self, prop_name) and getattr(self, prop_name):
+                components.append(name)
         return components
 
     def get_selected_version(self) -> str:

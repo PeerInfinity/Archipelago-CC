@@ -13,6 +13,14 @@
     "settings.py": {
       "sha256": "40a4ea6c0f3c615ebc59745aff3377c20b45292071cfc3c1668c3a2f68fc6058",
       "size": 36592
+    },
+    ".gitignore": {
+      "sha256": "bd72ed25e21d3706dd8dea280264d46d059763953fcc10e2a564afafa8e25d76",
+      "size": 3932
+    },
+    "requirements.txt": {
+      "sha256": "5b1853d1b16617ee347158c44e5eadfc278938714319fb89671901b049c13ff1",
+      "size": 358
     }
   }
 }
