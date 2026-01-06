@@ -6,11 +6,10 @@ Handles patching core Archipelago files with backup and restore capability.
 
 import hashlib
 import shutil
-import zipfile
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from Utils import local_path
 
@@ -160,104 +159,6 @@ def backup_file(filepath: Path, config: InstallerConfig) -> Optional[str]:
     return str(backup_path)
 
 
-def apply_patches(
-    archive_path: Path,
-    config: Optional[InstallerConfig] = None,
-    force: bool = False,
-) -> PatchResult:
-    """
-    Apply patches from a downloaded archive.
-
-    This extracts the patched versions of core files from the archive
-    and replaces the originals (after backing them up).
-
-    Args:
-        archive_path: Path to the downloaded archive.
-        config: Installer configuration.
-        force: If True, overwrite even if already patched.
-
-    Returns:
-        PatchResult with status information.
-    """
-    if config is None:
-        config = load_config()
-
-    result = PatchResult(success=True)
-    root = Path(local_path())
-
-    # Check version compatibility
-    version_info = detect_ap_version()
-    if version_info.support_level == SupportLevel.UNSUPPORTED:
-        result.success = False
-        result.errors.append(
-            f"AP version {version_info.version_string} is not supported"
-        )
-        return result
-
-    if version_info.support_level == SupportLevel.EXPERIMENTAL:
-        result.warnings.append(
-            f"AP version {version_info.version_string} is untested, patches may not work"
-        )
-
-    try:
-        with zipfile.ZipFile(archive_path, "r") as zf:
-            # Find archive root
-            all_files = zf.namelist()
-            archive_root = ""
-            if all_files:
-                first_part = all_files[0].split("/")[0]
-                if all(f.startswith(first_part + "/") for f in all_files if f):
-                    archive_root = first_part
-
-            for filename in PATCH_FILES:
-                # Find the patched file in archive
-                archive_file_path = f"{archive_root}/{filename}" if archive_root else filename
-
-                if archive_file_path not in all_files:
-                    result.warnings.append(f"Patched {filename} not found in archive")
-                    continue
-
-                target_path = root / filename
-
-                # Check current status
-                if target_path.exists():
-                    current_status = check_patch_status(config).get(filename)
-
-                    if current_status and current_status.is_patched and not force:
-                        result.warnings.append(f"{filename} already patched, skipping")
-                        continue
-
-                    # Backup original
-                    backup_path = backup_file(target_path, config)
-                    if backup_path:
-                        result.patched_files.append(f"{filename} (backed up to {backup_path})")
-                    else:
-                        result.warnings.append(f"Could not backup {filename}")
-
-                # Extract patched file
-                with zf.open(archive_file_path) as src:
-                    with open(target_path, "wb") as dst:
-                        shutil.copyfileobj(src, dst)
-
-                if filename not in [p.split(" ")[0] for p in result.patched_files]:
-                    result.patched_files.append(filename)
-
-    except zipfile.BadZipFile as e:
-        result.success = False
-        result.errors.append(f"Invalid archive: {str(e)}")
-    except Exception as e:
-        result.success = False
-        result.errors.append(f"Patch failed: {str(e)}")
-
-    # Update config
-    if result.success and result.patched_files:
-        config.patches.method = "file"
-        config.patches.applied_at = datetime.now().isoformat()
-        save_config(config)
-
-    return result
-
-
 def revert_patches(config: Optional[InstallerConfig] = None) -> PatchResult:
     """
     Revert all patches by restoring from backups.
@@ -335,9 +236,9 @@ def get_patch_summary(config: Optional[InstallerConfig] = None) -> Dict[str, any
     }
 
 
-def get_bundled_patches_dir(version: str) -> Optional[Path]:
+def get_patches_dir(version: str) -> Optional[Path]:
     """
-    Get the path to bundled patches for a specific AP version.
+    Get the path to downloaded main patches for a specific AP version.
 
     Args:
         version: AP version string (e.g., "0.6.5").
@@ -345,14 +246,16 @@ def get_bundled_patches_dir(version: str) -> Optional[Path]:
     Returns:
         Path to patches directory, or None if not found.
     """
-    # Look for patches bundled with the installer
-    patches_dir = Path(__file__).parent / "patches" / version
+    root = Path(local_path())
+
+    # Look for downloaded patches in json_tools_patches directory
+    patches_dir = root / "json_tools_patches" / version / "main"
     if patches_dir.exists():
         return patches_dir
 
     # Try base version (without rc suffix)
     base_version = version.split("-")[0]
-    patches_dir = Path(__file__).parent / "patches" / base_version
+    patches_dir = root / "json_tools_patches" / base_version / "main"
     if patches_dir.exists():
         return patches_dir
 
@@ -360,19 +263,24 @@ def get_bundled_patches_dir(version: str) -> Optional[Path]:
 
 
 def get_available_patch_versions() -> List[str]:
-    """Get list of AP versions with bundled patches."""
-    patches_base = Path(__file__).parent / "patches"
+    """Get list of AP versions with available patches."""
+    root = Path(local_path())
+    patches_base = root / "json_tools_patches"
     if not patches_base.exists():
         return []
 
     versions = []
     for item in patches_base.iterdir():
         if item.is_dir():
-            manifest = item / "manifest.json"
+            manifest = item / "main" / "manifest.json"
             if manifest.exists():
                 versions.append(item.name)
 
     return sorted(versions)
+
+
+# Keep old name for backwards compatibility
+get_bundled_patches_dir = get_patches_dir
 
 
 def apply_bundled_patches(
@@ -380,10 +288,9 @@ def apply_bundled_patches(
     force: bool = False,
 ) -> PatchResult:
     """
-    Apply patches from bundled patch files.
+    Apply patches from downloaded patch files.
 
-    This uses pre-made patched files included with the installer,
-    rather than extracting from a downloaded archive.
+    This uses pre-made patched files from the main_patches component.
 
     Args:
         config: Installer configuration.
@@ -409,12 +316,13 @@ def apply_bundled_patches(
         )
         return result
 
-    # Find bundled patches for this version
-    patches_dir = get_bundled_patches_dir(version_info.version_string)
+    # Find downloaded patches for this version
+    patches_dir = get_patches_dir(version_info.version_string)
     if patches_dir is None:
         result.success = False
         result.errors.append(
-            f"No bundled patches available for AP version {version_info.version_string}. "
+            f"Main patches not found for AP version {version_info.version_string}. "
+            f"Install the 'Main Patches' component first. "
             f"Available versions: {get_available_patch_versions()}"
         )
         return result

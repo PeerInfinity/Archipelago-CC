@@ -28,7 +28,8 @@ from ..config import load_config, save_config, InstallerConfig
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity
 from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
-from ..installer.patcher import apply_patches, revert_patches, get_patch_summary
+from ..installer.patcher import apply_bundled_patches, revert_patches, get_patch_summary
+from ..installer.romless_patcher import apply_romless_patches, revert_romless_patches
 
 
 class InstallerApp(App):
@@ -50,11 +51,16 @@ class InstallerApp(App):
     comp_presets = BooleanProperty(False)
     comp_docs = BooleanProperty(True)
     comp_scripts = BooleanProperty(True)
+    comp_main_patches = BooleanProperty(True)
     comp_romless_patches = BooleanProperty(True)
     comp_demo_worlds = BooleanProperty(True)
     comp_tracker = BooleanProperty(False)
     comp_testing = BooleanProperty(False)
     comp_worldgen_worlds = BooleanProperty(False)
+
+    # Post-install options
+    apply_main_patches_after = BooleanProperty(True)
+    apply_romless_patches_after = BooleanProperty(True)
 
     # Store checkbox references for updating
     component_checkboxes = {}
@@ -79,38 +85,38 @@ class InstallerApp(App):
 
         # AP Version info
         version_info = detect_ap_version()
-        version_box = BoxLayout(size_hint_y=None, height=60, orientation='vertical')
-        version_box.add_widget(Label(
+        ap_info_box = BoxLayout(size_hint_y=None, height=60, orientation='vertical')
+        ap_info_box.add_widget(Label(
             text=f'Archipelago Version: {version_info.version_string}',
             size_hint_y=None,
             height=30,
         ))
-        version_box.add_widget(Label(
+        ap_info_box.add_widget(Label(
             text=f'Support: {get_version_support_status(version_info)}',
             size_hint_y=None,
             height=30,
         ))
-        root.add_widget(version_box)
+        root.add_widget(ap_info_box)
 
-        # Version selection
-        version_box = BoxLayout(size_hint_y=None, height=40)
-        version_box.add_widget(Label(text='Version:', size_hint_x=0.3))
+        # Version selection (stable/dev)
+        version_select_box = BoxLayout(size_hint_y=None, height=40)
+        version_select_box.add_widget(Label(text='Version:', size_hint_x=0.3))
 
         stable_box = BoxLayout()
         stable_cb = CheckBox(group='version', active=True)
         stable_cb.bind(active=self.on_version_stable)
         stable_box.add_widget(stable_cb)
         stable_box.add_widget(Label(text='Stable'))
-        version_box.add_widget(stable_box)
+        version_select_box.add_widget(stable_box)
 
         dev_box = BoxLayout()
         dev_cb = CheckBox(group='version', active=False)
         dev_cb.bind(active=self.on_version_dev)
         dev_box.add_widget(dev_cb)
         dev_box.add_widget(Label(text='Dev'))
-        version_box.add_widget(dev_box)
+        version_select_box.add_widget(dev_box)
 
-        root.add_widget(version_box)
+        root.add_widget(version_select_box)
 
         # Components section header with Check All button
         comp_header = BoxLayout(size_hint_y=None, height=35, spacing=10)
@@ -141,12 +147,15 @@ class InstallerApp(App):
 
         # Component checkboxes in a scrollable container
         row_height = 40
+        spacing = 5
         num_components = len(COMPONENTS)
+        # Total height = rows + spacing between rows
+        total_height = (num_components * row_height) + ((num_components - 1) * spacing)
         components_box = BoxLayout(
             orientation='vertical',
             size_hint_y=None,
-            height=num_components * row_height,
-            spacing=5,
+            height=total_height,
+            spacing=spacing,
         )
 
         for name, comp in COMPONENTS.items():
@@ -187,18 +196,68 @@ class InstallerApp(App):
         # Wrap in ScrollView for when there are many components
         scroll_view = ScrollView(
             size_hint_y=None,
-            height=min(250, num_components * row_height),  # Max height of 250, scrollable if more
+            height=min(200, num_components * row_height),  # Max height of 200, scrollable if more
             do_scroll_x=False,
             bar_width=10,
         )
         scroll_view.add_widget(components_box)
         root.add_widget(scroll_view)
 
+        # Post-install options
+        options_label = Label(
+            text='Post-Install Options:',
+            size_hint_y=None,
+            height=25,
+            halign='left',
+        )
+        options_label.bind(size=options_label.setter('text_size'))
+        root.add_widget(options_label)
+
+        options_box = BoxLayout(size_hint_y=None, height=35, spacing=10)
+
+        # Apply main patches checkbox
+        main_patch_row = BoxLayout(size_hint_x=0.5)
+        self.apply_main_cb = CheckBox(
+            active=self.apply_main_patches_after,
+            size_hint_x=None,
+            width=40,
+        )
+        self.apply_main_cb.bind(active=lambda inst, val: setattr(self, 'apply_main_patches_after', val))
+        main_patch_row.add_widget(self.apply_main_cb)
+        main_patch_label = Label(
+            text='Apply main patches after download',
+            halign='left',
+            valign='middle',
+        )
+        main_patch_label.bind(size=main_patch_label.setter('text_size'))
+        main_patch_row.add_widget(main_patch_label)
+        options_box.add_widget(main_patch_row)
+
+        # Apply romless patches checkbox
+        romless_row = BoxLayout(size_hint_x=0.5)
+        self.apply_romless_cb = CheckBox(
+            active=self.apply_romless_patches_after,
+            size_hint_x=None,
+            width=40,
+        )
+        self.apply_romless_cb.bind(active=lambda inst, val: setattr(self, 'apply_romless_patches_after', val))
+        romless_row.add_widget(self.apply_romless_cb)
+        romless_label = Label(
+            text='Apply ROM-less patches after download',
+            halign='left',
+            valign='middle',
+        )
+        romless_label.bind(size=romless_label.setter('text_size'))
+        romless_row.add_widget(romless_label)
+        options_box.add_widget(romless_row)
+
+        root.add_widget(options_box)
+
         # Status area
         self.status_label = Label(
             text=self.status_text,
             size_hint_y=None,
-            height=60,
+            height=25,
         )
         root.add_widget(self.status_label)
 
@@ -359,13 +418,21 @@ class InstallerApp(App):
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")
                     return
 
-                self.update_status("Applying patches...")
-                self.update_progress(85)
+                # Apply main patches if selected and checkbox is checked
+                if "main_patches" in components and self.apply_main_patches_after:
+                    self.update_status("Applying main patches...")
+                    self.update_progress(85)
+                    patch_result = apply_bundled_patches(self.config)
+                    if not patch_result.success:
+                        self.show_message("Warning", f"Main patch issues: {patch_result.errors}")
 
-                patch_result = apply_patches(archive_path, self.config)
-
-                if not patch_result.success:
-                    self.show_message("Warning", f"Patching issues: {patch_result.errors}")
+                # Apply ROM-less patches if selected and checkbox is checked
+                if "romless_patches" in components and self.apply_romless_patches_after:
+                    self.update_status("Applying ROM-less patches...")
+                    self.update_progress(90)
+                    romless_result = apply_romless_patches(self.config)
+                    if not romless_result.success:
+                        self.show_message("Warning", f"ROM-less patch issues: {romless_result.errors}")
 
                 self.update_progress(100)
                 self.update_status("Installation complete!")
@@ -401,10 +468,13 @@ class InstallerApp(App):
     def _uninstall_thread(self):
         """Uninstall logic."""
         try:
-            self.update_status("Reverting patches...")
-            self.update_progress(25)
+            self.update_status("Reverting main patches...")
+            self.update_progress(20)
+            revert_patches(self.config)
 
-            revert_result = revert_patches(self.config)
+            self.update_status("Reverting ROM-less patches...")
+            self.update_progress(30)
+            revert_romless_patches(self.config)
 
             self.update_status("Removing components...")
             self.update_progress(50)
@@ -438,11 +508,20 @@ class InstallerApp(App):
 
         def revert():
             try:
-                self.update_status("Reverting patches...")
-                result = revert_patches(self.config)
+                errors = []
 
-                if result.errors:
-                    self.show_message("Warning", f"Some patches could not be reverted: {result.errors}")
+                self.update_status("Reverting main patches...")
+                main_result = revert_patches(self.config)
+                if main_result.errors:
+                    errors.extend(main_result.errors)
+
+                self.update_status("Reverting ROM-less patches...")
+                romless_result = revert_romless_patches(self.config)
+                if romless_result.errors:
+                    errors.extend(romless_result.errors)
+
+                if errors:
+                    self.show_message("Warning", f"Some patches could not be reverted: {errors}")
                 else:
                     self.show_message("Success", "Patches reverted successfully.")
 

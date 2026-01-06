@@ -93,15 +93,21 @@ COMPONENTS: Dict[str, Component] = {
         required=False,
         size_estimate_mb=0.5,
     ),
+    "main_patches": Component(
+        name="main_patches",
+        display_name="Main Patches",
+        description="Patched core files for JSON export support",
+        source_paths=["json_tools_patches/0.6.5/main"],
+        required=False,
+        size_estimate_mb=0.2,
+    ),
     "romless_patches": Component(
         name="romless_patches",
         display_name="ROM-less Generation Patches",
-        description="Patches for worlds to generate without ROM files",
-        source_paths=[
-            "docs/json/developer/diffs",
-        ],
+        description="Patched world files for generation without ROMs",
+        source_paths=["json_tools_patches/0.6.5/romless"],
         required=False,
-        size_estimate_mb=0.1,
+        size_estimate_mb=0.3,
     ),
     "demo_worlds": Component(
         name="demo_worlds",
@@ -159,6 +165,7 @@ DEFAULT_COMPONENTS = {
     "frontend",
     "docs",
     "scripts",
+    "main_patches",
     "romless_patches",
     "demo_worlds",
 }

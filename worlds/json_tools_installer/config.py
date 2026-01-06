@@ -62,6 +62,8 @@ class PatchInfo:
     method: str = "file"  # "file" or "monkey"
     backups: List[BackupInfo] = field(default_factory=list)
     applied_at: Optional[str] = None
+    romless_applied: bool = False
+    romless_applied_at: Optional[str] = None
 
 
 @dataclass
@@ -95,6 +97,8 @@ class InstallerConfig:
                 "method": self.patches.method,
                 "backups": [asdict(b) for b in self.patches.backups],
                 "applied_at": self.patches.applied_at,
+                "romless_applied": self.patches.romless_applied,
+                "romless_applied_at": self.patches.romless_applied_at,
             },
         }
 
@@ -127,6 +131,8 @@ class InstallerConfig:
             method=patches.get("method", "file"),
             backups=backups,
             applied_at=patches.get("applied_at"),
+            romless_applied=patches.get("romless_applied", False),
+            romless_applied_at=patches.get("romless_applied_at"),
         )
 
         return config

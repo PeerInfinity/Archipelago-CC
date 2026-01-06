@@ -48,7 +48,7 @@ from ..installer.extractor import (
     COMPONENTS,
 )
 from ..installer.patcher import (
-    apply_patches,
+    apply_bundled_patches,
     revert_patches,
     get_patch_summary,
 )
@@ -178,29 +178,10 @@ def do_install(
             success_count = sum(1 for v in hook_results.values() if v)
             print(f"  [OK] Installed {success_count}/{len(hook_results)} runtime hooks")
             config.patches.method = "monkey"
-        elif use_bundled_patches:
-            print("\n  Applying bundled patches...")
-            from ..installer.patcher import apply_bundled_patches
-            patch_result = apply_bundled_patches(config)
-
-            if patch_result.warnings:
-                for warning in patch_result.warnings:
-                    print(f"  [WARN] {warning}")
-
-            if not patch_result.success:
-                print("  [ERROR] Patching failed:")
-                for error in patch_result.errors:
-                    print(f"    - {error}")
-                return False
-
-            if patch_result.patched_files:
-                print(f"  [OK] Patched {len(patch_result.patched_files)} files")
-                for f in patch_result.patched_files:
-                    print(f"    - {f}")
         else:
-            print("\n  Applying patches from archive...")
-
-            patch_result = apply_patches(archive_path, config)
+            # Default: use bundled/downloaded patches
+            print("\n  Applying patches from downloaded patch files...")
+            patch_result = apply_bundled_patches(config)
 
             if patch_result.warnings:
                 for warning in patch_result.warnings:
