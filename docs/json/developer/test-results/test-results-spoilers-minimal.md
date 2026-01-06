@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-05 21:09:12
+**Generated:** 2026-01-06 05:54:58
 
-**Source Data Created:** 2026-01-05T20:39:59.813339
+**Source Data Created:** 2026-01-06T05:28:13.519765
 
-**Source Data Last Updated:** 2026-01-05T20:39:59.813346
+**Source Data Last Updated:** 2026-01-06T05:28:13.519773
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 64 (87.7%)
-- **Failed:** 9 (12.3%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/64 (62.5% of passed)
-- **Passing with Generic Logic:** 60/64 (93.8% of passed)
-- **Passing with Both Generic:** 40/64 (62.5% of passed)
+- **Passing with Generic Exporter:** 43/73 (58.9% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 43/73 (58.9% of passed)
 
 ## Test Results
 
@@ -35,7 +35,7 @@
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria | ❌ Failed | 0 | 0.1 | 5.2 | 🟠 1.9% | 1.8KB | ✅ |
+| Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 1.8KB | ✅ |
 | Baking Adventure | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
@@ -47,10 +47,10 @@
 | Choo-Choo Charles | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Coding Adventure | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| DLCQuest | ❌ Failed | 0 | 0.1 | 8.1 | 🟠 1.2% | 1.0KB | ✅ |
+| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ✅ |
-| Dark Souls III | ❌ Failed | 0 | 0 | 5.1 | 🔴 0.0% | ✅ | ✅ |
+| Dark Souls III | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
@@ -58,9 +58,9 @@
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 7.5KB | ✅ |
-| Kingdom Hearts | ❌ Failed | 0 | 0 | 10.3 | 🔴 0.0% | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | 0 | 0 | 15.1 | 🔴 0.0% | 19.5KB | ✅ |
-| Kirby's Dream Land 3 | ❌ Failed | 0 | 0 | 11.1 | 🔴 0.0% | 7.4KB | ✅ |
+| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 19.5KB | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 3.6KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
@@ -82,8 +82,8 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | 0 | 0 | 15.5 | 🔴 0.0% | 28.7KB | 87.5KB |
-| Stardew Valley | ❌ Failed | 0 | 0 | 44.1 | 🔴 0.0% | 18.8KB | 8.0KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 87.5KB |
+| Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 12.4KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
@@ -102,16 +102,7 @@
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 2.3KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 3.8KB | ✅ |
-| shapez | ❌ Failed | 0 | 1.2 | 5.7 | 🟡 21.1% | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| Choo-Choo Charles | 1 | 2026-01-05 20:34 | Previously failed, now passing |
-
+| shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes
 

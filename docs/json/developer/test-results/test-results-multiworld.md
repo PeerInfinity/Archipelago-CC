@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-05 21:09:12
+**Generated:** 2026-01-06 05:54:58
 
 ## Summary
 
@@ -16,9 +16,9 @@
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 18
-- **Second Pass Passed:** 6
-- **Second Pass Failed:** 12
+- **Second Pass Tested:** 20
+- **Second Pass Passed:** 7
+- **Second Pass Failed:** 13
 
 ### Generic Exporter/Logic Statistics
 
@@ -37,7 +37,7 @@
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ❌ Failed | ❌ Failed | 1 | 1 | 1.8KB | ✅ |
 | Baking Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ❌ Failed | ❌ Failed | 1 | 1 | 1.4KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
 | Bumper Stickers | ❌ Failed | ❌ Failed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ❌ Failed | ❌ Failed | 1 | 1 | 4.0KB | ✅ |
 | Castlevania 64 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
@@ -47,7 +47,7 @@
 | Choo-Choo Charles | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
 | Civilization VI | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Coding Adventure | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| DLCQuest | ❌ Failed | — | 2 | 2 | 1.0KB | ✅ |
+| DLCQuest | ❌ Failed | ❌ Failed | 2 | 2 | 1.0KB | ✅ |
 | DOOM 1993 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | DOOM II | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
@@ -57,17 +57,17 @@
 | Final Fantasy Mystic Quest | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
 | Heretic | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Hylics 2 | ❌ Failed | ❌ Failed | 3 | 3 | ✅ | ✅ |
-| Inscryption | ❌ Failed | — | 2 | 2 | 7.5KB | ✅ |
+| Inscryption | ❌ Failed | — | 3 | 3 | 7.5KB | ✅ |
 | Kingdom Hearts | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Kingdom Hearts 2 | ❌ Failed | — | 2 | 2 | 19.5KB | ✅ |
-| Kirby's Dream Land 3 | ❌ Failed | — | 2 | 2 | 7.4KB | ✅ |
+| Kirby's Dream Land 3 | ❌ Failed | — | 2 | 2 | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ❌ Failed | — | 2 | 2 | 3.6KB | ✅ |
 | Lingo | ❌ Failed | — | 2 | 2 | 38.0KB | 10.7KB |
 | Links Awakening DX | ❌ Failed | — | 2 | 2 | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Math Adventure | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
-| Mega Man 2 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
+| Mega Man 2 | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
 | MegaMan Battle Network 3 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Meritous | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
@@ -76,8 +76,8 @@
 | Old School Runescape | ❌ Failed | — | 2 | 2 | 1.0KB | ✅ |
 | Overcooked! 2 | ❌ Failed | — | 4 | 4 | 23.1KB | ✅ |
 | Paint | ❌ Failed | — | 2 | 2 | 2.7KB | ✅ |
-| Raft | ❌ Failed | — | 5 | 5 | 5.4KB | ✅ |
-| Risk of Rain 2 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
+| Raft | ❌ Failed | ❌ Failed | 5 | 5 | 5.4KB | ✅ |
+| Risk of Rain 2 | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
 | Saving Princess | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Secret of Evermore | ❌ Failed | — | 2 | 2 | 5.3KB | 6.9KB |
 | Shivers | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
@@ -86,8 +86,8 @@
 | Stardew Valley | ❌ Failed | — | 2 | 2 | 18.8KB | 8.0KB |
 | Subnautica | ❌ Failed | — | 4 | 4 | 2.2KB | ✅ |
 | Super Mario 64 | ❌ Failed | — | 2 | 2 | 12.4KB | ✅ |
-| Super Mario Land 2 | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
-| Super Mario World | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
+| Super Mario Land 2 | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
+| Super Mario World | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
 | Super Metroid | ❌ Failed | — | 2 | 2 | 60.9KB | 114.5KB |
 | TOEM original | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | TOEM rule builder | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
@@ -96,8 +96,8 @@
 | The Legend of Zelda | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
 | The Messenger | ❌ Failed | — | 4 | 4 | 4.7KB | ✅ |
 | The Wind Waker | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
-| The Witness | ❌ Failed | ❌ Failed | 5 | 5 | 14.1KB | ✅ |
-| Timespinner | ❌ Failed | — | 2 | 2 | 2.2KB | ✅ |
+| The Witness | ❌ Failed | ❌ Failed | 6 | 6 | 14.1KB | ✅ |
+| Timespinner | ❌ Failed | — | 3 | 3 | 2.2KB | ✅ |
 | Undertale | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | VVVVVV | ❌ Failed | — | 2 | 2 | 2.3KB | ✅ |
 | Wargroove | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
@@ -150,7 +150,7 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Baking Adventure.yaml |
 
-### Bomb Rush Cyberfunk ❌ (Split 8)
+### Bomb Rush Cyberfunk ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -294,7 +294,8 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
-| 2 | Inscryption.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
 
 ### Kingdom Hearts ❌ (Split 10)
 
@@ -367,7 +368,8 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
-| 2 | Mega Man 2.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Mega Man 2.yaml |
 
 ### MegaMan Battle Network 3 ❌ (Split 9)
 
@@ -442,7 +444,8 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
-| 2 | Risk of Rain 2.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Risk of Rain 2.yaml |
 
 ### Saving Princess ❌ (Split 9)
 
@@ -511,14 +514,16 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Coding Adventure.yaml |
 | 3 | Hylics 2.yaml |
 | 4 | Math Adventure.yaml |
-| 5 | Super Mario Land 2.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 ### Super Mario World ❌ (Split 8)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
-| 2 | Super Mario World.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Super Mario World.yaml |
 
 ### Super Metroid ❌ (Split 9)
 
@@ -587,14 +592,16 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Coding Adventure.yaml |
 | 3 | Hylics 2.yaml |
 | 4 | Math Adventure.yaml |
-| 5 | The Witness.yaml |
+| 5 | Raft.yaml |
+| 6 | The Witness.yaml |
 
 ### Timespinner ❌ (Split 8)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
-| 2 | Timespinner.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Timespinner.yaml |
 
 ### Undertale ❌ (Split 9)
 
@@ -677,14 +684,6 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 |------------------|--------|------------|----------|----------|
 | Aquaria.yaml | ❌ | ✅ | ❌ | ❌ |
 
-### DLCQuest (DLCQuest.yaml)
-
-**Failing pairs found:** 1
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Bomb Rush Cyberfunk.yaml | ❌ | ✅ | ❌ | ❌ |
-
 ### DOOM 1993 (DOOM 1993.yaml)
 
 **Failing pairs found:** 1
@@ -752,11 +751,12 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### Inscryption (Inscryption.yaml)
 
-**Failing pairs found:** 1
+**Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
 | Bomb Rush Cyberfunk.yaml | ❌ | ✅ | ❌ | ❌ |
+| DLCQuest.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Kingdom Hearts (Kingdom Hearts.yaml)
 
@@ -816,11 +816,12 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### Mega Man 2 (Mega Man 2.yaml)
 
-**Failing pairs found:** 1
+**Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
 | Bomb Rush Cyberfunk.yaml | ❌ | ✅ | ❌ | ❌ |
+| DLCQuest.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### MegaMan Battle Network 3 (MegaMan Battle Network 3.yaml)
 
@@ -880,24 +881,14 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 |------------------|--------|------------|----------|----------|
 | Aquaria.yaml | ❌ | ✅ | ❌ | ❌ |
 
-### Raft (Raft.yaml)
+### Risk of Rain 2 (Risk of Rain 2.yaml)
 
 **Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| Baking Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
-| Coding Adventure.yaml | ❌ | ✅ | ✅ | ❌ |
-| Hylics 2.yaml | ❌ | ✅ | ❌ | ✅ |
-| Math Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
-
-### Risk of Rain 2 (Risk of Rain 2.yaml)
-
-**Failing pairs found:** 1
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
 | Bomb Rush Cyberfunk.yaml | ❌ | ✅ | ❌ | ❌ |
+| DLCQuest.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Saving Princess (Saving Princess.yaml)
 
@@ -968,7 +959,7 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### Super Mario Land 2 (Super Mario Land 2.yaml)
 
-**Failing pairs found:** 1
+**Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
@@ -976,14 +967,16 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 | Coding Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
 | Hylics 2.yaml | ❌ | ✅ | ❌ | ❌ |
 | Math Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
+| Raft.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Super Mario World (Super Mario World.yaml)
 
-**Failing pairs found:** 1
+**Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
 | Bomb Rush Cyberfunk.yaml | ❌ | ✅ | ❌ | ❌ |
+| DLCQuest.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Super Metroid (Super Metroid.yaml)
 
@@ -1046,11 +1039,12 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### Timespinner (Timespinner.yaml)
 
-**Failing pairs found:** 1
+**Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
 | Bomb Rush Cyberfunk.yaml | ❌ | ✅ | ❌ | ❌ |
+| DLCQuest.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Undertale (Undertale.yaml)
 
@@ -1106,18 +1100,20 @@ Templates tested in the first pass with fewer than the maximum number of players
 | APQuest | 1 | 2 | 1 | ❌ Failed |
 | Adventure | 1 | 3 | 1 | ✅ Passed |
 | Aquaria | 1 | 1 | 2 | ❌ Failed |
-| Baking Adventure | 1 | 5 | 1 | ✅ Passed |
-| Bomb Rush Cyberfunk | 1 | 1 | 2 | ❌ Failed |
+| Baking Adventure | 1 | 6 | 1 | ✅ Passed |
+| Bomb Rush Cyberfunk | 1 | 2 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 1 | 2 | ❌ Failed |
 | Castlevania - Circle of the Moon | 1 | 1 | 2 | ❌ Failed |
 | Choo-Choo Charles | 2 | 3 | 2 | ❌ Failed |
-| Coding Adventure | 2 | 5 | 2 | ✅ Passed |
-| Hylics 2 | 3 | 5 | 3 | ❌ Failed |
+| Coding Adventure | 2 | 6 | 2 | ✅ Passed |
+| DLCQuest | 2 | 2 | 2 | ❌ Failed |
+| Hylics 2 | 3 | 6 | 3 | ❌ Failed |
 | Lufia II Ancient Cave | 3 | 2 | 2 | ✅ Passed |
-| Math Adventure | 4 | 4 | 3 | ❌ Failed |
+| Math Adventure | 4 | 5 | 3 | ❌ Failed |
 | Metamath | 2 | 2 | 2 | ✅ Passed |
+| Raft | 5 | 4 | 3 | ❌ Failed |
 | The Legend of Zelda | 2 | 1 | 3 | ❌ Failed |
-| The Witness | 5 | 3 | 3 | ❌ Failed |
+| The Witness | 6 | 3 | 3 | ❌ Failed |
 
 ### Second Pass Templates in Multiworld
 
@@ -1171,13 +1167,15 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | Coding Adventure.yaml |
 | 3 | Hylics 2.yaml |
 | 4 | Math Adventure.yaml |
-| 5 | The Witness.yaml |
+| 5 | Raft.yaml |
+| 6 | The Witness.yaml |
 
-#### Bomb Rush Cyberfunk ❌ (Split 8)
+#### Bomb Rush Cyberfunk ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
 
 #### Bumper Stickers ❌ (Split 9)
 
@@ -1207,7 +1205,15 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | Coding Adventure.yaml |
 | 3 | Hylics 2.yaml |
 | 4 | Math Adventure.yaml |
-| 5 | The Witness.yaml |
+| 5 | Raft.yaml |
+| 6 | The Witness.yaml |
+
+#### DLCQuest ❌ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
 
 #### Hylics 2 ❌ (Split 7)
 
@@ -1217,7 +1223,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | Coding Adventure.yaml |
 | 3 | Hylics 2.yaml |
 | 4 | Math Adventure.yaml |
-| 5 | The Witness.yaml |
+| 5 | Raft.yaml |
+| 6 | The Witness.yaml |
 
 #### Lufia II Ancient Cave ✅ (Split 5)
 
@@ -1233,7 +1240,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 1 | Baking Adventure.yaml |
 | 2 | Coding Adventure.yaml |
 | 3 | Math Adventure.yaml |
-| 4 | The Witness.yaml |
+| 4 | Raft.yaml |
+| 5 | The Witness.yaml |
 
 #### Metamath ✅ (Split 1)
 
@@ -1241,6 +1249,15 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 | 2 | Metamath.yaml |
+
+#### Raft ❌ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Raft.yaml |
+| 4 | The Witness.yaml |
 
 #### The Legend of Zelda ❌ (Split 4)
 
@@ -1277,18 +1294,38 @@ When a second pass multiworld test fails, bisection tests each pair of templates
 | Adventure.yaml | ❌ | ✅ | ❌ | ✅ |
 | Lufia II Ancient Cave.yaml | ✅ | ✅ | ✅ | ✅ |
 
-#### Hylics 2 (Hylics 2.yaml)
+#### DLCQuest (DLCQuest.yaml)
 
 **Failing pairs found:** 1
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Bomb Rush Cyberfunk.yaml | ❌ | ✅ | ❌ | ✅ |
+
+#### Hylics 2 (Hylics 2.yaml)
+
+**Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
 | Baking Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
 | Coding Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
 | Math Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
+| Raft.yaml | ❌ | ✅ | ❌ | ✅ |
 | The Witness.yaml | ❌ | ✅ | ❌ | ✅ |
 
 #### Math Adventure (Math Adventure.yaml)
+
+**No failing pairs found** (failure may be due to combination of 3+ templates)
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Baking Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
+| Coding Adventure.yaml | ✅ | ✅ | ✅ | ✅ |
+| Raft.yaml | ✅ | ✅ | ✅ | ✅ |
+| The Witness.yaml | ✅ | ✅ | ✅ | ✅ |
+
+#### Raft (Raft.yaml)
 
 **No failing pairs found** (failure may be due to combination of 3+ templates)
 

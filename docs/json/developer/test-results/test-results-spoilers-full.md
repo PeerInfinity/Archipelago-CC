@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-05 21:09:12
+**Generated:** 2026-01-06 05:54:58
 
-**Source Data Created:** 2026-01-05T20:48:00.705538
+**Source Data Created:** 2026-01-06T05:34:29.250962
 
-**Source Data Last Updated:** 2026-01-05T20:48:00.705546
+**Source Data Last Updated:** 2026-01-06T05:34:29.250970
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 60 (82.2%)
-- **Failed:** 13 (17.8%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 38/60 (63.3% of passed)
-- **Passing with Generic Logic:** 57/60 (95.0% of passed)
-- **Passing with Both Generic:** 38/60 (63.3% of passed)
+- **Passing with Generic Exporter:** 43/73 (58.9% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 43/73 (58.9% of passed)
 
 ## Test Results
 
@@ -35,7 +35,7 @@
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria | ❌ Failed | 0 | 0.9 | 5.19 | 🟠 17.3% | 1.8KB | ✅ |
+| Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 1.8KB | ✅ |
 | Baking Adventure | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
@@ -44,13 +44,13 @@
 | Celeste (Open World) | ✅ Passed | 0 | 16.5 | 16.5 | 🟢 Complete | ✅ | ✅ |
 | Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 4.1KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
-| Choo-Choo Charles | ❌ Failed | 0 | 0 | 4.3 | 🔴 0.0% | ✅ | ✅ |
+| Choo-Choo Charles | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ✅ |
 | Coding Adventure | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| DLCQuest | ❌ Failed | 0 | 0.1 | 8.1 | 🟠 1.2% | 1.0KB | ✅ |
+| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
-| Dark Souls III | ❌ Failed | 0 | 0 | 6.2 | 🔴 0.0% | ✅ | ✅ |
+| Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
@@ -58,14 +58,14 @@
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 7.5KB | ✅ |
-| Kingdom Hearts | ❌ Failed | 0 | 0 | 10.8 | 🔴 0.0% | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | 0 | 0 | 15.2 | 🔴 0.0% | 19.5KB | ✅ |
-| Kirby's Dream Land 3 | ❌ Failed | 0 | 0 | 11.3 | 🔴 0.0% | 7.4KB | ✅ |
+| Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 19.5KB | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 3.6KB | ✅ |
 | Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ❌ Failed | 0 | 0 | 8.8 | 🔴 0.0% | ✅ | ✅ |
+| Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | ✅ | ✅ |
 | Math Adventure | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -76,14 +76,14 @@
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 23.1KB | ✅ |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 2.7KB | ✅ |
-| Raft | ❌ Failed | 0 | 0 | 11.6 | 🔴 0.0% | 5.4KB | ✅ |
+| Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ✅ |
-| Secret of Evermore | ❌ Failed | 0 | 0 | 5.19 | 🔴 0.0% | 5.3KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | 0 | 0 | 15.14 | 🔴 0.0% | 28.7KB | 87.5KB |
-| Stardew Valley | ❌ Failed | 0 | 0 | 44.2 | 🔴 0.0% | 18.8KB | 8.0KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 28.7KB | 87.5KB |
+| Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 12.4KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
@@ -102,7 +102,7 @@
 | VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 2.3KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 3.8KB | ✅ |
-| shapez | ❌ Failed | 0 | 1.2 | 6.2 | 🟡 19.4% | ✅ | ✅ |
+| shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes
 
