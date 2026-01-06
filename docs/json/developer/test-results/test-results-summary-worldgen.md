@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-03 07:22:13
+**Generated:** 2026-01-05 21:09:12
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -169,6 +169,8 @@ These templates are excluded from testing:
 
 | Template | Reason |
 |----------|--------|
+| APWorld Manager WorldGen.yaml | Not a game. |
+| APWorld Manager.yaml | Not a game. |
 | Archipelago WorldGen.yaml | Not a game. |
 | Archipelago.yaml | Not a game. |
 | Blasphemous WorldGen.yaml | The spoiler test currently freezes. |
@@ -181,6 +183,8 @@ These templates are excluded from testing:
 | Final Fantasy.yaml | Requires manual configuration and is not compatible with automated testing. |
 | Hollow Knight WorldGen.yaml | The spoiler test currently freezes. |
 | Hollow Knight.yaml | The spoiler test currently freezes. |
+| JSON Tools Installer WorldGen.yaml | Not a game. |
+| JSON Tools Installer.yaml | Not a game. |
 | Jak and Daxter The Precursor Legacy WorldGen.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
 | Jak and Daxter The Precursor Legacy.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
 | Kingdom Hearts 2 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
