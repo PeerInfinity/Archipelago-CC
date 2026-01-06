@@ -37,28 +37,3 @@ def clear_caches():
     clean_source_cache.clear()
     unparsed_lambda_cache.clear()
     parameterless_func_cache.clear()
-
-
-def get_file_content_cache_size() -> int:
-    """Return the number of cached file contents."""
-    return len(file_content_cache)
-
-
-def get_ast_cache_size() -> int:
-    """Return the number of cached AST trees."""
-    return len(ast_cache)
-
-
-def get_clean_source_cache_size() -> int:
-    """Return the number of cached cleaned source strings."""
-    return len(clean_source_cache)
-
-
-def get_unparsed_lambda_cache_size() -> int:
-    """Return the number of cached unparsed lambda strings."""
-    return len(unparsed_lambda_cache)
-
-
-def get_parameterless_func_cache_size() -> int:
-    """Return the number of cached parameterless function analyses."""
-    return len(parameterless_func_cache)
