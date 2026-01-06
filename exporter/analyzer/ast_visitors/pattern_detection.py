@@ -136,14 +136,14 @@ class PatternDetectionMixin:
             # converted to setting_value. These are exported in game_info and should be
             # accessed as world.attr_name, which the frontend resolves from game_info.
             if attrs[0] == 'options' and len(attrs) >= 2:
+                # Do NOT match if pattern ends with .value - let closure_vars resolve it
+                # to get the actual integer value (e.g., dk_coins_for_gyrocopter.value -> 15)
+                if attrs[-1] == 'value':
+                    return None
                 # Do NOT match if pattern ends with .to_bool - this is a method call
                 # that needs to be evaluated at analysis time via call_visitor
                 if attrs[-1] == 'to_bool':
                     return None
-                # Strip .value suffix if present - the option value will be resolved at runtime
-                # This handles patterns like state.multiworld.worlds[player].options.bosses_required.value
-                if attrs[-1] == 'value':
-                    return '.'.join(attrs[1:-1])
                 # Remove 'options' prefix for .options.<setting> pattern
                 return '.'.join(attrs[1:])
             else:
