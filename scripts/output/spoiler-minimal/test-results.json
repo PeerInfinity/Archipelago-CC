@@ -16,7 +16,7 @@
       ],
       "last_updated": "2026-01-05T20:39:59.813349"
     },
-    "last_updated": "2026-01-05T20:39:59.813346",
+    "last_updated": "2026-01-06T04:34:59.729455",
     "script_version": "1.0.0"
   },
   "results": {
@@ -321,27 +321,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "b407340c92b436ab7e9d472e41b2f4154bec1905d11df7e8111c8be4955f7ee4",
-          "new_sphere_log_hash": "39ecce71a8f88115822f08ddaa5309af9d0c62e558cef8ec246166dce3d3ddc4",
-          "original_rules_hash": "b407340c92b436ab7e9d472e41b2f4154bec1905d11df7e8111c8be4955f7ee4",
-          "original_sphere_log_hash": "39ecce71a8f88115822f08ddaa5309af9d0c62e558cef8ec246166dce3d3ddc4",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2026-01-05T20:35:17.964542"
-        }
-      },
       "game_name_from_filename": "aquaria",
       "game_name_from_yaml": "Aquaria",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.79,
+        "processing_time_seconds": 8.92,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/aquaria/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -351,17 +339,17 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.2,
-        "return_code": 1,
-        "sphere_reached": 0.1,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 9.11,
+        "return_code": 0,
+        "sphere_reached": 5.2,
+        "success": true,
         "total_spheres": 5.2,
         "warning_count": 0
       },
       "template_filename": "Aquaria.yaml",
-      "timestamp": "2026-01-05T20:34:52.016925",
+      "timestamp": "2026-01-06T04:34:41.228238",
       "world_info": {
         "exporter_path": "exporter/games/aquaria.py",
         "exporter_size": 1861,
