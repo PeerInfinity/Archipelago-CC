@@ -832,7 +832,13 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
 
   // Spread contextVariables onto the interface so properties like currentLocation
   // are directly accessible (needed by ruleEngine's get_location handler)
-  return { ...anInterface, ...contextVariables };
+  // Also include prog_items and playerId for prog_item_count rule evaluation
+  return {
+    ...anInterface,
+    ...contextVariables,
+    prog_items: sm.prog_items || {},
+    playerId: sm.playerId
+  };
 }
 
 /**

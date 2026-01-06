@@ -202,6 +202,12 @@ export class WorkerSpoilerTest {
       const resolvedItems = inventoryDetails.resolved_items || {};
       const inventoryFromLog = useResolvedItems ? { ...resolvedItems } : { ...baseItems };
 
+      // Get accumulator targets from game_info to filter them out when using resolved_items
+      const gameInfo = this.sm.gameInfo?.[this.playerIdKey] || {};
+      const accumulatorTargets = new Set(
+        (gameInfo.accumulator_rules || []).map(rule => rule.target)
+      );
+
       // Find newly added items
       const newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventoryFromLog);
 
@@ -210,11 +216,18 @@ export class WorkerSpoilerTest {
         const isSphere0Base = sphereNumberInt === 0 && !String(sphereIndex).includes('.');
 
         if (!isSphere0Base && newlyAddedItems.length > 0) {
+          // Add items, skipping accumulator targets when using resolved_items
+          // (they appear in resolved_items but are just computed values, not real items)
           for (const itemName of newlyAddedItems) {
+            // Skip accumulator target items when using resolved_items
+            // The pattern-matching items (e.g., "46 coins") will handle accumulation
+            if (useResolvedItems && accumulatorTargets.has(itemName)) {
+              continue;
+            }
             this.sm.addItemToInventory(itemName, 1);
             result.itemsAdded++;
           }
-          this.log('info', `[WorkerSpoilerTest] Added ${newlyAddedItems.length} items upfront`);
+          this.log('info', `[WorkerSpoilerTest] Added ${result.itemsAdded} items upfront`);
         }
 
         // Compare after adding items
@@ -423,12 +436,21 @@ export class WorkerSpoilerTest {
   compareRegions(expectedRegions, snapshot, sphereIndex) {
     const result = { passed: true, mismatch: null };
 
-    // Get reachable regions from snapshot
+    // Get reachable regions from snapshot, excluding placeholder regions
+    // Placeholder regions are organizational regions that exist in rules.json
+    // but are filtered out of Python's multiworld (they have no locations and no exits)
+    // Since Python's sphere log doesn't track them, we exclude them from comparison
     const stateReachable = [];
     const regionReachability = snapshot.regionReachability || {};
 
     for (const [regionName, status] of Object.entries(regionReachability)) {
       if (status === 'reachable') {
+        // Check if this is a placeholder region
+        const regionDef = this.sm.regions?.get?.(regionName);
+        if (regionDef?.placeholder) {
+          // Skip placeholder regions - they don't exist in Python's multiworld
+          continue;
+        }
         stateReachable.push(regionName);
       }
     }

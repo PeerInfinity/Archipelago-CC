@@ -299,6 +299,17 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         # Main implementation with logging
         multiworld = spoiler.multiworld
 
+        # Call postprocess_regions for games that need to add missing regions
+        # This ensures regions like Aquaria's "Home Waters, behind rock" are available
+        # before sphere calculation begins
+        from exporter.games import get_game_export_handler
+        for player_id in multiworld.player_ids:
+            world = multiworld.worlds[player_id]
+            game_name = world.game
+            game_handler = get_game_export_handler(game_name, world)
+            if hasattr(game_handler, 'postprocess_regions'):
+                game_handler.postprocess_regions(multiworld, player_id)
+
         # Write metadata header as first entry (before any sphere data)
         if spoiler_log_file_handler:
             event_metadata = _collect_event_metadata(multiworld)
