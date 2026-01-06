@@ -2549,10 +2549,13 @@ export class StateManagerProxy {
    */
   async runSpoilerTest(sphereData, config) {
     log('info', `[StateManagerProxy] Running worker-side spoiler test with ${sphereData.length} spheres`);
+    // Use a longer timeout for spoiler tests - complex games like Stardew Valley
+    // can have 500+ locations with complex rules requiring significant evaluation time
+    const spoilerTestTimeout = 300000; // 5 minutes
     return this.sendQueryToWorker({
       command: 'runSpoilerTest',
       payload: { sphereData, config }
-    });
+    }, spoilerTestTimeout);
   }
 
   /**
