@@ -40,7 +40,16 @@ class KDL3GameExportHandler(GenericGameExportHandler):
 
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
     # Blacklisted helpers are automatically preserved as helper calls
-    HELPERS_TO_EXPORT_BLACKLIST = {'can_assemble_rob', 'can_fix_angel_wings'}
+    HELPERS_TO_EXPORT_BLACKLIST = {'can_assemble_rob', 'can_fix_angel_wings', 'can_reach_boss'}
+
+    # Level number to level name mapping for can_reach_boss helper
+    LEVEL_NAMES = {
+        1: "Grass Land",
+        2: "Ripple Field",
+        3: "Sand Canyon",
+        4: "Cloudy Park",
+        5: "Iceberg",
+    }
 
     # Map parameter names used in inlined functions to actual setting names
     NAME_REMAPPING = {
@@ -95,7 +104,12 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         if args is None:
             args = []
 
-        # Get copy_abilities from the first argument if it's a constant
+        # Handle can_reach_boss helper
+        # Arguments: level (constant), open_world (option), ow_boss_req (option), player_levels (constant)
+        if helper_name == 'can_reach_boss':
+            return self._expand_can_reach_boss(args)
+
+        # For can_assemble_rob and can_fix_angel_wings, get copy_abilities from first argument
         copy_abilities = None
         if args and isinstance(args[0], dict):
             arg = args[0]
@@ -188,3 +202,64 @@ class KDL3GameExportHandler(GenericGameExportHandler):
             return {'type': 'constant', 'value': True}
 
         return {'type': 'and', 'conditions': conditions}
+
+    def _expand_can_reach_boss(self, args: list) -> Optional[Dict[str, Any]]:
+        """Expand can_reach_boss helper into a conditional rule.
+
+        Arguments:
+        - level: constant int (1-5)
+        - open_world: option value
+        - ow_boss_req: option value
+        - player_levels: constant dict mapping level to location list
+
+        Logic:
+        - If open_world: has("{level_name} - Stage Completion", ow_boss_req)
+        - Else: can_reach("{level_name} 6 - Complete", "Location")
+        """
+        if len(args) < 4:
+            return None
+
+        # Extract level constant
+        level = None
+        level_arg = args[0]
+        if isinstance(level_arg, dict):
+            if level_arg.get('type') == 'constant':
+                level = level_arg.get('value')
+            elif level_arg.get('rule') == 'Constant':
+                level = level_arg.get('args', {}).get('value')
+
+        if level is None or level not in self.LEVEL_NAMES:
+            return None
+
+        # Get level name for the item check and location name
+        level_name = self.LEVEL_NAMES[level]
+        stage_completion_item = f"{level_name} - Stage Completion"
+        # Boss location is always stage 6 of the level (the last regular stage)
+        boss_location_name = f"{level_name} 6 - Complete"
+
+        # Build the conditional rule:
+        # if open_world: has(stage_completion_item, ow_boss_requirement)
+        # else: can_reach(boss_location_name, "Location")
+        return {
+            'type': 'conditional',
+            'test': {
+                'type': 'option_value',
+                'option': 'open_world'
+            },
+            'if_true': {
+                'type': 'item_check',
+                'item': stage_completion_item,
+                'count': {
+                    'type': 'option_value',
+                    'option': 'ow_boss_requirement'
+                }
+            },
+            'if_false': {
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': boss_location_name},
+                    {'type': 'constant', 'value': 'Location'}
+                ]
+            }
+        }
