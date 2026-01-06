@@ -259,6 +259,54 @@ export class WorkerSpoilerTest {
         // Normal mode: check locations one by one
         const locationsToCheck = sphere.locations || [];
 
+        // In multiworld, items can be received from other players without checking locations.
+        // We need to add items from new_inventory_details that are NOT from checking our own locations.
+        // Items from checking our own locations will be added by checkLocation().
+        const isSphere0Base = sphereNumberInt === 0 && !String(sphereIndex).includes('.');
+        if (!isSphere0Base && newlyAddedItems.length > 0) {
+          // Calculate items that will be added by checking our own locations
+          // (items at those locations that belong to this player)
+          const itemsFromOwnLocations = {};
+          for (const locationName of locationsToCheck) {
+            const locationDef = this.sm.locations?.get?.(locationName) ||
+                               this.sm.locations?.[locationName];
+            if (locationDef?.item?.name) {
+              const itemPlayer = String(locationDef.item.player || this.playerId);
+              if (itemPlayer === this.playerIdKey) {
+                // This item belongs to us and will be added by checkLocation
+                const itemName = locationDef.item.name;
+                itemsFromOwnLocations[itemName] = (itemsFromOwnLocations[itemName] || 0) + 1;
+              }
+            }
+          }
+
+          // Add only items from other players (not from checking our own locations)
+          // We need to track how many of each item to add, accounting for duplicates
+          const itemsToAdd = [...newlyAddedItems]; // Copy array to modify
+          for (const [itemName, count] of Object.entries(itemsFromOwnLocations)) {
+            let remaining = count;
+            for (let i = itemsToAdd.length - 1; i >= 0 && remaining > 0; i--) {
+              if (itemsToAdd[i] === itemName) {
+                itemsToAdd.splice(i, 1);
+                remaining--;
+              }
+            }
+          }
+
+          // Add remaining items (from other players in multiworld)
+          for (const itemName of itemsToAdd) {
+            // Skip accumulator target items when using resolved_items
+            if (useResolvedItems && accumulatorTargets.has(itemName)) {
+              continue;
+            }
+            this.sm.addItemToInventory(itemName, 1);
+            result.itemsAdded++;
+          }
+          if (result.itemsAdded > 0) {
+            this.log('info', `[WorkerSpoilerTest] Added ${result.itemsAdded} items from other players (multiworld)`);
+          }
+        }
+
         if (locationsToCheck.length > 0) {
           this.log('info', `[WorkerSpoilerTest] Checking ${locationsToCheck.length} locations`);
 
