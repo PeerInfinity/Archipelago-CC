@@ -237,9 +237,11 @@ class TrackerCore():
         """
         Auto-discover and load the rules JSON file based on game name and seed name.
 
-        Searches for rules files in:
-        1. frontend/presets/{world_directory}_worldgen/AP_{seed_name}/
-        2. frontend/presets/{world_directory}/AP_{seed_name}/
+        Searches for rules files in multiple locations (in order):
+        1. frontend/presets/{world_directory}_worldgen/AP_{seed_name}/ - worldgen presets
+        2. frontend/presets/{world_directory}/AP_{seed_name}/ - original presets
+        3. output/ directory - default generation output (extracted ZIP)
+        4. User data directory (~/.local/share/Archipelago/ on Linux)
 
         Returns:
             True if rules were loaded successfully, False otherwise
@@ -250,11 +252,12 @@ class TrackerCore():
 
         import json
         from pathlib import Path
+        from Utils import user_path, output_path
 
         # Get project root (TrackerCore is in worlds/tracker/)
         project_root = Path(__file__).parent.parent.parent
 
-        # Try to load world mapping
+        # Try to load world mapping for game -> directory conversion
         world_mapping_path = project_root / "scripts" / "data" / "world-mapping.json"
         world_directory = None
 
@@ -274,16 +277,27 @@ class TrackerCore():
         presets_dir = project_root / "frontend" / "presets"
         seed_folder = f"AP_{self.seed_name}"
 
-        # Search paths to try (worldgen first, then original)
+        # Build list of search paths (in priority order)
         search_paths = [
+            # 1. Worldgen presets directory
             presets_dir / f"{world_directory}_worldgen" / seed_folder,
+            # 2. Original presets directory
             presets_dir / world_directory / seed_folder,
+            # 3. Output directory (where ZIP is extracted)
+            Path(output_path()) / seed_folder,
+            Path(output_path()),  # Also check output root for flat extraction
+            # 4. User data directory
+            Path(user_path()) / seed_folder,
+            Path(user_path()) / "seeds" / seed_folder,
         ]
 
         for folder in search_paths:
             if folder.exists():
-                # Look for *_rules.json file
-                rules_files = list(folder.glob("*_rules.json"))
+                # Look for *_rules.json file matching the seed
+                rules_files = list(folder.glob(f"*{self.seed_name}*_rules.json"))
+                if not rules_files:
+                    # Fallback to any rules.json in the folder
+                    rules_files = list(folder.glob("*_rules.json"))
                 if rules_files:
                     json_path = rules_files[0]
                     self.logger.info(f"Auto-discovered rules JSON: {json_path}")

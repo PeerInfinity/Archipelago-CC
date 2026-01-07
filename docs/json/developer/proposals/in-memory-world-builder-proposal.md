@@ -459,15 +459,23 @@ class RuleCache:
 
 ### File Distribution for Multiplayer
 For other players to have explain support, they need the `_rules.json` file:
-1. Host generates seed → Gets `.archipelago` + `_rules.json`
-2. Host shares `_rules.json` with other players
-3. Players place file in `frontend/presets/{game}/AP_{seed_name}/`
+1. Host generates seed → Gets ZIP containing `.archipelago` + `_rules.json`
+2. Host shares the ZIP file with other players
+3. Players extract or place files in any of the supported locations
 4. Tracker auto-discovers and loads rules on connection
+
+### Auto-Discovery Search Paths
+The tracker searches for `_rules.json` in these locations (in order):
+1. `frontend/presets/{game}_worldgen/AP_{seed_name}/` - worldgen presets
+2. `frontend/presets/{game}/AP_{seed_name}/` - original presets
+3. `output/AP_{seed_name}/` - default generation output (extracted ZIP)
+4. `output/` - output root (flat extraction)
+5. `~/.local/share/Archipelago/AP_{seed_name}/` - user data directory
+6. `~/.local/share/Archipelago/seeds/AP_{seed_name}/` - user seeds folder
 
 ### Future Enhancements (Optional)
 1. Performance optimization (cache instantiated worlds)
-2. Embed rules in `.archipelago` file for single-file distribution
-3. Additional game testing
+2. Additional game testing
 
 ## Related Work
 
