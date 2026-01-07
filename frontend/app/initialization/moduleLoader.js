@@ -1,6 +1,8 @@
 // moduleLoader.js - Dynamic module loading and registration
 // Extracted from init.js lines 1268-1338
 
+import { profiler } from '../../modules/shared/profiler.js';
+
 /**
  * Loads and registers all modules defined in the module configuration
  *
@@ -74,6 +76,8 @@ export async function loadModules(options) {
   logger.info('init', 'Starting module import and registration phase...');
   logger.info('INIT_STEP', 'Module import and registration phase started');
 
+  profiler.start('moduleImportPhase');
+
   // Iterate through modules in priority order
   for (const moduleId of modulesData.loadPriority) {
     const moduleDefinition = modulesData.moduleDefinitions[moduleId];
@@ -103,6 +107,8 @@ export async function loadModules(options) {
     }
   }
 
+  profiler.end('moduleImportPhase');
+
   logger.info('init', 'Module import and registration phase complete.');
   logger.info('INIT_STEP', 'Module import and registration phase completed');
 }
@@ -131,6 +137,9 @@ async function loadSingleModule(options) {
 
   // Mark as enabled but not yet initialized
   runtimeModuleStates.set(moduleId, { initialized: false, enabled: true });
+
+  // Start timing for this specific module
+  profiler.start(`moduleImport:${moduleId}`);
 
   try {
     // Dynamically import the module
@@ -170,7 +179,12 @@ async function loadSingleModule(options) {
         `Module ${moduleId} does not have a register function.`
       );
     }
+
+    // End timing for this module (successful load)
+    profiler.end(`moduleImport:${moduleId}`);
   } catch (error) {
+    // End timing for this module (failed load)
+    profiler.end(`moduleImport:${moduleId}`);
     logger.error(
       'init',
       `Error importing or registering module ${moduleId}:`,

@@ -2,6 +2,16 @@
 // Refactored from 2,600+ lines to ~100 lines
 // Original backed up as init.js.backup
 
+// Import profiler first to capture page load timing
+import { profiler, autoEnableFromConfig } from './modules/shared/profiler.js';
+
+// Auto-enable profiling from URL param or localStorage
+autoEnableFromConfig();
+
+// Start page load timing immediately
+profiler.start('pageLoad');
+profiler.start('pageLoad > coreImports');
+
 // Import logger first and make it globally available before other imports
 import logger from './app/core/loggerService.js';
 
@@ -44,6 +54,9 @@ import { initializeApplication } from './app/initialization/index.js';
 
 // Import file loading UI utilities
 import { incrementFileCounter, addFileError } from './app/initialization/fileLoadingUI.js';
+
+// End core imports timing
+profiler.end('coreImports');
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -89,6 +102,7 @@ async function fetchJson(url, errorMessage) {
 }
 
 // Start the initialization process
+profiler.start('pageLoad > initializeApplication');
 initializeApplication({
   logger,
   eventBus,
@@ -100,6 +114,13 @@ initializeApplication({
   GoldenLayout,
   fetchJson,
   log,
+  profiler,
+}).then(() => {
+  profiler.end('initializeApplication');
+  profiler.end('pageLoad');
+  if (profiler.enabled) {
+    console.log(profiler.report());
+  }
 }).catch((error) => {
   console.error('[Init] CRITICAL: Application initialization failed:', error);
   log('error', 'Application initialization failed. Check console for details.', error);
