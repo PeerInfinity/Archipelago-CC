@@ -50,12 +50,8 @@ from lib.seed_utils import get_seed_id as compute_seed_id
 
 
 def run_post_processing_scripts(project_root: str, results_file: str, multiclient: bool = False, multiworld: bool = False, multitemplate: bool = False):
-    """Run post-processing scripts to update documentation and preset files."""
+    """Run post-processing scripts to update documentation."""
     print("\n=== Running Post-Processing Scripts ===")
-
-    # Read host.yaml to check extend_sphere_log_to_all_locations setting
-    host_config = read_host_yaml_config(project_root)
-    extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
 
     # Generate test charts using unified script (processes all test types and generates summary)
     print("\nGenerating test results charts...")
@@ -81,37 +77,6 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiclien
         print("✗ Test chart generation timed out")
     except Exception as e:
         print(f"✗ Error running generate-test-chart.py: {e}")
-
-    # Only update preset files if extend_sphere_log_to_all_locations is true and not in multiclient mode
-    if not multiclient and extend_sphere_log:
-        print("\nUpdating preset files with test data...")
-        preset_script = os.path.join(project_root, 'scripts', 'docs', 'update-preset-files.py')
-        try:
-            result = subprocess.run(
-                [sys.executable, preset_script, '--test-results', results_file],
-                cwd=project_root,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            if result.returncode == 0:
-                print("✓ Preset files updated successfully")
-                # Show summary from output
-                if "Summary:" in result.stdout:
-                    in_summary = False
-                    for line in result.stdout.split('\n'):
-                        if "Summary:" in line:
-                            in_summary = True
-                        elif in_summary and line.strip().startswith('-'):
-                            print(f"  {line.strip()}")
-            else:
-                print(f"✗ Failed to update preset files: {result.stderr}")
-        except subprocess.TimeoutExpired:
-            print("✗ Preset files update timed out")
-        except Exception as e:
-            print(f"✗ Error running update-preset-files.py: {e}")
-    elif not multiclient and not extend_sphere_log:
-        print("\nSkipping preset files update (extend_sphere_log_to_all_locations is false)")
 
     print("\n=== Post-Processing Complete ===")
 
