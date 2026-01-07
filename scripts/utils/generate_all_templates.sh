@@ -350,6 +350,50 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Math Adventure WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Metamath WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Coding Adventure WorldGen.yaml" --multi 1 --seed 1
+
+  # WorldGen2 world generation (generated from WorldGen worlds)
+  echo ""
+  echo "===== Generating WorldGen2 worlds (from WorldGen) ====="
+  echo ""
+
+  python -m world_generator frontend/presets/ahit_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/ahit_worldgen2 \
+      --game-name "A Hat in Time WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  python -m world_generator frontend/presets/alttp_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/alttp_worldgen2 \
+      --game-name "A Link to the Past WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  python -m world_generator frontend/presets/shorthike_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/shorthike_worldgen2 \
+      --game-name "A Short Hike WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  python -m world_generator frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/adventure_worldgen2 \
+      --game-name "Adventure WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  # Regenerate templates to include WorldGen2 worlds
+  echo ""
+  echo "===== Regenerating templates (for WorldGen2) ====="
+  echo ""
+  python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+  # Generate presets for WorldGen2 templates
+  echo ""
+  echo "===== Generating presets for WorldGen2 templates ====="
+  echo ""
+  python Generate.py --weights_file_path "Templates/A Hat in Time WorldGen2.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/A Link to the Past WorldGen2.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/A Short Hike WorldGen2.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/Adventure WorldGen2.yaml" --multi 1 --seed 1
 fi
 
 #remove empty preset directories
