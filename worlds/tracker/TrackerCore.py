@@ -4,6 +4,9 @@ import inspect
 import tempfile
 from typing import Union, Any, TYPE_CHECKING
 import traceback
+
+if TYPE_CHECKING:
+    from world_generator.json_world_builder import JSONWorldBuilder
 from Options import PerGameCommonOptions
 from BaseClasses import CollectionState, MultiWorld, LocationProgressType, ItemClassification
 from worlds import AutoWorld
@@ -61,6 +64,11 @@ class TrackerCore():
         self.seed_override: int | None = None  # Optional seed to use for generation (for UT comparison testing)
         self.sphere_log_mode: bool = False  # Enable lenient error handling for UT comparison testing
 
+        # Worldgen world support for rule explain functionality
+        self.worldgen_builder: Optional["JSONWorldBuilder"] = None
+        self.worldgen_world: Optional[Any] = None
+        self.worldgen_multiworld: Optional[MultiWorld] = None
+
     def disconnect(self):
         self.re_gen_passthrough = None
         self.player_id = None
@@ -68,6 +76,10 @@ class TrackerCore():
         self.manual_items.clear()
         self.player_folder_override = None
         self.location_alias_map = {}
+        # Clear worldgen world
+        self.worldgen_builder = None
+        self.worldgen_world = None
+        self.worldgen_multiworld = None
 
     def set_set_page(self,set_page:Optional[Callable[[str],None]]):
         self._set_page = set_page
@@ -85,7 +97,91 @@ class TrackerCore():
         if self.player_id and self.multiworld:
             return self.multiworld.worlds[self.player_id]
         return None
-    
+
+    def load_worldgen_world(self, json_path: str, worldgen_game_name: Optional[str] = None) -> bool:
+        """
+        Load a worldgen world from JSON for rule explain support.
+
+        This allows the tracker to explain rules for worlds that don't natively
+        support Rule Builder by loading the corresponding _worldgen world.
+
+        Args:
+            json_path: Path to the JSON rules file
+            worldgen_game_name: Optional override for worldgen world name.
+                If None, derives from JSON metadata (e.g., "TUNIC" -> "TUNIC WorldGen")
+
+        Returns:
+            True if worldgen world was loaded successfully, False otherwise
+        """
+        try:
+            from world_generator.json_world_builder import JSONWorldBuilder
+            self.worldgen_builder = JSONWorldBuilder(json_path)
+            self.worldgen_builder.load()
+            self.worldgen_world = self.worldgen_builder.build_world(worldgen_game_name)
+            self.worldgen_multiworld = self.worldgen_builder.multiworld
+            self.logger.info(f"Loaded worldgen world for explain support: {worldgen_game_name or self.worldgen_builder.data.metadata.game_name}")
+            return True
+        except Exception as e:
+            self.logger.warning(f"Failed to load worldgen world: {e}")
+            self.worldgen_builder = None
+            self.worldgen_world = None
+            self.worldgen_multiworld = None
+            return False
+
+    def get_worldgen_world(self):
+        """Get the worldgen world if loaded, for rule explain support."""
+        return self.worldgen_world
+
+    def get_worldgen_location(self, location_name: str):
+        """
+        Get a location from the worldgen world by name.
+
+        Useful for getting explain support for locations in non-Rule Builder worlds.
+        """
+        if self.worldgen_multiworld and self.worldgen_world:
+            try:
+                return self.worldgen_multiworld.get_location(location_name, 1)
+            except KeyError:
+                return None
+        return None
+
+    def explain_location_rule(self, location_name: str, state: CollectionState) -> Optional[list]:
+        """
+        Explain a location's access rule, using worldgen world if available.
+
+        Tries to get explanation from:
+        1. The main world's location (if it has explain_json)
+        2. The worldgen world's location (if loaded and has explain_json)
+
+        Args:
+            location_name: Name of the location to explain
+            state: Current collection state
+
+        Returns:
+            List of JSONMessagePart, or None if no explanation available
+        """
+        # Try main world first
+        if self.multiworld and self.player_id:
+            try:
+                location = self.multiworld.get_location(location_name, self.player_id)
+                if hasattr(location.access_rule, 'explain_json'):
+                    return location.access_rule.explain_json(state)
+            except KeyError:
+                pass
+
+        # Fall back to worldgen world
+        if self.worldgen_multiworld:
+            try:
+                wg_location = self.worldgen_multiworld.get_location(location_name, 1)
+                if hasattr(wg_location.access_rule, 'explain_json'):
+                    # Use worldgen's state if we have it
+                    wg_state = self.worldgen_multiworld.state if self.worldgen_multiworld.state else state
+                    return wg_location.access_rule.explain_json(wg_state)
+            except KeyError:
+                pass
+
+        return None
+
     def set_page(self, line: str):
         if self._set_page:
             self._set_page(line)

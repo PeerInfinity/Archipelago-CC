@@ -1769,7 +1769,12 @@ def explain(ctx: TrackerGameContext, dest_name: str):
         elif location.access_rule is Location.access_rule:
             logger.info("Location has a default access rule")
         else:
-            logger.info("Location doesn't have a rule that supports explanation")
+            # Try worldgen fallback for explain support
+            wg_explanation = ctx.tracker_core.explain_location_rule(dest_name, state)
+            if wg_explanation:
+                ctx.ui.print_json(wg_explanation)
+            else:
+                logger.info("Location doesn't have a rule that supports explanation")
         parent_region = location.parent_region
     elif dest_name in ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id]:
         parent_region = ctx.tracker_core.multiworld.get_region(dest_name,ctx.tracker_core.player_id)
