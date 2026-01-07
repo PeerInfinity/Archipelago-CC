@@ -71,6 +71,7 @@ class TrackerCore():
 
         # Direct AST explain support (works without worldgen world)
         self.seed_name: Optional[str] = None  # Seed name from RoomInfo (e.g., "14089154938208861744")
+        self.generation_seed: Optional[int] = None  # Short seed number from rules JSON (e.g., 1)
         self.rules_json_data: Optional[dict] = None  # Loaded rules JSON for direct AST explain
         self.rules_json_path: Optional[str] = None  # Path to loaded rules JSON
 
@@ -87,6 +88,7 @@ class TrackerCore():
         self.worldgen_multiworld = None
         # Clear direct AST explain data
         self.seed_name = None
+        self.generation_seed = None
         self.rules_json_data = None
         self.rules_json_path = None
 
@@ -316,15 +318,30 @@ class TrackerCore():
                 self.rules_json_data = json.load(f)
 
             self.rules_json_path = json_path
+
+            # Extract seed information
             game_name = self.rules_json_data.get('game_name', 'Unknown')
             schema_version = self.rules_json_data.get('schema_version', 'Unknown')
-            self.logger.info(f"Loaded rules JSON for {game_name} (schema v{schema_version})")
+            self.generation_seed = self.rules_json_data.get('generation_seed')
+            json_seed_name = self.rules_json_data.get('seed_name')
+
+            # Validate seed_name matches if we have both
+            if json_seed_name and self.seed_name and json_seed_name != self.seed_name:
+                self.logger.warning(
+                    f"Rules JSON seed_name mismatch: expected {self.seed_name}, got {json_seed_name}"
+                )
+
+            self.logger.info(
+                f"Loaded rules JSON for {game_name} (schema v{schema_version}, "
+                f"seed {self.generation_seed})"
+            )
             return True
 
         except Exception as e:
             self.logger.warning(f"Failed to load rules JSON: {e}")
             self.rules_json_data = None
             self.rules_json_path = None
+            self.generation_seed = None
             return False
 
     def set_page(self, line: str):
