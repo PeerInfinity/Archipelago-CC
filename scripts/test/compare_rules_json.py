@@ -274,6 +274,7 @@ def normalize_rule_format(obj: Any) -> Any:
     3. Remove default values like event: False, count: 1
     4. Normalize Constant rule wrapper to flat array
     5. Normalize AST_prog_item_count to CountItem (equivalent rule formats)
+    6. Normalize Not rule args.condition to child format
 
     The goal is to make semantically-equivalent JSON structures compare as equal.
     """
@@ -287,6 +288,18 @@ def normalize_rule_format(obj: Any) -> Any:
                 return {
                     'rule': 'CountItem',
                     'args': {'item_name': key}
+                }
+
+        # Normalize Not rule structure
+        # Original: {"rule": "Not", "args": {"condition": <inner_rule>}}
+        # WorldGen: {"rule": "Not", "child": <inner_rule>}
+        if obj.get('rule') == 'Not':
+            args = obj.get('args', {})
+            if 'condition' in args:
+                child = normalize_rule_format(args['condition'])
+                return {
+                    'rule': 'Not',
+                    'child': child
                 }
 
         result = {}
@@ -491,6 +504,88 @@ def normalize_and_with_true(obj: Any) -> Any:
         return [normalize_and_with_true(item) for item in obj]
     else:
         return obj
+
+
+def normalize_and_with_false(obj: Any) -> Any:
+    """
+    Normalize And rules containing False_ or Constant(0) by short-circuiting to False_.
+
+    Examples:
+        And(False_(), X) -> False_()
+        And(Constant(0), X) -> False_()
+        And(X, False_(), Y) -> False_()
+
+    This handles the case where a SettingValue evaluates to False at export time,
+    creating And(False_(), other_rules) which always evaluates to False.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_with_false(v) for k, v in obj.items()}
+
+        # Check if this is an And rule with False_ or Constant(0) children
+        if normalized.get('rule') == 'And':
+            children = normalized.get('children', [])
+            if children:
+                for child in children:
+                    if isinstance(child, dict):
+                        # Check for False_()
+                        if child.get('rule') == 'False_':
+                            return {'rule': 'False_', 'args': {}}
+                        # Check for Constant(0)
+                        if child.get('rule') == 'Constant':
+                            value = child.get('args', {}).get('value')
+                            if value == 0 or value is False:
+                                return {'rule': 'False_', 'args': {}}
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_with_false(item) for item in obj]
+    else:
+        return obj
+
+
+def make_setting_value_normalizer(option_values: dict):
+    """
+    Create a normalizer that evaluates SettingValue rules based on option values.
+
+    This is used to normalize rules that contain SettingValue(option_name) checks.
+    The normalizer replaces these with True_() or False_() based on the actual
+    option value, which allows subsequent normalizers to simplify the rules.
+
+    Args:
+        option_values: Dict mapping option names to their values
+
+    Returns:
+        A normalizer function that replaces SettingValue rules with True_/False_
+    """
+    def normalize_setting_value_rules(obj: Any) -> Any:
+        """
+        Evaluate SettingValue rules based on option values.
+
+        Examples:
+            SettingValue(calamity) -> False_() if calamity=False
+            SettingValue(calamity) -> True_() if calamity=True
+        """
+        if isinstance(obj, dict):
+            # Check if this is a SettingValue rule
+            if obj.get('rule') == 'SettingValue':
+                setting = obj.get('args', {}).get('setting')
+                if setting and setting in option_values:
+                    value = option_values[setting]
+                    # Convert to True_/False_ based on truthiness
+                    if value:
+                        return {'rule': 'True_', 'args': {}}
+                    else:
+                        return {'rule': 'False_', 'args': {}}
+
+            # Recursively normalize nested objects
+            return {k: normalize_setting_value_rules(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [normalize_setting_value_rules(item) for item in obj]
+        else:
+            return obj
+
+    return normalize_setting_value_rules
 
 
 def normalize_hasall_single_item(obj: Any) -> Any:
@@ -1546,6 +1641,23 @@ def main():
     # (e.g., StateMethod(has_any, items) -> HasAny(items))
     original_normalized = normalize_state_method_to_rule(original_normalized)
     worldgen_normalized = normalize_state_method_to_rule(worldgen_normalized)
+
+    # Evaluate SettingValue rules based on actual option values (if --ignore-canonical)
+    # This allows comparing rules that have option-dependent branches
+    # Original: Or(And(SettingValue(calamity), Has(X)), Has(Y))
+    # WorldGen: Has(Y)  (because calamity=False, the And branch becomes False and is removed)
+    if ignore_canonical:
+        # Get option values from the original (they should be the same in both)
+        option_values = original_normalized.get('world', {}).get('1', {}).get('options', {})
+        if option_values:
+            normalize_setting_values = make_setting_value_normalizer(option_values)
+            original_normalized = normalize_setting_values(original_normalized)
+            worldgen_normalized = normalize_setting_values(worldgen_normalized)
+
+    # Normalize And rules containing False_ by short-circuiting to False_
+    # (e.g., And(False_(), X) -> False_(), needed after SettingValue normalization)
+    original_normalized = normalize_and_with_false(original_normalized)
+    worldgen_normalized = normalize_and_with_false(worldgen_normalized)
 
     # Normalize And rules by removing True_ children
     # (e.g., And(True_(), X) -> X, handles has_all([]) -> True_ case)
