@@ -1660,9 +1660,16 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     locked_content = '\n'.join(locked_entries)
 
     # Build starting_items dictionary (preserve original order)
+    # Filter out items that are accumulator targets - these should start at 0 and accumulate
+    # during gameplay, not be precollected (accumulators are tracked via collect/remove methods)
+    accumulator_targets = set()
+    if data.accumulator_rules:
+        for rule in data.accumulator_rules:
+            accumulator_targets.add(rule['target'])
+
     starting_entries = []
     for item_name, count in data.starting_items.items():
-        if count > 0:
+        if count > 0 and item_name not in accumulator_targets:
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
             starting_entries.append(f'    "{item_escaped}": {count},')
 
