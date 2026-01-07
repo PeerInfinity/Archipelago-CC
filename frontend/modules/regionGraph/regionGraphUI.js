@@ -49,6 +49,12 @@ export class RegionGraphUI {
     this.locationsManuallyHidden = false;
     this.locationsManuallyShown = false;
 
+    // Location display limit settings (defaults, loaded from settings later)
+    this.maxLocationNodes = 100;
+    this.keepRegionSetsComplete = true;
+    this.onlyShowLocationsInView = false;
+    this.viewportStabilizeDelay = 1000;
+
     // Display settings
     this.showName = true;
     this.showLabel1 = false;
@@ -922,6 +928,10 @@ export class RegionGraphUI {
 
   updateLocationNodeZOrder() {
     return this.dataManager.updateLocationNodeZOrder();
+  }
+
+  refreshLocationNodes() {
+    return this.dataManager.refreshLocationNodes();
   }
 
   // Discovery mode event handlers
