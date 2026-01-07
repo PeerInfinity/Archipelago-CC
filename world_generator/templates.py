@@ -616,6 +616,25 @@ REGION_HINTS: Dict[str, str] = {{
 }}
 '''
 
+    # Compute exit targets (regions that are connected TO by exits)
+    # These need to be added to multiworld even if they have no locations or exits
+    exit_targets = set()
+    for exit_data in data.exits.values():
+        if exit_data.target_region:
+            exit_targets.add(exit_data.target_region)
+
+    # Generate exit targets set (used to ensure regions are added to multiworld)
+    exit_targets_section = ""
+    if exit_targets:
+        exit_targets_list = ', '.join(
+            f'"{t.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"'
+            for t in sorted(exit_targets)
+        )
+        exit_targets_section = f'''
+# Regions that are targets of exits (need to be added to multiworld)
+EXIT_TARGETS = {{{exit_targets_list}}}
+'''
+
     # Generate dynamically added regions set (if any)
     dynamically_added_section = ""
     if dynamically_added_regions:
@@ -719,7 +738,7 @@ from typing import {typing_import}
 from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, {class_name}Location
 {dungeon_section}
-{region_hints_section}{dynamically_added_section}{region_dungeons_section}{region_extra_section}
+{region_hints_section}{exit_targets_section}{dynamically_added_section}{region_dungeons_section}{region_extra_section}
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
@@ -764,11 +783,18 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Create entrances
 {entrances_content}
 
-    # Only add regions with locations or exits to multiworld
-    # This matches the behavior of original Archipelago worlds which filter out
-    # placeholder regions that have no locations and no exits
+    # Add regions to multiworld
+    # Include regions with locations, exits, OR that are entrance targets
+    # This ensures regions connected TO by exits are included, even if empty
+    try:
+        _exit_targets = EXIT_TARGETS
+    except NameError:
+        _exit_targets = set()
+
     for region in regions.values():
-        if len(region.locations) > 0 or len(region.exits) > 0:
+        if (len(region.locations) > 0 or
+            len(region.exits) > 0 or
+            region.name in _exit_targets):
             multiworld.regions.append(region)
 
 
