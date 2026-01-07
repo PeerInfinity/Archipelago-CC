@@ -1252,12 +1252,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # This is expected behavior - the worldgen bakes in option values.
     #
     # Pattern: helper body type changes from 'conditional' to simpler types
-    # (item_check, state_method, constant, and, or, helper) because the condition was resolved.
+    # (item_check, state_method, constant, and, or, helper, compare) because the condition was resolved.
     if 'helpers.' in path:
         # Helper body type changed due to option resolution
         if path.endswith('.type'):
             # Conditional resolved to simpler rule type
-            if original_value == 'conditional' and worldgen_value in ('item_check', 'state_method', 'constant', 'and', 'or', 'helper'):
+            if original_value == 'conditional' and worldgen_value in ('item_check', 'state_method', 'constant', 'and', 'or', 'helper', 'compare'):
                 return True
             # Attribute reference resolved to constant (e.g., self.castle_unlock -> 5)
             if original_value == 'attribute' and worldgen_value == 'constant':
@@ -1279,6 +1279,10 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
                 return True
         if path.endswith('.count') and original_value == '<missing>':
             return True
+        # Helper 'compare' type fields (left, op, right) appear when conditional is resolved
+        if path.endswith('.left') or path.endswith('.op') or path.endswith('.right'):
+            if original_value == '<missing>':
+                return True
         # Subscript patterns in helper tests (e.g., boss_order[0]) that worldgen resolves
         if '.test.args[' in path:
             # Type change from subscript to constant, or index/value differences
@@ -1388,6 +1392,31 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if '.args.items' in path and original_value == '<missing>':
             return True
 
+    # Option-dependent Conditional rules in access_rules get resolved at generation time.
+    # Original: Conditional(test=OptionValue(X), if_true=Rule1, if_false=Rule2)
+    # WorldGen: Just Rule1 or Rule2 depending on the option value.
+    # This is expected behavior when options are baked in during world generation.
+    if 'access_rule' in path:
+        # Conditional rule resolved to simpler rule type (at any level of nesting)
+        if '.rule' in path:
+            if original_value == 'Conditional' and worldgen_value in ('True_', 'False_', 'Has', 'HasAny', 'HasAll', 'And', 'Or'):
+                return True
+            # Constant rule resolved to False_ or True_ (often from option checks)
+            if original_value == 'Constant' and worldgen_value in ('True_', 'False_'):
+                return True
+        # Conditional args (test, if_true, if_false) are removed after resolution
+        if '.args.test' in path and worldgen_value == '<missing>':
+            return True
+        if '.args.if_true' in path and worldgen_value == '<missing>':
+            return True
+        if '.args.if_false' in path and worldgen_value == '<missing>':
+            return True
+        # New args appearing when Conditional is resolved to Has/HasAny/HasAll
+        if '.args.items' in path and original_value == '<missing>':
+            return True
+        if '.args.item_name' in path and original_value == '<missing>':
+            return True
+
     # WorldGen-specific options that only exist in WorldGen, not original
     worldgen_only_options = {'randomize_items', 'use_canonical_options'}
     for opt in worldgen_only_options:
@@ -1427,6 +1456,13 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'exporter.' in path and 'rule_format' in path:
         if original_value == '<missing>':
             return True
+
+    # WorldGen adds an exporter section with metadata (rule_format, use_resolved_items)
+    # that the original doesn't have. This entire section is WorldGen-specific.
+    if path == 'exporter.1' and original_value == '<missing>':
+        return True
+    if path.startswith('exporter.1.') and original_value == '<missing>':
+        return True
 
     # world_class_name in world section - restructured in WorldGen
     if path == 'world.1.world_class_name' and worldgen_value == '<missing>':
