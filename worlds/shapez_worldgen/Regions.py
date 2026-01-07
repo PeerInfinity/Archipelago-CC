@@ -30,7 +30,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         hint = None
         region = Region(region_name, player, multiworld, hint)
         regions[region_name] = region
-        multiworld.regions.append(region)
 
     # Mark dynamically added regions (these won't appear in sphere log comparisons)
     try:
@@ -123,6 +122,13 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Shapesanity Colorful Full Painted"], regions["Shapesanity Colorful Full Mixed"], "Mixing colors for a colorful full shape")
     _create_entrance(regions["Shapesanity Colorful Half Uncolored"], regions["Shapesanity Colorful Half Painted"], "Painting a colorful half shape")
     _create_entrance(regions["Shapesanity Colorful Half Painted"], regions["Shapesanity Colorful Half Mixed"], "Mixing colors for a colorful half shape")
+
+    # Only add regions with locations or exits to multiworld
+    # This matches the behavior of original Archipelago worlds which filter out
+    # placeholder regions that have no locations and no exits
+    for region in regions.values():
+        if len(region.locations) > 0 or len(region.exits) > 0:
+            multiworld.regions.append(region)
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:
