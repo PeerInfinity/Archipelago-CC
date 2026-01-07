@@ -484,30 +484,40 @@ export class WorkerSpoilerTest {
   compareRegions(expectedRegions, snapshot, sphereIndex) {
     const result = { passed: true, mismatch: null };
 
-    // Get reachable regions from snapshot, excluding placeholder regions
-    // Placeholder regions are organizational regions that exist in rules.json
-    // but are filtered out of Python's multiworld (they have no locations and no exits)
-    // Since Python's sphere log doesn't track them, we exclude them from comparison
+    // Get reachable regions from snapshot, excluding placeholder/dynamically_added regions
+    // These are organizational regions that exist in rules.json but are filtered out of
+    // Python's multiworld (they have no locations and no exits).
+    // - placeholder: terminal regions referenced by exits but not in multiworld.regions
+    // - dynamically_added: regions marked after sphere calculation
+    // Since Python's sphere log may or may not include them depending on export timing,
+    // we exclude them from comparison for consistency.
     const stateReachable = [];
     const regionReachability = snapshot.regionReachability || {};
 
     for (const [regionName, status] of Object.entries(regionReachability)) {
       if (status === 'reachable') {
-        // Check if this is a placeholder region
+        // Check if this is a placeholder or dynamically_added region
         const regionDef = this.sm.regions?.get?.(regionName);
-        if (regionDef?.placeholder) {
-          // Skip placeholder regions - they don't exist in Python's multiworld
+        if (regionDef?.placeholder || regionDef?.dynamically_added) {
+          // Skip placeholder/dynamically_added regions - they may not exist in Python's multiworld
           continue;
         }
         stateReachable.push(regionName);
       }
     }
 
+    // Also filter the expected regions using the same criteria
+    // This handles cross-validation where the log was generated with different rules
+    const filteredExpected = expectedRegions.filter(regionName => {
+      const regionDef = this.sm.regions?.get?.(regionName);
+      return !(regionDef?.placeholder || regionDef?.dynamically_added);
+    });
+
     // Compare sets
-    const expectedSet = new Set(expectedRegions);
+    const expectedSet = new Set(filteredExpected);
     const stateSet = new Set(stateReachable);
 
-    const missingFromState = expectedRegions.filter(reg => !stateSet.has(reg));
+    const missingFromState = filteredExpected.filter(reg => !stateSet.has(reg));
     const extraInState = stateReachable.filter(reg => !expectedSet.has(reg));
 
     if (missingFromState.length > 0 || extraInState.length > 0) {
@@ -517,7 +527,7 @@ export class WorkerSpoilerTest {
         sphereIndex: sphereIndex,
         missingFromState: missingFromState,
         extraInState: extraInState,
-        expectedCount: expectedRegions.length,
+        expectedCount: filteredExpected.length,
         actualCount: stateReachable.length
       };
 
