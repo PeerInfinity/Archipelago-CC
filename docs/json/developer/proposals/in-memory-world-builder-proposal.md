@@ -15,8 +15,8 @@ This proposal describes a system to enable the Rule Builder's "explain" feature 
 | AST explain module | ✅ Complete | Full explain_json() support |
 | Data extraction | ✅ Complete | `ExtractedData` class with all fields |
 | Schema versioning | ✅ Complete | All exports have `schema_version` |
-| `JSONWorldBuilder` | ❌ Not started | Orchestration class needed |
-| `MinimalWorldContext` | ❌ Not started | Context for rule resolution |
+| `JSONWorldBuilder` | ❌ Not started | Orchestration class using worldgen worlds |
+| `MinimalWorldContext` | ~~Not needed~~ | Use real world instance instead |
 | Tracker integration | ❌ Not started | Explain fallback chain |
 
 ## Problem Statement
@@ -37,26 +37,26 @@ The solution involves two parts:
 ### Architecture
 
 ```
-JSON Export
+JSON Export (rules.json)
     │
     ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    JSONWorldBuilder (NOT STARTED)            │
 │                                                              │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐  │
-│  │ JSON Loader │ -> │ Extractor   │ -> │ Rule Parser     │  │
-│  │             │    │ (COMPLETE)  │    │ (COMPLETE)      │  │
-│  └─────────────┘    └─────────────┘    └─────────────────┘  │
-│                                                ↓             │
-│                                    ┌─────────────────────┐  │
-│                                    │ MinimalWorldContext │  │
-│                                    │   (NOT STARTED)     │  │
-│                                    └─────────────────────┘  │
+│  ┌─────────────┐    ┌─────────────────────────────────────┐ │
+│  │ JSON Loader │ -> │ WorldGen World Instantiation        │ │
+│  │ (metadata)  │    │ (uses _worldgen world from same JSON)│ │
+│  └─────────────┘    └─────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
                             ↓
-                    Rule.Resolved objects
-                    with explain support (via ASTRule)
+                    Real World Instance
+                    (with native Rule Builder explain support)
 ```
+
+**Key insight:** The `_worldgen` world was generated from the same JSON rules file, so:
+- Its structure exactly matches the JSON data
+- It uses Rule Builder natively with full explain support
+- No need for a separate `MinimalWorldContext` - we get a real world instance
 
 ### Key Components
 
@@ -171,15 +171,33 @@ class ExtractedData:
 
 Proposed location: `world_generator/json_world_builder.py`
 
+**Revised approach:** Instead of creating a `MinimalWorldContext`, we instantiate the corresponding `_worldgen` world. This world was generated from the same JSON rules, so its structure matches exactly and it has native Rule Builder support with full explain functionality.
+
 ```python
+from pathlib import Path
+from typing import Optional
+from argparse import Namespace
+import json
+
+from BaseClasses import MultiWorld, CollectionState
+from worlds import AutoWorldRegister
+from world_generator.extractors import extract_all, ExtractedData
+
+
 class JSONWorldBuilder:
-    """Builds in-memory rule structures from JSON export data."""
+    """
+    Builds world instances from JSON export data.
+
+    Uses the corresponding _worldgen world which was generated from the same
+    JSON rules file, ensuring exact structural match and native Rule Builder
+    explain support.
+    """
 
     def __init__(self, json_path: str):
         self.json_path = Path(json_path)
         self.data: Optional[ExtractedData] = None
-        self.context: Optional[MinimalWorldContext] = None
-        self.resolved_rules: Dict[str, Rule.Resolved] = {}
+        self.world: Optional["World"] = None
+        self.multiworld: Optional[MultiWorld] = None
         self.schema_version: Optional[int] = None
 
     def load(self) -> ExtractedData:
@@ -190,62 +208,80 @@ class JSONWorldBuilder:
         self.data = extract_all(json_data)
         return self.data
 
-    def build_context(self, world_cls: type) -> MinimalWorldContext:
-        """Create minimal context for rule resolution."""
-        self.context = MinimalWorldContext(self.data, world_cls)
-        return self.context
+    def build_world(self, worldgen_game_name: Optional[str] = None) -> "World":
+        """
+        Create a world instance from the corresponding _worldgen world.
 
-    def resolve_rules(self) -> Dict[str, Rule.Resolved]:
-        """Parse and resolve all rules from JSON."""
-        for loc_name, loc_data in self.data.locations.items():
-            if loc_data.rule:
-                rule = parse_ast_rule(loc_data.rule, self.context.world_cls)
-                self.resolved_rules[loc_name] = rule.resolve(self.context)
-        return self.resolved_rules
+        Args:
+            worldgen_game_name: Name of the worldgen world to use. If None,
+                               derives from JSON metadata (e.g., "TUNIC" -> "TUNIC WorldGen")
 
-    def get_rule_for_location(self, location_name: str) -> Optional[Rule.Resolved]:
-        """Get resolved rule for a specific location."""
-        return self.resolved_rules.get(location_name)
+        Returns:
+            Instantiated World with Rule Builder support
+        """
+        if self.data is None:
+            self.load()
+
+        # Derive worldgen name if not provided
+        if worldgen_game_name is None:
+            base_name = self.data.metadata.game
+            worldgen_game_name = f"{base_name} WorldGen"
+
+        # Create MultiWorld
+        self.multiworld = MultiWorld(1)
+        self.multiworld.game[1] = worldgen_game_name
+        self.multiworld.player_name = {1: "Player"}
+        self.multiworld.set_seed(seed=1)  # Deterministic for explain
+
+        # Set up options
+        world_type = AutoWorldRegister.world_types[worldgen_game_name]
+        args = Namespace()
+        for name, option in world_type.options_dataclass.type_hints.items():
+            setattr(args, name, {1: option.from_any(option.default)})
+
+        self.multiworld.set_options(args)
+        self.multiworld.state = CollectionState(self.multiworld)
+
+        self.world = self.multiworld.worlds[1]
+        return self.world
+
+    def get_world(self) -> Optional["World"]:
+        """Get the instantiated world."""
+        return self.world
+
+    def get_state(self) -> Optional[CollectionState]:
+        """Get the collection state for the world."""
+        if self.multiworld:
+            return self.multiworld.state
+        return None
 
     def supports_explain(self) -> bool:
         """Check if this export supports explain functionality."""
         return self.schema_version is not None and self.schema_version >= 3
+
+
+def create_world_from_json(json_path: str, worldgen_game_name: Optional[str] = None) -> tuple:
+    """
+    Convenience function to create a world instance from JSON.
+
+    Args:
+        json_path: Path to the JSON rules file
+        worldgen_game_name: Optional override for worldgen world name
+
+    Returns:
+        Tuple of (world, multiworld, state)
+    """
+    builder = JSONWorldBuilder(json_path)
+    builder.load()
+    world = builder.build_world(worldgen_game_name)
+    return world, builder.multiworld, builder.multiworld.state
 ```
 
-#### 6. MinimalWorldContext Class (NOT STARTED)
-
-Provides rule resolution context without requiring a full World instance:
-
-```python
-class MinimalWorldContext:
-    """Minimal context for rule resolution from JSON data."""
-
-    def __init__(self, data: ExtractedData, world_cls: type):
-        self.data = data
-        self.world_cls = world_cls
-        self.item_name_groups = data.item_name_groups
-        self.helper_functions: Dict[str, Callable] = {}
-        self._unknown_rules: Set[str] = set()
-
-    def get_item_count(self, item_name: str) -> int:
-        """Get max count for an item."""
-        if item_name in self.data.items:
-            return self.data.items[item_name].count
-        return 1
-
-    def resolve_helper(self, helper_name: str) -> Optional[Callable]:
-        """Resolve a helper function by name."""
-        if helper_name in self.helper_functions:
-            return self.helper_functions[helper_name]
-        self._unknown_rules.add(f"helper:{helper_name}")
-        return None
-
-    def has_unknown_rules(self) -> bool:
-        return len(self._unknown_rules) > 0
-
-    def get_unknown_rules(self) -> Set[str]:
-        return self._unknown_rules.copy()
-```
+**Key benefits of this approach:**
+- No `MinimalWorldContext` needed - use a real world instance
+- Rule Builder explain support works natively
+- World structure exactly matches the JSON source
+- Full compatibility with existing Archipelago infrastructure
 
 ### Integration Points
 
@@ -258,38 +294,34 @@ class TrackerCore:
     def __init__(self, ...):
         # ... existing init
         self.json_builder: Optional[JSONWorldBuilder] = None
+        self.worldgen_world: Optional[World] = None
 
-    def load_json_rules(self, json_path: str, world_cls: type) -> bool:
-        """Load rules from JSON export for explain support."""
+    def load_worldgen_world(self, json_path: str, worldgen_game_name: Optional[str] = None) -> bool:
+        """Load worldgen world from JSON for explain support."""
         try:
             self.json_builder = JSONWorldBuilder(json_path)
             self.json_builder.load()
-            self.json_builder.build_context(world_cls)
-            self.json_builder.resolve_rules()
+            self.worldgen_world = self.json_builder.build_world(worldgen_game_name)
             return True
         except Exception as e:
-            logger.warning(f"Failed to load JSON rules: {e}")
+            logger.warning(f"Failed to load worldgen world: {e}")
             return False
 
     def explain_location(self, location: Location, state: CollectionState) -> list:
         """Explain a location's access rule."""
-        # Priority 1: World's native explain support
-        if hasattr(location.parent_region.world, 'explain_rule'):
-            return location.parent_region.world.explain_rule(location, state)
-
-        # Priority 2: Rule Builder native support
+        # Priority 1: Rule Builder native support (works with worldgen worlds)
         if hasattr(location.access_rule, 'explain_json'):
             return location.access_rule.explain_json(state)
 
-        # Priority 3: JSON-reconstructed rules
-        if self.json_builder:
-            rule = self.json_builder.get_rule_for_location(location.name)
-            if rule:
-                return rule.explain_json(state)
+        # Priority 2: World's custom explain support
+        if hasattr(location.parent_region.world, 'explain_rule'):
+            return location.parent_region.world.explain_rule(location, state)
 
         # Fallback: No explain available
         return [{"text": "Rule explanation not available", "type": "info"}]
 ```
+
+Since the worldgen world uses Rule Builder natively, the explain fallback chain simplifies - we just check for `explain_json` on the rule directly.
 
 ### JSON Source Location
 
@@ -332,24 +364,17 @@ When rules cannot be fully converted to native Rule Builder classes, they are wr
 
 ### Helper Function Integration
 
-The exporter is being updated to automatically extract helper functions and their required data. The JSONWorldBuilder will integrate with this:
-
-```python
-class MinimalWorldContext:
-    def load_helpers(self, helper_data: dict):
-        """Load extracted helper functions from JSON."""
-        for name, func_data in helper_data.items():
-            # Reconstruct helper from serialized form
-            self.helper_functions[name] = self._reconstruct_helper(func_data)
-```
+Helper functions are handled automatically by the worldgen world approach:
+- The world generator converts helper functions to Rule Builder `HelperCall` rules
+- These are included in the generated world's `Rules.py`
+- No runtime reconstruction needed - helpers work natively
 
 ## Implementation Phases
 
 ### Phase 1: Core Infrastructure ✅ COMPLETE
-- ~~Create `JSONWorldBuilder` class~~ → Orchestration layer NOT STARTED (but all dependencies ready)
-- ~~Create `MinimalWorldContext` class~~ → NOT STARTED
 - ✅ Add `ASTRule` class to rules.py (replaces proposed `UnknownRule`)
 - ✅ Add schema version to exports (version 3)
+- ✅ World generator creates `_worldgen` worlds from JSON
 
 ### Phase 2: Rule Resolution ✅ COMPLETE
 - ✅ AST format parser fully implemented (25+ rule types)
@@ -357,22 +382,20 @@ class MinimalWorldContext:
 - ✅ `ASTRule` wrapping for unknown types
 - ✅ Helper function parsing in AST format
 
-### Phase 3: Tracker Integration ❌ NOT STARTED
-- Add JSON loading to TrackerCore
+### Phase 3: Orchestration Layer ❌ NOT STARTED
+- Create `JSONWorldBuilder` class in `world_generator/json_world_builder.py`
+- Implement worldgen world instantiation from JSON metadata
+- Unit tests for the new class
+
+### Phase 4: Tracker Integration ❌ NOT STARTED
+- Add `load_worldgen_world()` method to TrackerCore
 - Implement explain fallback chain
 - Add JSON path auto-discovery from template filename
 
-### Phase 4: Helper Function Support 🔄 IN PROGRESS
-- ✅ Helper extraction in exporter
-- ✅ `HelperData` in `ExtractedData`
-- Implement helper reconstruction in `MinimalWorldContext`
-- Add helper dependency resolution
-
 ### Phase 5: Testing & Polish ❌ NOT STARTED
-- Unit tests for JSONWorldBuilder
 - Integration tests with real exports
-- Performance optimization
-- Caching for frequently accessed rules
+- Performance optimization (world caching)
+- Documentation updates
 
 ## Performance Considerations
 
@@ -422,17 +445,18 @@ The following work items remain to complete this proposal:
 
 ### Priority 1: Orchestration Layer
 1. Create `world_generator/json_world_builder.py` with `JSONWorldBuilder` class
-2. Create `MinimalWorldContext` class for context-free rule resolution
-3. Unit tests for the new classes
+2. Implement worldgen world instantiation from JSON metadata
+3. Add convenience function `create_world_from_json()`
+4. Unit tests for the new class
 
 ### Priority 2: Tracker Integration
-1. Add `json_builder` attribute to `TrackerCore`
-2. Implement `load_json_rules()` method
-3. Add explain fallback chain in location explanation
+1. Add `json_builder` and `worldgen_world` attributes to `TrackerCore`
+2. Implement `load_worldgen_world()` method
+3. Update explain functionality to use worldgen world
 4. Add JSON path auto-discovery from template filename
 
 ### Priority 3: Polish
-1. Performance optimization with caching
+1. Performance optimization (cache instantiated worlds)
 2. Integration tests with real exports
 3. Documentation updates
 
