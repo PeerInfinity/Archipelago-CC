@@ -316,7 +316,8 @@ class ScriptsApp(App):
                     Clock.schedule_once(lambda dt: self.show_message("Error",
                         f"Failed: {', '.join(result.errors)}"))
             except Exception as e:
-                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+                error_msg = str(e)
+                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
 
         thread = threading.Thread(target=do_apply)
         thread.daemon = True
@@ -337,7 +338,8 @@ class ScriptsApp(App):
                     Clock.schedule_once(lambda dt: self.show_message("Error",
                         f"Failed: {', '.join(result.errors)}"))
             except Exception as e:
-                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+                error_msg = str(e)
+                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
 
         thread = threading.Thread(target=do_revert)
         thread.daemon = True
@@ -360,7 +362,8 @@ class ScriptsApp(App):
                     Clock.schedule_once(lambda dt: self.show_message("Error",
                         f"Failed: {', '.join(result.errors)}"))
             except Exception as e:
-                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+                error_msg = str(e)
+                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
 
         thread = threading.Thread(target=do_apply)
         thread.daemon = True
@@ -383,7 +386,8 @@ class ScriptsApp(App):
                     Clock.schedule_once(lambda dt: self.show_message("Error",
                         f"Failed: {', '.join(result.errors)}"))
             except Exception as e:
-                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+                error_msg = str(e)
+                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
 
         thread = threading.Thread(target=do_revert)
         thread.daemon = True
@@ -409,7 +413,8 @@ class ScriptsApp(App):
                 msg = f"Auto monkey patches enabled.\n\nInstalled {success_count} hooks for current session: {', '.join(installed)}\n\nHooks will auto-install on future AP startups."
                 Clock.schedule_once(lambda dt: self.show_message("Success", msg))
             except Exception as e:
-                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+                error_msg = str(e)
+                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
 
         thread = threading.Thread(target=do_enable)
         thread.daemon = True
@@ -437,7 +442,8 @@ class ScriptsApp(App):
 
                 Clock.schedule_once(lambda dt: self.show_message("Success", msg))
             except Exception as e:
-                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+                error_msg = str(e)
+                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
 
         thread = threading.Thread(target=do_disable)
         thread.daemon = True
