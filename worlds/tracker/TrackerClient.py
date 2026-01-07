@@ -1329,7 +1329,13 @@ class TrackerGameContext(CommonContext):
                     self.updateTracker()
                 else:
                     asyncio.create_task(wait_for_items(self),name="UT Delay function") #if we don't get new items, delay for a bit first
-                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically 
+                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically
+
+                # Auto-discover rules JSON for explain support
+                if self.seed_name:
+                    self.tracker_core.set_seed_name(self.seed_name)
+                    self.tracker_core.auto_discover_rules_json()
+
             elif cmd == 'RoomUpdate':
                 if not (self.items_handling & 0b010):
                     self.scout_checked_locations()

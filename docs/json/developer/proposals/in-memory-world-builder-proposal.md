@@ -391,7 +391,8 @@ Helper functions are handled automatically by the worldgen world approach:
 - ✅ Added `load_worldgen_world()` method to TrackerCore
 - ✅ Added `explain_location_rule()` method with worldgen fallback
 - ✅ Updated `explain` function in TrackerClient to use worldgen fallback
-- Manual JSON path loading (auto-discovery can be added later)
+- ✅ Auto-discovery of rules JSON from game name + seed_name
+- ✅ Direct AST explain (works without worldgen world installed)
 
 ### Phase 5: Testing & Polish ✅ COMPLETE
 - ✅ Integration tests with real exports (TUNIC, A Short Hike)
@@ -451,10 +452,20 @@ class RuleCache:
 - ✅ TrackerClient `explain` function updated to use worldgen fallback
 - ✅ Integration tests with real exports (TUNIC, A Short Hike)
 - ✅ Test script properly initializes world with `create_regions()` and `set_rules()`
+- ✅ Auto-discovery: `TrackerCore.auto_discover_rules_json()` finds rules from game + seed_name
+- ✅ Direct AST explain: `TrackerCore.load_rules_json()` and `_explain_from_rules_json()`
+- ✅ TrackerClient auto-discovers rules after Connected packet
+
+### File Distribution for Multiplayer
+For other players to have explain support, they need the `_rules.json` file:
+1. Host generates seed → Gets `.archipelago` + `_rules.json`
+2. Host shares `_rules.json` with other players
+3. Players place file in `frontend/presets/{game}/AP_{seed_name}/`
+4. Tracker auto-discovers and loads rules on connection
 
 ### Future Enhancements (Optional)
 1. Performance optimization (cache instantiated worlds)
-2. Auto-discovery of JSON path from template filename
+2. Embed rules in `.archipelago` file for single-file distribution
 3. Additional game testing
 
 ## Related Work

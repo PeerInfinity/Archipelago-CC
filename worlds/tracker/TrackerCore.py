@@ -69,6 +69,11 @@ class TrackerCore():
         self.worldgen_world: Optional[Any] = None
         self.worldgen_multiworld: Optional[MultiWorld] = None
 
+        # Direct AST explain support (works without worldgen world)
+        self.seed_name: Optional[str] = None  # Seed name from RoomInfo (e.g., "14089154938208861744")
+        self.rules_json_data: Optional[dict] = None  # Loaded rules JSON for direct AST explain
+        self.rules_json_path: Optional[str] = None  # Path to loaded rules JSON
+
     def disconnect(self):
         self.re_gen_passthrough = None
         self.player_id = None
@@ -80,6 +85,10 @@ class TrackerCore():
         self.worldgen_builder = None
         self.worldgen_world = None
         self.worldgen_multiworld = None
+        # Clear direct AST explain data
+        self.seed_name = None
+        self.rules_json_data = None
+        self.rules_json_path = None
 
     def set_set_page(self,set_page:Optional[Callable[[str],None]]):
         self._set_page = set_page
@@ -180,7 +189,143 @@ class TrackerCore():
             except KeyError:
                 pass
 
+        # Fall back to direct AST explain from rules JSON
+        if self.rules_json_data:
+            return self._explain_from_rules_json(location_name, state)
+
         return None
+
+    def _explain_from_rules_json(self, location_name: str, state: CollectionState) -> Optional[list]:
+        """
+        Explain a location's access rule directly from loaded rules JSON.
+
+        This works without needing the worldgen world - just the rules JSON file.
+        """
+        if not self.rules_json_data:
+            return None
+
+        try:
+            from rule_builder.ast_explain import explain_ast_rule
+
+            # Find the location's access rule in the JSON
+            regions = self.rules_json_data.get('regions', {})
+            for region_name, region_data in regions.items():
+                locations = region_data.get('locations', {})
+                if location_name in locations:
+                    loc_data = locations[location_name]
+                    access_rule = loc_data.get('access_rule')
+                    if access_rule:
+                        player_id = self.player_id or 1
+                        return explain_ast_rule(access_rule, state, player_id)
+                    else:
+                        # No rule means always accessible
+                        return [{"text": "Always accessible", "type": "text"}]
+
+            # Location not found in JSON
+            return None
+        except Exception as e:
+            self.logger.warning(f"Failed to explain rule from JSON: {e}")
+            return None
+
+    def set_seed_name(self, seed_name: str):
+        """Set the seed name (from RoomInfo) for auto-discovery."""
+        self.seed_name = seed_name
+
+    def auto_discover_rules_json(self) -> bool:
+        """
+        Auto-discover and load the rules JSON file based on game name and seed name.
+
+        Searches for rules files in:
+        1. frontend/presets/{world_directory}_worldgen/AP_{seed_name}/
+        2. frontend/presets/{world_directory}/AP_{seed_name}/
+
+        Returns:
+            True if rules were loaded successfully, False otherwise
+        """
+        if not self.game or not self.seed_name:
+            self.logger.debug("Cannot auto-discover: game or seed_name not set")
+            return False
+
+        import json
+        from pathlib import Path
+
+        # Get project root (TrackerCore is in worlds/tracker/)
+        project_root = Path(__file__).parent.parent.parent
+
+        # Try to load world mapping
+        world_mapping_path = project_root / "scripts" / "data" / "world-mapping.json"
+        world_directory = None
+
+        if world_mapping_path.exists():
+            try:
+                with open(world_mapping_path) as f:
+                    world_mapping = json.load(f)
+                if self.game in world_mapping:
+                    world_directory = world_mapping[self.game].get('world_directory')
+            except Exception as e:
+                self.logger.debug(f"Failed to load world mapping: {e}")
+
+        if not world_directory:
+            # Fallback: convert game name to lowercase, replace spaces with underscores
+            world_directory = self.game.lower().replace(' ', '_').replace("'", "")
+
+        presets_dir = project_root / "frontend" / "presets"
+        seed_folder = f"AP_{self.seed_name}"
+
+        # Search paths to try (worldgen first, then original)
+        search_paths = [
+            presets_dir / f"{world_directory}_worldgen" / seed_folder,
+            presets_dir / world_directory / seed_folder,
+        ]
+
+        for folder in search_paths:
+            if folder.exists():
+                # Look for *_rules.json file
+                rules_files = list(folder.glob("*_rules.json"))
+                if rules_files:
+                    json_path = rules_files[0]
+                    self.logger.info(f"Auto-discovered rules JSON: {json_path}")
+                    return self.load_rules_json(str(json_path))
+
+        self.logger.debug(f"No rules JSON found for {self.game} seed {self.seed_name}")
+        return False
+
+    def load_rules_json(self, json_path: str) -> bool:
+        """
+        Load a rules JSON file for direct AST explain support.
+
+        This is a lighter-weight alternative to load_worldgen_world() that doesn't
+        require the worldgen world to be installed.
+
+        Args:
+            json_path: Path to the JSON rules file
+
+        Returns:
+            True if rules were loaded successfully, False otherwise
+        """
+        import json
+        from pathlib import Path
+
+        try:
+            path = Path(json_path)
+            if not path.exists():
+                self.logger.warning(f"Rules JSON not found: {json_path}")
+                return False
+
+            with open(path) as f:
+                self.rules_json_data = json.load(f)
+
+            self.rules_json_path = json_path
+            game_name = self.rules_json_data.get('game_name', 'Unknown')
+            schema_version = self.rules_json_data.get('schema_version', 'Unknown')
+            self.logger.info(f"Loaded rules JSON for {game_name} (schema v{schema_version})")
+            return True
+
+        except Exception as e:
+            self.logger.warning(f"Failed to load rules JSON: {e}")
+            self.rules_json_data = None
+            self.rules_json_path = None
+            return False
 
     def set_page(self, line: str):
         if self._set_page:
