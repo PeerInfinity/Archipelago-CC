@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-06 05:54:58
+**Generated:** 2026-01-07 00:06:36
 
-**Source Data Created:** 2026-01-06T05:28:13.519765
+**Source Data Created:** 2026-01-07T00:06:35.091491
 
-**Source Data Last Updated:** 2026-01-06T05:28:13.519773
+**Source Data Last Updated:** 2026-01-07T00:06:35.091496
 
 ## Summary
 
 - **Total Games:** 73
 - **Passed:** 73 (100.0%)
 - **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
@@ -103,6 +103,15 @@
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 3.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Super Mario World | 1 | 2026-01-07 00:04 | Previously failed, now passing |
+
 
 ## Notes
 
