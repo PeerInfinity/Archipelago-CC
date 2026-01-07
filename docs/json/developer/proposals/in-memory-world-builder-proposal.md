@@ -454,6 +454,7 @@ class RuleCache:
 - ✅ Test script properly initializes world with `create_regions()` and `set_rules()`
 - ✅ Auto-discovery: `TrackerCore.auto_discover_rules_json()` finds rules from game + seed_name
 - ✅ Direct AST explain: `TrackerCore.load_rules_json()` and `_explain_from_rules_json()`
+- ✅ TrackerClient captures seed_name from RoomInfo packet
 - ✅ TrackerClient auto-discovers rules after Connected packet
 
 ### File Distribution for Multiplayer
