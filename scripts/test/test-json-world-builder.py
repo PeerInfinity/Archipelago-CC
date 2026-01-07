@@ -101,6 +101,15 @@ def test_explain_support(json_path: Path, worldgen_name: str):
         print(f"  ✗ World not registered: {e}")
         return False
 
+    # Initialize the world's regions and rules
+    print("  Calling create_regions()...")
+    world.create_regions()
+    print(f"  ✓ Created {len(list(multiworld.get_regions(1)))} regions")
+
+    print("  Calling set_rules()...")
+    world.set_rules()
+    print("  ✓ Rules set")
+
     # Find a location with a non-trivial rule
     locations_with_rules = []
     for region in multiworld.get_regions(1):

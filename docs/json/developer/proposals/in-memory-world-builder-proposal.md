@@ -6,7 +6,7 @@ This proposal describes a system to enable the Rule Builder's "explain" feature 
 
 ## Current Status (Updated January 2026)
 
-**Phase 1-2 are substantially complete.** The core infrastructure for parsing AST format rules and providing explain support now exists. Key remaining work is the orchestration layer (`JSONWorldBuilder`) and tracker integration.
+**All phases are complete.** The JSONWorldBuilder implementation uses worldgen worlds for native Rule Builder explain support. Integration tests pass with real exports (TUNIC, A Short Hike).
 
 | Component | Status | Notes |
 |-----------|--------|-------|
@@ -393,10 +393,10 @@ Helper functions are handled automatically by the worldgen world approach:
 - ✅ Updated `explain` function in TrackerClient to use worldgen fallback
 - Manual JSON path loading (auto-discovery can be added later)
 
-### Phase 5: Testing & Polish ❌ NOT STARTED
-- Integration tests with real exports
-- Performance optimization (world caching)
-- Documentation updates
+### Phase 5: Testing & Polish ✅ COMPLETE
+- ✅ Integration tests with real exports (TUNIC, A Short Hike)
+- ⚠️ Performance optimization (world caching) - deferred for future enhancement
+- ✅ Test script updated with proper world initialization
 
 ## Performance Considerations
 
@@ -440,23 +440,22 @@ class RuleCache:
 3. **Dynamic rules**: How to handle rules that change during gameplay (e.g., boss shuffle)?
    - *Status*: Still open - requires runtime evaluation support
 
-## Next Steps
+## Summary of Completed Work
 
-The following work items remain to complete this proposal:
-
-### Priority 1: Polish & Enhancement
-1. Performance optimization (cache instantiated worlds)
-2. Integration tests with real exports
-3. Auto-discovery of JSON path from template filename
-4. Documentation updates
-
-### Completed
+### All Phases Complete
 - ✅ `JSONWorldBuilder` class in `world_generator/json_world_builder.py`
 - ✅ `create_world_from_json()` convenience function
 - ✅ Unit tests in `scripts/test/test-json-world-builder.py`
 - ✅ `TrackerCore.load_worldgen_world()` method
 - ✅ `TrackerCore.explain_location_rule()` with worldgen fallback
 - ✅ TrackerClient `explain` function updated to use worldgen fallback
+- ✅ Integration tests with real exports (TUNIC, A Short Hike)
+- ✅ Test script properly initializes world with `create_regions()` and `set_rules()`
+
+### Future Enhancements (Optional)
+1. Performance optimization (cache instantiated worlds)
+2. Auto-discovery of JSON path from template filename
+3. Additional game testing
 
 ## Related Work
 
