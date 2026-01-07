@@ -1404,6 +1404,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if '.dynamically_added' in path:
         return True
 
+    # placeholder: Regions with no locations and no exits may have placeholder: True.
+    # Original worlds may keep empty regions in multiworld, while WorldGen filters them
+    # out and the exporter creates placeholder entries. Both are semantically equivalent.
+    if '.placeholder' in path:
+        return True
+
     # exclude_locations: Original worlds may dynamically add exclusions in set_rules()
     # (e.g., DOOM games add death_logic_locations when allow_death_logic=false).
     # WorldGen doesn't replicate this dynamic behavior, so counts may differ.
