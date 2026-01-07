@@ -2487,7 +2487,7 @@ class RuleCodeGenerator:
             conditions = test.get('conditions', [])
             for cond in conditions:
                 if cond.get('type') == 'not':
-                    inner = cond.get('condition', {})
+                    inner = cond.get('condition') or cond.get('operand', {})
                     if inner.get('type') == 'name' and inner.get('name') in local_vars:
                         return True
                 elif cond.get('type') == 'item_check':
@@ -2495,7 +2495,7 @@ class RuleCodeGenerator:
             return False
 
         if test_type == 'not':
-            inner = test.get('condition', {})
+            inner = test.get('condition') or test.get('operand', {})
             if inner.get('type') == 'name' and inner.get('name') in local_vars:
                 return True
 
@@ -2519,7 +2519,7 @@ class RuleCodeGenerator:
             conditions = test.get('conditions', [])
             for cond in conditions:
                 if cond.get('type') == 'not':
-                    inner = cond.get('condition', {})
+                    inner = cond.get('condition') or cond.get('operand', {})
                     if inner.get('type') == 'name':
                         var_name = inner.get('name')
                         var_val = local_vars.get(var_name, 0)
@@ -2530,7 +2530,7 @@ class RuleCodeGenerator:
             return False
 
         if test_type == 'not':
-            inner = test.get('condition', {})
+            inner = test.get('condition') or test.get('operand', {})
             if inner.get('type') == 'name':
                 var_name = inner.get('name')
                 var_val = local_vars.get(var_name, 0)
@@ -2942,7 +2942,7 @@ class RuleCodeGenerator:
             return False if all_false else None
 
         if test_type == 'not':
-            inner = self._try_evaluate_if_test_constant(test.get('condition', {}), var_expressions)
+            inner = self._try_evaluate_if_test_constant(test.get('condition') or test.get('operand', {}), var_expressions)
             if inner is None:
                 return None
             return not inner
@@ -3241,7 +3241,8 @@ class RuleCodeGenerator:
 
         # Handle not - convert to Not()
         if expr_type == 'not':
-            condition = expr.get('condition', {})
+            # Try 'condition' first, then 'operand' for compatibility with different export formats
+            condition = expr.get('condition') or expr.get('operand', {})
             cond_expr = self._expr_to_rule_builder(condition, var_expressions)
             if cond_expr is None:
                 return None
@@ -5227,8 +5228,14 @@ class HelperCodeGenerator:
         return ' or '.join(parts)
 
     def _expr_not(self, expr: Dict[str, Any]) -> str:
-        """Generate not expression."""
-        inner = expr.get('condition', expr.get('operand', expr.get('value', {})))
+        """Generate not expression.
+
+        Handles both formats:
+        - {"type": "not", "condition": {...}} (condition is truthy)
+        - {"type": "not", "operand": {...}, "condition": null} (operand is truthy)
+        """
+        # Try condition first (if truthy), then operand, then value
+        inner = expr.get('condition') or expr.get('operand') or expr.get('value', {})
         return f"not ({self._generate_expression(inner)})"
 
     def _expr_all_of(self, expr: Dict[str, Any]) -> str:

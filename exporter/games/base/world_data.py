@@ -159,9 +159,13 @@ class WorldDataMixin:
                         else:
                             # Export as string key for equality comparisons
                             value = option.current_key
+                    # For FreeText options with float values (like FloatRangeText),
+                    # convert to string to match FreeText's expected value type
+                    elif isinstance(option, FreeText) and isinstance(value, float):
+                        value = str(value)
 
-                    # Only export simple types (int, bool, str, list, dict)
-                    if isinstance(value, (int, bool, str, list, dict)):
+                    # Only export simple types (int, float, bool, str, list, dict)
+                    if isinstance(value, (int, float, bool, str, list, dict)):
                         options_dict[option_name] = value
                     elif isinstance(value, set):
                         options_dict[option_name] = sorted(value)
