@@ -148,6 +148,15 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
             if region not in dependencies:
                 dependencies.append(region)
 
+    # Check for Rule Builder CanReachRegion rules
+    # Rule Builder format: {"rule": "CanReachRegion", "args": {"region_name": "RegionName"}}
+    rb_rule = rule.get('rule', '')
+    if rb_rule == 'CanReachRegion':
+        args = rule.get('args', {})
+        region_name = args.get('region_name', '')
+        if isinstance(region_name, str) and region_name and region_name not in dependencies:
+            dependencies.append(region_name)
+
     # Check for helper calls and resolve them
     # Handle both formats:
     # 1. type='helper' with name='helper_name' (standard format)
