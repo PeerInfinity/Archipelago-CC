@@ -765,9 +765,9 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 {entrances_content}
 
     # Add all regions to multiworld
-    # Note: Original Archipelago worlds add all regions unconditionally,
-    # including regions with no locations or exits. These regions may be
-    # referenced by CanReachRegion rules for indirect condition checking.
+    # Regions must be added even if they have no locations or exits, because:
+    # 1. They may be targets of entrances from other regions
+    # 2. They may be referenced by CanReachRegion() rules
     for region in regions.values():
         multiworld.regions.append(region)
 
