@@ -1404,6 +1404,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if '.dynamically_added' in path:
         return True
 
+    # placeholder: Similar to dynamically_added - marks regions that exist only as
+    # structural placeholders without real locations. Original may use dynamically_added
+    # while WorldGen may use placeholder - both are semantically equivalent metadata.
+    if '.placeholder' in path:
+        return True
+
     # exclude_locations: Original worlds may dynamically add exclusions in set_rules()
     # (e.g., DOOM games add death_logic_locations when allow_death_logic=false).
     # WorldGen doesn't replicate this dynamic behavior, so counts may differ.
