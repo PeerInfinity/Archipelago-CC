@@ -18,7 +18,9 @@ import {
 } from '../utils/debugSphereLogger.js';
 import { sharedClientState } from './sharedState.js';
 import { stateManagerProxySingleton } from '../../stateManager/index.js';
-import { getClientModuleDispatcher, moduleInfo } from '../index.js';
+
+// Module name constant - avoids circular import with ../index.js
+const MODULE_NAME = 'client';
 
 
 // Helper function for logging with fallback
@@ -1191,7 +1193,7 @@ export async function handleUserLocationCheckForClient(
       if (dispatcher) {
         // Assuming 'client' is the correct module name string for itself
         dispatcher.publishToNextModule(
-          moduleInfo.name,
+          MODULE_NAME,
           'user:locationCheck',
           eventData,
           { direction: 'up' }
@@ -1210,7 +1212,7 @@ export async function handleUserLocationCheckForClient(
     );
     if (dispatcher) {
       dispatcher.publishToNextModule(
-        moduleInfo.name,
+        MODULE_NAME,
         'user:locationCheck',
         eventData,
         { direction: 'up' }
@@ -1263,7 +1265,7 @@ export async function handleUserItemCheckForClient(
       );
       if (dispatcher) {
         dispatcher.publishToNextModule(
-          moduleInfo.name,
+          MODULE_NAME,
           'user:itemCheck',
           eventData,
           { direction: 'up' }
@@ -1282,7 +1284,7 @@ export async function handleUserItemCheckForClient(
     );
     if (dispatcher) {
       dispatcher.publishToNextModule(
-        moduleInfo.name,
+        MODULE_NAME,
         'user:itemCheck',
         eventData,
         { direction: 'up' }

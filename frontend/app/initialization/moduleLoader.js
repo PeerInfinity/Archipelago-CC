@@ -5,6 +5,7 @@ import { profiler } from '../../modules/shared/profiler.js';
 
 /**
  * Loads and registers all modules defined in the module configuration
+ * Uses parallel loading for all modules simultaneously for best performance.
  *
  * ⚠️ CRITICAL: This function modifies the provided Maps (runtimeModuleStates, importedModules, moduleInfoMap).
  * These Maps are passed by reference and will be populated during execution.
@@ -73,39 +74,52 @@ export async function loadModules(options) {
   runtimeModuleStates.clear();
   importedModules.clear();
 
-  logger.info('init', 'Starting module import and registration phase...');
-  logger.info('INIT_STEP', 'Module import and registration phase started');
-
-  profiler.start('moduleImportPhase');
-
-  // Iterate through modules in priority order
+  // Mark disabled modules
   for (const moduleId of modulesData.loadPriority) {
     const moduleDefinition = modulesData.moduleDefinitions[moduleId];
-
-    if (moduleDefinition && moduleDefinition.enabled) {
-      await loadSingleModule({
-        moduleId,
-        moduleDefinition,
-        runtimeModuleStates,
-        importedModules,
-        moduleInfoMap,
-        logger,
-        incrementFileCounter,
-        createRegistrationApi,
-      });
-    } else if (moduleDefinition && !moduleDefinition.enabled) {
+    if (moduleDefinition && !moduleDefinition.enabled) {
       logger.debug(
         'init',
         `Module ${moduleId} is defined but not enabled. Skipping.`
       );
       runtimeModuleStates.set(moduleId, { initialized: false, enabled: false });
-    } else {
+    } else if (!moduleDefinition) {
       logger.warn(
         'init',
         `Module ${moduleId} listed in loadPriority but not found in moduleDefinitions. Skipping.`
       );
     }
   }
+
+  logger.info('init', 'Starting module import and registration phase...');
+  logger.info('INIT_STEP', 'Module import and registration phase started');
+
+  profiler.start('moduleImportPhase');
+
+  // Get all enabled modules
+  const enabledModules = modulesData.loadPriority.filter(
+    moduleId => modulesData.moduleDefinitions[moduleId]?.enabled
+  );
+
+  logger.info('init', `Loading ${enabledModules.length} modules in parallel`);
+
+  // Load all modules in parallel
+  const loadPromises = enabledModules.map(moduleId => {
+    const moduleDefinition = modulesData.moduleDefinitions[moduleId];
+    return loadSingleModule({
+      moduleId,
+      moduleDefinition,
+      runtimeModuleStates,
+      importedModules,
+      moduleInfoMap,
+      logger,
+      incrementFileCounter,
+      createRegistrationApi,
+    });
+  });
+
+  // Wait for all modules to complete
+  await Promise.all(loadPromises);
 
   profiler.end('moduleImportPhase');
 
