@@ -764,22 +764,12 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Create entrances
 {entrances_content}
 
-    # Track which regions are targets of exits (terminal regions that need to exist)
-    entrance_targets = set()
+    # Add all regions to multiworld
+    # Note: Original Archipelago worlds add all regions unconditionally,
+    # including regions with no locations or exits. These regions may be
+    # referenced by CanReachRegion rules for indirect condition checking.
     for region in regions.values():
-        for exit_entrance in region.exits:
-            if exit_entrance.connected_region:
-                entrance_targets.add(exit_entrance.connected_region.name)
-
-    # Add regions to multiworld if they have locations, exits, are entrance targets,
-    # or have the dynamically_added flag. This preserves:
-    # - Terminal regions (no locations/exits) that are valid connection targets
-    # - Dynamically added regions so they export with correct attribute
-    for region in regions.values():
-        if (len(region.locations) > 0 or len(region.exits) > 0 or
-            region.name in entrance_targets or
-            getattr(region, 'dynamically_added', False)):
-            multiworld.regions.append(region)
+        multiworld.regions.append(region)
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:
