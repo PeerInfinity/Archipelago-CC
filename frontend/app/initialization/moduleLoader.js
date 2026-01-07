@@ -156,12 +156,24 @@ async function loadSingleModule(options) {
   profiler.start(`moduleImport:${moduleId}`);
 
   try {
-    // Dynamically import the module
-    // IMPORTANT: Resolve path relative to frontend root, not this file's location
-    // Module paths in modules.json are like "./modules/foo/index.js"
-    // From this file's location (app/initialization/), we need to go up to frontend root
-    const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
-    const moduleInstance = await import(resolvedPath);
+    // Check if module is pre-bundled (available via window.__BUNDLED_MODULES__)
+    const bundledModules = typeof window !== 'undefined' && window.__BUNDLED_MODULES__;
+    let moduleInstance;
+
+    if (bundledModules && bundledModules[moduleId]) {
+      // Use pre-bundled module
+      moduleInstance = bundledModules[moduleId];
+      logger.debug('init', `Using pre-bundled module: ${moduleId}`);
+    } else {
+      // Dynamically import the module
+      // IMPORTANT: Resolve path relative to frontend root, not this file's location
+      // Module paths in modules.json are like "./modules/foo/index.js"
+      // From this file's location (app/initialization/), we need to go up to frontend root
+      const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
+      moduleInstance = await import(resolvedPath);
+      logger.debug('init', `Dynamically imported module: ${moduleId}`);
+    }
+
     const moduleFileName = moduleDefinition.path.split('/').pop() || moduleDefinition.path;
     incrementFileCounter(`${moduleId} (${moduleFileName})`);
 
@@ -174,8 +186,6 @@ async function loadSingleModule(options) {
       moduleInfoMap.set(moduleId, actualModuleObject.moduleInfo);
       logger.debug('init', `Stored moduleInfo for ${moduleId}`, actualModuleObject.moduleInfo);
     }
-
-    logger.debug('init', `Dynamically imported module: ${moduleId}`);
 
     // Call the module's register function if it exists
     if (actualModuleObject && typeof actualModuleObject.register === 'function') {

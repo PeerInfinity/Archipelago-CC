@@ -200,10 +200,18 @@ export class StateManagerProxy {
   initializeWorker() {
     log('info', '[stateManagerProxy] Creating Worker...');
     try {
-      this.worker = new Worker(
-        new URL('./stateManagerWorker.js', import.meta.url),
-        { type: 'module' }
-      );
+      // Determine worker URL - use absolute path in bundled mode since import.meta.url
+      // points to the bundle location, not the original module location
+      // Check if we're in a bundle by looking at import.meta.url (contains /dist/)
+      // We can't use window.__BUNDLED_MODULES__ because it's set after static imports complete
+      const isBundled = import.meta.url.includes('/dist/');
+      const workerUrl = isBundled
+        ? new URL('./modules/stateManager/stateManagerWorker.js', window.location.origin + '/frontend/')
+        : new URL('./stateManagerWorker.js', import.meta.url);
+
+      log('info', `[stateManagerProxy] Worker URL: ${workerUrl.href} (bundled: ${!!isBundled})`);
+
+      this.worker = new Worker(workerUrl, { type: 'module' });
 
       this.worker.onmessage = (event) => {
         // console.debug('[stateManagerProxy] Received message from worker:', event.data); // Use debug for less noise
@@ -211,10 +219,15 @@ export class StateManagerProxy {
       };
 
       this.worker.onerror = (error) => {
-        log('error', '[stateManagerProxy] Worker global error:', error);
-        const errorMessage = `Worker error: ${
-          error.message || 'Unknown worker error'
-        }`;
+        // ErrorEvent has filename, lineno, colno, message properties
+        const errorDetails = {
+          message: error.message || 'Unknown',
+          filename: error.filename || 'Unknown',
+          lineno: error.lineno || 0,
+          colno: error.colno || 0,
+        };
+        log('error', '[stateManagerProxy] Worker global error:', errorDetails);
+        const errorMessage = `Worker error: ${errorDetails.message} at ${errorDetails.filename}:${errorDetails.lineno}:${errorDetails.colno}`;
 
         // Reject all pending queries with tracking
         const pendingQueryIds = Array.from(this.pendingQueries.keys());

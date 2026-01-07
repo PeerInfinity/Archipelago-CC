@@ -75,22 +75,66 @@ test.describe('Application End-to-End Tests', () => {
     await page.goto(APP_URL, { waitUntil: 'networkidle', timeout: 60000 });
     console.log('PW DEBUG: Page navigation complete (network idle).');
 
-    // Wait for the __playwrightTestsComplete__ flag to be set on window object
-    // Also check for early termination due to errors
+    // Phase 1: Wait for tests to START (short timeout - fail fast if page doesn't load)
     console.log(
-      'PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...'
+      'PW DEBUG: Waiting for tests to start (__playwrightTestsStarted__ flag)...'
+    );
+    try {
+      await page.waitForFunction(
+        () => {
+          // Tests started
+          if (window.__playwrightTestsStarted__ === true) {
+            return true;
+          }
+          // Or tests already complete (edge case)
+          if (window.__playwrightTestsComplete__ === true) {
+            return true;
+          }
+          // Or error occurred
+          if (window.__playwrightTestsError__ === true) {
+            return true;
+          }
+          return false;
+        },
+        null,
+        { timeout: 30000, polling: 500 }
+      );
+      console.log('PW DEBUG: Tests started (or already complete/errored).');
+    } catch (e) {
+      console.error('PW DEBUG: Timeout waiting for tests to start. Page may have failed to load.');
+      // Set error flag and results so the test can report properly
+      await page.evaluate(() => {
+        window.__playwrightTestsError__ = true;
+        window.__playwrightTestResults__ = {
+          summary: {
+            totalRun: 0,
+            passedCount: 0,
+            failedCount: 1,
+            failedConditionsCount: 0,
+            skippedCount: 0,
+            totalExpected: 0,
+            error: 'Timeout waiting for tests to start - page may have failed to load'
+          },
+          testDetails: [{
+            name: 'Page Load',
+            category: 'System',
+            status: 'failed',
+            message: 'Timeout waiting for tests to start'
+          }]
+        };
+        window.__playwrightTestsComplete__ = true;
+      });
+    }
+
+    // Phase 2: Wait for tests to COMPLETE (longer timeout for actual test execution)
+    console.log(
+      'PW DEBUG: Waiting for tests to complete (__playwrightTestsComplete__ flag)...'
     );
     await page.waitForFunction(
       () => {
         const flag = window.__playwrightTestsComplete__;
         const errorFlag = window.__playwrightTestsError__;
         const results = window.__playwrightTestResults__;
-
-        // This console.log will appear in Playwright's output (from the browser context)
-        // and will also be caught by page.on('console') above.
-        //console.log(
-        //  `Polling window.__playwrightTestsComplete__: "${flag}" (type: ${typeof flag})`
-        //);
 
         // If there's an error flag, exit early
         if (errorFlag === true) {
