@@ -21,6 +21,9 @@ logger.configure({
   moduleLevels: {},
 });
 
+// Apply any URL-based logging parameters (e.g., ?log=DEBUG, ?logcat=StateManager:DEBUG)
+logger.applyUrlParameters();
+
 // Make logger globally available
 window.logger = logger;
 
