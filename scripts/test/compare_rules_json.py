@@ -232,6 +232,36 @@ def normalize_tuple_wrapped_generator(obj: Any) -> Any:
         return obj
 
 
+def normalize_string_constant_wrapper(obj: Any) -> Any:
+    """
+    Normalize string constants wrapped in {"type": "constant", "value": "X"} to plain "X".
+
+    Original exporter wraps string values in item checks and rule args:
+        {"type": "item_check", "item": {"type": "constant", "value": "Wingsuit"}}
+
+    WorldGen exports them as plain strings:
+        {"type": "item_check", "item": "Wingsuit"}
+
+    Both are semantically equivalent. Normalize to the plain string format.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check if this is a constant wrapper for a string value
+        if obj_type == 'constant' and 'value' in obj:
+            value = obj.get('value')
+            # Only unwrap if the value is a string (not a list, dict, etc.)
+            if isinstance(value, str):
+                return value
+
+        # Recursively normalize nested objects
+        return {k: normalize_string_constant_wrapper(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_string_constant_wrapper(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_none_to_null(obj: Any) -> Any:
     """
     Normalize None values in conditional branches.
@@ -1029,6 +1059,14 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'helpers.' in path and ('bottle_count' in path or 'heart_count' in path):
         return True
 
+    # can_shop helper uses self.maximum_price world attribute, WorldGen bakes in the value
+    if 'helpers.' in path and 'can_shop' in path:
+        if 'maximum_price' in str(original_value) or 'maximum_price' in path:
+            return True
+        # Count attribute vs constant value for shop price calculation
+        if '.count' in path:
+            return True
+
     # basement_key_rule and tr_big_key_chest_keys_needed use placement_lookup
     if 'helpers.' in path and ('basement_key_rule' in path or 'tr_big_key_chest_keys_needed' in path):
         return True
@@ -1324,6 +1362,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             if path.endswith(f'.{opt}'):
                 return True
 
+    # StartInventoryPool options that WorldGen doesn't export
+    # These are special option types (type: start_inventory_pool) for starting items from pool
+    if 'option_definitions.' in path and 'start_inventory' in path and worldgen_value == '<missing>':
+        return True
+
     # ItemDict options that WorldGen doesn't support (dict mapping items to weights/counts)
     # These are complex option types requiring special handling that WorldGen doesn't implement
     itemdict_options = {'filler_items_distribution'}
@@ -1547,6 +1590,10 @@ def main():
     # Normalize None values in conditional branches
     original_normalized = normalize_none_to_null(original_normalized)
     worldgen_normalized = normalize_none_to_null(worldgen_normalized)
+
+    # Normalize string constant wrappers ({"type": "constant", "value": "X"} -> "X")
+    original_normalized = normalize_string_constant_wrapper(original_normalized)
+    worldgen_normalized = normalize_string_constant_wrapper(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
