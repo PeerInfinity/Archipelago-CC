@@ -23,7 +23,6 @@ from .extractor import (
     get_extractable_components,
 )
 from .patcher import (
-    apply_patches,
     apply_bundled_patches,
     revert_patches,
     check_patch_status,
@@ -40,7 +39,6 @@ __all__ = [
     "get_download_url",
     "extract_tools",
     "get_extractable_components",
-    "apply_patches",
     "apply_bundled_patches",
     "revert_patches",
     "check_patch_status",

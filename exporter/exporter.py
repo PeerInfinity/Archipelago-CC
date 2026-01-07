@@ -1952,6 +1952,25 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 if item_hint and item_hint != item_name:
                     _insert_hint_text(item_data, item_hint)
 
+    # 3c. Also update classification from items placed FOR this player across ALL locations
+    # This is critical for multiworld where Player A's items may be placed in Player B's locations
+    # Step 3 only checks placements IN this player's locations, but items can be placed anywhere
+    try:
+        for location in multiworld.get_locations():
+            if location.item and location.item.player == player:
+                item_name = location.item.name
+                item_classification = getattr(location.item, 'classification', ItemClassification.filler)
+
+                if item_name in items_data:
+                    # Update classification if new one has higher priority
+                    item_data = items_data[item_name]
+                    new_classification = classification_to_string(item_classification)
+                    current_classification = item_data.get('classification', 'filler')
+                    if classification_has_higher_priority(new_classification, current_classification):
+                        item_data['classification'] = new_classification
+    except Exception as e:
+        logger.warning(f"Could not update item classifications from multiworld placements for player {player}: {e}")
+
     # 4. Get and apply game-specific max counts
     try:
         game_max_counts = game_handler.get_item_max_counts(world)
