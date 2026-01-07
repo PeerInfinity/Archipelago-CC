@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-07 02:18:21
+**Generated:** 2026-01-07 20:04:55
 
-**Source Data Created:** 2026-01-07T00:13:01.889396
+**Source Data Created:** 2026-01-07T20:04:54.456509
 
-**Source Data Last Updated:** 2026-01-07T00:13:01.889405
+**Source Data Last Updated:** 2026-01-07T20:04:54.456515
 
 ## Summary
 
 - **Total Games:** 73
 - **Passed:** 73 (100.0%)
 - **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 2
-- **Total Intermittent Failures:** 2
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
@@ -110,8 +110,7 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Faxanadu | 1 | 2026-01-07 00:09 | Previously failed, now passing |
-| Heretic | 1 | 2026-01-07 00:10 | Previously failed, now passing |
+| Meritous | 1 | 2026-01-07 20:01 | Previously failed, now passing |
 
 
 ## Notes
