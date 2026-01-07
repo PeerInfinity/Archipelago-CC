@@ -764,11 +764,13 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Create entrances
 {entrances_content}
 
-    # Only add regions with locations or exits to multiworld
-    # This matches the behavior of original Archipelago worlds which filter out
-    # placeholder regions that have no locations and no exits
+    # Only add regions with locations, exits, or entrances to multiworld
+    # This filters out placeholder regions while keeping:
+    # - Regions with locations (can have items)
+    # - Regions with exits (connect to other regions)
+    # - Regions with entrances (are targets of connections, may be referenced by rules)
     for region in regions.values():
-        if len(region.locations) > 0 or len(region.exits) > 0:
+        if len(region.locations) > 0 or len(region.exits) > 0 or len(region.entrances) > 0:
             multiworld.regions.append(region)
 
 
