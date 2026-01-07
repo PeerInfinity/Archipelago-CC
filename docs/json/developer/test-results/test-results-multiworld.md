@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-07 00:28:44
+**Generated:** 2026-01-07 02:18:21
 
 ## Summary
 
-- **Total Games:** 66
-- **Passed:** 66 (100.0%)
+- **Total Games:** 73
+- **Passed:** 73 (100.0%)
 - **Failed:** 0 (0.0%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 66
-- **Second Pass Passed:** 66
+- **Second Pass Tested:** 73
+- **Second Pass Passed:** 73
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 38/66 (57.6% of passed)
-- **Passing with Generic Logic:** 60/66 (90.9% of passed)
-- **Passing with Both Generic:** 38/66 (57.6% of passed)
+- **Passing with Generic Exporter:** 43/73 (58.9% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 43/73 (58.9% of passed)
 
 ## Test Results
 
@@ -36,6 +36,7 @@
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 1.8KB | ✅ |
+| Baking Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 4.0KB | ✅ |
@@ -45,6 +46,7 @@
 | ChecksFinder | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| Coding Adventure | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 1.0KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
@@ -54,6 +56,7 @@
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 7.5KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 19.5KB | ✅ |
@@ -63,6 +66,7 @@
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Math Adventure | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
@@ -72,6 +76,7 @@
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 23.1KB | ✅ |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 2.7KB | ✅ |
+| Raft | ✅ Passed | ✅ Passed | 5 | 5 | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 6.9KB |
@@ -81,6 +86,7 @@
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 12.4KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
@@ -90,6 +96,7 @@
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 4.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 2.3KB | ✅ |
@@ -136,6 +143,12 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
+
+### Baking Adventure ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
 
 ### Bomb Rush Cyberfunk ✅ (Split 8)
 
@@ -196,6 +209,13 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Civilization VI.yaml |
+
+### Coding Adventure ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
 
 ### DLCQuest ✅ (Split 8)
 
@@ -265,6 +285,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 1 | Aquaria.yaml |
 | 2 | Civilization VI.yaml |
 | 3 | Heretic.yaml |
+
+### Hylics 2 ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
 
 ### Inscryption ✅ (Split 8)
 
@@ -343,6 +371,15 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Civilization VI.yaml |
 | 3 | Heretic.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
+
+### Math Adventure ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
 
 ### Mega Man 2 ✅ (Split 8)
 
@@ -430,6 +467,16 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Heretic.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
+
+### Raft ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
 
 ### Risk of Rain 2 ✅ (Split 8)
 
@@ -526,6 +573,17 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
 | 6 | Super Mario 64.yaml |
+
+### Super Mario Land 2 ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 ### Super Mario World ✅ (Split 8)
 
@@ -632,6 +690,18 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
+### The Witness ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
+
 ### Timespinner ✅ (Split 8)
 
 | Player # | Template |
@@ -720,6 +790,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | APQuest | 1 | 7 | 1 | ✅ Passed |
 | Adventure | 1 | 7 | 1 | ✅ Passed |
 | Aquaria | 1 | 7 | 1 | ✅ Passed |
+| Baking Adventure | 1 | 7 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
@@ -729,6 +800,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | ChecksFinder | 2 | 7 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 7 | 2 | ✅ Passed |
 | Civilization VI | 2 | 7 | 2 | ✅ Passed |
+| Coding Adventure | 2 | 7 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 7 | 2 | ✅ Passed |
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
@@ -738,6 +810,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Faxanadu | 3 | 7 | 3 | ✅ Passed |
 | Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
 | Heretic | 3 | 7 | 3 | ✅ Passed |
+| Hylics 2 | 3 | 7 | 3 | ✅ Passed |
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts 2 | 3 | 7 | 3 | ✅ Passed |
@@ -747,6 +820,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Links Awakening DX | 4 | 7 | 4 | ✅ Passed |
 | Lufia II Ancient Cave | 4 | 7 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
+| Math Adventure | 4 | 7 | 4 | ✅ Passed |
 | Mega Man 2 | 4 | 7 | 4 | ✅ Passed |
 | MegaMan Battle Network 3 | 4 | 7 | 4 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
@@ -756,6 +830,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Old School Runescape | 5 | 7 | 5 | ✅ Passed |
 | Overcooked! 2 | 5 | 7 | 5 | ✅ Passed |
 | Paint | 5 | 7 | 5 | ✅ Passed |
+| Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 5 | 7 | 5 | ✅ Passed |
 | Saving Princess | 5 | 7 | 5 | ✅ Passed |
 | Secret of Evermore | 5 | 7 | 5 | ✅ Passed |
@@ -765,6 +840,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Stardew Valley | 6 | 7 | 6 | ✅ Passed |
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
+| Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario World | 6 | 7 | 6 | ✅ Passed |
 | Super Metroid | 6 | 7 | 6 | ✅ Passed |
 | TOEM original | 6 | 7 | 6 | ✅ Passed |
@@ -774,6 +850,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | The Legend of Zelda | 7 | 7 | 7 | ✅ Passed |
 | The Messenger | 7 | 7 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
+| The Witness | 7 | 7 | 7 | ✅ Passed |
 | Timespinner | 7 | 7 | 7 | ✅ Passed |
 | Undertale | 7 | 7 | 7 | ✅ Passed |
 | VVVVVV | 7 | 7 | 7 | ✅ Passed |
@@ -859,6 +936,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Paint.yaml |
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
+
+#### Baking Adventure ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
 
 #### Bomb Rush Cyberfunk ✅ (Split 8)
 
@@ -971,6 +1060,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
+#### Coding Adventure ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
+
 #### DLCQuest ✅ (Split 8)
 
 | Player # | Template |
@@ -1081,6 +1182,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Paint.yaml |
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
+
+#### Hylics 2 ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
 
 #### Inscryption ✅ (Split 8)
 
@@ -1193,6 +1306,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
+#### Math Adventure ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
+
 #### Mega Man 2 ✅ (Split 8)
 
 | Player # | Template |
@@ -1303,6 +1428,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Paint.yaml |
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
+
+#### Raft ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
 
 #### Risk of Rain 2 ✅ (Split 8)
 
@@ -1415,6 +1552,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
+#### Super Mario Land 2 ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
+
 #### Super Mario World ✅ (Split 8)
 
 | Player # | Template |
@@ -1525,6 +1674,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Paint.yaml |
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
+
+#### The Witness ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Baking Adventure.yaml |
+| 2 | Coding Adventure.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Math Adventure.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario Land 2.yaml |
+| 7 | The Witness.yaml |
 
 #### Timespinner ✅ (Split 8)
 
