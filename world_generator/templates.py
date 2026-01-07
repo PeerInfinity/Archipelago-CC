@@ -771,10 +771,14 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
             if exit_entrance.connected_region:
                 entrance_targets.add(exit_entrance.connected_region.name)
 
-    # Add regions to multiworld if they have locations, exits, or are entrance targets
-    # This preserves terminal regions (no locations/exits) that are valid connection targets
+    # Add regions to multiworld if they have locations, exits, are entrance targets,
+    # or have the dynamically_added flag. This preserves:
+    # - Terminal regions (no locations/exits) that are valid connection targets
+    # - Dynamically added regions so they export with correct attribute
     for region in regions.values():
-        if len(region.locations) > 0 or len(region.exits) > 0 or region.name in entrance_targets:
+        if (len(region.locations) > 0 or len(region.exits) > 0 or
+            region.name in entrance_targets or
+            getattr(region, 'dynamically_added', False)):
             multiworld.regions.append(region)
 
 
