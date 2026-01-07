@@ -75,6 +75,9 @@ class TrackerCore():
         self.rules_json_data: Optional[dict] = None  # Loaded rules JSON for direct AST explain
         self.rules_json_path: Optional[str] = None  # Path to loaded rules JSON
 
+        # Auto-worldgen option: if True, generate worldgen world from rules JSON
+        self.auto_generate_worldgen: bool = False
+
     def disconnect(self):
         self.re_gen_passthrough = None
         self.player_id = None
@@ -137,6 +140,78 @@ class TrackerCore():
             self.worldgen_builder = None
             self.worldgen_world = None
             self.worldgen_multiworld = None
+            return False
+
+    def generate_and_load_worldgen_world(self, json_path: str) -> bool:
+        """
+        Generate a worldgen world from a rules JSON file and load it.
+
+        This runs the world generator to create Python files, then dynamically
+        imports the new world and loads it for use by the tracker.
+
+        Args:
+            json_path: Path to the JSON rules file
+
+        Returns:
+            True if world was generated and loaded successfully, False otherwise
+        """
+        try:
+            import importlib
+            import json
+            from pathlib import Path
+            from world_generator.generator import WorldGenerator
+
+            # Load JSON to get game name
+            with open(json_path) as f:
+                json_data = json.load(f)
+
+            game_name = json_data.get('game_name', 'Unknown')
+            worldgen_game_name = f"{game_name} WorldGen"
+
+            # Check if worldgen world already exists
+            if worldgen_game_name in AutoWorld.AutoWorldRegister.world_types:
+                self.logger.info(f"Worldgen world '{worldgen_game_name}' already loaded")
+                return self.load_worldgen_world(json_path, worldgen_game_name)
+
+            # Derive output directory
+            game_directory = json_data.get('game_directory', game_name.lower().replace(' ', '_'))
+            output_dir = Path('worlds') / f"{game_directory}_worldgen"
+
+            self.logger.info(f"Generating worldgen world from {json_path}")
+
+            # Run world generator
+            generator = WorldGenerator(
+                json_path=json_path,
+                output_dir=str(output_dir),
+                game_name=worldgen_game_name,
+                force=True,  # Overwrite existing
+                canonical_seed=1,  # Enable canonical placement for seed 1
+            )
+            generator.generate()
+
+            self.logger.info(f"Generated world files in {output_dir}")
+
+            # Dynamically import the new world module
+            module_name = output_dir.name  # e.g., "tunic_worldgen"
+            self.logger.info(f"Importing new world module: worlds.{module_name}")
+
+            # Import the module - this triggers AutoWorldRegister
+            importlib.import_module(f"worlds.{module_name}")
+
+            # Verify the world was registered
+            if worldgen_game_name not in AutoWorld.AutoWorldRegister.world_types:
+                self.logger.error(f"World '{worldgen_game_name}' not found after import")
+                return False
+
+            self.logger.info(f"Successfully imported '{worldgen_game_name}'")
+
+            # Now load the worldgen world using JSONWorldBuilder
+            return self.load_worldgen_world(json_path, worldgen_game_name)
+
+        except Exception as e:
+            self.logger.warning(f"Failed to generate/load worldgen world: {e}")
+            import traceback
+            self.logger.debug(traceback.format_exc())
             return False
 
     def get_worldgen_world(self):
@@ -299,9 +374,21 @@ class TrackerCore():
                     # Fallback to any rules.json in the folder
                     rules_files = list(folder.glob("*_rules.json"))
                 if rules_files:
-                    json_path = rules_files[0]
+                    json_path = str(rules_files[0])
                     self.logger.info(f"Auto-discovered rules JSON: {json_path}")
-                    return self.load_rules_json(str(json_path))
+
+                    # If auto_generate_worldgen is enabled, generate and load the worldgen world
+                    if self.auto_generate_worldgen:
+                        self.logger.info("Auto-worldgen enabled, generating worldgen world...")
+                        if self.generate_and_load_worldgen_world(json_path):
+                            # Also load the rules JSON for direct AST explain as fallback
+                            self.load_rules_json(json_path)
+                            return True
+                        else:
+                            self.logger.warning("Worldgen generation failed, falling back to direct AST explain")
+
+                    # Default: just load the rules JSON for direct AST explain
+                    return self.load_rules_json(json_path)
 
         self.logger.debug(f"No rules JSON found for {self.game} seed {self.seed_name}")
         return False

@@ -456,6 +456,7 @@ class RuleCache:
 - ✅ Direct AST explain: `TrackerCore.load_rules_json()` and `_explain_from_rules_json()`
 - ✅ TrackerClient captures seed_name from RoomInfo packet
 - ✅ TrackerClient auto-discovers rules after Connected packet
+- ✅ Auto-worldgen: `TrackerCore.generate_and_load_worldgen_world()` generates and loads worldgen world from rules JSON
 
 ### File Distribution for Multiplayer
 For other players to have explain support, they need the `_rules.json` file:
@@ -472,6 +473,21 @@ The tracker searches for `_rules.json` in these locations (in order):
 4. `output/` - output root (flat extraction)
 5. `~/.local/share/Archipelago/AP_{seed_name}/` - user data directory
 6. `~/.local/share/Archipelago/seeds/AP_{seed_name}/` - user seeds folder
+
+### Auto-Worldgen Option
+When `TrackerCore.auto_generate_worldgen = True`, the tracker will automatically:
+1. Run the world generator on the discovered `_rules.json` file
+2. Create a `{game}_worldgen` world in the `worlds/` directory
+3. Dynamically import the new world module
+4. Load the worldgen world for full Rule Builder support
+
+This provides richer functionality than direct AST explain:
+- Full Region/Location objects with proper parent relationships
+- Native Rule Builder rules with complete explain support
+- Access to world-specific methods and attributes
+
+**Default behavior** (auto_generate_worldgen=False): Uses lightweight direct AST explain
+**With auto-worldgen**: Generates and loads full worldgen world
 
 ### Future Enhancements (Optional)
 1. Performance optimization (cache instantiated worlds)
