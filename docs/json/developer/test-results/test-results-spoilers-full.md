@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-06 05:54:58
+**Generated:** 2026-01-07 00:13:02
 
-**Source Data Created:** 2026-01-06T05:34:29.250962
+**Source Data Created:** 2026-01-07T00:13:01.889396
 
-**Source Data Last Updated:** 2026-01-06T05:34:29.250970
+**Source Data Last Updated:** 2026-01-07T00:13:01.889405
 
 ## Summary
 
 - **Total Games:** 73
 - **Passed:** 73 (100.0%)
 - **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Games with Intermittent Failures:** 2
+- **Total Intermittent Failures:** 2
 
 ### Generic Exporter/Logic Statistics
 
@@ -103,6 +103,16 @@
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 3.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Faxanadu | 1 | 2026-01-07 00:09 | Previously failed, now passing |
+| Heretic | 1 | 2026-01-07 00:10 | Previously failed, now passing |
+
 
 ## Notes
 
