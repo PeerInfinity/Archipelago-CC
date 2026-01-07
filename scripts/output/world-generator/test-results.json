@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "timestamp": "2026-01-07T05:10:17.357139",
+    "seed": 1,
+    "phase": "all",
+    "canonical_seed1": true,
+    "total_templates": 1,
+    "successful_generations": 1,
+    "failed_generations": 0,
+    "successful_test_worlds": 1,
+    "failed_test_worlds": 0,
+    "rules_comparison_passed": 1,
+    "rules_comparison_failed": 0,
+    "cross_validation_passed": 1,
+    "cross_validation_failed": 0
+  },
+  "results": {
+    "Noita": {
+      "template": "Noita.yaml",
+      "game_name": "Noita",
+      "timestamp": "2026-01-07T05:10:23.548615",
+      "original": {
+        "generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/noita/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/noita/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/noita/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 5.81
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.41
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "world_dir": "/home/user/Archipelago-CC/worlds/noita_worldgen",
+          "error": null,
+          "processing_time_seconds": 0.15
+        },
+        "seed_generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/noita_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/noita_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/noita_worldgen/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 5.36
+        },
+        "rules_comparison": {
+          "success": true,
+          "pass_fail": "pass",
+          "differences_count": 0,
+          "ignored_count": 240,
+          "error": null,
+          "processing_time_seconds": 0.17
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.45
+        },
+        "cross_validation": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.36
+        },
+        "world_dir": "/home/user/Archipelago-CC/worlds/noita_worldgen",
+        "test_game_name": "Noita WorldGen",
+        "test_template_name": "Noita WorldGen.yaml"
+      },
+      "errors": {
+        "generation": [],
+        "testing": []
+      }
+    }
+  }
+}
