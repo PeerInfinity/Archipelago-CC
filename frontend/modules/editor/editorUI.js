@@ -36,9 +36,12 @@ class EditorUI {
     this.editorDropdown = null;
     this.autoUpdateCheckbox = null;
     this.updateNowButton = null;
+    this.applyButton = null;
     this.unsubscribeContentChanged = null;
 
     this._handleTextAreaInput = this._handleTextAreaInput.bind(this);
+    this._handleApplyClick = this._handleApplyClick.bind(this);
+    this._handleKeyDown = this._handleKeyDown.bind(this);
 
     this.container.element.appendChild(this.rootElement);
 
@@ -74,6 +77,9 @@ class EditorUI {
           if (this.editorDropdown && this.editorDropdown.value !== sourceKey) {
             this.editorDropdown.value = sourceKey;
           }
+
+          // Update Apply button visibility when source changes
+          this._updateApplyButtonVisibility();
         }
       );
 
@@ -162,6 +168,31 @@ class EditorUI {
     });
 
     controlsDiv.appendChild(this.updateNowButton);
+
+    // Create Apply button (only visible for 'rules' source)
+    this.applyButton = document.createElement('button');
+    this.applyButton.textContent = 'Apply';
+    this.applyButton.style.padding = '2px 8px';
+    this.applyButton.style.backgroundColor = '#444';
+    this.applyButton.style.color = '#ccc';
+    this.applyButton.style.border = '1px solid #666';
+    this.applyButton.style.borderRadius = '3px';
+    this.applyButton.style.cursor = 'pointer';
+    this.applyButton.title = 'Apply edited rules (Ctrl+Enter)';
+    this.applyButton.addEventListener('click', this._handleApplyClick);
+
+    this.applyButton.addEventListener('mouseenter', () => {
+      this.applyButton.style.backgroundColor = '#555';
+    });
+    this.applyButton.addEventListener('mouseleave', () => {
+      this.applyButton.style.backgroundColor = '#444';
+    });
+
+    controlsDiv.appendChild(this.applyButton);
+
+    // Update Apply button visibility based on current source
+    this._updateApplyButtonVisibility();
+
     this.rootElement.appendChild(controlsDiv);
 
     try {
@@ -174,6 +205,7 @@ class EditorUI {
       this.textAreaElement.style.color = '#FFFFFF';
       this.textAreaElement.classList.add('editor-textarea');
       this.textAreaElement.addEventListener('input', this._handleTextAreaInput);
+      this.textAreaElement.addEventListener('keydown', this._handleKeyDown);
       this.rootElement.appendChild(this.textAreaElement);
 
       this._displayCurrentSourceContent();
@@ -189,6 +221,7 @@ class EditorUI {
   _handleSourceChange() {
     const newSourceKey = this.editorDropdown.value;
     editorDataService.setCurrentSourceKey(newSourceKey);
+    this._updateApplyButtonVisibility();
   }
 
   _handleAutoUpdateChange() {
@@ -198,6 +231,81 @@ class EditorUI {
   async _handleUpdateNowClick() {
     log('info', '[EditorUI] Update Now button clicked');
     await editorDataService.updateNow();
+  }
+
+  async _handleApplyClick() {
+    if (!this.textAreaElement || !this.applyButton) return;
+
+    const currentSourceKey = editorDataService.getCurrentSourceKey();
+    if (currentSourceKey !== 'rules') {
+      log('warn', '[EditorUI] Apply clicked but not on rules source');
+      return;
+    }
+
+    try {
+      const jsonText = this.textAreaElement.value;
+      const rulesData = JSON.parse(jsonText);
+
+      log('info', '[EditorUI] Applying edited rules...');
+
+      // Publish the files:jsonLoaded event to trigger rules loading
+      eventBus.publish('files:jsonLoaded', {
+        jsonData: rulesData,
+        selectedPlayerId: '1',
+        sourceName: 'editorApply'
+      }, 'editor');
+
+      // Visual feedback - success
+      const originalText = this.applyButton.textContent;
+      const originalBg = this.applyButton.style.backgroundColor;
+      this.applyButton.textContent = 'Applied!';
+      this.applyButton.style.backgroundColor = '#4CAF50';
+
+      setTimeout(() => {
+        if (this.applyButton) {
+          this.applyButton.textContent = originalText;
+          this.applyButton.style.backgroundColor = originalBg;
+        }
+      }, 1000);
+
+      log('info', '[EditorUI] Rules applied successfully');
+    } catch (error) {
+      log('error', '[EditorUI] Error applying rules:', error);
+
+      // Visual feedback - error
+      const originalText = this.applyButton.textContent;
+      const originalBg = this.applyButton.style.backgroundColor;
+      this.applyButton.textContent = 'Error!';
+      this.applyButton.style.backgroundColor = '#f44336';
+
+      setTimeout(() => {
+        if (this.applyButton) {
+          this.applyButton.textContent = originalText;
+          this.applyButton.style.backgroundColor = originalBg;
+        }
+      }, 2000);
+
+      alert(`Error applying rules: ${error.message}`);
+    }
+  }
+
+  _updateApplyButtonVisibility() {
+    if (!this.applyButton) return;
+
+    const currentSourceKey = editorDataService.getCurrentSourceKey();
+    this.applyButton.style.display = currentSourceKey === 'rules' ? 'inline-block' : 'none';
+  }
+
+  _handleKeyDown(event) {
+    // Check for Ctrl+Enter combination to apply rules
+    if (event.ctrlKey && event.key === 'Enter') {
+      const currentSourceKey = editorDataService.getCurrentSourceKey();
+      if (currentSourceKey === 'rules') {
+        event.preventDefault();
+        log('info', '[EditorUI] Ctrl+Enter shortcut detected, applying rules...');
+        this._handleApplyClick();
+      }
+    }
   }
 
   _displayCurrentSourceContent() {
@@ -249,10 +357,16 @@ class EditorUI {
     if (this.textAreaElement) {
       log('info', 'Destroying <textarea> instance.');
       this.textAreaElement.removeEventListener('input', this._handleTextAreaInput);
+      this.textAreaElement.removeEventListener('keydown', this._handleKeyDown);
       if (this.textAreaElement.parentNode === this.rootElement) {
         this.rootElement.removeChild(this.textAreaElement);
       }
       this.textAreaElement = null;
+    }
+
+    if (this.applyButton) {
+      this.applyButton.removeEventListener('click', this._handleApplyClick);
+      this.applyButton = null;
     }
 
     if (this.editorDropdown) {

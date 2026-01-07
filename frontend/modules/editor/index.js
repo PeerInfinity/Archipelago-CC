@@ -32,4 +32,5 @@ export function register(registrationApi) {
 
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('editor:contentResponse');
+  registrationApi.registerEventBusPublisher('files:jsonLoaded');
 }
