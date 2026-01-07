@@ -275,3 +275,4 @@ frontend/modules/mazeGame-iframe/
 worlds/apworld_manager/
 worlds_disabled/
 custom_worlds_disabled/
+scripts/output/world-generator/
