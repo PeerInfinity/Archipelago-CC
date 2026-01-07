@@ -1,4 +1,5 @@
 import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
+import { profiler } from './profiler.js';
 
 /**
  * Rule Engine - Thread-Agnostic Rule Evaluation
@@ -430,6 +431,23 @@ function createBoundContext(context, iterator_info, value) {
 /**
  * Evaluates a rule against the provided state context (either StateManager or main thread snapshot).\n * @param {any} rule - The rule object (or primitive) to evaluate.\n * @param {object} context - Either the StateManager instance (or its interface) in the worker,\n *                           or the snapshot interface on the main thread.\n * @param {number} [depth=0] - Current recursion depth for debugging.\n * @returns {boolean|any} - The result of the rule evaluation.\n */
 export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
+  // Profile top-level calls only (depth 0) to minimize overhead
+  const shouldProfile = depth === 0 && profiler.enabled;
+  if (shouldProfile) {
+    profiler.start('evaluateRule');
+  }
+
+  try {
+    return _evaluateRuleImpl(rule, context, depth, localScope);
+  } finally {
+    if (shouldProfile) {
+      profiler.end('evaluateRule');
+    }
+  }
+};
+
+// Internal implementation of evaluateRule
+const _evaluateRuleImpl = (rule, context, depth, localScope) => {
   // Prevent infinite recursion by limiting depth
   if (depth > 100) {
     log('error', '[evaluateRule] Maximum recursion depth exceeded', {
@@ -2582,7 +2600,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'location_check': {
         // Check if a location is accessible (can be reached)
         // This matches the Python behavior where _can_get checks if a location CAN be reached
-        const locationName = evaluateRule(rule.location, context, depth + 1);
+        const locationName = evaluateRule(rule.location, context, depth + 1, localScope);
         if (locationName === undefined) {
           result = undefined;
         } else if (typeof context.isLocationAccessible === 'function') {
@@ -2836,13 +2854,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
-      // world_attribute is an alias for setting_value - both use getSetting() which
-      // checks settings first, then falls back to world_attributes
+      // option_value: for user-configurable options (e.g. world.options.difficulty)
+      // world_attribute: for runtime-computed values (e.g. world.shop_items, world.difficulty_requirements)
+      // setting_value: legacy type that could be either (for backward compatibility)
+      // All three use getSetting() which checks settings first, then falls back to world_attributes
+      case 'option_value':
       case 'world_attribute':
       case 'setting_value': {
         // Retrieve a setting or world attribute value
-        // - setting_value: for user-configurable options (e.g. world.options.difficulty)
-        // - world_attribute: for runtime-computed values (e.g. world.shop_items, world.difficulty_requirements)
         // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
         // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
         // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
@@ -2850,7 +2869,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         // use_current_key: When true, returns the string key (e.g., "easy") instead of numeric value.
         // This is used when Python code accesses option.current_key instead of option.value.
         // The name_lookup mapping in option_definitions is used for conversion.
-        let settingName = rule.setting || rule.attribute;
+        let settingName = rule.option || rule.setting || rule.attribute;
         if (typeof settingName === 'string') {
           let rawValue;
           // Handle dot notation for nested property access
@@ -3658,7 +3677,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'can_reach': {
         // Check if a region is reachable
-        const regionName = evaluateRule(rule.region, context, depth + 1);
+        const regionName = evaluateRule(rule.region, context, depth + 1, localScope);
         if (regionName === undefined) {
           result = undefined;
         } else if (typeof context.isRegionReachable === 'function') {
@@ -3676,7 +3695,10 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'can_reach_entrance': {
         // Check if an entrance is reachable
         // An entrance is reachable if we can reach its source region AND satisfy its access rule
-        const entranceName = rule.entrance;
+        // Evaluate entrance name in case it's an f_string or parameter reference
+        const entranceName = typeof rule.entrance === 'string'
+          ? rule.entrance
+          : evaluateRule(rule.entrance, context, depth + 1, localScope);
         if (!entranceName) {
           log('warn', '[evaluateRule] can_reach_entrance rule missing entrance name');
           result = undefined;
@@ -5558,6 +5580,85 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         }
       }
       log('debug', `[evaluateRuleBuilderRule] SettingValue: setting '${settingName}' not found`);
+      return undefined;
+    }
+
+    // OptionValue: get a user-configurable option value
+    // Rule Builder: {"rule": "OptionValue", "args": {"option": "open_pyramid"}}
+    case 'OptionValue': {
+      const optionName = args.option;
+      if (!optionName) {
+        log('warn', '[evaluateRuleBuilderRule] OptionValue rule missing option');
+        return undefined;
+      }
+      // Try to get option from context
+      if (context.getStaticData || context.staticData) {
+        const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
+        const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+        // Get world data
+        const worldData = staticData?.world;
+        if (worldData && worldData[playerId]) {
+          const playerWorld = worldData[playerId];
+
+          // Check in options sub-object first (where options typically are)
+          let optionValue = playerWorld.options?.[optionName];
+
+          // If not found, check at top level
+          if (optionValue === undefined) {
+            optionValue = playerWorld[optionName];
+          }
+
+          if (optionValue !== undefined) {
+            // Convert string booleans to actual booleans
+            if (optionValue === 'true') return true;
+            if (optionValue === 'false') return false;
+            return optionValue;
+          }
+        }
+      }
+      log('debug', `[evaluateRuleBuilderRule] OptionValue: option '${optionName}' not found`);
+      return undefined;
+    }
+
+    // WorldAttribute: get a runtime-computed world attribute value
+    // Rule Builder: {"rule": "WorldAttribute", "args": {"attribute": "shop_items", "index": 0}}
+    case 'WorldAttribute': {
+      const attributeName = args.attribute;
+      const index = args.index;
+      if (!attributeName) {
+        log('warn', '[evaluateRuleBuilderRule] WorldAttribute rule missing attribute');
+        return undefined;
+      }
+      // Try to get attribute from context
+      if (context.getStaticData || context.staticData) {
+        const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
+        const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+        // Get world data
+        const worldData = staticData?.world;
+        if (worldData && worldData[playerId]) {
+          const playerWorld = worldData[playerId];
+
+          // Get the attribute value
+          let attrValue = playerWorld[attributeName];
+
+          // Apply index if specified
+          if (attrValue !== undefined && index !== undefined) {
+            if (Array.isArray(attrValue) && typeof index === 'number') {
+              attrValue = attrValue[index];
+            } else if (typeof attrValue === 'object' && attrValue !== null) {
+              attrValue = attrValue[index];
+            }
+          }
+
+          if (attrValue !== undefined) {
+            // Convert string booleans to actual booleans
+            if (attrValue === 'true') return true;
+            if (attrValue === 'false') return false;
+            return attrValue;
+          }
+        }
+      }
+      log('debug', `[evaluateRuleBuilderRule] WorldAttribute: attribute '${attributeName}' not found`);
       return undefined;
     }
 

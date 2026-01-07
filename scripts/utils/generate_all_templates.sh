@@ -405,5 +405,11 @@ fi
 #remove empty preset directories
 find frontend/presets -type d -empty -delete
 
-#rm -rf frontend/modules/textAdventure-remote/shared
-#cp -r frontend/modules/shared frontend/modules/textAdventure-remote/
+# Update textAdventure-remote shared directory (without game-specific JS helpers)
+rm -rf frontend/modules/textAdventure-remote/shared
+cp -r frontend/modules/shared frontend/modules/textAdventure-remote/
+# Remove game-specific JS helper directories (keep only generic/)
+find frontend/modules/textAdventure-remote/shared/gameLogic -mindepth 1 -maxdepth 1 -type d ! -name generic -exec rm -rf {} +
+# Use empty registry (no game-specific imports)
+cp frontend/modules/shared/gameLogic/gameLogicRegistry.empty.js frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.js
+rm frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.empty.js
