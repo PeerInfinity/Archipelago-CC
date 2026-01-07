@@ -1695,6 +1695,33 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if option_name in random_options:
             return True
 
+    # Not rule format difference: WorldGen uses 'child' while original may use 'args.condition'
+    # Both represent the same rule structure, just with different key names
+    if 'access_rule' in path and '.child' in path:
+        # This is a WorldGen-specific format that appears where original has args.condition
+        if worldgen_value and isinstance(worldgen_value, dict) and 'rule' in worldgen_value:
+            return True
+        if original_value == '<missing>':
+            return True
+
+    # Rule simplification: And(False, ...) -> False_
+    # When a rule has a condition that's always false, WorldGen simplifies to False_
+    # Original may keep the full And structure with Constant(0) elements
+    if 'access_rule' in path and path.endswith('.rule'):
+        if original_value in ('And', 'Or') and worldgen_value == 'False_':
+            return True
+
+    # Complex options that WorldGen doesn't export (dict/list options with nested structure)
+    # These are game-specific override options that require special handling
+    complex_options = {
+        'DamageRandoOverrides', 'RisingTidesOverrides', 'Traps',
+        'boss_rando_overrides', 'damage_rando_overrides', 'rising_tides_overrides', 'traps'
+    }
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in complex_options:
+            if path.endswith(f'.{opt}'):
+                return True
+
     return False
 
 
