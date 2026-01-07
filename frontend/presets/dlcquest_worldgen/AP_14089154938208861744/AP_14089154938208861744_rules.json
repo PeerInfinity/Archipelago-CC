@@ -7,9 +7,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "DLCqworld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1874,6 +1871,7 @@
   "world": {
     "1": {
       "game": "DLCQuest WorldGen",
+      "world_class_name": "DLCqworld",
       "options": {
         "accessibility": 0,
         "campaign": 0,
@@ -1936,7 +1934,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "double_jump_glitch": {
@@ -2044,12 +2042,8 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
       "use_resolved_items": true,
-      "add_sphere_items_upfront": true,
-      "world_class_name": "DLCqworld"
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
