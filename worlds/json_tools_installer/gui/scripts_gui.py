@@ -125,6 +125,16 @@ SCRIPT_CATEGORIES = {
             "Restore original world files from backups",
             command=None  # Handled specially
         ),
+        ScriptAction(
+            "Enable Auto Monkey Patches",
+            "Use runtime hooks on every AP startup (no file changes)",
+            command=None  # Handled specially
+        ),
+        ScriptAction(
+            "Disable Auto Monkey Patches",
+            "Stop using runtime hooks on startup",
+            command=None  # Handled specially
+        ),
     ],
     "Quick Actions": [
         ScriptAction(
@@ -276,7 +286,11 @@ class ScriptsApp(App):
         """Handle patch-related actions."""
         action_name = action.name.lower()
 
-        if "main" in action_name and "apply" in action_name:
+        if "monkey" in action_name and "enable" in action_name:
+            self.enable_auto_monkey_patches()
+        elif "monkey" in action_name and "disable" in action_name:
+            self.disable_auto_monkey_patches()
+        elif "main" in action_name and "apply" in action_name:
             self.apply_main_patches()
         elif "main" in action_name and "revert" in action_name:
             self.revert_main_patches()
@@ -372,6 +386,60 @@ class ScriptsApp(App):
                 Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
 
         thread = threading.Thread(target=do_revert)
+        thread.daemon = True
+        thread.start()
+
+    def enable_auto_monkey_patches(self):
+        """Enable auto monkey patches (persists across sessions)."""
+        def do_enable():
+            try:
+                from ..config import load_config, save_config
+                from ..monkey_patches import install_hooks, get_installed_hooks
+
+                # Update config to use monkey patching
+                config = load_config()
+                config.patches.method = "monkey"
+                save_config(config)
+
+                # Also install for current session
+                results = install_hooks()
+                installed = get_installed_hooks()
+                success_count = sum(1 for v in results.values() if v)
+
+                msg = f"Auto monkey patches enabled.\n\nInstalled {success_count} hooks for current session: {', '.join(installed)}\n\nHooks will auto-install on future AP startups."
+                Clock.schedule_once(lambda dt: self.show_message("Success", msg))
+            except Exception as e:
+                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+
+        thread = threading.Thread(target=do_enable)
+        thread.daemon = True
+        thread.start()
+
+    def disable_auto_monkey_patches(self):
+        """Disable auto monkey patches."""
+        def do_disable():
+            try:
+                from ..config import load_config, save_config
+                from ..monkey_patches import uninstall_hooks, get_installed_hooks
+
+                # Update config to not use monkey patching
+                config = load_config()
+                config.patches.method = "file"
+                save_config(config)
+
+                # Uninstall from current session if any
+                installed_before = get_installed_hooks()
+                if installed_before:
+                    uninstall_hooks()
+                    msg = f"Auto monkey patches disabled.\n\nUninstalled hooks from current session: {', '.join(installed_before)}"
+                else:
+                    msg = "Auto monkey patches disabled.\n\nNo hooks were active in current session."
+
+                Clock.schedule_once(lambda dt: self.show_message("Success", msg))
+            except Exception as e:
+                Clock.schedule_once(lambda dt: self.show_message("Error", str(e)))
+
+        thread = threading.Thread(target=do_disable)
         thread.daemon = True
         thread.start()
 
