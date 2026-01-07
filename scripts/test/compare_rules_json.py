@@ -755,6 +755,85 @@ def normalize_and_or_structure(obj: Any) -> Any:
         return obj
 
 
+def normalize_not_expression_format(obj: Any) -> Any:
+    """
+    Normalize 'not' expression formats between original and WorldGen exports.
+
+    Original exports:
+        {"type": "not", "operand": {...}, "condition": null}
+
+    WorldGen exports:
+        {"type": "not", "condition": {...}}
+
+    Both are semantically equivalent. This normalizes to use 'condition' as the key,
+    omitting the null 'condition' field when 'operand' is present.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for 'not' type with operand
+        if obj_type == 'not':
+            operand = obj.get('operand')
+            condition = obj.get('condition')
+
+            # If operand exists and condition is None/missing, use operand
+            if operand and not condition:
+                result = {'type': 'not', 'condition': normalize_not_expression_format(operand)}
+                # Preserve any other keys (unlikely but for safety)
+                for k, v in obj.items():
+                    if k not in ('type', 'operand', 'condition'):
+                        result[k] = normalize_not_expression_format(v)
+                return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_not_expression_format(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_not_expression_format(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_world_attribute_format(obj: Any) -> Any:
+    """
+    Normalize world attribute access patterns to the canonical world_attribute format.
+
+    WorldGen uses the expanded attribute format:
+        {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "X"}
+
+    Original worlds use the compact world_attribute format:
+        {"type": "world_attribute", "attribute": "X"}
+
+    Both are semantically equivalent. This normalizes to world_attribute for comparison.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for attribute type with world object
+        if obj_type == 'attribute':
+            obj_obj = obj.get('object')
+            attr_name = obj.get('attr')
+
+            # Check if object is {"type": "name", "name": "world"}
+            if (isinstance(obj_obj, dict) and
+                obj_obj.get('type') == 'name' and
+                obj_obj.get('name') == 'world' and
+                attr_name):
+                # Convert to world_attribute format
+                result = {'type': 'world_attribute', 'attribute': attr_name}
+                # Preserve any other keys (like index)
+                for k, v in obj.items():
+                    if k not in ('type', 'object', 'attr'):
+                        result[k] = normalize_world_attribute_format(v)
+                return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_world_attribute_format(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_world_attribute_format(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_setting_types(obj: Any) -> Any:
     """
     Normalize option_value/world_attribute types to setting_value for comparison.
@@ -1515,6 +1594,14 @@ def main():
     # Normalize And/Or structure (flatten nested, sort children)
     original_normalized = normalize_and_or_structure(original_normalized)
     worldgen_normalized = normalize_and_or_structure(worldgen_normalized)
+
+    # Normalize world attribute format (attribute with world object -> world_attribute)
+    original_normalized = normalize_world_attribute_format(original_normalized)
+    worldgen_normalized = normalize_world_attribute_format(worldgen_normalized)
+
+    # Normalize not expression format (operand -> condition)
+    original_normalized = normalize_not_expression_format(original_normalized)
+    worldgen_normalized = normalize_not_expression_format(worldgen_normalized)
 
     # Normalize setting types (option_value/world_attribute -> setting_value)
     original_normalized = normalize_setting_types(original_normalized)
