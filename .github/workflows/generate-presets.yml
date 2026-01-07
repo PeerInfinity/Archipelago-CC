@@ -23,6 +23,11 @@ on:
         type: boolean
         default: true
 
+      generate_worldgen2:
+        description: 'Generate worldgen2 worlds (from worldgen worlds)'
+        type: boolean
+        default: false
+
       filter_presets:
         description: 'Filter preset changes to only include rules.json and sphere_log.jsonl files (excludes Spoiler.txt and .archipelago)'
         type: boolean
@@ -108,6 +113,7 @@ jobs:
           GENERATE_EXTRA_SEEDS: ${{ inputs.generate_extra_seeds }}
           GENERATE_WORLDGEN: ${{ inputs.generate_worldgen }}
           WORLDGEN_CANONICAL_SEED1: ${{ inputs.worldgen_canonical_seed1 }}
+          GENERATE_WORLDGEN2: ${{ inputs.generate_worldgen2 }}
         run: |
           source .venv/bin/activate
           chmod +x scripts/utils/generate_all_templates.sh
