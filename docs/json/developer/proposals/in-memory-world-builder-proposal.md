@@ -15,7 +15,7 @@ This proposal describes a system to enable the Rule Builder's "explain" feature 
 | AST explain module | ✅ Complete | Full explain_json() support |
 | Data extraction | ✅ Complete | `ExtractedData` class with all fields |
 | Schema versioning | ✅ Complete | All exports have `schema_version` |
-| `JSONWorldBuilder` | ❌ Not started | Orchestration class using worldgen worlds |
+| `JSONWorldBuilder` | ✅ Complete | `world_generator/json_world_builder.py` |
 | `MinimalWorldContext` | ~~Not needed~~ | Use real world instance instead |
 | Tracker integration | ❌ Not started | Explain fallback chain |
 
@@ -32,7 +32,7 @@ The Rule Builder's explain feature provides detailed rule explanations via `expl
 The solution involves two parts:
 
 1. **AST Rule Parsing & Explain (COMPLETE)**: Parse AST format JSON directly into Rule Builder objects with explain support
-2. **JSONWorldBuilder Orchestration (NOT STARTED)**: An orchestration layer to load JSON exports and provide rule lookup for the tracker
+2. **JSONWorldBuilder Orchestration (COMPLETE)**: An orchestration layer to load JSON exports and instantiate worldgen worlds
 
 ### Architecture
 
@@ -41,7 +41,7 @@ JSON Export (rules.json)
     │
     ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    JSONWorldBuilder (NOT STARTED)            │
+│                    JSONWorldBuilder (COMPLETE)               │
 │                                                              │
 │  ┌─────────────┐    ┌─────────────────────────────────────┐ │
 │  │ JSON Loader │ -> │ WorldGen World Instantiation        │ │
@@ -167,9 +167,9 @@ class ExtractedData:
     dungeons: Dict[str, DungeonData]
 ```
 
-#### 5. JSONWorldBuilder Class (NOT STARTED)
+#### 5. JSONWorldBuilder Class (COMPLETE)
 
-Proposed location: `world_generator/json_world_builder.py`
+Location: `world_generator/json_world_builder.py`
 
 **Revised approach:** Instead of creating a `MinimalWorldContext`, we instantiate the corresponding `_worldgen` world. This world was generated from the same JSON rules, so its structure matches exactly and it has native Rule Builder support with full explain functionality.
 
@@ -382,10 +382,10 @@ Helper functions are handled automatically by the worldgen world approach:
 - ✅ `ASTRule` wrapping for unknown types
 - ✅ Helper function parsing in AST format
 
-### Phase 3: Orchestration Layer ❌ NOT STARTED
-- Create `JSONWorldBuilder` class in `world_generator/json_world_builder.py`
-- Implement worldgen world instantiation from JSON metadata
-- Unit tests for the new class
+### Phase 3: Orchestration Layer ✅ COMPLETE
+- ✅ Created `JSONWorldBuilder` class in `world_generator/json_world_builder.py`
+- ✅ Implemented worldgen world instantiation from JSON metadata
+- ✅ Unit tests in `scripts/test/test-json-world-builder.py`
 
 ### Phase 4: Tracker Integration ❌ NOT STARTED
 - Add `load_worldgen_world()` method to TrackerCore
@@ -443,22 +443,21 @@ class RuleCache:
 
 The following work items remain to complete this proposal:
 
-### Priority 1: Orchestration Layer
-1. Create `world_generator/json_world_builder.py` with `JSONWorldBuilder` class
-2. Implement worldgen world instantiation from JSON metadata
-3. Add convenience function `create_world_from_json()`
-4. Unit tests for the new class
-
-### Priority 2: Tracker Integration
+### Priority 1: Tracker Integration
 1. Add `json_builder` and `worldgen_world` attributes to `TrackerCore`
 2. Implement `load_worldgen_world()` method
 3. Update explain functionality to use worldgen world
 4. Add JSON path auto-discovery from template filename
 
-### Priority 3: Polish
+### Priority 2: Polish
 1. Performance optimization (cache instantiated worlds)
 2. Integration tests with real exports
 3. Documentation updates
+
+### Completed
+- ✅ `JSONWorldBuilder` class in `world_generator/json_world_builder.py`
+- ✅ `create_world_from_json()` convenience function
+- ✅ Unit tests in `scripts/test/test-json-world-builder.py`
 
 ## Related Work
 
