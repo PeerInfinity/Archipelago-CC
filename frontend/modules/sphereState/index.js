@@ -200,12 +200,15 @@ function handleRulesLoaded(data, propagationOptions) {
   // The sphere log is shared and named: AP_14089154938208861744_sphere_log.jsonl (without _P{N})
   const match = sourceName.match(/presets\/([^/]+)\/([^/]+)\/\2(?:_P\d+)?_rules\.json$/);
   if (!match) {
-    // If sourceName indicates data loaded from localStorage, this is expected
+    // If sourceName indicates data loaded from localStorage or editor, this is expected
     const isFromLocalStorage = sourceName === 'moduleSpecificConfigProvidedRules';
+    const isFromEditor = sourceName === 'editorApply';
+    const isExpectedNonFilePath = isFromLocalStorage || isFromEditor;
     log(
-      isFromLocalStorage ? 'info' : 'warn',
+      isExpectedNonFilePath ? 'info' : 'warn',
       `Could not parse sourceName format: ${sourceName}` +
-      (isFromLocalStorage ? ' (Rules loaded from localStorage without file path)' : '')
+      (isFromLocalStorage ? ' (Rules loaded from localStorage without file path)' : '') +
+      (isFromEditor ? ' (Rules applied from editor)' : '')
     );
     return;
   }

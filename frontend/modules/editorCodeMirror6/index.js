@@ -34,5 +34,8 @@ export const moduleInfo = {
 export function register(registrationApi) {
   log('info', '[CodeMirror 6 Editor Module] Registering...');
   registrationApi.registerPanelComponent('editorCodeMirror6Panel', CodeMirror6UI);
+
+  registrationApi.registerEventBusPublisher('files:jsonLoaded');
+
   log('info', '[CodeMirror 6 Editor Module] Registered successfully');
 }

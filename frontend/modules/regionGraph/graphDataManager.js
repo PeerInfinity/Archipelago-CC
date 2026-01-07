@@ -786,14 +786,78 @@ export class GraphDataManager {
     // Don't proceed if manually hidden
     if (this.ui.locationsManuallyHidden) return;
 
-    const elementsToAdd = [];
+    const staticData = stateManager.getStaticData();
+    if (!staticData?.regions) return;
 
+    // Get settings with defaults
+    const maxLocationNodes = this.ui.maxLocationNodes ?? 100;
+    const keepRegionSetsComplete = this.ui.keepRegionSetsComplete ?? true;
+    const onlyShowLocationsInView = this.ui.onlyShowLocationsInView ?? false;
+
+    // Get viewport extent for distance calculation and visibility filtering
+    const extent = this.ui.cy.extent();
+    const centerX = (extent.x1 + extent.x2) / 2;
+    const centerY = (extent.y1 + extent.y2) / 2;
+
+    // Collect region info with distances and location counts
+    const regionInfos = [];
     this.ui.cy.nodes('.region').forEach(region => {
       if (!region.hasClass('player') && !region.hasClass('location-node')) {
-        const elements = this.createLocationNodesForRegion(region.id());
-        elementsToAdd.push(...elements);
+        const regionId = region.id();
+        const regionData = staticData.regions.get(regionId);
+        const locationCount = regionData?.locations?.length || 0;
+
+        if (locationCount === 0) return;
+
+        const pos = region.position();
+        const distance = Math.sqrt(Math.pow(pos.x - centerX, 2) + Math.pow(pos.y - centerY, 2));
+
+        // Calculate radius for viewport check (same formula as in createLocationNodesForRegion)
+        const radius = 80 + (Math.sqrt(locationCount) * 15);
+
+        // Check if region is within viewport (with margin for location ring)
+        let isInViewport = true;
+        if (onlyShowLocationsInView) {
+          const margin = radius + 30; // Extra margin for location nodes
+          isInViewport = (
+            pos.x + margin >= extent.x1 &&
+            pos.x - margin <= extent.x2 &&
+            pos.y + margin >= extent.y1 &&
+            pos.y - margin <= extent.y2
+          );
+        }
+
+        regionInfos.push({
+          regionId,
+          region,
+          locationCount,
+          distance,
+          isInViewport
+        });
       }
     });
+
+    // Sort by distance from viewport center (closest first)
+    regionInfos.sort((a, b) => a.distance - b.distance);
+
+    // Filter by viewport if enabled
+    let candidateRegions = onlyShowLocationsInView
+      ? regionInfos.filter(r => r.isInViewport)
+      : regionInfos;
+
+    // Apply max location limit
+    const selectedRegions = this.selectRegionsWithinLimit(
+      candidateRegions,
+      maxLocationNodes,
+      keepRegionSetsComplete
+    );
+
+    // Create location nodes only for selected regions
+    const elementsToAdd = [];
+    for (const regionInfo of selectedRegions) {
+      const elements = this.createLocationNodesForRegion(regionInfo.regionId);
+      elementsToAdd.push(...elements);
+    }
 
     // Batch add all location nodes
     if (elementsToAdd.length > 0) {
@@ -805,6 +869,62 @@ export class GraphDataManager {
       // Update z-order based on distance from viewport center
       this.updateLocationNodeZOrder();
     }
+
+    const totalLocationCount = selectedRegions.reduce((sum, r) => sum + r.locationCount, 0);
+    logger.debug(`Location nodes displayed: ${totalLocationCount} locations from ${selectedRegions.length} regions`);
+  }
+
+  /**
+   * Select regions to display based on max limit and keepRegionSetsComplete setting
+   */
+  selectRegionsWithinLimit(candidateRegions, maxLocationNodes, keepRegionSetsComplete) {
+    // If no limit (0 = unlimited), return all
+    if (maxLocationNodes === 0) {
+      return candidateRegions;
+    }
+
+    const selectedRegions = [];
+    let totalLocations = 0;
+
+    for (const regionInfo of candidateRegions) {
+      const wouldExceedLimit = totalLocations + regionInfo.locationCount > maxLocationNodes;
+
+      if (wouldExceedLimit) {
+        if (keepRegionSetsComplete) {
+          // Always include at least one region, even if it exceeds the limit
+          // After that, include regions that would exceed to keep sets complete
+          selectedRegions.push(regionInfo);
+          totalLocations += regionInfo.locationCount;
+          // Stop adding more regions after exceeding
+          break;
+        } else {
+          // Strict limit: stop here (but ensure at least one region if none added yet)
+          if (totalLocations === 0) {
+            selectedRegions.push(regionInfo);
+          }
+          break;
+        }
+      } else {
+        selectedRegions.push(regionInfo);
+        totalLocations += regionInfo.locationCount;
+      }
+    }
+
+    return selectedRegions;
+  }
+
+  /**
+   * Refresh location nodes with current settings (called when settings change)
+   */
+  refreshLocationNodes() {
+    if (!this.ui.cy || !this.ui.locationsVisible) return;
+
+    // Remove existing location nodes
+    this.hideAllLocationNodes();
+
+    // Recreate with new settings
+    this.showAllLocationNodes();
+    this.ui.locationsVisible = true;
   }
 
   createLocationNodesForRegion(regionId) {

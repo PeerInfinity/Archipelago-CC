@@ -24,10 +24,12 @@
       // Support both bundled and unbundled loading modes:
       // - ?dev or ?unbundled: Force unbundled mode (ES modules)
       // - ?bundled: Force bundled mode
-      // - Default: Try bundled first, fall back to unbundled
+      // - Local development (localhost): Default to unbundled
+      // - Deployed (other hosts): Try bundled first, fall back to unbundled
       const params = new URLSearchParams(location.search);
       const forceUnbundled = params.has('dev') || params.has('unbundled');
       const forceBundled = params.has('bundled');
+      const isLocalDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
       async function loadApp() {
         if (forceUnbundled) {
@@ -42,7 +44,14 @@
           return;
         }
 
-        // Default: try bundled first, fall back to unbundled
+        // Local development: default to unbundled (no HEAD request noise)
+        if (isLocalDev) {
+          console.log('[Loader] Using unbundled mode (local development)');
+          await import('./init.js');
+          return;
+        }
+
+        // Deployed: try bundled first, fall back to unbundled
         try {
           // Check if bundle exists by fetching with HEAD request
           const response = await fetch('./dist/bundle.js', { method: 'HEAD' });
