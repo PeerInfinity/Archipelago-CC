@@ -62,10 +62,13 @@ class CodeMirror6UI {
     this.editorDropdown = null;
     this.autoUpdateCheckbox = null;
     this.updateNowButton = null;
+    this.applyButton = null;
     this.foldAllButton = null;
     this.unfoldAllButton = null;
     this.unsubscribeContentChanged = null;
     this.isUpdatingFromService = false;
+
+    this._handleApplyClick = this._handleApplyClick.bind(this);
 
     this.container.element.appendChild(this.rootElement);
 
@@ -106,6 +109,9 @@ class CodeMirror6UI {
         if (this.editorDropdown && this.editorDropdown.value !== sourceKey) {
           this.editorDropdown.value = sourceKey;
         }
+
+        // Update Apply button visibility when source changes
+        this._updateApplyButtonVisibility();
       }
     );
 
@@ -171,6 +177,14 @@ class CodeMirror6UI {
     });
     controlsDiv.appendChild(this.updateNowButton);
 
+    // Create Apply button (only visible for 'rules' source)
+    this.applyButton = this._createButton('Apply', this._handleApplyClick);
+    this.applyButton.title = 'Apply edited rules (Ctrl+Enter)';
+    controlsDiv.appendChild(this.applyButton);
+
+    // Update Apply button visibility based on current source
+    this._updateApplyButtonVisibility();
+
     // Create Fold All button
     this.foldAllButton = this._createButton('Fold All', () => {
       if (this.editorView) {
@@ -231,6 +245,22 @@ class CodeMirror6UI {
       }
     });
 
+    // Custom keymap for Apply (Ctrl+Enter)
+    const applyKeymap = keymap.of([
+      {
+        key: 'Ctrl-Enter',
+        run: () => {
+          const currentSourceKey = editorDataService.getCurrentSourceKey();
+          if (currentSourceKey === 'rules') {
+            log('info', '[CodeMirror6UI] Ctrl+Enter shortcut detected, applying rules...');
+            this._handleApplyClick();
+            return true;
+          }
+          return false;
+        },
+      },
+    ]);
+
     const extensions = [
       lineNumbers(),
       highlightActiveLine(),
@@ -245,6 +275,7 @@ class CodeMirror6UI {
         ...foldKeymap,
         ...searchKeymap,
       ]),
+      applyKeymap,
       highlightSelectionMatches(),
       updateListener,
       EditorView.lineWrapping,
@@ -318,6 +349,69 @@ class CodeMirror6UI {
     }
   }
 
+  async _handleApplyClick() {
+    if (!this.editorView || !this.applyButton) return;
+
+    const currentSourceKey = editorDataService.getCurrentSourceKey();
+    if (currentSourceKey !== 'rules') {
+      log('warn', '[CodeMirror6UI] Apply clicked but not on rules source');
+      return;
+    }
+
+    try {
+      const jsonText = this.editorView.state.doc.toString();
+      const rulesData = JSON.parse(jsonText);
+
+      log('info', '[CodeMirror6UI] Applying edited rules...');
+
+      // Publish the files:jsonLoaded event to trigger rules loading
+      eventBus.publish('files:jsonLoaded', {
+        jsonData: rulesData,
+        selectedPlayerId: '1',
+        sourceName: 'editorApply'
+      }, 'editorCodeMirror6');
+
+      // Visual feedback - success
+      const originalText = this.applyButton.textContent;
+      const originalBg = this.applyButton.style.backgroundColor;
+      this.applyButton.textContent = 'Applied!';
+      this.applyButton.style.backgroundColor = '#4CAF50';
+
+      setTimeout(() => {
+        if (this.applyButton) {
+          this.applyButton.textContent = originalText;
+          this.applyButton.style.backgroundColor = originalBg;
+        }
+      }, 1000);
+
+      log('info', '[CodeMirror6UI] Rules applied successfully');
+    } catch (error) {
+      log('error', '[CodeMirror6UI] Error applying rules:', error);
+
+      // Visual feedback - error
+      const originalText = this.applyButton.textContent;
+      const originalBg = this.applyButton.style.backgroundColor;
+      this.applyButton.textContent = 'Error!';
+      this.applyButton.style.backgroundColor = '#f44336';
+
+      setTimeout(() => {
+        if (this.applyButton) {
+          this.applyButton.textContent = originalText;
+          this.applyButton.style.backgroundColor = originalBg;
+        }
+      }, 2000);
+
+      alert(`Error applying rules: ${error.message}`);
+    }
+  }
+
+  _updateApplyButtonVisibility() {
+    if (!this.applyButton) return;
+
+    const currentSourceKey = editorDataService.getCurrentSourceKey();
+    this.applyButton.style.display = currentSourceKey === 'rules' ? 'inline-block' : 'none';
+  }
+
   onPanelResize(width, height) {
     log('info', `CodeMirror6UI resized to ${width}x${height}`);
     // CodeMirror 6 handles resize automatically with proper CSS
@@ -340,6 +434,7 @@ class CodeMirror6UI {
     this.editorDropdown = null;
     this.autoUpdateCheckbox = null;
     this.updateNowButton = null;
+    this.applyButton = null;
     this.foldAllButton = null;
     this.unfoldAllButton = null;
     this.editorContainer = null;
