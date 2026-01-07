@@ -310,30 +310,307 @@ def extract_game_name_from_content(content: str, filename: str = "<string>") -> 
         return None
 
 
+def build_symbol_table_from_apworld(zf: zipfile.ZipFile, world_dir: str) -> Dict[str, str]:
+    """
+    Build a symbol table of all string constants defined in the apworld.
+    This allows resolving cross-file constant references like:
+      - from .constants import GAME_NAME
+      - game = GAME_NAME
+
+    Returns dict mapping constant names to their string values.
+    """
+    symbols = {}
+
+    # Find all Python files in the world directory
+    py_files = [name for name in zf.namelist()
+                if name.startswith(f"{world_dir}/") and name.endswith('.py')]
+
+    for py_file in py_files:
+        try:
+            content = zf.read(py_file).decode('utf-8')
+            tree = ast.parse(content, filename=py_file)
+
+            # Look for module-level string constant assignments
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Assign):
+                    for target in node.targets:
+                        if isinstance(target, ast.Name):
+                            # Check if value is a string literal
+                            if isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+                                symbols[target.id] = node.value.value
+                            elif isinstance(node.value, ast.Str):  # Python 3.7 compat
+                                symbols[target.id] = node.value.s
+                elif isinstance(node, ast.AnnAssign):
+                    if isinstance(node.target, ast.Name) and node.value:
+                        if isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+                            symbols[node.target.id] = node.value.value
+                        elif isinstance(node.value, ast.Str):  # Python 3.7 compat
+                            symbols[node.target.id] = node.value.s
+
+                # Also look for class-level constants (like CupheadWorld.GAME_NAME)
+                elif isinstance(node, ast.ClassDef):
+                    for item in node.body:
+                        if isinstance(item, ast.Assign):
+                            for target in item.targets:
+                                if isinstance(target, ast.Name):
+                                    if isinstance(item.value, ast.Constant) and isinstance(item.value.value, str):
+                                        # Store both as ClassName.attr and just attr
+                                        symbols[f"{node.name}.{target.id}"] = item.value.value
+                                        symbols[target.id] = item.value.value
+                                    elif isinstance(item.value, ast.Str):
+                                        symbols[f"{node.name}.{target.id}"] = item.value.s
+                                        symbols[target.id] = item.value.s
+                        elif isinstance(item, ast.AnnAssign):
+                            if isinstance(item.target, ast.Name) and item.value:
+                                if isinstance(item.value, ast.Constant) and isinstance(item.value.value, str):
+                                    symbols[f"{node.name}.{item.target.id}"] = item.value.value
+                                    symbols[item.target.id] = item.value.value
+                                elif isinstance(item.value, ast.Str):
+                                    symbols[f"{node.name}.{item.target.id}"] = item.value.s
+                                    symbols[item.target.id] = item.value.s
+        except (SyntaxError, ValueError, UnicodeDecodeError):
+            continue
+
+    return symbols
+
+
+def build_dict_table(content: str, filename: str) -> Dict[str, Dict[str, str]]:
+    """
+    Build a table of module-level dict definitions.
+    Returns dict mapping dict names to their string key-value pairs.
+    """
+    dicts = {}
+    try:
+        tree = ast.parse(content, filename=filename)
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and isinstance(node.value, ast.Dict):
+                        dict_values = {}
+                        for key, val in zip(node.value.keys, node.value.values):
+                            if key is not None:
+                                key_str = None
+                                if isinstance(key, ast.Constant) and isinstance(key.value, str):
+                                    key_str = key.value
+                                elif isinstance(key, ast.Str):
+                                    key_str = key.s
+
+                                if key_str:
+                                    val_str = None
+                                    if isinstance(val, ast.Constant) and isinstance(val.value, str):
+                                        val_str = val.value
+                                    elif isinstance(val, ast.Str):
+                                        val_str = val.s
+                                    if val_str:
+                                        dict_values[key_str] = val_str
+
+                        if dict_values:
+                            dicts[target.id] = dict_values
+    except (SyntaxError, ValueError):
+        pass
+    return dicts
+
+
+def extract_game_from_world_class(content: str, filename: str, symbols: Dict[str, str]) -> Optional[str]:
+    """
+    Extract the game name from a World class definition.
+    Uses the symbol table to resolve constant references.
+    """
+    try:
+        tree = ast.parse(content, filename=filename)
+
+        # Build dict table for this file (for patterns like game = json_world["game_name"])
+        module_dicts = build_dict_table(content, filename)
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                # Check if this is a World subclass
+                is_world_class = any(
+                    isinstance(base, ast.Name) and base.id == 'World'
+                    for base in node.bases
+                )
+
+                if is_world_class:
+                    # Look for 'game' attribute in the class
+                    for item in node.body:
+                        game_value = None
+                        if isinstance(item, ast.AnnAssign):
+                            if isinstance(item.target, ast.Name) and item.target.id == 'game':
+                                game_value = item.value
+                        elif isinstance(item, ast.Assign):
+                            for target in item.targets:
+                                if isinstance(target, ast.Name) and target.id == 'game':
+                                    game_value = item.value
+                                    break
+
+                        if game_value:
+                            # Direct string literal
+                            if isinstance(game_value, ast.Constant) and isinstance(game_value.value, str):
+                                return game_value.value
+                            elif isinstance(game_value, ast.Str):
+                                return game_value.s
+                            # Name reference to a constant
+                            elif isinstance(game_value, ast.Name):
+                                if game_value.id in symbols:
+                                    return symbols[game_value.id]
+                            # Attribute access (e.g., Constants.GAME_NAME or self.GAME_NAME)
+                            elif isinstance(game_value, ast.Attribute):
+                                # Try ClassName.attr format
+                                if isinstance(game_value.value, ast.Name):
+                                    full_name = f"{game_value.value.id}.{game_value.attr}"
+                                    if full_name in symbols:
+                                        return symbols[full_name]
+                                    # Also try just the attribute name
+                                    if game_value.attr in symbols:
+                                        return symbols[game_value.attr]
+                            # Dictionary subscript: game = some_dict["key"]
+                            elif isinstance(game_value, ast.Subscript):
+                                if isinstance(game_value.value, ast.Name):
+                                    dict_name = game_value.value.id
+                                    if dict_name in module_dicts:
+                                        # Get the key being accessed
+                                        key = None
+                                        if isinstance(game_value.slice, ast.Constant) and isinstance(game_value.slice.value, str):
+                                            key = game_value.slice.value
+                                        elif isinstance(game_value.slice, ast.Str):
+                                            key = game_value.slice.s
+                                        elif isinstance(game_value.slice, ast.Index):  # Python 3.8 compat
+                                            idx = game_value.slice.value
+                                            if isinstance(idx, ast.Constant) and isinstance(idx.value, str):
+                                                key = idx.value
+                                            elif isinstance(idx, ast.Str):
+                                                key = idx.s
+
+                                        if key and key in module_dicts[dict_name]:
+                                            return module_dicts[dict_name][key]
+
+        return None
+    except (SyntaxError, ValueError):
+        return None
+
+
+def read_game_from_manifest(zf: zipfile.ZipFile, world_dir: str) -> Optional[str]:
+    """
+    Read the game name from archipelago.json manifest file inside the apworld.
+    This is a fallback for apworlds that use runtime loading of the game name.
+    """
+    manifest_path = f"{world_dir}/archipelago.json"
+    try:
+        if manifest_path in zf.namelist():
+            content = zf.read(manifest_path).decode('utf-8')
+            manifest = json.loads(content)
+            return manifest.get("game")
+    except (json.JSONDecodeError, UnicodeDecodeError, KeyError):
+        pass
+    return None
+
+
+def extract_game_name_shallow(content: str, filename: str) -> Optional[str]:
+    """
+    Shallow extraction: only looks for direct string literals in World class.
+    Fast but doesn't resolve constant references.
+    """
+    try:
+        tree = ast.parse(content, filename=filename)
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                is_world_class = any(
+                    isinstance(base, ast.Name) and base.id == 'World'
+                    for base in node.bases
+                )
+
+                if is_world_class:
+                    for item in node.body:
+                        game_value = None
+                        if isinstance(item, ast.AnnAssign):
+                            if isinstance(item.target, ast.Name) and item.target.id == 'game':
+                                game_value = item.value
+                        elif isinstance(item, ast.Assign):
+                            for target in item.targets:
+                                if isinstance(target, ast.Name) and target.id == 'game':
+                                    game_value = item.value
+                                    break
+
+                        if game_value:
+                            if isinstance(game_value, ast.Constant) and isinstance(game_value.value, str):
+                                return game_value.value
+                            elif isinstance(game_value, ast.Str):
+                                return game_value.s
+
+        return None
+    except (SyntaxError, ValueError):
+        return None
+
+
 def extract_game_name_from_apworld(apworld_path: str) -> Optional[tuple]:
     """
     Extract the game name and world directory from a .apworld file.
     Returns tuple of (game_name, world_directory) or None if not found.
+
+    Uses a tiered approach for performance:
+    1. First checks archipelago.json manifest (fastest)
+    2. Then tries shallow analysis of __init__.py (direct string literals only)
+    3. Only if needed, does deep analysis with cross-file symbol resolution
     """
     try:
         with zipfile.ZipFile(apworld_path, 'r') as zf:
-            # Find all __init__.py files in the archive
-            init_files = [name for name in zf.namelist() if name.endswith('__init__.py')]
-
-            for init_file in init_files:
-                # Extract the world directory name from the path (e.g., "clique/__init__.py" -> "clique")
-                parts = init_file.split('/')
-                if len(parts) == 2 and parts[1] == '__init__.py':
+            # Find the world directory (top-level directory in the zip)
+            world_dir = None
+            for name in zf.namelist():
+                parts = name.split('/')
+                if len(parts) >= 2 and parts[1] == '__init__.py':
                     world_dir = parts[0]
+                    break
 
-                    # Read and parse the __init__.py content
-                    content = zf.read(init_file).decode('utf-8')
-                    game_name = extract_game_name_from_content(content, init_file)
+            if not world_dir:
+                return None
 
+            # TIER 1: Try archipelago.json manifest first (fastest)
+            game_name = read_game_from_manifest(zf, world_dir)
+            if game_name:
+                return (game_name, world_dir)
+
+            # TIER 2: Try shallow analysis of __init__.py only (fast)
+            init_path = f"{world_dir}/__init__.py"
+            if init_path in zf.namelist():
+                try:
+                    content = zf.read(init_path).decode('utf-8')
+                    game_name = extract_game_name_shallow(content, init_path)
                     if game_name:
                         return (game_name, world_dir)
+                except (UnicodeDecodeError, SyntaxError):
+                    pass
 
-        return None
+            # TIER 3: Deep analysis - build symbol table and search all files
+            symbols = build_symbol_table_from_apworld(zf, world_dir)
+
+            # Find Python files to search for World class
+            py_files = [name for name in zf.namelist()
+                        if name.startswith(f"{world_dir}/") and name.endswith('.py')
+                        and '/test/' not in name and '/tests/' not in name]
+
+            # Sort to prioritize __init__.py and world.py
+            def priority(f):
+                if f.endswith('__init__.py'):
+                    return 0
+                if f.endswith('world.py'):
+                    return 1
+                return 2
+
+            py_files.sort(key=priority)
+
+            for py_file in py_files:
+                try:
+                    content = zf.read(py_file).decode('utf-8')
+                    game_name = extract_game_from_world_class(content, py_file, symbols)
+                    if game_name:
+                        return (game_name, world_dir)
+                except (UnicodeDecodeError, SyntaxError):
+                    continue
+
+            return None
     except (zipfile.BadZipFile, IOError, UnicodeDecodeError) as e:
         return None
 

@@ -21,8 +21,44 @@
     />
 
     <script type="module">
-      // Load the main initialization
-      import('./init.js');
+      // Support both bundled and unbundled loading modes:
+      // - ?dev or ?unbundled: Force unbundled mode (ES modules)
+      // - ?bundled: Force bundled mode
+      // - Default: Try bundled first, fall back to unbundled
+      const params = new URLSearchParams(location.search);
+      const forceUnbundled = params.has('dev') || params.has('unbundled');
+      const forceBundled = params.has('bundled');
+
+      async function loadApp() {
+        if (forceUnbundled) {
+          console.log('[Loader] Using unbundled mode (ES modules)');
+          await import('./init.js');
+          return;
+        }
+
+        if (forceBundled) {
+          console.log('[Loader] Using bundled mode');
+          await import('./dist/bundle.js');
+          return;
+        }
+
+        // Default: try bundled first, fall back to unbundled
+        try {
+          // Check if bundle exists by fetching with HEAD request
+          const response = await fetch('./dist/bundle.js', { method: 'HEAD' });
+          if (response.ok) {
+            console.log('[Loader] Using bundled mode (auto-detected)');
+            await import('./dist/bundle.js');
+          } else {
+            throw new Error('Bundle not found');
+          }
+        } catch (e) {
+          console.log('[Loader] Using unbundled mode (bundle not available)');
+          await import('./init.js');
+        }
+      }
+
+      loadApp();
     </script>
 
     <link rel="icon" href="data:," type="image/x-icon" />

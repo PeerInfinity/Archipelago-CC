@@ -15,6 +15,13 @@ from worlds.AutoWorld import World
 # Import and register launcher components
 from . import components as _components
 
+# Auto-install monkey patches if configured
+try:
+    from .monkey_patches import auto_install
+    auto_install()
+except Exception:
+    pass  # Silently ignore errors during auto-install
+
 
 class JSONToolsInstallerWorld(World):
     """

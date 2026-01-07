@@ -821,6 +821,9 @@ export const testLogic = {
   },
 
   async runAllEnabledTests() {
+    // Set started flag immediately for Playwright to detect
+    window.__playwrightTestsStarted__ = true;
+
     await initializeTestDiscovery();
 
     const tests = TestState.getTestsForExecution();

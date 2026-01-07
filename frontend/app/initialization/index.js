@@ -2,6 +2,8 @@
 // Orchestrates the entire application initialization flow
 // Extracted and refactored from init.js main() function (lines 1148-2610)
 
+import { profiler } from '../../modules/shared/profiler.js';
+
 // Import mode management
 import { determineActiveMode } from '../mode/modeManager.js';
 import { loadModesConfiguration } from '../mode/modeConfigResolver.js';
@@ -94,7 +96,9 @@ export async function initializeApplication(dependencies) {
   logger.info('init', 'DOM content fully loaded and parsed.');
 
   // --- Phase 1: Mode Determination ---
+  profiler.start('phase1:modeDetermination');
   const { currentActiveMode, skipLocalStorageLoad } = await determineActiveMode(logger);
+  profiler.end('phase1:modeDetermination');
   logger.info(
     'init',
     `Effective active mode for this session: "${currentActiveMode}"`
@@ -105,7 +109,9 @@ export async function initializeApplication(dependencies) {
   );
 
   // --- Phase 2: Load Modes Configuration ---
+  profiler.start('phase2:loadModesConfig');
   const modesConfig = await loadModesConfiguration(fetchJson, logger);
+  profiler.end('phase2:loadModesConfig');
 
   // Validate that the current active mode exists in modes.json
   let validatedMode = currentActiveMode;
@@ -137,6 +143,7 @@ export async function initializeApplication(dependencies) {
   }
 
   // --- Phase 3: Load Combined Mode Data ---
+  profiler.start('phase3:loadCombinedModeData');
   const { combinedModeData, layoutPresets } = await loadCombinedModeData({
     urlParams,
     modesConfig,
@@ -148,8 +155,10 @@ export async function initializeApplication(dependencies) {
     isValidLayoutObject,
     getDefaultLayoutConfig: () => getDefaultLayoutConfig(logger),
   });
+  profiler.end('phase3:loadCombinedModeData');
 
   // --- Phase 4: Initialize Settings Manager ---
+  profiler.start('phase4:settingsManager');
   if (combinedModeData.userSettings) {
     logger.debug(
       'init',
@@ -180,8 +189,10 @@ export async function initializeApplication(dependencies) {
   } catch (error) {
     log('error', '[Init] Error reconfiguring logger:', error);
   }
+  profiler.end('phase4:settingsManager');
 
   // --- Phase 5: Load and Register Modules ---
+  profiler.start('phase5:loadModules');
   const modulesData = combinedModeData.moduleConfig;
   if (
     !modulesData ||
@@ -242,8 +253,10 @@ export async function initializeApplication(dependencies) {
     incrementFileCounter: (fileName) => incrementFileCounter(fileName, logger),
     createRegistrationApi: createRegistrationApiWrapper,
   });
+  profiler.end('phase5:loadModules');
 
   // --- Phase 6: Apply Data to Registered Modules ---
+  profiler.start('phase6:applyDataToModules');
   if (combinedModeData) {
     const jsonDataHandlers = centralRegistry.getAllJsonDataHandlers();
     logger.debug(
@@ -274,8 +287,10 @@ export async function initializeApplication(dependencies) {
       'Published app:fullModeDataLoadedFromStorage with combinedModeData.'
     );
   }
+  profiler.end('phase6:applyDataToModules');
 
   // --- Phase 7: Initialize Layout Manager ---
+  profiler.start('phase7:layoutManager');
   const {
     layoutManagerInstance,
     goldenLayoutInstance,
@@ -297,8 +312,10 @@ export async function initializeApplication(dependencies) {
     logger,
     log,
   });
+  profiler.end('phase7:layoutManager');
 
   // --- Phase 8: Initialize Event Dispatcher ---
+  profiler.start('phase8:eventDispatcher');
   logger.info('init', 'Initializing Event Dispatcher...');
   const getHandlersFunc = () => centralRegistry.getAllDispatcherHandlers();
   const getLoadPriorityFunc = () => modulesData?.loadPriority || [];
@@ -337,11 +354,14 @@ export async function initializeApplication(dependencies) {
     });
   };
 
+  profiler.end('phase8:eventDispatcher');
+
   // Make combinedModeData globally available
   window.G_combinedModeData = combinedModeData;
   logger.debug('init', 'window.G_combinedModeData has been set.');
 
   // --- Phase 9: Initialize Modules ---
+  profiler.start('phase9:initializeModules');
   await initializeModules({
     loadPriority: modulesData.loadPriority,
     importedModules,
@@ -349,8 +369,10 @@ export async function initializeApplication(dependencies) {
     createInitializationApi: createInitializationApiWithDispatcher,
     logger,
   });
+  profiler.end('phase9:initializeModules');
 
   // --- Phase 10: Post-Initialize Modules ---
+  profiler.start('phase10:postInitializeModules');
   await postInitializeModules({
     loadPriority: modulesData.loadPriority,
     importedModules,
@@ -360,8 +382,10 @@ export async function initializeApplication(dependencies) {
     logger,
     log,
   });
+  profiler.end('phase10:postInitializeModules');
 
   // --- Phase 11: Create Module Manager API ---
+  profiler.start('phase11:createModuleManagerApi');
   // CRITICAL: Assign to existing moduleManagerApi object (not const)
   // This populates the object that was forward-referenced during module loading
   Object.assign(moduleManagerApi, createModuleManagerApi({
@@ -378,6 +402,7 @@ export async function initializeApplication(dependencies) {
     createRegistrationApi: createRegistrationApiWrapper,
     createInitializationApi: createInitializationApiWithDispatcher,
   }));
+  profiler.end('phase11:createModuleManagerApi');
 
   logger.info('init', 'ModuleManagerAPI populated.');
 

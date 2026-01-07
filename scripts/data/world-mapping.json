@@ -604,7 +604,7 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 7601,
+    "exporter_size": 10315,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
