@@ -3179,21 +3179,18 @@
         "name": "Achievements needing a MAM",
         "exits": [],
         "locations": [],
-        "dynamically_added": true,
         "placeholder": true
       },
       "Shapesanity Colorful East Windmill Mixed": {
         "name": "Shapesanity Colorful East Windmill Mixed",
         "exits": [],
         "locations": [],
-        "dynamically_added": true,
         "placeholder": true
       },
       "Shapesanity Colorful Half Mixed": {
         "name": "Shapesanity Colorful Half Mixed",
         "exits": [],
         "locations": [],
-        "dynamically_added": true,
         "placeholder": true
       }
     }
