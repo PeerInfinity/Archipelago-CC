@@ -1274,7 +1274,10 @@ class TrackerGameContext(CommonContext):
             self._log_debug_message(f"recv_{cmd}", {"cmd": cmd, "args": log_args})
 
         try:
-            if cmd == 'Connected':
+            if cmd == 'RoomInfo':
+                # Capture seed_name for auto-discovery of rules JSON
+                self.seed_name = args.get('seed_name')
+            elif cmd == 'Connected':
                 self.game = args["slot_info"][str(args["slot"])][1]
                 slot_name = args["slot_info"][str(args["slot"])][0]
                 self.tracker_core.set_slot_params(self.game,self.slot,slot_name,self.team)
