@@ -454,16 +454,53 @@ export class GraphInteractionManager {
     this.ui.currentZoomLevel = this.ui.cy.zoom();
     this.ui.locationsVisible = false;
 
+    // Initialize debounce timer for viewport-based location refresh
+    this.viewportRefreshTimer = null;
+
     // Listen to zoom/pan events
     this.ui.cy.on('zoom pan', () => {
       this.updateZoomBasedVisibility();
       this.ui.updateLocationNodeZOrder();
+
+      // Debounced refresh for viewport-filtered locations
+      this.scheduleViewportRefresh();
     });
 
     // Also update z-order when viewport changes
     this.ui.cy.on('viewport', () => {
       this.ui.updateLocationNodeZOrder();
+
+      // Debounced refresh for viewport-filtered locations
+      this.scheduleViewportRefresh();
     });
+  }
+
+  /**
+   * Schedule a debounced refresh of location nodes when viewport changes.
+   * Only triggers if onlyShowLocationsInView is enabled.
+   */
+  scheduleViewportRefresh() {
+    // Only schedule refresh if viewport filtering is enabled and locations are visible
+    if (!this.ui.onlyShowLocationsInView || !this.ui.locationsVisible) {
+      return;
+    }
+
+    // Clear any existing timer
+    if (this.viewportRefreshTimer) {
+      clearTimeout(this.viewportRefreshTimer);
+    }
+
+    // Get the stabilize delay (default 1000ms)
+    const delay = this.ui.viewportStabilizeDelay ?? 1000;
+
+    // Schedule the refresh
+    this.viewportRefreshTimer = setTimeout(() => {
+      this.viewportRefreshTimer = null;
+      if (this.ui.locationsVisible && this.ui.onlyShowLocationsInView) {
+        logger.debug('Viewport stabilized, refreshing location nodes');
+        this.ui.refreshLocationNodes();
+      }
+    }, delay);
   }
 
   updateZoomBasedVisibility() {
