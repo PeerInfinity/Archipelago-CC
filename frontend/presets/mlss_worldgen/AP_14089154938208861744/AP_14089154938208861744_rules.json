@@ -4,6 +4,7 @@
   "game_directory": "mlss_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -4308,16 +4309,18 @@
               "children": [
                 {
                   "rule": "canCrash",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "postJokes",
                   "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "Constant",
+                      "rule": "OptionValue",
                       "args": {
-                        "value": 0
+                        "option": "goal"
                       }
                     }
                   ]
@@ -8659,11 +8662,12 @@
             "access_rule": {
               "rule": "postJokes",
               "_original_ast_type": "helper",
+              "_converted_from_ast": true,
               "args": [
                 {
-                  "rule": "Constant",
+                  "rule": "OptionValue",
                   "args": {
-                    "value": 0
+                    "option": "goal"
                   }
                 }
               ]
@@ -9228,16 +9232,18 @@
               "children": [
                 {
                   "rule": "canCrash",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "postJokes",
                   "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "Constant",
+                      "rule": "OptionValue",
                       "args": {
-                        "value": 0
+                        "option": "goal"
                       }
                     }
                   ]

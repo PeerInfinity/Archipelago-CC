@@ -4,11 +4,9 @@
   "game_directory": "shivers_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
-  },
-  "world_classes": {
-    "1": "ShiversWorldGenWorld"
   },
   "regions": {
     "1": {
@@ -834,74 +832,91 @@
                                                   "args": {
                                                     "left": {
                                                       "rule": "water_capturable",
-                                                      "_original_ast_type": "helper"
+                                                      "_original_ast_type": "helper",
+                                                      "_converted_from_ast": true
                                                     },
                                                     "op": "+",
                                                     "right": {
                                                       "rule": "wax_capturable",
-                                                      "_original_ast_type": "helper"
+                                                      "_original_ast_type": "helper",
+                                                      "_converted_from_ast": true
                                                     }
                                                   }
                                                 },
                                                 "op": "+",
                                                 "right": {
                                                   "rule": "ash_capturable",
-                                                  "_original_ast_type": "helper"
+                                                  "_original_ast_type": "helper",
+                                                  "_converted_from_ast": true
                                                 }
                                               }
                                             },
                                             "op": "+",
                                             "right": {
                                               "rule": "oil_capturable",
-                                              "_original_ast_type": "helper"
+                                              "_original_ast_type": "helper",
+                                              "_converted_from_ast": true
                                             }
                                           }
                                         },
                                         "op": "+",
                                         "right": {
                                           "rule": "cloth_capturable",
-                                          "_original_ast_type": "helper"
+                                          "_original_ast_type": "helper",
+                                          "_converted_from_ast": true
                                         }
                                       }
                                     },
                                     "op": "+",
                                     "right": {
                                       "rule": "wood_capturable",
-                                      "_original_ast_type": "helper"
+                                      "_original_ast_type": "helper",
+                                      "_converted_from_ast": true
                                     }
                                   }
                                 },
                                 "op": "+",
                                 "right": {
                                   "rule": "crystal_capturable",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_ast": true
                                 }
                               }
                             },
                             "op": "+",
                             "right": {
                               "rule": "sand_capturable",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
                             }
                           }
                         },
                         "op": "+",
                         "right": {
                           "rule": "metal_capturable",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         }
                       }
                     },
                     "op": "+",
                     "right": {
                       "rule": "lightning_capturable",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   }
                 },
                 "op": ">=",
-                "right": 10
-              }
+                "right": {
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "ixupi_captures_needed"
+                  }
+                },
+                "_original_ast_type": "compare"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1182,7 +1197,10 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "True_"
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "puzzle_hints_required"
+                      }
                     },
                     "if_true": {
                       "rule": "And",
@@ -1203,12 +1221,15 @@
                     },
                     "if_false": {
                       "rule": "True_"
-                    }
-                  }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "beths_body_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1398,7 +1419,10 @@
               "rule": "Conditional",
               "args": {
                 "test": {
-                  "rule": "True_"
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "puzzle_hints_required"
+                  }
                 },
                 "if_true": {
                   "rule": "CanReachRegion",
@@ -1408,8 +1432,10 @@
                 },
                 "if_false": {
                   "rule": "True_"
-                }
-              }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1527,7 +1553,10 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "True_"
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "puzzle_hints_required"
+                      }
                     },
                     "if_true": {
                       "rule": "CanReachRegion",
@@ -1537,8 +1566,10 @@
                     },
                     "if_false": {
                       "rule": "True_"
-                    }
-                  }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -3012,7 +3043,10 @@
                   "rule": "Conditional",
                   "args": {
                     "test": {
-                      "rule": "True_"
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "puzzle_hints_required"
+                      }
                     },
                     "if_true": {
                       "rule": "Has",
@@ -3022,8 +3056,10 @@
                     },
                     "if_false": {
                       "rule": "True_"
-                    }
-                  }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4987,6 +5023,7 @@
   "world": {
     "1": {
       "game": "Shivers WorldGen",
+      "world_class_name": "ShiversWorld",
       "options": {
         "accessibility": 0,
         "early_beth": true,
@@ -5011,7 +5048,8 @@
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -5030,7 +5068,7 @@
         },
         "early_lightning": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Early Lightning"
         },
         "elevators_stay_solved": {
@@ -5040,7 +5078,7 @@
         },
         "front_door_usable": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Front Door Usable"
         },
         "full_pots": {
@@ -5055,7 +5093,7 @@
         },
         "include_information_plaques": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Information Plaques"
         },
         "ixupi_captures_needed": {
@@ -5116,6 +5154,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "pot_completed_list": [],
@@ -5198,14 +5241,7 @@
       "world_directory": "shivers_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -5269,8 +5305,8 @@
             "name": "first_nine_ixupi_capturable"
           },
           {
-            "type": "constant",
-            "value": true
+            "type": "option_value",
+            "option": "early_beth"
           }
         ]
       },
@@ -5392,8 +5428,8 @@
                 "name": "first_nine_ixupi_capturable"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "option_value",
+                "option": "early_lightning"
               }
             ]
           },

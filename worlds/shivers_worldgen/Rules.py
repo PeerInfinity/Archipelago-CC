@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Arithmetic, CanReachRegion, Compare, Conditional, Has, HasAll, HelperCall, OptionValue, Or, True_
+from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -159,10 +159,8 @@ def set_rules(world: "World") -> None:
         Has('Key for Front Door', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("To Victory", player),
-        Compare(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(Arithmetic(HelperCall(helper_func=water_capturable, helper_name="water_capturable"), "+", HelperCall(helper_func=wax_capturable, helper_name="wax_capturable")), "+", HelperCall(helper_func=ash_capturable, helper_name="ash_capturable")), "+", HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")), "+", HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")), "+", HelperCall(helper_func=wood_capturable, helper_name="wood_capturable")), "+", HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable")), "+", HelperCall(helper_func=sand_capturable, helper_name="sand_capturable")), "+", HelperCall(helper_func=metal_capturable, helper_name="metal_capturable")), "+", HelperCall(helper_func=lightning_capturable, helper_name="lightning_capturable")), ">=", OptionValue('ixupi_captures_needed'))
-    )
+    multiworld.get_entrance("To Victory", player).access_rule = \
+        lambda state: ((((((((((water_capturable(state, player) + wax_capturable(state, player)) + ash_capturable(state, player)) + oil_capturable(state, player)) + cloth_capturable(state, player)) + wood_capturable(state, player)) + crystal_capturable(state, player)) + sand_capturable(state, player)) + metal_capturable(state, player)) + lightning_capturable(state, player)) >= state.multiworld.worlds[player].options.ixupi_captures_needed)
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Library", player),
@@ -179,10 +177,8 @@ def set_rules(world: "World") -> None:
         Has('Key for Generator Room', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("To Beth's Body From Generator", player),
-        And(Conditional(test=OptionValue('puzzle_hints_required'), if_true=And(CanReachRegion('Theater'), Has('Viewed Norse Stone')), if_false=True_()), HelperCall(helper_func=beths_body_available, helper_name="beths_body_available"))
-    )
+    multiworld.get_entrance("To Beth's Body From Generator", player).access_rule = \
+        lambda state: ((((((state.can_reach_region('Theater', player)) and (state.has('Viewed Norse Stone', player)))) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (beths_body_available(state, player)))
 
     world.set_rule(
         multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player),
@@ -199,10 +195,8 @@ def set_rules(world: "World") -> None:
         Has('Key for Projector Room', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player),
-        Conditional(test=OptionValue('puzzle_hints_required'), if_true=CanReachRegion('Bedroom'), if_false=True_())
-    )
+    multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player).access_rule = \
+        lambda state: ((state.can_reach_region('Bedroom', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Prehistoric", player),
@@ -334,10 +328,8 @@ def set_rules(world: "World") -> None:
         Has('Key for Puzzle Room', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("To Guillotine From Torture", player),
-        And(Conditional(test=OptionValue('puzzle_hints_required'), if_true=Has('Viewed Egyptian Hieroglyphics Explained', 1), if_false=True_()), Has('Viewed Page 17'))
-    )
+    multiworld.get_entrance("To Guillotine From Torture", player).access_rule = \
+        lambda state: ((((state.has('Viewed Egyptian Hieroglyphics Explained', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (state.has('Viewed Page 17', player)))
 
     world.set_rule(
         multiworld.get_entrance("To Torture", player),
@@ -352,6 +344,43 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("To Lobby From Slide Room", player),
         Has('Lost Your Head', 1)
+    )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Tar River"),
+        multiworld.get_entrance("To Tar River From Lobby", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Theater"),
+        multiworld.get_entrance("To Beth's Body From Generator", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Three Floor Elevator"),
+        multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Bedroom"),
+        multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Projector Room"),
+        multiworld.get_entrance("To Maze From Maze Staircase", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Egypt"),
+        multiworld.get_entrance("To Burial From Egypt", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Clock Tower"),
+        multiworld.get_entrance("To Gods Room From Shaman", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Maintenance Tunnels"),
+        multiworld.get_entrance("To Anansi From Gods Room", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Gods Room"),
+        multiworld.get_entrance("To Gods Room From Anansi", player)
     )
     # Location rules
     world.set_rule(
@@ -394,10 +423,8 @@ def set_rules(world: "World") -> None:
         Has('Set Time', 1)
     )
 
-    world.set_rule(
-        multiworld.get_location("Jukebox", player),
-        And(Conditional(test=OptionValue('puzzle_hints_required'), if_true=CanReachRegion('Anansi'), if_false=True_()), CanReachRegion('Clock Tower'))
-    )
+    multiworld.get_location("Jukebox", player).access_rule = \
+        lambda state: ((((state.can_reach_region('Anansi', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (state.can_reach_region('Clock Tower', player)))
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Atlantis", player),

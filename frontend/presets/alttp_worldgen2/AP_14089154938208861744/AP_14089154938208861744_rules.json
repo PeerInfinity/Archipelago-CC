@@ -1,14 +1,12 @@
 {
   "schema_version": 3,
-  "game_name": "A Link to the Past WorldGen 2",
+  "game_name": "A Link to the Past WorldGen2",
   "game_directory": "alttp_worldgen2",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
-  },
-  "world_classes": {
-    "1": "ALTTPWorld"
   },
   "regions": {
     "1": {
@@ -3777,23 +3775,32 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": 1,
+                        "left": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "enemy_health"
+                          }
+                        },
                         "op": "in",
                         "right": [
-                          "easy",
-                          "default"
-                        ]
-                      }
+                          0,
+                          1
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 1
-                          }
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -3965,12 +3972,10 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "AST_setting_value",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "mode",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "option": "mode"
+                          }
                         },
                         "op": "==",
                         "right": 0,
@@ -3982,12 +3987,10 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "AST_setting_value",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "small_key_shuffle",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "option": "small_key_shuffle"
+                          }
                         },
                         "op": "==",
                         "right": 5,
@@ -6028,30 +6031,10 @@
             "name": "Pyramid Hole",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "bool",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "AST_setting_value",
-                      "args": {
-                        "setting": "open_pyramid",
-                        "_original_ast_type": "setting_value"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beat Agahnim 2"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Beat Agahnim 2"
+              }
             }
           },
           {
@@ -7772,12 +7755,10 @@
               "_converted_from_ast": true,
               "args": [
                 {
-                  "rule": "AST_setting_value",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "crystals_needed_for_gt",
-                    "_original_ast_type": "setting_value"
-                  },
-                  "_converted_from_ast": true
+                    "option": "crystals_needed_for_gt"
+                  }
                 }
               ]
             }
@@ -8447,12 +8428,10 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "AST_setting_value",
+                              "rule": "OptionValue",
                               "args": {
-                                "setting": "enemy_health",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
+                                "option": "enemy_health"
+                              }
                             },
                             "op": "in",
                             "right": [
@@ -15839,12 +15818,10 @@
                   "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "AST_setting_value",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "crystals_needed_for_ganon",
-                        "_original_ast_type": "setting_value"
-                      },
-                      "_converted_from_ast": true
+                        "option": "crystals_needed_for_ganon"
+                      }
                     }
                   ]
                 },
@@ -16487,12 +16464,10 @@
                           ]
                         },
                         {
-                          "rule": "AST_setting_value",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "swordless",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
+                            "option": "swordless"
+                          }
                         },
                         {
                           "rule": "HasAll",
@@ -16552,12 +16527,10 @@
                               "_converted_from_ast": true
                             },
                             {
-                              "rule": "AST_setting_value",
+                              "rule": "OptionValue",
                               "args": {
-                                "setting": "swordless",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
+                                "option": "swordless"
+                              }
                             }
                           ]
                         },
@@ -19749,7 +19722,8 @@
   },
   "world": {
     "1": {
-      "game": "A Link to the Past WorldGen 2",
+      "game": "A Link to the Past WorldGen2",
+      "world_class_name": "ALTTPWorld",
       "options": {
         "accessibility": 1,
         "allow_collect": true,
@@ -19898,7 +19872,7 @@
         },
         "bombless_start": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bombless Start"
         },
         "boss_shuffle": {
@@ -19915,7 +19889,7 @@
         },
         "bush_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bush Shuffle"
         },
         "compass_shuffle": {
@@ -19964,7 +19938,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "dungeon_counters": {
@@ -20001,7 +19975,7 @@
         },
         "enemy_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enemy Shuffle"
         },
         "entrance_shuffle": {
@@ -20120,7 +20094,7 @@
         },
         "include_witch_hut": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Witch's Hut"
         },
         "item_functionality": {
@@ -20152,7 +20126,7 @@
         },
         "killable_thieves": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Killable Thieves"
         },
         "map_shuffle": {
@@ -20245,7 +20219,7 @@
         },
         "pot_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Pot Shuffle"
         },
         "progression_balancing": {
@@ -20272,7 +20246,7 @@
         },
         "randomize_cost_types": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Cost Types"
         },
         "randomize_items": {
@@ -20292,7 +20266,7 @@
         },
         "randomize_shop_prices": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Shop Prices"
         },
         "red_clock_time": {
@@ -20309,17 +20283,17 @@
         },
         "restrict_dungeon_item_on_boss": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Prevent Dungeon Item on Boss"
         },
         "retro_bow": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Retro Bow"
         },
         "retro_caves": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Retro Caves"
         },
         "scams": {
@@ -20386,7 +20360,7 @@
         },
         "shuffle_shop_inventories": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Shop Inventories"
         },
         "small_key_shuffle": {
@@ -20430,12 +20404,12 @@
         },
         "swordless": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Swordless"
         },
         "tile_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tile Shuffle"
         },
         "timer": {
@@ -21442,15 +21416,7 @@
       "world_directory": "alttp_worldgen2"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false,
-      "world_class_name": "ALTTPWorld"
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -21462,8 +21428,8 @@
           {
             "type": "if_statement",
             "test": {
-              "type": "setting_value",
-              "setting": "swordless"
+              "type": "option_value",
+              "option": "swordless"
             },
             "body": [
               {
@@ -21522,8 +21488,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "setting_value",
-                "setting": "glitches_required"
+                "type": "option_value",
+                "option": "glitches_required"
               },
               "op": "!=",
               "right": {
@@ -21657,8 +21623,12 @@
         "type": "min",
         "args": [
           {
-            "type": "constant",
-            "value": 4
+            "type": "attribute",
+            "object": {
+              "type": "world_attribute",
+              "attribute": "difficulty_requirements"
+            },
+            "attr": "progressive_bottle_limit"
           },
           {
             "type": "group_count",
@@ -21764,12 +21734,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -21824,12 +21790,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -21918,8 +21880,8 @@
                       {
                         "type": "compare",
                         "left": {
-                          "type": "setting_value",
-                          "setting": "item_functionality"
+                          "type": "option_value",
+                          "option": "item_functionality"
                         },
                         "op": "==",
                         "right": {
@@ -21978,8 +21940,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "setting_value",
-                            "setting": "item_functionality"
+                            "type": "option_value",
+                            "option": "item_functionality"
                           },
                           "op": "==",
                           "right": {
@@ -22162,8 +22124,8 @@
             {
               "type": "if_statement",
               "test": {
-                "type": "setting_value",
-                "setting": "shuffle_capacity_upgrades"
+                "type": "option_value",
+                "option": "shuffle_capacity_upgrades"
               },
               "body": [
                 {
@@ -22361,8 +22323,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "enemy_shuffle"
+            "type": "option_value",
+            "option": "enemy_shuffle"
           },
           "if_true": {
             "type": "and",
@@ -22466,8 +22428,8 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "setting_value",
-                      "setting": "enemy_health"
+                      "type": "option_value",
+                      "option": "enemy_health"
                     },
                     "op": "in",
                     "right": {
@@ -22546,8 +22508,8 @@
                 "type": "or",
                 "conditions": [
                   {
-                    "type": "setting_value",
-                    "setting": "swordless"
+                    "type": "option_value",
+                    "option": "swordless"
                   },
                   {
                     "type": "helper",
@@ -22577,8 +22539,8 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "setting_value",
-                    "setting": "swordless"
+                    "type": "option_value",
+                    "option": "swordless"
                   },
                   {
                     "type": "item_check",
@@ -22597,8 +22559,8 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "setting_value",
-            "setting": "retro_bow"
+            "type": "option_value",
+            "option": "retro_bow"
           },
           "if_true": {
             "type": "and",
@@ -22674,8 +22636,8 @@
               "value": {
                 "type": "conditional",
                 "test": {
-                  "type": "setting_value",
-                  "setting": "bombless_start"
+                  "type": "option_value",
+                  "option": "bombless_start"
                 },
                 "if_true": {
                   "type": "constant",
@@ -22802,8 +22764,8 @@
                   {
                     "type": "not",
                     "condition": {
-                      "type": "setting_value",
-                      "setting": "shuffle_capacity_upgrades"
+                      "type": "option_value",
+                      "option": "shuffle_capacity_upgrades"
                     }
                   },
                   {
@@ -22915,6 +22877,9 @@
               }
             }
           ]
+        },
+        "param_mappings": {
+          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {
@@ -22963,8 +22928,8 @@
       "has_misery_mire_medallion": {
         "type": "item_check",
         "item": {
-          "type": "setting_value",
-          "setting": "required_medallions",
+          "type": "world_attribute",
+          "attribute": "required_medallions",
           "index": 0
         }
       },
@@ -22992,8 +22957,8 @@
       "has_turtle_rock_medallion": {
         "type": "item_check",
         "item": {
-          "type": "setting_value",
-          "setting": "required_medallions",
+          "type": "world_attribute",
+          "attribute": "required_medallions",
           "index": 1
         }
       },
@@ -23004,16 +22969,16 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "constant",
-              "value": 24
+              "type": "world_attribute",
+              "attribute": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "constant",
-              "value": 10
+              "type": "world_attribute",
+              "attribute": "logical_heart_containers"
             }
           },
           {
@@ -23112,8 +23077,8 @@
             "test": {
               "type": "compare",
               "left": {
-                "type": "setting_value",
-                "setting": "mode"
+                "type": "option_value",
+                "option": "mode"
               },
               "op": "!=",
               "right": {

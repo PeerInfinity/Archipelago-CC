@@ -4,6 +4,7 @@
   "game_directory": "lufia2ac",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -5567,10 +5568,10 @@
             "36": "daos",
             "37": "egg_dragon",
             "38": "master",
-            "39": "random-middle",
-            "40": "random-high",
+            "39": "random-sinistral",
+            "40": "random-middle",
             "41": "random-low",
-            "42": "random-sinistral"
+            "42": "random-high"
           },
           "default": 38,
           "display_name": "Boss"

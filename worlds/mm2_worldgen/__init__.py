@@ -173,15 +173,18 @@ class MM2World(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'MM2World'
-        self.weapon_damage = {'0': [2, 2, 1, 1, 2, 2, 1, 1, 1, 7, 1, 0, 1, -1], '1': [-1, 6, 14, 0, 10, 6, 4, 6, 8, 13, 8, 0, 14, -1], '2': [2, 0, 4, 0, 2, 0, 0, 10, 0, 0, 0, 0, 1, -1], '3': [0, 8, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], '4': [6, 0, 0, -1, 0, 2, 0, 1, 0, 14, 1, 0, 0, 1], '5': [2, 2, 0, 2, 0, 0, 4, 1, 1, 7, 2, 0, 1, -1], '6': [-1, 0, 2, 2, 4, 3, 0, 0, 1, 0, 1, 20, 1, -1], '7': [1, 0, 2, 4, 0, 4, 14, 0, 0, 7, 0, 0, 1, -1], '8': [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
-        self.wily_5_weapons = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '12': []}
+        self.weapon_damage = {0: [2, 2, 1, 1, 2, 2, 1, 1, 1, 7, 1, 0, 1, -1], 1: [-1, 6, 14, 0, 10, 6, 4, 6, 8, 13, 8, 0, 14, -1], 2: [2, 0, 4, 0, 2, 0, 0, 10, 0, 0, 0, 0, 1, -1], 3: [0, 8, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], 4: [6, 0, 0, -1, 0, 2, 0, 1, 0, 14, 1, 0, 0, 1], 5: [2, 2, 0, 2, 0, 0, 4, 1, 1, 7, 2, 0, 1, -1], 6: [-1, 0, 2, 2, 4, 3, 0, 0, 1, 0, 1, 20, 1, -1], 7: [1, 0, 2, 4, 0, 4, 14, 0, 0, 7, 0, 0, 1, -1], 8: [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
+        self.wily_5_weapons = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []}
         self.world_description = 'In the year 200X, following his prior defeat by Mega Man, the evil Dr. Wily has returned to take over the world with\nhis own group of Robot Masters. Mega Man once again sets out to defeat the eight Robot Masters and stop Dr. Wily.'
-        self.slot_data = {'death_link': 0, 'weapon_damage': {'0': [2, 2, 1, 1, 2, 2, 1, 1, 1, 7, 1, 0, 1, -1], '1': [-1, 6, 14, 0, 10, 6, 4, 6, 8, 13, 8, 0, 14, -1], '2': [2, 0, 4, 0, 2, 0, 0, 10, 0, 0, 0, 0, 1, -1], '3': [0, 8, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], '4': [6, 0, 0, -1, 0, 2, 0, 1, 0, 14, 1, 0, 0, 1], '5': [2, 2, 0, 2, 0, 0, 4, 1, 1, 7, 2, 0, 1, -1], '6': [-1, 0, 2, 2, 4, 3, 0, 0, 1, 0, 1, 20, 1, -1], '7': [1, 0, 2, 4, 0, 4, 14, 0, 0, 7, 0, 0, 1, -1], '8': [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, 'wily_5_weapons': {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '12': []}}
+        self.slot_data = {'death_link': 0, 'weapon_damage': {0: [2, 2, 1, 1, 2, 2, 1, 1, 1, 7, 1, 0, 1, -1], 1: [-1, 6, 14, 0, 10, 6, 4, 6, 8, 13, 8, 0, 14, -1], 2: [2, 0, 4, 0, 2, 0, 0, 10, 0, 0, 0, 0, 1, -1], 3: [0, 8, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], 4: [6, 0, 0, -1, 0, 2, 0, 1, 0, 14, 1, 0, 0, 1], 5: [2, 2, 0, 2, 0, 0, 4, 1, 1, 7, 2, 0, 1, -1], 6: [-1, 0, 2, 2, 4, 3, 0, 0, 1, 0, 1, 20, 1, -1], 7: [1, 0, 2, 4, 0, 4, 14, 0, 0, 7, 0, 0, 1, -1], 8: [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, 'wily_5_weapons': {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []}}
+
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
 
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -189,7 +192,7 @@ class MM2World(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module
@@ -346,6 +349,6 @@ class MM2World(RuleWorldMixin, World):
         """Return data for the client."""
         return {
             "death_link": 0,
-            "weapon_damage": {'0': [2, 2, 1, 1, 2, 2, 1, 1, 1, 7, 1, 0, 1, -1], '1': [-1, 6, 14, 0, 10, 6, 4, 6, 8, 13, 8, 0, 14, -1], '2': [2, 0, 4, 0, 2, 0, 0, 10, 0, 0, 0, 0, 1, -1], '3': [0, 8, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], '4': [6, 0, 0, -1, 0, 2, 0, 1, 0, 14, 1, 0, 0, 1], '5': [2, 2, 0, 2, 0, 0, 4, 1, 1, 7, 2, 0, 1, -1], '6': [-1, 0, 2, 2, 4, 3, 0, 0, 1, 0, 1, 20, 1, -1], '7': [1, 0, 2, 4, 0, 4, 14, 0, 0, 7, 0, 0, 1, -1], '8': [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-            "wily_5_weapons": {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '12': []},
+            "weapon_damage": {0: [2, 2, 1, 1, 2, 2, 1, 1, 1, 7, 1, 0, 1, -1], 1: [-1, 6, 14, 0, 10, 6, 4, 6, 8, 13, 8, 0, 14, -1], 2: [2, 0, 4, 0, 2, 0, 0, 10, 0, 0, 0, 0, 1, -1], 3: [0, 8, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], 4: [6, 0, 0, -1, 0, 2, 0, 1, 0, 14, 1, 0, 0, 1], 5: [2, 2, 0, 2, 0, 0, 4, 1, 1, 7, 2, 0, 1, -1], 6: [-1, 0, 2, 2, 4, 3, 0, 0, 1, 0, 1, 20, 1, -1], 7: [1, 0, 2, 4, 0, 4, 14, 0, 0, 7, 0, 0, 1, -1], 8: [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+            "wily_5_weapons": {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []},
         }

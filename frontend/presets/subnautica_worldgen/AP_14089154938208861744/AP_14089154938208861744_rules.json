@@ -4,6 +4,7 @@
   "game_directory": "subnautica_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -5185,8 +5186,7 @@
         },
         "empty_tanks": {
           "type": "default_on_toggle",
-          "default": 1,
-          "display_name": "Empty Tanks"
+          "default": 1
         },
         "free_samples": {
           "type": "toggle",

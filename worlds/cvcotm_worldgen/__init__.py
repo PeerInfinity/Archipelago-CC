@@ -268,10 +268,13 @@ class CVCotMWorld(RuleWorldMixin, World):
         self.world_description = 'Castlevania: Circle of the Moon is a launch title for the Game Boy Advance and the first of three Castlevania games\nreleased for the handheld in the "Metroidvania" format. As Nathan Graves, wielding the Hunter Whip and utilizing the\nDual Set-Up System for new possibilities, you must battle your way through Camilla\'s castle and rescue your master\nfrom a demonic ritual to restore the Count\'s power...'
         self.slot_data = types.SimpleNamespace(death_link=0, iron_maiden_behavior=0, ignore_cleansing=0, skip_tutorials=0, required_last_keys=1, completion_goal=0, nerf_roc_wing=0)
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -279,7 +282,7 @@ class CVCotMWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

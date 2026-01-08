@@ -4,6 +4,7 @@
   "game_directory": "mm2_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -960,7 +961,14 @@
             "name": "Wily Machine 2 - Defeated",
             "id": 8912909,
             "access_rule": {
-              "rule": "True_"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_enough_rbms",
+                "inferred": true,
+                "description": "Requires ability to defeat enough rbms",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "E-Tank",
@@ -974,7 +982,14 @@
             "name": "Wily Stage 5 - Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_enough_rbms",
+                "inferred": true,
+                "description": "Requires ability to defeat enough rbms",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Wily Stage 5 - Completed",
@@ -2052,8 +2067,37 @@
                         "method": "has_all",
                         "args": [
                           {
-                            "type": "constant",
-                            "value": true
+                            "type": "map",
+                            "function": {
+                              "type": "lambda",
+                              "params": [
+                                "x"
+                              ],
+                              "body": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "constant",
+                                  "value": {
+                                    "1": "Atomic Fire",
+                                    "2": "Air Shooter",
+                                    "3": "Leaf Shield",
+                                    "4": "Bubble Lead",
+                                    "5": "Quick Boomerang",
+                                    "6": "Crash Bomber",
+                                    "7": "Metal Blade",
+                                    "8": "Time Stopper"
+                                  }
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "x"
+                                }
+                              }
+                            },
+                            "iterable": {
+                              "type": "name",
+                              "name": "reqs"
+                            }
                           }
                         ]
                       },
@@ -2109,6 +2153,10 @@
               }
             }
           ]
+        },
+        "param_mappings": {
+          "required": "wily_5_requirement",
+          "boss_requirements": "wily_5_weapons"
         }
       }
     }

@@ -69,7 +69,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
-    "COINS": 851,
+
 }
 
 
@@ -277,10 +277,13 @@ class ShortHikeWorld(RuleWorldMixin, World):
         self.world_description = "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you."
         self.slot_data = {'settings': {'goal': 3, 'logicLevel': 1, 'costMultiplier': 100, 'shopCheckLogic': 1, 'minShopCheckLogic': 1, 'easierRaces': False}}
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -288,7 +291,7 @@ class ShortHikeWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

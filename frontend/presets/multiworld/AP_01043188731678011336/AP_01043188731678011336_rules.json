@@ -4,6 +4,7 @@
   "game_directory": "multiworld",
   "archipelago_version": "0.6.5",
   "generation_seed": 2,
+  "seed_name": "01043188731678011336",
   "player_names": {
     "1": "Player1",
     "2": "Player2",
@@ -12674,30 +12675,10 @@
             "name": "Pyramid Hole",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "option_value",
-                        "option": "open_pyramid"
-                      },
-                      "attr": "to_bool"
-                    },
-                    "_original_ast_type": "function_call"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beat Agahnim 2"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Beat Agahnim 2"
+              }
             }
           },
           {
@@ -26490,7 +26471,7 @@
           "Burger",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26502,7 +26483,7 @@
           "Burger",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26514,7 +26495,7 @@
           "Everything",
           "Train"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26526,7 +26507,7 @@
           "Everything",
           "Train"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26550,7 +26531,7 @@
           "Everything",
           "UFO"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26562,7 +26543,7 @@
           "Everything",
           "UFO"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26574,7 +26555,7 @@
           "Everything",
           "UFO"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26598,7 +26579,7 @@
           "Crayon",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26610,7 +26591,7 @@
           "Crayon",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26622,7 +26603,7 @@
           "Crayon",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26705,7 +26686,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26727,7 +26708,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26738,7 +26719,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26749,7 +26730,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26760,7 +26741,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -26793,7 +26774,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -27024,7 +27005,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -27047,7 +27028,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -27785,7 +27766,7 @@
           "Progression Items",
           "Rods"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -27799,7 +27780,7 @@
           "Progression Items",
           "Rods"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -27812,7 +27793,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -27825,7 +27806,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -27853,7 +27834,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -27906,7 +27887,7 @@
           "Medallions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -27919,7 +27900,7 @@
           "Medallions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -27944,7 +27925,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -27971,7 +27952,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28012,7 +27993,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28025,7 +28006,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28038,7 +28019,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28079,7 +28060,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28092,7 +28073,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28105,7 +28086,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28118,7 +28099,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28185,7 +28166,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28199,7 +28180,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28229,7 +28210,7 @@
           "Potions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -28383,7 +28364,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
@@ -28396,7 +28377,7 @@
           "Everything",
           "Non Progression Items"
         ],
-        "classification": "useful",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 10,
@@ -28586,7 +28567,7 @@
           "Progression Items",
           "Upgrades"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -30339,7 +30320,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2
@@ -30372,7 +30353,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30383,7 +30364,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 5
@@ -30416,7 +30397,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30427,7 +30408,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30438,7 +30419,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30460,7 +30441,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30552,7 +30533,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30563,7 +30544,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30574,7 +30555,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -30585,7 +30566,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31117,7 +31098,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31128,7 +31109,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31139,7 +31120,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31150,7 +31131,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31161,7 +31142,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31172,7 +31153,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31183,7 +31164,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -31205,7 +31186,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -35288,12 +35269,8 @@
           {
             "type": "attribute",
             "object": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "difficulty_requirements"
+              "type": "world_attribute",
+              "attribute": "difficulty_requirements"
             },
             "attr": "progressive_bottle_limit"
           },
@@ -35401,12 +35378,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -35461,12 +35434,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -36552,6 +36521,9 @@
               }
             }
           ]
+        },
+        "param_mappings": {
+          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {
@@ -36641,24 +36613,16 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "logical_heart_pieces"
+              "type": "world_attribute",
+              "attribute": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "logical_heart_containers"
+              "type": "world_attribute",
+              "attribute": "logical_heart_containers"
             }
           },
           {

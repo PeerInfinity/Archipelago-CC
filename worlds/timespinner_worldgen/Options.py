@@ -354,7 +354,6 @@ class GyreArchives(Toggle):
 
 class HasReplacedOptions(Toggle):
     """Option for Has Replaced Options."""
-    display_name = "Has Replaced Options"
     default = False
 
 class HpCap(Range):

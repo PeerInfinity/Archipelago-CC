@@ -286,10 +286,13 @@ class DKC3World(RuleWorldMixin, World):
         self.world_description = 'Donkey Kong Country 3 is an action platforming game.\nPlay as Dixie Kong and her baby cousin Kiddy as they try to solve the\nmystery of why Donkey Kong and Diddy disappeared while on vacation.'
         self.slot_data = types.SimpleNamespace(active_levels=['Lakeside Limbo', 'Doorstop Dash', 'Tidal Trouble', "Skidda's Row", 'Murky Mill', 'Barrel Shield Bust-Up', 'Riverside Race', 'Squeals On Wheels', "Springin' Spiders", 'Bobbing Barrel Brawl', "Bazza's Blockade", 'Rocket Barrel Ride', 'Kreeping Klasps', 'Tracker Barrel Trek', 'Fish Food Frenzy', 'Fire-Ball Frenzy', 'Demolition Drain-Pipe', 'Ripsaw Rage', 'Blazing Bazukas', 'Low-G Labyrinth', 'Krevice Kreepers', 'Tearaway Toboggan', 'Barrel Drop Bounce', 'Krack-Shot Kroc', 'Lemguin Lunge', 'Buzzer Barrage', 'Kong-Fused Cliffs', 'Floodlit Fish', 'Pothole Panic', 'Ropey Rumpus', 'Konveyor Rope Klash', 'Creepy Caverns', 'Lightning Lookout', 'Koindozer Klamber', 'Poisonous Pipeline', 'Stampede Sprint', 'Criss Kross Cliffs', 'Tyrant Twin Tussle', 'Swoopy Salvo'], goal=0, krematoa_bonus_coin_cost=15, percentage_of_extra_bonus_coins=100, number_of_banana_birds=15, percentage_of_banana_birds=100, dk_coins_for_gyrocopter=30, kongsanity=0, level_shuffle=0, difficulty=0, autosave=1, merry=0, music_shuffle=0, kong_palette_swap=0, starting_life_count=5)
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -297,7 +300,7 @@ class DKC3World(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

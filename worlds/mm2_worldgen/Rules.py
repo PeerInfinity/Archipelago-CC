@@ -20,7 +20,7 @@ def can_defeat_enough_rbms(state: "CollectionState", player: int, required = Non
     can_defeat = 0
     for boss, reqs in boss_requirements.items():
         if (boss in {0: 'Heat Man Defeated', 1: 'Air Man Defeated', 2: 'Wood Man Defeated', 3: 'Bubble Man Defeated', 4: 'Quick Man Defeated', 5: 'Flash Man Defeated', 6: 'Metal Man Defeated', 7: 'Crash Man Defeated'}):
-            if state.has_all(True, player):
+            if state.has_all(map(lambda x: {1: 'Atomic Fire', 2: 'Air Shooter', 3: 'Leaf Shield', 4: 'Bubble Lead', 5: 'Quick Boomerang', 6: 'Crash Bomber', 7: 'Metal Blade', 8: 'Time Stopper'}[x], reqs), player):
                 can_defeat += 1
                 if (can_defeat >= required):
                     return True
@@ -153,15 +153,11 @@ def set_rules(world: "World") -> None:
         And(HasAny('Crash Bomber'), Has('Crash Bomber'))
     )
 
-    world.set_rule(
-        multiworld.get_location("Wily Machine 2 - Defeated", player),
-        True_()
-    )
+    multiworld.get_location("Wily Machine 2 - Defeated", player).access_rule = \
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, state.multiworld.worlds[player].wily_5_weapons)
 
-    world.set_rule(
-        multiworld.get_location("Wily Stage 5 - Completed", player),
-        True_()
-    )
+    multiworld.get_location("Wily Stage 5 - Completed", player).access_rule = \
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, state.multiworld.worlds[player].wily_5_weapons)
 
     world.set_rule(
         multiworld.get_location("Dr. Wily (Alien) - Defeated", player),

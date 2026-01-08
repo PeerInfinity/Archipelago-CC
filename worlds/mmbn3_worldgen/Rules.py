@@ -175,6 +175,34 @@ def set_rules(world: "World") -> None:
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("ACDC Cyberworld -> SciLab Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("ACDC Cyberworld -> Yoka Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("ACDC Cyberworld -> Beach Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("SciLab Overworld -> SciLab Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("SciLab Cyberworld -> Yoka Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("SciLab Cyberworld -> Beach Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Yoka Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("WWW Island"),
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
     )
@@ -213,6 +241,22 @@ def set_rules(world: "World") -> None:
     multiworld.register_indirect_condition(
         world.get_region("Secret Area"),
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Cyberworld -> SciLab Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Yoka Cyberworld -> Beach Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> SciLab Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Yoka Cyberworld", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("WWW Island"),

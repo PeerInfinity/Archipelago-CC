@@ -432,6 +432,15 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (right)", player),
         HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateRightPyramid',))
     )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Upper Lake Serene"),
+        multiworld.get_entrance("Lake desolation -> Upper lake desolation", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Upper Lake Serene"),
+        multiworld.get_entrance("Eastern lake desolation -> Upper lake desolation", player)
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("Lake Desolation: Forget me not chest", player),

@@ -4,6 +4,7 @@
   "game_directory": "osrs_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -11614,12 +11615,8 @@
             "function": {
               "type": "attribute",
               "object": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "qp_items"
+                "type": "world_attribute",
+                "attribute": "qp_items"
               },
               "attr": "items"
             }

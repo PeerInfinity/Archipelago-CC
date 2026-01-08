@@ -44,7 +44,7 @@ def is_auto_scroll(state: "CollectionState", player: int, level = None) -> bool:
     level_id = {'Mushroom Zone': 0, 'Scenic Course': 25, 'Tree Zone 1': 1, 'Tree Zone 2': 2, 'Tree Zone 3': 4, 'Tree Zone 4': 3, 'Tree Zone 5': 5, 'Tree Zone Secret Course': 29, 'Hippo Zone': 17, 'Space Zone 1': 18, 'Space Zone Secret Course': 28, 'Space Zone 2': 19, 'Macro Zone 1': 20, 'Macro Zone 2': 21, 'Macro Zone 3': 22, 'Macro Zone 4': 23, 'Macro Zone Secret Course': 30, 'Pumpkin Zone 1': 6, 'Pumpkin Zone 2': 7, 'Pumpkin Zone 3': 8, 'Pumpkin Zone 4': 9, 'Pumpkin Zone Secret Course 1': 27, 'Pumpkin Zone Secret Course 2': 31, 'Mario Zone 1': 10, 'Mario Zone 2': 11, 'Mario Zone 3': 12, 'Mario Zone 4': 13, 'Turtle Zone 1': 14, 'Turtle Zone 2': 15, 'Turtle Zone 3': 16, 'Turtle Zone Secret Course': 26, "Mario's Castle": 24}[level]
     if state.has_any(('Cancel Auto Scroll', f"Cancel Auto Scroll - {level}"), player):
         return False
-    return ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][level_id] > 0)
+    return (state.multiworld.worlds[player].auto_scroll_levels[level_id] > 0)
 
 
 def macro_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:

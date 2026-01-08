@@ -289,14 +289,17 @@ class SM64World(RuleWorldMixin, World):
         self.number_of_stars = 105
         self.filler_count = 0
         self.star_costs = types.SimpleNamespace(FirstBowserDoorCost=7, BasementDoorCost=26, SecondFloorDoorCost=44, MIPS1Cost=13, MIPS2Cost=44, StarsToFinish=61)
-        self.area_connections = {'91': 91, '241': 241, '121': 121, '51': 51, '41': 41, '71': 71, '221': 221, '81': 81, '231': 231, '101': 101, '111': 111, '361': 361, '132': 132, '131': 131, '141': 141, '151': 151, '271': 271, '201': 201, '171': 171, '291': 291, '281': 281, '181': 181, '191': 191, '311': 311}
+        self.area_connections = {91: 91, 241: 241, 121: 121, 51: 51, 41: 41, 71: 71, 221: 221, 81: 81, 231: 231, 101: 101, 111: 111, 361: 361, 132: 132, 131: 131, 141: 141, 151: 151, 271: 271, 201: 201, 171: 171, 291: 291, 281: 281, 181: 181, 191: 191, 311: 311}
         self.world_description = 'The first Super Mario game to feature 3D gameplay, it features freedom of movement within a large open world based on polygons,\ncombined with traditional Mario gameplay, visual style, and characters.'
-        self.slot_data = {'AreaRando': {'91': 91, '241': 241, '121': 121, '51': 51, '41': 41, '71': 71, '221': 221, '81': 81, '231': 231, '101': 101, '111': 111, '361': 361, '132': 132, '131': 131, '141': 141, '151': 151, '271': 271, '201': 201, '171': 171, '291': 291, '281': 281, '181': 181, '191': 191, '311': 311}, 'MoveRandoVec': 0, 'DeathLink': 0, 'CompletionType': 0, 'FirstBowserDoorCost': 7, 'BasementDoorCost': 26, 'SecondFloorDoorCost': 44, 'MIPS1Cost': 13, 'MIPS2Cost': 44, 'StarsToFinish': 61}
+        self.slot_data = {'AreaRando': {91: 91, 241: 241, 121: 121, 51: 51, 41: 41, 71: 71, 221: 221, 81: 81, 231: 231, 101: 101, 111: 111, 361: 361, 132: 132, 131: 131, 141: 141, 151: 151, 271: 271, 201: 201, 171: 171, 291: 291, 281: 281, 181: 181, 191: 191, 311: 311}, 'MoveRandoVec': 0, 'DeathLink': 0, 'CompletionType': 0, 'FirstBowserDoorCost': 7, 'BasementDoorCost': 26, 'SecondFloorDoorCost': 44, 'MIPS1Cost': 13, 'MIPS2Cost': 44, 'StarsToFinish': 61}
+
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
 
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -304,7 +307,7 @@ class SM64World(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module
@@ -440,7 +443,7 @@ class SM64World(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "AreaRando": {'91': 91, '241': 241, '121': 121, '51': 51, '41': 41, '71': 71, '221': 221, '81': 81, '231': 231, '101': 101, '111': 111, '361': 361, '132': 132, '131': 131, '141': 141, '151': 151, '271': 271, '201': 201, '171': 171, '291': 291, '281': 281, '181': 181, '191': 191, '311': 311},
+            "AreaRando": {91: 91, 241: 241, 121: 121, 51: 51, 41: 41, 71: 71, 221: 221, 81: 81, 231: 231, 101: 101, 111: 111, 361: 361, 132: 132, 131: 131, 141: 141, 151: 151, 271: 271, 201: 201, 171: 171, 291: 291, 281: 281, 181: 181, 191: 191, 311: 311},
             "MoveRandoVec": 0,
             "DeathLink": 0,
             "CompletionType": 0,
