@@ -1284,6 +1284,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             # Type change from subscript to constant, or index/value differences
             if 'type' in path or 'index' in path or 'value' in path:
                 return True
+            # Entire args element changes type when subscript is resolved to string
+            # Original: {"type": "subscript", ...} (dict)
+            # WorldGen: "Burt The Bashful's Boss Room" (string after constant unwrap)
+            # This happens for boss_order[N] and similar world attribute lookups
+            if path.endswith(']') and original_value == 'type: dict' and worldgen_value == 'type: str':
+                return True
         # Option attribute comparisons (self.game_logic, self.midring_start, etc.)
         # that get resolved to constant values in worldgen
         if 'game_logic' in str(original_value) or 'midring_start' in str(original_value):
