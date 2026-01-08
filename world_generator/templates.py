@@ -1594,7 +1594,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             elif isinstance(option_value, str):
                 # Choice options with string value - need to look up the value
                 # Try to find the corresponding option_* attribute
-                option_attr_name = f"option_{option_value}"
+                option_attr_name = f"option_{{option_value}}"
                 if hasattr(option_obj.__class__, option_attr_name):
                     option_obj.value = getattr(option_obj.__class__, option_attr_name)
                 else:

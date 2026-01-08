@@ -150,6 +150,9 @@ class JSONWorldBuilder:
         # This instantiates the world
         self.multiworld.set_options(args)
 
+        # Set up collection state BEFORE generation (some worlds access it during generation)
+        self.multiworld.state = CollectionState(self.multiworld)
+
         # Run generation steps to create regions, items, and rules
         gen_steps = [
             "generate_early",
@@ -161,9 +164,6 @@ class JSONWorldBuilder:
         for step in gen_steps:
             if hasattr(AutoWorld.World, step):
                 AutoWorld.call_all(self.multiworld, step)
-
-        # Set up collection state after generation
-        self.multiworld.state = CollectionState(self.multiworld)
 
         self.world = self.multiworld.worlds[1]
 
