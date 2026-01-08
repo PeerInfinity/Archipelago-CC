@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-07 20:20:27
+**Generated:** 2026-01-08 05:55:23
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -57,78 +57,78 @@ Of the 73 templates passing all 4 tests:
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.6KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 654.6KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 654.1KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
-| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 25.9KB |
+| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.8KB | ✅ | 275.4KB |
-| Baking Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.1KB |
+| Baking Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.2KB |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.4KB | 40.3KB | 329.0KB |
-| Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 50.3KB |
+| Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.0KB | ✅ | 94.4KB |
 | Castlevania 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 138.5KB |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1043.3KB |
 | Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ | 53.7KB |
 | ChecksFinder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 16.2KB |
-| Choo-Choo Charles | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 282.2KB |
+| Choo-Choo Charles | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 282.3KB |
 | Civilization VI | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 166.9KB |
-| Coding Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.8KB |
-| DLCQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 51.2KB |
+| Coding Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.9KB |
+| DLCQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 51.3KB |
 | DOOM 1993 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 280.1KB |
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.1KB | ✅ | 298.3KB |
+| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 68.6KB |
-| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1302.4KB |
+| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1302.5KB |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 367.5KB |
-| Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 102.1KB |
+| Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 102.2KB |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.5KB | ✅ | 84.2KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 754.0KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 19.5KB | ✅ | 1675.2KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.1KB | ✅ | 756.5KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.1KB | ✅ | 688.9KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 3.6KB | ✅ | 210.3KB |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.4KB | ✅ | 714.4KB |
-| Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 132.3KB |
-| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 398.4KB |
+| Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.4KB | ✅ | 714.5KB |
+| Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 132.4KB |
+| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 12.6KB |
 | Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 51.5KB |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 57.2KB |
 | Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 47.5KB |
 | Muse Dash | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 231.5KB |
-| Noita | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 74.5KB |
+| Noita | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 74.6KB |
 | Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 308.9KB |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 23.1KB | ✅ | 488.9KB |
-| Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 123.6KB |
+| Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 123.7KB |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 146.1KB |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.5KB |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | 6.9KB | 418.7KB |
-| Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.2KB |
+| Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 266.1KB |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.7KB | 87.5KB | 1136.1KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.8KB | 8.0KB | 2430.1KB |
-| Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 207.7KB |
+| Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 207.8KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 875.1KB |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 875.0KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 178.2KB |
 | Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 102.8KB |
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.1KB | ✅ | 711.6KB |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.8KB | ✅ | 283.0KB |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 555.4KB |
-| The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.7KB | ✅ | 211.7KB |
-| The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 253.8KB |
-| The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.1KB | ✅ | 401.2KB |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 555.5KB |
+| The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.7KB | ✅ | 211.8KB |
+| The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 253.9KB |
+| The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.1KB | ✅ | 401.3KB |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 267.3KB |
-| Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 57.9KB |
+| Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | ✅ | 22.7KB |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 44.7KB |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 283.2KB |
-| shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 155.4KB |
+| shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 155.5KB |
 
 ### Largest Rules Files
 
@@ -136,14 +136,14 @@ Of the 73 templates passing all 4 tests:
 |------|-----------|------------|
 | 1 | Stardew Valley | 2430.1KB |
 | 2 | Kingdom Hearts 2 | 1675.2KB |
-| 3 | Final Fantasy Mystic Quest | 1302.4KB |
+| 3 | Final Fantasy Mystic Quest | 1302.5KB |
 | 4 | Starcraft 2 | 1136.1KB |
 | 5 | Dark Souls III | 1062.0KB |
 | 6 | Celeste (Open World) | 1043.3KB |
 | 7 | Lingo | 946.3KB |
-| 8 | Super Mario Land 2 | 875.1KB |
-| 9 | Kirby's Dream Land 3 | 756.5KB |
-| 10 | Kingdom Hearts | 754.0KB |
+| 8 | Super Mario Land 2 | 875.0KB |
+| 9 | Kingdom Hearts | 754.0KB |
+| 10 | Links Awakening DX | 714.5KB |
 
 ### Exporter Files by Size
 
