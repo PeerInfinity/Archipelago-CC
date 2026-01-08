@@ -5693,23 +5693,16 @@ class HelperCodeGenerator:
                 else:
                     return str(value)
 
-        # Special case: when accessing world.xxx where xxx is a known attribute
-        # We need to distinguish between options (inline the value) and world attributes
-        # (preserve runtime access for correct re-export).
+        # Special case: when accessing world.xxx where xxx is a known world attribute
+        # (e.g., world.era_required_non_progressive_items), inline the constant value.
+        # This handles game-specific computed attributes that were exported in the rules.json
+        # and are accessed by helper functions. Instead of trying to access via
+        # state.multiworld.worlds[player] (which is a SimpleNamespace), we inline the data.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'world':
             if attr in self.settings:
-                # Check if this is a world attribute (not an option)
-                # World attributes should be accessed at runtime to preserve the reference
-                # for correct re-export when the worldgen world's rules are exported again.
-                is_option = attr in self.option_definitions
-                if not is_option:
-                    # World attribute: generate runtime access code
-                    # This ensures the exporter sees the pattern and exports it correctly
-                    return f"state.multiworld.worlds[player].{attr}"
-                else:
-                    # Option: inline the constant value
-                    value = self.settings[attr]
-                    return self._expr_constant({'type': 'constant', 'value': value})
+                value = self.settings[attr]
+                # Use _expr_constant to convert the value to Python code
+                return self._expr_constant({'type': 'constant', 'value': value})
 
         # Special case: when accessing world.xxx.yyy where xxx is a known world attribute
         # that contains a dict/object (e.g., world.difficulty_requirements.progressive_bottle_limit).
@@ -5725,24 +5718,18 @@ class HelperCodeGenerator:
                         nested_value = inner_value[attr]
                         return self._expr_constant({'type': 'constant', 'value': nested_value})
 
-        # Special case: when accessing self.world.xxx where xxx is a known attribute
+        # Special case: when accessing self.world.xxx where xxx is a known setting
         # (e.g., self.world.required_epitaph_pieces_name). In original world code,
         # 'self' refers to a rules class and self.world is the World instance.
-        # Distinguish between options (inline) and world attributes (preserve reference).
+        # Resolve these to literal values from settings, same as world.xxx.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'attribute':
             inner_obj = obj_expr.get('object', {})
             inner_attr = obj_expr.get('attr', '')
             if (isinstance(inner_obj, dict) and inner_obj.get('type') == 'name' and
                     inner_obj.get('name') == 'self' and inner_attr == 'world'):
                 if attr in self.settings:
-                    is_option = attr in self.option_definitions
-                    if not is_option:
-                        # World attribute: generate runtime access code
-                        return f"state.multiworld.worlds[player].{attr}"
-                    else:
-                        # Option: inline the constant value
-                        value = self.settings[attr]
-                        return self._expr_constant({'type': 'constant', 'value': value})
+                    value = self.settings[attr]
+                    return self._expr_constant({'type': 'constant', 'value': value})
 
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
