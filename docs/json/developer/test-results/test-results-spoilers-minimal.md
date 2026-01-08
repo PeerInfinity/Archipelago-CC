@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-08 06:23:33
+**Generated:** 2026-01-08 20:15:28
 
-**Source Data Created:** 2026-01-07T19:58:36.943245
+**Source Data Created:** 2026-01-08T20:15:27.175780
 
-**Source Data Last Updated:** 2026-01-07T19:58:36.943250
+**Source Data Last Updated:** 2026-01-08T20:15:27.175788
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 43/73 (58.9% of passed)
-- **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 43/73 (58.9% of passed)
+- **Passing with Generic Exporter:** 43/72 (59.7% of passed)
+- **Passing with Generic Logic:** 66/72 (91.7% of passed)
+- **Passing with Both Generic:** 43/72 (59.7% of passed)
 
 ## Test Results
 
@@ -61,7 +61,7 @@
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | ✅ |
-| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 3.6KB | ✅ |
+| Landstalker - The Treasures of King Nole | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | 3.6KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
@@ -103,15 +103,6 @@
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 3.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| VVVVVV | 1 | 2026-01-07 19:56 | Previously failed, now passing |
-
 
 ## Notes
 
