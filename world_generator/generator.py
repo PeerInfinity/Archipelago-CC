@@ -39,7 +39,7 @@ class WorldGenerator:
         output_dir: Optional[str] = None,
         game_name: Optional[str] = None,
         force: bool = False,
-        canonical_seed1: bool = False,
+        canonical_seed: Optional[int] = None,
         player_id: str = '1',
     ):
         """
@@ -50,13 +50,13 @@ class WorldGenerator:
             output_dir: Output directory for generated files. If None, derived from JSON.
             game_name: Override the game name (useful to avoid conflicts with existing worlds)
             force: If True, overwrite existing files
-            canonical_seed1: If True, generated world will place items in original locations when seed=1
+            canonical_seed: If set, generated world will place items in original locations when seed matches this value
             player_id: Player ID to extract from multiworld rules file (default: '1')
         """
         self.json_path = Path(json_path)
         self.game_name_override = game_name
         self.force = force
-        self.canonical_seed1 = canonical_seed1
+        self.canonical_seed = canonical_seed
         self.player_id = player_id
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
@@ -147,7 +147,7 @@ class WorldGenerator:
             'Regions.py': generate_regions_py(self.data),
             'Rules.py': generate_rules_py(self.data),
             'Options.py': generate_options_py(self.data),
-            '__init__.py': generate_init_py(self.data, canonical_seed1=self.canonical_seed1),
+            '__init__.py': generate_init_py(self.data, canonical_seed=self.canonical_seed),
         }
 
         # Generate archipelago.json manifest for apworld packaging compatibility
