@@ -51,13 +51,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Quest - Monster spotting", player),
-        CanReachRegion('Kiiruberg')
+        multiworld.get_location("Quest - Ghost helper!", player),
+        CanReachRegion('Logcity')
     )
 
     world.set_rule(
-        multiworld.get_location("Quest - Ghost helper!", player),
-        CanReachRegion('Logcity')
+        multiworld.get_location("Quest - Monster spotting", player),
+        CanReachRegion('Kiiruberg')
     )
 
     world.set_rule(

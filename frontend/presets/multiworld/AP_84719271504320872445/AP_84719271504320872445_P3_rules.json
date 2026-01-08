@@ -5,6 +5,7 @@
   "playerId": "3",
   "archipelago_version": "0.6.5",
   "generation_seed": 3,
+  "seed_name": "84719271504320872445",
   "player_names": {
     "1": "Player1",
     "2": "Player2",
@@ -2236,7 +2237,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 2
@@ -2247,7 +2248,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2
@@ -2269,7 +2270,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2
@@ -2292,7 +2293,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 5
@@ -2303,7 +2304,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2347,7 +2348,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2369,7 +2370,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2461,7 +2462,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2472,7 +2473,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2494,7 +2495,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2578,7 +2579,7 @@
           "Coins",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2590,7 +2591,7 @@
           "Coins",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 6
@@ -2602,7 +2603,7 @@
           "Coins",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -3732,12 +3733,8 @@
           {
             "type": "attribute",
             "object": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "difficulty_requirements"
+              "type": "world_attribute",
+              "attribute": "difficulty_requirements"
             },
             "attr": "progressive_bottle_limit"
           },
@@ -3845,12 +3842,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -3905,12 +3898,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -4996,6 +4985,9 @@
               }
             }
           ]
+        },
+        "param_mappings": {
+          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {
@@ -5085,24 +5077,16 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "logical_heart_pieces"
+              "type": "world_attribute",
+              "attribute": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "logical_heart_containers"
+              "type": "world_attribute",
+              "attribute": "logical_heart_containers"
             }
           },
           {

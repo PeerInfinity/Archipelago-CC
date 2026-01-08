@@ -4,6 +4,7 @@
   "game_directory": "alttp_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -3774,23 +3775,32 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": 1,
+                        "left": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "enemy_health"
+                          }
+                        },
                         "op": "in",
                         "right": [
                           0,
                           1
-                        ]
-                      }
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 1
-                          }
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -3961,18 +3971,32 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": 1,
+                        "left": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "mode"
+                          }
+                        },
                         "op": "==",
-                        "right": 0
-                      }
+                        "right": 0,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": 0,
+                        "left": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "small_key_shuffle"
+                          }
+                        },
                         "op": "==",
-                        "right": 5
-                      }
+                        "right": 5,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -6007,28 +6031,10 @@
             "name": "Pyramid Hole",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "bool",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "OptionValue",
-                      "args": {
-                        "option": "open_pyramid"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beat Agahnim 2"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Beat Agahnim 2"
+              }
             }
           },
           {
@@ -7746,11 +7752,12 @@
             "access_rule": {
               "rule": "has_crystals",
               "_original_ast_type": "helper",
+              "_converted_from_ast": true,
               "args": [
                 {
-                  "rule": "Constant",
+                  "rule": "OptionValue",
                   "args": {
-                    "value": 7
+                    "option": "crystals_needed_for_gt"
                   }
                 }
               ]
@@ -8420,23 +8427,32 @@
                         {
                           "rule": "Compare",
                           "args": {
-                            "left": 1,
+                            "left": {
+                              "rule": "OptionValue",
+                              "args": {
+                                "option": "enemy_health"
+                              }
+                            },
                             "op": "in",
                             "right": [
                               0,
                               1
-                            ]
-                          }
+                            ],
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
-                              }
+                              },
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -8444,11 +8460,13 @@
                     },
                     {
                       "rule": "can_shoot_arrows",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_beam_sword",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -15791,16 +15809,18 @@
               "children": [
                 {
                   "rule": "GanonDefeatRule",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_crystals",
                   "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
                   "args": [
                     {
-                      "rule": "Constant",
+                      "rule": "OptionValue",
                       "args": {
-                        "value": 7
+                        "option": "crystals_needed_for_ganon"
                       }
                     }
                   ]
@@ -21603,8 +21623,12 @@
         "type": "min",
         "args": [
           {
-            "type": "constant",
-            "value": 4
+            "type": "attribute",
+            "object": {
+              "type": "world_attribute",
+              "attribute": "difficulty_requirements"
+            },
+            "attr": "progressive_bottle_limit"
           },
           {
             "type": "group_count",
@@ -21710,12 +21734,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -21770,12 +21790,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -22861,6 +22877,9 @@
               }
             }
           ]
+        },
+        "param_mappings": {
+          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {
@@ -22950,16 +22969,16 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "constant",
-              "value": 24
+              "type": "world_attribute",
+              "attribute": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "constant",
-              "value": 10
+              "type": "world_attribute",
+              "attribute": "logical_heart_containers"
             }
           },
           {

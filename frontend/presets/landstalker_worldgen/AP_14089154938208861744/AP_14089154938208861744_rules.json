@@ -4,6 +4,7 @@
   "game_directory": "landstalker_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -8021,8 +8022,37 @@
           "regions"
         ],
         "body": {
-          "type": "constant",
-          "value": true
+          "type": "all_of",
+          "element_rule": {
+            "type": "item_check",
+            "item": {
+              "type": "binary_op",
+              "left": {
+                "type": "constant",
+                "value": "event_visited_"
+              },
+              "op": "+",
+              "right": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "region"
+                },
+                "attr": "code"
+              }
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "region"
+            },
+            "iterator": {
+              "type": "name",
+              "name": "regions"
+            }
+          }
         }
       }
     }

@@ -364,10 +364,13 @@ class RiskOfRainWorld(RuleWorldMixin, World):
         self.world_description = 'Escape a chaotic alien planet by fighting through hordes of frenzied monsters – with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.'
         self.slot_data = types.SimpleNamespace(itemPickupStep=1, shrineUseStep=0, goal=1, victory=0, totalLocations=40, chestsPerStage=10, shrinesPerStage=5, scavengersPerStage=0, scannerPerStage=1, altarsPerStage=1, totalRevivals=4, startWithRevive=1, finalStageDeath=0, deathLink=0, requireStages=1, progressiveStages=1, seed='3991975562123098', offset=37000)
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -375,7 +378,7 @@ class RiskOfRainWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

@@ -80,7 +80,6 @@ class StartInventoryFromPool(StartInventoryPool):
 
 class StartingTool(Choice):
     """Option for Starting Tool."""
-    display_name = "Starting Tool"
     option_brush = 0
     option_pencil = 1
     option_eraser = 2

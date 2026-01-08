@@ -1,6 +1,7 @@
 {
   "accessibility": 0,
   "allow_floating_layers": false,
+  "complexity_growth_gradient": "0.5",
   "early_balancer_tunnel_and_trash": 2,
   "exclude_locations": [],
   "exclude_long_playtime_achievements": true,
