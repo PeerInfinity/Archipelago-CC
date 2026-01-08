@@ -91,18 +91,22 @@ class JSONWorldBuilder:
 
     def build_world(self, worldgen_game_name: Optional[str] = None) -> "World":
         """
-        Create a world instance from the corresponding _worldgen world.
+        Create a fully-functional world instance from the corresponding _worldgen world.
 
         The worldgen world was generated from the same JSON rules file,
         so its structure matches exactly and it has native Rule Builder
         support with full explain functionality.
+
+        This method runs the full generation steps (create_regions, create_items,
+        set_rules, etc.) to produce a world suitable for tracking, not just
+        introspection.
 
         Args:
             worldgen_game_name: Name of the worldgen world to use. If None,
                 derives from JSON metadata (e.g., "TUNIC" -> "TUNIC WorldGen")
 
         Returns:
-            Instantiated World with Rule Builder support
+            Instantiated World with regions, locations, items, and rules set up
 
         Raises:
             ValueError: If the worldgen world isn't registered
@@ -110,7 +114,7 @@ class JSONWorldBuilder:
         """
         # Import here to avoid circular imports at module load time
         from BaseClasses import CollectionState, MultiWorld
-        from worlds import AutoWorldRegister
+        from worlds import AutoWorld, AutoWorldRegister
 
         if self.data is None:
             self.load()
@@ -134,7 +138,8 @@ class JSONWorldBuilder:
         self.multiworld = MultiWorld(1)
         self.multiworld.game[1] = worldgen_game_name
         self.multiworld.player_name = {1: "Player"}
-        self.multiworld.set_seed(seed=1)  # Deterministic for explain purposes
+        self.multiworld.set_seed(seed=1)  # Deterministic
+        self.multiworld.generation_is_fake = True  # Mark as tracker-generated
 
         # Set up options with defaults
         world_type = AutoWorldRegister.world_types[worldgen_game_name]
@@ -144,6 +149,20 @@ class JSONWorldBuilder:
 
         # This instantiates the world
         self.multiworld.set_options(args)
+
+        # Run generation steps to create regions, items, and rules
+        gen_steps = [
+            "generate_early",
+            "create_regions",
+            "create_items",
+            "set_rules",
+            "generate_basic",
+        ]
+        for step in gen_steps:
+            if hasattr(AutoWorld.World, step):
+                AutoWorld.call_all(self.multiworld, step)
+
+        # Set up collection state after generation
         self.multiworld.state = CollectionState(self.multiworld)
 
         self.world = self.multiworld.worlds[1]

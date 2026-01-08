@@ -151,12 +151,12 @@ class ExpressionVisitorMixin:
             logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
 
             # Special handling: if accessing an attribute on state.multiworld.worlds[player],
-            # convert directly to world_attribute type for consistent output.
-            # This handles patterns like state.multiworld.worlds[player].logic_in_swordless_mode
-            # which should be exported as {'type': 'world_attribute', 'attribute': 'logic_in_swordless_mode'}
+            # convert the object to just 'world' so the frontend can resolve it from game_info.
+            # This handles patterns like state.multiworld.worlds[player].hat_yarn_costs
+            # which the frontend expects as world.hat_yarn_costs
             if self._is_world_player_subscript(node.value):
-                logging.debug(f"visit_Attribute: Detected state.multiworld.worlds[player].{attr_name}, converting to world_attribute")
-                return {'type': 'world_attribute', 'attribute': attr_name}
+                logging.debug(f"visit_Attribute: Detected state.multiworld.worlds[player].{attr_name}, converting to world.{attr_name}")
+                obj_result = {'type': 'name', 'name': 'world'}
             else:
                 obj_result = self.visit(node.value) # Get returned result
 

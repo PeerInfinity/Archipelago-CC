@@ -64,10 +64,11 @@ class TrackerCore():
         self.seed_override: int | None = None  # Optional seed to use for generation (for UT comparison testing)
         self.sphere_log_mode: bool = False  # Enable lenient error handling for UT comparison testing
 
-        # Worldgen world support for rule explain functionality
+        # Worldgen world support for rule explain and tracking functionality
         self.worldgen_builder: Optional["JSONWorldBuilder"] = None
         self.worldgen_world: Optional[Any] = None
         self.worldgen_multiworld: Optional[MultiWorld] = None
+        self._tracking_from_worldgen: bool = False  # True if tracking uses worldgen world
 
         # Direct AST explain support (works without worldgen world)
         self.seed_name: Optional[str] = None  # Seed name from RoomInfo (e.g., "14089154938208861744")
@@ -89,6 +90,7 @@ class TrackerCore():
         self.worldgen_builder = None
         self.worldgen_world = None
         self.worldgen_multiworld = None
+        self._tracking_from_worldgen = False
         # Clear direct AST explain data
         self.seed_name = None
         self.generation_seed = None
@@ -142,6 +144,37 @@ class TrackerCore():
             self.worldgen_multiworld = None
             return False
 
+    def initialize_tracking_from_worldgen(self) -> bool:
+        """
+        Initialize tracking using the worldgen world.
+
+        This method attempts to use an already-loaded worldgen world for tracking.
+        The worldgen world must have been created via build_world() which runs
+        the generation steps (create_regions, set_rules, etc.).
+
+        Returns:
+            True if tracking was initialized from worldgen, False otherwise
+        """
+        if not self.worldgen_multiworld or not self.worldgen_world:
+            self.logger.debug("No worldgen world available for tracking")
+            return False
+
+        try:
+            # Use worldgen multiworld for tracking
+            self.multiworld = self.worldgen_multiworld
+            self.player_id = 1
+            self._tracking_from_worldgen = True
+
+            self.logger.info(
+                f"Initialized tracking from worldgen world: {self.worldgen_world.game}"
+            )
+            return True
+
+        except Exception as e:
+            self.logger.warning(f"Failed to initialize tracking from worldgen: {e}")
+            self._tracking_from_worldgen = False
+            return False
+
     def generate_and_load_worldgen_world(self, json_path: str) -> bool:
         """
         Generate a worldgen world from a rules JSON file and load it.
@@ -158,6 +191,7 @@ class TrackerCore():
         try:
             import importlib
             import json
+            import sys
             from pathlib import Path
             from world_generator.generator import WorldGenerator
 
@@ -168,18 +202,14 @@ class TrackerCore():
             game_name = json_data.get('game_name', 'Unknown')
             worldgen_game_name = f"{game_name} WorldGen"
 
-            # Check if worldgen world already exists
-            if worldgen_game_name in AutoWorld.AutoWorldRegister.world_types:
-                self.logger.info(f"Worldgen world '{worldgen_game_name}' already loaded")
-                return self.load_worldgen_world(json_path, worldgen_game_name)
-
             # Derive output directory
             game_directory = json_data.get('game_directory', game_name.lower().replace(' ', '_'))
             output_dir = Path('worlds') / f"{game_directory}_worldgen"
+            module_name = output_dir.name  # e.g., "adventure_worldgen"
 
             self.logger.info(f"Generating worldgen world from {json_path}")
 
-            # Run world generator
+            # Run world generator to create/overwrite Python files
             generator = WorldGenerator(
                 json_path=json_path,
                 output_dir=str(output_dir),
@@ -191,12 +221,21 @@ class TrackerCore():
 
             self.logger.info(f"Generated world files in {output_dir}")
 
-            # Dynamically import the new world module
-            module_name = output_dir.name  # e.g., "tunic_worldgen"
-            self.logger.info(f"Importing new world module: worlds.{module_name}")
+            # Check if module was previously imported
+            full_module_name = f"worlds.{module_name}"
+            if full_module_name in sys.modules:
+                # Unregister the old world class before reloading
+                if worldgen_game_name in AutoWorld.AutoWorldRegister.world_types:
+                    self.logger.info(f"Unregistering existing '{worldgen_game_name}' before reload")
+                    del AutoWorld.AutoWorldRegister.world_types[worldgen_game_name]
 
-            # Import the module - this triggers AutoWorldRegister
-            importlib.import_module(f"worlds.{module_name}")
+                # Reload the module to pick up the new code
+                self.logger.info(f"Reloading module: {full_module_name}")
+                importlib.reload(sys.modules[full_module_name])
+            else:
+                # Import the module for the first time
+                self.logger.info(f"Importing new world module: {full_module_name}")
+                importlib.import_module(full_module_name)
 
             # Verify the world was registered
             if worldgen_game_name not in AutoWorld.AutoWorldRegister.world_types:
@@ -829,6 +868,21 @@ class TrackerCore():
         if getattr(connected_cls, "disable_ut", False):
             self.log_to_tab("World Author has requested UT be disabled on this world, please respect their decision")
             return
+
+        # Try worldgen-based tracking first if rules.json is available
+        if self.rules_json_path:
+            self.logger.info(f"Attempting worldgen-based tracking from {self.rules_json_path}")
+            # Generate a fresh worldgen world from the rules.json file
+            # This ensures the worldgen world matches the specific seed we're connecting to
+            if self.generate_and_load_worldgen_world(self.rules_json_path):
+                if self.initialize_tracking_from_worldgen():
+                    self.logger.info("Using worldgen-based tracking")
+                    return
+                else:
+                    self.logger.warning("Failed to initialize tracking from worldgen, falling back")
+            else:
+                self.logger.warning("Failed to generate worldgen world, falling back to standard tracking")
+
         # first check if we don't need a yaml
         if getattr(connected_cls, "ut_can_gen_without_yaml", False):
             with tempfile.TemporaryDirectory() as tempdir:

@@ -345,7 +345,7 @@ def can_defeat_peahats(state: "CollectionState", player: int) -> bool:
 
 
 def can_defeat_phantom_ganon(state: "CollectionState", player: int) -> bool:
-    return ((not (state.multiworld.worlds[player].logic_in_swordless_mode)) and (has_any_master_sword(state, player))) or ((state.multiworld.worlds[player].logic_in_swordless_mode) and (state.has('Skull Hammer', player)))
+    return ((not (None)) and (has_any_master_sword(state, player))) or ((state.multiworld.worlds[player].logic_in_swordless_mode) and (state.has('Skull Hammer', player)))
 
 
 def can_defeat_puppet_ganon(state: "CollectionState", player: int) -> bool:
@@ -533,7 +533,7 @@ def can_unlock_ganons_tower_four_boss_door(state: "CollectionState", player: int
 
 
 def can_unlock_puppet_ganon_door(state: "CollectionState", player: int) -> bool:
-    return (can_defeat_moblins(state, player)) and (can_defeat_mighty_darknuts(state, player)) and ((not (state.multiworld.worlds[player].logic_in_required_bosses_mode)) or ((state.multiworld.worlds[player].logic_in_required_bosses_mode) and (all(state.can_reach_location(loc, player) for loc in state.multiworld.worlds[player].boss_reqs.required_boss_item_locations))))
+    return (can_defeat_moblins(state, player)) and (can_defeat_mighty_darknuts(state, player)) and ((not (None)) or ((state.multiworld.worlds[player].logic_in_required_bosses_mode) and (True)))
 
 
 def has_all_8_triforce_shards(state: "CollectionState", player: int) -> bool:
