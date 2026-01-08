@@ -352,8 +352,9 @@ class ShiversWorld(RuleWorldMixin, World):
 
             # Handle different option types
             if isinstance(option_value, bool):
-                # Toggle options
-                option_obj.value = int(option_value)
+                # Toggle options - preserve as boolean to match original world behavior
+                # (Original worlds set value = False directly, not value = 0)
+                option_obj.value = option_value
             elif isinstance(option_value, int):
                 # Range or Choice options with numeric value
                 option_obj.value = option_value
@@ -452,8 +453,6 @@ class ShiversWorld(RuleWorldMixin, World):
         """Create an item by name."""
         data = item_table[name]
         item = ShiversWorldGenItem(name, data.classification, data.id, self.player)
-        if data.hint_text:
-            item._hint_text = data.hint_text
         return item
 
 

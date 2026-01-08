@@ -5,16 +5,25 @@
 # GENERATE_EXTRA_SEEDS - set to "false" to skip seeds 2 and 3 (default: true)
 # GENERATE_WORLDGEN - set to "true" to generate worldgen worlds (default: false)
 # WORLDGEN_CANONICAL_SEED1 - set to "true" to use canonical seed 1 placement (default: true)
+# GENERATE_WORLDGEN2 - set to "true" to generate worldgen2 worlds from worldgen worlds (default: false)
 
 GENERATE_MULTIWORLD="${GENERATE_MULTIWORLD:-true}"
 GENERATE_EXTRA_SEEDS="${GENERATE_EXTRA_SEEDS:-true}"
 GENERATE_WORLDGEN="${GENERATE_WORLDGEN:-false}"
 WORLDGEN_CANONICAL_SEED1="${WORLDGEN_CANONICAL_SEED1:-true}"
+GENERATE_WORLDGEN2="${GENERATE_WORLDGEN2:-false}"
+
+# Build the canonical-seed1 flag if enabled (used by WorldGen and WorldGen2)
+CANONICAL_FLAG=""
+if [ "$WORLDGEN_CANONICAL_SEED1" = "true" ]; then
+  CANONICAL_FLAG="--canonical-seed1"
+fi
 
 echo "GENERATE_MULTIWORLD: $GENERATE_MULTIWORLD"
 echo "GENERATE_EXTRA_SEEDS: $GENERATE_EXTRA_SEEDS"
 echo "GENERATE_WORLDGEN: $GENERATE_WORLDGEN"
 echo "WORLDGEN_CANONICAL_SEED1: $WORLDGEN_CANONICAL_SEED1"
+echo "GENERATE_WORLDGEN2: $GENERATE_WORLDGEN2"
 
 # Templates with seeds 1, 2, 3
 python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 1
@@ -166,12 +175,6 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   echo ""
   echo "===== Generating WorldGen worlds ====="
   echo ""
-
-  # Build the canonical-seed1 flag if enabled
-  CANONICAL_FLAG=""
-  if [ "$WORLDGEN_CANONICAL_SEED1" = "true" ]; then
-    CANONICAL_FLAG="--canonical-seed1"
-  fi
 
   # Generate worldgen worlds for all standard templates (alphabetical order)
   # Excluded templates: Archipelago, Final Fantasy, Hollow Knight, Ocarina of Time, Sudoku, Universal Tracker, Zillion
@@ -350,10 +353,63 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Math Adventure WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Metamath WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Coding Adventure WorldGen.yaml" --multi 1 --seed 1
+
+fi
+
+# WorldGen2 world generation (generated from WorldGen worlds)
+if [ "$GENERATE_WORLDGEN2" = "true" ]; then
+  echo ""
+  echo "===== Generating WorldGen2 worlds (from WorldGen) ====="
+  echo ""
+
+  python -m world_generator frontend/presets/ahit_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/ahit_worldgen2 \
+      --game-name "A Hat in Time WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  python -m world_generator frontend/presets/alttp_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/alttp_worldgen2 \
+      --game-name "A Link to the Past WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  python -m world_generator frontend/presets/shorthike_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/shorthike_worldgen2 \
+      --game-name "A Short Hike WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  python -m world_generator frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+      -o worlds/adventure_worldgen2 \
+      --game-name "Adventure WorldGen2" \
+      --force \
+      $CANONICAL_FLAG
+
+  # Regenerate templates to include WorldGen2 worlds
+  echo ""
+  echo "===== Regenerating templates (for WorldGen2) ====="
+  echo ""
+  python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+  # Generate presets for WorldGen2 templates
+  echo ""
+  echo "===== Generating presets for WorldGen2 templates ====="
+  echo ""
+  python Generate.py --weights_file_path "Templates/A Hat in Time WorldGen2.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/A Link to the Past WorldGen2.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/A Short Hike WorldGen2.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/Adventure WorldGen2.yaml" --multi 1 --seed 1
 fi
 
 #remove empty preset directories
 find frontend/presets -type d -empty -delete
 
-#rm -rf frontend/modules/textAdventure-remote/shared
-#cp -r frontend/modules/shared frontend/modules/textAdventure-remote/
+# Update textAdventure-remote shared directory (without game-specific JS helpers)
+rm -rf frontend/modules/textAdventure-remote/shared
+cp -r frontend/modules/shared frontend/modules/textAdventure-remote/
+# Remove game-specific JS helper directories (keep only generic/)
+find frontend/modules/textAdventure-remote/shared/gameLogic -mindepth 1 -maxdepth 1 -type d ! -name generic -exec rm -rf {} +
+# Use empty registry (no game-specific imports)
+cp frontend/modules/shared/gameLogic/gameLogicRegistry.empty.js frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.js
+rm frontend/modules/textAdventure-remote/shared/gameLogic/gameLogicRegistry.empty.js

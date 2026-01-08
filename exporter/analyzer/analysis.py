@@ -6,18 +6,68 @@ point for analyzing rule functions and AST nodes.
 """
 
 import ast
+import inspect
 import json
 import logging
 import traceback
-from typing import Optional, Callable, Dict, Any
+from typing import Optional, Callable, Dict, Any, Tuple
 
 from .rule_analyzer import RuleAnalyzer
 from .source_extraction import _clean_source
 from .utils import make_json_serializable
+from .cache import parameterless_func_cache
 from exporter.constants import MAX_ANALYZE_RULE_CALLS
+from exporter.profiling import profiler
 
 # Global counter for detecting infinite loops
 _analyze_rule_call_count = 0
+
+# Standard parameters that don't affect cacheability
+_STANDARD_PARAMS = frozenset({'state', 'player', 'world', 'self'})
+
+
+def _is_cacheable_function(func: Callable) -> Optional[Tuple[str, int]]:
+    """
+    Check if a function is cacheable (parameterless beyond standard params).
+
+    A function is cacheable only if:
+    1. It only takes standard parameters (state, player, world, self)
+    2. It has NO closure variables (captured from enclosing scope)
+
+    Functions with closure variables cannot be cached because different
+    invocations may have different bound values even at the same source location.
+
+    Returns:
+        (filename, lineno) tuple if cacheable, None otherwise
+    """
+    try:
+        if not hasattr(func, '__code__'):
+            return None
+
+        code = func.__code__
+        all_params = code.co_varnames[:code.co_argcount]
+
+        # Check if all parameters are standard (state, player, world, self)
+        extra_params = [p for p in all_params if p not in _STANDARD_PARAMS]
+        if extra_params:
+            return None
+
+        # Check for closure variables - if present, don't cache
+        # Closure variables mean different instances of this function
+        # at the same source location may have different bound values
+        if hasattr(func, '__closure__') and func.__closure__:
+            return None
+
+        # Also check co_freevars which lists the names of free variables
+        if code.co_freevars:
+            return None
+
+        # Get cache key
+        filename = inspect.getfile(func)
+        lineno = code.co_firstlineno
+        return (filename, lineno)
+    except (TypeError, AttributeError):
+        return None
 
 
 def reset_analyze_rule_counter():
@@ -63,10 +113,38 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
     Returns:
         A dictionary representing the structured rule, or an error structure.
     """
+    with profiler.section("analyze_rule"):
+        return _analyze_rule_impl(
+            rule_func, closure_vars, seen_funcs, ast_node, game_handler,
+            player_context, context_info, preserve_parameter_names,
+            rule_target_name, target_type
+        )
+
+
+def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
+                       closure_vars: Optional[Dict[str, Any]] = None,
+                       seen_funcs: Optional[Dict[int, int]] = None,
+                       ast_node: Optional[ast.AST] = None,
+                       game_handler=None,
+                       player_context: Optional[int] = None,
+                       context_info: Optional[str] = None,
+                       preserve_parameter_names: bool = False,
+                       rule_target_name: Optional[str] = None,
+                       target_type: Optional[str] = None) -> Dict[str, Any]:
+    """Implementation of analyze_rule (separated for profiling)."""
     global _analyze_rule_call_count
     _analyze_rule_call_count += 1
     if _analyze_rule_call_count > MAX_ANALYZE_RULE_CALLS:
         raise RuntimeError(f"analyze_rule called {_analyze_rule_call_count} times - likely infinite loop. Context: {context_info}")
+
+    # Check parameterless function cache for functions that only take state/player/world
+    # This avoids re-analyzing the same helper function multiple times
+    cache_key = None
+    if rule_func is not None and not preserve_parameter_names:
+        cache_key = _is_cacheable_function(rule_func)
+        if cache_key and cache_key in parameterless_func_cache:
+            logging.debug(f"analyze_rule: Cache hit for parameterless function at {cache_key}")
+            return parameterless_func_cache[cache_key]
 
     logging.debug("\n--- Starting Rule Analysis ---")
 
@@ -172,7 +250,8 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                 logging.debug("preserve_parameter_names is True, skipping default parameter extraction")
 
             # Clean the source
-            cleaned_source = _clean_source(rule_func)
+            with profiler.section("source_extraction"):
+                cleaned_source = _clean_source(rule_func)
             if cleaned_source is None:
                 logging.error("analyze_rule: Failed to clean source, returning error.")
                 # Need to initialize analyzer logs for the error result
@@ -210,12 +289,14 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
 
                 # Comprehensive parse and visit
                 try:
-                    tree = ast.parse(cleaned_source)
+                    with profiler.section("ast_parse"):
+                        tree = ast.parse(cleaned_source)
                     logging.debug(f"analyze_rule: Parsed AST = {ast.dump(tree)}")
                     logging.debug("AST parsed successfully")
 
                     # Always visit the full parsed tree
-                    analysis_result = analyzer.visit(tree)
+                    with profiler.section("ast_visit"):
+                        analysis_result = analyzer.visit(tree)
 
                 except SyntaxError as parse_err:
                     logging.error(f"analyze_rule: SyntaxError during parse: {parse_err}", exc_info=True)
@@ -275,6 +356,11 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
         else:
             # Successful analysis
             final_result = analysis_result
+
+            # Cache successful results for parameterless functions
+            if cache_key is not None and final_result.get('type') != 'error':
+                parameterless_func_cache[cache_key] = final_result
+                logging.debug(f"analyze_rule: Cached result for parameterless function at {cache_key}")
 
         # Always log the final result (or error structure) being returned
         try:

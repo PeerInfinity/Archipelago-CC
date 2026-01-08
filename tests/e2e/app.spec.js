@@ -10,6 +10,7 @@ test.describe('Application End-to-End Tests', () => {
   const rulesOverride = process.env.RULES_OVERRIDE; // Optional rules file override
   const testLayout = process.env.TEST_LAYOUT; // Optional layout parameter (mobile/desktop)
   const testOrderSeed = process.env.TEST_ORDER_SEED; // Optional test order seed for reproducible randomization
+  const testProfiling = process.env.TEST_PROFILING; // Optional profiling flag (1 to enable)
 
   // Build URL with all optional parameters
   let APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
@@ -30,6 +31,9 @@ test.describe('Application End-to-End Tests', () => {
   }
   if (testOrderSeed) {
     APP_URL += `&testOrderSeed=${encodeURIComponent(testOrderSeed)}`;
+  }
+  if (testProfiling) {
+    APP_URL += `&profiling=${encodeURIComponent(testProfiling)}`;
   }
 
   test('run in-app tests and check results', async ({ page }) => {
@@ -63,27 +67,74 @@ test.describe('Application End-to-End Tests', () => {
     if (testOrderSeed) {
       console.log(`  - testOrderSeed: ${testOrderSeed}`);
     }
+    if (testProfiling) {
+      console.log(`  - profiling: ${testProfiling}`);
+    }
     console.log(`PW DEBUG: URL: ${APP_URL}`);
     // Wait until network activity has ceased, giving SPA more time to initialize
     await page.goto(APP_URL, { waitUntil: 'networkidle', timeout: 60000 });
     console.log('PW DEBUG: Page navigation complete (network idle).');
 
-    // Wait for the __playwrightTestsComplete__ flag to be set on window object
-    // Also check for early termination due to errors
+    // Phase 1: Wait for tests to START (short timeout - fail fast if page doesn't load)
     console.log(
-      'PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...'
+      'PW DEBUG: Waiting for tests to start (__playwrightTestsStarted__ flag)...'
+    );
+    try {
+      await page.waitForFunction(
+        () => {
+          // Tests started
+          if (window.__playwrightTestsStarted__ === true) {
+            return true;
+          }
+          // Or tests already complete (edge case)
+          if (window.__playwrightTestsComplete__ === true) {
+            return true;
+          }
+          // Or error occurred
+          if (window.__playwrightTestsError__ === true) {
+            return true;
+          }
+          return false;
+        },
+        null,
+        { timeout: 30000, polling: 500 }
+      );
+      console.log('PW DEBUG: Tests started (or already complete/errored).');
+    } catch (e) {
+      console.error('PW DEBUG: Timeout waiting for tests to start. Page may have failed to load.');
+      // Set error flag and results so the test can report properly
+      await page.evaluate(() => {
+        window.__playwrightTestsError__ = true;
+        window.__playwrightTestResults__ = {
+          summary: {
+            totalRun: 0,
+            passedCount: 0,
+            failedCount: 1,
+            failedConditionsCount: 0,
+            skippedCount: 0,
+            totalExpected: 0,
+            error: 'Timeout waiting for tests to start - page may have failed to load'
+          },
+          testDetails: [{
+            name: 'Page Load',
+            category: 'System',
+            status: 'failed',
+            message: 'Timeout waiting for tests to start'
+          }]
+        };
+        window.__playwrightTestsComplete__ = true;
+      });
+    }
+
+    // Phase 2: Wait for tests to COMPLETE (longer timeout for actual test execution)
+    console.log(
+      'PW DEBUG: Waiting for tests to complete (__playwrightTestsComplete__ flag)...'
     );
     await page.waitForFunction(
       () => {
         const flag = window.__playwrightTestsComplete__;
         const errorFlag = window.__playwrightTestsError__;
         const results = window.__playwrightTestResults__;
-
-        // This console.log will appear in Playwright's output (from the browser context)
-        // and will also be caught by page.on('console') above.
-        //console.log(
-        //  `Polling window.__playwrightTestsComplete__: "${flag}" (type: ${typeof flag})`
-        //);
 
         // If there's an error flag, exit early
         if (errorFlag === true) {
@@ -242,6 +293,15 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`PW DEBUG: Detailed spoiler test results from localStorage: ${JSON.stringify(spoilerTestResults.localStorageResults, null, 2)}`);
     } else {
       console.log('PW DEBUG: No detailed spoiler test results found in localStorage.__spoilerTestResults__.');
+    }
+
+    // Capture and log profiling data if available
+    const profilingData = await page.evaluate(() => {
+      return typeof window !== 'undefined' && window.__profilingData__ ? window.__profilingData__ : null;
+    });
+    if (profilingData) {
+      console.log('PW DEBUG: Profiling data captured:');
+      console.log(JSON.stringify(profilingData, null, 2));
     }
 
     console.log('PW DEBUG: All Playwright assertions passed.');

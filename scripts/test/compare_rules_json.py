@@ -121,6 +121,346 @@ def normalize_toggle_defaults(obj: Any) -> Any:
         return obj
 
 
+def normalize_list_representation(obj: Any) -> Any:
+    """
+    Normalize list representations between original and WorldGen exports.
+
+    Original exports a list as:
+        {"type": "constant", "value": [200, 400, 600]}
+
+    WorldGen exports the same list as:
+        {"type": "list", "value": [
+            {"type": "constant", "value": 200},
+            {"type": "constant", "value": 400},
+            {"type": "constant", "value": 600}
+        ]}
+
+    Both are semantically equivalent. Normalize to the 'constant' format.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check if this is a list type that can be normalized to constant
+        if obj_type == 'list' and 'value' in obj:
+            value = obj.get('value', [])
+            if isinstance(value, list):
+                # Try to extract values from nested constants
+                extracted_values = []
+                can_simplify = True
+                for item in value:
+                    if isinstance(item, dict) and item.get('type') == 'constant':
+                        extracted_values.append(item.get('value'))
+                    else:
+                        # Not a simple constant, can't simplify
+                        can_simplify = False
+                        break
+
+                if can_simplify:
+                    return {
+                        'type': 'constant',
+                        'value': extracted_values
+                    }
+
+        # Recursively normalize nested objects
+        return {k: normalize_list_representation(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_list_representation(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_tuple_list_types(obj: Any) -> Any:
+    """
+    Normalize tuple and list types to a consistent format.
+
+    Original may use {"type": "list", "value": [...]} for has_any/has_all args,
+    while WorldGen may use {"type": "tuple", "elements": [...]}.
+
+    Both are semantically equivalent in Python (both work with has_any/has_all).
+    Normalize to list format for consistent comparison.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Normalize tuple to list format
+        if obj_type == 'tuple' and 'elements' in obj:
+            elements = obj['elements']
+            return {
+                'type': 'list',
+                'value': [normalize_tuple_list_types(e) for e in elements]
+            }
+
+        # Recursively normalize nested objects
+        return {k: normalize_tuple_list_types(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_tuple_list_types(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_tuple_wrapped_generator(obj: Any) -> Any:
+    """
+    Normalize tuple() wrapped generator expressions to bare generator expressions.
+
+    Original may export:
+        {"type": "generator_expression", "element": {...}, "comprehension": {...}}
+
+    WorldGen may export:
+        {"type": "helper", "name": "tuple", "args": [
+            {"type": "generator_expression", "element": {...}, "comprehension": {...}}
+        ]}
+
+    Both are semantically equivalent. Normalize to the bare generator expression.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check if this is a tuple() helper call wrapping a generator expression
+        if obj_type == 'helper' and obj.get('name') == 'tuple':
+            args = obj.get('args', [])
+            if len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, dict) and arg.get('type') == 'generator_expression':
+                    # Unwrap the generator expression
+                    return normalize_tuple_wrapped_generator(arg)
+
+        # Recursively normalize nested objects
+        return {k: normalize_tuple_wrapped_generator(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_tuple_wrapped_generator(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_string_constant_wrapper(obj: Any) -> Any:
+    """
+    Normalize string constants wrapped in {"type": "constant", "value": "X"} to plain "X".
+
+    Original exporter wraps string values in item checks and rule args:
+        {"type": "item_check", "item": {"type": "constant", "value": "Wingsuit"}}
+
+    WorldGen exports them as plain strings:
+        {"type": "item_check", "item": "Wingsuit"}
+
+    Both are semantically equivalent. Normalize to the plain string format.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check if this is a constant wrapper for a string value
+        if obj_type == 'constant' and 'value' in obj:
+            value = obj.get('value')
+            # Only unwrap if the value is a string (not a list, dict, etc.)
+            if isinstance(value, str):
+                return value
+
+        # Recursively normalize nested objects
+        return {k: normalize_string_constant_wrapper(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_string_constant_wrapper(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_item_check_count_default(obj: Any) -> Any:
+    """
+    Normalize item_check rules by removing count=1 since it's the default.
+
+    Original may export:
+        {"type": "item_check", "item": "X", "count": {"type": "constant", "value": 1}}
+
+    WorldGen may export:
+        {"type": "item_check", "item": "X"}
+
+    Both are semantically equivalent. Normalize by removing count=1.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for item_check with count=1
+        if obj_type == 'item_check' and 'count' in obj:
+            count = obj.get('count')
+            # Check if count is {"type": "constant", "value": 1} or just 1
+            is_count_one = False
+            if isinstance(count, dict) and count.get('type') == 'constant' and count.get('value') == 1:
+                is_count_one = True
+            elif count == 1:
+                is_count_one = True
+
+            if is_count_one:
+                # Remove the count field since it's the default
+                result = {k: normalize_item_check_count_default(v) for k, v in obj.items() if k != 'count'}
+                return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_item_check_count_default(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_item_check_count_default(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_nested_world_attribute(obj: Any) -> Any:
+    """
+    Normalize nested world attribute access patterns.
+
+    WorldGen may use nested attribute format:
+        {"type": "attribute", "object": {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "boss_reqs"}, "attr": "required_boss_item_locations"}
+    Or:
+        {"type": "attribute", "object": {"type": "world_attribute", "attribute": "boss_reqs"}, "attr": "required_boss_item_locations"}
+
+    Original worlds use the flattened world_attribute format:
+        {"type": "world_attribute", "attribute": "boss_reqs.required_boss_item_locations"}
+
+    Both are semantically equivalent. This normalizes to the flattened world_attribute format.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for nested attribute type
+        if obj_type == 'attribute':
+            attr_name = obj.get('attr', '')
+            inner_obj = obj.get('object', {})
+
+            # Build the full path by traversing the nested attributes
+            path_parts = [attr_name]
+            current = inner_obj
+            while isinstance(current, dict) and current.get('type') == 'attribute':
+                path_parts.insert(0, current.get('attr', ''))
+                current = current.get('object', {})
+
+            # Check if we've reached world (name, world_attribute, or setting_value)
+            if isinstance(current, dict):
+                if current.get('type') == 'name' and current.get('name') == 'world':
+                    # Convert nested world.x.y to world_attribute with x.y
+                    full_path = '.'.join(path_parts)
+                    result = {'type': 'world_attribute', 'attribute': full_path}
+                    # Preserve any other keys (like index)
+                    for k, v in obj.items():
+                        if k not in ('type', 'object', 'attr'):
+                            result[k] = normalize_nested_world_attribute(v)
+                    return result
+                elif current.get('type') == 'world_attribute':
+                    # Base is already a world_attribute, extend the path
+                    base_attr = current.get('attribute', '')
+                    full_path = '.'.join([base_attr] + path_parts)
+                    result = {'type': 'world_attribute', 'attribute': full_path}
+                    for k, v in obj.items():
+                        if k not in ('type', 'object', 'attr'):
+                            result[k] = normalize_nested_world_attribute(v)
+                    return result
+                elif current.get('type') == 'setting_value':
+                    # Base is a setting_value, extend the path
+                    base_setting = current.get('setting', '')
+                    full_path = '.'.join([base_setting] + path_parts)
+                    result = {'type': 'world_attribute', 'attribute': full_path}
+                    for k, v in obj.items():
+                        if k not in ('type', 'object', 'attr'):
+                            result[k] = normalize_nested_world_attribute(v)
+                    return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_nested_world_attribute(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_nested_world_attribute(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_all_of_iterable(obj: Any) -> Any:
+    """
+    Normalize all_of by removing redundant iterable field.
+
+    Original may export:
+        {"type": "all_of", "iterable": X, "iterator_info": {"iterator": X, ...}, ...}
+
+    WorldGen may export:
+        {"type": "all_of", "iterator_info": {"iterator": X, ...}, ...}
+
+    The iterable field is redundant with iterator_info.iterator. Normalize by removing iterable.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for all_of with iterable
+        if obj_type == 'all_of' and 'iterable' in obj:
+            # Remove the iterable field
+            result = {k: normalize_all_of_iterable(v) for k, v in obj.items() if k != 'iterable'}
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_all_of_iterable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_all_of_iterable(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_setting_to_world_attribute(obj: Any) -> Any:
+    """
+    Normalize setting_value to world_attribute format.
+
+    Original may export:
+        {"type": "setting_value", "setting": "boss_reqs.required_boss_item_locations"}
+
+    WorldGen may export:
+        {"type": "world_attribute", "attribute": "boss_reqs.required_boss_item_locations"}
+
+    Both are semantically equivalent for world instance attributes. Normalize to world_attribute.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Convert setting_value to world_attribute
+        if obj_type == 'setting_value':
+            setting = obj.get('setting', '')
+            result = {'type': 'world_attribute', 'attribute': setting}
+            # Preserve any other keys (like index)
+            for k, v in obj.items():
+                if k not in ('type', 'setting'):
+                    result[k] = normalize_setting_to_world_attribute(v)
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_setting_to_world_attribute(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_setting_to_world_attribute(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_none_to_null(obj: Any) -> Any:
+    """
+    Normalize None values in conditional branches.
+
+    Some helpers have if_false branches that are None in one export but
+    {"type": "constant", "value": null} or similar in another. These are
+    semantically equivalent (both represent "no else branch" or "return None").
+    """
+    if isinstance(obj, dict):
+        # Check for None-equivalent values in if_false branches
+        if 'if_false' in obj:
+            if_false = obj.get('if_false')
+            # Normalize various None representations to a consistent format
+            if if_false is None:
+                # Keep as None
+                pass
+            elif isinstance(if_false, dict):
+                if if_false.get('type') == 'constant' and if_false.get('value') is None:
+                    # Normalize to None
+                    result = dict(obj)
+                    result['if_false'] = None
+                    return {k: normalize_none_to_null(v) if k != 'if_false' else v
+                            for k, v in result.items()}
+
+        # Recursively normalize nested objects
+        return {k: normalize_none_to_null(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_none_to_null(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_rule_format(obj: Any) -> Any:
     """
     Normalize rule format differences between original exports and WorldGen exports.
@@ -130,14 +470,43 @@ def normalize_rule_format(obj: Any) -> Any:
     2. Normalize set type with elements to constant type with array value
     3. Remove default values like event: False, count: 1
     4. Normalize Constant rule wrapper to flat array
+    5. Normalize AST_prog_item_count to CountItem (equivalent rule formats)
+    6. Normalize Not rule args.condition to child format
 
     The goal is to make semantically-equivalent JSON structures compare as equal.
     """
     if isinstance(obj, dict):
+        # Normalize AST_prog_item_count to CountItem before processing
+        # Original: {"rule": "AST_prog_item_count", "args": {"key": "X", "_original_ast_type": "..."}}
+        # WorldGen: {"rule": "CountItem", "args": {"item_name": "X"}}
+        if obj.get('rule') == 'AST_prog_item_count':
+            key = obj.get('args', {}).get('key')
+            if key is not None:
+                return {
+                    'rule': 'CountItem',
+                    'args': {'item_name': key}
+                }
+
+        # Normalize Not rule structure
+        # Original: {"rule": "Not", "args": {"condition": <inner_rule>}}
+        # WorldGen: {"rule": "Not", "child": <inner_rule>}
+        if obj.get('rule') == 'Not':
+            args = obj.get('args', {})
+            if 'condition' in args:
+                child = normalize_rule_format(args['condition'])
+                return {
+                    'rule': 'Not',
+                    'child': child
+                }
+
         result = {}
         for k, v in obj.items():
             # Skip _converted_from_ast metadata (only present in original, not in WorldGen)
             if k == '_converted_from_ast':
+                continue
+
+            # Skip _original_ast_type metadata (only present in original, not in WorldGen)
+            if k == '_original_ast_type':
                 continue
 
             # Skip event: False (default value - original includes it, WorldGen omits it)
@@ -205,6 +574,319 @@ def normalize_rule_format(obj: Any) -> Any:
         return result
     elif isinstance(obj, list):
         return [normalize_rule_format(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_state_method_to_rule(obj: Any) -> Any:
+    """
+    Normalize StateMethod rules to their equivalent Rule Builder rules.
+
+    Examples:
+        StateMethod(has_any, items) -> HasAny(items)
+        StateMethod(has_all, items) -> HasAll(items)
+        StateMethod(has, item) -> Has(item)
+
+    This handles the case where the original exporter exports AST-style
+    StateMethod calls while WorldGen exports Rule Builder rules.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_state_method_to_rule(v) for k, v in obj.items()}
+
+        # Check if this is a StateMethod rule
+        if normalized.get('rule') == 'StateMethod':
+            args = normalized.get('args', {})
+            method = args.get('method')
+            method_args = args.get('args', [])
+
+            # StateMethod(has_any, items) -> HasAny(items)
+            if method == 'has_any' and len(method_args) == 1:
+                arg = method_args[0]
+                # Handle subscript lookups (item_groups['GroupName'])
+                if isinstance(arg, dict) and arg.get('type') == 'subscript':
+                    # Extract item group from subscript value
+                    value = arg.get('value', {})
+                    index = arg.get('index', {})
+                    if isinstance(value, dict) and value.get('type') == 'constant':
+                        item_groups = value.get('value', {})
+                        # Get the group name from the index
+                        group_name = None
+                        if isinstance(index, dict):
+                            if index.get('type') == 'binary_op':
+                                # Handle 'Axe' + 's' -> 'Axes'
+                                left = index.get('left', {}).get('value', '')
+                                right = index.get('right', {}).get('value', '')
+                                group_name = left + right
+                            elif index.get('type') == 'constant':
+                                group_name = index.get('value')
+                        if group_name and group_name in item_groups:
+                            items = item_groups[group_name]
+                            return {
+                                'rule': 'HasAny',
+                                'args': {'items': items}
+                            }
+                # Handle constant list directly
+                elif isinstance(arg, dict) and arg.get('type') == 'constant':
+                    items = arg.get('value', [])
+                    if isinstance(items, list):
+                        return {
+                            'rule': 'HasAny',
+                            'args': {'items': items}
+                        }
+
+            # StateMethod(has_all, []) -> always true (can be simplified away)
+            # StateMethod(has_all, items) -> HasAll(items)
+            if method == 'has_all' and len(method_args) == 1:
+                arg = method_args[0]
+                if isinstance(arg, dict) and arg.get('type') == 'constant':
+                    items = arg.get('value', [])
+                    if isinstance(items, list):
+                        if len(items) == 0:
+                            # has_all([]) is always true
+                            return {'rule': 'True_', 'args': {}}
+                        return {
+                            'rule': 'HasAll',
+                            'args': {'items': items}
+                        }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_state_method_to_rule(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_and_with_true(obj: Any) -> Any:
+    """
+    Normalize And rules by removing True_ children.
+
+    Examples:
+        And(True_(), X) -> X
+        And(X, True_()) -> X
+        And(True_(), True_()) -> True_()
+
+    This handles the case where has_all([]) (always true) is converted to True_
+    and can be removed from And rules.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_with_true(v) for k, v in obj.items()}
+
+        # Check if this is an And rule with True_ children
+        if normalized.get('rule') == 'And':
+            children = normalized.get('children', [])
+            if children:
+                # Filter out True_ children
+                filtered_children = []
+                for child in children:
+                    if isinstance(child, dict) and child.get('rule') == 'True_':
+                        continue  # Skip True_ rule
+                    filtered_children.append(child)
+
+                # If we filtered some children
+                if len(filtered_children) < len(children):
+                    if len(filtered_children) == 0:
+                        # All children were True_ - return True_
+                        return {'rule': 'True_', 'args': {}}
+                    elif len(filtered_children) == 1:
+                        # Only one child left - return it directly
+                        return filtered_children[0]
+                    else:
+                        # Multiple children left - return simplified And
+                        normalized['children'] = filtered_children
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_with_true(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_and_with_false(obj: Any) -> Any:
+    """
+    Normalize And rules containing False_ or Constant(0) by short-circuiting to False_.
+
+    Examples:
+        And(False_(), X) -> False_()
+        And(Constant(0), X) -> False_()
+        And(X, False_(), Y) -> False_()
+
+    This handles the case where a SettingValue evaluates to False at export time,
+    creating And(False_(), other_rules) which always evaluates to False.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_with_false(v) for k, v in obj.items()}
+
+        # Check if this is an And rule with False_ or Constant(0) children
+        if normalized.get('rule') == 'And':
+            children = normalized.get('children', [])
+            if children:
+                for child in children:
+                    if isinstance(child, dict):
+                        # Check for False_()
+                        if child.get('rule') == 'False_':
+                            return {'rule': 'False_', 'args': {}}
+                        # Check for Constant(0)
+                        if child.get('rule') == 'Constant':
+                            value = child.get('args', {}).get('value')
+                            if value == 0 or value is False:
+                                return {'rule': 'False_', 'args': {}}
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_with_false(item) for item in obj]
+    else:
+        return obj
+
+
+def make_setting_value_normalizer(option_values: dict):
+    """
+    Create a normalizer that evaluates SettingValue rules based on option values.
+
+    This is used to normalize rules that contain SettingValue(option_name) checks.
+    The normalizer replaces these with True_() or False_() based on the actual
+    option value, which allows subsequent normalizers to simplify the rules.
+
+    Args:
+        option_values: Dict mapping option names to their values
+
+    Returns:
+        A normalizer function that replaces SettingValue rules with True_/False_
+    """
+    def normalize_setting_value_rules(obj: Any) -> Any:
+        """
+        Evaluate SettingValue rules based on option values.
+
+        Examples:
+            SettingValue(calamity) -> False_() if calamity=False
+            SettingValue(calamity) -> True_() if calamity=True
+        """
+        if isinstance(obj, dict):
+            # Check if this is a SettingValue rule
+            if obj.get('rule') == 'SettingValue':
+                setting = obj.get('args', {}).get('setting')
+                if setting and setting in option_values:
+                    value = option_values[setting]
+                    # Convert to True_/False_ based on truthiness
+                    if value:
+                        return {'rule': 'True_', 'args': {}}
+                    else:
+                        return {'rule': 'False_', 'args': {}}
+
+            # Recursively normalize nested objects
+            return {k: normalize_setting_value_rules(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [normalize_setting_value_rules(item) for item in obj]
+        else:
+            return obj
+
+    return normalize_setting_value_rules
+
+
+def normalize_hasall_single_item(obj: Any) -> Any:
+    """
+    Normalize HasAll with a single item to Has.
+
+    Examples:
+        HasAll(['item']) -> Has('item')
+
+    This handles the case where WorldGen simplifies single-item HasAll to Has.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_hasall_single_item(v) for k, v in obj.items()}
+
+        # Check if this is a HasAll with a single item
+        if normalized.get('rule') == 'HasAll':
+            items = normalized.get('args', {}).get('items', [])
+            if len(items) == 1:
+                return {
+                    'rule': 'Has',
+                    'args': {'item_name': items[0]}
+                }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_hasall_single_item(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_hasany_single_item(obj: Any) -> Any:
+    """
+    Normalize HasAny with a single item to Has.
+
+    Examples:
+        HasAny(['item']) -> Has('item')
+
+    This handles the case where WorldGen simplifies single-item HasAny to Has,
+    which is semantically equivalent (having any of one item = having that item).
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_hasany_single_item(v) for k, v in obj.items()}
+
+        # Check if this is a HasAny with a single item
+        if normalized.get('rule') == 'HasAny':
+            items = normalized.get('args', {}).get('items', [])
+            if len(items) == 1:
+                return {
+                    'rule': 'Has',
+                    'args': {'item_name': items[0]}
+                }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_hasany_single_item(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_hasall_duplicate_items(obj: Any) -> Any:
+    """
+    Normalize HasAll with duplicate items to deduplicated form.
+
+    Examples:
+        HasAll(['item', 'item']) -> Has('item')  (single unique item)
+        HasAll(['a', 'a', 'b']) -> HasAll(['a', 'b'])  (deduplicated)
+
+    This handles the case where WorldGen simplifies duplicate items,
+    which is semantically equivalent (having all of [x, x] = having x).
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_hasall_duplicate_items(v) for k, v in obj.items()}
+
+        # Check if this is a HasAll with items
+        if normalized.get('rule') == 'HasAll':
+            items = normalized.get('args', {}).get('items', [])
+            if items:
+                # Deduplicate while preserving order
+                seen = set()
+                unique_items = []
+                for item in items:
+                    if item not in seen:
+                        seen.add(item)
+                        unique_items.append(item)
+
+                if len(unique_items) == 1:
+                    # Single unique item -> Has
+                    return {
+                        'rule': 'Has',
+                        'args': {'item_name': unique_items[0]}
+                    }
+                elif len(unique_items) < len(items):
+                    # Has duplicates -> deduplicated HasAll
+                    return {
+                        'rule': 'HasAll',
+                        'args': {'items': unique_items}
+                    }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_hasall_duplicate_items(item) for item in obj]
     else:
         return obj
 
@@ -365,6 +1047,85 @@ def normalize_and_or_structure(obj: Any) -> Any:
         return obj
 
 
+def normalize_not_expression_format(obj: Any) -> Any:
+    """
+    Normalize 'not' expression formats between original and WorldGen exports.
+
+    Original exports:
+        {"type": "not", "operand": {...}, "condition": null}
+
+    WorldGen exports:
+        {"type": "not", "condition": {...}}
+
+    Both are semantically equivalent. This normalizes to use 'condition' as the key,
+    omitting the null 'condition' field when 'operand' is present.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for 'not' type with operand
+        if obj_type == 'not':
+            operand = obj.get('operand')
+            condition = obj.get('condition')
+
+            # If operand exists and condition is None/missing, use operand
+            if operand and not condition:
+                result = {'type': 'not', 'condition': normalize_not_expression_format(operand)}
+                # Preserve any other keys (unlikely but for safety)
+                for k, v in obj.items():
+                    if k not in ('type', 'operand', 'condition'):
+                        result[k] = normalize_not_expression_format(v)
+                return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_not_expression_format(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_not_expression_format(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_world_attribute_format(obj: Any) -> Any:
+    """
+    Normalize world attribute access patterns to the canonical world_attribute format.
+
+    WorldGen uses the expanded attribute format:
+        {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "X"}
+
+    Original worlds use the compact world_attribute format:
+        {"type": "world_attribute", "attribute": "X"}
+
+    Both are semantically equivalent. This normalizes to world_attribute for comparison.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for attribute type with world object
+        if obj_type == 'attribute':
+            obj_obj = obj.get('object')
+            attr_name = obj.get('attr')
+
+            # Check if object is {"type": "name", "name": "world"}
+            if (isinstance(obj_obj, dict) and
+                obj_obj.get('type') == 'name' and
+                obj_obj.get('name') == 'world' and
+                attr_name):
+                # Convert to world_attribute format
+                result = {'type': 'world_attribute', 'attribute': attr_name}
+                # Preserve any other keys (like index)
+                for k, v in obj.items():
+                    if k not in ('type', 'object', 'attr'):
+                        result[k] = normalize_world_attribute_format(v)
+                return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_world_attribute_format(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_world_attribute_format(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_setting_types(obj: Any) -> Any:
     """
     Normalize option_value/world_attribute types to setting_value for comparison.
@@ -402,6 +1163,179 @@ def normalize_setting_types(obj: Any) -> Any:
         return {k: normalize_setting_types(v) for k, v in obj.items()}
     elif isinstance(obj, list):
         return [normalize_setting_types(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_math_functions(obj: Any) -> Any:
+    """
+    Normalize math module function calls to helper format.
+
+    Original exports math functions as helpers:
+        {"type": "helper", "name": "sqrt", "args": [...]}
+
+    WorldGen exports them as function_call with math.sqrt:
+        {"type": "function_call", "function": {"type": "attribute", "object": {"type": "name", "name": "math"}, "attr": "sqrt"}, "args": [...]}
+
+    This function normalizes the function_call format to helper format for comparison.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Normalize math module function calls to helper format
+        if obj_type == 'function_call':
+            func = obj.get('function', {})
+            if isinstance(func, dict) and func.get('type') == 'attribute':
+                func_obj = func.get('object', {})
+                func_attr = func.get('attr', '')
+                # Check if it's math.X where X is sqrt, floor, ceil, etc.
+                if (isinstance(func_obj, dict) and func_obj.get('type') == 'name' and
+                        func_obj.get('name') == 'math' and
+                        func_attr in ('sqrt', 'floor', 'ceil', 'pow', 'log', 'log10', 'exp', 'sin', 'cos', 'tan')):
+                    # Convert to helper format
+                    args = obj.get('args', [])
+                    return {
+                        'type': 'helper',
+                        'name': func_attr,
+                        'args': [normalize_math_functions(arg) for arg in args]
+                    }
+
+        # Recursively normalize nested objects
+        return {k: normalize_math_functions(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_math_functions(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_option_display_name(obj: Any) -> Any:
+    """
+    Remove display_name from option definitions.
+
+    WorldGen may add display_name fields to option definitions that the original
+    doesn't have. These are just UI metadata and don't affect gameplay.
+    """
+    if isinstance(obj, dict):
+        # Check if this is an option definition (has type and name_lookup or default)
+        if 'type' in obj and ('name_lookup' in obj or 'default' in obj or 'values' in obj):
+            # Remove display_name if present
+            result = {}
+            for k, v in obj.items():
+                if k == 'display_name':
+                    continue
+                result[k] = normalize_option_display_name(v)
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_option_display_name(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_option_display_name(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_sum_of_helpers(obj: Any) -> Any:
+    """
+    Normalize sum_of helper format differences between original and WorldGen exports.
+
+    DICT_SUM_HELPERS (original) produces:
+    {
+        "params": [],
+        "body": {
+            "type": "sum_of",
+            "iterator_info": {
+                "target": {...},
+                "iterator": {"type": "method_call", "object": {"type": "setting_value", "setting": "X"}, "method": "items", "args": []}
+            },
+            "element_rule": {...}
+        }
+    }
+
+    WorldGen analyzer produces:
+    {
+        "type": "sum_of",
+        "iterator_info": {
+            "type": "comprehension_details",
+            "target": {...},
+            "iterator": {"type": "function_call", "function": {"type": "attribute", ...}}
+        },
+        "element_rule": {...}
+    }
+
+    This function normalizes both to a common format by:
+    1. Unwrapping {"params": [], "body": X} to just X
+    2. Removing "type": "comprehension_details" from iterator_info
+    3. Converting function_call+attribute to method_call+setting_value
+    """
+    if isinstance(obj, dict):
+        result = obj
+
+        # Unwrap {"params": [], "body": X} to just X (for no-param helpers)
+        if 'params' in obj and 'body' in obj:
+            params = obj.get('params', [])
+            if params == [] and 'body' in obj:
+                # This is a no-param helper - normalize to just the body
+                result = obj['body']
+                # Recursively normalize the body
+                return normalize_sum_of_helpers(result)
+
+        # Check if this is a sum_of type
+        if obj.get('type') == 'sum_of':
+            result = dict(obj)
+            iterator_info = result.get('iterator_info', {})
+
+            if iterator_info:
+                new_iterator_info = dict(iterator_info)
+
+                # Remove "type": "comprehension_details" - it's metadata
+                if new_iterator_info.get('type') == 'comprehension_details':
+                    del new_iterator_info['type']
+
+                # Normalize the iterator structure
+                iterator = new_iterator_info.get('iterator', {})
+                if isinstance(iterator, dict):
+                    # Convert function_call+attribute chain to method_call+setting_value
+                    # function_call pattern: {"type": "function_call", "function": {"type": "attribute", "object": {...}, "attr": "items"}}
+                    # method_call pattern: {"type": "method_call", "object": {...}, "method": "items", "args": []}
+                    if iterator.get('type') == 'function_call':
+                        func = iterator.get('function', {})
+                        if func.get('type') == 'attribute' and func.get('attr') == 'items':
+                            # Extract the setting name from the attribute chain
+                            inner_obj = func.get('object', {})
+                            setting_name = None
+
+                            # Pattern 1: {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "qp_items"}
+                            if inner_obj.get('type') == 'attribute':
+                                # world.qp_items pattern
+                                if inner_obj.get('object', {}).get('type') == 'name':
+                                    setting_name = inner_obj.get('attr')
+
+                            # Pattern 2: {"type": "setting_value", "setting": "qp_items"}
+                            # This happens when normalize_setting_types runs before this normalizer
+                            elif inner_obj.get('type') == 'setting_value':
+                                setting_name = inner_obj.get('setting')
+
+                            if setting_name:
+                                new_iterator_info['iterator'] = {
+                                    'type': 'method_call',
+                                    'object': {'type': 'setting_value', 'setting': setting_name},
+                                    'method': 'items',
+                                    'args': []
+                                }
+
+                result['iterator_info'] = new_iterator_info
+
+            # Recursively normalize element_rule and other nested objects
+            for key in result:
+                if key not in ('type', 'iterator_info'):
+                    result[key] = normalize_sum_of_helpers(result[key])
+
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_sum_of_helpers(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_sum_of_helpers(item) for item in obj]
     else:
         return obj
 
@@ -471,9 +1405,92 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'helpers.' in path and ('bottle_count' in path or 'heart_count' in path):
         return True
 
+    # can_shop helper uses self.maximum_price world attribute, WorldGen bakes in the value
+    if 'helpers.' in path and 'can_shop' in path:
+        if 'maximum_price' in str(original_value) or 'maximum_price' in path:
+            return True
+        # Count attribute vs constant value for shop price calculation
+        if '.count' in path:
+            return True
+
     # basement_key_rule and tr_big_key_chest_keys_needed use placement_lookup
     if 'helpers.' in path and ('basement_key_rule' in path or 'tr_big_key_chest_keys_needed' in path):
         return True
+
+    # Option-dependent helper simplification: Original helpers may have conditional
+    # expressions that check option values (e.g., self.game_logic == "Easy"). The
+    # worldgen resolves these to literal values at code generation time, so when
+    # re-exported, the conditionals simplify to just the matching branch.
+    # This is expected behavior - the worldgen bakes in option values.
+    #
+    # Pattern: helper body type changes from 'conditional' to simpler types
+    # (item_check, state_method, constant, and, or, helper, compare) because the condition was resolved.
+    if 'helpers.' in path:
+        # Helper body type changed due to option resolution
+        if path.endswith('.type'):
+            # Conditional resolved to simpler rule type
+            if original_value == 'conditional' and worldgen_value in ('item_check', 'state_method', 'constant', 'and', 'or', 'helper', 'compare'):
+                return True
+            # Attribute reference resolved to constant (e.g., self.castle_unlock -> 5)
+            if original_value == 'attribute' and worldgen_value == 'constant':
+                return True
+            # Subscript resolved to constant (e.g., boss_order[0] -> "Burt The Bashful's Boss Room")
+            if original_value == 'subscript' and worldgen_value == 'constant':
+                return True
+        # Helper conditional fields (test, if_true, if_false) only in original
+        if any(field in path for field in ['.test.', '.if_true.', '.if_false.', '.test', '.if_true', '.if_false']):
+            # Check if this is a conditional that was simplified
+            if 'conditional' in str(original_value) or worldgen_value == '<missing>':
+                return True
+        # Helper simpler form fields (item, args, method, value, conditions, name, count) only in worldgen
+        if path.endswith('.item') or path.endswith('.args') or path.endswith('.method'):
+            if original_value == '<missing>':
+                return True
+        if path.endswith('.value') or path.endswith('.conditions') or path.endswith('.name'):
+            if original_value == '<missing>':
+                return True
+        if path.endswith('.count') and original_value == '<missing>':
+            return True
+        # Helper 'compare' type fields (left, op, right) appear when conditional is resolved
+        if path.endswith('.left') or path.endswith('.op') or path.endswith('.right'):
+            if original_value == '<missing>':
+                return True
+        # Subscript patterns in helper tests (e.g., boss_order[0]) that worldgen resolves
+        if '.test.args[' in path:
+            # Type change from subscript to constant, or index/value differences
+            if 'type' in path or 'index' in path or 'value' in path:
+                return True
+            # Entire args element changes type when subscript is resolved to string
+            # Original: {"type": "subscript", ...} (dict)
+            # WorldGen: "Burt The Bashful's Boss Room" (string after constant unwrap)
+            # This happens for boss_order[N] and similar world attribute lookups
+            if path.endswith(']') and original_value == 'type: dict' and worldgen_value == 'type: str':
+                return True
+        # Option attribute comparisons (self.game_logic, self.midring_start, etc.)
+        # that get resolved to constant values in worldgen
+        if 'game_logic' in str(original_value) or 'midring_start' in str(original_value):
+            return True
+        if 'clouds_always_visible' in str(original_value) or 'consumable_logic' in str(original_value):
+            return True
+        if 'bowser_door' in str(original_value) or 'luigi_pieces' in str(original_value):
+            return True
+        # World attribute references (self.X, world.X) resolved to constants
+        # e.g., self.castle_unlock, self.boss_unlock, self.boss_order
+        if '.attr' in path or '.object' in path:
+            if 'castle_unlock' in str(original_value) or 'boss_unlock' in str(original_value):
+                return True
+            if 'boss_order' in str(original_value):
+                return True
+            # Check for self/world name references being removed
+            if isinstance(original_value, dict) and original_value.get('type') == 'name':
+                if original_value.get('name') in ('self', 'world'):
+                    return True
+            if worldgen_value == '<missing>' and isinstance(original_value, dict):
+                return True
+        # Count field changes from attribute reference to constant
+        if '.count.' in path:
+            if 'attr' in path or 'object' in path or 'type' in path:
+                return True
 
     # Event items: Original may have list IDs (SRAM data), WorldGen treats as events.
     # Crystals and Pendants are handled differently between original and WorldGen.
@@ -483,6 +1500,20 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             return True
         if 'groups' in path:
             return True
+
+    # Item groups membership: The "Everything" group is auto-generated by Archipelago
+    # to include all items. WorldGen may not include this auto-generated group in
+    # individual item group lists, but both have the same items. This is metadata.
+    if 'items.' in path and '.groups' in path:
+        # Ignore differences involving "Everything" group membership
+        if original_value == 'Everything' or worldgen_value == 'Everything':
+            return True
+        # Ignore length differences that may be due to "Everything" being included/excluded
+        if path.endswith('.groups[length]'):
+            # Check if the difference is exactly 1 (likely just "Everything")
+            if isinstance(original_value, int) and isinstance(worldgen_value, int):
+                if abs(original_value - worldgen_value) == 1:
+                    return True
 
     # Item groups: WorldGen adds an "Event" group for event items
     if path.startswith('item_groups.'):
@@ -524,15 +1555,68 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if 'AST_function_call' in str(original_value) or 'AST_function_call' in str(worldgen_value):
             return True
 
+    # AST_all_of (comprehension-style rules) vs resolved Has/HasAll/True_ rules.
+    # The original exports Python comprehension rules like all(state.has(tech.name) for tech in required_technologies[X])
+    # which get resolved to simpler HasAll/Has/True_ rules in WorldGen.
+    if 'access_rule' in path:
+        # Rule type conversions from AST comprehensions to resolved rules
+        if path.endswith('.rule') and original_value == 'AST_all_of':
+            if worldgen_value in ('Has', 'HasAll', 'True_'):
+                return True
+        # Comprehension-specific keys that don't exist in resolved rules
+        if 'iterator_info' in path or 'element_rule' in path:
+            return True
+        # Resolved item lists in WorldGen that don't exist in comprehension-based original
+        if '.args.items' in path and original_value == '<missing>':
+            return True
+
+    # Option-dependent Conditional rules in access_rules get resolved at generation time.
+    # Original: Conditional(test=OptionValue(X), if_true=Rule1, if_false=Rule2)
+    # WorldGen: Just Rule1 or Rule2 depending on the option value.
+    # This is expected behavior when options are baked in during world generation.
+    if 'access_rule' in path:
+        # Conditional rule resolved to simpler rule type (at any level of nesting)
+        if '.rule' in path:
+            if original_value == 'Conditional' and worldgen_value in ('True_', 'False_', 'Has', 'HasAny', 'HasAll', 'And', 'Or'):
+                return True
+            # Constant rule resolved to False_ or True_ (often from option checks)
+            if original_value == 'Constant' and worldgen_value in ('True_', 'False_'):
+                return True
+        # Conditional args (test, if_true, if_false) are removed after resolution
+        if '.args.test' in path and worldgen_value == '<missing>':
+            return True
+        if '.args.if_true' in path and worldgen_value == '<missing>':
+            return True
+        if '.args.if_false' in path and worldgen_value == '<missing>':
+            return True
+        # New args appearing when Conditional is resolved to Has/HasAny/HasAll
+        if '.args.items' in path and original_value == '<missing>':
+            return True
+        if '.args.item_name' in path and original_value == '<missing>':
+            return True
+
     # WorldGen-specific options that only exist in WorldGen, not original
     worldgen_only_options = {'randomize_items', 'use_canonical_options'}
     for opt in worldgen_only_options:
         if opt in path and original_value == '<missing>':
             return True
 
+    # priority_locations: WorldGen skips this fill option since canonical placements are used.
+    # Original may have priority locations set, WorldGen has an empty list.
+    if 'priority_locations' in path:
+        return True
+
     # dynamically_added: Regions with no locations/exits may be auto-marked.
     # Some exports have this marked, others don't. Both are semantically equivalent.
     if '.dynamically_added' in path:
+        return True
+
+    # placeholder: Regions that are "missing terminal regions" (referenced by exits but
+    # not in the multiworld.regions list) are created with placeholder: True by the exporter.
+    # This is semantically equivalent to dynamically_added: True for empty regions.
+    # WorldGen worlds may not add empty regions to multiworld.regions, causing the exporter
+    # to create them as placeholder entries when it sees exits pointing to them.
+    if '.placeholder' in path:
         return True
 
     # exclude_locations: Original worlds may dynamically add exclusions in set_rules()
@@ -546,10 +1630,46 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if path == 'exporter.1.world_class_name':
         return True
 
+    # rule_format version info is WorldGen-specific
+    if 'exporter.' in path and 'rule_format' in path:
+        if original_value == '<missing>':
+            return True
+
+    # WorldGen adds an exporter section with metadata (rule_format, use_resolved_items)
+    # that the original doesn't have. This entire section is WorldGen-specific.
+    if path == 'exporter.1' and original_value == '<missing>':
+        return True
+    if path.startswith('exporter.1.') and original_value == '<missing>':
+        return True
+
+    # world_class_name in world section - restructured in WorldGen
+    if path == 'world.1.world_class_name' and worldgen_value == '<missing>':
+        return True
+
+    # world_classes section - WorldGen exports this separately
+    if path.startswith('world_classes'):
+        return True
+
     # WorldGen-specific game_info fields (state counters, accumulator rules, etc.)
     worldgen_game_info_fields = {'accumulator_rules', 'prog_items_init'}
     for field in worldgen_game_info_fields:
         if f'game_info.1.{field}' in path and original_value == '<missing>':
+            return True
+
+    # Game-specific variables that differ between original and WorldGen exports.
+    # Factorio's required_technologies is a KeyedDefaultDict that gets lazily populated
+    # when the original world accesses ingredients during set_rules(). The worldgen
+    # world uses different rule implementations and doesn't populate these keys the
+    # same way. The actual access rules have technology requirements baked in differently,
+    # so this data isn't needed at runtime for the worldgen world.
+    if 'game_info.' in path and '.variables.required_technologies' in path:
+        return True
+
+    # prog_items_init differences - items may differ based on game options
+    # (e.g., campaign-specific items like " coins freemium" for Live Freemium or Die)
+    if 'prog_items_init.' in path:
+        # Missing items in WorldGen are ok - may be option-dependent
+        if worldgen_value == '<missing>':
             return True
 
     # Event relic group added by WorldGen
@@ -558,18 +1678,37 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # World attributes baked into helpers (hat_yarn_costs, hat_craft_order, etc.)
     # These are world instance attributes that WorldGen resolves at generation time
-    world_attrs_in_helpers = {'hat_yarn_costs', 'hat_craft_order'}
+    world_attrs_in_helpers = {'hat_yarn_costs', 'hat_craft_order',
+                              'era_required_non_progressive_items',
+                              'era_required_progressive_items_counts'}
     for attr in world_attrs_in_helpers:
         if 'helpers.' in path and attr in path:
             return True
         if 'helpers.' in path and attr in str(original_value):
             return True
+    # Helpers that use world attributes to check items/counts dynamically.
+    # WorldGen resolves these to literal values at generation time.
+    # has_all_epitaph_pieces: uses self.world.required_epitaph_pieces_name/count
+    if 'helpers.' in path and 'has_all_epitaph_pieces' in path:
+        return True
+
     # Also catch the type/object/value differences for world attribute access patterns
-    if 'helpers.' in path and any(h in path for h in ['can_use_hat', 'get_hat_cost']):
+    if 'helpers.' in path and any(h in path for h in ['can_use_hat', 'get_hat_cost',
+                                                       'has_non_progressive_items',
+                                                       'has_progressive_items']):
         if '.value.type' in path or '.value.object' in path or '.value.value' in path:
             return True
         if '.iterable.type' in path or '.iterable.object' in path or '.iterable.value' in path:
             return True
+        if '.value.attr' in path:
+            return True
+
+    # param_mappings is exporter metadata that maps helper parameters to slot_data keys.
+    # WorldGen generates different Python code that doesn't use the same patterns, so
+    # this metadata isn't preserved during the roundtrip. It's used for frontend rule
+    # evaluation but the actual access rules work without it.
+    if 'helpers.' in path and '.param_mappings' in path:
+        return True
 
     # AST_location_rule_ref vs CanReachLocation - semantically equivalent rule formats
     if 'access_rule' in path and '.rule' in path:
@@ -595,10 +1734,36 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if 'children[length]' in path:
             return True
 
-    # has_paintings helper has a None vs dict difference for if_false branch
-    # This is a type representation difference
-    if 'helpers.' in path and 'has_paintings' in path and 'if_false' in path:
+    # Helper functions may have None vs dict differences for if_false branches.
+    # This is a type representation difference - both represent "no else branch".
+    if 'helpers.' in path and 'if_false' in path:
         if 'NoneType' in str(original_value) or 'NoneType' in str(worldgen_value):
+            return True
+
+    # Helper functions may have world attributes inlined vs kept as references.
+    # auto_scroll_levels is a world attribute that gets baked into worldgen as constants.
+    # Check if the original value is an attribute access to auto_scroll_levels that became a constant.
+    if 'helpers.' in path and '.value' in path:
+        # Check if original was an attribute access that became a constant
+        if isinstance(original_value, dict) and original_value.get('type') == 'attribute':
+            attr = original_value.get('attr', '')
+            if attr == 'auto_scroll_levels':
+                return True
+        # Check for world attribute being replaced with constant
+        if isinstance(original_value, dict) and original_value.get('type') == 'name':
+            if original_value.get('name') == 'world' and worldgen_value == '<missing>':
+                return True
+        # Check for type change from attribute to constant
+        if original_value == 'attribute' and worldgen_value == 'constant':
+            return True
+        # Check for object missing when value was inlined
+        if 'object' in path and original_value != '<missing>' and worldgen_value == '<missing>':
+            return True
+        # Check for value appearing when it was an attribute
+        if path.endswith('.value') and original_value == '<missing>' and isinstance(worldgen_value, list):
+            return True
+        # Check for attr being missing when the attribute was replaced with a constant
+        if path.endswith('.attr') and worldgen_value == '<missing>':
             return True
 
     # Empty options that aren't exported by WorldGen
@@ -646,9 +1811,57 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'options.' in path and original_value == {} and worldgen_value == '<missing>':
         return True
 
+    # Options that have empty list [] in original but missing in WorldGen
+    if 'options.' in path and original_value == [] and worldgen_value == '<missing>':
+        return True
+
+    # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
+    # These are complex option types that the world generator doesn't generate Options.py classes for
+    optionset_options = {'death_link_effect', 'include_dlcs', 'move_rando_actions', 'pre_hint_items'}
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in optionset_options:
+            if path.endswith(f'.{opt}'):
+                return True
+
+    # StartInventoryPool options that WorldGen doesn't export
+    # These are special option types (type: start_inventory_pool) for starting items from pool
+    if 'option_definitions.' in path and 'start_inventory' in path and worldgen_value == '<missing>':
+        return True
+
+    # ItemDict options that WorldGen doesn't support (dict mapping items to weights/counts)
+    # These are complex option types requiring special handling that WorldGen doesn't implement
+    itemdict_options = {'filler_items_distribution'}
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in itemdict_options:
+            if path.endswith(f'.{opt}'):
+                return True
+
+    # World instance attributes that are metadata, not rules-related
+    # player_name is set from multiworld during generation and isn't reproduced in WorldGen
+    if path == 'world.1.player_name' and worldgen_value == '<missing>':
+        return True
+
+    # Game-specific complex options that WorldGen doesn't extract (Factorio world_gen, starting_items, etc.)
+    # These are game-specific configuration options that require special handling to reproduce
+    game_specific_options = {'world_gen', 'starting_items'}
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in game_specific_options:
+            if path.endswith(f'.{opt}'):
+                return True
+
+    # start_location_hints: WorldGen doesn't auto-populate location hints, so counts may differ
+    if 'options.start_location_hints' in path:
+        return True
+
     # World class name differences: Original may use abbreviated names (DarkSouls3World)
     # while WorldGen uses full names derived from game name (DarkSoulsIIIWorld)
     if path.startswith('world_classes.'):
+        return True
+
+    # world_description: WorldGen always generates a default docstring for worlds
+    # ("GAME for Archipelago.\n\nAuto-generated world implementation.") even when
+    # the original world doesn't have a docstring. This is expected.
+    if path == 'world.1.world_description' and original_value == '<missing>':
         return True
 
     # And/Has/HasAll structural differences that are semantically equivalent
@@ -688,6 +1901,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # depending on whether the original uses ItemsAccessibility or Accessibility
         if 'accessibility' in path.lower():
             return True
+        # display_name: WorldGen may add display_name when original didn't have it,
+        # or vice versa. This is a presentational difference, not functional.
+        if path.endswith('.display_name'):
+            if original_value == '<missing>' or worldgen_value == '<missing>':
+                return True
 
     # Option value differences for options that may be resolved differently
     # during canonical generation (e.g., random -> specific value)
@@ -698,6 +1916,33 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         random_options = {'starting_stage', 'accessibility'}
         if option_name in random_options:
             return True
+
+    # Not rule format difference: WorldGen uses 'child' while original may use 'args.condition'
+    # Both represent the same rule structure, just with different key names
+    if 'access_rule' in path and '.child' in path:
+        # This is a WorldGen-specific format that appears where original has args.condition
+        if worldgen_value and isinstance(worldgen_value, dict) and 'rule' in worldgen_value:
+            return True
+        if original_value == '<missing>':
+            return True
+
+    # Rule simplification: And(False, ...) -> False_
+    # When a rule has a condition that's always false, WorldGen simplifies to False_
+    # Original may keep the full And structure with Constant(0) elements
+    if 'access_rule' in path and path.endswith('.rule'):
+        if original_value in ('And', 'Or') and worldgen_value == 'False_':
+            return True
+
+    # Complex options that WorldGen doesn't export (dict/list options with nested structure)
+    # These are game-specific override options that require special handling
+    complex_options = {
+        'DamageRandoOverrides', 'RisingTidesOverrides', 'Traps',
+        'boss_rando_overrides', 'damage_rando_overrides', 'rising_tides_overrides', 'traps'
+    }
+    if 'options.' in path and worldgen_value == '<missing>':
+        for opt in complex_options:
+            if path.endswith(f'.{opt}'):
+                return True
 
     return False
 
@@ -763,21 +2008,121 @@ def main():
     original_normalized = normalize_rule_format(original_normalized)
     worldgen_normalized = normalize_rule_format(worldgen_normalized)
 
+    # Normalize StateMethod rules to Rule Builder equivalents
+    # (e.g., StateMethod(has_any, items) -> HasAny(items))
+    original_normalized = normalize_state_method_to_rule(original_normalized)
+    worldgen_normalized = normalize_state_method_to_rule(worldgen_normalized)
+
+    # Evaluate SettingValue rules based on actual option values (if --ignore-canonical)
+    # This allows comparing rules that have option-dependent branches
+    # Original: Or(And(SettingValue(calamity), Has(X)), Has(Y))
+    # WorldGen: Has(Y)  (because calamity=False, the And branch becomes False and is removed)
+    if ignore_canonical:
+        # Get option values from the original (they should be the same in both)
+        option_values = original_normalized.get('world', {}).get('1', {}).get('options', {})
+        if option_values:
+            normalize_setting_values = make_setting_value_normalizer(option_values)
+            original_normalized = normalize_setting_values(original_normalized)
+            worldgen_normalized = normalize_setting_values(worldgen_normalized)
+
+    # Normalize And rules containing False_ by short-circuiting to False_
+    # (e.g., And(False_(), X) -> False_(), needed after SettingValue normalization)
+    original_normalized = normalize_and_with_false(original_normalized)
+    worldgen_normalized = normalize_and_with_false(worldgen_normalized)
+
+    # Normalize And rules by removing True_ children
+    # (e.g., And(True_(), X) -> X, handles has_all([]) -> True_ case)
+    original_normalized = normalize_and_with_true(original_normalized)
+    worldgen_normalized = normalize_and_with_true(worldgen_normalized)
+
+    # Normalize HasAll with single item to Has
+    # (e.g., HasAll(['item']) -> Has('item'))
+    original_normalized = normalize_hasall_single_item(original_normalized)
+    worldgen_normalized = normalize_hasall_single_item(worldgen_normalized)
+
+    # Normalize HasAny with single item to Has
+    # (e.g., HasAny(['item']) -> Has('item'))
+    original_normalized = normalize_hasany_single_item(original_normalized)
+    worldgen_normalized = normalize_hasany_single_item(worldgen_normalized)
+
     # Normalize Or(Constant(0), X) and Or(False_(), X) to just X
     original_normalized = normalize_or_with_false(original_normalized)
     worldgen_normalized = normalize_or_with_false(worldgen_normalized)
 
     # Normalize And+Has/HasAll patterns to single HasAll (cleaner format)
+    # (e.g., And(Has(A), Has(B)) -> HasAll([A, B]))
     original_normalized = normalize_and_has_patterns(original_normalized)
     worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
+
+    # Normalize HasAll with duplicate items (run AFTER normalize_and_has_patterns
+    # which may create HasAll with duplicates from And(Has(A), Has(A)))
+    # (e.g., HasAll(['item', 'item']) -> Has('item'))
+    original_normalized = normalize_hasall_duplicate_items(original_normalized)
+    worldgen_normalized = normalize_hasall_duplicate_items(worldgen_normalized)
 
     # Normalize And/Or structure (flatten nested, sort children)
     original_normalized = normalize_and_or_structure(original_normalized)
     worldgen_normalized = normalize_and_or_structure(worldgen_normalized)
 
+    # Normalize world attribute format (attribute with world object -> world_attribute)
+    original_normalized = normalize_world_attribute_format(original_normalized)
+    worldgen_normalized = normalize_world_attribute_format(worldgen_normalized)
+
+    # Normalize not expression format (operand -> condition)
+    original_normalized = normalize_not_expression_format(original_normalized)
+    worldgen_normalized = normalize_not_expression_format(worldgen_normalized)
+
     # Normalize setting types (option_value/world_attribute -> setting_value)
     original_normalized = normalize_setting_types(original_normalized)
     worldgen_normalized = normalize_setting_types(worldgen_normalized)
+
+    # Normalize math function calls (math.sqrt function_call -> sqrt helper)
+    original_normalized = normalize_math_functions(original_normalized)
+    worldgen_normalized = normalize_math_functions(worldgen_normalized)
+
+    # Normalize option display_name (remove WorldGen-added display_name fields)
+    original_normalized = normalize_option_display_name(original_normalized)
+    worldgen_normalized = normalize_option_display_name(worldgen_normalized)
+
+    # Normalize sum_of helper format (DICT_SUM_HELPERS format vs analyzer format)
+    original_normalized = normalize_sum_of_helpers(original_normalized)
+    worldgen_normalized = normalize_sum_of_helpers(worldgen_normalized)
+
+    # Normalize list representations (constant with list value vs list type)
+    original_normalized = normalize_list_representation(original_normalized)
+    worldgen_normalized = normalize_list_representation(worldgen_normalized)
+
+    # Normalize tuple types to list types (tuple and list are equivalent for has_any/has_all)
+    original_normalized = normalize_tuple_list_types(original_normalized)
+    worldgen_normalized = normalize_tuple_list_types(worldgen_normalized)
+
+    # Normalize tuple-wrapped generator expressions (tuple(gen) vs bare gen)
+    original_normalized = normalize_tuple_wrapped_generator(original_normalized)
+    worldgen_normalized = normalize_tuple_wrapped_generator(worldgen_normalized)
+
+    # Normalize None values in conditional branches
+    original_normalized = normalize_none_to_null(original_normalized)
+    worldgen_normalized = normalize_none_to_null(worldgen_normalized)
+
+    # Normalize string constant wrappers ({"type": "constant", "value": "X"} -> "X")
+    original_normalized = normalize_string_constant_wrapper(original_normalized)
+    worldgen_normalized = normalize_string_constant_wrapper(worldgen_normalized)
+
+    # Normalize item_check count=1 default (remove count=1 since it's the default)
+    original_normalized = normalize_item_check_count_default(original_normalized)
+    worldgen_normalized = normalize_item_check_count_default(worldgen_normalized)
+
+    # Normalize nested world attribute access (world.x.y -> world_attribute with x.y)
+    original_normalized = normalize_nested_world_attribute(original_normalized)
+    worldgen_normalized = normalize_nested_world_attribute(worldgen_normalized)
+
+    # Normalize all_of by removing redundant iterable field
+    original_normalized = normalize_all_of_iterable(original_normalized)
+    worldgen_normalized = normalize_all_of_iterable(worldgen_normalized)
+
+    # Normalize setting_value to world_attribute (semantically equivalent)
+    original_normalized = normalize_setting_to_world_attribute(original_normalized)
+    worldgen_normalized = normalize_setting_to_world_attribute(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)

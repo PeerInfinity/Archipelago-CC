@@ -28,7 +28,10 @@
     "dev": "python3 scripts/utils/dev-server-nocache.py",
     "dev:cache": "python3 -m http.server 8000",
     "docs": "jsdoc -c jsdoc.json",
-    "docs:watch": "jsdoc -c jsdoc.json --watch"
+    "docs:watch": "jsdoc -c jsdoc.json --watch",
+    "build": "node scripts/build/bundle-frontend.js",
+    "build:watch": "node scripts/build/bundle-frontend.js --watch",
+    "build:dev": "node scripts/build/bundle-frontend.js --no-minify"
   },
   "repository": {
     "type": "git",
@@ -51,6 +54,7 @@
   "devDependencies": {
     "@playwright/test": "1.56.0",
     "@vitest/coverage-v8": "^4.0.15",
+    "esbuild": "^0.27.2",
     "jsdoc": "^4.0.5",
     "vitest": "^4.0.15"
   }

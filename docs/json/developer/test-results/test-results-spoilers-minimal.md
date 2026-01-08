@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-02 03:55:47
+**Generated:** 2026-01-07 20:20:27
 
-**Source Data Created:** 2026-01-02T03:15:43.848542
+**Source Data Created:** 2026-01-07T19:58:36.943245
 
-**Source Data Last Updated:** 2026-01-02T03:15:43.848550
+**Source Data Last Updated:** 2026-01-07T19:58:36.943250
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 69 (94.5%)
-- **Failed:** 4 (5.5%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 1
 - **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 42/69 (60.9% of passed)
-- **Passing with Generic Logic:** 64/69 (92.8% of passed)
-- **Passing with Both Generic:** 42/69 (60.9% of passed)
+- **Passing with Generic Exporter:** 43/73 (58.9% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 43/73 (58.9% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 4.6KB | ✅ |
-| A Link to the Past | ❌ Failed | 0 | 6.1 | 22.1 | 🟡 27.6% | ✅ | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -52,7 +52,7 @@
 | DOOM II | ✅ Passed | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ❌ Failed | 0 | 1.8 | 12.1 | 🟡 14.9% | 4.1KB | ✅ |
+| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
@@ -60,9 +60,9 @@
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 7.5KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 19.5KB | ✅ |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 7.4KB | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 3.6KB | ✅ |
-| Lingo | ❌ Failed | 0 | 0 | 5.1 | 🔴 0.0% | 36.0KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
@@ -82,7 +82,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 87.5KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 12.4KB | ✅ |
@@ -97,7 +97,7 @@
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 4.7KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | ✅ | ✅ |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 14.1KB | ✅ |
-| Timespinner | ❌ Failed | 0 | 0.1 | 7.1 | 🟠 1.4% | 2.2KB | ✅ |
+| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 2.3KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
@@ -110,7 +110,7 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| DOOM 1993 | 1 | 2026-01-02 03:13 | Previously failed, now passing |
+| VVVVVV | 1 | 2026-01-07 19:56 | Previously failed, now passing |
 
 
 ## Notes

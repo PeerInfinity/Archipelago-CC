@@ -16444,6 +16444,12 @@
                           ]
                         },
                         {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "swordless"
+                          }
+                        },
+                        {
                           "rule": "HasAll",
                           "args": {
                             "items": [
@@ -16487,13 +16493,42 @@
                   ]
                 },
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bombos",
-                      "Fire Rod"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "has_sword",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "OptionValue",
+                              "args": {
+                                "option": "swordless"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bombos"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Rod"
+                      }
+                    }
+                  ]
                 }
               ]
             }

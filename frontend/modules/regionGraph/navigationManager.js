@@ -13,6 +13,25 @@ export class NavigationManager {
     this.ui = ui;
   }
 
+  /**
+   * Get the primary start region from stateManager, with fallback
+   * @returns {string} The primary start region name
+   */
+  getPrimaryStartRegion() {
+    const startRegions = stateManager.getStartRegions?.() || ['Menu'];
+    return startRegions[0] || 'Menu';
+  }
+
+  /**
+   * Check if a region is a start region
+   * @param {string} regionName - The region to check
+   * @returns {boolean} Whether the region is a start region
+   */
+  isStartRegion(regionName) {
+    const startRegions = stateManager.getStartRegions?.() || ['Menu'];
+    return startRegions.includes(regionName);
+  }
+
   onPathUpdate(data) {
     if (!data || !data.path) return;
 
@@ -86,7 +105,9 @@ export class NavigationManager {
     // Find the target region node
     const regionNode = this.ui.cy.getElementById(regionName);
     if (!regionNode || regionNode.length === 0) {
-      logger.warn(`Region node not found: ${regionName}`);
+      // Start regions may not exist in all graphs - log at debug level
+      const logLevel = this.isStartRegion(regionName) ? 'debug' : 'warn';
+      logger[logLevel](`Region node not found: ${regionName}`);
       return;
     }
 
@@ -97,8 +118,8 @@ export class NavigationManager {
     logger.verbose('Default player position', { playerPos });
 
     // Check if player is at the end of the path and should be positioned at exit edge
-    // Always use default positioning for Menu region
-    if (regionName !== 'Menu' && this.ui.currentPath && this.ui.currentPath.length > 0) {
+    // Always use default positioning for start regions
+    if (!this.isStartRegion(regionName) && this.ui.currentPath && this.ui.currentPath.length > 0) {
       const lastPathEntry = this.ui.currentPath[this.ui.currentPath.length - 1];
       logger.verbose('Last path entry', { lastPathEntry });
 
@@ -417,24 +438,24 @@ export class NavigationManager {
   }
 
   overwritePath(targetRegion, moveOnlyOneStep = false) {
-    // First, set player to Menu and reset the path
-    logger.debug('Resetting player to Menu and clearing path');
+    // Get the start region from stateManager
+    const startRegion = this.getPrimaryStartRegion();
+
+    // First, set player to start region and reset the path
+    logger.debug(`Resetting player to ${startRegion} and clearing path`);
     const playerState = getPlayerStateSingleton();
 
-    // Set current region to Menu first
-    playerState.setCurrentRegion('Menu');
+    // Set current region to start region first
+    playerState.setCurrentRegion(startRegion);
 
-    // Then trim the path (this will reset path to just Menu)
-    playerState.trimPath('Menu', 1);
+    // Then trim the path (this will reset path to just start region)
+    playerState.trimPath(startRegion, 1);
 
     // Disable "Show All Regions" before executing moves
     this.setShowAllRegions(false);
 
-    // Find path from Menu to target
-    const startRegion = 'Menu';
-
     if (startRegion === targetRegion) {
-      logger.debug('Target region is Menu, path already reset');
+      logger.debug(`Target region is ${startRegion}, path already reset`);
       return;
     }
 
@@ -443,15 +464,15 @@ export class NavigationManager {
 
     if (!path || path.length === 0) {
       logger.warn(`No accessible path found from ${startRegion} to ${targetRegion}`);
-      this.ui.updateStatus(`No path from Menu to ${targetRegion}`);
+      this.ui.updateStatus(`No path from ${startRegion} to ${targetRegion}`);
       return;
     }
 
     // Execute the path by sending user:regionMove events
-    // Skip the first region in the path (Menu)
+    // Skip the first region in the path (start region)
     const stepsToExecute = moveOnlyOneStep ? [path.steps[1]] : path.steps.slice(1);
 
-    logger.info(`Creating new path: Menu → ${stepsToExecute.join(' → ')}`);
+    logger.info(`Creating new path: ${startRegion} → ${stepsToExecute.join(' → ')}`);
 
     // Build adjacency map for finding exits
     const staticData = stateManager.getStaticData();
@@ -486,7 +507,7 @@ export class NavigationManager {
       });
     });
 
-    this.ui.updateStatus(`Created path: Menu → ${targetRegion} (${stepsToExecute.length} steps)`);
+    this.ui.updateStatus(`Created path: ${startRegion} → ${targetRegion} (${stepsToExecute.length} steps)`);
   }
 
   setShowAllRegions(enabled) {

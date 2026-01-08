@@ -52,6 +52,7 @@ export class ActionQueueManager {
         action = {
           id: `action-${index}`,
           type: 'moveToRegion',
+          destinationRegion: entry.region,  // Add destinationRegion for display
           regionName: entry.region,
           region: entry.region,
           exitUsed: entry.exitUsed || null,

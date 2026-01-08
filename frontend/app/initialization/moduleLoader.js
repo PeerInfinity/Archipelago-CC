@@ -1,8 +1,11 @@
 // moduleLoader.js - Dynamic module loading and registration
 // Extracted from init.js lines 1268-1338
 
+import { profiler } from '../../modules/shared/profiler.js';
+
 /**
  * Loads and registers all modules defined in the module configuration
+ * Uses parallel loading for all modules simultaneously for best performance.
  *
  * ⚠️ CRITICAL: This function modifies the provided Maps (runtimeModuleStates, importedModules, moduleInfoMap).
  * These Maps are passed by reference and will be populated during execution.
@@ -71,37 +74,54 @@ export async function loadModules(options) {
   runtimeModuleStates.clear();
   importedModules.clear();
 
-  logger.info('init', 'Starting module import and registration phase...');
-  logger.info('INIT_STEP', 'Module import and registration phase started');
-
-  // Iterate through modules in priority order
+  // Mark disabled modules
   for (const moduleId of modulesData.loadPriority) {
     const moduleDefinition = modulesData.moduleDefinitions[moduleId];
-
-    if (moduleDefinition && moduleDefinition.enabled) {
-      await loadSingleModule({
-        moduleId,
-        moduleDefinition,
-        runtimeModuleStates,
-        importedModules,
-        moduleInfoMap,
-        logger,
-        incrementFileCounter,
-        createRegistrationApi,
-      });
-    } else if (moduleDefinition && !moduleDefinition.enabled) {
+    if (moduleDefinition && !moduleDefinition.enabled) {
       logger.debug(
         'init',
         `Module ${moduleId} is defined but not enabled. Skipping.`
       );
       runtimeModuleStates.set(moduleId, { initialized: false, enabled: false });
-    } else {
+    } else if (!moduleDefinition) {
       logger.warn(
         'init',
         `Module ${moduleId} listed in loadPriority but not found in moduleDefinitions. Skipping.`
       );
     }
   }
+
+  logger.info('init', 'Starting module import and registration phase...');
+  logger.info('INIT_STEP', 'Module import and registration phase started');
+
+  profiler.start('moduleImportPhase');
+
+  // Get all enabled modules
+  const enabledModules = modulesData.loadPriority.filter(
+    moduleId => modulesData.moduleDefinitions[moduleId]?.enabled
+  );
+
+  logger.info('init', `Loading ${enabledModules.length} modules in parallel`);
+
+  // Load all modules in parallel
+  const loadPromises = enabledModules.map(moduleId => {
+    const moduleDefinition = modulesData.moduleDefinitions[moduleId];
+    return loadSingleModule({
+      moduleId,
+      moduleDefinition,
+      runtimeModuleStates,
+      importedModules,
+      moduleInfoMap,
+      logger,
+      incrementFileCounter,
+      createRegistrationApi,
+    });
+  });
+
+  // Wait for all modules to complete
+  await Promise.all(loadPromises);
+
+  profiler.end('moduleImportPhase');
 
   logger.info('init', 'Module import and registration phase complete.');
   logger.info('INIT_STEP', 'Module import and registration phase completed');
@@ -132,13 +152,28 @@ async function loadSingleModule(options) {
   // Mark as enabled but not yet initialized
   runtimeModuleStates.set(moduleId, { initialized: false, enabled: true });
 
+  // Start timing for this specific module
+  profiler.start(`moduleImport:${moduleId}`);
+
   try {
-    // Dynamically import the module
-    // IMPORTANT: Resolve path relative to frontend root, not this file's location
-    // Module paths in modules.json are like "./modules/foo/index.js"
-    // From this file's location (app/initialization/), we need to go up to frontend root
-    const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
-    const moduleInstance = await import(resolvedPath);
+    // Check if module is pre-bundled (available via window.__BUNDLED_MODULES__)
+    const bundledModules = typeof window !== 'undefined' && window.__BUNDLED_MODULES__;
+    let moduleInstance;
+
+    if (bundledModules && bundledModules[moduleId]) {
+      // Use pre-bundled module
+      moduleInstance = bundledModules[moduleId];
+      logger.debug('init', `Using pre-bundled module: ${moduleId}`);
+    } else {
+      // Dynamically import the module
+      // IMPORTANT: Resolve path relative to frontend root, not this file's location
+      // Module paths in modules.json are like "./modules/foo/index.js"
+      // From this file's location (app/initialization/), we need to go up to frontend root
+      const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
+      moduleInstance = await import(resolvedPath);
+      logger.debug('init', `Dynamically imported module: ${moduleId}`);
+    }
+
     const moduleFileName = moduleDefinition.path.split('/').pop() || moduleDefinition.path;
     incrementFileCounter(`${moduleId} (${moduleFileName})`);
 
@@ -151,8 +186,6 @@ async function loadSingleModule(options) {
       moduleInfoMap.set(moduleId, actualModuleObject.moduleInfo);
       logger.debug('init', `Stored moduleInfo for ${moduleId}`, actualModuleObject.moduleInfo);
     }
-
-    logger.debug('init', `Dynamically imported module: ${moduleId}`);
 
     // Call the module's register function if it exists
     if (actualModuleObject && typeof actualModuleObject.register === 'function') {
@@ -170,7 +203,12 @@ async function loadSingleModule(options) {
         `Module ${moduleId} does not have a register function.`
       );
     }
+
+    // End timing for this module (successful load)
+    profiler.end(`moduleImport:${moduleId}`);
   } catch (error) {
+    // End timing for this module (failed load)
+    profiler.end(`moduleImport:${moduleId}`);
     logger.error(
       'init',
       `Error importing or registering module ${moduleId}:`,

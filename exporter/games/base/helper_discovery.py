@@ -109,6 +109,14 @@ class HelperDiscoveryMixin:
                         }
                         if defaults:
                             helper_def['defaults'] = defaults
+                        # Add param_mappings: prefer manual definition, fallback to auto-discovered
+                        if helper_name in getattr(self, 'HELPER_PARAM_MAPPINGS', {}):
+                            helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
+                        elif hasattr(self, 'get_discovered_param_mappings'):
+                            discovered = self.get_discovered_param_mappings(helper_name)
+                            if discovered:
+                                helper_def['param_mappings'] = discovered
+                                logger.debug(f"Using auto-discovered param_mappings for worldgen helper '{helper_name}': {discovered}")
                         helper_definitions[helper_name] = helper_def
                     else:
                         helper_definitions[helper_name] = rule

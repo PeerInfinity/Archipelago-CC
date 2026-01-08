@@ -10,69 +10,53 @@ import inspect
 import re
 import logging
 import textwrap
-import tokenize
-import io
+import zipfile
 from typing import Optional, Callable
 import astunparse
 
-from .cache import file_content_cache, ast_cache
+from .cache import file_content_cache, ast_cache, clean_source_cache, unparsed_lambda_cache
 
 
-def remove_comments_from_source(source: str) -> str:
+def _read_source_from_path(filename: str) -> Optional[str]:
     """
-    Remove Python comments from source code while preserving # characters in string literals.
-
-    Uses tokenize to properly distinguish between comments and string content.
+    Read source code from a file path, handling both regular files and
+    files inside .apworld zip archives.
 
     Args:
-        source: Source code string
+        filename: The file path, which may be inside an apworld zip
+                  (e.g., '/path/to/game.apworld/game/Rules.py')
 
     Returns:
-        Source code with comments removed
+        The file content as a string, or None if reading failed
     """
+    # Check if this is a path inside an apworld zip file
+    if '.apworld' in filename:
+        # Split the path at .apworld to get the zip path and internal path
+        # e.g., '/path/to/game.apworld/game/Rules.py' ->
+        #       zip_path = '/path/to/game.apworld'
+        #       internal_path = 'game/Rules.py'
+        parts = filename.split('.apworld')
+        if len(parts) >= 2:
+            zip_path = parts[0] + '.apworld'
+            # Remove leading slash from internal path
+            internal_path = parts[1].lstrip('/')
+
+            try:
+                with zipfile.ZipFile(zip_path, 'r') as zf:
+                    content = zf.read(internal_path).decode('utf-8')
+                    logging.debug(f"Read source from apworld: {zip_path}!{internal_path}")
+                    return content
+            except Exception as e:
+                logging.error(f"Failed to read from apworld {zip_path}!{internal_path}: {e}")
+                return None
+
+    # Regular file - read from disk
     try:
-        # Convert source to bytes for tokenize
-        source_bytes = source.encode('utf-8')
-        tokens = tokenize.tokenize(io.BytesIO(source_bytes).readline)
-
-        result = []
-        prev_end = (1, 0)
-
-        for tok in tokens:
-            # Skip comments
-            if tok.type == tokenize.COMMENT:
-                continue
-
-            # Handle newlines and indentation
-            if tok.type in (tokenize.NEWLINE, tokenize.NL):
-                result.append(tok.string)
-                prev_end = tok.end
-                continue
-
-            # Add any whitespace between tokens
-            if tok.start[0] > prev_end[0]:
-                # New line - add newline only if previous token wasn't NL/NEWLINE
-                # (since those tokens already include the newline character)
-                if result and not result[-1].endswith('\n'):
-                    result.append('\n')
-                # Preserve indentation on the new line
-                if tok.start[1] > 0 and tok.type != tokenize.INDENT:
-                    result.append(' ' * tok.start[1])
-            elif tok.start[1] > prev_end[1] and tok.type != tokenize.INDENT:
-                # Same line, add spaces
-                result.append(' ' * (tok.start[1] - prev_end[1]))
-
-            # Add the token
-            if tok.type not in (tokenize.ENCODING, tokenize.ENDMARKER):
-                result.append(tok.string)
-
-            prev_end = tok.end
-
-        return ''.join(result).strip()
+        with open(filename, 'r', encoding='utf-8-sig') as f:
+            return f.read()
     except Exception as e:
-        # Fallback to simple regex if tokenization fails
-        logging.warning(f"Tokenization failed for comment removal: {e}. Using fallback regex.")
-        return re.sub(r'#.*$', '', source, flags=re.MULTILINE).strip()
+        logging.error(f"Failed to read source file {filename}: {e}")
+        return None
 
 
 class LambdaLineFinder(ast.NodeVisitor):
@@ -104,7 +88,7 @@ class LambdaLineFinder(ast.NodeVisitor):
 def get_multiline_lambda_source(func: Callable) -> Optional[str]:
     """
     Robustly gets the full source code of a lambda function using full-file AST parsing.
-    Includes caching for both file content and the parsed AST to improve performance.
+    Includes caching for both file content, parsed AST, and unparsed lambda source.
 
     Args:
         func: The lambda function to extract source from
@@ -116,6 +100,12 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
         filename = inspect.getfile(func)
         start_line = func.__code__.co_firstlineno
 
+        # Check unparsed lambda cache first (fastest path)
+        cache_key = (filename, start_line)
+        if cache_key in unparsed_lambda_cache:
+            logging.debug(f"get_multiline_lambda_source: Cache hit for {filename}:{start_line}")
+            return unparsed_lambda_cache[cache_key]
+
         # 1. Check for a cached AST first (most performant)
         if filename in ast_cache:
             tree = ast_cache[filename]
@@ -124,9 +114,10 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
             if filename in file_content_cache:
                 source_code = file_content_cache[filename]
             else:
-                # 3. Read from disk as a last resort
-                with open(filename, 'r', encoding='utf-8-sig') as f:
-                    source_code = f.read()
+                # 3. Read from disk (or apworld zip) as a last resort
+                source_code = _read_source_from_path(filename)
+                if source_code is None:
+                    return None
                 file_content_cache[filename] = source_code
 
             # 4. Parse the source and populate the AST cache
@@ -141,9 +132,13 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
 
         if lambda_node:
             # "Un-parse" the found AST node back into a source string
-            return astunparse.unparse(lambda_node).strip()
+            result = astunparse.unparse(lambda_node).strip()
         else:
-            return inspect.getsource(func)  # Fallback
+            result = inspect.getsource(func)  # Fallback
+
+        # Cache the result
+        unparsed_lambda_cache[cache_key] = result
+        return result
 
     except Exception as e:
         logging.error(f"Failed to get multiline lambda source for {func}: {e}")
@@ -154,96 +149,6 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
             return None
 
 
-def _read_multiline_lambda(func: Callable) -> Optional[str]:
-    """
-    Read a multiline lambda function using tokenize to properly handle
-    parentheses and indentation.
-
-    Args:
-        func: The lambda function to read
-
-    Returns:
-        The lambda source as a string, or None if reading failed
-    """
-    try:
-        # Get the file and line number where the lambda starts
-        filename = inspect.getfile(func)
-        start_line = func.__code__.co_firstlineno
-
-        if filename in file_content_cache:
-            lines = file_content_cache[filename]
-            logging.debug(f"_read_multiline_lambda: Using cached content for {filename}")
-        else:
-            logging.debug(f"_read_multiline_lambda: Reading and caching content for {filename}")
-            with open(filename, 'r', encoding='utf-8-sig') as f:
-                # Read the file line by line
-                lines = f.readlines()
-            file_content_cache[filename] = lines  # Store in cache
-
-        # Start with the line containing the lambda
-        # Correct for 0-based list index vs 1-based line number
-        if start_line <= 0 or start_line > len(lines):
-            logging.error(
-                f"Error: start_line {start_line} is out of bounds for file {filename} "
-                f"with {len(lines)} lines."
-            )
-            return None  # Or handle error appropriately
-
-        lambda_text = lines[start_line - 1]
-        initial_indent = len(lambda_text) - len(lambda_text.lstrip())
-
-        # Track parentheses balance
-        paren_count = lambda_text.count('(') - lambda_text.count(')')
-        bracket_count = lambda_text.count('[') - lambda_text.count(']')
-        brace_count = lambda_text.count('{') - lambda_text.count('}')
-
-        # Continue reading lines until all parentheses/brackets/braces are balanced
-        # and we see a decrease in indentation
-        i = start_line
-        while i < len(lines):
-            line = lines[i]
-            current_indent = len(line) - len(line.lstrip())
-
-            # If we see a decrease in indentation, we're probably past the lambda
-            if current_indent < initial_indent:
-                break
-
-            # Update counts
-            paren_count += line.count('(') - line.count(')')
-            bracket_count += line.count('[') - line.count(']')
-            brace_count += line.count('{') - line.count('}')
-
-            # Add the line to our lambda text
-            lambda_text += line
-
-            # If all parentheses/brackets/braces are balanced, we might be done
-            if paren_count <= 0 and bracket_count <= 0 and brace_count <= 0:
-                # Check if the next line has less indentation
-                if i + 1 < len(lines):
-                    next_line = lines[i + 1]
-                    # Check if next_line is not empty or just whitespace before calculating indent
-                    if next_line.strip():
-                        next_indent = len(next_line) - len(next_line.lstrip())
-                        if next_indent < initial_indent:
-                            break
-                    else:
-                        # Skip empty/whitespace lines when checking indentation break
-                        pass
-
-            i += 1
-
-        # Clean up the lambda text
-        lambda_text = lambda_text.strip()
-
-        # Remove comments while preserving # in string literals
-        lambda_text = remove_comments_from_source(lambda_text)
-
-        return lambda_text
-    except Exception as e:
-        logging.error(f"Error reading multiline lambda: {e}", exc_info=True)
-        return None
-
-
 def _clean_source(func: Callable) -> Optional[str]:
     """
     A new version of _clean_source that uses the robust lambda finder.
@@ -251,12 +156,39 @@ def _clean_source(func: Callable) -> Optional[str]:
     This function extracts the source code from a lambda or function, cleans it,
     and converts it to a format suitable for AST analysis.
 
+    Results are cached by (filename, lineno) to avoid repeated extraction
+    for the same function.
+
     Args:
         func: The function to extract and clean source from
 
     Returns:
         Cleaned source code as a string, or None if cleaning failed
     """
+    # Check cache first
+    try:
+        filename = inspect.getfile(func)
+        lineno = func.__code__.co_firstlineno
+        cache_key = (filename, lineno)
+
+        if cache_key in clean_source_cache:
+            logging.debug(f"_clean_source: Cache hit for {filename}:{lineno}")
+            return clean_source_cache[cache_key]
+    except (TypeError, AttributeError):
+        # Can't determine cache key, proceed without caching
+        cache_key = None
+
+    result = _clean_source_impl(func)
+
+    # Store in cache if we have a valid cache key
+    if cache_key is not None:
+        clean_source_cache[cache_key] = result
+
+    return result
+
+
+def _clean_source_impl(func: Callable) -> Optional[str]:
+    """Implementation of _clean_source (separated for caching)."""
     try:
         # Use the robust function to get the full lambda source
         source = get_multiline_lambda_source(func)

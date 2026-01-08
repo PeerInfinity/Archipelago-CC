@@ -3465,6 +3465,93 @@ class WeightedSum(Rule[TWorld], game="Archipelago"):
             }
 
 
+@dataclasses.dataclass()
+class OptionValue(Rule[TWorld], game="Archipelago"):
+    """A rule that evaluates to the truthiness of a world option at runtime.
+
+    This is used in Conditional tests to check option values dynamically,
+    allowing rules to adapt based on the player's option settings.
+
+    Usage:
+        rule = Conditional(
+            test=OptionValue('puzzle_hints_required'),
+            if_true=And(CanReachRegion('Theater'), Has('Key')),
+            if_false=True_()
+        )
+    """
+
+    option_name: str
+    """The name of the option to check"""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.option_name,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"OptionValue({self.option_name})"
+
+    @override
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "rule": "OptionValue",
+            "args": {"option": self.option_name}
+        }
+
+    class Resolved(Rule.Resolved):
+        option_name: str
+        skip_cache: ClassVar[bool] = True
+
+        def _get_option(self, state: CollectionState) -> Any:
+            """Get the raw option object from the world."""
+            world = state.multiworld.worlds[self.player]
+            return getattr(world.options, self.option_name, None)
+
+        def get_value(self, state: CollectionState) -> int | float:
+            """Get the numeric value of the option for Compare/Arithmetic contexts."""
+            option = self._get_option(state)
+            if option is None:
+                return 0
+            # Handle Option objects that have a .value attribute
+            if hasattr(option, 'value'):
+                value = option.value
+                if isinstance(value, (int, float)):
+                    return value
+                return 1 if value else 0
+            if isinstance(option, (int, float)):
+                return option
+            return 1 if option else 0
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            option = self._get_option(state)
+            if option is None:
+                return True  # Default to true if option not found
+            # Handle Option objects that have a .value attribute
+            if hasattr(option, 'value'):
+                return bool(option.value)
+            return bool(option)
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state:
+                result = self(state)
+                color = "green" if result else "salmon"
+                return [{"type": "color", "color": color, "text": f"Option: {self.option_name}"}]
+            return [{"type": "text", "text": f"Option: {self.option_name}"}]
+
+        @override
+        def __str__(self) -> str:
+            return f"OptionValue({self.option_name})"
+
+
 DEFAULT_RULES = {
     rule_name: cast(type[Rule[RuleWorldMixin]], rule_class)
     for rule_name, rule_class in locals().items()

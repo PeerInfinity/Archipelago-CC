@@ -1,0 +1,72 @@
+{
+  "ap_version": "0.6.5",
+  "description": "ROM-less generation patches for world files",
+  "files": {
+    "alttp": {
+      "patched_sha256": "26694d00e35446b86c2b4fe5eafdaecf91f63a17f4dca904d66373a91f7f182c",
+      "patched_size": 48174,
+      "original_sha256": "e0cef7f4ddceed3386eca644636b89962c3cbf830bc65c2d8ddb656514ee1435",
+      "original_size": 46603
+    },
+    "apsudoku": {
+      "patched_sha256": "e0acd5e21d70fd146ea7ddd2d51c78de677f74d30bff475348a32ced36dd1d02",
+      "patched_size": 1206,
+      "original_sha256": "f8f2c1a2617bcce9098539ae7ecdd9aa258b13b49e39fa7990ac7026fa662076",
+      "original_size": 910
+    },
+    "dkc3": {
+      "patched_sha256": "da31275ffd1ffc9802d44790284753e539f59966a37e35a2028ed2ae4709db23",
+      "patched_size": 10084,
+      "original_sha256": "223eea005de66c595633d3666ce681c0bd972e93c03b699588c2d44128a71998",
+      "original_size": 8792
+    },
+    "ff1": {
+      "patched_sha256": "919bf696bce0b5d19fc81692affbedc0208cd93ac3a2a4701f750962fa43ccd1",
+      "patched_size": 6227,
+      "original_sha256": "819cb58a6e0c8071afa55d627df9e2ac4e30f66ff9faf2ea229860d7ac886283",
+      "original_size": 5844
+    },
+    "lufia2ac": {
+      "patched_sha256": "5da907872a029ad71953e8b9bcf2641041620ff5abe7d32b9fa1aefcc1113ba0",
+      "patched_size": 30110,
+      "original_sha256": "5872200fe4ee9fe042934a59b2c5dcdebc4e50a1a93e8b1fef92069aa9b829b8",
+      "original_size": 28944
+    },
+    "mmbn3": {
+      "patched_sha256": "3801a0b831fae13a3af3d4bf0d79ac51f96fd796cf5035fcbdee5d6f69e64315",
+      "patched_size": 32256,
+      "original_sha256": "e27ef266019dc8a3a93ebdcc95e1d763f6cc4cf503b7a5380507b7726aef0693",
+      "original_size": 31117
+    },
+    "oot": {
+      "patched_sha256": "21452927b2d111908c9f1280948686ce93a94baa113abd31f8eba1a283229314",
+      "patched_size": 75342,
+      "original_sha256": "6433748e95bc3ddb5565dab71d98355ce8c547ba098d7ee251bbcca997f04cc7",
+      "original_size": 73948
+    },
+    "smw": {
+      "patched_sha256": "8945e46859eaca08a49a6bc9386923f3ed1e730a8c435ac1287b3ee5c603042c",
+      "patched_size": 15956,
+      "original_sha256": "7af9de688e3e4c2feb3b13fda9258bb9945bfba9f50f6618ef854c2219af4931",
+      "original_size": 14761
+    },
+    "soe": {
+      "patched_sha256": "21fd08f8f5aa64154d6c9448f0cfd0cdff6437bf4783fceb46ec1caa889bb42b",
+      "patched_size": 23301,
+      "original_sha256": "2860fa7108f3c36a3ddf9cd2764be9fdae248d2907e407ebfd2799f79ab01659",
+      "original_size": 22423
+    },
+    "tloz": {
+      "patched_sha256": "8f9c06e60b337193e7c2ab4418d2856c0545f8220f780c26815a7bf51dc16885",
+      "patched_size": 17472,
+      "original_sha256": "36d88ef8e850c438d56fc38e172cf83e08518a5777aa46eb41e2b77d2107257a",
+      "original_size": 16166
+    },
+    "yoshisisland": {
+      "patched_sha256": "8517c982a47b0cf2b4211e956884a1d1b623021d7e92213d8b42c06d6a77d081",
+      "patched_size": 18887,
+      "original_sha256": "631c8d2453492278885850635e474d67787ad8226c84d48d49696bad455d4085",
+      "original_size": 17605
+    }
+  }
+}

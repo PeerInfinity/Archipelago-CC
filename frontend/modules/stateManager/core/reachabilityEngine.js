@@ -1,4 +1,5 @@
 import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
+import { profiler } from '../../shared/profiler.js';
 
 /**
  * StateManager Reachability Engine Module
@@ -212,6 +213,7 @@ export function computeReachableRegions(sm) {
   }
 
   sm._computing = true;
+  profiler.start('computeReachableRegions');
 
   try {
     // Get start regions and initialize BFS
@@ -329,6 +331,7 @@ export function computeReachableRegions(sm) {
     sm.cacheValid = true;
   } finally {
     sm._computing = false;
+    profiler.end('computeReachableRegions');
   }
 
   return sm.knownReachableRegions;
@@ -355,6 +358,7 @@ export function computeReachableRegions(sm) {
  * @returns {boolean} True if new regions were found in this pass
  */
 export function runBFSPass(sm) {
+  profiler.start('runBFSPass');
   let newRegionsFound = false;
   const passStartRegions = new Set(sm.knownReachableRegions);
 
@@ -501,6 +505,7 @@ export function runBFSPass(sm) {
     }
   }
 
+  profiler.end('runBFSPass');
   return newRegionsFound;
 }
 
@@ -563,34 +568,35 @@ export function isRegionReachable(sm, regionName) {
  * @returns {boolean} Whether the location is accessible
  */
 export function isLocationAccessible(sm, location) {
-  // The check for serverProvidedUncheckedLocations was removed from here.
-  // A location being unchecked by the server does not mean it's inaccessible by rules.
-
-  // Recursion protection: if we're already computing reachable regions,
-  // use the current state instead of triggering another computation
-  const reachableRegions = sm._computing
-    ? sm.knownReachableRegions
-    : computeReachableRegions(sm);
-  if (!reachableRegions.has(location.region)) {
-    return false;
-  }
-  if (!location.access_rule) {
-    // Event locations with no access rule are only accessible if you don't already have the event item
-    // This matches Python's behavior where event items can only be collected once
-    if (location.item && location.item.event && location.item.name) {
-      // Check if we already have this event item
-      const itemCount = sm.inventory && sm.inventory[location.item.name];
-      if (itemCount && itemCount > 0) {
-        // Already have this event, location is not accessible (can't collect again)
-        return false;
-      }
-    }
-    // No access rule means accessible (for non-event locations or events we don't have yet)
-    return true;
-  }
-
-  // Use the *injected* evaluateRule engine
+  profiler.start('isLocationAccessible');
   try {
+    // The check for serverProvidedUncheckedLocations was removed from here.
+    // A location being unchecked by the server does not mean it's inaccessible by rules.
+
+    // Recursion protection: if we're already computing reachable regions,
+    // use the current state instead of triggering another computation
+    const reachableRegions = sm._computing
+      ? sm.knownReachableRegions
+      : computeReachableRegions(sm);
+    if (!reachableRegions.has(location.region)) {
+      return false;
+    }
+    if (!location.access_rule) {
+      // Event locations with no access rule are only accessible if you don't already have the event item
+      // This matches Python's behavior where event items can only be collected once
+      if (location.item && location.item.event && location.item.name) {
+        // Check if we already have this event item
+        const itemCount = sm.inventory && sm.inventory[location.item.name];
+        if (itemCount && itemCount > 0) {
+          // Already have this event, location is not accessible (can't collect again)
+          return false;
+        }
+      }
+      // No access rule means accessible (for non-event locations or events we don't have yet)
+      return true;
+    }
+
+    // Use the *injected* evaluateRule engine
     // Pass location via contextVariables so it's available to resolveName() for boss defeat rules
     const snapshotInterface = sm._createSelfSnapshotInterface({ location, currentLocation: location });
 
@@ -606,6 +612,8 @@ export function isLocationAccessible(sm, location) {
       location.access_rule
     );
     return false;
+  } finally {
+    profiler.end('isLocationAccessible');
   }
 }
 

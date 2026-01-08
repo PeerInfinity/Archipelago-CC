@@ -6,6 +6,18 @@
       "reason": "Not a game."
     },
     {
+      "name": "APWorld Manager.yaml",
+      "reason": "Not a game."
+    },
+    {
+      "name": "JSON Tools Installer.yaml",
+      "reason": "Not a game."
+    },
+    {
+      "name": "Universal Tracker.yaml",
+      "reason": "Not a game."
+    },
+    {
       "name": "Blasphemous.yaml",
       "reason": "The spoiler test currently freezes."
     },
@@ -24,10 +36,6 @@
     {
       "name": "Sudoku.yaml",
       "reason": "Cannot be used for generating worlds."
-    },
-    {
-      "name": "Universal Tracker.yaml",
-      "reason": "Not a game."
     },
     {
       "name": "Zillion.yaml",

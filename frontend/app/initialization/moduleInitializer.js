@@ -1,6 +1,8 @@
 // moduleInitializer.js - Module initialization and post-initialization
 // Extracted from init.js lines 340-481, 1935-2003
 
+import { profiler } from '../../modules/shared/profiler.js';
+
 /**
  * Initializes all enabled modules by calling their initialize() method
  *
@@ -57,6 +59,8 @@ export async function initializeModules(options) {
     `Module initialization phase started (${enabledModules.length} modules)`
   );
 
+  profiler.start('moduleInitPhase');
+
   // Initialize modules in priority order
   for (const moduleId of loadPriority) {
     if (runtimeModuleStates.get(moduleId)?.enabled) {
@@ -70,6 +74,8 @@ export async function initializeModules(options) {
       });
     }
   }
+
+  profiler.end('moduleInitPhase');
 
   logger.info(
     'init',
@@ -154,6 +160,8 @@ export async function postInitializeModules(options) {
     `Module post-initialization phase started (${modulesWithPostInit.length} modules)`
   );
 
+  profiler.start('modulePostInitPhase');
+
   // Post-initialize modules in priority order
   for (const moduleId of loadPriority) {
     if (runtimeModuleStates.get(moduleId)?.enabled) {
@@ -168,6 +176,8 @@ export async function postInitializeModules(options) {
       });
     }
   }
+
+  profiler.end('modulePostInitPhase');
 
   logger.info(
     'init',
@@ -208,6 +218,7 @@ export async function initializeSingleModule(options) {
 
   if (moduleInstance && typeof moduleInstance.initialize === 'function') {
     const api = createInitializationApi(moduleId);
+    profiler.start(`moduleInit:${moduleId}`);
     try {
       logger.info(
         'init',
@@ -224,7 +235,9 @@ export async function initializeSingleModule(options) {
         `Completed initialization of module: ${moduleId}`
       );
       logger.debug('init', `Initialized module: ${moduleId}`);
+      profiler.end(`moduleInit:${moduleId}`);
     } catch (error) {
+      profiler.end(`moduleInit:${moduleId}`);
       logger.error(
         'init',
         `Error during initialization of module: ${moduleId}`,
@@ -283,6 +296,7 @@ export async function postInitializeSingleModule(options) {
       );
     }
 
+    profiler.start(`modulePostInit:${moduleId}`);
     try {
       logger.info('init', `Post-initializing module: ${moduleId}`);
 
@@ -295,7 +309,9 @@ export async function postInitializeSingleModule(options) {
       }
 
       await moduleInstance.postInitialize(api, configForPostInitialize);
+      profiler.end(`modulePostInit:${moduleId}`);
     } catch (error) {
+      profiler.end(`modulePostInit:${moduleId}`);
       logger.error(
         'init',
         `Error during post-initialization of module: ${moduleId}`,

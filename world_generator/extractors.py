@@ -148,6 +148,7 @@ class HelperData:
     params: List[str] = field(default_factory=list)  # Parameters (excluding state/player)
     body: Optional[Dict[str, Any]] = None  # The rule body
     defaults: Dict[str, Any] = field(default_factory=dict)  # Default parameter values
+    param_mappings: Dict[str, str] = field(default_factory=dict)  # Maps param names to option/attribute names
 
 
 @dataclass
@@ -955,6 +956,7 @@ def extract_helpers(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str
             raw_params = helper_def.get('params', [])
             body = helper_def.get('body', helper_def)
             defaults = helper_def.get('defaults', {})
+            param_mappings = helper_def.get('param_mappings', {})
 
             # Include all declared params in the function signature, even if they're
             # not used in the body. This is necessary because callers will pass
@@ -965,7 +967,8 @@ def extract_helpers(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str
                 name=helper_name,
                 params=raw_params,
                 body=body,
-                defaults=defaults
+                defaults=defaults,
+                param_mappings=param_mappings
             )
         else:
             # Simple helper - the entire helper_def is the body
@@ -973,7 +976,8 @@ def extract_helpers(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str
                 name=helper_name,
                 params=[],
                 body=helper_def,
-                defaults={}
+                defaults={},
+                param_mappings={}
             )
 
     return helpers

@@ -80,6 +80,15 @@
     "has_custom_game_logic": false,
     "world_directory": "apquest_worldgen"
   },
+  "APWorld Manager": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "apworld_manager"
+  },
   "Adventure": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -539,6 +548,15 @@
     "has_custom_game_logic": false,
     "world_directory": "inscryption_worldgen"
   },
+  "JSON Tools Installer": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "json_tools_installer"
+  },
   "Jak and Daxter The Precursor Legacy WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -586,7 +604,7 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 7601,
+    "exporter_size": 10315,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1029,7 +1047,7 @@
     "exporter_path": "exporter/games/sc2.py",
     "exporter_size": 29356,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
-    "game_logic_size": 89488,
+    "game_logic_size": 89569,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "sc2"
@@ -1090,7 +1108,7 @@
   },
   "Super Mario 64": {
     "exporter_path": "exporter/games/sm64ex.py",
-    "exporter_size": 12650,
+    "exporter_size": 12655,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

@@ -21,7 +21,7 @@ def _landstalker_has_health(state: "CollectionState", player: int, health = None
 
 
 def _landstalker_has_visited_regions(state: "CollectionState", player: int, regions = None) -> bool:
-    return True
+    return all(state.has(('event_visited_' + region.code), player) for region in regions)
 
 
 def set_rules(world: "World") -> None:

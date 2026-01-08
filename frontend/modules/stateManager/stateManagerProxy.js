@@ -200,10 +200,18 @@ export class StateManagerProxy {
   initializeWorker() {
     log('info', '[stateManagerProxy] Creating Worker...');
     try {
-      this.worker = new Worker(
-        new URL('./stateManagerWorker.js', import.meta.url),
-        { type: 'module' }
-      );
+      // Determine worker URL - use absolute path in bundled mode since import.meta.url
+      // points to the bundle location, not the original module location
+      // Check if we're in a bundle by looking at import.meta.url (contains /dist/)
+      // We can't use window.__BUNDLED_MODULES__ because it's set after static imports complete
+      const isBundled = import.meta.url.includes('/dist/');
+      const workerUrl = isBundled
+        ? new URL('./modules/stateManager/stateManagerWorker.js', window.location.origin + '/frontend/')
+        : new URL('./stateManagerWorker.js', import.meta.url);
+
+      log('info', `[stateManagerProxy] Worker URL: ${workerUrl.href} (bundled: ${!!isBundled})`);
+
+      this.worker = new Worker(workerUrl, { type: 'module' });
 
       this.worker.onmessage = (event) => {
         // console.debug('[stateManagerProxy] Received message from worker:', event.data); // Use debug for less noise
@@ -211,10 +219,15 @@ export class StateManagerProxy {
       };
 
       this.worker.onerror = (error) => {
-        log('error', '[stateManagerProxy] Worker global error:', error);
-        const errorMessage = `Worker error: ${
-          error.message || 'Unknown worker error'
-        }`;
+        // ErrorEvent has filename, lineno, colno, message properties
+        const errorDetails = {
+          message: error.message || 'Unknown',
+          filename: error.filename || 'Unknown',
+          lineno: error.lineno || 0,
+          colno: error.colno || 0,
+        };
+        log('error', '[stateManagerProxy] Worker global error:', errorDetails);
+        const errorMessage = `Worker error: ${errorDetails.message} at ${errorDetails.filename}:${errorDetails.lineno}:${errorDetails.colno}`;
 
         // Reject all pending queries with tracking
         const pendingQueryIds = Array.from(this.pendingQueries.keys());
@@ -669,6 +682,33 @@ export class StateManagerProxy {
           stack: message.stack,
           correlationId: message.correlationId
         });
+        break;
+      case 'spoilerTestProgress':
+        // Forward progress updates to eventBus for UI consumption
+        this.eventBus.publish('spoilerTest:progress', {
+          eventIndex: message.eventIndex,
+          totalEvents: message.totalEvents,
+          sphereIndex: message.sphereIndex,
+          passed: message.passed,
+          locationsChecked: message.locationsChecked,
+          itemsAdded: message.itemsAdded
+        }, 'stateManager');
+        break;
+      case 'spoilerTestMismatch':
+        // Forward mismatch details to eventBus for analysis
+        this.eventBus.publish('spoilerTest:mismatch', {
+          eventIndex: message.eventIndex,
+          sphereIndex: message.sphereIndex,
+          mismatches: message.mismatches,
+          awaitingAnalysis: message.awaitingAnalysis
+        }, 'stateManager');
+        break;
+      case 'spoilerTestComplete':
+        // Forward completion event to eventBus
+        // Note: The promise is resolved separately via queryResponse
+        this.eventBus.publish('spoilerTest:complete', {
+          result: message.result
+        }, 'stateManager');
         break;
       default:
         log(
@@ -2463,6 +2503,98 @@ export class StateManagerProxy {
       null, // No payload needed
       false // Fire-and-forget, snapshot update will arrive via normal flow
     );
+  }
+
+  /**
+   * Enable or disable worker-side profiling
+   *
+   * When enabled, the worker will track timing data for key operations:
+   * - computeReachableRegions
+   * - runBFSPass
+   * - isLocationAccessible
+   *
+   * @param {boolean} enabled - Whether to enable profiling
+   * @returns {Promise<Object>} Result with { success: boolean, enabled: boolean }
+   */
+  async setWorkerProfiling(enabled) {
+    log('info', `[StateManagerProxy] Setting worker profiling to ${enabled}`);
+    return this.sendQueryToWorker({
+      command: 'setWorkerProfiling',
+      payload: { enabled }
+    });
+  }
+
+  /**
+   * Get the worker-side profiling report
+   *
+   * Returns timing statistics for profiled operations in the worker.
+   *
+   * @returns {Promise<Object>} Object with { report: string, data: Object }
+   *   - report: Human-readable formatted report
+   *   - data: Machine-readable profiling data with stats per section
+   */
+  async getWorkerProfilingReport() {
+    log('info', '[StateManagerProxy] Getting worker profiling report');
+    return this.sendQueryToWorker({
+      command: 'getWorkerProfilingReport',
+      payload: {}
+    });
+  }
+
+  /**
+   * Run spoiler test entirely in worker
+   *
+   * Sends all sphere data to the worker and lets it process the entire test
+   * internally, eliminating round-trip communication overhead.
+   *
+   * Progress updates are sent via 'spoilerTestProgress' messages.
+   * Mismatch details are sent via 'spoilerTestMismatch' messages.
+   *
+   * @param {Array} sphereData - Pre-processed sphere data from sphereState
+   * @param {Object} config - Test configuration
+   * @param {number} config.playerId - Player ID
+   * @param {boolean} config.stopOnFirstError - Halt on first mismatch (default: true)
+   * @param {boolean} config.waitForMainThreadAnalysis - Wait for main thread analysis (default: false)
+   * @param {boolean} config.verboseMode - Enable verbose logging
+   * @param {boolean} config.focusedMode - Focused regression test mode
+   * @param {Array} config.focusLocations - Locations to focus on in focused mode
+   * @returns {Promise<Object>} Test results
+   */
+  async runSpoilerTest(sphereData, config) {
+    log('info', `[StateManagerProxy] Running worker-side spoiler test with ${sphereData.length} spheres`);
+    // Use 5 minute timeout for spoiler tests - they can take a long time for complex games
+    const SPOILER_TEST_TIMEOUT = 300000;
+    return this.sendQueryToWorker({
+      command: 'runSpoilerTest',
+      payload: { sphereData, config }
+    }, SPOILER_TEST_TIMEOUT);
+  }
+
+  /**
+   * Abort a running spoiler test
+   *
+   * Signals the worker to stop processing the current spoiler test.
+   * The test will complete with aborted=true in the results.
+   *
+   * @returns {Promise<Object>} Result with { aborted: boolean }
+   */
+  async abortSpoilerTest() {
+    log('info', '[StateManagerProxy] Aborting spoiler test');
+    return this.sendQueryToWorker({
+      command: 'abortSpoilerTest',
+      payload: {}
+    });
+  }
+
+  /**
+   * Signal that main thread analysis is complete
+   *
+   * Used when waitForMainThreadAnalysis is enabled. Signals the worker
+   * to continue processing after main thread has completed its analysis.
+   */
+  signalAnalysisComplete() {
+    log('debug', '[StateManagerProxy] Signaling analysis complete');
+    this._sendCommand('signalAnalysisComplete', {}, false);
   }
 }
 

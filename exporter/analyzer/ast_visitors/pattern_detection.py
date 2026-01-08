@@ -23,6 +23,8 @@ class PatternDetectionMixin:
         Also matches:
         - self.multiworld.worlds[player] for class-based helpers (e.g., RaftLogic)
         - world.worlds[player] where 'world' is the multiworld directly (e.g., ALTTP rules)
+        - state.multiworld.worlds[1] where player is already resolved to a constant integer
+          (common in worldgen rules where player is bound in the closure)
         Returns True if matched, False otherwise.
 
         AST structure (with multiworld):
@@ -30,17 +32,29 @@ class PatternDetectionMixin:
           value=Attribute(attr='worlds')
             value=Attribute(attr='multiworld')
               value=Name(id='state', 'world', or 'self')
-          slice=Name(id='player')
+          slice=Name(id='player') OR Constant(value=<int>)
 
         AST structure (world is multiworld):
         Subscript
           value=Attribute(attr='worlds')
             value=Name(id='world')
-          slice=Name(id='player')
+          slice=Name(id='player') OR Constant(value=<int>)
         """
         if not isinstance(node, ast.Subscript):
             return False
-        if not isinstance(node.slice, ast.Name) or node.slice.id != 'player':
+
+        # Check slice: accept Name(id='player') or Constant(value=<int>)
+        slice_ok = False
+        if isinstance(node.slice, ast.Name) and node.slice.id == 'player':
+            slice_ok = True
+        elif isinstance(node.slice, ast.Constant) and isinstance(node.slice.value, int):
+            # Accept constant integer player numbers (common in worldgen rules)
+            slice_ok = True
+        elif isinstance(node.slice, ast.Num):
+            # Python 3.7 compatibility
+            slice_ok = True
+
+        if not slice_ok:
             return False
 
         # Check .worlds
@@ -136,6 +150,10 @@ class PatternDetectionMixin:
             # converted to setting_value. These are exported in game_info and should be
             # accessed as world.attr_name, which the frontend resolves from game_info.
             if attrs[0] == 'options' and len(attrs) >= 2:
+                # Do NOT match if pattern ends with .value - let closure_vars resolve it
+                # to get the actual integer value (e.g., dk_coins_for_gyrocopter.value -> 15)
+                if attrs[-1] == 'value':
+                    return None
                 # Do NOT match if pattern ends with .to_bool - this is a method call
                 # that needs to be evaluated at analysis time via call_visitor
                 if attrs[-1] == 'to_bool':
@@ -143,7 +161,19 @@ class PatternDetectionMixin:
                 # Remove 'options' prefix for .options.<setting> pattern
                 return '.'.join(attrs[1:])
             else:
-                # Direct world attributes - do NOT convert to setting_value
+                # Check if this direct world attribute is mapped in SELF_ATTR_TO_SETTING
+                # This handles patterns like state.multiworld.worlds[player].pyramid_keys_unlock
+                # in worldgen rules where the original world uses self.pyramid_keys_unlock
+                if len(attrs) == 1 and hasattr(self, 'game_handler') and self.game_handler is not None:
+                    setting_mapping = getattr(self.game_handler, 'SELF_ATTR_TO_SETTING', {})
+                    attr_name = attrs[0]
+                    if attr_name in setting_mapping:
+                        mapping_value = setting_mapping[attr_name]
+                        if isinstance(mapping_value, dict):
+                            return mapping_value.get('setting', attr_name)
+                        else:
+                            return mapping_value
+                # Direct world attributes not in mapping - do NOT convert to setting_value
                 # Let normal attribute handling create {type: 'attribute', object: world, attr: ...}
                 return None
 
@@ -230,7 +260,17 @@ class PatternDetectionMixin:
         subscript = node.value.value
         if not isinstance(subscript, ast.Subscript):
             return None, None
-        if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
+
+        # Accept Name(id='player') or Constant(value=<int>)
+        slice_ok = False
+        if isinstance(subscript.slice, ast.Name) and subscript.slice.id == 'player':
+            slice_ok = True
+        elif isinstance(subscript.slice, ast.Constant) and isinstance(subscript.slice.value, int):
+            slice_ok = True
+        elif isinstance(subscript.slice, ast.Num):
+            slice_ok = True
+
+        if not slice_ok:
             return None, None
 
         # Check .worlds
@@ -280,7 +320,17 @@ class PatternDetectionMixin:
         inner_subscript = node.value
         if not isinstance(inner_subscript, ast.Subscript):
             return None
-        if not isinstance(inner_subscript.slice, ast.Name) or inner_subscript.slice.id != 'player':
+
+        # Accept Name(id='player') or Constant(value=<int>)
+        slice_ok = False
+        if isinstance(inner_subscript.slice, ast.Name) and inner_subscript.slice.id == 'player':
+            slice_ok = True
+        elif isinstance(inner_subscript.slice, ast.Constant) and isinstance(inner_subscript.slice.value, int):
+            slice_ok = True
+        elif isinstance(inner_subscript.slice, ast.Num):
+            slice_ok = True
+
+        if not slice_ok:
             return None
 
         # Check attribute: .prog_items

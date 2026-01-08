@@ -7,7 +7,7 @@ for that file.
 
 import json
 import re
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Optional, Set
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
@@ -43,6 +43,38 @@ def is_valid_identifier(name: str) -> bool:
     """
     import keyword
     return name.isidentifier() and not keyword.iskeyword(name)
+
+
+def _format_dict_repr(value: Any) -> str:
+    """Format a value for use in Python source code, converting numeric string keys to integers.
+
+    JSON always uses string keys, but if the original Python code used integer keys,
+    they would be serialized as strings. This function converts numeric string keys
+    back to integers so that lookups like dict[1] work (instead of requiring dict["1"]).
+
+    Args:
+        value: The value to format (handles dicts, lists, and primitives)
+
+    Returns:
+        A string representation suitable for Python source code
+    """
+    if isinstance(value, dict):
+        items = []
+        for k, v in value.items():
+            # Convert numeric string keys to integers
+            if isinstance(k, str) and k.lstrip('-').isdigit():
+                key_repr = k  # Use as integer literal (no quotes)
+            else:
+                key_repr = repr(k)
+            # Recursively format the value
+            val_repr = _format_dict_repr(v)
+            items.append(f'{key_repr}: {val_repr}')
+        return '{' + ', '.join(items) + '}'
+    elif isinstance(value, list):
+        items = [_format_dict_repr(v) for v in value]
+        return '[' + ', '.join(items) + ']'
+    else:
+        return repr(value)
 
 
 def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = None, visited_helpers: Set[str] = None) -> List[str]:
@@ -115,6 +147,15 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
         elif isinstance(region, str):
             if region not in dependencies:
                 dependencies.append(region)
+
+    # Check for Rule Builder CanReachRegion rules
+    # Rule Builder format: {"rule": "CanReachRegion", "args": {"region_name": "RegionName"}}
+    rb_rule = rule.get('rule', '')
+    if rb_rule == 'CanReachRegion':
+        args = rule.get('args', {})
+        region_name = args.get('region_name', '')
+        if isinstance(region_name, str) and region_name and region_name not in dependencies:
+            dependencies.append(region_name)
 
     # Check for helper calls and resolve them
     # Handle both formats:
@@ -218,7 +259,12 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # AST_function_call is included because it may reference 'location' or 'entrance'
     # variables that are substituted at generation time via set_context(), and
     # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call'):
+    # WorldAttribute and OptionValue need lambda because they generate
+    # state.multiworld.worlds[player].attr/options.xxx which requires 'state'
+    # to be defined (only available in lambda context).
+    # AST_capability needs lambda because it calls helper functions with runtime arguments
+    # from options/world attributes.
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'OptionValue', 'AST_capability'):
         return True
 
     # Recursively check all dict and list values
@@ -685,7 +731,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         hint = {hint_lookup}
         region = Region(region_name, player, multiworld, hint)
         regions[region_name] = region
-        multiworld.regions.append(region)
 
     # Mark dynamically added regions (these won't appear in sphere log comparisons)
     try:
@@ -718,6 +763,13 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
 {entrances_content}
+
+    # Add all regions to multiworld
+    # Regions must be added even if they have no locations or exits, because:
+    # 1. They may be targets of entrances from other regions
+    # 2. They may be referenced by CanReachRegion() rules
+    for region in regions.values():
+        multiworld.regions.append(region)
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:
@@ -769,6 +821,16 @@ def generate_rules_py(data: ExtractedData) -> str:
     )
     helper_generator.set_known_helpers(set(data.helpers.keys()))
     helper_generator.set_placements(data.original_placements)
+
+    # Build helper data dict with param_mappings for AST_capability resolution
+    helper_data_dict = {}
+    for helper_name, helper_obj in data.helpers.items():
+        helper_data_dict[helper_name] = {
+            'params': helper_obj.params,
+            'param_mappings': helper_obj.param_mappings,
+            'defaults': helper_obj.defaults,
+        }
+    helper_generator.set_helper_data(helper_data_dict)
 
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)
@@ -1081,12 +1143,18 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
         option_def: The option definition dict with type, default, etc.
 
     Returns:
-        Tuple of (class_code, field_code, import_name) or (None, None, None) if unsupported.
+        Tuple of (class_code, field_code, import_name, name_lookup_override) or
+        (None, None, None, None) if unsupported.
+        name_lookup_override is optional code to set the name_lookup after class definition.
     """
     class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
+    # Only include display_name in generated code if it was in the original option definition
+    has_display_name = 'display_name' in option_def
     display_name = option_def.get('display_name', ' '.join(word.capitalize() for word in setting_name.split('_')))
     # Escape double quotes in display names to generate valid Python code
     display_name_escaped = display_name.replace('"', '\\"')
+    # Create the display_name line only if it was in the original
+    display_name_line = f'    display_name = "{display_name_escaped}"\n' if has_display_name else ''
     option_type = option_def.get('type')
     default = option_def.get('default', 0)
 
@@ -1105,43 +1173,75 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
             class_code = f'''
 class {class_name}(TextChoice):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-
+{display_name_line}
     default = {default_repr}
 '''
-            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice', None
 
         # Check if all keys are numeric (convertible to int)
         # Some games use TextChoice with string keys (e.g., "random-2p", "M", "MA")
         try:
             sorted_items = sorted(name_lookup.items(), key=lambda x: int(x[0]))
+            has_numeric_keys = True
         except ValueError:
             # Non-numeric keys indicate a TextChoice or similar complex option
-            # Fall back to TextChoice for these cases
+            has_numeric_keys = False
+
+        if not has_numeric_keys:
+            # Non-numeric keys - generate TextChoice but preserve name_lookup
+            # Build the name_lookup dict representation
+            name_lookup_items = []
+            for key, value in sorted(name_lookup.items()):
+                name_lookup_items.append(f'        {repr(key)}: {repr(value)}')
+            name_lookup_str = ',\n'.join(name_lookup_items)
+
             class_code = f'''
 class {class_name}(TextChoice):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-
+{display_name_line}
     default = {default_repr}
-'''
-            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
 
+# Preserve original name_lookup for export
+{class_name}.name_lookup = {{
+{name_lookup_str}
+}}
+'''
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice', None
+
+        # Numeric keys - generate normal Choice class
         option_lines = []
+        needs_name_lookup_override = False
         for value_str, name in sorted_items:
             # Sanitize the option name to be a valid Python identifier
             safe_name = sanitize_option_name(name)
+            if safe_name != name:
+                needs_name_lookup_override = True
             option_lines.append(f'    option_{safe_name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-{options_code}
+{display_name_line}{options_code}
     default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Choice'
+
+        # If any option names were sanitized, we need to override name_lookup
+        # to preserve the original names (e.g., "random-middle" instead of "random_middle")
+        name_lookup_override = None
+        if needs_name_lookup_override:
+            name_lookup_items = []
+            for value_str, name in sorted_items:
+                name_lookup_items.append(f'    {value_str}: {repr(name)}')
+            name_lookup_str = ',\n'.join(name_lookup_items)
+            name_lookup_override = f'''
+# Preserve original option names in name_lookup (before sanitization)
+{class_name}.name_lookup = {{
+{name_lookup_str}
+}}
+'''
+
+        return class_code, f'    {setting_name}: {class_name}', 'Choice', name_lookup_override
 
     elif option_type == 'range':
         range_start = option_def.get('range_start', 0)
@@ -1164,31 +1264,28 @@ class {class_name}(Choice):
             class_code = f'''
 class {class_name}(NamedRange):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-    range_start = {range_start}
+{display_name_line}    range_start = {range_start}
     range_end = {range_end}
     default = {default_repr}
     special_range_names = {{"default": {default_repr}}}
 '''
-            return class_code, f'    {setting_name}: {class_name}', 'NamedRange'
+            return class_code, f'    {setting_name}: {class_name}', 'NamedRange', None
         else:
             class_code = f'''
 class {class_name}(Range):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-    range_start = {range_start}
+{display_name_line}    range_start = {range_start}
     range_end = {range_end}
     default = {default_repr}
 '''
-            return class_code, f'    {setting_name}: {class_name}', 'Range'
+            return class_code, f'    {setting_name}: {class_name}', 'Range', None
 
     elif option_type == 'default_on_toggle':
         class_code = f'''
 class {class_name}(DefaultOnToggle):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-'''
-        return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
+{display_name_line}'''
+        return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle', None
 
     elif option_type == 'toggle':
         # Get the default value, preserving boolean type if present
@@ -1201,10 +1298,9 @@ class {class_name}(DefaultOnToggle):
         class_code = f'''
 class {class_name}(Toggle):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-    default = {default_repr}
+{display_name_line}    default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Toggle'
+        return class_code, f'    {setting_name}: {class_name}', 'Toggle', None
 
     elif option_type == 'removed':
         # Deprecated/removed options - use Removed class
@@ -1219,7 +1315,7 @@ class {class_name}(Removed):
     """Deprecated option for {display_name}."""
     default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Removed'
+        return class_code, f'    {setting_name}: {class_name}', 'Removed', None
 
     elif option_type == 'freetext':
         # Free text options (like entrance_shuffle_seed)
@@ -1231,10 +1327,9 @@ class {class_name}(Removed):
         class_code = f'''
 class {class_name}(FreeText):
     """Option for {display_name}."""
-    display_name = "{display_name_escaped}"
-    default = {default_repr}
+{display_name_line}    default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'FreeText'
+        return class_code, f'    {setting_name}: {class_name}', 'FreeText', None
 
     elif option_type == 'plando_connections':
         # Plando connections - inherits from PlandoConnections
@@ -1246,7 +1341,7 @@ class {class_name}(PlandoConnections):
     entrances = frozenset()
     exits = frozenset()
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections'
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoConnections', None
 
     elif option_type == 'plando_texts':
         # Plando texts - inherits from PlandoTexts
@@ -1254,7 +1349,7 @@ class {class_name}(PlandoConnections):
 class {class_name}(PlandoTexts):
     """Plando texts for {display_name}."""
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'PlandoTexts'
+        return class_code, f'    {setting_name}: {class_name}', 'PlandoTexts', None
 
     elif option_type == 'start_inventory_pool':
         # Start inventory from pool option - inherits from StartInventoryPool
@@ -1262,9 +1357,9 @@ class {class_name}(PlandoTexts):
 class {class_name}(StartInventoryPool):
     """Start inventory from pool for {display_name}."""
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'StartInventoryPool'
+        return class_code, f'    {setting_name}: {class_name}', 'StartInventoryPool', None
 
-    return None, None, None
+    return None, None, None, None
 
 
 def generate_options_py(data: ExtractedData) -> str:
@@ -1326,19 +1421,23 @@ class Accessibility(Choice):
         skip_options.add('accessibility')
 
     # Generate option classes from definitions
+    name_lookup_overrides = []
     for setting_name in sorted(option_definitions.keys()):
         if setting_name in skip_options:
             continue
 
         option_def = option_definitions[setting_name]
-        class_code, field_code, import_name = _generate_option_class_from_definition(setting_name, option_def)
+        class_code, field_code, import_name, name_lookup_override = _generate_option_class_from_definition(setting_name, option_def)
         if class_code:
             option_classes.append(class_code)
             option_fields.append(field_code)
             imports_needed.add(import_name)
+            if name_lookup_override:
+                name_lookup_overrides.append(name_lookup_override)
 
     imports_str = ', '.join(sorted(imports_needed))
     option_classes_str = ''.join(option_classes)
+    name_lookup_overrides_str = ''.join(name_lookup_overrides)
     option_fields_str = ('\n' + '\n'.join(option_fields)) if option_fields else ''
 
     return f'''"""
@@ -1369,7 +1468,7 @@ class UseCanonicalOptions(Toggle):
     """
     display_name = "Use Canonical Options"
     default = True
-{option_classes_str}
+{option_classes_str}{name_lookup_overrides_str}
 
 @dataclass
 class {class_name}Options(PerGameCommonOptions):
@@ -1379,22 +1478,22 @@ class {class_name}Options(PerGameCommonOptions):
 '''
 
 
-def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
+def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
     """Generate __init__.py (main world file) content.
 
     Args:
         data: Extracted game data
-        canonical_seed1: If True, include seed=1 canonical placement behavior
+        canonical_seed: If set, include canonical placement behavior for this seed number
     """
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
     world_class = data.metadata.world_class_name
 
-    # Build canonical placements dict (only needed if canonical_seed1 is enabled)
+    # Build canonical placements dict (only needed if canonical_seed is enabled)
     # Use canonical_placements if available, otherwise fall back to original_placements
     placement_entries = []
     canonical_class_attr_entries = []  # For the class attribute (exporter to read)
-    if canonical_seed1:
+    if canonical_seed is not None:
         # Prefer canonical_placements (from world class attribute) over original_placements
         placements_source = data.canonical_placements if data.canonical_placements else data.original_placements
         for loc_name, item_name in placements_source.items():
@@ -1440,13 +1539,16 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
             lambda state: state.has("{victory_item}", self.player)
 '''
 
-    # Generate canonical seed1 sections only if enabled
-    if canonical_seed1:
-        generate_early_section = '''
+    # Generate canonical seed sections only if enabled
+    if canonical_seed is not None:
+        generate_early_section = f'''
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = {canonical_seed}
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -1454,7 +1556,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module
@@ -1483,15 +1585,16 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
             # Handle different option types
             if isinstance(option_value, bool):
-                # Toggle options
-                option_obj.value = int(option_value)
+                # Toggle options - preserve as boolean to match original world behavior
+                # (Original worlds set value = False directly, not value = 0)
+                option_obj.value = option_value
             elif isinstance(option_value, int):
                 # Range or Choice options with numeric value
                 option_obj.value = option_value
             elif isinstance(option_value, str):
                 # Choice options with string value - need to look up the value
                 # Try to find the corresponding option_* attribute
-                option_attr_name = f"option_{option_value}"
+                option_attr_name = f"option_{{option_value}}"
                 if hasattr(option_obj.__class__, option_attr_name):
                     option_obj.value = getattr(option_obj.__class__, option_attr_name)
                 else:
@@ -1569,9 +1672,16 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     locked_content = '\n'.join(locked_entries)
 
     # Build starting_items dictionary (preserve original order)
+    # Filter out items that are accumulator targets - these should start at 0 and accumulate
+    # during gameplay, not be precollected (accumulators are tracked via collect/remove methods)
+    accumulator_targets = set()
+    if data.accumulator_rules:
+        for rule in data.accumulator_rules:
+            accumulator_targets.add(rule['target'])
+
     starting_entries = []
     for item_name, count in data.starting_items.items():
-        if count > 0:
+        if count > 0 and item_name not in accumulator_targets:
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
             starting_entries.append(f'    "{item_escaped}": {count},')
 
@@ -1703,7 +1813,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 '''
 
     # Generate canonical_placements class attribute (for exporter to read)
-    if canonical_seed1 and canonical_class_attr_content:
+    if canonical_seed is not None and canonical_class_attr_content:
         canonical_placements_section = f'''
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -1746,8 +1856,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                         init_attrs.append(f'        self.{attr_name} = types.SimpleNamespace(**{{{dict_items}}})')
                 else:
                     # Keep as dict for integer keys or nested dicts
-                    dict_items = ', '.join(f'{k!r}: {v!r}' for k, v in attr_value.items())
-                    init_attrs.append(f'        self.{attr_name} = {{{dict_items}}}')
+                    # Use _format_dict_repr to convert numeric string keys to integers
+                    init_attrs.append(f'        self.{attr_name} = {_format_dict_repr(attr_value)}')
             elif isinstance(attr_value, list):
                 # Special handling for shops - convert dicts to ShopWrapper objects
                 if attr_name == 'shops' and attr_value and isinstance(attr_value[0], dict):
@@ -1966,8 +2076,9 @@ class _ShopWrapper:
                 value_escaped = value.replace('\\', '\\\\').replace('"', '\\"')
                 slot_data_entries.append(f'            "{key_escaped}": "{value_escaped}",')
             else:
-                # For complex types, try to represent as string
-                slot_data_entries.append(f'            "{key_escaped}": {repr(value)},')
+                # For complex types (dicts, lists), use _format_dict_repr to handle
+                # numeric string keys from JSON (convert back to integers)
+                slot_data_entries.append(f'            "{key_escaped}": {_format_dict_repr(value)},')
         slot_data_content = '\n'.join(slot_data_entries)
         fill_slot_data_section = f'''
     def fill_slot_data(self) -> Dict[str, Any]:
@@ -1986,7 +2097,7 @@ class _ShopWrapper:
     # Build optional imports
     types_import = 'import types\n' if needs_types_import else ''
     # Add json and os imports for canonical options loading
-    canonical_imports = 'import json\nimport os\n' if canonical_seed1 else ''
+    canonical_imports = 'import json\nimport os\n' if canonical_seed is not None else ''
 
     # Check if any items have hint_text for create_item method
     has_hint_text = any(item.hint_text for item in data.items.values())

@@ -116,68 +116,71 @@ class WorldDataMixin:
 
         # Export all game-specific options from the world
         # This allows the world generator to recreate fill_slot_data behavior
+        # Also export option definitions for world generator to recreate proper Option classes
+        #
+        # Optimization: Import Option types once and iterate through options once
+        # (previously this was two separate loops with imports inside each iteration)
         if hasattr(world, 'options') and world.options:
+            # Import all Option types once at the start (not per-iteration)
+            from Options import (Choice, Range, Toggle, DefaultOnToggle, OptionSet, OptionList, OptionDict,
+                                 FreeText, Removed, PlandoConnections, PlandoTexts, StartInventoryPool)
+
+            # Helper to normalize Choice keys (handles buggy tuple values)
+            def normalize_key(k):
+                if isinstance(k, tuple) and len(k) == 1:
+                    return str(k[0])
+                return str(k)
+
             options_dict = {}
-            for option_name in dir(world.options):
-                if option_name.startswith('_'):
-                    continue
+            option_definitions = {}
+
+            # Cache the list of option names (avoid calling dir() twice)
+            option_names = [name for name in dir(world.options) if not name.startswith('_')]
+
+            for option_name in option_names:
                 try:
                     option = getattr(world.options, option_name)
                     # Check if it's an Option object with a value attribute
-                    if hasattr(option, 'value'):
-                        from Options import Toggle, Choice
-                        value = option.value
-                        # Convert Toggle int values (0/1) to actual booleans
-                        if isinstance(option, Toggle):
-                            value = bool(value)
-                        # For Choice options, check EXPORT_CHOICE_OPTIONS_AS_NUMERIC flag
-                        elif isinstance(option, Choice):
-                            if self.EXPORT_CHOICE_OPTIONS_AS_NUMERIC:
-                                # Export as integer for proper ordered comparisons
-                                value = option.value
-                            else:
-                                # Export as string key for equality comparisons
-                                value = option.current_key
-                        # Only export simple types (int, bool, str, list, dict)
-                        if isinstance(value, (int, bool, str, list, dict)):
-                            options_dict[option_name] = value
-                        elif isinstance(value, set):
-                            options_dict[option_name] = sorted(value)
-                except Exception:
-                    pass
-            if options_dict:
-                world_data['options'] = options_dict
-
-        # Export option definitions for world generator to recreate proper Option classes
-        # This captures the option type (Choice, Range, Toggle, etc.) and metadata
-        if hasattr(world, 'options') and world.options:
-            option_definitions = {}
-            for option_name in dir(world.options):
-                if option_name.startswith('_'):
-                    continue
-                try:
-                    option = getattr(world.options, option_name)
-                    # Check if it's an Option object
                     if not hasattr(option, 'value'):
                         continue
 
                     option_class = type(option)
-                    option_def = {}
 
-                    # Determine option type by checking class hierarchy
-                    # Import here to avoid circular imports
-                    from Options import (Choice, Range, Toggle, DefaultOnToggle, OptionSet, OptionList, OptionDict,
-                                         FreeText, Removed, PlandoConnections, PlandoTexts, StartInventoryPool)
+                    # === Extract option VALUE ===
+                    value = option.value
+                    # Convert Toggle int values (0/1) to actual booleans
+                    if isinstance(option, Toggle):
+                        value = bool(value)
+                    # For Choice options, check EXPORT_CHOICE_OPTIONS_AS_NUMERIC flag
+                    elif isinstance(option, Choice):
+                        if self.EXPORT_CHOICE_OPTIONS_AS_NUMERIC:
+                            # Export as integer for proper ordered comparisons
+                            value = option.value
+                        else:
+                            # Export as string key for equality comparisons
+                            value = option.current_key
+                    # For FreeText options with float values (like FloatRangeText),
+                    # convert to string to match FreeText's expected value type
+                    elif isinstance(option, FreeText) and isinstance(value, float):
+                        value = str(value)
+
+                    # Only export simple types (int, float, bool, str, list, dict)
+                    if isinstance(value, (int, float, bool, str, list, dict)):
+                        options_dict[option_name] = value
+                    elif isinstance(value, set):
+                        options_dict[option_name] = sorted(value)
+
+                    # === Extract option DEFINITION ===
+                    option_def = {}
 
                     # Check for specific subclasses BEFORE checking their parent classes
                     # (StartInventoryPool inherits from OptionDict, so must be checked first)
                     if isinstance(option, StartInventoryPool):
-                        # Start inventory from pool option
                         option_def['type'] = 'start_inventory_pool'
                         option_def['default'] = {}
-                    elif isinstance(option, OptionSet) or isinstance(option, OptionList) or isinstance(option, OptionDict):
-                        # Skip complex collection options for now
-                        continue
+                    elif isinstance(option, (OptionSet, OptionList, OptionDict)):
+                        # Skip complex collection options for definitions
+                        pass
                     elif isinstance(option, Range) and not isinstance(option, Choice):
                         option_def['type'] = 'range'
                         option_def['range_start'] = option_class.range_start
@@ -191,42 +194,32 @@ class WorldDataMixin:
                         option_def['default'] = option_class.default
                     elif isinstance(option, Choice):
                         option_def['type'] = 'choice'
-                        # Export name_lookup which maps value -> name
-                        # Handle buggy option definitions where values are tuples like (1,) instead of 1
-                        def normalize_key(k):
-                            if isinstance(k, tuple) and len(k) == 1:
-                                return str(k[0])
-                            return str(k)
                         option_def['name_lookup'] = {normalize_key(k): v for k, v in option_class.name_lookup.items()}
                         option_def['default'] = option_class.default
                     elif isinstance(option, Removed):
-                        # Deprecated/removed options - export so WorldGen can recreate them
                         option_def['type'] = 'removed'
                         option_def['default'] = option_class.default if hasattr(option_class, 'default') else ''
                     elif isinstance(option, FreeText):
-                        # Free text options (like entrance_shuffle_seed)
                         option_def['type'] = 'freetext'
                         option_def['default'] = option_class.default if hasattr(option_class, 'default') else ''
                     elif isinstance(option, PlandoConnections):
-                        # Plando connections - skip value but export definition
                         option_def['type'] = 'plando_connections'
                         option_def['default'] = []
                     elif isinstance(option, PlandoTexts):
-                        # Plando texts - skip value but export definition
                         option_def['type'] = 'plando_texts'
                         option_def['default'] = []
-                    else:
-                        # Unknown option type, skip
-                        continue
 
-                    # Add display_name if available
-                    if hasattr(option_class, 'display_name') and option_class.display_name:
-                        option_def['display_name'] = option_class.display_name
+                    # Add display_name and store definition if we have one
+                    if option_def:
+                        if hasattr(option_class, 'display_name') and option_class.display_name:
+                            option_def['display_name'] = option_class.display_name
+                        option_definitions[option_name] = option_def
 
-                    option_definitions[option_name] = option_def
                 except Exception as e:
-                    logger.debug(f"Failed to export option definition for '{option_name}': {e}")
+                    logger.debug(f"Failed to export option '{option_name}': {e}")
 
+            if options_dict:
+                world_data['options'] = options_dict
             if option_definitions:
                 world_data['option_definitions'] = option_definitions
 

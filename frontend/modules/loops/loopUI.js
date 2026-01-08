@@ -659,7 +659,7 @@ export class LoopUI {
     
     // Update actions completed count
     if (this.actionsCompletedElement) {
-      const completedCount = loopState.actionCompleted?.size || 0;
+      const completedCount = loopState.actionQueueManager?.actionCompleted?.size || 0;
       this.actionsCompletedElement.textContent = completedCount;
     }
     

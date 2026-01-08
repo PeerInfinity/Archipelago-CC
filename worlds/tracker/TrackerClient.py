@@ -1274,7 +1274,10 @@ class TrackerGameContext(CommonContext):
             self._log_debug_message(f"recv_{cmd}", {"cmd": cmd, "args": log_args})
 
         try:
-            if cmd == 'Connected':
+            if cmd == 'RoomInfo':
+                # Capture seed_name for auto-discovery of rules JSON
+                self.seed_name = args.get('seed_name')
+            elif cmd == 'Connected':
                 self.game = args["slot_info"][str(args["slot"])][1]
                 slot_name = args["slot_info"][str(args["slot"])][0]
                 self.tracker_core.set_slot_params(self.game,self.slot,slot_name,self.team)
@@ -1329,7 +1332,13 @@ class TrackerGameContext(CommonContext):
                     self.updateTracker()
                 else:
                     asyncio.create_task(wait_for_items(self),name="UT Delay function") #if we don't get new items, delay for a bit first
-                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically 
+                self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically
+
+                # Auto-discover rules JSON for explain support
+                if self.seed_name:
+                    self.tracker_core.set_seed_name(self.seed_name)
+                    self.tracker_core.auto_discover_rules_json()
+
             elif cmd == 'RoomUpdate':
                 if not (self.items_handling & 0b010):
                     self.scout_checked_locations()
@@ -1769,7 +1778,12 @@ def explain(ctx: TrackerGameContext, dest_name: str):
         elif location.access_rule is Location.access_rule:
             logger.info("Location has a default access rule")
         else:
-            logger.info("Location doesn't have a rule that supports explanation")
+            # Try worldgen fallback for explain support
+            wg_explanation = ctx.tracker_core.explain_location_rule(dest_name, state)
+            if wg_explanation:
+                ctx.ui.print_json(wg_explanation)
+            else:
+                logger.info("Location doesn't have a rule that supports explanation")
         parent_region = location.parent_region
     elif dest_name in ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id]:
         parent_region = ctx.tracker_core.multiworld.get_region(dest_name,ctx.tracker_core.player_id)

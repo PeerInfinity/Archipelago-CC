@@ -1363,10 +1363,13 @@ class CallVisitorMixin:
             # We evaluate to_bool() at analysis time since it only depends on settings, not game state.
             elif method_name == 'to_bool':
                 logging.debug(f"Processing potential option to_bool call")
-                # Check if the object is a setting_value (options access pattern)
+                # Check if the object is a setting_value or option_value (options access pattern)
+                # Note: expression_visitors.py creates 'option_value' type, but older code may use 'setting_value'
                 func_object = func_info.get('object', {})
-                if func_object.get('type') == 'setting_value':
-                    setting_name = func_object.get('setting')
+                func_obj_type = func_object.get('type')
+                if func_obj_type in ('setting_value', 'option_value'):
+                    # Handle both key names: 'setting' (legacy) and 'option' (current)
+                    setting_name = func_object.get('setting') or func_object.get('option')
                     logging.debug(f"to_bool called on setting: {setting_name}")
 
                     # Try to get the actual option object and call to_bool()

@@ -661,6 +661,21 @@ class RuleCodeGenerator:
                 if rb_rule == 'AST_function_call':
                     return self._convert_ast_function_call(rule)
 
+                # Check if this is an AST_capability rule (capability check converted from can_X helpers)
+                # AST_capability with capability "defeat_enough_rbms" -> can_defeat_enough_rbms(state, player)
+                if rb_rule == 'AST_capability':
+                    args = rule.get('args', {})
+                    capability = args.get('capability', '')
+                    if capability:
+                        helper_name = f'can_{capability}'
+                        # Check if this helper exists in known_helpers
+                        if helper_name in self.known_helpers:
+                            self.required_imports.add('HelperCall')
+                            func_name = self.get_function_name(helper_name)
+                            # Generate a HelperCall for the helper function
+                            return f'HelperCall({func_name})'
+                    # Unknown capability - fall through to True_()
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
@@ -960,12 +975,11 @@ class RuleCodeGenerator:
             return self._convert_setting_value(setting_rule)
 
         if rb_rule == 'OptionValue':
-            # Convert Rule Builder format OptionValue
-            option_rule = {
-                'type': 'option_value',
-                'option': args.get('option', '')
-            }
-            return self._expr_option_value(option_rule)
+            # Convert Rule Builder format OptionValue to OptionValue Rule
+            # This allows runtime evaluation of options in set_rules context
+            option_name = args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         if rb_rule == 'WorldAttribute':
             # Convert Rule Builder format WorldAttribute
@@ -1953,17 +1967,10 @@ class RuleCodeGenerator:
             return '0'
 
         if rb_rule == 'OptionValue':
-            # Handle OptionValue in Compare operand - preserve numeric value
-            option = rb_args.get('option', '')
-            if option in self.settings:
-                value = self.settings[option]
-                if isinstance(value, (int, float)):
-                    return repr(value)
-                if isinstance(value, bool):
-                    self.required_imports.add('True_' if value else 'False_')
-                    return 'True_()' if value else 'False_()'
-                return repr(value)
-            return '0'
+            # Handle OptionValue in Compare operand - use OptionValue rule for runtime evaluation
+            option_name = rb_args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         if rb_rule == 'WorldAttribute':
             # Handle WorldAttribute in Compare operand - preserve value
@@ -2116,12 +2123,9 @@ class RuleCodeGenerator:
         # Handle Rule Builder format OptionValue in arithmetic operand
         if rb_rule == 'OptionValue':
             rb_args = operand.get('args', {})
-            option = rb_args.get('option', '')
-            if option in self.settings:
-                value = self.settings[option]
-                if isinstance(value, (int, float)):
-                    return repr(value)
-            return '0'
+            option_name = rb_args.get('option', '')
+            self.required_imports.add('OptionValue')
+            return f"OptionValue('{option_name}')"
 
         # Handle Rule Builder format WorldAttribute in arithmetic operand
         if rb_rule == 'WorldAttribute':
@@ -2273,6 +2277,49 @@ class RuleCodeGenerator:
         # Setting not found - return False as safe default
         self.required_imports.add('False_')
         return 'False_()'
+
+    def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access a world attribute at runtime.
+
+        World attributes are properties on the world object that are set
+        during game generation. Examples include logic settings like
+        'logic_obscure_1' in The Wind Waker.
+
+        Always generates: state.multiworld.worlds[player].<name>
+        This pattern is recognized by the exporter's pattern detection.
+        """
+        attribute = expr.get('attribute', '')
+        base_path = f'state.multiworld.worlds[player].{attribute}'
+
+        # Handle indexed access (e.g., required_medallions[0])
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
+
+    def _expr_option_value(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access an option at runtime.
+
+        Options are accessed via the world's options attribute at runtime.
+        This generates: state.multiworld.worlds[player].options.<name>
+        This pattern is recognized by the exporter's _is_world_options_pattern().
+        """
+        option = expr.get('option', '')
+        base_path = f'state.multiworld.worlds[player].options.{option}'
+
+        # Handle indexed access (not common for options, but supported)
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
 
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
@@ -2440,7 +2487,7 @@ class RuleCodeGenerator:
             conditions = test.get('conditions', [])
             for cond in conditions:
                 if cond.get('type') == 'not':
-                    inner = cond.get('condition', {})
+                    inner = cond.get('condition') or cond.get('operand', {})
                     if inner.get('type') == 'name' and inner.get('name') in local_vars:
                         return True
                 elif cond.get('type') == 'item_check':
@@ -2448,7 +2495,7 @@ class RuleCodeGenerator:
             return False
 
         if test_type == 'not':
-            inner = test.get('condition', {})
+            inner = test.get('condition') or test.get('operand', {})
             if inner.get('type') == 'name' and inner.get('name') in local_vars:
                 return True
 
@@ -2472,7 +2519,7 @@ class RuleCodeGenerator:
             conditions = test.get('conditions', [])
             for cond in conditions:
                 if cond.get('type') == 'not':
-                    inner = cond.get('condition', {})
+                    inner = cond.get('condition') or cond.get('operand', {})
                     if inner.get('type') == 'name':
                         var_name = inner.get('name')
                         var_val = local_vars.get(var_name, 0)
@@ -2483,7 +2530,7 @@ class RuleCodeGenerator:
             return False
 
         if test_type == 'not':
-            inner = test.get('condition', {})
+            inner = test.get('condition') or test.get('operand', {})
             if inner.get('type') == 'name':
                 var_name = inner.get('name')
                 var_val = local_vars.get(var_name, 0)
@@ -2895,7 +2942,7 @@ class RuleCodeGenerator:
             return False if all_false else None
 
         if test_type == 'not':
-            inner = self._try_evaluate_if_test_constant(test.get('condition', {}), var_expressions)
+            inner = self._try_evaluate_if_test_constant(test.get('condition') or test.get('operand', {}), var_expressions)
             if inner is None:
                 return None
             return not inner
@@ -3194,7 +3241,8 @@ class RuleCodeGenerator:
 
         # Handle not - convert to Not()
         if expr_type == 'not':
-            condition = expr.get('condition', {})
+            # Try 'condition' first, then 'operand' for compatibility with different export formats
+            condition = expr.get('condition') or expr.get('operand', {})
             cond_expr = self._expr_to_rule_builder(condition, var_expressions)
             if cond_expr is None:
                 return None
@@ -3986,7 +4034,17 @@ class RuleCodeGenerator:
             # Option-filtered rule - just return the if_true branch
             return self._convert_rule(if_true)
 
-        test_code = self._convert_rule(test)
+        # Check if test is an OptionValue - generate OptionValue rule for runtime evaluation
+        test_rb_rule = test.get('rule', '') if isinstance(test, dict) else ''
+        test_type = test.get('type', '') if isinstance(test, dict) else ''
+        if test_rb_rule == 'OptionValue' or test_type == 'option_value':
+            # Get the option name and generate OptionValue rule
+            test_args = test.get('args', {}) if isinstance(test, dict) else {}
+            option_name = test_args.get('option', '') or test.get('option', '')
+            self.required_imports.add('OptionValue')
+            test_code = f"OptionValue('{option_name}')"
+        else:
+            test_code = self._convert_rule(test)
         if_true_code = self._convert_rule(if_true)
         if_false_code = self._convert_rule(if_false)
 
@@ -4057,6 +4115,7 @@ class HelperCodeGenerator:
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
+        self.helper_data: Dict[str, Any] = {}  # Full helper data including param_mappings
         self.uses_math: bool = False  # Track if math functions are used
         self.uses_placement_lookup: bool = False  # Track if placement_lookup is used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
@@ -4073,6 +4132,18 @@ class HelperCodeGenerator:
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
         self.known_helpers = helper_names
+
+    def set_helper_data(self, helper_data: Dict[str, Any]) -> None:
+        """Set the full helper data including param_mappings.
+
+        Args:
+            helper_data: Dict mapping helper names to their data, including:
+                - params: List of parameter names
+                - param_mappings: Dict mapping param names to setting/attribute names
+                - body: The helper body
+                - defaults: Default parameter values
+        """
+        self.helper_data = helper_data or {}
 
     def set_placements(self, placements: Dict[str, str]) -> None:
         """Set the placement data for resolving placement_lookup rules."""
@@ -4494,6 +4565,8 @@ class HelperCodeGenerator:
             'generator_expression': self._expr_generator_expression,
             'region_reference': self._expr_region_reference,
             'region_attribute': self._expr_region_attribute,
+            'map': self._expr_map,
+            'lambda': self._expr_lambda,
         }
 
         handler = handlers.get(expr_type)
@@ -4559,6 +4632,16 @@ class HelperCodeGenerator:
                 count = args.get('count', 1)
                 if count == 1:
                     return f"state.has({repr(item_name)}, player)"
+                # Handle dict counts (e.g., OptionValue rules)
+                if isinstance(count, dict):
+                    count_rule = count.get('rule', '')
+                    count_args = count.get('args', {})
+                    if count_rule == 'OptionValue':
+                        option = count_args.get('option', '')
+                        return f"state.has({repr(item_name)}, player, state.multiworld.worlds[player].options.{option}.value)"
+                    # For other complex expressions, use _generate_expression
+                    count_expr = self._generate_expression(count)
+                    return f"state.has({repr(item_name)}, player, {count_expr})"
                 return f"state.has({repr(item_name)}, player, {count})"
 
             # Handle HasAll rules (Rule Builder format)
@@ -4587,6 +4670,19 @@ class HelperCodeGenerator:
                 return 'True'
             if rule_type == 'False_':
                 return 'False'
+
+            # Handle OptionValue rules (Rule Builder format) - preserve as runtime check
+            # This is critical for boss defeat rules that depend on game options like 'swordless'
+            if rule_type == 'OptionValue':
+                args = expr.get('args', {})
+                option = args.get('option', '')
+                return f'state.multiworld.worlds[player].options.{option}'
+
+            # Handle SettingValue rules (Rule Builder format - legacy)
+            if rule_type == 'SettingValue':
+                args = expr.get('args', {})
+                setting = args.get('setting', '')
+                return self._expr_setting_value({'setting': setting})
 
             # Handle Tuple rules (Rule Builder format)
             if rule_type == 'Tuple':
@@ -4682,6 +4778,39 @@ class HelperCodeGenerator:
                     setting_expr['index'] = index
                 return self._expr_setting_value(setting_expr)
 
+            # Handle OptionValue (Rule Builder format for option_value)
+            if rule_type == 'OptionValue':
+                args = expr.get('args', {})
+                option = args.get('option', '')
+                index = args.get('index')
+                # Build an option_value dict and use the existing handler
+                option_expr = {'option': option}
+                if index is not None:
+                    option_expr['index'] = index
+                return self._expr_option_value(option_expr)
+
+            # Handle WorldAttribute (Rule Builder format for world_attribute)
+            if rule_type == 'WorldAttribute':
+                args = expr.get('args', {})
+                attribute = args.get('attribute', '')
+                index = args.get('index')
+                # Build a world_attribute dict and use the existing handler
+                attr_expr = {'attribute': attribute}
+                if index is not None:
+                    attr_expr['index'] = index
+                return self._expr_world_attribute(attr_expr)
+
+            # Handle Arithmetic rules (Rule Builder format for binary operations)
+            if rule_type == 'Arithmetic':
+                args = expr.get('args', {})
+                left = args.get('left', 0)
+                op = args.get('op', '+')
+                right = args.get('right', 0)
+                # Recursively generate expressions for operands
+                left_expr = self._generate_expression(left) if isinstance(left, dict) else str(left)
+                right_expr = self._generate_expression(right) if isinstance(right, dict) else str(right)
+                return f"({left_expr} {op} {right_expr})"
+
             # Handle AST_placement_lookup (Rule Builder format for placement_lookup)
             if rule_type == 'AST_placement_lookup':
                 args = expr.get('args', {})
@@ -4721,6 +4850,71 @@ class HelperCodeGenerator:
 
                     return f'{func_expr}({", ".join(arg_exprs)})'
                 return 'True'
+
+            # Handle AST_capability (converts to helper function call)
+            # Original: {"rule": "AST_capability", "args": {"capability": "defeat_enough_rbms", ...}}
+            # Converts to: can_defeat_enough_rbms(state, player, ...)
+            if rule_type == 'AST_capability':
+                args = expr.get('args', {})
+                capability = args.get('capability', '')
+                if capability:
+                    helper_name = f'can_{capability}'
+                    func_name = self.get_function_name(helper_name)
+
+                    # Get helper data including param_mappings
+                    helper_info = self.helper_data.get(helper_name, {})
+                    params = helper_info.get('params', [])
+                    param_mappings = helper_info.get('param_mappings', {})
+
+                    # Build argument list based on param_mappings
+                    arg_exprs = []
+                    for param in params:
+                        if param in param_mappings:
+                            setting_name = param_mappings[param]
+                            # Check if it's an option or a world attribute
+                            if setting_name in self.option_definitions:
+                                # Option: access via state.multiworld.worlds[player].options.<name>.value
+                                arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
+                            else:
+                                # World attribute: access via state.multiworld.worlds[player].<name>
+                                arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
+                        else:
+                            # No mapping, use None as default
+                            arg_exprs.append('None')
+
+                    if arg_exprs:
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+                    return f'{func_name}(state, player)'
+                return 'True'
+
+            # Handle CanReachRegion rules (Rule Builder format)
+            # This is critical for lambda-based rules that contain region checks
+            if rule_type == 'CanReachRegion':
+                args = expr.get('args', {})
+                region = args.get('region_name', '')
+                if isinstance(region, dict):
+                    # Region name is an expression, generate it
+                    region_expr = self._generate_expression(region)
+                    return f'state.can_reach_region({region_expr}, player)'
+                return f'state.can_reach_region({repr(region)}, player)'
+
+            # Handle CanReachLocation rules (Rule Builder format)
+            if rule_type == 'CanReachLocation':
+                args = expr.get('args', {})
+                location = args.get('location_name', '')
+                if isinstance(location, dict):
+                    location_expr = self._generate_expression(location)
+                    return f'state.can_reach_location({location_expr}, player)'
+                return f'state.can_reach_location({repr(location)}, player)'
+
+            # Handle CanReachEntrance rules (Rule Builder format)
+            if rule_type == 'CanReachEntrance':
+                args = expr.get('args', {})
+                entrance = args.get('entrance_name', '')
+                if isinstance(entrance, dict):
+                    entrance_expr = self._generate_expression(entrance)
+                    return f'state.can_reach({entrance_expr}, "Entrance", player)'
+                return f'state.can_reach({repr(entrance)}, "Entrance", player)'
 
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
@@ -4764,13 +4958,26 @@ class HelperCodeGenerator:
         return base_path
 
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access an option at runtime.
+        """Generate code to access an option or world attribute at runtime.
 
-        Always generates: state.multiworld.worlds[player].options.<name>
-        This pattern is recognized by the exporter's _is_world_options_pattern().
+        If the name is a known option (in option_definitions), generates:
+            state.multiworld.worlds[player].options.<name>
+
+        Otherwise, treats it as a world attribute and generates:
+            state.multiworld.worlds[player].<name>
+
+        This handles cases where the exporter marks world attributes as option_value
+        (e.g., pyramid_keys_unlock in Timespinner).
         """
         option = expr.get('option', '')
-        base_path = f'state.multiworld.worlds[player].options.{option}'
+
+        # Check if this is actually a known option or a world attribute
+        # Some games export world attributes with option_value type incorrectly
+        if option in self.option_definitions:
+            base_path = f'state.multiworld.worlds[player].options.{option}'
+        else:
+            # Not a known option - treat as world attribute
+            base_path = f'state.multiworld.worlds[player].{option}'
 
         # Handle indexed access (not common for options, but supported)
         if 'index' in expr:
@@ -4866,13 +5073,17 @@ class HelperCodeGenerator:
                     val_reprs.append(self._generate_expression({'type': 'constant', 'value': v}))
                 return f"{class_name}({', '.join(val_reprs)})"
 
-            # Handle dict constants - convert string keys that look like integers
+            # Handle dict constants - convert numeric string keys back to integers
+            # JSON always uses string keys, but if the original Python code used integer
+            # keys (e.g., from enums like HatType), they would be serialized as strings.
+            # We need to convert them back to integers so that lookups like dict[1] work
+            # (instead of requiring dict["1"]).
             items = []
             for k, v in value.items():
-                # Try to convert string keys that look like integers
-                try:
-                    key_repr = str(int(k))
-                except (ValueError, TypeError):
+                # Convert numeric string keys to integers
+                if isinstance(k, str) and k.lstrip('-').isdigit():
+                    key_repr = k  # Use the integer directly (no quotes)
+                else:
                     key_repr = repr(k)
                 # Check if dict value is an AST node (has 'type' key) - process as expression
                 if isinstance(v, dict) and 'type' in v:
@@ -5017,15 +5228,51 @@ class HelperCodeGenerator:
         return ' or '.join(parts)
 
     def _expr_not(self, expr: Dict[str, Any]) -> str:
-        """Generate not expression."""
-        inner = expr.get('condition', expr.get('operand', expr.get('value', {})))
+        """Generate not expression.
+
+        Handles both formats:
+        - {"type": "not", "condition": {...}} (condition is truthy)
+        - {"type": "not", "operand": {...}, "condition": null} (operand is truthy)
+        """
+        # Try condition first (if truthy), then operand, then value
+        inner = expr.get('condition') or expr.get('operand') or expr.get('value', {})
         return f"not ({self._generate_expression(inner)})"
 
     def _expr_all_of(self, expr: Dict[str, Any]) -> str:
         """Generate all() expression for AND of conditions.
 
-        Used by SM helpers like wand() that need to AND variadic arguments.
+        Handles two formats:
+        1. Simple conditions list: {"type": "all_of", "conditions": [...]}
+        2. Comprehension style: {"type": "all_of", "element_rule": {...}, "iterator_info": {...}}
+
+        Used by SM helpers like wand() that need to AND variadic arguments,
+        and by helpers that use all() comprehensions.
         """
+        # Check for comprehension style (iterator_info present)
+        iterator_info = expr.get('iterator_info')
+        if iterator_info:
+            target = iterator_info.get('target', {})
+            iterator = iterator_info.get('iterator', {})
+            condition = iterator_info.get('condition')
+            element_rule = expr.get('element_rule', {'type': 'constant', 'value': True})
+
+            # Generate target variable names
+            target_expr = self._generate_expression(target)
+
+            # Generate iterator expression
+            iterator_expr = self._generate_expression(iterator)
+
+            # Generate element rule expression
+            element_expr = self._generate_expression(element_rule)
+
+            # Generate condition expression if present
+            if condition:
+                condition_expr = self._generate_expression(condition)
+                return f"all({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
+
+            return f"all({element_expr} for {target_expr} in {iterator_expr})"
+
+        # Simple conditions list format
         conditions = expr.get('conditions', [])
         if not conditions:
             return 'True'
@@ -5892,3 +6139,37 @@ class HelperCodeGenerator:
             result = f"[{element} for {target_name} in {iterator} if {cond_expr}]"
 
         return result
+
+    def _expr_map(self, expr: Dict[str, Any]) -> str:
+        """Generate a Python map() call.
+
+        Structure: {"type": "map", "function": <lambda_expr>, "iterable": <expr>}
+
+        This is used for expressions like:
+            map(lambda x: weapons_to_name[x], reqs)
+
+        Which maps elements of an iterable through a function.
+        """
+        function = expr.get('function', {})
+        iterable = expr.get('iterable', {})
+
+        func_expr = self._generate_expression(function)
+        iter_expr = self._generate_expression(iterable)
+
+        return f"map({func_expr}, {iter_expr})"
+
+    def _expr_lambda(self, expr: Dict[str, Any]) -> str:
+        """Generate a Python lambda expression.
+
+        Structure: {"type": "lambda", "params": ["x", ...], "body": <expr>}
+
+        This is used for expressions like:
+            lambda x: weapons_to_name[x]
+        """
+        params = expr.get('params', [])
+        body = expr.get('body', {})
+
+        params_str = ', '.join(params)
+        body_expr = self._generate_expression(body)
+
+        return f"lambda {params_str}: {body_expr}"

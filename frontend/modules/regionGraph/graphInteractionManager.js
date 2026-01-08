@@ -454,16 +454,63 @@ export class GraphInteractionManager {
     this.ui.currentZoomLevel = this.ui.cy.zoom();
     this.ui.locationsVisible = false;
 
+    // Initialize debounce timer for viewport-based location refresh
+    this.viewportRefreshTimer = null;
+
     // Listen to zoom/pan events
     this.ui.cy.on('zoom pan', () => {
       this.updateZoomBasedVisibility();
       this.ui.updateLocationNodeZOrder();
+
+      // Debounced refresh for viewport-filtered locations
+      this.scheduleViewportRefresh();
     });
 
     // Also update z-order when viewport changes
     this.ui.cy.on('viewport', () => {
       this.ui.updateLocationNodeZOrder();
+
+      // Debounced refresh for viewport-filtered locations
+      this.scheduleViewportRefresh();
     });
+  }
+
+  /**
+   * Schedule a debounced refresh of location nodes when viewport changes.
+   * Triggers if locations are visible and viewport-dependent features are enabled
+   * (either onlyShowLocationsInView or maxLocationNodes limit).
+   */
+  scheduleViewportRefresh() {
+    // Only schedule refresh if locations are visible
+    if (!this.ui.locationsVisible) {
+      return;
+    }
+
+    // Check if any viewport-dependent feature is enabled
+    const hasLocationLimit = (this.ui.maxLocationNodes ?? 100) > 0;
+    const hasViewportFilter = this.ui.onlyShowLocationsInView ?? false;
+
+    // Only refresh if a viewport-dependent feature is active
+    if (!hasViewportFilter && !hasLocationLimit) {
+      return;
+    }
+
+    // Clear any existing timer
+    if (this.viewportRefreshTimer) {
+      clearTimeout(this.viewportRefreshTimer);
+    }
+
+    // Get the stabilize delay (default 1000ms)
+    const delay = this.ui.viewportStabilizeDelay ?? 1000;
+
+    // Schedule the refresh
+    this.viewportRefreshTimer = setTimeout(() => {
+      this.viewportRefreshTimer = null;
+      if (this.ui.locationsVisible) {
+        logger.debug('Viewport stabilized, refreshing location nodes');
+        this.ui.refreshLocationNodes();
+      }
+    }, delay);
   }
 
   updateZoomBasedVisibility() {

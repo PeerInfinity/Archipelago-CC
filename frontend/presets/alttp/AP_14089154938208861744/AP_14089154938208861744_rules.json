@@ -6218,30 +6218,10 @@
             "name": "Pyramid Hole",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "option_value",
-                        "option": "open_pyramid"
-                      },
-                      "attr": "to_bool"
-                    },
-                    "_original_ast_type": "function_call"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beat Agahnim 2"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Beat Agahnim 2"
+              }
             }
           },
           {
@@ -22860,6 +22840,9 @@
               }
             }
           ]
+        },
+        "param_mappings": {
+          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {

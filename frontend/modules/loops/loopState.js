@@ -102,6 +102,23 @@ export class LoopState {
   }
 
   /**
+   * Check if a path entry is an initial start position (first entry with no exit used)
+   * @param {Object} entry - Path entry to check
+   * @returns {boolean} True if this is an initial start position
+   */
+  isInitialStartEntry(entry) {
+    if (!entry || entry.type !== 'regionMove' || entry.exitUsed) {
+      return false;
+    }
+    // Check if the region is a start region using playerState API
+    if (this.playerState?.isStartRegion) {
+      return this.playerState.isStartRegion(entry.region);
+    }
+    // Fallback to checking for 'Menu' if playerState not available
+    return entry.region === 'Menu';
+  }
+
+  /**
    * Sets up event listeners for game events
    */
   _setupEventListeners() {
@@ -438,21 +455,21 @@ export class LoopState {
       return;
     }
 
-    // Check if we have any real actions to process (not just the initial Menu)
+    // Check if we have any real actions to process (not just the initial start region)
     let firstActionIndex = 0;
     if (queue.length > 0) {
       const firstEntry = queue[0];
       log('info', 'First queue entry:', firstEntry);
-      if (firstEntry.type === 'regionMove' && firstEntry.region === 'Menu' && !firstEntry.exitUsed) {
-        // First entry is the initial Menu position, real actions start at index 1
+      if (this.isInitialStartEntry(firstEntry)) {
+        // First entry is the initial start position, real actions start at index 1
         firstActionIndex = 1;
-        log('info', 'First entry is initial Menu, skipping to index 1');
+        log('info', 'First entry is initial start region, skipping to index 1');
       }
     }
-    
+
     // If there are no real actions, don't start processing
     if (firstActionIndex >= queue.length) {
-      log('info', 'No actions to process (only initial Menu in queue)');
+      log('info', 'No actions to process (only initial start region in queue)');
       return;
     }
 
@@ -461,7 +478,7 @@ export class LoopState {
     // Set the current action index to the first real action if not already set
     if (this.currentActionIndex === 0 || this.currentActionIndex === undefined) {
       this.currentActionIndex = firstActionIndex;
-      log('info', `Setting currentActionIndex to ${firstActionIndex} (skipping initial Menu: ${firstActionIndex === 1})`);
+      log('info', `Setting currentActionIndex to ${firstActionIndex} (skipping initial start region: ${firstActionIndex === 1})`);
     }
 
     // Make sure the index is valid
@@ -609,16 +626,16 @@ export class LoopState {
 
         // Try to recover by finding a valid action
         if (queue.length > 0) {
-          // Skip initial Menu if present
+          // Skip initial start region if present
           this.currentActionIndex = 0;
-          if (queue[0].type === 'regionMove' && queue[0].region === 'Menu' && !queue[0].exitUsed) {
+          if (this.isInitialStartEntry(queue[0])) {
             this.currentActionIndex = 1;
           }
-          
+
           if (this.currentActionIndex < queue.length) {
             this.currentAction = queue[this.currentActionIndex];
           } else {
-            // Only Menu in queue, no real actions
+            // Only start region in queue, no real actions
             this.stopProcessing();
             return;
           }
@@ -811,9 +828,9 @@ export class LoopState {
     if (this.currentActionIndex >= queue.length) {
       // Reset to beginning if auto-restart is enabled
       if (this.autoRestartQueue) {
-        // Skip initial Menu if present
+        // Skip initial start region if present
         this.currentActionIndex = 0;
-        if (queue.length > 0 && queue[0].type === 'regionMove' && queue[0].region === 'Menu' && !queue[0].exitUsed) {
+        if (queue.length > 0 && this.isInitialStartEntry(queue[0])) {
           this.currentActionIndex = 1;
         }
         this._resetActionsProgress();
@@ -986,12 +1003,12 @@ export class LoopState {
     // Reset all action progress
     this._resetActionsProgress();
 
-    // Get queue to check for initial Menu
+    // Get queue to check for initial start region
     const queue = this.getActionQueue();
-    
-    // Reset to first real action (skip initial Menu if present)
+
+    // Reset to first real action (skip initial start region if present)
     this.currentActionIndex = 0;
-    if (queue.length > 0 && queue[0].type === 'regionMove' && queue[0].region === 'Menu' && !queue[0].exitUsed) {
+    if (queue.length > 0 && this.isInitialStartEntry(queue[0])) {
       this.currentActionIndex = 1;
     }
 
@@ -1062,12 +1079,12 @@ export class LoopState {
       this.stopProcessing();
     }
 
-    // Get queue to check for initial Menu
+    // Get queue to check for initial start region
     const queue = this.getActionQueue();
-    
-    // Reset to beginning, skipping initial Menu if present
+
+    // Reset to beginning, skipping initial start region if present
     this.currentActionIndex = 0;
-    if (queue.length > 0 && queue[0].type === 'regionMove' && queue[0].region === 'Menu' && !queue[0].exitUsed) {
+    if (queue.length > 0 && this.isInitialStartEntry(queue[0])) {
       this.currentActionIndex = 1;
     }
 
