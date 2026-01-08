@@ -347,6 +347,43 @@ class TrackerCore():
         """Set the seed name (from RoomInfo) for auto-discovery."""
         self.seed_name = seed_name
 
+    def _validate_rules_json(self, json_path: str) -> bool:
+        """
+        Validate that a rules JSON file matches the expected game and seed.
+
+        Args:
+            json_path: Path to the JSON rules file
+
+        Returns:
+            True if the file matches game and seed, False otherwise
+        """
+        import json
+        try:
+            with open(json_path) as f:
+                data = json.load(f)
+
+            json_game_name = data.get('game_name')
+            json_seed_name = data.get('seed_name')
+
+            # Validate game name
+            if json_game_name and json_game_name != self.game:
+                self.logger.debug(
+                    f"Rules JSON game mismatch: expected '{self.game}', got '{json_game_name}' in {json_path}"
+                )
+                return False
+
+            # Validate seed name (if present in the JSON)
+            if json_seed_name and self.seed_name and str(json_seed_name) != str(self.seed_name):
+                self.logger.debug(
+                    f"Rules JSON seed mismatch: expected '{self.seed_name}', got '{json_seed_name}' in {json_path}"
+                )
+                return False
+
+            return True
+        except Exception as e:
+            self.logger.debug(f"Failed to validate rules JSON {json_path}: {e}")
+            return False
+
     def auto_discover_rules_json(self) -> bool:
         """
         Auto-discover and load the rules JSON file based on game name and seed name.
@@ -356,6 +393,9 @@ class TrackerCore():
         2. frontend/presets/{world_directory}/AP_{seed_name}/ - original presets
         3. output/ directory - default generation output (extracted ZIP)
         4. User data directory (~/.local/share/Archipelago/ on Linux)
+
+        Each candidate file is validated to ensure game_name and seed_name match
+        before being accepted. If validation fails, the search continues.
 
         Returns:
             True if rules were loaded successfully, False otherwise
@@ -412,8 +452,15 @@ class TrackerCore():
                 if not rules_files:
                     # Fallback to any rules.json in the folder
                     rules_files = list(folder.glob("*_rules.json"))
-                if rules_files:
-                    json_path = str(rules_files[0])
+
+                # Check each candidate file for validity
+                for rules_file in rules_files:
+                    json_path = str(rules_file)
+
+                    # Validate the file matches our game and seed
+                    if not self._validate_rules_json(json_path):
+                        continue
+
                     self.logger.info(f"Auto-discovered rules JSON: {json_path}")
 
                     # If auto_generate_worldgen is enabled, generate and load the worldgen world
@@ -465,11 +512,23 @@ class TrackerCore():
             self.generation_seed = self.rules_json_data.get('generation_seed')
             json_seed_name = self.rules_json_data.get('seed_name')
 
+            # Validate game_name matches if we have both
+            if game_name and self.game and game_name != self.game:
+                self.logger.warning(
+                    f"Rules JSON game mismatch: expected {self.game}, got {game_name}"
+                )
+                self.rules_json_data = None
+                self.rules_json_path = None
+                return False
+
             # Validate seed_name matches if we have both
-            if json_seed_name and self.seed_name and json_seed_name != self.seed_name:
+            if json_seed_name and self.seed_name and str(json_seed_name) != str(self.seed_name):
                 self.logger.warning(
                     f"Rules JSON seed_name mismatch: expected {self.seed_name}, got {json_seed_name}"
                 )
+                self.rules_json_data = None
+                self.rules_json_path = None
+                return False
 
             self.logger.info(
                 f"Loaded rules JSON for {game_name} (schema v{schema_version}, "
