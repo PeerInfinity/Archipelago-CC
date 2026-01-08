@@ -86,9 +86,20 @@ Examples:
     )
 
     parser.add_argument(
+        '--canonical-seed',
+        type=int,
+        nargs='?',
+        const=1,
+        default=None,
+        metavar='N',
+        help='Enable canonical placement for seed N (default: 1 if flag provided). Places items in original locations when seed matches.'
+    )
+
+    # Keep old flag for backwards compatibility
+    parser.add_argument(
         '--canonical-seed1',
         action='store_true',
-        help='Enable seed=1 canonical placement (places items in original locations when seed is 1)'
+        help='(Deprecated) Alias for --canonical-seed 1'
     )
 
     parser.add_argument(
@@ -119,13 +130,18 @@ Examples:
         logger.warning(f"Input file does not have .json extension: {input_path}")
 
     try:
+        # Handle canonical seed (new arg takes precedence, then deprecated flag)
+        canonical_seed = args.canonical_seed
+        if canonical_seed is None and args.canonical_seed1:
+            canonical_seed = 1  # Backwards compatibility
+
         # Create generator
         generator = WorldGenerator(
             json_path=str(input_path),
             output_dir=args.output,
             game_name=args.game_name,
             force=args.force,
-            canonical_seed1=args.canonical_seed1,
+            canonical_seed=canonical_seed,
             player_id=args.player_id,
         )
 

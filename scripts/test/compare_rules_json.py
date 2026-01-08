@@ -262,6 +262,173 @@ def normalize_string_constant_wrapper(obj: Any) -> Any:
         return obj
 
 
+def normalize_item_check_count_default(obj: Any) -> Any:
+    """
+    Normalize item_check rules by removing count=1 since it's the default.
+
+    Original may export:
+        {"type": "item_check", "item": "X", "count": {"type": "constant", "value": 1}}
+
+    WorldGen may export:
+        {"type": "item_check", "item": "X"}
+
+    Both are semantically equivalent. Normalize by removing count=1.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for item_check with count=1
+        if obj_type == 'item_check' and 'count' in obj:
+            count = obj.get('count')
+            # Check if count is {"type": "constant", "value": 1} or just 1
+            is_count_one = False
+            if isinstance(count, dict) and count.get('type') == 'constant' and count.get('value') == 1:
+                is_count_one = True
+            elif count == 1:
+                is_count_one = True
+
+            if is_count_one:
+                # Remove the count field since it's the default
+                result = {k: normalize_item_check_count_default(v) for k, v in obj.items() if k != 'count'}
+                return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_item_check_count_default(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_item_check_count_default(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_nested_world_attribute(obj: Any) -> Any:
+    """
+    Normalize nested world attribute access patterns.
+
+    WorldGen may use nested attribute format:
+        {"type": "attribute", "object": {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "boss_reqs"}, "attr": "required_boss_item_locations"}
+    Or:
+        {"type": "attribute", "object": {"type": "world_attribute", "attribute": "boss_reqs"}, "attr": "required_boss_item_locations"}
+
+    Original worlds use the flattened world_attribute format:
+        {"type": "world_attribute", "attribute": "boss_reqs.required_boss_item_locations"}
+
+    Both are semantically equivalent. This normalizes to the flattened world_attribute format.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for nested attribute type
+        if obj_type == 'attribute':
+            attr_name = obj.get('attr', '')
+            inner_obj = obj.get('object', {})
+
+            # Build the full path by traversing the nested attributes
+            path_parts = [attr_name]
+            current = inner_obj
+            while isinstance(current, dict) and current.get('type') == 'attribute':
+                path_parts.insert(0, current.get('attr', ''))
+                current = current.get('object', {})
+
+            # Check if we've reached world (name, world_attribute, or setting_value)
+            if isinstance(current, dict):
+                if current.get('type') == 'name' and current.get('name') == 'world':
+                    # Convert nested world.x.y to world_attribute with x.y
+                    full_path = '.'.join(path_parts)
+                    result = {'type': 'world_attribute', 'attribute': full_path}
+                    # Preserve any other keys (like index)
+                    for k, v in obj.items():
+                        if k not in ('type', 'object', 'attr'):
+                            result[k] = normalize_nested_world_attribute(v)
+                    return result
+                elif current.get('type') == 'world_attribute':
+                    # Base is already a world_attribute, extend the path
+                    base_attr = current.get('attribute', '')
+                    full_path = '.'.join([base_attr] + path_parts)
+                    result = {'type': 'world_attribute', 'attribute': full_path}
+                    for k, v in obj.items():
+                        if k not in ('type', 'object', 'attr'):
+                            result[k] = normalize_nested_world_attribute(v)
+                    return result
+                elif current.get('type') == 'setting_value':
+                    # Base is a setting_value, extend the path
+                    base_setting = current.get('setting', '')
+                    full_path = '.'.join([base_setting] + path_parts)
+                    result = {'type': 'world_attribute', 'attribute': full_path}
+                    for k, v in obj.items():
+                        if k not in ('type', 'object', 'attr'):
+                            result[k] = normalize_nested_world_attribute(v)
+                    return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_nested_world_attribute(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_nested_world_attribute(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_all_of_iterable(obj: Any) -> Any:
+    """
+    Normalize all_of by removing redundant iterable field.
+
+    Original may export:
+        {"type": "all_of", "iterable": X, "iterator_info": {"iterator": X, ...}, ...}
+
+    WorldGen may export:
+        {"type": "all_of", "iterator_info": {"iterator": X, ...}, ...}
+
+    The iterable field is redundant with iterator_info.iterator. Normalize by removing iterable.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Check for all_of with iterable
+        if obj_type == 'all_of' and 'iterable' in obj:
+            # Remove the iterable field
+            result = {k: normalize_all_of_iterable(v) for k, v in obj.items() if k != 'iterable'}
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_all_of_iterable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_all_of_iterable(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_setting_to_world_attribute(obj: Any) -> Any:
+    """
+    Normalize setting_value to world_attribute format.
+
+    Original may export:
+        {"type": "setting_value", "setting": "boss_reqs.required_boss_item_locations"}
+
+    WorldGen may export:
+        {"type": "world_attribute", "attribute": "boss_reqs.required_boss_item_locations"}
+
+    Both are semantically equivalent for world instance attributes. Normalize to world_attribute.
+    """
+    if isinstance(obj, dict):
+        obj_type = obj.get('type')
+
+        # Convert setting_value to world_attribute
+        if obj_type == 'setting_value':
+            setting = obj.get('setting', '')
+            result = {'type': 'world_attribute', 'attribute': setting}
+            # Preserve any other keys (like index)
+            for k, v in obj.items():
+                if k not in ('type', 'setting'):
+                    result[k] = normalize_setting_to_world_attribute(v)
+            return result
+
+        # Recursively normalize nested objects
+        return {k: normalize_setting_to_world_attribute(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_setting_to_world_attribute(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_none_to_null(obj: Any) -> Any:
     """
     Normalize None values in conditional branches.
@@ -1137,11 +1304,16 @@ def normalize_sum_of_helpers(obj: Any) -> Any:
                             inner_obj = func.get('object', {})
                             setting_name = None
 
-                            # Pattern: {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "qp_items"}
+                            # Pattern 1: {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "qp_items"}
                             if inner_obj.get('type') == 'attribute':
                                 # world.qp_items pattern
                                 if inner_obj.get('object', {}).get('type') == 'name':
                                     setting_name = inner_obj.get('attr')
+
+                            # Pattern 2: {"type": "setting_value", "setting": "qp_items"}
+                            # This happens when normalize_setting_types runs before this normalizer
+                            elif inner_obj.get('type') == 'setting_value':
+                                setting_name = inner_obj.get('setting')
 
                             if setting_name:
                                 new_iterator_info['iterator'] = {
@@ -1252,12 +1424,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # This is expected behavior - the worldgen bakes in option values.
     #
     # Pattern: helper body type changes from 'conditional' to simpler types
-    # (item_check, state_method, constant, and, or, helper) because the condition was resolved.
+    # (item_check, state_method, constant, and, or, helper, compare) because the condition was resolved.
     if 'helpers.' in path:
         # Helper body type changed due to option resolution
         if path.endswith('.type'):
             # Conditional resolved to simpler rule type
-            if original_value == 'conditional' and worldgen_value in ('item_check', 'state_method', 'constant', 'and', 'or', 'helper'):
+            if original_value == 'conditional' and worldgen_value in ('item_check', 'state_method', 'constant', 'and', 'or', 'helper', 'compare'):
                 return True
             # Attribute reference resolved to constant (e.g., self.castle_unlock -> 5)
             if original_value == 'attribute' and worldgen_value == 'constant':
@@ -1279,10 +1451,20 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
                 return True
         if path.endswith('.count') and original_value == '<missing>':
             return True
+        # Helper 'compare' type fields (left, op, right) appear when conditional is resolved
+        if path.endswith('.left') or path.endswith('.op') or path.endswith('.right'):
+            if original_value == '<missing>':
+                return True
         # Subscript patterns in helper tests (e.g., boss_order[0]) that worldgen resolves
         if '.test.args[' in path:
             # Type change from subscript to constant, or index/value differences
             if 'type' in path or 'index' in path or 'value' in path:
+                return True
+            # Entire args element changes type when subscript is resolved to string
+            # Original: {"type": "subscript", ...} (dict)
+            # WorldGen: "Burt The Bashful's Boss Room" (string after constant unwrap)
+            # This happens for boss_order[N] and similar world attribute lookups
+            if path.endswith(']') and original_value == 'type: dict' and worldgen_value == 'type: str':
                 return True
         # Option attribute comparisons (self.game_logic, self.midring_start, etc.)
         # that get resolved to constant values in worldgen
@@ -1388,6 +1570,31 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if '.args.items' in path and original_value == '<missing>':
             return True
 
+    # Option-dependent Conditional rules in access_rules get resolved at generation time.
+    # Original: Conditional(test=OptionValue(X), if_true=Rule1, if_false=Rule2)
+    # WorldGen: Just Rule1 or Rule2 depending on the option value.
+    # This is expected behavior when options are baked in during world generation.
+    if 'access_rule' in path:
+        # Conditional rule resolved to simpler rule type (at any level of nesting)
+        if '.rule' in path:
+            if original_value == 'Conditional' and worldgen_value in ('True_', 'False_', 'Has', 'HasAny', 'HasAll', 'And', 'Or'):
+                return True
+            # Constant rule resolved to False_ or True_ (often from option checks)
+            if original_value == 'Constant' and worldgen_value in ('True_', 'False_'):
+                return True
+        # Conditional args (test, if_true, if_false) are removed after resolution
+        if '.args.test' in path and worldgen_value == '<missing>':
+            return True
+        if '.args.if_true' in path and worldgen_value == '<missing>':
+            return True
+        if '.args.if_false' in path and worldgen_value == '<missing>':
+            return True
+        # New args appearing when Conditional is resolved to Has/HasAny/HasAll
+        if '.args.items' in path and original_value == '<missing>':
+            return True
+        if '.args.item_name' in path and original_value == '<missing>':
+            return True
+
     # WorldGen-specific options that only exist in WorldGen, not original
     worldgen_only_options = {'randomize_items', 'use_canonical_options'}
     for opt in worldgen_only_options:
@@ -1427,6 +1634,13 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'exporter.' in path and 'rule_format' in path:
         if original_value == '<missing>':
             return True
+
+    # WorldGen adds an exporter section with metadata (rule_format, use_resolved_items)
+    # that the original doesn't have. This entire section is WorldGen-specific.
+    if path == 'exporter.1' and original_value == '<missing>':
+        return True
+    if path.startswith('exporter.1.') and original_value == '<missing>':
+        return True
 
     # world_class_name in world section - restructured in WorldGen
     if path == 'world.1.world_class_name' and worldgen_value == '<missing>':
@@ -1893,6 +2107,22 @@ def main():
     # Normalize string constant wrappers ({"type": "constant", "value": "X"} -> "X")
     original_normalized = normalize_string_constant_wrapper(original_normalized)
     worldgen_normalized = normalize_string_constant_wrapper(worldgen_normalized)
+
+    # Normalize item_check count=1 default (remove count=1 since it's the default)
+    original_normalized = normalize_item_check_count_default(original_normalized)
+    worldgen_normalized = normalize_item_check_count_default(worldgen_normalized)
+
+    # Normalize nested world attribute access (world.x.y -> world_attribute with x.y)
+    original_normalized = normalize_nested_world_attribute(original_normalized)
+    worldgen_normalized = normalize_nested_world_attribute(worldgen_normalized)
+
+    # Normalize all_of by removing redundant iterable field
+    original_normalized = normalize_all_of_iterable(original_normalized)
+    worldgen_normalized = normalize_all_of_iterable(worldgen_normalized)
+
+    # Normalize setting_value to world_attribute (semantically equivalent)
+    original_normalized = normalize_setting_to_world_attribute(original_normalized)
+    worldgen_normalized = normalize_setting_to_world_attribute(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)

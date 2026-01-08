@@ -1113,6 +1113,13 @@ class ASTToRuleBuilder:
                 inner_obj.get('name') == 'self' and inner_attr == 'options'):
                 return self._make_rule('SettingValue', {'setting': attr})
 
+        # Pattern 4: world.X → WorldAttribute
+        # Handles world instance attributes that are NOT options (logic_in_swordless_mode, logic_obscure_1, etc.)
+        # These come from worldgen rules where state.multiworld.worlds[player].X is converted to world.X
+        # {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "X"}
+        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'world':
+            return self._make_rule('WorldAttribute', {'attribute': attr})
+
         # Default: preserve as custom Attribute rule
         return self._make_custom_rule('Attribute', {
             'object': self._convert_rule(obj) if isinstance(obj, dict) else obj,

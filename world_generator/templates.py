@@ -7,7 +7,7 @@ for that file.
 
 import json
 import re
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Optional, Set
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
@@ -1478,22 +1478,22 @@ class {class_name}Options(PerGameCommonOptions):
 '''
 
 
-def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
+def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
     """Generate __init__.py (main world file) content.
 
     Args:
         data: Extracted game data
-        canonical_seed1: If True, include seed=1 canonical placement behavior
+        canonical_seed: If set, include canonical placement behavior for this seed number
     """
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
     world_class = data.metadata.world_class_name
 
-    # Build canonical placements dict (only needed if canonical_seed1 is enabled)
+    # Build canonical placements dict (only needed if canonical_seed is enabled)
     # Use canonical_placements if available, otherwise fall back to original_placements
     placement_entries = []
     canonical_class_attr_entries = []  # For the class attribute (exporter to read)
-    if canonical_seed1:
+    if canonical_seed is not None:
         # Prefer canonical_placements (from world class attribute) over original_placements
         placements_source = data.canonical_placements if data.canonical_placements else data.original_placements
         for loc_name, item_name in placements_source.items():
@@ -1539,13 +1539,16 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
             lambda state: state.has("{victory_item}", self.player)
 '''
 
-    # Generate canonical seed1 sections only if enabled
-    if canonical_seed1:
-        generate_early_section = '''
+    # Generate canonical seed sections only if enabled
+    if canonical_seed is not None:
+        generate_early_section = f'''
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = {canonical_seed}
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -1553,7 +1556,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module
@@ -1810,7 +1813,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 '''
 
     # Generate canonical_placements class attribute (for exporter to read)
-    if canonical_seed1 and canonical_class_attr_content:
+    if canonical_seed is not None and canonical_class_attr_content:
         canonical_placements_section = f'''
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -2094,7 +2097,7 @@ class _ShopWrapper:
     # Build optional imports
     types_import = 'import types\n' if needs_types_import else ''
     # Add json and os imports for canonical options loading
-    canonical_imports = 'import json\nimport os\n' if canonical_seed1 else ''
+    canonical_imports = 'import json\nimport os\n' if canonical_seed is not None else ''
 
     # Check if any items have hint_text for create_item method
     has_hint_text = any(item.hint_text for item in data.items.values())
