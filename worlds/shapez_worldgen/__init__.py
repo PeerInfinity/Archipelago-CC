@@ -332,10 +332,13 @@ class ShapezWorld(RuleWorldMixin, World):
         self.world_description = 'shapez is an automation game about cutting, rotating, stacking, and painting shapes, that you extract from randomly\ngenerated patches on an infinite canvas, without the need to manage your infinite resources or to pay for building\nyour factories.'
         self.slot_data = {'Level building 1': 'Cutter', 'Level building 2': 'Rotator', 'Level building 3': 'Painter', 'Level building 4': 'Color Mixer', 'Level building 5': 'Stacker', 'Upgrade building 1': 'Stacker', 'Upgrade building 2': 'Cutter', 'Upgrade building 3': 'Rotator', 'Upgrade building 4': 'Painter', 'Upgrade building 5': 'Color Mixer', 'goal': 'vanilla', 'maxlevel': 25, 'finaltier': 8, 'required_shapes_multiplier': 10, 'allow_floating_layers': False, 'randomize_level_requirements': True, 'randomize_upgrade_requirements': True, 'randomize_level_logic': 'stretched', 'randomize_upgrade_logic': 'linear', 'throughput_levels_ratio': 0, 'complexity_growth_gradient': 0.5, 'same_late_upgrade_requirements': True, 'toolbar_shuffling': True, 'Phase 0 length': 1, 'Phase 1 length': 1, 'Phase 2 length': 1, 'Phase 3 length': 1, 'Phase 4 length': 1, 'belt category buildings amount': 0, 'miner category buildings amount': 1, 'processors category buildings amount': 2, 'painting category buildings amount': 3, 'seed': 3745, 'shapesanity': ['Uncolored Circle', 'Uncolored Square', 'Uncolored Star', 'Uncolored Windmill', 'Cyan Windmill', 'Cornered Yellow Star', 'Half Cyan Circle', 'Purple Square Piece', 'Yellow Circle Piece', 'Half Blue Circle', 'Cut Out Green Circle', 'Cut Out Blue Square', 'Green Star Piece', 'Red Square Piece', 'Cornered Yellow Square', 'Red Windmill', 'Half Red Star', 'Yellow Windmill Piece', 'Cut Out Red Star', 'Half White Circle', 'Cut Out Red Square', 'Blue Square', 'Cut Out Blue Star', 'Blue Star Piece', 'Purple Circle', 'bcgr Star', 'Yellow CRS-', 'cpru Circle', 'Blue CSW-', 'Adjacent 2-1 Wc Ww', 'Adjacent Singles Cr Wr', '3-1 Rr Sg', 'Cornered 2-1 Rr Ww', 'Adjacent 2-1 Su Cc', 'Adjacent 2-1 Su Wc', '3-1 Ru Cu', 'Half-Half Cp Su', 'Checkered Cr Wp', '3-1 Rc Rr', 'Adjacent 2-1 Cy Wr', 'Adjacent Singles Cw Sy', 'Adjacent 2-1-1 Sg Cb Ww', 'Singles Cy Sw Wr', 'Cornered 2-1-1 Ry Cc Cy', 'Adjacent 2-1-1 Su Sy Wu', 'Singles Cr Rb Wg Wy', 'Singles Cw Sy Wg Wr', 'Singles Cp Rb Sg Sr', 'Singles Cc Cp Ru Rw', 'Singles Cr Cw Rb Rw']}
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -343,7 +346,7 @@ class ShapezWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

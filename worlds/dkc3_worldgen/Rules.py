@@ -27,7 +27,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_entrance("Overworld 4", player).access_rule = \
-        lambda state: ((state.has('DK Coin', player, state.multiworld.worlds[player].options.dk_coins_for_gyrocopter)) and (state.has('Progressive Boat Upgrade', player, 3)))
+        lambda state: ((state.has('DK Coin', player, state.multiworld.worlds[player].options.dk_coins_for_gyrocopter.value)) and (state.has('Progressive Boat Upgrade', player, 3)))
 
     world.set_rule(
         multiworld.get_entrance("Overworld 3", player),

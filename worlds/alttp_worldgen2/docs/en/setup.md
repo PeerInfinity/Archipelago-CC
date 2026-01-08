@@ -1,4 +1,4 @@
-# A Link to the Past WorldGen 2 Setup Guide
+# A Link to the Past WorldGen2 Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with A Link to the Past WorldGen 2
+3. Generate a multiworld with A Link to the Past WorldGen2
 
 ## Joining a Game
 

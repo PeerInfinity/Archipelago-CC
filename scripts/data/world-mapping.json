@@ -80,15 +80,6 @@
     "has_custom_game_logic": false,
     "world_directory": "apquest_worldgen"
   },
-  "APWorld Manager": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "apworld_manager"
-  },
   "Adventure": {
     "exporter_path": null,
     "exporter_size": 0,

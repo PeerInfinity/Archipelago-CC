@@ -768,11 +768,243 @@ def set_rules(world: "World") -> None:
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
-        world.get_region("Gold Ore"),
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Lumbridge->Barbarian Village", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Lumbridge->Edgeville", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("Lumbridge->Edgeville", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Lumbridge->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("Lumbridge->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Edgeville"),
+        multiworld.get_entrance("Lumbridge->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("South of Varrock"),
+        multiworld.get_entrance("Lumbridge->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Barbarian Village"),
+        multiworld.get_entrance("Lumbridge->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("South of Varrock->Edgeville", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("South of Varrock->Edgeville", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Wilderness"),
+        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Barbarian Village"),
+        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Lumbridge"),
+        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Edgeville"),
+        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Fly Fishing Spot"),
+        multiworld.get_entrance("West Varrock->Cook's Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Port Sarim"),
+        multiworld.get_entrance("West Varrock->Cook's Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shrimp Spot"),
+        multiworld.get_entrance("West Varrock->Cook's Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Wheat"),
+        multiworld.get_entrance("West Varrock->Cook's Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Windmill"),
+        multiworld.get_entrance("West Varrock->Cook's Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Egg"),
+        multiworld.get_entrance("West Varrock->Cook's Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Milk"),
+        multiworld.get_entrance("West Varrock->Cook's Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Edgeville->South of Varrock", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Edgeville->Lumbridge", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("Edgeville->Lumbridge", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Edgeville->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("Edgeville->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Lumbridge"),
+        multiworld.get_entrance("Edgeville->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Barbarian Village"),
+        multiworld.get_entrance("Edgeville->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Wilderness"),
+        multiworld.get_entrance("Edgeville->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("South of Varrock"),
+        multiworld.get_entrance("Edgeville->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Edgeville"),
+        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("South of Varrock"),
+        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Lumbridge"),
+        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Wilderness"),
+        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("South of Varrock"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Edgeville"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Lumbridge"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Rimmington"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Monastery"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dwarven Mines"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Port Sarim"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Draynor Village"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("South of Varrock"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Edgeville"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Lumbridge"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Rimmington"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Monastery"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dwarven Mines"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Port Sarim"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Draynor Village"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Falador Farms"),
+        multiworld.get_entrance("Rimmington->Corsair Cove", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Anvil"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Bronze Ores"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Coal Ore"),
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("Furnace"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Iron Ore"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Gold Ore"),
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
@@ -792,11 +1024,31 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Gold Ore"),
+        world.get_region("Central Varrock"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Anvil"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Bronze Ores"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Coal Ore"),
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("Furnace"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Iron Ore"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Gold Ore"),
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
@@ -814,6 +1066,38 @@ def set_rules(world: "World") -> None:
     multiworld.register_indirect_condition(
         world.get_region("Milk"),
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Central Varrock"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Wilderness->South of Varrock", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("Wilderness->South of Varrock", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Oak Tree"),
+        multiworld.get_entrance("Wilderness->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("Wilderness->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("South of Varrock"),
+        multiworld.get_entrance("Wilderness->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Edgeville"),
+        multiworld.get_entrance("Wilderness->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Barbarian Village"),
+        multiworld.get_entrance("Wilderness->Canoe Tree", player)
     )
     # Location rules
     world.set_rule(

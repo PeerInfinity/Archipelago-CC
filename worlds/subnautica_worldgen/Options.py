@@ -55,7 +55,6 @@ class EarlySeaglide(DefaultOnToggle):
 
 class EmptyTanks(DefaultOnToggle):
     """Option for Empty Tanks."""
-    display_name = "Empty Tanks"
 
 class FreeSamples(Toggle):
     """Option for Free Samples."""

@@ -511,6 +511,127 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("SF Behind Boss Firewall -> SF Boss Arena", player),
         And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), Has('TOD Access'))
     )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Picture Perfect"),
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("The Golden Vault"),
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Picture Perfect"),
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("The Golden Vault"),
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Picture Perfect"),
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("The Golden Vault"),
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Picture Perfect"),
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("The Golden Vault"),
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Picture Perfect"),
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("The Golden Vault"),
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Picture Perfect"),
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("The Golden Vault"),
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Picture Perfect"),
+        multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("The Golden Vault"),
+        multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Mail Delivery Service"),
+        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Train Rush"),
+        multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Heating Up Mafia Town"),
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Alpine Free Roam"),
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Heating Up Mafia Town"),
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Alpine Free Roam"),
+        multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Down with the Mafia!"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dead Bird Studio Basement"),
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Down with the Mafia!"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dead Bird Studio Basement"),
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Down with the Mafia!"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dead Bird Studio Basement"),
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Down with the Mafia!"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dead Bird Studio Basement"),
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Down with the Mafia!"),
+        multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dead Bird Studio Basement"),
+        multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player)
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("Mafia Boss Shop Item", player),

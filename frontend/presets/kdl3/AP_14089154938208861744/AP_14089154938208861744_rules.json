@@ -4,6 +4,7 @@
   "game_directory": "kdl3",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -2868,83 +2869,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 1
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Grass Land - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Grass Land 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2995,83 +2948,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 1
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Grass Land - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Grass Land 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6887,83 +6792,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Ripple Field - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Ripple Field 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -7014,83 +6871,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 2
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Ripple Field - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Ripple Field 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -13578,83 +13387,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 3
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Sand Canyon - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Sand Canyon 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -13705,83 +13466,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 3
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Sand Canyon - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Sand Canyon 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17777,83 +17490,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Cloudy Park - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Cloudy Park 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17904,83 +17569,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 4
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Cloudy Park - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Cloudy Park 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -23858,83 +23475,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 5
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Iceberg - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Iceberg 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -23985,83 +23554,35 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_reach_boss",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": 5
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
                       "rule": "OptionValue",
                       "args": {
                         "option": "open_world"
                       }
                     },
-                    {
-                      "rule": "OptionValue",
+                    "if_true": {
+                      "rule": "Has",
                       "args": {
-                        "option": "ow_boss_requirement"
+                        "item_name": "Iceberg - Stage Completion",
+                        "count": {
+                          "rule": "OptionValue",
+                          "args": {
+                            "option": "ow_boss_requirement"
+                          }
+                        }
                       }
                     },
-                    {
-                      "rule": "Constant",
+                    "if_false": {
+                      "rule": "CanReachLocation",
                       "args": {
-                        "value": {
-                          "1": [
-                            7798784,
-                            7798785,
-                            7798786,
-                            7798787,
-                            7798788,
-                            7798789,
-                            7799296
-                          ],
-                          "2": [
-                            7798790,
-                            7798791,
-                            7798792,
-                            7798793,
-                            7798794,
-                            7798795,
-                            7799297
-                          ],
-                          "3": [
-                            7798796,
-                            7798797,
-                            7798798,
-                            7798799,
-                            7798800,
-                            7798801,
-                            7799298
-                          ],
-                          "4": [
-                            7798802,
-                            7798803,
-                            7798804,
-                            7798805,
-                            7798806,
-                            7798807,
-                            7799299
-                          ],
-                          "5": [
-                            7798808,
-                            7798809,
-                            7798810,
-                            7798811,
-                            7798812,
-                            7798813,
-                            7799300
-                          ]
-                        }
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                        "location_name": "Iceberg 6 - Complete"
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -26173,972 +25694,6 @@
   },
   "helpers": {
     "1": {
-      "can_reach_boss": {
-        "params": [
-          "level",
-          "open_world",
-          "ow_boss_req",
-          "player_levels"
-        ],
-        "body": {
-          "type": "conditional",
-          "test": {
-            "type": "option_value",
-            "option": "open_world"
-          },
-          "if_true": {
-            "type": "item_check",
-            "item": {
-              "type": "f_string",
-              "parts": [
-                {
-                  "type": "formatted_value",
-                  "value": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location_name"
-                      },
-                      "attr": "level_names_inverse"
-                    },
-                    "index": {
-                      "type": "name",
-                      "name": "level"
-                    }
-                  }
-                },
-                {
-                  "type": "constant",
-                  "value": " - Stage Completion"
-                }
-              ],
-              "all_simple": true,
-              "value": "{...} - Stage Completion"
-            },
-            "count": {
-              "type": "option_value",
-              "option": "ow_boss_requirement"
-            }
-          },
-          "if_false": {
-            "type": "state_method",
-            "method": "can_reach",
-            "args": [
-              {
-                "type": "subscript",
-                "value": {
-                  "type": "constant",
-                  "value": {
-                    "7798784": "Grass Land 1 - Complete",
-                    "7798785": "Grass Land 2 - Complete",
-                    "7798786": "Grass Land 3 - Complete",
-                    "7798787": "Grass Land 4 - Complete",
-                    "7798788": "Grass Land 5 - Complete",
-                    "7798789": "Grass Land 6 - Complete",
-                    "7798790": "Ripple Field 1 - Complete",
-                    "7798791": "Ripple Field 2 - Complete",
-                    "7798792": "Ripple Field 3 - Complete",
-                    "7798793": "Ripple Field 4 - Complete",
-                    "7798794": "Ripple Field 5 - Complete",
-                    "7798795": "Ripple Field 6 - Complete",
-                    "7798796": "Sand Canyon 1 - Complete",
-                    "7798797": "Sand Canyon 2 - Complete",
-                    "7798798": "Sand Canyon 3 - Complete",
-                    "7798799": "Sand Canyon 4 - Complete",
-                    "7798800": "Sand Canyon 5 - Complete",
-                    "7798801": "Sand Canyon 6 - Complete",
-                    "7798802": "Cloudy Park 1 - Complete",
-                    "7798803": "Cloudy Park 2 - Complete",
-                    "7798804": "Cloudy Park 3 - Complete",
-                    "7798805": "Cloudy Park 4 - Complete",
-                    "7798806": "Cloudy Park 5 - Complete",
-                    "7798807": "Cloudy Park 6 - Complete",
-                    "7798808": "Iceberg 1 - Complete",
-                    "7798809": "Iceberg 2 - Complete",
-                    "7798810": "Iceberg 3 - Complete",
-                    "7798811": "Iceberg 4 - Complete",
-                    "7798812": "Iceberg 5 - Complete",
-                    "7798813": "Iceberg 6 - Complete",
-                    "7799040": "Grass Land 1 - Tulip",
-                    "7799041": "Grass Land 2 - Muchimuchi",
-                    "7799042": "Grass Land 3 - Pitcherman",
-                    "7799043": "Grass Land 4 - Chao & Goku",
-                    "7799044": "Grass Land 5 - Mine",
-                    "7799045": "Grass Land 6 - Pierre",
-                    "7799046": "Ripple Field 1 - Kamuribana",
-                    "7799047": "Ripple Field 2 - Bakasa",
-                    "7799048": "Ripple Field 3 - Elieel",
-                    "7799049": "Ripple Field 4 - Toad & Little Toad",
-                    "7799050": "Ripple Field 5 - Mama Pitch",
-                    "7799051": "Ripple Field 6 - HB-002",
-                    "7799052": "Sand Canyon 1 - Geromuzudake",
-                    "7799053": "Sand Canyon 2 - Auntie",
-                    "7799054": "Sand Canyon 3 - Caramello",
-                    "7799055": "Sand Canyon 4 - Donbe & Hikari",
-                    "7799056": "Sand Canyon 5 - Nyupun",
-                    "7799057": "Sand Canyon 6 - Professor Hector & R.O.B",
-                    "7799058": "Cloudy Park 1 - Hibanamodoki",
-                    "7799059": "Cloudy Park 2 - Piyo & Keko",
-                    "7799060": "Cloudy Park 3 - Mr. Ball",
-                    "7799061": "Cloudy Park 4 - Mikarin & Kagami Mocchi",
-                    "7799062": "Cloudy Park 5 - Pick",
-                    "7799063": "Cloudy Park 6 - HB-007",
-                    "7799064": "Iceberg 1 - Kogoesou",
-                    "7799065": "Iceberg 2 - Samus",
-                    "7799066": "Iceberg 3 - Chef Kawasaki",
-                    "7799067": "Iceberg 4 - Name",
-                    "7799068": "Iceberg 5 - Shiro",
-                    "7799069": "Iceberg 6 - Angel",
-                    "7799296": "Grass Land - Boss (Whispy Woods) Purified",
-                    "7799297": "Ripple Field - Boss (Acro) Purified",
-                    "7799298": "Sand Canyon - Boss (Pon & Con) Purified",
-                    "7799299": "Cloudy Park - Boss (Ado) Purified",
-                    "7799300": "Iceberg - Boss (Dedede) Purified",
-                    "7799552": "Grass Land 1 - 1-Up (Parasol)",
-                    "7799553": "Grass Land 1 - Maxim Tomato (Spark)",
-                    "7799554": "Grass Land 2 - 1-Up (Needle)",
-                    "7799555": "Grass Land 3 - 1-Up (Climb)",
-                    "7799556": "Grass Land 3 - Maxim Tomato (Climb)",
-                    "7799557": "Grass Land 4 - Maxim Tomato (Zebon Right)",
-                    "7799558": "Grass Land 4 - 1-Up (Gordo)",
-                    "7799559": "Grass Land 4 - Maxim Tomato (Gordo)",
-                    "7799560": "Grass Land 4 - Maxim Tomato (Cliff)",
-                    "7799561": "Grass Land 6 - 1-Up (Tower)",
-                    "7799562": "Grass Land 6 - 1-Up (Falling)",
-                    "7799563": "Ripple Field 2 - 1-Up (Currents)",
-                    "7799564": "Ripple Field 2 - Maxim Tomato (Currents)",
-                    "7799565": "Ripple Field 3 - Maxim Tomato (Cove)",
-                    "7799566": "Ripple Field 3 - 1-Up (Cutter/Spark)",
-                    "7799567": "Ripple Field 4 - Maxim Tomato (Stone)",
-                    "7799568": "Ripple Field 4 - 1-Up (Stone)",
-                    "7799569": "Ripple Field 4 - Maxim Tomato (Dark)",
-                    "7799570": "Ripple Field 5 - 1-Up (Currents)",
-                    "7799571": "Ripple Field 5 - Maxim Tomato (Currents)",
-                    "7799572": "Ripple Field 5 - Maxim Tomato (Exit)",
-                    "7799573": "Sand Canyon 1 - 1-Up (Polof)",
-                    "7799574": "Sand Canyon 2 - 1-Up (Enclave)",
-                    "7799575": "Sand Canyon 2 - Maxim Tomato (Underwater)",
-                    "7799576": "Sand Canyon 4 - Maxim Tomato (Pacto)",
-                    "7799577": "Sand Canyon 4 - 1-Up (Clean)",
-                    "7799578": "Sand Canyon 4 - Maxim Tomato (Needle)",
-                    "7799579": "Sand Canyon 5 - 1-Up (Falling Block)",
-                    "7799580": "Sand Canyon 5 - 1-Up (Ice 2)",
-                    "7799581": "Sand Canyon 5 - Maxim Tomato (Pit)",
-                    "7799582": "Sand Canyon 5 - 1-Up (Ice 3)",
-                    "7799583": "Sand Canyon 5 - 1-Up (Ice 1)",
-                    "7799584": "Cloudy Park 1 - Maxim Tomato (Mariel)",
-                    "7799585": "Cloudy Park 1 - 1-Up (Shotzo)",
-                    "7799586": "Cloudy Park 4 - 1-Up (Windy)",
-                    "7799587": "Cloudy Park 4 - Maxim Tomato (Windy)",
-                    "7799588": "Cloudy Park 5 - Maxim Tomato (Pillars)",
-                    "7799589": "Cloudy Park 6 - 1-Up (Cutter)",
-                    "7799590": "Iceberg 3 - Maxim Tomato (Ceiling)",
-                    "7799591": "Iceberg 5 - 1-Up (Boulder)",
-                    "7799592": "Iceberg 5 - 1-Up (Floor)",
-                    "7799593": "Iceberg 5 - 1-Up (Peloo)",
-                    "7799594": "Iceberg 6 - Maxim Tomato (Left)",
-                    "7799595": "Iceberg 6 - 1-Up (Middle)",
-                    "7799809": "Grass Land 1 - Star 1",
-                    "7799810": "Grass Land 1 - Star 2",
-                    "7799811": "Grass Land 1 - Star 3",
-                    "7799812": "Grass Land 1 - Star 4",
-                    "7799813": "Grass Land 1 - Star 5",
-                    "7799814": "Grass Land 1 - Star 6",
-                    "7799815": "Grass Land 1 - Star 7",
-                    "7799816": "Grass Land 1 - Star 8",
-                    "7799817": "Grass Land 1 - Star 9",
-                    "7799818": "Grass Land 1 - Star 10",
-                    "7799819": "Grass Land 1 - Star 11",
-                    "7799820": "Grass Land 1 - Star 12",
-                    "7799821": "Grass Land 1 - Star 13",
-                    "7799822": "Grass Land 1 - Star 14",
-                    "7799823": "Grass Land 1 - Star 15",
-                    "7799824": "Grass Land 1 - Star 16",
-                    "7799825": "Grass Land 1 - Star 17",
-                    "7799826": "Grass Land 1 - Star 18",
-                    "7799827": "Grass Land 1 - Star 19",
-                    "7799828": "Grass Land 1 - Star 20",
-                    "7799829": "Grass Land 1 - Star 21",
-                    "7799830": "Grass Land 1 - Star 22",
-                    "7799831": "Grass Land 1 - Star 23",
-                    "7799832": "Grass Land 2 - Star 1",
-                    "7799833": "Grass Land 2 - Star 2",
-                    "7799834": "Grass Land 2 - Star 3",
-                    "7799835": "Grass Land 2 - Star 4",
-                    "7799836": "Grass Land 2 - Star 5",
-                    "7799837": "Grass Land 2 - Star 6",
-                    "7799838": "Grass Land 2 - Star 7",
-                    "7799839": "Grass Land 2 - Star 8",
-                    "7799840": "Grass Land 2 - Star 9",
-                    "7799841": "Grass Land 2 - Star 10",
-                    "7799842": "Grass Land 2 - Star 11",
-                    "7799843": "Grass Land 2 - Star 12",
-                    "7799844": "Grass Land 2 - Star 13",
-                    "7799845": "Grass Land 2 - Star 14",
-                    "7799846": "Grass Land 2 - Star 15",
-                    "7799847": "Grass Land 2 - Star 16",
-                    "7799848": "Grass Land 2 - Star 17",
-                    "7799849": "Grass Land 2 - Star 18",
-                    "7799850": "Grass Land 2 - Star 19",
-                    "7799851": "Grass Land 2 - Star 20",
-                    "7799852": "Grass Land 2 - Star 21",
-                    "7799853": "Grass Land 3 - Star 1",
-                    "7799854": "Grass Land 3 - Star 2",
-                    "7799855": "Grass Land 3 - Star 3",
-                    "7799856": "Grass Land 3 - Star 4",
-                    "7799857": "Grass Land 3 - Star 5",
-                    "7799858": "Grass Land 3 - Star 6",
-                    "7799859": "Grass Land 3 - Star 7",
-                    "7799860": "Grass Land 3 - Star 8",
-                    "7799861": "Grass Land 3 - Star 9",
-                    "7799862": "Grass Land 3 - Star 10",
-                    "7799863": "Grass Land 3 - Star 11",
-                    "7799864": "Grass Land 3 - Star 12",
-                    "7799865": "Grass Land 3 - Star 13",
-                    "7799866": "Grass Land 3 - Star 14",
-                    "7799867": "Grass Land 3 - Star 15",
-                    "7799868": "Grass Land 3 - Star 16",
-                    "7799869": "Grass Land 3 - Star 17",
-                    "7799870": "Grass Land 3 - Star 18",
-                    "7799871": "Grass Land 3 - Star 19",
-                    "7799872": "Grass Land 3 - Star 20",
-                    "7799873": "Grass Land 3 - Star 21",
-                    "7799874": "Grass Land 3 - Star 22",
-                    "7799875": "Grass Land 3 - Star 23",
-                    "7799876": "Grass Land 3 - Star 24",
-                    "7799877": "Grass Land 3 - Star 25",
-                    "7799878": "Grass Land 3 - Star 26",
-                    "7799879": "Grass Land 3 - Star 27",
-                    "7799880": "Grass Land 3 - Star 28",
-                    "7799881": "Grass Land 3 - Star 29",
-                    "7799882": "Grass Land 3 - Star 30",
-                    "7799883": "Grass Land 3 - Star 31",
-                    "7799884": "Grass Land 4 - Star 1",
-                    "7799885": "Grass Land 4 - Star 2",
-                    "7799886": "Grass Land 4 - Star 3",
-                    "7799887": "Grass Land 4 - Star 4",
-                    "7799888": "Grass Land 4 - Star 5",
-                    "7799889": "Grass Land 4 - Star 6",
-                    "7799890": "Grass Land 4 - Star 7",
-                    "7799891": "Grass Land 4 - Star 8",
-                    "7799892": "Grass Land 4 - Star 9",
-                    "7799893": "Grass Land 4 - Star 10",
-                    "7799894": "Grass Land 4 - Star 11",
-                    "7799895": "Grass Land 4 - Star 12",
-                    "7799896": "Grass Land 4 - Star 13",
-                    "7799897": "Grass Land 4 - Star 14",
-                    "7799898": "Grass Land 4 - Star 15",
-                    "7799899": "Grass Land 4 - Star 16",
-                    "7799900": "Grass Land 4 - Star 17",
-                    "7799901": "Grass Land 4 - Star 18",
-                    "7799902": "Grass Land 4 - Star 19",
-                    "7799903": "Grass Land 4 - Star 20",
-                    "7799904": "Grass Land 4 - Star 21",
-                    "7799905": "Grass Land 4 - Star 22",
-                    "7799906": "Grass Land 4 - Star 23",
-                    "7799907": "Grass Land 4 - Star 24",
-                    "7799908": "Grass Land 4 - Star 25",
-                    "7799909": "Grass Land 4 - Star 26",
-                    "7799910": "Grass Land 4 - Star 27",
-                    "7799911": "Grass Land 4 - Star 28",
-                    "7799912": "Grass Land 4 - Star 29",
-                    "7799913": "Grass Land 4 - Star 30",
-                    "7799914": "Grass Land 4 - Star 31",
-                    "7799915": "Grass Land 4 - Star 32",
-                    "7799916": "Grass Land 4 - Star 33",
-                    "7799917": "Grass Land 4 - Star 34",
-                    "7799918": "Grass Land 4 - Star 35",
-                    "7799919": "Grass Land 4 - Star 36",
-                    "7799920": "Grass Land 4 - Star 37",
-                    "7799921": "Grass Land 5 - Star 1",
-                    "7799922": "Grass Land 5 - Star 2",
-                    "7799923": "Grass Land 5 - Star 3",
-                    "7799924": "Grass Land 5 - Star 4",
-                    "7799925": "Grass Land 5 - Star 5",
-                    "7799926": "Grass Land 5 - Star 6",
-                    "7799927": "Grass Land 5 - Star 7",
-                    "7799928": "Grass Land 5 - Star 8",
-                    "7799929": "Grass Land 5 - Star 9",
-                    "7799930": "Grass Land 5 - Star 10",
-                    "7799931": "Grass Land 5 - Star 11",
-                    "7799932": "Grass Land 5 - Star 12",
-                    "7799933": "Grass Land 5 - Star 13",
-                    "7799934": "Grass Land 5 - Star 14",
-                    "7799935": "Grass Land 5 - Star 15",
-                    "7799936": "Grass Land 5 - Star 16",
-                    "7799937": "Grass Land 5 - Star 17",
-                    "7799938": "Grass Land 5 - Star 18",
-                    "7799939": "Grass Land 5 - Star 19",
-                    "7799940": "Grass Land 5 - Star 20",
-                    "7799941": "Grass Land 5 - Star 21",
-                    "7799942": "Grass Land 5 - Star 22",
-                    "7799943": "Grass Land 5 - Star 23",
-                    "7799944": "Grass Land 5 - Star 24",
-                    "7799945": "Grass Land 5 - Star 25",
-                    "7799946": "Grass Land 5 - Star 26",
-                    "7799947": "Grass Land 5 - Star 27",
-                    "7799948": "Grass Land 5 - Star 28",
-                    "7799949": "Grass Land 5 - Star 29",
-                    "7799950": "Grass Land 6 - Star 1",
-                    "7799951": "Grass Land 6 - Star 2",
-                    "7799952": "Grass Land 6 - Star 3",
-                    "7799953": "Grass Land 6 - Star 4",
-                    "7799954": "Grass Land 6 - Star 5",
-                    "7799955": "Grass Land 6 - Star 6",
-                    "7799956": "Grass Land 6 - Star 7",
-                    "7799957": "Grass Land 6 - Star 8",
-                    "7799958": "Grass Land 6 - Star 9",
-                    "7799959": "Grass Land 6 - Star 10",
-                    "7799960": "Grass Land 6 - Star 11",
-                    "7799961": "Grass Land 6 - Star 12",
-                    "7799962": "Grass Land 6 - Star 13",
-                    "7799963": "Grass Land 6 - Star 14",
-                    "7799964": "Grass Land 6 - Star 15",
-                    "7799965": "Grass Land 6 - Star 16",
-                    "7799966": "Grass Land 6 - Star 17",
-                    "7799967": "Grass Land 6 - Star 18",
-                    "7799968": "Grass Land 6 - Star 19",
-                    "7799969": "Grass Land 6 - Star 20",
-                    "7799970": "Grass Land 6 - Star 21",
-                    "7799971": "Grass Land 6 - Star 22",
-                    "7799972": "Grass Land 6 - Star 23",
-                    "7799973": "Grass Land 6 - Star 24",
-                    "7799974": "Grass Land 6 - Star 25",
-                    "7799975": "Grass Land 6 - Star 26",
-                    "7799976": "Grass Land 6 - Star 27",
-                    "7799977": "Grass Land 6 - Star 28",
-                    "7799978": "Grass Land 6 - Star 29",
-                    "7799979": "Ripple Field 1 - Star 1",
-                    "7799980": "Ripple Field 1 - Star 2",
-                    "7799981": "Ripple Field 1 - Star 3",
-                    "7799982": "Ripple Field 1 - Star 4",
-                    "7799983": "Ripple Field 1 - Star 5",
-                    "7799984": "Ripple Field 1 - Star 6",
-                    "7799985": "Ripple Field 1 - Star 7",
-                    "7799986": "Ripple Field 1 - Star 8",
-                    "7799987": "Ripple Field 1 - Star 9",
-                    "7799988": "Ripple Field 1 - Star 10",
-                    "7799989": "Ripple Field 1 - Star 11",
-                    "7799990": "Ripple Field 1 - Star 12",
-                    "7799991": "Ripple Field 1 - Star 13",
-                    "7799992": "Ripple Field 1 - Star 14",
-                    "7799993": "Ripple Field 1 - Star 15",
-                    "7799994": "Ripple Field 1 - Star 16",
-                    "7799995": "Ripple Field 1 - Star 17",
-                    "7799996": "Ripple Field 1 - Star 18",
-                    "7799997": "Ripple Field 1 - Star 19",
-                    "7799998": "Ripple Field 2 - Star 1",
-                    "7799999": "Ripple Field 2 - Star 2",
-                    "7800000": "Ripple Field 2 - Star 3",
-                    "7800001": "Ripple Field 2 - Star 4",
-                    "7800002": "Ripple Field 2 - Star 5",
-                    "7800003": "Ripple Field 2 - Star 6",
-                    "7800004": "Ripple Field 2 - Star 7",
-                    "7800005": "Ripple Field 2 - Star 8",
-                    "7800006": "Ripple Field 2 - Star 9",
-                    "7800007": "Ripple Field 2 - Star 10",
-                    "7800008": "Ripple Field 2 - Star 11",
-                    "7800009": "Ripple Field 2 - Star 12",
-                    "7800010": "Ripple Field 2 - Star 13",
-                    "7800011": "Ripple Field 2 - Star 14",
-                    "7800012": "Ripple Field 2 - Star 15",
-                    "7800013": "Ripple Field 2 - Star 16",
-                    "7800014": "Ripple Field 2 - Star 17",
-                    "7800015": "Ripple Field 3 - Star 1",
-                    "7800016": "Ripple Field 3 - Star 2",
-                    "7800017": "Ripple Field 3 - Star 3",
-                    "7800018": "Ripple Field 3 - Star 4",
-                    "7800019": "Ripple Field 3 - Star 5",
-                    "7800020": "Ripple Field 3 - Star 6",
-                    "7800021": "Ripple Field 3 - Star 7",
-                    "7800022": "Ripple Field 3 - Star 8",
-                    "7800023": "Ripple Field 3 - Star 9",
-                    "7800024": "Ripple Field 3 - Star 10",
-                    "7800025": "Ripple Field 3 - Star 11",
-                    "7800026": "Ripple Field 3 - Star 12",
-                    "7800027": "Ripple Field 3 - Star 13",
-                    "7800028": "Ripple Field 3 - Star 14",
-                    "7800029": "Ripple Field 3 - Star 15",
-                    "7800030": "Ripple Field 3 - Star 16",
-                    "7800031": "Ripple Field 3 - Star 17",
-                    "7800032": "Ripple Field 3 - Star 18",
-                    "7800033": "Ripple Field 3 - Star 19",
-                    "7800034": "Ripple Field 3 - Star 20",
-                    "7800035": "Ripple Field 3 - Star 21",
-                    "7800036": "Ripple Field 4 - Star 1",
-                    "7800037": "Ripple Field 4 - Star 2",
-                    "7800038": "Ripple Field 4 - Star 3",
-                    "7800039": "Ripple Field 4 - Star 4",
-                    "7800040": "Ripple Field 4 - Star 5",
-                    "7800041": "Ripple Field 4 - Star 6",
-                    "7800042": "Ripple Field 4 - Star 7",
-                    "7800043": "Ripple Field 4 - Star 8",
-                    "7800044": "Ripple Field 4 - Star 9",
-                    "7800045": "Ripple Field 4 - Star 10",
-                    "7800046": "Ripple Field 4 - Star 11",
-                    "7800047": "Ripple Field 4 - Star 12",
-                    "7800048": "Ripple Field 4 - Star 13",
-                    "7800049": "Ripple Field 4 - Star 14",
-                    "7800050": "Ripple Field 4 - Star 15",
-                    "7800051": "Ripple Field 4 - Star 16",
-                    "7800052": "Ripple Field 4 - Star 17",
-                    "7800053": "Ripple Field 4 - Star 18",
-                    "7800054": "Ripple Field 4 - Star 19",
-                    "7800055": "Ripple Field 4 - Star 20",
-                    "7800056": "Ripple Field 4 - Star 21",
-                    "7800057": "Ripple Field 4 - Star 22",
-                    "7800058": "Ripple Field 4 - Star 23",
-                    "7800059": "Ripple Field 4 - Star 24",
-                    "7800060": "Ripple Field 4 - Star 25",
-                    "7800061": "Ripple Field 4 - Star 26",
-                    "7800062": "Ripple Field 4 - Star 27",
-                    "7800063": "Ripple Field 4 - Star 28",
-                    "7800064": "Ripple Field 4 - Star 29",
-                    "7800065": "Ripple Field 4 - Star 30",
-                    "7800066": "Ripple Field 4 - Star 31",
-                    "7800067": "Ripple Field 4 - Star 32",
-                    "7800068": "Ripple Field 4 - Star 33",
-                    "7800069": "Ripple Field 4 - Star 34",
-                    "7800070": "Ripple Field 4 - Star 35",
-                    "7800071": "Ripple Field 4 - Star 36",
-                    "7800072": "Ripple Field 4 - Star 37",
-                    "7800073": "Ripple Field 4 - Star 38",
-                    "7800074": "Ripple Field 4 - Star 39",
-                    "7800075": "Ripple Field 4 - Star 40",
-                    "7800076": "Ripple Field 4 - Star 41",
-                    "7800077": "Ripple Field 4 - Star 42",
-                    "7800078": "Ripple Field 4 - Star 43",
-                    "7800079": "Ripple Field 4 - Star 44",
-                    "7800080": "Ripple Field 4 - Star 45",
-                    "7800081": "Ripple Field 4 - Star 46",
-                    "7800082": "Ripple Field 4 - Star 47",
-                    "7800083": "Ripple Field 4 - Star 48",
-                    "7800084": "Ripple Field 4 - Star 49",
-                    "7800085": "Ripple Field 4 - Star 50",
-                    "7800086": "Ripple Field 4 - Star 51",
-                    "7800087": "Ripple Field 5 - Star 1",
-                    "7800088": "Ripple Field 5 - Star 2",
-                    "7800089": "Ripple Field 5 - Star 3",
-                    "7800090": "Ripple Field 5 - Star 4",
-                    "7800091": "Ripple Field 5 - Star 5",
-                    "7800092": "Ripple Field 5 - Star 6",
-                    "7800093": "Ripple Field 5 - Star 7",
-                    "7800094": "Ripple Field 5 - Star 8",
-                    "7800095": "Ripple Field 5 - Star 9",
-                    "7800096": "Ripple Field 5 - Star 10",
-                    "7800097": "Ripple Field 5 - Star 11",
-                    "7800098": "Ripple Field 5 - Star 12",
-                    "7800099": "Ripple Field 5 - Star 13",
-                    "7800100": "Ripple Field 5 - Star 14",
-                    "7800101": "Ripple Field 5 - Star 15",
-                    "7800102": "Ripple Field 5 - Star 16",
-                    "7800103": "Ripple Field 5 - Star 17",
-                    "7800104": "Ripple Field 5 - Star 18",
-                    "7800105": "Ripple Field 5 - Star 19",
-                    "7800106": "Ripple Field 5 - Star 20",
-                    "7800107": "Ripple Field 5 - Star 21",
-                    "7800108": "Ripple Field 5 - Star 22",
-                    "7800109": "Ripple Field 5 - Star 23",
-                    "7800110": "Ripple Field 5 - Star 24",
-                    "7800111": "Ripple Field 5 - Star 25",
-                    "7800112": "Ripple Field 5 - Star 26",
-                    "7800113": "Ripple Field 5 - Star 27",
-                    "7800114": "Ripple Field 5 - Star 28",
-                    "7800115": "Ripple Field 5 - Star 29",
-                    "7800116": "Ripple Field 5 - Star 30",
-                    "7800117": "Ripple Field 5 - Star 31",
-                    "7800118": "Ripple Field 5 - Star 32",
-                    "7800119": "Ripple Field 5 - Star 33",
-                    "7800120": "Ripple Field 5 - Star 34",
-                    "7800121": "Ripple Field 5 - Star 35",
-                    "7800122": "Ripple Field 5 - Star 36",
-                    "7800123": "Ripple Field 5 - Star 37",
-                    "7800124": "Ripple Field 5 - Star 38",
-                    "7800125": "Ripple Field 5 - Star 39",
-                    "7800126": "Ripple Field 5 - Star 40",
-                    "7800127": "Ripple Field 5 - Star 41",
-                    "7800128": "Ripple Field 5 - Star 42",
-                    "7800129": "Ripple Field 5 - Star 43",
-                    "7800130": "Ripple Field 5 - Star 44",
-                    "7800131": "Ripple Field 5 - Star 45",
-                    "7800132": "Ripple Field 5 - Star 46",
-                    "7800133": "Ripple Field 5 - Star 47",
-                    "7800134": "Ripple Field 5 - Star 48",
-                    "7800135": "Ripple Field 5 - Star 49",
-                    "7800136": "Ripple Field 5 - Star 50",
-                    "7800137": "Ripple Field 5 - Star 51",
-                    "7800138": "Ripple Field 6 - Star 1",
-                    "7800139": "Ripple Field 6 - Star 2",
-                    "7800140": "Ripple Field 6 - Star 3",
-                    "7800141": "Ripple Field 6 - Star 4",
-                    "7800142": "Ripple Field 6 - Star 5",
-                    "7800143": "Ripple Field 6 - Star 6",
-                    "7800144": "Ripple Field 6 - Star 7",
-                    "7800145": "Ripple Field 6 - Star 8",
-                    "7800146": "Ripple Field 6 - Star 9",
-                    "7800147": "Ripple Field 6 - Star 10",
-                    "7800148": "Ripple Field 6 - Star 11",
-                    "7800149": "Ripple Field 6 - Star 12",
-                    "7800150": "Ripple Field 6 - Star 13",
-                    "7800151": "Ripple Field 6 - Star 14",
-                    "7800152": "Ripple Field 6 - Star 15",
-                    "7800153": "Ripple Field 6 - Star 16",
-                    "7800154": "Ripple Field 6 - Star 17",
-                    "7800155": "Ripple Field 6 - Star 18",
-                    "7800156": "Ripple Field 6 - Star 19",
-                    "7800157": "Ripple Field 6 - Star 20",
-                    "7800158": "Ripple Field 6 - Star 21",
-                    "7800159": "Ripple Field 6 - Star 22",
-                    "7800160": "Ripple Field 6 - Star 23",
-                    "7800161": "Sand Canyon 1 - Star 1",
-                    "7800162": "Sand Canyon 1 - Star 2",
-                    "7800163": "Sand Canyon 1 - Star 3",
-                    "7800164": "Sand Canyon 1 - Star 4",
-                    "7800165": "Sand Canyon 1 - Star 5",
-                    "7800166": "Sand Canyon 1 - Star 6",
-                    "7800167": "Sand Canyon 1 - Star 7",
-                    "7800168": "Sand Canyon 1 - Star 8",
-                    "7800169": "Sand Canyon 1 - Star 9",
-                    "7800170": "Sand Canyon 1 - Star 10",
-                    "7800171": "Sand Canyon 1 - Star 11",
-                    "7800172": "Sand Canyon 1 - Star 12",
-                    "7800173": "Sand Canyon 1 - Star 13",
-                    "7800174": "Sand Canyon 1 - Star 14",
-                    "7800175": "Sand Canyon 1 - Star 15",
-                    "7800176": "Sand Canyon 1 - Star 16",
-                    "7800177": "Sand Canyon 1 - Star 17",
-                    "7800178": "Sand Canyon 1 - Star 18",
-                    "7800179": "Sand Canyon 1 - Star 19",
-                    "7800180": "Sand Canyon 1 - Star 20",
-                    "7800181": "Sand Canyon 1 - Star 21",
-                    "7800182": "Sand Canyon 1 - Star 22",
-                    "7800183": "Sand Canyon 2 - Star 1",
-                    "7800184": "Sand Canyon 2 - Star 2",
-                    "7800185": "Sand Canyon 2 - Star 3",
-                    "7800186": "Sand Canyon 2 - Star 4",
-                    "7800187": "Sand Canyon 2 - Star 5",
-                    "7800188": "Sand Canyon 2 - Star 6",
-                    "7800189": "Sand Canyon 2 - Star 7",
-                    "7800190": "Sand Canyon 2 - Star 8",
-                    "7800191": "Sand Canyon 2 - Star 9",
-                    "7800192": "Sand Canyon 2 - Star 10",
-                    "7800193": "Sand Canyon 2 - Star 11",
-                    "7800194": "Sand Canyon 2 - Star 12",
-                    "7800195": "Sand Canyon 2 - Star 13",
-                    "7800196": "Sand Canyon 2 - Star 14",
-                    "7800197": "Sand Canyon 2 - Star 15",
-                    "7800198": "Sand Canyon 2 - Star 16",
-                    "7800199": "Sand Canyon 2 - Star 17",
-                    "7800200": "Sand Canyon 2 - Star 18",
-                    "7800201": "Sand Canyon 2 - Star 19",
-                    "7800202": "Sand Canyon 2 - Star 20",
-                    "7800203": "Sand Canyon 2 - Star 21",
-                    "7800204": "Sand Canyon 2 - Star 22",
-                    "7800205": "Sand Canyon 2 - Star 23",
-                    "7800206": "Sand Canyon 2 - Star 24",
-                    "7800207": "Sand Canyon 2 - Star 25",
-                    "7800208": "Sand Canyon 2 - Star 26",
-                    "7800209": "Sand Canyon 2 - Star 27",
-                    "7800210": "Sand Canyon 2 - Star 28",
-                    "7800211": "Sand Canyon 2 - Star 29",
-                    "7800212": "Sand Canyon 2 - Star 30",
-                    "7800213": "Sand Canyon 2 - Star 31",
-                    "7800214": "Sand Canyon 2 - Star 32",
-                    "7800215": "Sand Canyon 2 - Star 33",
-                    "7800216": "Sand Canyon 2 - Star 34",
-                    "7800217": "Sand Canyon 2 - Star 35",
-                    "7800218": "Sand Canyon 2 - Star 36",
-                    "7800219": "Sand Canyon 2 - Star 37",
-                    "7800220": "Sand Canyon 2 - Star 38",
-                    "7800221": "Sand Canyon 2 - Star 39",
-                    "7800222": "Sand Canyon 2 - Star 40",
-                    "7800223": "Sand Canyon 2 - Star 41",
-                    "7800224": "Sand Canyon 2 - Star 42",
-                    "7800225": "Sand Canyon 2 - Star 43",
-                    "7800226": "Sand Canyon 2 - Star 44",
-                    "7800227": "Sand Canyon 2 - Star 45",
-                    "7800228": "Sand Canyon 2 - Star 46",
-                    "7800229": "Sand Canyon 2 - Star 47",
-                    "7800230": "Sand Canyon 2 - Star 48",
-                    "7800231": "Sand Canyon 3 - Star 1",
-                    "7800232": "Sand Canyon 3 - Star 2",
-                    "7800233": "Sand Canyon 3 - Star 3",
-                    "7800234": "Sand Canyon 3 - Star 4",
-                    "7800235": "Sand Canyon 3 - Star 5",
-                    "7800236": "Sand Canyon 3 - Star 6",
-                    "7800237": "Sand Canyon 3 - Star 7",
-                    "7800238": "Sand Canyon 3 - Star 8",
-                    "7800239": "Sand Canyon 3 - Star 9",
-                    "7800240": "Sand Canyon 3 - Star 10",
-                    "7800241": "Sand Canyon 4 - Star 1",
-                    "7800242": "Sand Canyon 4 - Star 2",
-                    "7800243": "Sand Canyon 4 - Star 3",
-                    "7800244": "Sand Canyon 4 - Star 4",
-                    "7800245": "Sand Canyon 4 - Star 5",
-                    "7800246": "Sand Canyon 4 - Star 6",
-                    "7800247": "Sand Canyon 4 - Star 7",
-                    "7800248": "Sand Canyon 4 - Star 8",
-                    "7800249": "Sand Canyon 4 - Star 9",
-                    "7800250": "Sand Canyon 4 - Star 10",
-                    "7800251": "Sand Canyon 4 - Star 11",
-                    "7800252": "Sand Canyon 4 - Star 12",
-                    "7800253": "Sand Canyon 4 - Star 13",
-                    "7800254": "Sand Canyon 4 - Star 14",
-                    "7800255": "Sand Canyon 4 - Star 15",
-                    "7800256": "Sand Canyon 4 - Star 16",
-                    "7800257": "Sand Canyon 4 - Star 17",
-                    "7800258": "Sand Canyon 4 - Star 18",
-                    "7800259": "Sand Canyon 4 - Star 19",
-                    "7800260": "Sand Canyon 4 - Star 20",
-                    "7800261": "Sand Canyon 4 - Star 21",
-                    "7800262": "Sand Canyon 4 - Star 22",
-                    "7800263": "Sand Canyon 4 - Star 23",
-                    "7800264": "Sand Canyon 5 - Star 1",
-                    "7800265": "Sand Canyon 5 - Star 2",
-                    "7800266": "Sand Canyon 5 - Star 3",
-                    "7800267": "Sand Canyon 5 - Star 4",
-                    "7800268": "Sand Canyon 5 - Star 5",
-                    "7800269": "Sand Canyon 5 - Star 6",
-                    "7800270": "Sand Canyon 5 - Star 7",
-                    "7800271": "Sand Canyon 5 - Star 8",
-                    "7800272": "Sand Canyon 5 - Star 9",
-                    "7800273": "Sand Canyon 5 - Star 10",
-                    "7800274": "Sand Canyon 5 - Star 11",
-                    "7800275": "Sand Canyon 5 - Star 12",
-                    "7800276": "Sand Canyon 5 - Star 13",
-                    "7800277": "Sand Canyon 5 - Star 14",
-                    "7800278": "Sand Canyon 5 - Star 15",
-                    "7800279": "Sand Canyon 5 - Star 16",
-                    "7800280": "Sand Canyon 5 - Star 17",
-                    "7800281": "Sand Canyon 5 - Star 18",
-                    "7800282": "Sand Canyon 5 - Star 19",
-                    "7800283": "Sand Canyon 5 - Star 20",
-                    "7800284": "Sand Canyon 5 - Star 21",
-                    "7800285": "Sand Canyon 5 - Star 22",
-                    "7800286": "Sand Canyon 5 - Star 23",
-                    "7800287": "Sand Canyon 5 - Star 24",
-                    "7800288": "Sand Canyon 5 - Star 25",
-                    "7800289": "Sand Canyon 5 - Star 26",
-                    "7800290": "Sand Canyon 5 - Star 27",
-                    "7800291": "Sand Canyon 5 - Star 28",
-                    "7800292": "Sand Canyon 5 - Star 29",
-                    "7800293": "Sand Canyon 5 - Star 30",
-                    "7800294": "Sand Canyon 5 - Star 31",
-                    "7800295": "Sand Canyon 5 - Star 32",
-                    "7800296": "Sand Canyon 5 - Star 33",
-                    "7800297": "Sand Canyon 5 - Star 34",
-                    "7800298": "Sand Canyon 5 - Star 35",
-                    "7800299": "Sand Canyon 5 - Star 36",
-                    "7800300": "Sand Canyon 5 - Star 37",
-                    "7800301": "Sand Canyon 5 - Star 38",
-                    "7800302": "Sand Canyon 5 - Star 39",
-                    "7800303": "Sand Canyon 5 - Star 40",
-                    "7800304": "Cloudy Park 1 - Star 1",
-                    "7800305": "Cloudy Park 1 - Star 2",
-                    "7800306": "Cloudy Park 1 - Star 3",
-                    "7800307": "Cloudy Park 1 - Star 4",
-                    "7800308": "Cloudy Park 1 - Star 5",
-                    "7800309": "Cloudy Park 1 - Star 6",
-                    "7800310": "Cloudy Park 1 - Star 7",
-                    "7800311": "Cloudy Park 1 - Star 8",
-                    "7800312": "Cloudy Park 1 - Star 9",
-                    "7800313": "Cloudy Park 1 - Star 10",
-                    "7800314": "Cloudy Park 1 - Star 11",
-                    "7800315": "Cloudy Park 1 - Star 12",
-                    "7800316": "Cloudy Park 1 - Star 13",
-                    "7800317": "Cloudy Park 1 - Star 14",
-                    "7800318": "Cloudy Park 1 - Star 15",
-                    "7800319": "Cloudy Park 1 - Star 16",
-                    "7800320": "Cloudy Park 1 - Star 17",
-                    "7800321": "Cloudy Park 1 - Star 18",
-                    "7800322": "Cloudy Park 1 - Star 19",
-                    "7800323": "Cloudy Park 1 - Star 20",
-                    "7800324": "Cloudy Park 1 - Star 21",
-                    "7800325": "Cloudy Park 1 - Star 22",
-                    "7800326": "Cloudy Park 1 - Star 23",
-                    "7800327": "Cloudy Park 2 - Star 1",
-                    "7800328": "Cloudy Park 2 - Star 2",
-                    "7800329": "Cloudy Park 2 - Star 3",
-                    "7800330": "Cloudy Park 2 - Star 4",
-                    "7800331": "Cloudy Park 2 - Star 5",
-                    "7800332": "Cloudy Park 2 - Star 6",
-                    "7800333": "Cloudy Park 2 - Star 7",
-                    "7800334": "Cloudy Park 2 - Star 8",
-                    "7800335": "Cloudy Park 2 - Star 9",
-                    "7800336": "Cloudy Park 2 - Star 10",
-                    "7800337": "Cloudy Park 2 - Star 11",
-                    "7800338": "Cloudy Park 2 - Star 12",
-                    "7800339": "Cloudy Park 2 - Star 13",
-                    "7800340": "Cloudy Park 2 - Star 14",
-                    "7800341": "Cloudy Park 2 - Star 15",
-                    "7800342": "Cloudy Park 2 - Star 16",
-                    "7800343": "Cloudy Park 2 - Star 17",
-                    "7800344": "Cloudy Park 2 - Star 18",
-                    "7800345": "Cloudy Park 2 - Star 19",
-                    "7800346": "Cloudy Park 2 - Star 20",
-                    "7800347": "Cloudy Park 2 - Star 21",
-                    "7800348": "Cloudy Park 2 - Star 22",
-                    "7800349": "Cloudy Park 2 - Star 23",
-                    "7800350": "Cloudy Park 2 - Star 24",
-                    "7800351": "Cloudy Park 2 - Star 25",
-                    "7800352": "Cloudy Park 2 - Star 26",
-                    "7800353": "Cloudy Park 2 - Star 27",
-                    "7800354": "Cloudy Park 2 - Star 28",
-                    "7800355": "Cloudy Park 2 - Star 29",
-                    "7800356": "Cloudy Park 2 - Star 30",
-                    "7800357": "Cloudy Park 2 - Star 31",
-                    "7800358": "Cloudy Park 2 - Star 32",
-                    "7800359": "Cloudy Park 2 - Star 33",
-                    "7800360": "Cloudy Park 2 - Star 34",
-                    "7800361": "Cloudy Park 2 - Star 35",
-                    "7800362": "Cloudy Park 2 - Star 36",
-                    "7800363": "Cloudy Park 2 - Star 37",
-                    "7800364": "Cloudy Park 2 - Star 38",
-                    "7800365": "Cloudy Park 2 - Star 39",
-                    "7800366": "Cloudy Park 2 - Star 40",
-                    "7800367": "Cloudy Park 2 - Star 41",
-                    "7800368": "Cloudy Park 2 - Star 42",
-                    "7800369": "Cloudy Park 2 - Star 43",
-                    "7800370": "Cloudy Park 2 - Star 44",
-                    "7800371": "Cloudy Park 2 - Star 45",
-                    "7800372": "Cloudy Park 2 - Star 46",
-                    "7800373": "Cloudy Park 2 - Star 47",
-                    "7800374": "Cloudy Park 2 - Star 48",
-                    "7800375": "Cloudy Park 2 - Star 49",
-                    "7800376": "Cloudy Park 2 - Star 50",
-                    "7800377": "Cloudy Park 2 - Star 51",
-                    "7800378": "Cloudy Park 2 - Star 52",
-                    "7800379": "Cloudy Park 2 - Star 53",
-                    "7800380": "Cloudy Park 2 - Star 54",
-                    "7800381": "Cloudy Park 3 - Star 1",
-                    "7800382": "Cloudy Park 3 - Star 2",
-                    "7800383": "Cloudy Park 3 - Star 3",
-                    "7800384": "Cloudy Park 3 - Star 4",
-                    "7800385": "Cloudy Park 3 - Star 5",
-                    "7800386": "Cloudy Park 3 - Star 6",
-                    "7800387": "Cloudy Park 3 - Star 7",
-                    "7800388": "Cloudy Park 3 - Star 8",
-                    "7800389": "Cloudy Park 3 - Star 9",
-                    "7800390": "Cloudy Park 3 - Star 10",
-                    "7800391": "Cloudy Park 3 - Star 11",
-                    "7800392": "Cloudy Park 3 - Star 12",
-                    "7800393": "Cloudy Park 3 - Star 13",
-                    "7800394": "Cloudy Park 3 - Star 14",
-                    "7800395": "Cloudy Park 3 - Star 15",
-                    "7800396": "Cloudy Park 3 - Star 16",
-                    "7800397": "Cloudy Park 3 - Star 17",
-                    "7800398": "Cloudy Park 3 - Star 18",
-                    "7800399": "Cloudy Park 3 - Star 19",
-                    "7800400": "Cloudy Park 3 - Star 20",
-                    "7800401": "Cloudy Park 3 - Star 21",
-                    "7800402": "Cloudy Park 3 - Star 22",
-                    "7800403": "Cloudy Park 4 - Star 1",
-                    "7800404": "Cloudy Park 4 - Star 2",
-                    "7800405": "Cloudy Park 4 - Star 3",
-                    "7800406": "Cloudy Park 4 - Star 4",
-                    "7800407": "Cloudy Park 4 - Star 5",
-                    "7800408": "Cloudy Park 4 - Star 6",
-                    "7800409": "Cloudy Park 4 - Star 7",
-                    "7800410": "Cloudy Park 4 - Star 8",
-                    "7800411": "Cloudy Park 4 - Star 9",
-                    "7800412": "Cloudy Park 4 - Star 10",
-                    "7800413": "Cloudy Park 4 - Star 11",
-                    "7800414": "Cloudy Park 4 - Star 12",
-                    "7800415": "Cloudy Park 4 - Star 13",
-                    "7800416": "Cloudy Park 4 - Star 14",
-                    "7800417": "Cloudy Park 4 - Star 15",
-                    "7800418": "Cloudy Park 4 - Star 16",
-                    "7800419": "Cloudy Park 4 - Star 17",
-                    "7800420": "Cloudy Park 4 - Star 18",
-                    "7800421": "Cloudy Park 4 - Star 19",
-                    "7800422": "Cloudy Park 4 - Star 20",
-                    "7800423": "Cloudy Park 4 - Star 21",
-                    "7800424": "Cloudy Park 4 - Star 22",
-                    "7800425": "Cloudy Park 4 - Star 23",
-                    "7800426": "Cloudy Park 4 - Star 24",
-                    "7800427": "Cloudy Park 4 - Star 25",
-                    "7800428": "Cloudy Park 4 - Star 26",
-                    "7800429": "Cloudy Park 4 - Star 27",
-                    "7800430": "Cloudy Park 4 - Star 28",
-                    "7800431": "Cloudy Park 4 - Star 29",
-                    "7800432": "Cloudy Park 4 - Star 30",
-                    "7800433": "Cloudy Park 4 - Star 31",
-                    "7800434": "Cloudy Park 4 - Star 32",
-                    "7800435": "Cloudy Park 4 - Star 33",
-                    "7800436": "Cloudy Park 4 - Star 34",
-                    "7800437": "Cloudy Park 4 - Star 35",
-                    "7800438": "Cloudy Park 4 - Star 36",
-                    "7800439": "Cloudy Park 4 - Star 37",
-                    "7800440": "Cloudy Park 4 - Star 38",
-                    "7800441": "Cloudy Park 4 - Star 39",
-                    "7800442": "Cloudy Park 4 - Star 40",
-                    "7800443": "Cloudy Park 4 - Star 41",
-                    "7800444": "Cloudy Park 4 - Star 42",
-                    "7800445": "Cloudy Park 4 - Star 43",
-                    "7800446": "Cloudy Park 4 - Star 44",
-                    "7800447": "Cloudy Park 4 - Star 45",
-                    "7800448": "Cloudy Park 4 - Star 46",
-                    "7800449": "Cloudy Park 4 - Star 47",
-                    "7800450": "Cloudy Park 4 - Star 48",
-                    "7800451": "Cloudy Park 4 - Star 49",
-                    "7800452": "Cloudy Park 4 - Star 50",
-                    "7800453": "Cloudy Park 5 - Star 1",
-                    "7800454": "Cloudy Park 5 - Star 2",
-                    "7800455": "Cloudy Park 5 - Star 3",
-                    "7800456": "Cloudy Park 5 - Star 4",
-                    "7800457": "Cloudy Park 5 - Star 5",
-                    "7800458": "Cloudy Park 5 - Star 6",
-                    "7800459": "Cloudy Park 6 - Star 1",
-                    "7800460": "Cloudy Park 6 - Star 2",
-                    "7800461": "Cloudy Park 6 - Star 3",
-                    "7800462": "Cloudy Park 6 - Star 4",
-                    "7800463": "Cloudy Park 6 - Star 5",
-                    "7800464": "Cloudy Park 6 - Star 6",
-                    "7800465": "Cloudy Park 6 - Star 7",
-                    "7800466": "Cloudy Park 6 - Star 8",
-                    "7800467": "Cloudy Park 6 - Star 9",
-                    "7800468": "Cloudy Park 6 - Star 10",
-                    "7800469": "Cloudy Park 6 - Star 11",
-                    "7800470": "Cloudy Park 6 - Star 12",
-                    "7800471": "Cloudy Park 6 - Star 13",
-                    "7800472": "Cloudy Park 6 - Star 14",
-                    "7800473": "Cloudy Park 6 - Star 15",
-                    "7800474": "Cloudy Park 6 - Star 16",
-                    "7800475": "Cloudy Park 6 - Star 17",
-                    "7800476": "Cloudy Park 6 - Star 18",
-                    "7800477": "Cloudy Park 6 - Star 19",
-                    "7800478": "Cloudy Park 6 - Star 20",
-                    "7800479": "Cloudy Park 6 - Star 21",
-                    "7800480": "Cloudy Park 6 - Star 22",
-                    "7800481": "Cloudy Park 6 - Star 23",
-                    "7800482": "Cloudy Park 6 - Star 24",
-                    "7800483": "Cloudy Park 6 - Star 25",
-                    "7800484": "Cloudy Park 6 - Star 26",
-                    "7800485": "Cloudy Park 6 - Star 27",
-                    "7800486": "Cloudy Park 6 - Star 28",
-                    "7800487": "Cloudy Park 6 - Star 29",
-                    "7800488": "Cloudy Park 6 - Star 30",
-                    "7800489": "Cloudy Park 6 - Star 31",
-                    "7800490": "Cloudy Park 6 - Star 32",
-                    "7800491": "Cloudy Park 6 - Star 33",
-                    "7800492": "Iceberg 1 - Star 1",
-                    "7800493": "Iceberg 1 - Star 2",
-                    "7800494": "Iceberg 1 - Star 3",
-                    "7800495": "Iceberg 1 - Star 4",
-                    "7800496": "Iceberg 1 - Star 5",
-                    "7800497": "Iceberg 1 - Star 6",
-                    "7800498": "Iceberg 2 - Star 1",
-                    "7800499": "Iceberg 2 - Star 2",
-                    "7800500": "Iceberg 2 - Star 3",
-                    "7800501": "Iceberg 2 - Star 4",
-                    "7800502": "Iceberg 2 - Star 5",
-                    "7800503": "Iceberg 2 - Star 6",
-                    "7800504": "Iceberg 2 - Star 7",
-                    "7800505": "Iceberg 2 - Star 8",
-                    "7800506": "Iceberg 2 - Star 9",
-                    "7800507": "Iceberg 2 - Star 10",
-                    "7800508": "Iceberg 2 - Star 11",
-                    "7800509": "Iceberg 2 - Star 12",
-                    "7800510": "Iceberg 2 - Star 13",
-                    "7800511": "Iceberg 2 - Star 14",
-                    "7800512": "Iceberg 2 - Star 15",
-                    "7800513": "Iceberg 2 - Star 16",
-                    "7800514": "Iceberg 2 - Star 17",
-                    "7800515": "Iceberg 2 - Star 18",
-                    "7800516": "Iceberg 2 - Star 19",
-                    "7800517": "Iceberg 3 - Star 1",
-                    "7800518": "Iceberg 3 - Star 2",
-                    "7800519": "Iceberg 3 - Star 3",
-                    "7800520": "Iceberg 3 - Star 4",
-                    "7800521": "Iceberg 3 - Star 5",
-                    "7800522": "Iceberg 3 - Star 6",
-                    "7800523": "Iceberg 3 - Star 7",
-                    "7800524": "Iceberg 3 - Star 8",
-                    "7800525": "Iceberg 3 - Star 9",
-                    "7800526": "Iceberg 3 - Star 10",
-                    "7800527": "Iceberg 3 - Star 11",
-                    "7800528": "Iceberg 3 - Star 12",
-                    "7800529": "Iceberg 3 - Star 13",
-                    "7800530": "Iceberg 3 - Star 14",
-                    "7800531": "Iceberg 3 - Star 15",
-                    "7800532": "Iceberg 3 - Star 16",
-                    "7800533": "Iceberg 3 - Star 17",
-                    "7800534": "Iceberg 3 - Star 18",
-                    "7800535": "Iceberg 3 - Star 19",
-                    "7800536": "Iceberg 3 - Star 20",
-                    "7800537": "Iceberg 3 - Star 21",
-                    "7800538": "Iceberg 4 - Star 1",
-                    "7800539": "Iceberg 4 - Star 2",
-                    "7800540": "Iceberg 4 - Star 3",
-                    "7800541": "Iceberg 5 - Star 1",
-                    "7800542": "Iceberg 5 - Star 2",
-                    "7800543": "Iceberg 5 - Star 3",
-                    "7800544": "Iceberg 5 - Star 4",
-                    "7800545": "Iceberg 5 - Star 5",
-                    "7800546": "Iceberg 5 - Star 6",
-                    "7800547": "Iceberg 5 - Star 7",
-                    "7800548": "Iceberg 5 - Star 8",
-                    "7800549": "Iceberg 5 - Star 9",
-                    "7800550": "Iceberg 5 - Star 10",
-                    "7800551": "Iceberg 5 - Star 11",
-                    "7800552": "Iceberg 5 - Star 12",
-                    "7800553": "Iceberg 5 - Star 13",
-                    "7800554": "Iceberg 5 - Star 14",
-                    "7800555": "Iceberg 5 - Star 15",
-                    "7800556": "Iceberg 5 - Star 16",
-                    "7800557": "Iceberg 5 - Star 17",
-                    "7800558": "Iceberg 5 - Star 18",
-                    "7800559": "Iceberg 5 - Star 19",
-                    "7800560": "Iceberg 5 - Star 20",
-                    "7800561": "Iceberg 5 - Star 21",
-                    "7800562": "Iceberg 5 - Star 22",
-                    "7800563": "Iceberg 5 - Star 23",
-                    "7800564": "Iceberg 5 - Star 24",
-                    "7800565": "Iceberg 5 - Star 25",
-                    "7800566": "Iceberg 5 - Star 26",
-                    "7800567": "Iceberg 5 - Star 27",
-                    "7800568": "Iceberg 5 - Star 28",
-                    "7800569": "Iceberg 5 - Star 29",
-                    "7800570": "Iceberg 5 - Star 30",
-                    "7800571": "Iceberg 5 - Star 31",
-                    "7800572": "Iceberg 5 - Star 32",
-                    "7800573": "Iceberg 5 - Star 33",
-                    "7800574": "Iceberg 5 - Star 34",
-                    "7800575": "Iceberg 6 - Star 1"
-                  }
-                },
-                "index": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "name",
-                      "name": "player_levels"
-                    },
-                    "index": {
-                      "type": "name",
-                      "name": "level"
-                    }
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 5
-                  }
-                }
-              },
-              {
-                "type": "constant",
-                "value": "Location"
-              }
-            ]
-          }
-        },
-        "param_mappings": {
-          "ow_boss_req": "ow_boss_requirement"
-        }
-      },
       "can_reach_burning": {
         "type": "and",
         "conditions": [

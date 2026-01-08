@@ -772,10 +772,13 @@ class HereticWorld(RuleWorldMixin, World):
         self.world_description = 'Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software.'
         self.slot_data = types.SimpleNamespace(goal=0, difficulty=2, random_monsters=1, random_pickups=1, random_music=0, allow_death_logic=0, pro=0, death_link=0, reset_level_on_death=1, check_sanity=0, episode1=1, episode2=1, episode3=1, episode4=0, episode5=0, ammo1start=100, ammo2start=50, ammo3start=200, ammo4start=200, ammo5start=20, ammo6start=150, ammo1add=100, ammo2add=50, ammo3add=200, ammo4add=200, ammo5add=20, ammo6add=150)
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -783,7 +786,7 @@ class HereticWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

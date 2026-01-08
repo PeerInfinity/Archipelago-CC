@@ -4,11 +4,9 @@
   "game_directory": "tww_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
-  },
-  "world_classes": {
-    "1": "TheWindWakerWorldGenWorld"
   },
   "regions": {
     "1": {
@@ -346,14 +344,22 @@
               "children": [
                 {
                   "rule": "can_get_inside_forsaken_fortress",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_fly_with_deku_leaf_indoors",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "WorldAttribute",
+                      "args": {
+                        "attribute": "logic_obscure_1"
+                      }
                     },
                     {
                       "rule": "Has",
@@ -775,8 +781,26 @@
                   "rule": "Or",
                   "children": [
                     {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_obscure_1"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Hookshot"
+                          }
+                        }
+                      ]
+                    },
+                    {
                       "rule": "can_fly_with_deku_leaf_indoors",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -1302,19 +1326,34 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_defeat_door_flowers",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "can_destroy_seeds_hanging_by_vines",
-                  "_original_ast_type": "helper"
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_destroy_seeds_hanging_by_vines",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "WorldAttribute",
+                      "args": {
+                        "attribute": "logic_precise_1"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "HasAll",
@@ -1347,15 +1386,29 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "can_defeat_peahats",
-                  "_original_ast_type": "helper"
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_defeat_peahats",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "WorldAttribute",
+                      "args": {
+                        "attribute": "logic_precise_2"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "HasAll",
@@ -1547,11 +1600,51 @@
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_heros_bow",
-                  "_original_ast_type": "helper"
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "can_fly_with_deku_leaf_indoors",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_precise_1"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_obscure_1"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Hookshot"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "has_heros_bow",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1780,23 +1873,87 @@
               "children": [
                 {
                   "rule": "can_aim_mirror_shield",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_defeat_darknuts",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_play_command_melody",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "can_defeat_blue_bubbles",
-                  "_original_ast_type": "helper"
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "has_heros_bow",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_obscure_1"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "has_any_master_sword",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "has_heros_sword",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Skull Hammer"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_obscure_1"
+                          }
+                        },
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_precise_1"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "can_defeat_blue_bubbles",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -2359,7 +2516,8 @@
               "children": [
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -2369,11 +2527,13 @@
                       "children": [
                         {
                           "rule": "can_defeat_blue_bubbles",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "can_fly_with_deku_leaf_indoors",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -2388,22 +2548,26 @@
                       "children": [
                         {
                           "rule": "can_fan_with_deku_leaf",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "can_fly_with_deku_leaf_indoors",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
                           "children": [
                             {
                               "rule": "can_cut_grass",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "has_magic_meter_upgrade",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -2411,6 +2575,34 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Iron Boots"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "can_fly_with_deku_leaf_indoors",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_obscure_1"
+                          }
+                        },
+                        {
+                          "rule": "WorldAttribute",
+                          "args": {
+                            "attribute": "logic_precise_2"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Hookshot"
                           }
                         }
                       ]
@@ -3302,8 +3494,37 @@
             "name": "Cliff Plateau Isles - Cave",
             "id": 2326766,
             "access_rule": {
-              "rule": "can_defeat_boko_babas",
-              "_original_ast_type": "helper"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "WorldAttribute",
+                      "args": {
+                        "attribute": "logic_obscure_1"
+                      }
+                    },
+                    {
+                      "rule": "WorldAttribute",
+                      "args": {
+                        "attribute": "logic_precise_1"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Grappling Hook"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_defeat_boko_babas",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Piece of Heart",
@@ -5513,6 +5734,7 @@
   "world": {
     "1": {
       "game": "The Wind Waker WorldGen",
+      "world_class_name": "TWWWorld",
       "options": {
         "accessibility": 0,
         "add_shortcut_warps_between_dungeons": false,
@@ -5574,9 +5796,11 @@
         "skip_rematch_bosses": true,
         "start_hints": [],
         "start_inventory": {},
+        "start_inventory_from_pool": {},
         "start_location_hints": [],
         "swift_sail": true,
-        "sword_mode": 0
+        "sword_mode": 0,
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -5590,27 +5814,27 @@
         },
         "add_shortcut_warps_between_dungeons": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Add Shortcut Warps Between Dungeons"
         },
         "chest_type_matches_contents": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Chest Type Matches Contents"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "enable_tuner_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable Tuner Logic"
         },
         "hero_mode": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hero Mode"
         },
         "instant_text_boxes": {
@@ -5665,22 +5889,22 @@
         },
         "progression_battlesquid": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Battlesquid Minigame"
         },
         "progression_big_octos_gunboats": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Big Octos and Gunboats"
         },
         "progression_combat_secret_caves": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Combat Secret Caves"
         },
         "progression_dungeon_secrets": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Dungeon Secrets"
         },
         "progression_dungeons": {
@@ -5695,7 +5919,7 @@
         },
         "progression_eye_reef_chests": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Eye Reef Chests"
         },
         "progression_free_gifts": {
@@ -5710,32 +5934,32 @@
         },
         "progression_island_puzzles": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Island Puzzles"
         },
         "progression_long_sidequests": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Long Sidequests"
         },
         "progression_mail": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Mail"
         },
         "progression_minigames": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Minigames"
         },
         "progression_misc": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Miscellaneous"
         },
         "progression_platforms_rafts": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Lookout Platforms and Rafts"
         },
         "progression_puzzle_secret_caves": {
@@ -5745,37 +5969,37 @@
         },
         "progression_savage_labyrinth": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Savage Labyrinth"
         },
         "progression_short_sidequests": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Short Sidequests"
         },
         "progression_spoils_trading": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Spoils Trading"
         },
         "progression_submarines": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Submarines"
         },
         "progression_tingle_chests": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tingle Chests"
         },
         "progression_treasure_charts": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Sunken Treasure (From Treasure Charts)"
         },
         "progression_triforce_charts": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Sunken Treasure (From Triforce Charts)"
         },
         "randomize_bigkeys": {
@@ -5793,27 +6017,27 @@
         },
         "randomize_boss_entrances": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Nested Bosses"
         },
         "randomize_charts": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Charts"
         },
         "randomize_dungeon_entrances": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Dungeons"
         },
         "randomize_enemies": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Enemies"
         },
         "randomize_fairy_fountain_entrances": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Fairy Fountains"
         },
         "randomize_items": {
@@ -5836,17 +6060,17 @@
         },
         "randomize_miniboss_entrances": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Nested Minibosses"
         },
         "randomize_secret_cave_entrances": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Secret Caves"
         },
         "randomize_secret_cave_inner_entrances": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Inner Secret Caves"
         },
         "randomize_smallkeys": {
@@ -5864,17 +6088,17 @@
         },
         "randomize_starting_island": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Starting Island"
         },
         "remove_music": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Remove Music"
         },
         "required_bosses": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Required Bosses Mode"
         },
         "reveal_full_sea_chart": {
@@ -5886,6 +6110,11 @@
           "type": "default_on_toggle",
           "default": 1,
           "display_name": "Skip Boss Rematches"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
         },
         "swift_sail": {
           "type": "default_on_toggle",
@@ -5902,6 +6131,11 @@
           },
           "default": 0,
           "display_name": "Sword Mode"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "dungeons": {
@@ -6320,14 +6554,7 @@
       "world_directory": "tww_worldgen"
     }
   },
-  "exporter": {
-    "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
-      "use_resolved_items": false
-    }
-  },
+  "exporter": {},
   "game_info": {
     "1": {}
   },
@@ -6419,12 +6646,12 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_obscure_2"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_precise_2"
                   }
                 ]
               }
@@ -6523,12 +6750,12 @@
                     "name": "can_fly_with_deku_leaf_outdoors"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_obscure_1"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_precise_1"
                   }
                 ]
               }
@@ -7012,8 +7239,8 @@
                 "name": "can_fly_with_deku_leaf_indoors"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_obscure_1"
               }
             ]
           },
@@ -7153,8 +7380,8 @@
                 "item": "Hookshot"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_1"
               }
             ]
           },
@@ -7166,8 +7393,8 @@
                 "item": "Grappling Hook"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_1"
               }
             ]
           }
@@ -7201,8 +7428,8 @@
                 "item": "Power Bracelets"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_obscure_3"
               }
             ]
           }
@@ -7454,8 +7681,8 @@
                 "item": "Skull Hammer"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_1"
               }
             ]
           }
@@ -7472,8 +7699,8 @@
                 "name": "has_heros_sword"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_in_swordless_mode"
               }
             ]
           },
@@ -7492,8 +7719,8 @@
                     "item": "Skull Hammer"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_obscure_2"
                   }
                 ]
               }
@@ -7519,12 +7746,12 @@
                     "item": "Hookshot"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_obscure_1"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_precise_2"
                   }
                 ]
               }
@@ -7619,8 +7846,8 @@
                 "item": "Skull Hammer"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_3"
               }
             ]
           }
@@ -7797,8 +8024,11 @@
             "type": "and",
             "conditions": [
               {
-                "type": "constant",
-                "value": true
+                "type": "not",
+                "condition": {
+                  "type": "world_attribute",
+                  "attribute": "logic_in_swordless_mode"
+                }
               },
               {
                 "type": "helper",
@@ -7810,8 +8040,8 @@
             "type": "and",
             "conditions": [
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_in_swordless_mode"
               },
               {
                 "type": "item_check",
@@ -7836,8 +8066,8 @@
                 "item": "Boomerang"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_2"
               }
             ]
           }
@@ -8054,12 +8284,12 @@
                 "name": "has_heros_sword"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_obscure_1"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_2"
               }
             ]
           }
@@ -8146,12 +8376,12 @@
             "type": "and",
             "conditions": [
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_obscure_1"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_1"
               }
             ]
           },
@@ -8163,8 +8393,8 @@
                 "name": "can_open_ganons_tower_dark_portal"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_obscure_1"
               }
             ]
           }
@@ -8185,8 +8415,8 @@
                 "name": "has_full_power_master_sword"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_in_swordless_mode"
               }
             ]
           }
@@ -8434,8 +8664,8 @@
                     "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_obscure_2"
                   }
                 ]
               },
@@ -8447,12 +8677,12 @@
                     "name": "has_ice_arrows"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_obscure_2"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_precise_1"
                   }
                 ]
               }
@@ -8634,8 +8864,8 @@
                 "name": "can_defeat_red_bubbles"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_precise_2"
               }
             ]
           },
@@ -8709,12 +8939,12 @@
                     "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_obscure_1"
                   },
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_precise_2"
                   }
                 ]
               }
@@ -8750,8 +8980,8 @@
                 "name": "can_fly_with_deku_leaf_outdoors"
               },
               {
-                "type": "constant",
-                "value": false
+                "type": "world_attribute",
+                "attribute": "logic_obscure_1"
               }
             ]
           }
@@ -8903,8 +9133,8 @@
             "name": "can_complete_all_memory_dungeons_and_bosses"
           },
           {
-            "type": "constant",
-            "value": true
+            "type": "world_attribute",
+            "attribute": "logic_rematch_bosses_skipped"
           }
         ]
       },
@@ -8923,19 +9153,46 @@
             "type": "or",
             "conditions": [
               {
-                "type": "constant",
-                "value": true
+                "type": "not",
+                "condition": {
+                  "type": "world_attribute",
+                  "attribute": "logic_in_required_bosses_mode"
+                }
               },
               {
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "world_attribute",
+                    "attribute": "logic_in_required_bosses_mode"
                   },
                   {
-                    "type": "constant",
-                    "value": true
+                    "type": "all_of",
+                    "element_rule": {
+                      "type": "state_method",
+                      "method": "can_reach_location",
+                      "args": [
+                        {
+                          "type": "name",
+                          "name": "loc"
+                        }
+                      ]
+                    },
+                    "iterator_info": {
+                      "type": "comprehension_details",
+                      "target": {
+                        "type": "name",
+                        "name": "loc"
+                      },
+                      "iterator": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "world_attribute",
+                          "attribute": "boss_reqs"
+                        },
+                        "attr": "required_boss_item_locations"
+                      }
+                    }
                   }
                 ]
               }

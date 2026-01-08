@@ -681,18 +681,6 @@ export function createStateSnapshotInterface(
       if (rawValue === undefined && worldToUse?.options) {
         rawValue = worldToUse.options[settingName];
       }
-
-      // Special case: item_name_groups needs to be constructed dynamically
-      // This is needed for world_attribute rules that reference item_name_groups
-      // (used by helpers like has_relic_combo in AHIT)
-      if (rawValue === undefined && settingName === 'item_name_groups') {
-        const gameInfo = staticData?.game_info?.[playerIdKey] || staticData?.game_info || {};
-        rawValue = {
-          ...(staticData?.groupData || staticData?.groups || {}),
-          ...(gameInfo.relic_groups || {})
-        };
-      }
-
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings
       if (typeof rawValue === 'string') {

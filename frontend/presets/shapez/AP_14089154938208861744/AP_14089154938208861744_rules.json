@@ -4,6 +4,7 @@
   "game_directory": "shapez",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -4284,6 +4285,7 @@
       "options": {
         "accessibility": 0,
         "allow_floating_layers": false,
+        "complexity_growth_gradient": "0.5",
         "early_balancer_tunnel_and_trash": 2,
         "exclude_locations": [],
         "exclude_long_playtime_achievements": true,

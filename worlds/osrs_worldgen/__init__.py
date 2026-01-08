@@ -237,10 +237,13 @@ class OSRSWorld(RuleWorldMixin, World):
         self.world_description = "The best retro fantasy MMORPG on the planet. Old School is RuneScape but… older! This is the open world you know and love, but as it was in 2007.\nThe Randomizer takes the form of a Chunk-Restricted f2p Ironman that takes a brand new account up through defeating\nthe Green Dragon of Crandor and earning a spot in the fabled Champion's Guild!"
         self.slot_data = types.SimpleNamespace(brutal_grinds=0, data_csv_tag='v2.0.5', starting_area='Area: Lumbridge', max_prayer_level=50, max_magic_level=50, max_runecraft_level=50, max_mining_level=50, max_crafting_level=50, max_smithing_level=50, max_fishing_level=50, max_cooking_level=50, max_firemaking_level=50, max_woodcutting_level=50, max_combat_level=50)
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -248,7 +251,7 @@ class OSRSWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

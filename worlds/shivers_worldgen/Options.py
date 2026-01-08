@@ -21,7 +21,7 @@ class UseCanonicalOptions(Toggle):
     """Use canonical options for seed 1.
 
     When enabled and generating seed 1, options will be loaded from the
-    _worldgen_settings.json file to reproduce the exact original seed.
+    _worldgen_options.json file to reproduce the exact original seed.
     This ensures deterministic output matching the original world export.
     """
     display_name = "Use Canonical Options"
@@ -34,6 +34,7 @@ class EarlyBeth(DefaultOnToggle):
 class EarlyLightning(Toggle):
     """Option for Early Lightning."""
     display_name = "Early Lightning"
+    default = False
 
 class ElevatorsStaySolved(DefaultOnToggle):
     """Option for Elevators Stay Solved."""
@@ -42,6 +43,7 @@ class ElevatorsStaySolved(DefaultOnToggle):
 class FrontDoorUsable(Toggle):
     """Option for Front Door Usable."""
     display_name = "Front Door Usable"
+    default = False
 
 class FullPots(Choice):
     """Option for Full Pots."""
@@ -54,6 +56,7 @@ class FullPots(Choice):
 class IncludeInformationPlaques(Toggle):
     """Option for Include Information Plaques."""
     display_name = "Include Information Plaques"
+    default = False
 
 class IxupiCapturesNeeded(Range):
     """Option for Number of Ixupi Captures Needed."""

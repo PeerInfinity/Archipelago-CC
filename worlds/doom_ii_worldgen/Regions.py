@@ -20,7 +20,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         hint = None
         region = Region(region_name, player, multiworld, hint)
         regions[region_name] = region
-        multiworld.regions.append(region)
 
     # Mark dynamically added regions (these won't appear in sphere log comparisons)
     try:
@@ -226,6 +225,13 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["The Spirit World (MAP28) Red"], regions["The Spirit World (MAP28) Main"], "The Spirit World (MAP28) Red -> The Spirit World (MAP28) Main")
     _create_entrance(regions["Icon of Sin (MAP30) Main"], regions["Icon of Sin (MAP30) Start"], "Icon of Sin (MAP30) Main -> Icon of Sin (MAP30) Start")
     _create_entrance(regions["Icon of Sin (MAP30) Start"], regions["Icon of Sin (MAP30) Main"], "Icon of Sin (MAP30) Start -> Icon of Sin (MAP30) Main")
+
+    # Add all regions to multiworld
+    # Regions must be added even if they have no locations or exits, because:
+    # 1. They may be targets of entrances from other regions
+    # 2. They may be referenced by CanReachRegion() rules
+    for region in regions.values():
+        multiworld.regions.append(region)
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:

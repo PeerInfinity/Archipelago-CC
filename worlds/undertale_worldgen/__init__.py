@@ -196,10 +196,13 @@ class UndertaleWorld(RuleWorldMixin, World):
         self.world_description = 'Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.'
         self.slot_data = types.SimpleNamespace(world_seed=3777206549, seed_name='14089154938208861744', player_name='Player1', player_id=1, client_version=[0, 1, 6], race=False, route='neutral', starting_area='ruins', temy_armor_include=True, only_flakes=False, no_equips=False, key_hunt=False, key_pieces=5, rando_love=False, rando_stats=False, prog_armor=False, prog_weapons=False, rando_item_button=False, route_required=0, temy_include=1)
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -207,7 +210,7 @@ class UndertaleWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

@@ -213,10 +213,8 @@ def set_rules(world: "World") -> None:
         Or(And(HelperCall(helper_func=castleTown, helper_name="castleTown"), HelperCall(helper_func=pieces, helper_name="pieces"), HelperCall(helper_func=rose, helper_name="rose")), HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Shop Birdo Flag", player),
-        And(HelperCall(helper_func=canCrash, helper_name="canCrash"), HelperCall(helper_func=postJokes, helper_name="postJokes", args=(0,)))
-    )
+    multiworld.get_entrance("Shop Birdo Flag", player).access_rule = \
+        lambda state: ((canCrash(state, player)) and (postJokes(state, player, state.multiworld.worlds[player].options.goal)))
 
     world.set_rule(
         multiworld.get_entrance("JokesEntrance", player),
@@ -248,20 +246,16 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=canCrash, helper_name="canCrash"), HelperCall(helper_func=canDig, helper_name="canDig"))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("PostJokes", player),
-        HelperCall(helper_func=postJokes, helper_name="postJokes", args=(0,))
-    )
+    multiworld.get_entrance("PostJokes", player).access_rule = \
+        lambda state: postJokes(state, player, state.multiworld.worlds[player].options.goal)
 
     world.set_rule(
         multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player),
         Or(HelperCall(helper_func=fungitown_birdo_shop, helper_name="fungitown_birdo_shop"), HelperCall(helper_func=pieces, helper_name="pieces"))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Fungitown Shop Birdo Flag", player),
-        And(HelperCall(helper_func=canCrash, helper_name="canCrash"), HelperCall(helper_func=postJokes, helper_name="postJokes", args=(0,)))
-    )
+    multiworld.get_entrance("Fungitown Shop Birdo Flag", player).access_rule = \
+        lambda state: ((canCrash(state, player)) and (postJokes(state, player, state.multiworld.worlds[player].options.goal)))
 
     world.set_rule(
         multiworld.get_entrance("Bowser's Castle Mini", player),

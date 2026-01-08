@@ -4,6 +4,7 @@
   "game_directory": "ahit_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -8515,12 +8516,8 @@
               {
                 "type": "subscript",
                 "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "item_name_groups"
+                  "type": "world_attribute",
+                  "attribute": "item_name_groups"
                 },
                 "index": {
                   "type": "name",

@@ -20,7 +20,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         hint = None
         region = Region(region_name, player, multiworld, hint)
         regions[region_name] = region
-        multiworld.regions.append(region)
 
     # Mark dynamically added regions (these won't appear in sphere log comparisons)
     try:
@@ -65,6 +64,13 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["The Forest"], regions["The Final Boss Room"], "Behind Ogre")
     _create_entrance(regions["The Forest"], regions["The Forest with double Jump"], "Forest Double Jump")
     _create_entrance(regions["The Forest with double Jump"], regions["The Forest with double Jump Part 2"], "Forest True Double Jump")
+
+    # Add all regions to multiworld
+    # Regions must be added even if they have no locations or exits, because:
+    # 1. They may be targets of entrances from other regions
+    # 2. They may be referenced by CanReachRegion() rules
+    for region in regions.values():
+        multiworld.regions.append(region)
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:

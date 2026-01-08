@@ -4,6 +4,7 @@
   "game_directory": "smw_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -4490,7 +4491,12 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Boss Token",
-                    "count": 7
+                    "count": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "bosses_required"
+                      }
+                    }
                   }
                 },
                 {
@@ -4533,7 +4539,12 @@
               "rule": "Has",
               "args": {
                 "item_name": "Boss Token",
-                "count": 7
+                "count": {
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "bosses_required"
+                  }
+                }
               }
             }
           }

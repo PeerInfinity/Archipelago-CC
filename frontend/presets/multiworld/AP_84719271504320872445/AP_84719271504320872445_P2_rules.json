@@ -5,6 +5,7 @@
   "playerId": "2",
   "archipelago_version": "0.6.5",
   "generation_seed": 3,
+  "seed_name": "84719271504320872445",
   "player_names": {
     "1": "Player1",
     "2": "Player2",
@@ -6222,30 +6223,10 @@
             "name": "Pyramid Hole",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "option_value",
-                        "option": "open_pyramid"
-                      },
-                      "attr": "to_bool"
-                    },
-                    "_original_ast_type": "function_call"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beat Agahnim 2"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Beat Agahnim 2"
+              }
             }
           },
           {
@@ -17278,7 +17259,7 @@
           "Progression Items",
           "Rods"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17292,7 +17273,7 @@
           "Progression Items",
           "Rods"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17305,7 +17286,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17318,7 +17299,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17346,7 +17327,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17359,7 +17340,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17386,7 +17367,7 @@
           "Medallions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -17399,7 +17380,7 @@
           "Medallions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -17412,7 +17393,7 @@
           "Medallions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -17437,7 +17418,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17450,7 +17431,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17464,7 +17445,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17505,7 +17486,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17518,7 +17499,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17531,7 +17512,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17572,7 +17553,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17585,7 +17566,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17598,7 +17579,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17611,7 +17592,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17692,7 +17673,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17737,7 +17718,7 @@
           "Potions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
@@ -17862,7 +17843,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17876,7 +17857,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17889,7 +17870,7 @@
           "Everything",
           "Non Progression Items"
         ],
-        "classification": "useful",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 10,
@@ -18037,7 +18018,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -18301,7 +18282,7 @@
           "Gloves",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
@@ -18341,7 +18322,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
@@ -22274,12 +22255,8 @@
           {
             "type": "attribute",
             "object": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "difficulty_requirements"
+              "type": "world_attribute",
+              "attribute": "difficulty_requirements"
             },
             "attr": "progressive_bottle_limit"
           },
@@ -22387,12 +22364,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -22447,12 +22420,8 @@
               "name": "shop"
             },
             "iterator": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "shops"
+              "type": "world_attribute",
+              "attribute": "shops"
             }
           }
         }
@@ -23538,6 +23507,9 @@
               }
             }
           ]
+        },
+        "param_mappings": {
+          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {
@@ -23627,24 +23599,16 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "logical_heart_pieces"
+              "type": "world_attribute",
+              "attribute": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "logical_heart_containers"
+              "type": "world_attribute",
+              "attribute": "logical_heart_containers"
             }
           },
           {

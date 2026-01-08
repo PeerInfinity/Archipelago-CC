@@ -165,10 +165,13 @@ class Celeste64World(RuleWorldMixin, World):
         self.world_description = 'Relive the magic of Celeste Mountain alongside Madeline in this small, heartfelt 3D platformer.\nCreated in a week(ish) by the Celeste team to celebrate the game’s sixth anniversary 🍓✨'
         self.slot_data = types.SimpleNamespace(death_link=0, death_link_amnesty=10, strawberries_required=16, move_shuffle=0, friendsanity=0, signsanity=0, carsanity=0, checkpointsanity=0, madeline_one_dash_hair_color=14363648, madeline_two_dash_hair_color=16421375, madeline_no_dash_hair_color=7258367, madeline_feather_hair_color=15914064, badeline_chaser_source=0, badeline_chaser_frequency=0, badeline_chaser_speed=3)
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -176,7 +179,7 @@ class Celeste64World(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

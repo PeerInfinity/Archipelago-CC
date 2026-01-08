@@ -155,14 +155,17 @@ class AdventureWorld(RuleWorldMixin, World):
         self.difficulty_switch_a = 2
         self.difficulty_switch_b = 2
         self.start_castle = 0
-        self.dragon_speed_reducer_info = {'118000259': [1], '118000260': [1], '118000261': [2]}
+        self.dragon_speed_reducer_info = {118000259: [1], 118000260: [1], 118000261: [2]}
         self.created_items = 24
         self.world_description = 'Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!'
 
+    # Canonical seed for deterministic placement
+    CANONICAL_SEED: ClassVar[int] = 1
+
     def generate_early(self) -> None:
-        """Push starting items and load canonical options for seed 1."""
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
+        if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
@@ -170,7 +173,7 @@ class AdventureWorld(RuleWorldMixin, World):
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
 
-        This ensures that when generating seed 1, the same options are used
+        This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
         # Find the options file in the same directory as this module

@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from worlds.generic.Rules import location_item_name, item_name_in_location_names
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -33,7 +33,7 @@ def basement_key_rule(state: "CollectionState", player: int) -> bool:
 
 
 def bottle_count(state: "CollectionState", player: int) -> bool:
-    return min(4, state.count_group('Bottles', player))
+    return min(state.multiworld.worlds[player].difficulty_requirements.progressive_bottle_limit, state.count_group('Bottles', player))
 
 
 def can_activate_crystal_switch(state: "CollectionState", player: int) -> bool:
@@ -148,8 +148,8 @@ def has_turtle_rock_medallion(state: "CollectionState", player: int) -> bool:
 
 
 def heart_count(state: "CollectionState", player: int) -> bool:
-    max_heart_pieces = 24
-    max_heart_containers = 10
+    max_heart_pieces = state.multiworld.worlds[player].logical_heart_pieces
+    max_heart_containers = state.multiworld.worlds[player].logical_heart_containers
     return (((min(state.count('Boss Heart Container', player), max_heart_containers) + state.count('Sanctuary Heart Container', player)) + (min(state.count('Piece of Heart', player), max_heart_pieces) // 4)) + 3)
 
 
@@ -449,10 +449,8 @@ def set_rules(world: "World") -> None:
         Has('Lamp', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Sewers Door", player),
-        Or(And(Compare(1, "==", 0), Compare(0, "==", 5)), Has('Small Key (Hyrule Castle)', 4))
-    )
+    multiworld.get_entrance("Sewers Door", player).access_rule = \
+        lambda state: (((((state.multiworld.worlds[player].options.mode == 0)) and ((state.multiworld.worlds[player].options.small_key_shuffle == 5)))) or (state.has('Small Key (Hyrule Castle)', player, 4)))
 
     world.set_rule(
         multiworld.get_entrance("Sewers Back Door", player),
@@ -582,8 +580,10 @@ def set_rules(world: "World") -> None:
         Has('Magic Mirror', 1)
     )
 
-    multiworld.get_entrance("Pyramid Hole", player).access_rule = \
-        lambda state: ((bool(state.multiworld.worlds[player].options.open_pyramid)) or (state.has('Beat Agahnim 2', player)))
+    world.set_rule(
+        multiworld.get_entrance("Pyramid Hole", player),
+        Has('Beat Agahnim 2', 1)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Northeast Dark World Broken Bridge Pass", player),
@@ -805,10 +805,8 @@ def set_rules(world: "World") -> None:
         Has('Magic Mirror', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower", player),
-        HelperCall(helper_func=has_crystals, helper_name="has_crystals", args=(7,))
-    )
+    multiworld.get_entrance("Ganons Tower", player).access_rule = \
+        lambda state: has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_gt)
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave", player),
@@ -1175,6 +1173,19 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Ganon Drop", player),
         And(HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword"), Has('Moon Pearl'))
     )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Big Bomb Shop"),
+        multiworld.get_entrance("Pyramid Fairy", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("East Dark World"),
+        multiworld.get_entrance("Pyramid Fairy", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Turtle Rock (Top)"),
+        multiworld.get_entrance("Turtle Rock", player)
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("Flute Spot", player),
@@ -1366,10 +1377,8 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=basement_key_rule, helper_name="basement_key_rule"), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,)))
     )
 
-    world.set_rule(
-        multiworld.get_location("Hyrule Castle - Zelda's Chest", player),
-        And(Has('Small Key (Hyrule Castle)', 4), Or(Compare(1, "in", (0, 1)), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
-    )
+    multiworld.get_location("Hyrule Castle - Zelda's Chest", player).access_rule = \
+        lambda state: ((state.has('Small Key (Hyrule Castle)', player, 4)) and ((((state.multiworld.worlds[player].options.enemy_health in (0, 1))) or (can_kill_most_things(state, player, 1)))) and (state.has('Big Key (Hyrule Castle)', player)))
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Map Guard Key Drop", player),
@@ -1610,10 +1619,8 @@ def set_rules(world: "World") -> None:
         HasAll('Moon Pearl', 'Hookshot')
     )
 
-    world.set_rule(
-        multiworld.get_location("Mimic Cave", player),
-        And(Or(And(Compare(1, "in", (0, 1)), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs", args=(4,))), HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword"), Has('Cane of Somaria')), Has('Hammer'))
-    )
+    multiworld.get_location("Mimic Cave", player).access_rule = \
+        lambda state: (((((((state.multiworld.worlds[player].options.enemy_health in (0, 1))) and (can_use_bombs(state, player, 4)))) or (can_shoot_arrows(state, player)) or (has_beam_sword(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Hammer', player)))
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
@@ -2176,10 +2183,8 @@ def set_rules(world: "World") -> None:
     multiworld.get_location("Agahnim 2", player).access_rule = \
         lambda state: ((state.multiworld.get_location("Agahnim 2", player).parent_region.dungeon.boss.can_defeat(state)) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganon", player),
-        And(HelperCall(helper_func=GanonDefeatRule, helper_name="GanonDefeatRule"), HelperCall(helper_func=has_crystals, helper_name="has_crystals", args=(7,)), HasAll('Beat Agahnim 2', 'Moon Pearl'))
-    )
+    multiworld.get_location("Ganon", player).access_rule = \
+        lambda state: ((GanonDefeatRule(state, player)) and (has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_ganon)) and (state.has_all(['Beat Agahnim 2', 'Moon Pearl'], player)))
 
     # Wire up boss defeat functions to dungeon objects
     _setup_dungeon_bosses(multiworld, player)
