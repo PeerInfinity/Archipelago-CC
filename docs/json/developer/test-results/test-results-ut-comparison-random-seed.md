@@ -4,7 +4,7 @@
 
 **See also:** [Fixed Seed Results](./test-results-ut-comparison-fixed-seed.md) - Tests run with seed=1 for reproducibility
 
-**Generated:** 2026-01-08 06:23:33
+**Generated:** 2026-01-08 20:38:21
 
 **Source Data Created:** 2025-12-04T02:55:16.194200
 
