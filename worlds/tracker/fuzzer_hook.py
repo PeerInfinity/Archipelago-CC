@@ -41,6 +41,9 @@ class Hook(BaseHook):
         slot_data = temp["slot_data"][1] #slot 0 is reserved
 
         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
+        # Set seed_name to enable auto-discovery of rules.json for worldgen tracking
+        self.ut_core.seed_name = mw.seed_name
+        self.ut_core.auto_discover_rules_json()
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 

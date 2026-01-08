@@ -2198,7 +2198,7 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 
 
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder") -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2210,6 +2210,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         save_presets: Whether to save copies of files to the presets directory
         skip_preset_copy_if_rules_identical: If True, skip copying to presets if files are identical
         rules_json_format: Output format - "rule_builder" (default), "ast", or "both"
+        cleanup_multiworld: If True, clear multiworld references after export to help garbage
+            collection. Disabled by default as it invalidates the multiworld object.
 
     Returns:
         Dict containing paths to generated files
@@ -2638,10 +2640,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     from .analyzer import clear_caches as clear_analyzer_caches
     clear_analyzer_caches()
 
-    # Clear circular references in multiworld to allow garbage collection
-    # This is necessary because Region, World, Spoiler, and CollectionState
-    # all hold references to multiworld, creating reference cycles
-    _clear_multiworld_references(multiworld)
+    # Optionally clear circular references in multiworld to allow garbage collection
+    # This is disabled by default as it invalidates the multiworld object
+    if cleanup_multiworld:
+        _clear_multiworld_references(multiworld)
 
     # Print profiling report if enabled
     if profiler.enabled:
