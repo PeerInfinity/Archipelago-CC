@@ -1,3 +1,5 @@
+from typing import ClassVar, Set
+
 from BaseClasses import LocationProgressType, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from .Constants import *
@@ -37,6 +39,8 @@ class LandstalkerWorld(World):
     item_name_to_id = build_item_name_to_id_table()
     location_name_to_id = build_location_name_to_id_table()
 
+    cached_spheres: List[Set[Location]] = []
+
     def __init__(self, multiworld, player):
         super().__init__(multiworld, player)
         self.regions_table: Dict[str, LandstalkerRegion] = {}
@@ -46,11 +50,11 @@ class LandstalkerWorld(World):
         self.jewel_items = []
 
     def fill_slot_data(self) -> dict:
-        # Compute spheres locally to avoid holding references to multiworld
-        spheres = list(self.multiworld.get_spheres())
+        if not LandstalkerWorld.cached_spheres:
+            LandstalkerWorld.cached_spheres = list(self.multiworld.get_spheres())
 
         # Generate hints.
-        self.adjust_shop_prices(spheres)
+        self.adjust_shop_prices()
         hints = Hints.generate_random_hints(self)
         hints["Lithograph"] = Hints.generate_lithograph_hint(self)
         hints["Oracle Stone"] = f"It shows {self.dark_dungeon_id}\nenshrouded in darkness."
@@ -230,7 +234,11 @@ class LandstalkerWorld(World):
         else:
             return 4
 
-    def adjust_shop_prices(self, spheres):
+    @classmethod
+    def stage_modify_multidata(cls, multiworld: MultiWorld, *_):
+        LandstalkerWorld.cached_spheres = []
+
+    def adjust_shop_prices(self):
         # Calculate prices for items in shops once all items have their final position
         unknown_items_price = 250
         earlygame_price_factor = 1.0
@@ -238,6 +246,8 @@ class LandstalkerWorld(World):
         factor_diff = endgame_price_factor - earlygame_price_factor
 
         global_price_factor = self.options.shop_prices_factor / 100.0
+
+        spheres = LandstalkerWorld.cached_spheres
         sphere_count = len(spheres)
         for sphere_id, sphere in enumerate(spheres):
             location: LandstalkerLocation  # after conditional, we guarantee it's this kind of location.
