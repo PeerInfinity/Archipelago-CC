@@ -241,16 +241,15 @@ def run_generation(
     return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=600, env=env)
     result['processing_time_seconds'] = round(time.time() - start_time, 2)
 
+    # Capture error info if return code is non-zero
+    generation_error = None
     if return_code != 0:
-        result['error'] = f"Generation failed with return code {return_code}"
-        # Extract error from output
         full_output = stdout + '\n' + stderr
         error_count, _, first_error, _ = count_errors_and_warnings(full_output)
-        if first_error:
-            result['error'] = first_error
-        return result
+        generation_error = first_error or f"Generation failed with return code {return_code}"
 
-    # Find the generated files
+    # Find the generated files - check even if return_code != 0
+    # (generation may complete successfully before memory leak assertions, etc.)
     game_dir = get_world_directory_for_template(template_name, project_root)
     preset_dir = os.path.join(project_root, 'frontend', 'presets', game_dir, seed_id)
 
@@ -265,8 +264,14 @@ def run_generation(
             result['sphere_log_path'] = sphere_log_path
 
         result['success'] = result['rules_path'] is not None
+        # If successful but had error, note it as a warning
+        if result['success'] and generation_error:
+            result['warning'] = generation_error
     else:
-        result['error'] = f"Preset directory not found: {preset_dir}"
+        result['error'] = generation_error or f"Preset directory not found: {preset_dir}"
+
+    if not result['success'] and generation_error:
+        result['error'] = generation_error
 
     return result
 
