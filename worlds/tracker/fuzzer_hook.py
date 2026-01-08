@@ -47,7 +47,9 @@ class Hook(BaseHook):
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 
-        remaining_locations = [location.address for location in mw.worlds[1].get_locations() if location.address is not None]
+        # Filter to only hashable addresses (some games like ALTTP have list-type addresses)
+        remaining_locations = [location.address for location in mw.worlds[1].get_locations()
+                               if location.address is not None and not isinstance(location.address, list)]
         current_inventory = [NetworkItem(item.code,-2,item.player,item.classification) for item in mw.precollected_items[1] if item.code is not None]
         new_items = []
         new_inventory = []
