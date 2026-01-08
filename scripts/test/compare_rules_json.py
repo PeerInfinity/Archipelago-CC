@@ -1304,11 +1304,16 @@ def normalize_sum_of_helpers(obj: Any) -> Any:
                             inner_obj = func.get('object', {})
                             setting_name = None
 
-                            # Pattern: {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "qp_items"}
+                            # Pattern 1: {"type": "attribute", "object": {"type": "name", "name": "world"}, "attr": "qp_items"}
                             if inner_obj.get('type') == 'attribute':
                                 # world.qp_items pattern
                                 if inner_obj.get('object', {}).get('type') == 'name':
                                     setting_name = inner_obj.get('attr')
+
+                            # Pattern 2: {"type": "setting_value", "setting": "qp_items"}
+                            # This happens when normalize_setting_types runs before this normalizer
+                            elif inner_obj.get('type') == 'setting_value':
+                                setting_name = inner_obj.get('setting')
 
                             if setting_name:
                                 new_iterator_info['iterator'] = {
