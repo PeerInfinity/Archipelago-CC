@@ -4,7 +4,9 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-08 06:08:53
+[View WorldGen Template Results](./test-results-multiworld-worldgen.md)
+
+**Generated:** 2026-01-08 06:23:33
 
 ## Summary
 
