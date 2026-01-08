@@ -383,6 +383,17 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
         rawValue = worldAttrsToUse?.[settingName];
       }
 
+      // Special case: item_name_groups needs to be constructed dynamically
+      // This is needed for world_attribute rules that reference item_name_groups
+      // (used by helpers like has_relic_combo in AHIT)
+      if (rawValue === undefined && settingName === 'item_name_groups') {
+        const gameInfo = sm.gameInfo?.[playerIdKey] || sm.gameInfo || {};
+        rawValue = {
+          ...(sm.groupData || {}),
+          ...(gameInfo.relic_groups || {})
+        };
+      }
+
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings
       if (typeof rawValue === 'string') {
