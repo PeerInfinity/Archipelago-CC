@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-07 02:18:21
+**Generated:** 2026-01-07 20:20:27
 
-**Source Data Created:** 2026-01-07T00:06:35.091491
+**Source Data Created:** 2026-01-07T19:58:36.943245
 
-**Source Data Last Updated:** 2026-01-07T00:06:35.091496
+**Source Data Last Updated:** 2026-01-07T19:58:36.943250
 
 ## Summary
 
@@ -110,7 +110,7 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Super Mario World | 1 | 2026-01-07 00:04 | Previously failed, now passing |
+| VVVVVV | 1 | 2026-01-07 19:56 | Previously failed, now passing |
 
 
 ## Notes
