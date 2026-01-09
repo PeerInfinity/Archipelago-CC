@@ -17,6 +17,7 @@ BOOLEAN_SETTINGS = [
     'log_fractional_sphere_details',
     'log_integer_sphere_details',
     'auto_collect_events',
+    'filter_event_items',
     'update_frontend_presets',
 ]
 
@@ -37,6 +38,7 @@ PRESETS = {
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
         'auto_collect_events': False,
+        'filter_event_items': False,
         'update_frontend_presets': False,
     },
     'minimal-spoilers': {
@@ -50,6 +52,7 @@ PRESETS = {
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
         'auto_collect_events': False,
+        'filter_event_items': False,
         'update_frontend_presets': True,
     },
     'full-spoilers': {
@@ -63,6 +66,7 @@ PRESETS = {
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
         'auto_collect_events': False,
+        'filter_event_items': False,
         'update_frontend_presets': True,
     },
     'ut-comparison': {
@@ -76,6 +80,7 @@ PRESETS = {
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
         'auto_collect_events': True,  # Enable event auto-collection to match UT behavior
+        'filter_event_items': True,  # Filter out event locations/items to match UT output
         'update_frontend_presets': True,
     },
 }

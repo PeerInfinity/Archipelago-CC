@@ -534,7 +534,8 @@ class GeneralOptions(Group):
     extend_sphere_log_to_all_locations: bool = False
     log_fractional_sphere_details: bool = True
     log_integer_sphere_details: bool = False
-    auto_collect_events: bool = False  # Auto-collect event items when locations become accessible (matches UT behavior)
+    auto_collect_events: bool = False  # Auto-collect event items when locations become accessible
+    filter_event_items: bool = False  # Filter out event locations/items from sphere log output (matches UT behavior)
     update_frontend_presets: bool = False
 
 

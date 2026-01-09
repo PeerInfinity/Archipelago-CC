@@ -63,6 +63,8 @@ class TrackerCore():
         self.missing_locations: set[int] = set()
         self.seed_override: int | None = None  # Optional seed to use for generation (for UT comparison testing)
         self.sphere_log_mode: bool = False  # Enable lenient error handling for UT comparison testing
+        self.auto_collect_events: bool = True  # Auto-collect event items when locations become accessible
+        self.filter_event_items: bool = True  # Filter out event locations/items from output (default UT behavior)
 
         # Worldgen world support for rule explain and tracking functionality
         self.worldgen_builder: Optional["JSONWorldBuilder"] = None
@@ -807,12 +809,14 @@ class TrackerCore():
                 state.collect(world_item, True)
                 if world_item.advancement:
                     prog_items[world_item.name] += 1
-                if world_item.code is not None:
+                # Add to all_items unless filtering event items (code is None)
+                if not self.filter_event_items or world_item.code is not None:
                     all_items[world_item.name] += 1
             except Exception:
                 self.log_to_tab("Item id " + str(item_name) + " not able to be created", False)
-        state.sweep_for_advancements(
-            locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
+        if self.auto_collect_events:
+            state.sweep_for_advancements(
+                locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
 
         self.clear_page()
         regions = []
@@ -821,7 +825,8 @@ class TrackerCore():
         glitches_locations:list[int] = []
         hinted_locations = []
         for temp_loc in self.multiworld.get_reachable_locations(state, self.player_id):
-            if temp_loc.address is None or isinstance(temp_loc.address, list):
+            # Filter event locations (address is None) if filter_event_items is enabled
+            if self.filter_event_items and (temp_loc.address is None or isinstance(temp_loc.address, list)):
                 continue
             elif self.hide_excluded and temp_loc.progress_type == LocationProgressType.EXCLUDED:
                 continue
@@ -877,10 +882,12 @@ class TrackerCore():
             except Exception:
                 self.log_to_tab("Item id " + str(glitches_item_name) + " not able to be created", False)
             else:
-                state.sweep_for_advancements(
-                    locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
+                if self.auto_collect_events:
+                    state.sweep_for_advancements(
+                        locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
                 for temp_loc in self.multiworld.get_reachable_locations(state, self.player_id):
-                    if temp_loc.address is None or isinstance(temp_loc.address, list):
+                    # Filter event locations (address is None) if filter_event_items is enabled
+                    if self.filter_event_items and (temp_loc.address is None or isinstance(temp_loc.address, list)):
                         continue
                     elif self.hide_excluded and temp_loc.progress_type == LocationProgressType.EXCLUDED:
                         continue
