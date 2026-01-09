@@ -211,12 +211,16 @@ class TrackerCore():
                 json_data = json.load(f)
 
             game_name = json_data.get('game_name', 'Unknown')
-            worldgen_game_name = f"{game_name} WorldGen"
 
-            # Derive output directory
+            # Include seed name in directory and game name for parallel-safe operation
+            # This allows multiple fuzzer processes to run simultaneously without conflicts
+            seed_suffix = f"_{self.seed_name}" if self.seed_name else ""
+            worldgen_game_name = f"{game_name} WorldGen{seed_suffix}"
+
+            # Derive output directory with seed-specific suffix
             game_directory = json_data.get('game_directory', game_name.lower().replace(' ', '_'))
-            output_dir = Path('worlds') / f"{game_directory}_worldgen"
-            module_name = output_dir.name  # e.g., "adventure_worldgen"
+            output_dir = Path('worlds') / f"{game_directory}_worldgen{seed_suffix}"
+            module_name = output_dir.name  # e.g., "adventure_worldgen_12345"
 
             self.logger.info(f"Generating worldgen world from {json_path}")
 
