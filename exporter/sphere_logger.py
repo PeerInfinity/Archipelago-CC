@@ -268,6 +268,7 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     log_integer_sphere_details = settings.general_options.log_integer_sphere_details
     verbose_sphere_log = settings.general_options.verbose_sphere_log
     extend_sphere_log_to_all_locations = settings.general_options.extend_sphere_log_to_all_locations
+    auto_collect_events = settings.general_options.auto_collect_events
 
     # Reset state trackers at the start
     _previous_fractional_state = None
@@ -431,9 +432,10 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
             # Auto-collect events that are accessible at sphere 0
             # This matches how Universal Tracker handles events - they are automatically
             # collected when their location becomes accessible, unlocking downstream locations
-            current_playthrough_state.sweep_for_advancements(
-                locations=[loc for loc in multiworld.get_locations() if loc.address is None]
-            )
+            if auto_collect_events:
+                current_playthrough_state.sweep_for_advancements(
+                    locations=[loc for loc in multiworld.get_locations() if loc.address is None]
+                )
 
             # Log the final "sphere 0" state (contains all precollected items + auto-collected events)
             log_sphere_details(spoiler_log_file_handler, multiworld, 0, set(), current_playthrough_state.copy(), verbose_sphere_log, extend_sphere_log_to_all_locations)
@@ -462,9 +464,10 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
                 current_playthrough_state.collect(location.item, True, location)
 
                 # Auto-collect any events that become accessible after this item
-                current_playthrough_state.sweep_for_advancements(
-                    locations=[loc for loc in multiworld.get_locations() if loc.address is None]
-                )
+                if auto_collect_events:
+                    current_playthrough_state.sweep_for_advancements(
+                        locations=[loc for loc in multiworld.get_locations() if loc.address is None]
+                    )
 
                 item_sub_index += 1
 
