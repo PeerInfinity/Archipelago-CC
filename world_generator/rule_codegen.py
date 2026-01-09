@@ -5839,17 +5839,15 @@ class HelperCodeGenerator:
         return f"{obj}.{method}({', '.join(arg_exprs)})"
 
     def _expr_list(self, expr: Dict[str, Any]) -> str:
-        """Generate tuple literal from list.
+        """Generate list literal.
 
-        We use tuples instead of lists because location_item_name() returns
-        tuples, and Python's == comparison requires matching types.
+        Lists are mutable and support methods like .append(), .extend(), etc.
+        Comparison context (in _generate_operand_for_compare) handles converting
+        to tuples when needed for location_item_name() comparisons.
         """
         values = expr.get('value', expr.get('elements', []))
         items = [self._generate_expression(v) for v in values]
-        # Use tuple format to match location_item_name() return type
-        if len(items) == 1:
-            return f"({items[0]},)"
-        return f"({', '.join(items)})"
+        return f"[{', '.join(items)}]"
 
     def _expr_tuple(self, expr: Dict[str, Any]) -> str:
         """Generate tuple literal."""

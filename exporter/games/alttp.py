@@ -34,6 +34,36 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     # Pattern to detect serialized bunny rule lambdas
     BUNNY_RULE_PATTERN = re.compile(r'<function set_bunny_rules\.')
 
+    def __init__(self, world=None):
+        """Initialize with optional world reference."""
+        super().__init__(world)
+        self._current_location_context = None
+
+    def set_location_context(self, location_name: str) -> None:
+        """Set the current location context for rule analysis."""
+        self._current_location_context = location_name
+
+    def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """Intercept bunny rules before standard analysis.
+
+        Bunny rules are complex lambdas created by set_bunny_rules() that can't be
+        properly analyzed because they contain nested lambdas and dynamic path lookups.
+        We detect these by checking the function's qualified name and replace them
+        with simpler rules.
+        """
+        if rule_func is None:
+            return None
+
+        # Check if this is a bunny rule lambda by its qualified name
+        func_qualname = getattr(rule_func, '__qualname__', '')
+        if 'set_bunny_rules' in func_qualname:
+            location_name = rule_target_name or self._current_location_context or ''
+            logger.debug(f"ALttP: Intercepting bunny rule for '{location_name}'")
+            return self._get_bunny_replacement_rule(location_name)
+
+        # Not a bunny rule - let standard analysis handle it
+        return None
+
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
         """Post-process location data to handle bunny rule lambdas.
 
@@ -43,6 +73,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         We convert these to simpler rules:
         - If the location is bunny-accessible, the bunny rule part is always True
         - Otherwise, require Moon Pearl
+
+        Note: Most bunny rules are now intercepted earlier by override_rule_analysis,
+        but this handles any that slip through in serialized form.
         """
         if 'access_rule' in location_data and location_data['access_rule']:
             location_data['access_rule'] = self._process_bunny_rules(
