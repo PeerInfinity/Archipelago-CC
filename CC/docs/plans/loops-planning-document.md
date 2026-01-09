@@ -365,13 +365,7 @@ async generateCostData(sphereLog, staticData) {
 
 #### 2.6 Generation Tool UI
 
-**Option A: Standalone page**
-- `frontend/tools/cost-generator.html`
-- Load sphere log file
-- Run generation
-- Download resulting costs.json
-
-**Option B: Integrated into loops module**
+**Implementation**: Integrated into loops module (not a separate page)
 - Button in loops panel: "Generate Cost Data"
 - Progress indicator during generation
 - Auto-save to preset directory (if possible) or download
@@ -437,7 +431,59 @@ collectItem(itemName) {
 }
 ```
 
-#### 3.4 Cost Calculation Algorithm
+#### 3.4 Required Items Algorithm
+
+To determine which items are required for an action's access rule:
+
+```javascript
+getRequiredItems(action, simulatedInventory, itemPriorityOrder) {
+  const accessRule = getAccessRuleForAction(action);
+
+  // Step 1: Create temporary inventory WITHOUT untaken items
+  const tempInventory = new Set();
+  for (const item of simulatedInventory) {
+    tempInventory.add(item);
+  }
+
+  // Step 2: Check if rule passes without any additional items
+  if (evaluateRule(accessRule, tempInventory)) {
+    return []; // No items required - already accessible
+  }
+
+  // Step 3: Add items one at a time in priority order until rule passes
+  const addedItems = [];
+  for (const item of itemPriorityOrder) {
+    if (!tempInventory.has(item)) {
+      tempInventory.add(item);
+      addedItems.push(item);
+      if (evaluateRule(accessRule, tempInventory)) {
+        break; // Rule now passes
+      }
+    }
+  }
+
+  // Step 4: Remove items in reverse order to find minimum required set
+  const requiredItems = [];
+  for (let i = addedItems.length - 1; i >= 0; i--) {
+    const item = addedItems[i];
+    tempInventory.delete(item);
+    if (!evaluateRule(accessRule, tempInventory)) {
+      // Removing this item broke the rule - it's required
+      tempInventory.add(item);
+      requiredItems.push(item);
+    }
+  }
+
+  return requiredItems;
+}
+```
+
+**Notes**:
+- `itemPriorityOrder` is user-configurable (affects which items get selected when multiple options exist)
+- This algorithm handles OR conditions in rules (e.g., "Bow OR Hookshot")
+- The reverse removal step ensures we find the minimal required set
+
+#### 3.5 Cost Calculation Algorithm
 
 When queue changes, recalculate all costs:
 
@@ -454,7 +500,7 @@ recalculateCosts() {
     }
 
     // Get required items for this action's access rule
-    const requiredItems = this.getRequiredItems(action);
+    const requiredItems = this.getRequiredItems(action, simulatedInventory, this.itemPriorityOrder);
 
     // Calculate penalties for missing items
     action.itemPenalties = [];
@@ -476,7 +522,7 @@ recalculateCosts() {
 }
 ```
 
-#### 3.5 UI Updates
+#### 3.6 UI Updates
 
 **Loop Stats Panel**:
 - Expanded view shows item penalties:
@@ -840,15 +886,14 @@ export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
 |------|---------|
 | `frontend/modules/loopStats/` | New stats panel module |
 | `frontend/modules/shared/pathfinder.js` | Shared pathfinding logic (moved from regionGraph) |
-| `frontend/tools/costGenerator/` | Cost generation tool |
-| `scripts/tools/generate-loop-costs.py` | Batch cost generation |
+| `scripts/tools/generate-loop-costs.py` | Batch cost generation script |
 | `frontend/presets/*/AP_*_costs.json` | Cost data files |
 
 ### Modified Files
 
 | Path | Changes |
 |------|---------|
-| `frontend/modules/loops/loopState.js` | Item XP, loop inventory, cost loading, instant mode, no-reset mode |
+| `frontend/modules/loops/loopState.js` | Item XP, loop inventory, cost loading, instant mode, no-reset mode, cost generation |
 | `frontend/modules/loops/loopEvents.js` | Queue vs immediate execution logic |
 | `frontend/modules/loops/xpFormulas.js` | Item penalty formulas |
 | `frontend/modules/loops/loopUI.js` | Cost display, penalty highlighting |
