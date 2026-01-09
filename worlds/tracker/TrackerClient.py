@@ -1287,6 +1287,13 @@ class TrackerGameContext(CommonContext):
                     return
                 if self.checksums[self.game] != connected_cls.get_data_package_data()["checksum"]:
                     logger.warning("*****\nWarning: the local datapackage for the connected game does not match the server's datapackage\n*****")
+                # Auto-discover rules JSON BEFORE initializing tracker core
+                # This allows worldgen-based tracking to be used when rules.json is available
+                if self.seed_name:
+                    # Set up debug logger for tracker_core to use the same debug log file
+                    self.tracker_core.set_debug_logger(self._log_debug_message)
+                    self.tracker_core.set_seed_name(self.seed_name)
+                    self.tracker_core.auto_discover_rules_json()
                 self.tracker_core.initalize_tracker_core(connected_cls,args["slot_data"])
                 if not self.tracker_core.multiworld:
                     logger.error("Internal generation failed, something has gone wrong")
@@ -1333,11 +1340,6 @@ class TrackerGameContext(CommonContext):
                 else:
                     asyncio.create_task(wait_for_items(self),name="UT Delay function") #if we don't get new items, delay for a bit first
                 self.watcher_task = asyncio.create_task(game_watcher(self), name="GameWatcher") #This shouldn't be needed, but technically
-
-                # Auto-discover rules JSON for explain support
-                if self.seed_name:
-                    self.tracker_core.set_seed_name(self.seed_name)
-                    self.tracker_core.auto_discover_rules_json()
 
             elif cmd == 'RoomUpdate':
                 if not (self.items_handling & 0b010):

@@ -205,17 +205,25 @@ function getInventoryDiff(pythonInventory, utInventory, ignoreItems = null) {
     }
   }
 
-  const match = Object.keys(baseItemsDiff.missing).length === 0 &&
-                Object.keys(baseItemsDiff.extra).length === 0 &&
-                Object.keys(baseItemsDiff.mismatch).length === 0 &&
-                Object.keys(resolvedItemsDiff.missing).length === 0 &&
-                Object.keys(resolvedItemsDiff.extra).length === 0 &&
-                Object.keys(resolvedItemsDiff.mismatch).length === 0;
+  const baseItemsMatch = Object.keys(baseItemsDiff.missing).length === 0 &&
+                         Object.keys(baseItemsDiff.extra).length === 0 &&
+                         Object.keys(baseItemsDiff.mismatch).length === 0;
+
+  const resolvedItemsMatch = Object.keys(resolvedItemsDiff.missing).length === 0 &&
+                             Object.keys(resolvedItemsDiff.extra).length === 0 &&
+                             Object.keys(resolvedItemsDiff.mismatch).length === 0;
+
+  // Match if EITHER base_items OR resolved_items match.
+  // This handles the case where Python resolves progressive items (e.g., "Progressive Sword" -> "Fighter Sword")
+  // but UT reports the base name. Both representations are valid.
+  const match = baseItemsMatch || resolvedItemsMatch;
 
   return {
     base_items: baseItemsDiff,
     resolved_items: resolvedItemsDiff,
-    match
+    match,
+    base_items_match: baseItemsMatch,
+    resolved_items_match: resolvedItemsMatch
   };
 }
 

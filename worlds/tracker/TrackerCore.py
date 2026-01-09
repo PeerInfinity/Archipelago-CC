@@ -109,6 +109,15 @@ class TrackerCore():
     def set_get_ut_color(self,get_ut_color:Optional[Callable[[str],str]]):
         self._get_ut_color = get_ut_color
 
+    def set_debug_logger(self, debug_logger: Optional[Callable[[str, dict], None]]):
+        """Set callback for debug logging (used by TrackerClient for debug log file)."""
+        self._debug_logger = debug_logger
+
+    def _log_debug(self, event_type: str, data: dict):
+        """Log a debug event if debug logger is configured."""
+        if hasattr(self, '_debug_logger') and self._debug_logger:
+            self._debug_logger(event_type, data)
+
     def get_current_world(self):
         if self.player_id and self.multiworld:
             return self.multiworld.worlds[self.player_id]
@@ -400,6 +409,7 @@ class TrackerCore():
         Returns:
             True if rules were loaded successfully, False otherwise
         """
+        self._log_debug("auto_discover_rules_json", {"game": self.game, "seed_name": self.seed_name})
         if not self.game or not self.seed_name:
             self.logger.debug("Cannot auto-discover: game or seed_name not set")
             return False
@@ -462,6 +472,7 @@ class TrackerCore():
                         continue
 
                     self.logger.info(f"Auto-discovered rules JSON: {json_path}")
+                    self._log_debug("rules_json_found", {"path": json_path})
 
                     # If auto_generate_worldgen is enabled, generate and load the worldgen world
                     if self.auto_generate_worldgen:
@@ -474,9 +485,12 @@ class TrackerCore():
                             self.logger.warning("Worldgen generation failed, falling back to direct AST explain")
 
                     # Default: just load the rules JSON for direct AST explain
-                    return self.load_rules_json(json_path)
+                    result = self.load_rules_json(json_path)
+                    self._log_debug("load_rules_json_result", {"result": result, "rules_json_path": self.rules_json_path})
+                    return result
 
         self.logger.debug(f"No rules JSON found for {self.game} seed {self.seed_name}")
+        self._log_debug("rules_json_not_found", {"game": self.game, "seed_name": self.seed_name})
         return False
 
     def load_rules_json(self, json_path: str) -> bool:
@@ -929,13 +943,20 @@ class TrackerCore():
             return
 
         # Try worldgen-based tracking first if rules.json is available
+        self._log_debug("initalize_tracker_core", {"rules_json_path": self.rules_json_path})
         if self.rules_json_path:
             self.logger.info(f"Attempting worldgen-based tracking from {self.rules_json_path}")
+            self._log_debug("attempting_worldgen_tracking", {"rules_json_path": self.rules_json_path})
             # Generate a fresh worldgen world from the rules.json file
             # This ensures the worldgen world matches the specific seed we're connecting to
-            if self.generate_and_load_worldgen_world(self.rules_json_path):
-                if self.initialize_tracking_from_worldgen():
+            worldgen_result = self.generate_and_load_worldgen_world(self.rules_json_path)
+            self._log_debug("generate_worldgen_result", {"success": worldgen_result})
+            if worldgen_result:
+                tracking_result = self.initialize_tracking_from_worldgen()
+                self._log_debug("initialize_tracking_result", {"success": tracking_result})
+                if tracking_result:
                     self.logger.info("Using worldgen-based tracking")
+                    self._log_debug("using_worldgen_tracking", {"success": True})
                     return
                 else:
                     self.logger.warning("Failed to initialize tracking from worldgen, falling back")
