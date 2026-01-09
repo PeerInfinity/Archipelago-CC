@@ -119,8 +119,8 @@ rm -rf frontend/presets/*/AP_*
 
 ### ALttP
 - Bunny rules are simplified to Moon Pearl requirements
-- Shop price rules may evaluate differently
-- ~90% failure rate due to complex dynamic systems
+- Key logic rules using `location_item_name` may evaluate differently
+- ~60% failure rate due to complex dynamic systems (improved from ~90%)
 
 ### Adventure
 - ~100% pass rate with current implementation
@@ -135,3 +135,30 @@ Fixed in commit `8c22fb8a8` - worldgen directories are now seed-specific.
 
 ### Lambda strings in rules
 Fixed by game-specific handlers (e.g., ALttP handler converts bunny rule lambdas).
+
+### Module caching with code changes
+
+On Linux, the fuzzer uses `fork` for multiprocessing, which means worker processes inherit cached module imports from the parent process. If you modify exporter code (like game handlers in `exporter/games/`), the changes may not take effect immediately.
+
+**Symptoms:**
+- Debug print statements don't appear in output
+- Code changes don't seem to have any effect
+- Tests pass/fail inconsistently
+
+**Solutions:**
+
+1. **Start a fresh Python process** - Use `exec` to replace the current process:
+   ```bash
+   exec python fuzz.py -r 1 -j 1 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+   ```
+
+2. **Clear Python cache files**:
+   ```bash
+   find . -name "*.pyc" -delete
+   find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null
+   ```
+
+3. **Run from a new terminal** - Close your current terminal and open a fresh one.
+
+**Why this happens:**
+The fuzzer imports modules before creating the multiprocessing Pool. When `fork` is used (default on Linux), child processes inherit the parent's memory including already-imported modules. Even with `-j 1`, the Pool still creates a worker process via fork.
