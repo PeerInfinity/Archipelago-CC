@@ -746,6 +746,7 @@ class TrackerCore():
                 "set_rules",
                 "connect_entrances",
                 "generate_basic",
+                "pre_fill",  # Needed for worldgen worlds that place items in pre_fill (e.g., for location_item_name checks)
             )
         )
 
