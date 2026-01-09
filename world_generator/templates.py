@@ -893,7 +893,10 @@ def generate_rules_py(data: ExtractedData) -> str:
                 )
             else:
                 # Use Rule Builder
+                # Set context so 'entrance' variable references can be substituted
+                rule_builder_generator.set_context(entrance=exit_name)
                 rule_code = rule_builder_generator.generate(exit_data.access_rule)
+                rule_builder_generator.set_context()  # Clear context
                 entrance_rules.append(
                     f'    world.set_rule(\n'
                     f'        multiworld.get_entrance("{exit_escaped}", player),\n'
@@ -918,7 +921,10 @@ def generate_rules_py(data: ExtractedData) -> str:
                 )
             else:
                 # Use Rule Builder
+                # Set context so 'location' variable references can be substituted
+                rule_builder_generator.set_context(location=loc_name)
                 rule_code = rule_builder_generator.generate(loc_data.access_rule)
+                rule_builder_generator.set_context()  # Clear context
                 location_rules.append(
                     f'    world.set_rule(\n'
                     f'        multiworld.get_location("{loc_escaped}", player),\n'

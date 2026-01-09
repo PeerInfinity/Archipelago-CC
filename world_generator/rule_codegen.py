@@ -22,11 +22,25 @@ class RuleCodeGenerator:
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        # Context for current location/entrance being processed
+        # Used to substitute 'location' or 'entrance' variable references
+        self._current_location: Optional[str] = None
+        self._current_entrance: Optional[str] = None
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
         self._inline_counter = 0
+
+    def set_context(self, location: Optional[str] = None, entrance: Optional[str] = None) -> None:
+        """Set the current context for variable substitution.
+
+        When generating rules for a specific location or entrance, set the context
+        so that references to 'location' or 'entrance' variables can be substituted
+        with the appropriate multiworld.get_*() lookup.
+        """
+        self._current_location = location
+        self._current_entrance = entrance
 
     def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
                      helper_params: Dict[str, List[str]] = None,
@@ -1104,9 +1118,18 @@ class RuleCodeGenerator:
             return f'[{", ".join(converted_items)}]'
 
         if rb_rule == 'Name':
-            # Convert Name rule to constant based on settings
             # The name is in args.name for Rule Builder format
             name = args.get('name', '')
+            # Check for location/entrance context substitution
+            # When generating rules for a specific location, substitute 'location' with
+            # the actual location object lookup
+            if name == 'location' and self._current_location:
+                escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
+                return f'multiworld.get_location("{escaped}", player)'
+            if name == 'entrance' and self._current_entrance:
+                escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
+                return f'multiworld.get_entrance("{escaped}", player)'
+            # Otherwise treat as a setting reference and resolve to constant
             return self._resolve_setting_to_bool(name, default=False)
 
         # Unknown Rule Builder rule - return True_() as placeholder
@@ -1114,15 +1137,23 @@ class RuleCodeGenerator:
         return 'True_()'
 
     def _convert_name(self, rule: Dict[str, Any]) -> str:
-        """Convert a name reference to a constant.
+        """Convert a name reference to a constant or context lookup.
 
         Names typically reference game settings/options. Since worldgen worlds
         don't have the original game options, we resolve them to constants.
-        If the name matches a known setting, use its value. Otherwise default
-        to False_() since most setting references are optional feature flags
-        that should be disabled for vanilla worldgen.
+
+        Special handling for 'location' and 'entrance': when context is set,
+        these are substituted with multiworld.get_*() lookups.
         """
         name = rule.get('name', '')
+        # Check for location/entrance context substitution
+        if name == 'location' and self._current_location:
+            escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
+            return f'multiworld.get_location("{escaped}", player)'
+        if name == 'entrance' and self._current_entrance:
+            escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
+            return f'multiworld.get_entrance("{escaped}", player)'
+        # Otherwise treat as a setting reference and resolve to constant
         return self._resolve_setting_to_bool(name, default=False)
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
@@ -3883,6 +3914,18 @@ class RuleCodeGenerator:
                         else:
                             # Unknown nested helper - assume True (optimistic approximation)
                             arg_strs.append('True')
+                    elif arg_rule == 'Name':
+                        # Handle Name references - check for location/entrance context
+                        name = arg.get('args', {}).get('name', '')
+                        if name == 'location' and self._current_location:
+                            escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
+                            arg_strs.append(f'multiworld.get_location("{escaped}", player)')
+                        elif name == 'entrance' and self._current_entrance:
+                            escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
+                            arg_strs.append(f'multiworld.get_entrance("{escaped}", player)')
+                        else:
+                            # Unknown name reference - default to None
+                            arg_strs.append('None')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
