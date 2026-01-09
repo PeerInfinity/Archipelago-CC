@@ -671,24 +671,161 @@ To add:
 
 ## Testing Strategy
 
+### Primary Test: Loops Queue Test
+
+**Goal**: Adapt the timer test to use the action queue instead of direct location checks.
+
+**Location**: New mode in `timerTests.js` (may refactor to multiple files later)
+
+#### Test Flow
+
+```
+1. Enable loop mode
+2. Enable test settings (instant mode, no mana depletion reset)
+3. Find an accessible location or unexplored region
+4. Build path from starting region to target
+5. Queue the actions (moves + explore/check)
+6. Wait for queue to complete (or target achieved)
+7. Start new loop with new target
+8. Repeat until all locations checked
+```
+
+#### Key Differences from Timer Test
+
+| Aspect | Timer Test | Loops Queue Test |
+|--------|------------|------------------|
+| Location check | Direct dispatch | Queue actions, wait for completion |
+| Navigation | Implicit | Explicit path building |
+| Starting point | Current position | Always from start region |
+| Mana tracking | N/A | Verify consumption and debt |
+
+#### Test Settings
+
+| Setting | Value | Purpose |
+|---------|-------|---------|
+| `instantMode` | `true` | Actions complete in one frame |
+| `noManaDepletionReset` | `true` | Don't restart loop when mana depletes |
+| `gameSpeed` | `Infinity` | If instant mode uses speed setting |
+
+#### Success Criteria (v1)
+
+Same as timer test: All manually-checkable locations are checked.
+
+Future enhancements:
+- Verify XP gained for each region
+- Verify mana consumed correctly
+- Track "mana debt" (how negative mana went)
+
+---
+
+### Test Mode Settings
+
+#### Instant Mode
+
+Actions complete in a single frame but use the same cost formulas.
+
+```javascript
+// If gameSpeed supports Infinity
+loopState.setGameSpeed(Infinity);
+
+// Or add dedicated instant mode
+loopState.setInstantMode(true);
+```
+
+**Scope**: General setting (usable for "skip animation" in normal play too)
+
+#### No Mana Depletion Reset
+
+When mana reaches zero (or goes negative), don't trigger loop reset.
+
+```javascript
+// In loopState
+this.noManaDepletionReset = false; // Default
+
+// In mana consumption logic
+if (this.currentMana <= 0 && !this.noManaDepletionReset) {
+  this.resetLoop();
+}
+```
+
+**Benefit**: Test can observe mana going negative to verify cost formulas
+
+#### Mana Debt Tracking
+
+Track how negative mana went for test assertions:
+
+```javascript
+this.manaDebt = 0; // Reset on loop start
+
+// When mana would go negative
+if (newMana < 0) {
+  this.manaDebt = Math.abs(newMana);
+  this.currentMana = newMana; // Allow negative for tracking
+}
+```
+
+---
+
+### Architecture Changes for Testing
+
+#### Shared Pathfinding Module
+
+Move pathfinding logic to a shared module accessible by multiple modules:
+
+**Current**: `frontend/modules/regionGraph/pathfinder.js`
+**Proposed**: `frontend/modules/shared/pathfinder.js`
+
+Used by:
+- `regionGraph` - Navigation visualization
+- `loops` - Queue building
+- `tests` - Path verification
+
+#### Queue Data Location
+
+**Decision**: Action queue data stays in `playerState` (used by regionGraph, Regions for display). Loop-specific processing logic stays in `loops` module.
+
+#### Event Handling for Queue vs Immediate
+
+**Decision**: Loops module handles the distinction between "queue action" (loop mode) vs "execute immediately" (non-loop mode) via event interception.
+
+```javascript
+// In loops/loopEvents.js
+export function handleUserLocationCheckForLoops(eventData, propagationOptions) {
+  if (isLoopModeActive) {
+    // Queue the action, don't propagate for immediate execution
+    queueLocationCheck(eventData.locationName, eventData.regionName);
+    // Don't propagate - we've handled it
+  } else {
+    // Propagate for immediate execution
+    dispatcher.publishToNextModule(...);
+  }
+}
+```
+
+---
+
 ### Unit Tests (Vitest)
 
-- `xpFormulas.test.js` - XP calculations (exists)
-- `costCalculator.test.js` - Cost calculations with penalties
-- `queueAnalyzer.test.js` - Queue analysis logic
+| Test File | Coverage |
+|-----------|----------|
+| `xpFormulas.test.js` | XP calculations (exists) |
+| `costCalculator.test.js` | Cost calculations with penalties |
+| `queueAnalyzer.test.js` | Queue analysis logic |
+| `pathfinder.test.js` | Path finding algorithms |
 
 ### Integration Tests (In-App)
 
 - Loop mode toggle
 - Action queue management
-- Mana consumption
+- Mana consumption (with debt tracking)
 - XP awarding
 - Loop reset behavior
 - Cost data loading
+- Instant mode behavior
 
 ### E2E Tests (Playwright)
 
-- Full loop playthrough
+- Full loop playthrough (loops queue test)
 - Cost generation tool
 - Stats panel display
 - Graph visualization
@@ -702,6 +839,7 @@ To add:
 | Path | Purpose |
 |------|---------|
 | `frontend/modules/loopStats/` | New stats panel module |
+| `frontend/modules/shared/pathfinder.js` | Shared pathfinding logic (moved from regionGraph) |
 | `frontend/tools/costGenerator/` | Cost generation tool |
 | `scripts/tools/generate-loop-costs.py` | Batch cost generation |
 | `frontend/presets/*/AP_*_costs.json` | Cost data files |
@@ -710,10 +848,12 @@ To add:
 
 | Path | Changes |
 |------|---------|
-| `frontend/modules/loops/loopState.js` | Item XP, loop inventory, cost loading |
+| `frontend/modules/loops/loopState.js` | Item XP, loop inventory, cost loading, instant mode, no-reset mode |
+| `frontend/modules/loops/loopEvents.js` | Queue vs immediate execution logic |
 | `frontend/modules/loops/xpFormulas.js` | Item penalty formulas |
 | `frontend/modules/loops/loopUI.js` | Cost display, penalty highlighting |
-| `frontend/modules/regionGraph/` | Node/edge rendering hooks |
+| `frontend/modules/regionGraph/` | Node/edge rendering hooks, use shared pathfinder |
+| `frontend/modules/tests/testCases/timerTests.js` | Add loops queue test mode |
 | `frontend/modes.json` | Add `loop` mode entry |
 
 ---
