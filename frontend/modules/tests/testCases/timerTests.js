@@ -31,7 +31,7 @@ export async function timerOfflineTest(testController) {
     testController.reportCondition('Test started', true);
 
     // EXPERIMENT: Try different location checking orders
-    const testMode = 'timer';
+    const testMode = 'loops-queue';
     // Options: 'sphere-order', 'snapshot-order', 'sphere-order-with-accessibility-check', 'sphere-order-check-rejection-test', 'ganon-immediate-check', 'sphere-order-no-autocollect', 'sphere-order-with-accessibility-check-no-autocollect', 'timer', 'loops-queue'
 
     if (testMode === 'loops-queue') {
@@ -1622,6 +1622,13 @@ async function timerOfflineTestWithLoopsQueue(testController) {
     }
     testController.reportCondition('PlayerState API available', true);
 
+    // Use global event dispatcher for publishing events
+    const dispatcher = window.eventDispatcher;
+    if (!dispatcher) {
+      throw new Error('Event dispatcher not available');
+    }
+    testController.reportCondition('Dispatcher available', true);
+
     // Get start regions
     const startRegions = stateManager.getStartRegions?.() || ['Menu'];
     const startRegion = startRegions[0] || 'Menu';
@@ -1676,34 +1683,33 @@ async function timerOfflineTestWithLoopsQueue(testController) {
         break;
       }
 
-      // Log progress
-      if (totalLocationsChecked % 10 === 0 || totalLocationsChecked < 10) {
+      // Log progress periodically
+      if (totalLocationsChecked % 10 === 0 || totalLocationsChecked < 5) {
         testController.log(`[${totalLocationsChecked + 1}] Targeting: ${targetLocation.name} in ${targetRegion}`);
       }
 
-      // Clear the current queue
-      playerStateAPI.removeAllActionsOfType?.('locationCheck');
-      playerStateAPI.removeAllActionsOfType?.('customAction');
+      // Clear the current queue - trim path back to start region
+      playerStateAPI.trimPath?.(startRegion, 1);
 
       // Build path from start region to target region
       const path = pathFinder.findPathWithExits(startRegion, targetRegion);
 
       if (!path) {
-        testController.log(`  WARNING: No path found from ${startRegion} to ${targetRegion}, skipping ${targetLocation.name}`);
-        // Mark as "processed" to avoid infinite loop on unreachable locations
+        testController.log(`WARNING: No path found from ${startRegion} to ${targetRegion}, skipping`);
         continue;
       }
 
-      // Queue the path actions
-      // First, set current region to start
-      // The path starts from startRegion, so we add moves for each step
+      // Queue the path actions using proper user:regionMove events
+      let previousRegion = startRegion;
       for (let i = 1; i < path.steps.length; i++) {
         const step = path.steps[i];
-        // Add move to region
-        playerStateAPI.addCustomAction?.('regionMove', {
-          region: step.region,
-          exitUsed: step.exitUsed
-        });
+        dispatcher.publish('tests', 'user:regionMove', {
+          sourceRegion: previousRegion,
+          targetRegion: step.region,
+          exitName: step.exitUsed,
+          updatePath: true,
+        }, { initialTarget: 'bottom' });
+        previousRegion = step.region;
       }
 
       // Add the location check at the end
@@ -1729,28 +1735,25 @@ async function timerOfflineTestWithLoopsQueue(testController) {
         };
         eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
 
-        // Safety timeout
+        // Safety timeout (5 seconds per location in instant mode should be plenty)
         timeout = setTimeout(() => {
           eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
           testController.log(`    WARNING: Timeout waiting for ${targetLocation.name} to be checked`);
           resolve(false);
-        }, 10000);
+        }, 5000);
       });
 
       if (wasChecked) {
         totalLocationsChecked++;
       }
 
-      // Reset loop for next iteration (mana refill, back to start)
+      // Reset loop for next iteration (mana refill, resets action progress)
       loopState._resetLoop?.();
+      // Unpause after reset (since _resetLoop pauses when autoRestartQueue is false)
+      loopState.setPaused(false);
 
-      // Small delay
+      // Small delay between iterations
       await new Promise(resolve => setTimeout(resolve, 50));
-
-      // Log progress periodically
-      if (totalLocationsChecked % 20 === 0) {
-        testController.log(`Progress: ${totalLocationsChecked} locations checked so far`);
-      }
     }
 
     if (iterationCount >= maxIterations) {

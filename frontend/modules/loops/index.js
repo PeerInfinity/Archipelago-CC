@@ -111,6 +111,10 @@ export function register(registrationApi) {
     return _playerStateAPI;
   });
 
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getLoopsModuleDispatcher', () => {
+    return moduleDispatcher;
+  });
+
   // Register Loops settings schema snippet
   registrationApi.registerSettingsSchema({
     type: 'object',

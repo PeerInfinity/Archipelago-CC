@@ -86,23 +86,42 @@ export class PlayerState {
     }
 
     /**
+     * Get the last region in the path (where the queue ends)
+     * This is used for queue building - checking against path end, not current position
+     * @returns {string|null} Last region name in path, or null if path is empty
+     */
+    getLastRegionInPath() {
+        // Search backwards for the last regionMove entry
+        for (let i = this.path.length - 1; i >= 0; i--) {
+            if (this.path[i].type === 'regionMove') {
+                return this.path[i].region;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Update path when moving to a new region
      * @param {string} targetRegion - Target region name
      * @param {string} exitUsed - Exit used to reach the target (optional)
      * @param {string} sourceRegion - Source region (optional, for validation)
      */
     updatePath(targetRegion, exitUsed = null, sourceRegion = null) {
+        // Get the last region in the path (where the queue currently ends)
+        const lastPathRegion = this.getLastRegionInPath();
+
         // Check if we're already at the target region - ignore redundant moves
-        if (targetRegion === this.currentRegion) {
+        // Use the last region in the path, not currentRegion, so queue building works correctly
+        if (targetRegion === lastPathRegion) {
             // Using console.log instead of console.warn since this is expected behavior
             // (prevents duplicate moves when events are processed multiple times)
-            console.log(`[PlayerState] Ignoring redundant move to same region: ${targetRegion}. Current path length: ${this.path.length}`);
+            console.log(`[PlayerState] Ignoring redundant move to same region: ${targetRegion}. Path ends at: ${lastPathRegion}`);
             return;
         }
-        
-        // If sourceRegion is provided, validate it matches current region
-        if (sourceRegion && sourceRegion !== this.currentRegion) {
-            console.warn(`[PlayerState] Source region mismatch: expected ${this.currentRegion}, got ${sourceRegion}. Target: ${targetRegion}, Exit: ${exitUsed}. This may indicate multiple region move events or outdated event data.`);
+
+        // If sourceRegion is provided, validate it matches the last region in path
+        if (sourceRegion && sourceRegion !== lastPathRegion) {
+            console.warn(`[PlayerState] Source region mismatch: path ends at ${lastPathRegion}, got sourceRegion ${sourceRegion}. Target: ${targetRegion}, Exit: ${exitUsed}. This may indicate multiple region move events or outdated event data.`);
         }
         
         // Check if we should handle backward navigation (only if loops are disabled)
@@ -210,10 +229,12 @@ export class PlayerState {
      * @param {Object} params - Additional parameters for the action
      */
     addCustomAction(actionName, params = {}) {
-        if (!this.currentRegion || this.isStartRegion(this.currentRegion)) {
-            console.warn(`[PlayerState] Cannot add custom action when not in a valid region (start regions are already fully explored)`);
+        if (!this.currentRegion) {
+            console.warn(`[PlayerState] Cannot add custom action when not in a valid region`);
             return;
         }
+        // Note: Removed the start region check to allow building paths from start regions
+        // Start regions may still need explore/move actions in loop mode
         
         // Get the current region's instance number
         const currentInstanceNumber = this.regionInstanceCounts.get(this.currentRegion) || 1;
