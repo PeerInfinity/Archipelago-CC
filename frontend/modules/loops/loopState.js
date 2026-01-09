@@ -54,6 +54,11 @@ export class LoopState {
     this.autoRestartQueue = false; // Flag to auto-restart queue when complete
     this.gameSpeed = 10; // Multiplier for processing speed
 
+    // Test mode flags
+    this.instantMode = false; // When true, actions complete in one frame
+    this.noManaDepletionReset = false; // When true, don't reset loop when mana reaches 0
+    this.manaDebt = 0; // Track how negative mana went (for testing)
+
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
     // this.discoveredLocations = new Set();
@@ -577,7 +582,12 @@ export class LoopState {
    * @param {number} speed - Speed multiplier (1.0 = normal speed)
    */
   setGameSpeed(speed) {
-    this.gameSpeed = Math.max(0.1, Math.min(100, speed));
+    // Allow Infinity for instant mode, otherwise cap at 100
+    if (speed === Infinity) {
+      this.gameSpeed = Infinity;
+    } else {
+      this.gameSpeed = Math.max(0.1, Math.min(100, speed));
+    }
 
     // Reset the _lastFrameTime to ensure smooth speed transitions
     if (this.isProcessing) {
@@ -585,6 +595,39 @@ export class LoopState {
     }
 
     this.eventBus.publish('loopState:speedChanged', { speed: this.gameSpeed }, 'loops');
+  }
+
+  /**
+   * Set instant mode - actions complete in one frame
+   * @param {boolean} enabled - Whether to enable instant mode
+   */
+  setInstantMode(enabled) {
+    this.instantMode = enabled;
+    log('info', `[LoopState] Instant mode ${enabled ? 'enabled' : 'disabled'}`);
+  }
+
+  /**
+   * Set no-mana-depletion-reset mode - don't reset loop when mana reaches 0
+   * @param {boolean} enabled - Whether to enable no-reset mode
+   */
+  setNoManaDepletionReset(enabled) {
+    this.noManaDepletionReset = enabled;
+    log('info', `[LoopState] No-mana-depletion-reset mode ${enabled ? 'enabled' : 'disabled'}`);
+  }
+
+  /**
+   * Get the current mana debt (how negative mana went)
+   * @returns {number} The mana debt
+   */
+  getManaDebt() {
+    return this.manaDebt;
+  }
+
+  /**
+   * Reset mana debt tracking
+   */
+  resetManaDebt() {
+    this.manaDebt = 0;
   }
 
   /**
@@ -648,18 +691,35 @@ export class LoopState {
 
       // Process current action
       const actionCost = this._calculateActionCost(this.currentAction);
-      // Slow down the action for better visibility - use 20 instead of 100
-      const progressIncrement = (deltaTime / 1000) * (20 / actionCost);
+
+      // Calculate progress increment
+      let progressIncrement;
+      const currentProgress = this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
+
+      if (this.instantMode) {
+        // In instant mode, complete action in one frame
+        progressIncrement = 100 - currentProgress;
+      } else {
+        // Slow down the action for better visibility - use 20 instead of 100
+        progressIncrement = (deltaTime / 1000) * (20 / actionCost);
+      }
 
       // Update progress in our tracking Map
-      const currentProgress = this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
       const newProgress = currentProgress + progressIncrement;
       this.actionQueueManager.setProgress(this.currentAction.pathIndex, newProgress);
       this.currentAction.progress = newProgress;
 
       // Reduce mana based on progress
       const manaCost = (progressIncrement / 100) * actionCost;
-      this.currentMana = Math.max(0, this.currentMana - manaCost);
+      const newMana = this.currentMana - manaCost;
+
+      // Track mana debt if mana goes negative
+      if (newMana < 0 && this.noManaDepletionReset) {
+        this.manaDebt = Math.max(this.manaDebt, Math.abs(newMana));
+        this.currentMana = newMana; // Allow negative mana for tracking
+      } else {
+        this.currentMana = Math.max(0, newMana);
+      }
 
       // Publish mana changed event immediately after update
       this.eventBus.publish('loopState:manaChanged', {
@@ -701,7 +761,7 @@ export class LoopState {
       }
 
       // Check for loop reset (out of mana)
-      if (this.currentMana <= 0) {
+      if (this.currentMana <= 0 && !this.noManaDepletionReset) {
         //log('info', 'Loop reset: out of mana');
         this._resetLoop();
         this._animationFrameId = requestAnimationFrame(
