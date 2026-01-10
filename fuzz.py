@@ -360,6 +360,11 @@ def call_generate(yaml_path, args, output_path):
 def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
     global MP_HOOKS
 
+    # Seed random for reproducibility if seed is provided
+    # Use seed + iteration to ensure each worker gets a unique but deterministic seed
+    if args.seed is not None:
+        random.seed(args.seed + i)
+
     out_buf = StringIO()
 
     timer = None
@@ -727,6 +732,11 @@ if __name__ == "__main__":
         timeout_handler.start()
 
         while i < args.runs:
+            # Seed random for this iteration if seed is provided
+            # This ensures YAML generation in main process is deterministic
+            if args.seed is not None:
+                random.seed(args.seed + i)
+
             if apworld_name is None:
                 actual_apworld = random.choice(valid_worlds)
             else:
@@ -787,6 +797,7 @@ if __name__ == "__main__":
     parser.add_argument("--with-static-worlds", default=None)
     parser.add_argument("--hook", action="append", default=[])
     parser.add_argument("--skip-output", default=False, action="store_true")
+    parser.add_argument("--seed", default=None, type=int, help="Random seed for reproducible fuzzing")
 
     args = parser.parse_args()
 
