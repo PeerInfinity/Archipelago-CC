@@ -31,10 +31,13 @@ export async function timerOfflineTest(testController) {
     testController.reportCondition('Test started', true);
 
     // EXPERIMENT: Try different location checking orders
-    const testMode = 'timer';
-    // Options: 'sphere-order', 'snapshot-order', 'sphere-order-with-accessibility-check', 'sphere-order-check-rejection-test', 'ganon-immediate-check', 'sphere-order-no-autocollect', 'sphere-order-with-accessibility-check-no-autocollect', 'timer'
+    const testMode = 'loops-queue';
+    // Options: 'sphere-order', 'snapshot-order', 'sphere-order-with-accessibility-check', 'sphere-order-check-rejection-test', 'ganon-immediate-check', 'sphere-order-no-autocollect', 'sphere-order-with-accessibility-check-no-autocollect', 'timer', 'loops-queue'
 
-    if (testMode === 'sphere-order') {
+    if (testMode === 'loops-queue') {
+      testController.log('EXPERIMENT: Using loops queue mode to check locations');
+      return await timerOfflineTestWithLoopsQueue(testController);
+    } else if (testMode === 'sphere-order') {
       testController.log('EXPERIMENT: Using sphereState to check locations in sphere order');
       return await timerOfflineTestWithSphereOrder(testController);
     } else if (testMode === 'snapshot-order') {
@@ -1550,6 +1553,252 @@ async function timerOfflineTestWithSphereOrder(testController) {
     await testController.completeTest(true);
   } catch (error) {
     testController.log(`Error in timerOfflineTestWithSphereOrder: ${error.message}`, 'error');
+    testController.reportCondition(`Test errored: ${error.message}`, false);
+    await testController.completeTest(false);
+  }
+}
+
+/**
+ * Timer Offline Test with Loops Queue Mode
+ *
+ * This test uses the loops module action queue to check locations:
+ * 1. Enable loop mode with instant mode and no-mana-depletion-reset
+ * 2. Find an accessible location
+ * 3. Build path from start region to the target location
+ * 4. Queue the actions (moves + check)
+ * 5. Wait for the queue to complete
+ * 6. Start a new loop with a new target
+ * 7. Repeat until all locations are checked
+ */
+async function timerOfflineTestWithLoopsQueue(testController) {
+  try {
+    testController.log('Starting timerOfflineTestWithLoopsQueue...');
+
+    // Get state manager and event bus
+    const stateManager = testController.stateManager;
+    const eventBus = testController.eventBus;
+
+    const initialSnapshot = stateManager.getSnapshot();
+    if (!initialSnapshot) {
+      throw new Error('State snapshot not available');
+    }
+
+    testController.log('Running in offline mode (no server connection)');
+    testController.reportCondition('Offline mode confirmed', true);
+
+    // Get static data
+    const staticData = stateManager.getStaticData();
+    if (!staticData || !staticData.locations) {
+      throw new Error('Static data or locations not available');
+    }
+
+    // Import PathFinder from shared module
+    const { PathFinder } = await import('../../shared/pathfinder.js');
+    const pathFinder = new PathFinder(stateManager);
+    testController.reportCondition('PathFinder loaded', true);
+
+    // Import createStateSnapshotInterface for accessibility checks
+    const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
+
+    // Get loopState singleton
+    const getLoopState = window.centralRegistry.getPublicFunction('loops', 'getLoopState');
+    if (!getLoopState) {
+      throw new Error('loops getLoopState function not found in central registry');
+    }
+    const loopState = getLoopState();
+    if (!loopState) {
+      throw new Error('loopState not available');
+    }
+    testController.reportCondition('LoopState module available', true);
+
+    // Get playerState API
+    const getPlayerStateAPI = window.centralRegistry.getPublicFunction('loops', 'getPlayerStateAPI');
+    if (!getPlayerStateAPI) {
+      throw new Error('loops getPlayerStateAPI function not found in central registry');
+    }
+    const playerStateAPI = getPlayerStateAPI();
+    if (!playerStateAPI) {
+      throw new Error('playerStateAPI not available');
+    }
+    testController.reportCondition('PlayerState API available', true);
+
+    // Use global event dispatcher for publishing events
+    const dispatcher = window.eventDispatcher;
+    if (!dispatcher) {
+      throw new Error('Event dispatcher not available');
+    }
+    testController.reportCondition('Dispatcher available', true);
+
+    // Get start regions
+    const startRegions = stateManager.getStartRegions?.() || ['Menu'];
+    const startRegion = startRegions[0] || 'Menu';
+    testController.log(`Start region: ${startRegion}`);
+
+    // Configure loop state for testing
+    loopState.setInstantMode(true);
+    loopState.setNoManaDepletionReset(true);
+    loopState.setPaused(false);
+    testController.reportCondition('Loop state configured for testing (instant mode, no mana reset)', true);
+
+    // Get locations array
+    const locationsArray = Array.from(staticData.locations.values());
+    const manuallyCheckableLocations = locationsArray.filter(
+      loc => loc.id !== null && loc.id !== undefined && loc.id !== 0
+    );
+    const totalManuallyCheckable = manuallyCheckableLocations.length;
+    testController.log(`Total manually-checkable locations: ${totalManuallyCheckable}`);
+
+    let totalLocationsChecked = 0;
+    let iterationCount = 0;
+    const maxIterations = 1000;
+
+    // Main loop
+    while (iterationCount < maxIterations) {
+      iterationCount++;
+
+      // Get fresh snapshot
+      const currentSnapshot = stateManager.getSnapshot();
+      const snapshotInterface = createStateSnapshotInterface(currentSnapshot, staticData);
+
+      // Find first accessible unchecked location
+      let targetLocation = null;
+      let targetRegion = null;
+
+      for (const loc of manuallyCheckableLocations) {
+        if (currentSnapshot?.checkedLocations?.includes(loc.name)) {
+          continue;
+        }
+
+        const isAccessible = snapshotInterface.isLocationAccessible(loc.name);
+        if (isAccessible) {
+          targetLocation = loc;
+          targetRegion = loc.parent_region || loc.region || null;
+          break;
+        }
+      }
+
+      // If no accessible location found, we're done
+      if (!targetLocation) {
+        testController.log(`No more accessible locations found after ${totalLocationsChecked} checks`);
+        break;
+      }
+
+      // Log progress periodically
+      if (totalLocationsChecked % 10 === 0 || totalLocationsChecked < 5) {
+        testController.log(`[${totalLocationsChecked + 1}] Targeting: ${targetLocation.name} in ${targetRegion}`);
+      }
+
+      // Clear the current queue - trim path back to start region
+      playerStateAPI.trimPath?.(startRegion, 1);
+
+      // Build path from start region to target region
+      const path = pathFinder.findPathWithExits(startRegion, targetRegion);
+
+      if (!path) {
+        testController.log(`WARNING: No path found from ${startRegion} to ${targetRegion}, skipping`);
+        continue;
+      }
+
+      // Queue the path actions using proper user:regionMove events
+      let previousRegion = startRegion;
+      for (let i = 1; i < path.steps.length; i++) {
+        const step = path.steps[i];
+        dispatcher.publish('tests', 'user:regionMove', {
+          sourceRegion: previousRegion,
+          targetRegion: step.region,
+          exitName: step.exitUsed,
+          updatePath: true,
+        }, { initialTarget: 'bottom' });
+        previousRegion = step.region;
+      }
+
+      // Add the location check at the end
+      playerStateAPI.addLocationCheck?.(targetLocation.name, targetRegion);
+
+      // Start processing if not already started
+      if (!loopState.isProcessing) {
+        loopState.startProcessing();
+      }
+
+      // Wait for the location to be checked
+      const wasChecked = await new Promise((resolve) => {
+        let timeout;
+        const handler = (data) => {
+          const snapshot = data?.snapshot || stateManager.getSnapshot();
+          const isNowChecked = snapshot?.checkedLocations?.includes(targetLocation.name);
+
+          if (isNowChecked) {
+            clearTimeout(timeout);
+            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+            resolve(true);
+          }
+        };
+        eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+
+        // Safety timeout (5 seconds per location in instant mode should be plenty)
+        timeout = setTimeout(() => {
+          eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+          testController.log(`    WARNING: Timeout waiting for ${targetLocation.name} to be checked`);
+          resolve(false);
+        }, 5000);
+      });
+
+      if (wasChecked) {
+        totalLocationsChecked++;
+      }
+
+      // Reset loop for next iteration (mana refill, resets action progress)
+      loopState._resetLoop?.();
+      // Unpause after reset (since _resetLoop pauses when autoRestartQueue is false)
+      loopState.setPaused(false);
+
+      // Small delay between iterations
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    if (iterationCount >= maxIterations) {
+      testController.log(`WARNING: Hit maximum iteration limit of ${maxIterations}`, 'warn');
+    }
+
+    // Stop loop processing
+    loopState.stopProcessing?.();
+    loopState.setInstantMode(false);
+    loopState.setNoManaDepletionReset(false);
+
+    testController.reportCondition('Loops queue test completed', true);
+
+    // Verify final state
+    const finalSnapshot = stateManager.getSnapshot();
+    const finalCheckedCount = finalSnapshot?.checkedLocations?.length || 0;
+
+    testController.log(`Final result: ${finalCheckedCount} locations checked`);
+    testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
+
+    // Determine test pass/fail
+    let testPassed = false;
+    if (finalCheckedCount >= totalManuallyCheckable) {
+      testController.reportCondition(
+        `All ${totalManuallyCheckable} manually-checkable locations successfully checked`,
+        true
+      );
+      testPassed = true;
+    } else {
+      testController.reportCondition(
+        `Only ${finalCheckedCount}/${totalManuallyCheckable} manually-checkable locations were checked`,
+        false
+      );
+      testPassed = false;
+    }
+
+    // Log mana debt if any
+    const manaDebt = loopState.getManaDebt?.() || 0;
+    if (manaDebt > 0) {
+      testController.log(`Mana debt accumulated: ${manaDebt.toFixed(2)}`);
+    }
+
+    await testController.completeTest(testPassed);
+  } catch (error) {
+    testController.log(`Error in timerOfflineTestWithLoopsQueue: ${error.message}`, 'error');
     testController.reportCondition(`Test errored: ${error.message}`, false);
     await testController.completeTest(false);
   }
