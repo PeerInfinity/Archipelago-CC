@@ -92,9 +92,9 @@ See the [Project Roadmap](/docs/json/project-roadmap.md) for the latest status, 
 - Web client interface derived from [ArchipIDLE](https://github.com/LegendaryLinux/archipidle-client).
 - Loop mode inspired by games like [Idle Loops](https://github.com/dmchurch/omsi-loops/), Increlution, and Stuck In Time.
 - Uses [Golden Layout](https://github.com/golden-layout/golden-layout) for panel management.
-- Uses [vanilla-jsoneditor](https://github.com/josdejong/svelte-jsoneditor)
-- Uses [json-editor](https://github.com/json-editor/json-editor)
 - Uses [CodeMirror](https://github.com/codemirror/codemirror5)
 - Uses [Cytoscape.js](https://github.com/cytoscape/cytoscape.js) for graph visualization
 - Uses [metamath-py](https://pypi.org/project/metamath-py/) for the MetaMath apworld
 - Uses [Rule Builder](https://github.com/drtchops/Archipelago/tree/rules-engine) ([PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048))
+- Universal Tracker based on [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago)
+- Fuzzer based on [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong
