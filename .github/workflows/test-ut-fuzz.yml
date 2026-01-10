@@ -312,8 +312,8 @@ jobs:
           # Add test results JSON
           git add -f scripts/output/ut-fuzz/test-results-*.json
 
-          # Add generated documentation
-          git add -f docs/json/developer/test-results/test-results-ut-fuzz.md || true
+          # Add generated documentation (includes test-results-ut-fuzz.md and test-results-ut-fuzz-*.md)
+          git add -f docs/json/developer/test-results/test-results-ut-fuzz*.md || true
 
           if ! git diff --staged --quiet; then
             git commit -m "Update UT fuzz test results (${{ inputs.test_original_ut && 'original' || 'modified' }} UT)
