@@ -103,8 +103,9 @@ jobs:
       fail-fast: false
       matrix:
         # In debug mode, only run 1 split since we're only testing Adventure.yaml
+        # Note: split_total stays at 10 even in debug mode so the script produces split-numbered output files
         split_num: ${{ fromJSON(inputs.debug_mode && '[1]' || '[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]') }}
-        split_total: ${{ fromJSON(inputs.debug_mode && '[1]' || '[10]') }}
+        split_total: [10]
 
     steps:
       - name: Checkout ut-fuzz-test branch

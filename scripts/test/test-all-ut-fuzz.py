@@ -58,6 +58,10 @@ def get_template_files(templates_dir: Path, skip_list: List[str], include_list: 
         # Filter out skipped files
         yaml_files = [f for f in yaml_files if f.name not in skip_list]
 
+    # Filter out WorldGen and WorldGen 2 templates - they are regenerated versions
+    # of original games and should behave identically, so testing them is redundant
+    yaml_files = [f for f in yaml_files if 'WorldGen' not in f.name]
+
     return yaml_files
 
 
