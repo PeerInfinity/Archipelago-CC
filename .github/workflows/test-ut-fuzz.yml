@@ -274,14 +274,21 @@ jobs:
           print(f"Combined {len(combined['results'])} results into {output_file}")
           PYTHON_SCRIPT
 
+      - name: Generate documentation
+        run: |
+          python scripts/docs/generate_ut_fuzz_chart.py
+
       - name: Commit and push results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin ut-fuzz-test || true
 
-          # Add test results
+          # Add test results JSON
           git add -f scripts/output/ut-fuzz/test-results-*.json
+
+          # Add generated documentation
+          git add -f docs/json/developer/test-results/test-results-ut-fuzz.md || true
 
           if ! git diff --staged --quiet; then
             git commit -m "Update UT fuzz test results
@@ -291,6 +298,10 @@ jobs:
             Runs per game: ${{ inputs.runs_per_game }}
             Jobs: ${{ inputs.jobs }}
             Timeout: ${{ inputs.timeout }}s
+
+            Includes:
+            - Test results JSON
+            - Generated documentation (test-results-ut-fuzz.md)
             "
             git push origin ut-fuzz-test
           fi
