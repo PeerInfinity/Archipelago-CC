@@ -1,0 +1,296 @@
+name: Test UT Fuzzer
+
+on:
+  workflow_dispatch:
+    inputs:
+      runs_per_game:
+        description: 'Number of fuzz runs per game'
+        required: true
+        type: number
+        default: 10
+
+      jobs:
+        description: 'Number of parallel fuzzer jobs (per runner)'
+        required: true
+        type: number
+        default: 2
+
+      timeout:
+        description: 'Timeout per generation in seconds'
+        required: true
+        type: number
+        default: 15
+
+      seed:
+        description: 'Random seed for reproducibility (leave empty for random)'
+        required: false
+        type: number
+        default: 1
+
+      delete_existing_results:
+        description: 'Delete existing ut-fuzz test results before testing'
+        type: boolean
+        default: true
+
+      debug_mode:
+        description: 'Debug mode: only process Adventure.yaml (for quick testing)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
+jobs:
+  # Initial setup job - creates/updates branch
+  setup-branch:
+    name: Setup UT Fuzz Test Branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Create or switch to ut-fuzz-test branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin ut-fuzz-test; then
+            git checkout ut-fuzz-test
+            git pull origin ut-fuzz-test
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync ut-fuzz-test with main"
+              git push origin ut-fuzz-test
+            fi
+          else
+            git checkout -b ut-fuzz-test origin/main
+            git push -u origin ut-fuzz-test
+          fi
+
+      - name: Delete existing test results
+        if: inputs.delete_existing_results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Delete ut-fuzz test results
+          git rm -f scripts/output/ut-fuzz/test-results-fixed-seed.json || true
+          git rm -f scripts/output/ut-fuzz/test-results-random-seed.json || true
+
+          # Commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Delete existing UT fuzz test results before new test run"
+            git push origin ut-fuzz-test
+          fi
+
+  # UT Fuzz Tests
+  test-ut-fuzz:
+    name: Test UT Fuzz Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    needs: setup-branch
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # In debug mode, only run 1 split since we're only testing Adventure.yaml
+        split_num: ${{ fromJSON(inputs.debug_mode && '[1]' || '[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]') }}
+        split_total: ${{ fromJSON(inputs.debug_mode && '[1]' || '[10]') }}
+
+    steps:
+      - name: Checkout ut-fuzz-test branch
+        uses: actions/checkout@v4
+        with:
+          ref: ut-fuzz-test
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Run UT fuzz test
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+          echo "Using seed: ${{ inputs.seed || 'random' }}"
+          python scripts/test/test-all-ut-fuzz.py \
+            --runs ${{ inputs.runs_per_game }} \
+            --jobs ${{ inputs.jobs }} \
+            --timeout ${{ inputs.timeout }} \
+            ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-ut-fuzz-split-${{ matrix.split_num }}
+          path: scripts/output/ut-fuzz/test-results-*-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+      - name: Upload fuzz output for split ${{ matrix.split_num }}
+        if: ${{ !cancelled() && failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-output-split-${{ matrix.split_num }}
+          path: fuzz_output/
+          retention-days: 7
+
+  # Combine UT fuzz results
+  combine-ut-fuzz:
+    name: Combine UT Fuzz Results
+    runs-on: ubuntu-latest
+    needs: [setup-branch, test-ut-fuzz]
+    if: ${{ !cancelled() }}
+
+    steps:
+      - name: Checkout ut-fuzz-test branch
+        uses: actions/checkout@v4
+        with:
+          ref: ut-fuzz-test
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-ut-fuzz-split-*
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p scripts/output/ut-fuzz
+
+          # Determine seed type from input
+          SEED_TYPE="${{ inputs.seed && 'fixed' || 'random' }}"
+
+          # Combine JSON files using Python
+          python3 << 'PYTHON_SCRIPT'
+          import json
+          import glob
+          from datetime import datetime
+
+          # Find all split result files
+          files = glob.glob("artifacts/test-results-ut-fuzz-split-*/test-results-*-split-*.json")
+          print(f"Found {len(files)} result files to combine")
+
+          if not files:
+              print("No result files found")
+              exit(0)
+
+          # Combine results
+          combined = {
+              "metadata": {
+                  "created": datetime.now().isoformat(),
+                  "last_updated": datetime.now().isoformat(),
+                  "script_version": "1.0.0",
+                  "combined_from": len(files)
+              },
+              "results": {}
+          }
+
+          # Merge all results
+          for f in sorted(files):
+              print(f"Processing: {f}")
+              with open(f) as fp:
+                  data = json.load(fp)
+
+              # Copy metadata from first file
+              if "seed_mode" not in combined["metadata"]:
+                  for key in ["seed_mode", "seed", "runs_per_game", "jobs", "timeout"]:
+                      if key in data.get("metadata", {}):
+                          combined["metadata"][key] = data["metadata"][key]
+
+              # Merge results
+              combined["results"].update(data.get("results", {}))
+
+          combined["metadata"]["total_templates"] = len(combined["results"])
+
+          # Determine output filename from seed mode
+          seed_mode = combined["metadata"].get("seed_mode", "fixed")
+          output_file = f"scripts/output/ut-fuzz/test-results-{seed_mode}-seed.json"
+
+          with open(output_file, "w") as fp:
+              json.dump(combined, fp, indent=2)
+
+          print(f"Combined {len(combined['results'])} results into {output_file}")
+          PYTHON_SCRIPT
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin ut-fuzz-test || true
+
+          # Add test results
+          git add -f scripts/output/ut-fuzz/test-results-*.json
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update UT fuzz test results
+
+            Generated by workflow run: ${{ github.run_id }}
+            Seed: ${{ inputs.seed || 'random' }}
+            Runs per game: ${{ inputs.runs_per_game }}
+            Jobs: ${{ inputs.jobs }}
+            Timeout: ${{ inputs.timeout }}s
+            "
+            git push origin ut-fuzz-test
+          fi
