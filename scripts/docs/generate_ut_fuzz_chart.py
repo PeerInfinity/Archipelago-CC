@@ -245,26 +245,22 @@ def find_result_files(results_dir: str) -> List[str]:
     Find all UT fuzz result files in the results directory.
 
     Looks for files matching patterns:
-    - test-results-{ut_version}-{seed_type}-seed.json (new format)
+    - test-results-{world_source}-{ut_version}-{seed_type}-seed.json (new with world_source)
+    - test-results-{ut_version}-{seed_type}-seed.json (bundled worlds format)
     - test-results-{seed_type}-seed.json (old format, for backward compatibility)
     """
     import glob
 
     result_files = []
 
-    # New format: test-results-{ut_version}-{seed_type}-seed.json
-    new_pattern = os.path.join(results_dir, 'test-results-*-*-seed.json')
-    result_files.extend(glob.glob(new_pattern))
-
-    # Old format: test-results-{seed_type}-seed.json (only 2 parts before -seed.json)
-    old_pattern = os.path.join(results_dir, 'test-results-*-seed.json')
-    for f in glob.glob(old_pattern):
-        # Only include if it's the old format (doesn't have ut_version)
+    # Match all test-results-*-seed.json files
+    pattern = os.path.join(results_dir, 'test-results-*-seed.json')
+    for f in glob.glob(pattern):
         basename = os.path.basename(f)
-        # Count parts: test-results-fixed-seed.json = 4 parts, test-results-modified-fixed-seed.json = 5 parts
-        parts = basename.replace('.json', '').split('-')
-        if len(parts) == 4 and f not in result_files:  # Old format: test-results-fixed-seed
-            result_files.append(f)
+        # Skip split files (used during workflow, not final results)
+        if '-split-' in basename:
+            continue
+        result_files.append(f)
 
     return sorted(result_files)
 
@@ -274,6 +270,7 @@ def get_output_filename(results_path: str) -> str:
     Generate output markdown filename based on results file.
 
     Examples:
+    - test-results-apworlds-modified-fixed-seed.json -> test-results-ut-fuzz-apworlds-modified.md
     - test-results-modified-fixed-seed.json -> test-results-ut-fuzz-modified.md
     - test-results-original-fixed-seed.json -> test-results-ut-fuzz-original.md
     - test-results-fixed-seed.json -> test-results-ut-fuzz.md (old format)
@@ -281,8 +278,13 @@ def get_output_filename(results_path: str) -> str:
     basename = os.path.basename(results_path)
     parts = basename.replace('.json', '').split('-')
 
-    # New format: test-results-{ut_version}-{seed_type}-seed
-    if len(parts) == 5:  # ['test', 'results', 'modified', 'fixed', 'seed']
+    # Format with world_source: test-results-{world_source}-{ut_version}-{seed_type}-seed
+    if len(parts) == 6:  # ['test', 'results', 'apworlds', 'modified', 'fixed', 'seed']
+        world_source = parts[2]
+        ut_version = parts[3]
+        return f'test-results-ut-fuzz-{world_source}-{ut_version}.md'
+    # Bundled format: test-results-{ut_version}-{seed_type}-seed
+    elif len(parts) == 5:  # ['test', 'results', 'modified', 'fixed', 'seed']
         ut_version = parts[2]
         return f'test-results-ut-fuzz-{ut_version}.md'
     else:
