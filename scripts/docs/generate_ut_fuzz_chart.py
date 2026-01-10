@@ -115,11 +115,17 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         metadata: Metadata from the test results
         world_mapping: Mapping of game names to world directories
     """
-    # Determine seed info
+    # Determine seed info and UT version
     seed = metadata.get('seed', 'random')
     seed_display = f"Fixed (seed={seed})" if seed != 'random' else "Random"
+    ut_version = metadata.get('ut_version', 'modified')
+    ut_version_display = "Original (FarisTheAncient)" if ut_version == 'original' else "Modified (this repository)"
 
-    md_content = "# Universal Tracker Fuzz Test Results\n\n"
+    # Title includes UT version if it's original
+    if ut_version == 'original':
+        md_content = "# Universal Tracker Fuzz Test Results (Original UT)\n\n"
+    else:
+        md_content = "# Universal Tracker Fuzz Test Results\n\n"
 
     # Add navigation links
     md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
@@ -128,6 +134,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
         md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
+        md_content += f"**Universal Tracker Version:** {ut_version_display}\n\n"
         md_content += f"**Seed Mode:** {seed_display}\n\n"
         md_content += f"**Runs Per Game:** {metadata.get('runs_per_game', 'Unknown')}\n\n"
         md_content += f"**Parallel Jobs:** {metadata.get('jobs', 'Unknown')}\n\n"
@@ -233,10 +240,60 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     return md_content
 
 
+def find_result_files(results_dir: str) -> List[str]:
+    """
+    Find all UT fuzz result files in the results directory.
+
+    Looks for files matching patterns:
+    - test-results-{ut_version}-{seed_type}-seed.json (new format)
+    - test-results-{seed_type}-seed.json (old format, for backward compatibility)
+    """
+    import glob
+
+    result_files = []
+
+    # New format: test-results-{ut_version}-{seed_type}-seed.json
+    new_pattern = os.path.join(results_dir, 'test-results-*-*-seed.json')
+    result_files.extend(glob.glob(new_pattern))
+
+    # Old format: test-results-{seed_type}-seed.json (only 2 parts before -seed.json)
+    old_pattern = os.path.join(results_dir, 'test-results-*-seed.json')
+    for f in glob.glob(old_pattern):
+        # Only include if it's the old format (doesn't have ut_version)
+        basename = os.path.basename(f)
+        # Count parts: test-results-fixed-seed.json = 4 parts, test-results-modified-fixed-seed.json = 5 parts
+        parts = basename.replace('.json', '').split('-')
+        if len(parts) == 4 and f not in result_files:  # Old format: test-results-fixed-seed
+            result_files.append(f)
+
+    return sorted(result_files)
+
+
+def get_output_filename(results_path: str) -> str:
+    """
+    Generate output markdown filename based on results file.
+
+    Examples:
+    - test-results-modified-fixed-seed.json -> test-results-ut-fuzz-modified.md
+    - test-results-original-fixed-seed.json -> test-results-ut-fuzz-original.md
+    - test-results-fixed-seed.json -> test-results-ut-fuzz.md (old format)
+    """
+    basename = os.path.basename(results_path)
+    parts = basename.replace('.json', '').split('-')
+
+    # New format: test-results-{ut_version}-{seed_type}-seed
+    if len(parts) == 5:  # ['test', 'results', 'modified', 'fixed', 'seed']
+        ut_version = parts[2]
+        return f'test-results-ut-fuzz-{ut_version}.md'
+    else:
+        # Old format or unexpected format
+        return 'test-results-ut-fuzz.md'
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate UT fuzz test results chart')
     parser.add_argument('--results', type=str,
-                        help='Path to test results JSON')
+                        help='Path to test results JSON (if not specified, processes all found files)')
     parser.add_argument('--output', type=str,
                         help='Output markdown file path')
 
@@ -248,54 +305,55 @@ def main():
     # Load world mapping for creating game links
     world_mapping = load_world_mapping(project_root)
 
-    # Default path for results file
-    results_path = args.results
-    if results_path:
-        results_path = os.path.join(project_root, results_path) if not os.path.isabs(results_path) else results_path
-    else:
-        # Try fixed seed first, then random
-        fixed_path = os.path.join(project_root, 'scripts/output/ut-fuzz/test-results-fixed-seed.json')
-        random_path = os.path.join(project_root, 'scripts/output/ut-fuzz/test-results-random-seed.json')
-        if os.path.exists(fixed_path):
-            results_path = fixed_path
-        elif os.path.exists(random_path):
-            results_path = random_path
-        else:
-            print(f"Error: No result files found.")
-            print(f"  Looked for: {fixed_path}")
-            print(f"  Looked for: {random_path}")
-            return 1
-
-    # Output path
+    # Output directory
     output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
-    output_path = args.output
-    if output_path:
-        output_path = os.path.join(project_root, output_path) if not os.path.isabs(output_path) else output_path
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Find result files
+    results_dir = os.path.join(project_root, 'scripts/output/ut-fuzz')
+
+    if args.results:
+        # Single file mode
+        results_path = os.path.join(project_root, args.results) if not os.path.isabs(args.results) else args.results
+        result_files = [results_path]
     else:
-        output_path = os.path.join(output_dir, 'test-results-ut-fuzz.md')
+        # Find all result files
+        result_files = find_result_files(results_dir)
 
-    # Load results
-    if not os.path.exists(results_path):
-        print(f"Error: Results file not found: {results_path}")
+    if not result_files:
+        print(f"Error: No result files found in {results_dir}")
         return 1
 
-    results = load_test_results(results_path)
-    if not results:
-        print("Error: Failed to load results")
-        return 1
+    # Process each result file
+    for results_path in result_files:
+        if not os.path.exists(results_path):
+            print(f"Warning: Results file not found: {results_path}")
+            continue
 
-    metadata = results.get('metadata', {})
-    chart_data = extract_ut_fuzz_chart_data(results)
+        results = load_test_results(results_path)
+        if not results:
+            print(f"Warning: Failed to load results from {results_path}")
+            continue
 
-    # Generate markdown
-    md_content = generate_ut_fuzz_markdown(chart_data, metadata, world_mapping)
+        metadata = results.get('metadata', {})
+        chart_data = extract_ut_fuzz_chart_data(results)
 
-    # Write output
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'w') as f:
-        f.write(md_content)
+        # Generate markdown
+        md_content = generate_ut_fuzz_markdown(chart_data, metadata, world_mapping)
 
-    print(f"Chart saved to: {output_path}")
+        # Determine output path
+        if args.output and len(result_files) == 1:
+            output_path = os.path.join(project_root, args.output) if not os.path.isabs(args.output) else args.output
+        else:
+            output_filename = get_output_filename(results_path)
+            output_path = os.path.join(output_dir, output_filename)
+
+        # Write output
+        with open(output_path, 'w') as f:
+            f.write(md_content)
+
+        print(f"Chart saved to: {output_path} (from {os.path.basename(results_path)})")
+
     return 0
 
 

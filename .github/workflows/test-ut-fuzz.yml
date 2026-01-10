@@ -37,6 +37,11 @@ on:
         type: boolean
         default: false
 
+      test_original_ut:
+        description: 'Test original Universal Tracker (from FarisTheAncient) instead of modified version'
+        type: boolean
+        default: false
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -160,12 +165,22 @@ jobs:
           source .venv/bin/activate
           python scripts/build/build-world-mapping.py
 
+      - name: Swap to original Universal Tracker
+        if: inputs.test_original_ut
+        run: |
+          echo "Replacing modified tracker with original tracker from FarisTheAncient..."
+          rm -rf worlds/tracker
+          cp -r scripts/test/fixtures/tracker_original worlds/tracker
+          echo "Original tracker installed:"
+          ls -la worlds/tracker/
+
       - name: Run UT fuzz test
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           echo "Using seed: ${{ inputs.seed || 'random' }}"
+          echo "UT version: ${{ inputs.test_original_ut && 'original' || 'modified' }}"
           python scripts/test/test-all-ut-fuzz.py \
             --runs ${{ inputs.runs_per_game }} \
             --jobs ${{ inputs.jobs }} \
@@ -173,13 +188,14 @@ jobs:
             ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
+            --ut-version ${{ inputs.test_original_ut && 'original' || 'modified' }} \
             ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-ut-fuzz-split-${{ matrix.split_num }}
+          name: test-results-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-${{ matrix.split_num }}
           path: scripts/output/ut-fuzz/test-results-*-split-${{ matrix.split_num }}.json
           retention-days: 7
 
@@ -187,7 +203,7 @@ jobs:
         if: ${{ !cancelled() && failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: fuzz-output-split-${{ matrix.split_num }}
+          name: fuzz-output-${{ inputs.test_original_ut && 'original' || 'modified' }}-split-${{ matrix.split_num }}
           path: fuzz_output/
           retention-days: 7
 
@@ -218,24 +234,26 @@ jobs:
       - name: Download test artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: test-results-ut-fuzz-split-*
+          pattern: test-results-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-*
           path: artifacts
 
       - name: Combine test results
+        env:
+          UT_VERSION: ${{ inputs.test_original_ut && 'original' || 'modified' }}
         run: |
           mkdir -p scripts/output/ut-fuzz
-
-          # Determine seed type from input
-          SEED_TYPE="${{ inputs.seed && 'fixed' || 'random' }}"
 
           # Combine JSON files using Python
           python3 << 'PYTHON_SCRIPT'
           import json
           import glob
+          import os
           from datetime import datetime
 
-          # Find all split result files
-          files = glob.glob("artifacts/test-results-ut-fuzz-split-*/test-results-*-split-*.json")
+          ut_version = os.environ.get('UT_VERSION', 'modified')
+
+          # Find all split result files (pattern matches both original and modified artifacts)
+          files = glob.glob("artifacts/test-results-*-ut-fuzz-split-*/test-results-*-split-*.json")
           print(f"Found {len(files)} result files to combine")
 
           if not files:
@@ -261,7 +279,7 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["seed_mode", "seed", "runs_per_game", "jobs", "timeout"]:
+                  for key in ["ut_version", "seed_mode", "seed", "runs_per_game", "jobs", "timeout"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
@@ -270,9 +288,10 @@ jobs:
 
           combined["metadata"]["total_templates"] = len(combined["results"])
 
-          # Determine output filename from seed mode
+          # Determine output filename from ut_version and seed mode
+          ut_ver = combined["metadata"].get("ut_version", ut_version)
           seed_mode = combined["metadata"].get("seed_mode", "fixed")
-          output_file = f"scripts/output/ut-fuzz/test-results-{seed_mode}-seed.json"
+          output_file = f"scripts/output/ut-fuzz/test-results-{ut_ver}-{seed_mode}-seed.json"
 
           with open(output_file, "w") as fp:
               json.dump(combined, fp, indent=2)
@@ -297,9 +316,10 @@ jobs:
           git add -f docs/json/developer/test-results/test-results-ut-fuzz.md || true
 
           if ! git diff --staged --quiet; then
-            git commit -m "Update UT fuzz test results
+            git commit -m "Update UT fuzz test results (${{ inputs.test_original_ut && 'original' || 'modified' }} UT)
 
             Generated by workflow run: ${{ github.run_id }}
+            UT Version: ${{ inputs.test_original_ut && 'original' || 'modified' }}
             Seed: ${{ inputs.seed || 'random' }}
             Runs per game: ${{ inputs.runs_per_game }}
             Jobs: ${{ inputs.jobs }}

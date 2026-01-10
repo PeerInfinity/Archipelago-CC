@@ -275,24 +275,34 @@ def main():
         default=0,
         help='Skip the first N templates before applying every-nth filter'
     )
+    parser.add_argument(
+        '--ut-version',
+        type=str,
+        choices=['modified', 'original'],
+        default='modified',
+        help='Which version of Universal Tracker to test (default: modified)'
+    )
 
     args = parser.parse_args()
 
     # Clean up empty worldgen directories before loading worlds
     cleanup_empty_worldgen_dirs()
 
-    # Determine seed mode
+    # Determine seed mode and UT version
     is_random_seed_mode = args.seed is None
     seed_type = "random" if is_random_seed_mode else "fixed"
+    ut_version = args.ut_version  # 'modified' or 'original'
 
     # Compute output filename if not specified
+    # Format: test-results-{ut_version}-{seed_type}-split-{N}.json
+    # or: test-results-{ut_version}-{seed_type}-seed.json
     if args.output_file is None:
         is_split_job = args.every_nth > 1
         if is_split_job:
             split_num = args.skip_first + 1
-            output_filename = f"test-results-{seed_type}-split-{split_num}.json"
+            output_filename = f"test-results-{ut_version}-{seed_type}-split-{split_num}.json"
         else:
-            output_filename = f"test-results-{seed_type}-seed.json"
+            output_filename = f"test-results-{ut_version}-{seed_type}-seed.json"
         args.output_file = f"scripts/output/ut-fuzz/{output_filename}"
         print(f"Auto-computed output file: {args.output_file}")
 
@@ -338,6 +348,7 @@ def main():
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
+            "ut_version": ut_version,
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
             "runs_per_game": args.runs,
