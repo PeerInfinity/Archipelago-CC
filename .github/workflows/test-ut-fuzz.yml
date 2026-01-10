@@ -155,6 +155,11 @@ jobs:
           python Launcher.py --update_settings
           python scripts/setup/update_host_settings.py minimal-spoilers
 
+      - name: Update world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
+
       - name: Run UT fuzz test
         env:
           PYTHONUNBUFFERED: "1"
