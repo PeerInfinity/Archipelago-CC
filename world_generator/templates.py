@@ -1618,8 +1618,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         # Add pre_fill section for canonical placement
         pre_fill_section = f'''
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
             self._place_original_items()
 
     def _place_original_items(self) -> None:
