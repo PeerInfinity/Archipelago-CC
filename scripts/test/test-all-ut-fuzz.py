@@ -47,6 +47,39 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 FUZZ_OUTPUT_DIR = PROJECT_ROOT / "fuzz_output"
 
 
+def cleanup_empty_worldgen_dirs():
+    """
+    Remove empty temporary worldgen directories from worlds/.
+
+    These are leftover directories from previous fuzz/worldgen runs that
+    don't have an __init__.py file, causing warnings when worlds are loaded.
+    They typically have names like 'adventure_worldgen_86998726363870010506'.
+    """
+    worlds_dir = PROJECT_ROOT / "worlds"
+    if not worlds_dir.exists():
+        return
+
+    removed_count = 0
+    for entry in worlds_dir.iterdir():
+        if not entry.is_dir():
+            continue
+
+        # Look for directories matching the pattern: *_worldgen_<numbers>
+        # or *_<numbers> that don't have an __init__.py
+        name = entry.name
+        if "_worldgen_" in name or (name.split("_")[-1].isdigit() and len(name.split("_")[-1]) > 10):
+            init_file = entry / "__init__.py"
+            if not init_file.exists():
+                try:
+                    shutil.rmtree(entry)
+                    removed_count += 1
+                except OSError:
+                    pass  # Ignore errors during cleanup
+
+    if removed_count > 0:
+        print(f"Cleaned up {removed_count} empty worldgen directories")
+
+
 def get_template_files(templates_dir: Path, skip_list: List[str], include_list: Optional[List[str]] = None) -> List[Path]:
     """Get list of template files to test."""
     yaml_files = sorted(templates_dir.glob("*.yaml"))
@@ -244,6 +277,9 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Clean up empty worldgen directories before loading worlds
+    cleanup_empty_worldgen_dirs()
 
     # Determine seed mode
     is_random_seed_mode = args.seed is None

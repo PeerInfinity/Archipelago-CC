@@ -284,6 +284,10 @@ def get_random_value(name, option):
         if not valid_choices:
             valid_choices = list(option.options.keys())
 
+        # Handle TextChoice and other Choice subclasses with no predefined options
+        if not valid_choices:
+            return option.default
+
         return random.choice(valid_choices)
 
     if issubclass(option, Range):

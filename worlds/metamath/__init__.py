@@ -40,8 +40,8 @@ class MetamathWorld(World):
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
 
-        # Get the theorem name from options
-        theorem_name = self.options.theorem.value
+        # Get the theorem name from options (use current_key for string representation)
+        theorem_name = self.options.theorem.current_key
 
         # Extract theorem name from URL if provided
         if theorem_name.startswith("http"):
@@ -289,6 +289,6 @@ class MetamathWorld(World):
                 for i, stmt in self.proof_structure.statements.items()
             },
             "starting_statements": list(self.starting_statements),
-            "theorem": self.options.theorem.value,
+            "theorem": self.options.theorem.current_key,
             "randomize_items": self.options.randomize_items.value,
         }
