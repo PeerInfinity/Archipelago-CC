@@ -5681,9 +5681,16 @@ class HelperCodeGenerator:
                     location_expr = self._generate_expression(args[0])
                 return f'state.can_reach_location({location_expr}, player)'
 
-        # Generic fallback
+        elif method == 'copy':
+            # state.copy() takes no arguments
+            return 'state.copy()'
+
+        # Generic fallback - methods that take player as an argument
         arg_exprs = [self._generate_expression(a) for a in args]
-        return f'state.{method}({", ".join(arg_exprs)}, player)'
+        if arg_exprs:
+            return f'state.{method}({", ".join(arg_exprs)}, player)'
+        else:
+            return f'state.{method}(player)'
 
     def _expr_subscript(self, expr: Dict[str, Any]) -> str:
         """Generate subscript/index expression."""

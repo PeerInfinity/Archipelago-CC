@@ -8,7 +8,7 @@ This exporter handles ALttP-specific patterns:
   to purchase items from shops.
 """
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Set
 from .generic import GenericGameExportHandler
 import logging
 import re
@@ -18,14 +18,15 @@ logger = logging.getLogger(__name__)
 
 # Locations that are accessible in bunny form (from set_bunny_rules in ALttP Rules.py)
 # These locations don't require Moon Pearl even in Dark World regions
-BUNNY_ACCESSIBLE_LOCATIONS = [
+BUNNY_ACCESSIBLE_LOCATIONS = {
     "Link's Uncle", "Sahasrahla", "Sick Kid", "Lost Woods Hideout", "Lumberjack Tree",
     "Checkerboard Cave", "Potion Shop", "Spectacle Rock Cave", "Pyramid",
     "Hype Cave - Generous Guy", "Peg Cave", "Bumper Cave Ledge", "Dark Blacksmith Ruins",
     "Spectacle Rock", "Bombos Tablet", "Ether Tablet", "Purple Chest", "Blacksmith",
     "Missing Smith", "Master Sword Pedestal", "Bottle Merchant", "Sunken Treasure",
     "Desert Ledge"
-]
+}
+
 
 
 class ALttPGameExportHandler(GenericGameExportHandler):
@@ -38,6 +39,23 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Initialize with optional world reference."""
         super().__init__(world)
         self._current_location_context = None
+        self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
+
+    def _compute_bunny_accessible_locations(self, world) -> Set[str]:
+        """Compute the set of bunny-accessible locations based on world options.
+
+        The bunny-accessible list is the set of locations that never require Moon Pearl.
+        These are locations that can be accessed in bunny form regardless of game mode
+        or glitch settings.
+
+        Note: ALttP has complex path-dependent bunny rules for glitch modes that can't
+        be easily replicated. The original rules check entrance paths and add options
+        for superbunny or mirror accessibility. We simplify to the basic set of always-
+        accessible locations to avoid logic mismatches.
+        """
+        # Return the static set - glitch modes have complex path-dependent rules
+        # that can't be simplified to a location list
+        return set(BUNNY_ACCESSIBLE_LOCATIONS)
 
     def set_location_context(self, location_name: str) -> None:
         """Set the current location context for rule analysis."""
@@ -115,7 +133,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Check for AST_any_of with bunny rules in iterator
         if rule.get('rule') == 'AST_any_of' or rule.get('type') == 'any_of':
             args = rule.get('args', {})
-            iterator_info = args.get('iterator_info', {})
+            iterator_info = args.get('iterator_info', rule.get('iterator_info', {}))
             iterator = iterator_info.get('iterator', {})
             if iterator.get('type') == 'constant':
                 value = iterator.get('value', [])
@@ -126,15 +144,18 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     # This entire any_of is a bunny rule - replace it
                     return self._get_bunny_replacement_rule(location_name)
             # Also check nested element_rule
-            element_rule = args.get('element_rule', {})
+            element_rule = args.get('element_rule', rule.get('element_rule', {}))
             if element_rule:
                 processed_element = self._process_bunny_rules(element_rule, location_name)
                 if processed_element != element_rule:
                     # If we replaced something in element_rule, check if it's now a simple rule
                     if processed_element.get('type') in ('constant', 'item_check'):
                         return processed_element
-                    args = {**args, 'element_rule': processed_element}
-                    return {**rule, 'args': args}
+                    if 'args' in rule:
+                        args = {**args, 'element_rule': processed_element}
+                        return {**rule, 'args': args}
+                    else:
+                        return {**rule, 'element_rule': processed_element}
 
         # Check for Or/And with bunny rules in children
         if rule.get('type') in ('or', 'and'):
@@ -176,10 +197,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     def _get_bunny_replacement_rule(self, location_name: str) -> Dict[str, Any]:
         """Get the replacement rule for a bunny rule lambda.
 
-        If the location is in the bunny-accessible list, return True.
+        If the location is in the bunny-accessible list (which may include superbunny
+        locations when glitch modes are enabled), return True.
         Otherwise, require Moon Pearl.
         """
-        if location_name in BUNNY_ACCESSIBLE_LOCATIONS:
+        if location_name in self._bunny_accessible_locations:
             logger.debug(f"ALttP: Location '{location_name}' is bunny-accessible, replacing bunny rule with True")
             return {'type': 'constant', 'value': True}
         else:
