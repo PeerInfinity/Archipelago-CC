@@ -355,12 +355,19 @@ class HypotheticalState:
 3. **Test coverage**: >90% coverage of pathfinding code
 4. **Documentation**: All new rule types documented with examples
 
+## Design Decisions
+
+1. **Caching strategy**: Start without caching, evaluate fresh each time. Add caching later if performance requires it.
+
+2. **Entrance randomizer**: Dynamic entrances are already resolved to static entrances during export, so no special handling is needed. The exported rules.json contains the final entrance configuration.
+
+3. **Standardization**: Prefer universal format for pathfinding conditions. Start with custom conditions only if universal format proves too complex, then refactor to universal later.
+
+4. **Tracker visualization**: Defer to Phase 4 (Frontend Support). The explain tool should show which paths were checked and which succeeded/failed.
+
 ## Open Questions
 
-1. Should pathfinding cache results per sweep, or evaluate fresh each time?
-2. How to handle dynamic entrances (entrance randomizer)?
-3. Should we support custom pathfinding conditions per game, or standardize?
-4. How to visualize pathfinding in the tracker explain tool?
+1. How to visualize pathfinding in the tracker explain tool? (Deferred to Phase 4)
 
 ## References
 

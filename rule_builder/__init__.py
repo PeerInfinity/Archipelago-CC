@@ -78,6 +78,23 @@ from .ast_format import (
     parse_ast_rule,
 )
 
+from .pathfinding import (
+    # Core pathfinding
+    PathExistsToRegion,
+    find_paths_to_region,
+    # Hypothetical state
+    HypotheticalState,
+    create_hypothetical_state,
+    # Region properties
+    RegionProperty,
+    ALTTP_REGION_PROPERTIES,
+    check_region_property,
+    # Entrance chain conditions
+    EntranceChainCondition,
+    # ALttP-specific helpers
+    can_reach_via_bunny_path,
+)
+
 __all__ = [
     # World mixin
     'RuleWorldMixin',
@@ -124,4 +141,14 @@ __all__ = [
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',
+    # Pathfinding tools
+    'PathExistsToRegion',
+    'find_paths_to_region',
+    'HypotheticalState',
+    'create_hypothetical_state',
+    'RegionProperty',
+    'ALTTP_REGION_PROPERTIES',
+    'check_region_property',
+    'EntranceChainCondition',
+    'can_reach_via_bunny_path',
 ]
