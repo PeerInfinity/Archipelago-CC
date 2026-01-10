@@ -2,11 +2,11 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-10 18:52:59
+**Generated:** 2026-01-10 19:55:17
 
-**Source Data Created:** 2026-01-10T18:52:58.991617
+**Source Data Created:** 2026-01-10T19:55:16.983809
 
-**Source Data Last Updated:** 2026-01-10T18:52:58.991623
+**Source Data Last Updated:** 2026-01-10T19:55:16.983815
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -19,12 +19,12 @@
 ## Summary
 
 - **Total Games:** 73
-- **Games with 100% Pass Rate:** 31 (42.5%)
-- **Games with Failures:** 42 (57.5%)
-- **Total Fuzz Runs:** 710
-- **Successful Runs:** 420 (59.2%)
+- **Games with 100% Pass Rate:** 33 (45.2%)
+- **Games with Failures:** 40 (54.8%)
+- **Total Fuzz Runs:** 730
+- **Successful Runs:** 441 (60.4%)
 - **Failed Runs:** 262
-- **Timed Out Runs:** 11
+- **Timed Out Runs:** 10
 - **Ignored Runs:** 17
 
 ## Test Results
@@ -55,7 +55,7 @@
 | [Donkey Kong Country 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=dkc3) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Factorio](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=factorio) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Faxanadu](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=faxanadu) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Final Fantasy Mystic Quest](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffmq) | ❌ | 10 | 7 | 2 | 1 | 0 | ⚠️ 70.0% |
+| [Final Fantasy Mystic Quest](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffmq) | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
 | [Heretic](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=heretic) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Hylics 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=hylics2) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Inscryption](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=inscryption) | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
@@ -64,14 +64,14 @@
 | [Kirby's Dream Land 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=kdl3) | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | [Landstalker - The Treasures of King Nole](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=landstalker) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Lingo](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=lingo) | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% |
-| [Links Awakening DX](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=links_awakening_dx) | ❌ | 0 | 0 | 0 | 0 | 0 | ❌ 0.0% |
+| [Links Awakening DX](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ladx) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Lufia II Ancient Cave](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=lufia2ac) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Mario & Luigi Superstar Saga](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mlss) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Math Adventure](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mathadventure) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Mega Man 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mm2) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [MegaMan Battle Network 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mmbn3) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Meritous](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=meritous) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Metamath](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=metamath) | ❌ | 0 | 0 | 0 | 0 | 0 | ❌ 0.0% |
+| [Metamath](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=metamath) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Muse Dash](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=musedash) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Noita](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=noita) | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
 | [Old School Runescape](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=osrs) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
@@ -146,7 +146,6 @@
 ### Final Fantasy Mystic Quest
 
 - **Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'**: 2 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
 
 ### Inscryption
 
@@ -246,8 +245,8 @@
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **FillError**: 5 occurrence(s)
-- **None**: 3 occurrence(s)
+- **FillError**: 3 occurrence(s)
+- **None**: 5 occurrence(s)
 
 ### TUNIC
 
