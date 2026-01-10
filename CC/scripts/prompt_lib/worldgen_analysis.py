@@ -271,3 +271,147 @@ def categorize_seed_generation_error(error_msg):
         return ('attribute_error', {'message': error_msg})
 
     return ('other', {'message': error_msg})
+
+
+def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fixed', world_source='bundled'):
+    """Load the UT fuzz test results JSON file.
+
+    Args:
+        project_root: Path to the project root
+        ut_version: 'original' or 'modified'
+        seed_mode: 'fixed' or 'random'
+        world_source: 'bundled' or 'apworlds'
+
+    Returns:
+        Dict with 'metadata' and 'results' keys, or empty dict if not found
+    """
+    # Build filename based on parameters
+    # For bundled worlds: test-results-{ut_version}-{seed_mode}-seed.json
+    # For apworlds: test-results-{world_source}-{ut_version}-{seed_mode}-seed.json
+    if world_source == 'bundled':
+        filename = f'test-results-{ut_version}-{seed_mode}-seed.json'
+    else:
+        filename = f'test-results-{world_source}-{ut_version}-{seed_mode}-seed.json'
+
+    results_file = Path(project_root) / 'scripts' / 'output' / 'ut-fuzz' / filename
+    if not results_file.exists():
+        return {}
+
+    try:
+        with open(results_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading UT fuzz test results: {e}", file=sys.stderr)
+        return {}
+
+
+def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='modified', worldgen_test_mode='canonical'):
+    """Get games that pass canonical worldgen test but fail UT fuzz test.
+
+    This identifies games where:
+    - The world generator successfully round-trips the rules (canonical test passes)
+    - But UT fuzz testing reveals logic mismatches under random option configurations
+
+    Returns list of dicts with game_name, template, ut_fuzz stats, and worldgen status.
+    """
+    # Load both result sets
+    ut_fuzz_data = load_ut_fuzz_test_results(project_root, ut_version=ut_version)
+    worldgen_data = load_worldgen_test_results(project_root, test_mode=worldgen_test_mode)
+
+    ut_results = ut_fuzz_data.get('results', {})
+    wg_results = worldgen_data.get('results', {})
+
+    failures = []
+
+    for template_name, ut_result in ut_results.items():
+        ut_fuzz = ut_result.get('ut_fuzz', {})
+        world_info = ut_result.get('world_info', {})
+        game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
+
+        # Skip if UT fuzz test passed
+        if ut_fuzz.get('passed', False):
+            continue
+
+        # Check if this game passes the canonical worldgen test
+        wg_result = wg_results.get(game_name, {})
+        if not wg_result:
+            # Not in worldgen results - could be a different naming convention
+            # Try to find by template name
+            for wg_game, wg_data in wg_results.items():
+                if wg_data.get('template') == template_name:
+                    wg_result = wg_data
+                    game_name = wg_game
+                    break
+
+        if not wg_result:
+            # Game not in worldgen results, skip
+            continue
+
+        # Check if worldgen passes (all stages)
+        test_world = wg_result.get('test_world', {})
+        original = wg_result.get('original', {})
+
+        # Check original spoiler test
+        orig_spoiler_pass = original.get('spoiler_test', {}).get('pass_fail') == 'pass'
+
+        # Check all worldgen stages
+        world_gen_success = test_world.get('world_generation', {}).get('success', False)
+        seed_gen_success = test_world.get('seed_generation', {}).get('success', False)
+        wg_spoiler_pass = test_world.get('spoiler_test', {}).get('pass_fail') == 'pass'
+        crossval_pass = test_world.get('cross_validation', {}).get('pass_fail') != 'fail'
+        rules_comp_pass = test_world.get('rules_comparison', {}).get('pass_fail') != 'fail'
+
+        # Overall worldgen pass
+        worldgen_passes = (
+            orig_spoiler_pass and
+            world_gen_success and
+            seed_gen_success and
+            wg_spoiler_pass and
+            crossval_pass and
+            rules_comp_pass
+        )
+
+        if worldgen_passes:
+            # This game passes worldgen but fails UT fuzz - add to failures
+            failures.append({
+                'game_name': game_name,
+                'template': template_name,
+                'world_directory': world_info.get('world_directory'),
+                'ut_fuzz': {
+                    'total': ut_fuzz.get('total', 0),
+                    'success': ut_fuzz.get('success', 0),
+                    'failure': ut_fuzz.get('failure', 0),
+                    'timeout': ut_fuzz.get('timeout', 0),
+                    'success_rate': (ut_fuzz.get('success', 0) / ut_fuzz.get('total', 1)) * 100,
+                    'error_types': list(ut_fuzz.get('errors', {}).keys()),
+                    'error_runs': ut_fuzz.get('errors', {}),
+                },
+            })
+
+    return failures
+
+
+def categorize_ut_fuzz_error(error_types):
+    """Categorize UT fuzz error types.
+
+    The UT fuzz test reports error types like:
+    - 'None': Logic mismatch (UT and server disagree on accessible locations)
+    - Other: Python exception type
+
+    Returns a tuple of (category, details).
+    """
+    if not error_types:
+        return ('unknown', None)
+
+    if 'None' in error_types:
+        # Logic mismatch is the primary issue
+        other_types = [t for t in error_types if t != 'None']
+        if other_types:
+            return ('logic_mismatch_with_errors', {
+                'logic_mismatches': True,
+                'exception_types': other_types
+            })
+        return ('logic_mismatch', None)
+
+    # Only exception-based errors
+    return ('exceptions', {'types': error_types})
