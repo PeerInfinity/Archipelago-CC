@@ -42,7 +42,6 @@ This module does not register any public functions.
 
 #### Alternative Implementations
 
-The project contains scaffolding for two alternative, more advanced editor implementations that are not currently active:
+The project contains scaffolding for an alternative, more advanced editor implementation that is not currently active:
 
-- **`editor-vanilla-jsoneditor`:** Uses the `vanilla-jsoneditor` library to provide a tree-view and other advanced editing features. It was disabled due to performance issues.
 - **`editor-codemirror`:** An unfinished module intended to use the CodeMirror library to provide a text editor with syntax highlighting for JSON.
