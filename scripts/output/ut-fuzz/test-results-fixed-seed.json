@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-10T18:52:58.991617",
-    "last_updated": "2026-01-10T18:52:58.991623",
+    "created": "2026-01-10T19:55:16.983809",
+    "last_updated": "2026-01-10T19:55:16.983815",
     "script_version": "1.0.0",
     "combined_from": 10,
     "seed_mode": "fixed",
@@ -34,7 +34,7 @@
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-01-10T18:49:31.007381"
+      "timestamp": "2026-01-10T19:51:41.167495"
     },
     "Castlevania 64.yaml": {
       "ut_fuzz": {
@@ -55,7 +55,7 @@
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-01-10T18:49:40.302357"
+      "timestamp": "2026-01-10T19:51:49.754268"
     },
     "Dark Souls III.yaml": {
       "ut_fuzz": {
@@ -76,7 +76,7 @@
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-01-10T18:49:54.620906"
+      "timestamp": "2026-01-10T19:52:03.504181"
     },
     "Kirby's Dream Land 3.yaml": {
       "ut_fuzz": {
@@ -104,13 +104,13 @@
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-01-10T18:50:13.647890"
+      "timestamp": "2026-01-10T19:52:21.300332"
     },
     "Metamath.yaml": {
       "ut_fuzz": {
-        "passed": false,
-        "total": 0,
-        "success": 0,
+        "passed": true,
+        "total": 10,
+        "success": 10,
         "failure": 0,
         "timeout": 0,
         "ignored": 0,
@@ -120,8 +120,7 @@
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-01-10T18:50:17.124298",
-      "error": "Report file not found | Exit code: 2 | stderr: ...ly as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources  # noqa: F401\nTraceback (most recent call last):\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/fuzz.py\", line 818, in <module>\n    main(p, args, tmp.name)\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/fuzz.py\", line 754, in main\n    generate_random_yaml(actual_apworld, meta) for _ in range(yamls_this_run)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/fuzz.py\", line 222, in generate_random_yaml\n    get_random_value(option_name, option_value)\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/fuzz.py\", line 287, in get_random_value\n    return random.choice(valid_choices)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.12.12/x64/lib/python3.12/random.py\", line 347, in choice\n    raise IndexError('Cannot choose from an empty sequence')\nIndexError: Cannot choose from an empty sequence | stdout: \u001b[2J\u001b[H"
+      "timestamp": "2026-01-10T19:53:31.629698"
     },
     "Shivers.yaml": {
       "ut_fuzz": {
@@ -146,7 +145,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-01-10T18:51:19.601025"
+      "timestamp": "2026-01-10T19:54:33.962743"
     },
     "TOEM rule builder.yaml": {
       "ut_fuzz": {
@@ -162,7 +161,7 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-01-10T18:51:26.530737"
+      "timestamp": "2026-01-10T19:54:40.399103"
     },
     "Wargroove.yaml": {
       "ut_fuzz": {
@@ -178,7 +177,7 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-01-10T18:51:33.821959"
+      "timestamp": "2026-01-10T19:54:47.327171"
     },
     "Castlevania - Circle of the Moon.yaml": {
       "ut_fuzz": {
@@ -194,7 +193,7 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-01-10T18:49:21.463066"
+      "timestamp": "2026-01-10T19:51:50.691741"
     },
     "DOOM II.yaml": {
       "ut_fuzz": {
@@ -210,7 +209,7 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-01-10T18:49:29.787174"
+      "timestamp": "2026-01-10T19:51:59.136925"
     },
     "Kingdom Hearts.yaml": {
       "ut_fuzz": {
@@ -239,7 +238,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-01-10T18:50:01.528976"
+      "timestamp": "2026-01-10T19:52:31.623565"
     },
     "Meritous.yaml": {
       "ut_fuzz": {
@@ -255,7 +254,7 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-01-10T18:50:07.302422"
+      "timestamp": "2026-01-10T19:52:37.500871"
     },
     "Secret of Evermore.yaml": {
       "ut_fuzz": {
@@ -284,7 +283,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-01-10T18:50:18.439926"
+      "timestamp": "2026-01-10T19:52:49.176598"
     },
     "TOEM original.yaml": {
       "ut_fuzz": {
@@ -300,7 +299,7 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-01-10T18:50:24.489731"
+      "timestamp": "2026-01-10T19:52:55.348802"
     },
     "VVVVVV.yaml": {
       "ut_fuzz": {
@@ -321,7 +320,7 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-01-10T18:50:30.570098"
+      "timestamp": "2026-01-10T19:53:01.582925"
     },
     "A Link to the Past.yaml": {
       "ut_fuzz": {
@@ -346,7 +345,7 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-01-10T18:49:42.542915"
+      "timestamp": "2026-01-10T19:52:06.137516"
     },
     "Celeste (Open World).yaml": {
       "ut_fuzz": {
@@ -364,8 +363,8 @@
             3,
             4,
             5,
-            6,
             7,
+            6,
             8,
             9
           ]
@@ -375,7 +374,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-01-10T18:50:31.011672"
+      "timestamp": "2026-01-10T19:52:54.155265"
     },
     "Donkey Kong Country 3.yaml": {
       "ut_fuzz": {
@@ -391,7 +390,7 @@
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-01-10T18:50:38.470721"
+      "timestamp": "2026-01-10T19:53:01.468066"
     },
     "Landstalker - The Treasures of King Nole.yaml": {
       "ut_fuzz": {
@@ -420,7 +419,7 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-01-10T18:50:46.470802"
+      "timestamp": "2026-01-10T19:53:09.439411"
     },
     "Muse Dash.yaml": {
       "ut_fuzz": {
@@ -438,10 +437,10 @@
             3,
             5,
             4,
-            7,
             6,
-            8,
-            9
+            7,
+            9,
+            8
           ]
         }
       },
@@ -449,7 +448,7 @@
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-01-10T18:50:56.153813"
+      "timestamp": "2026-01-10T19:53:18.930114"
     },
     "Sonic Adventure 2 Battle.yaml": {
       "ut_fuzz": {
@@ -464,8 +463,8 @@
             0,
             1,
             2,
-            4,
             3,
+            4,
             6,
             5,
             7,
@@ -478,7 +477,7 @@
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-01-10T18:51:25.578458"
+      "timestamp": "2026-01-10T19:53:47.618570"
     },
     "TUNIC.yaml": {
       "ut_fuzz": {
@@ -505,7 +504,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-01-10T18:52:23.298195"
+      "timestamp": "2026-01-10T19:54:43.961615"
     },
     "Yoshi's Island.yaml": {
       "ut_fuzz": {
@@ -534,7 +533,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-01-10T18:52:39.105316"
+      "timestamp": "2026-01-10T19:54:58.333451"
     },
     "A Short Hike.yaml": {
       "ut_fuzz": {
@@ -550,7 +549,7 @@
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-01-10T18:49:20.790817"
+      "timestamp": "2026-01-10T19:51:46.127237"
     },
     "Celeste 64.yaml": {
       "ut_fuzz": {
@@ -566,7 +565,7 @@
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-01-10T18:49:26.612320"
+      "timestamp": "2026-01-10T19:51:52.117351"
     },
     "Factorio.yaml": {
       "ut_fuzz": {
@@ -595,7 +594,7 @@
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-01-10T18:49:37.889757"
+      "timestamp": "2026-01-10T19:52:03.434137"
     },
     "Lingo.yaml": {
       "ut_fuzz": {
@@ -617,7 +616,7 @@
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-01-10T18:49:49.691379"
+      "timestamp": "2026-01-10T19:52:15.040165"
     },
     "Noita.yaml": {
       "ut_fuzz": {
@@ -632,10 +631,10 @@
             0,
             1,
             3,
-            5,
             4,
-            7,
+            5,
             6,
+            7,
             8
           ]
         }
@@ -644,7 +643,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-01-10T18:49:56.044125"
+      "timestamp": "2026-01-10T19:52:21.283804"
     },
     "Starcraft 2.yaml": {
       "ut_fuzz": {
@@ -691,7 +690,7 @@
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-01-10T18:50:03.402977"
+      "timestamp": "2026-01-10T19:52:28.796278"
     },
     "Terraria.yaml": {
       "ut_fuzz": {
@@ -715,7 +714,7 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-01-10T18:50:10.809616"
+      "timestamp": "2026-01-10T19:52:36.249639"
     },
     "shapez.yaml": {
       "ut_fuzz": {
@@ -737,7 +736,7 @@
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-01-10T18:50:19.153244"
+      "timestamp": "2026-01-10T19:52:44.651335"
     },
     "APQuest.yaml": {
       "ut_fuzz": {
@@ -753,7 +752,7 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-01-10T18:49:25.725218"
+      "timestamp": "2026-01-10T19:51:43.484244"
     },
     "ChecksFinder.yaml": {
       "ut_fuzz": {
@@ -769,7 +768,7 @@
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-01-10T18:49:30.431839"
+      "timestamp": "2026-01-10T19:51:48.677968"
     },
     "Faxanadu.yaml": {
       "ut_fuzz": {
@@ -798,13 +797,13 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-01-10T18:49:36.137301"
+      "timestamp": "2026-01-10T19:51:54.908112"
     },
     "Links Awakening DX.yaml": {
       "ut_fuzz": {
-        "passed": false,
-        "total": 0,
-        "success": 0,
+        "passed": true,
+        "total": 10,
+        "success": 10,
         "failure": 0,
         "timeout": 0,
         "ignored": 0,
@@ -812,10 +811,9 @@
       },
       "world_info": {
         "game_name": "Links Awakening DX",
-        "world_directory": "links_awakening_dx"
+        "world_directory": "ladx"
       },
-      "timestamp": "2026-01-10T18:49:38.982574",
-      "error": "Report file not found | Exit code: 2 | stderr: /home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources  # noqa: F401\nTraceback (most recent call last):\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/fuzz.py\", line 818, in <module>\n    main(p, args, tmp.name)\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/fuzz.py\", line 657, in main\n    world = world_from_apworld_name(apworld_name)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/fuzz.py\", line 171, in world_from_apworld_name\n    raise Exception(f\"Couldn't find loaded world with world: {apworld_name}\")\nException: Couldn't find loaded world with world: links_awakening_dx"
+      "timestamp": "2026-01-10T19:52:36.280731"
     },
     "Old School Runescape.yaml": {
       "ut_fuzz": {
@@ -831,7 +829,7 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-01-10T18:49:49.458629"
+      "timestamp": "2026-01-10T19:52:47.846340"
     },
     "Stardew Valley.yaml": {
       "ut_fuzz": {
@@ -844,8 +842,8 @@
         "errors": {
           "None": [
             1,
-            0,
             2,
+            0,
             3,
             4,
             6,
@@ -860,7 +858,7 @@
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-01-10T18:50:21.914171"
+      "timestamp": "2026-01-10T19:53:23.774750"
     },
     "The Legend of Zelda.yaml": {
       "ut_fuzz": {
@@ -873,8 +871,8 @@
         "errors": {
           "None": [
             5,
-            6,
-            7
+            7,
+            6
           ]
         }
       },
@@ -882,7 +880,7 @@
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-01-10T18:50:31.478832"
+      "timestamp": "2026-01-10T19:53:33.761994"
     },
     "Adventure.yaml": {
       "ut_fuzz": {
@@ -898,7 +896,7 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-01-10T18:49:22.099177"
+      "timestamp": "2026-01-10T19:51:37.594202"
     },
     "Choo-Choo Charles.yaml": {
       "ut_fuzz": {
@@ -914,23 +912,20 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-01-10T18:49:28.986289"
+      "timestamp": "2026-01-10T19:51:43.418222"
     },
     "Final Fantasy Mystic Quest.yaml": {
       "ut_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 7,
+        "success": 8,
         "failure": 2,
-        "timeout": 1,
+        "timeout": 0,
         "ignored": 0,
         "errors": {
           "Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'": [
             2,
             6
-          ],
-          "<class 'TimeoutError'>": [
-            0
           ]
         }
       },
@@ -938,7 +933,7 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-01-10T18:49:53.089471"
+      "timestamp": "2026-01-10T19:51:59.867057"
     },
     "Lufia II Ancient Cave.yaml": {
       "ut_fuzz": {
@@ -954,7 +949,7 @@
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-01-10T18:50:01.010932"
+      "timestamp": "2026-01-10T19:52:06.990743"
     },
     "Overcooked! 2.yaml": {
       "ut_fuzz": {
@@ -990,7 +985,7 @@
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-01-10T18:50:07.054194"
+      "timestamp": "2026-01-10T19:52:12.340374"
     },
     "Subnautica.yaml": {
       "ut_fuzz": {
@@ -1006,7 +1001,7 @@
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-01-10T18:50:16.968575"
+      "timestamp": "2026-01-10T19:52:21.244387"
     },
     "The Messenger.yaml": {
       "ut_fuzz": {
@@ -1018,8 +1013,8 @@
         "ignored": 0,
         "errors": {
           "None": [
-            1,
             0,
+            1,
             2,
             5,
             6,
@@ -1032,7 +1027,7 @@
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-01-10T18:50:25.427282"
+      "timestamp": "2026-01-10T19:52:29.089367"
     },
     "Aquaria.yaml": {
       "ut_fuzz": {
@@ -1048,7 +1043,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-01-10T18:49:36.026274"
+      "timestamp": "2026-01-10T19:51:46.926835"
     },
     "Civilization VI.yaml": {
       "ut_fuzz": {
@@ -1064,7 +1059,7 @@
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-01-10T18:49:42.853678"
+      "timestamp": "2026-01-10T19:51:53.630862"
     },
     "Heretic.yaml": {
       "ut_fuzz": {
@@ -1080,7 +1075,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-01-10T18:49:52.499855"
+      "timestamp": "2026-01-10T19:52:03.220269"
     },
     "Mario & Luigi Superstar Saga.yaml": {
       "ut_fuzz": {
@@ -1096,7 +1091,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-01-10T18:50:03.111515"
+      "timestamp": "2026-01-10T19:52:13.857983"
     },
     "Paint.yaml": {
       "ut_fuzz": {
@@ -1125,7 +1120,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-01-10T18:50:09.144610"
+      "timestamp": "2026-01-10T19:52:19.732132"
     },
     "Super Mario 64.yaml": {
       "ut_fuzz": {
@@ -1147,7 +1142,7 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-01-10T18:50:16.619558"
+      "timestamp": "2026-01-10T19:52:27.028778"
     },
     "The Wind Waker.yaml": {
       "ut_fuzz": {
@@ -1171,7 +1166,7 @@
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-01-10T18:50:29.979684"
+      "timestamp": "2026-01-10T19:52:40.490857"
     },
     "Baking Adventure.yaml": {
       "ut_fuzz": {
@@ -1187,7 +1182,7 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-01-10T18:49:20.202990"
+      "timestamp": "2026-01-10T19:51:37.647553"
     },
     "Coding Adventure.yaml": {
       "ut_fuzz": {
@@ -1203,7 +1198,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-01-10T18:49:25.156525"
+      "timestamp": "2026-01-10T19:51:42.946005"
     },
     "Hylics 2.yaml": {
       "ut_fuzz": {
@@ -1219,7 +1214,7 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-01-10T18:49:32.135128"
+      "timestamp": "2026-01-10T19:51:50.377150"
     },
     "Math Adventure.yaml": {
       "ut_fuzz": {
@@ -1235,7 +1230,7 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-01-10T18:49:36.765940"
+      "timestamp": "2026-01-10T19:51:55.447351"
     },
     "Raft.yaml": {
       "ut_fuzz": {
@@ -1264,7 +1259,7 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-01-10T18:49:42.899985"
+      "timestamp": "2026-01-10T19:52:02.110901"
     },
     "Super Mario Land 2.yaml": {
       "ut_fuzz": {
@@ -1287,7 +1282,7 @@
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-01-10T18:50:03.090415"
+      "timestamp": "2026-01-10T19:52:23.081974"
     },
     "The Witness.yaml": {
       "ut_fuzz": {
@@ -1313,7 +1308,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-01-10T18:50:13.602108"
+      "timestamp": "2026-01-10T19:52:34.184762"
     },
     "Bomb Rush Cyberfunk.yaml": {
       "ut_fuzz": {
@@ -1342,7 +1337,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-01-10T18:49:35.718144"
+      "timestamp": "2026-01-10T19:52:05.008935"
     },
     "DLCQuest.yaml": {
       "ut_fuzz": {
@@ -1369,7 +1364,7 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-01-10T18:49:44.108479"
+      "timestamp": "2026-01-10T19:52:13.102795"
     },
     "Inscryption.yaml": {
       "ut_fuzz": {
@@ -1392,7 +1387,7 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-01-10T18:49:50.275669"
+      "timestamp": "2026-01-10T19:52:19.020883"
     },
     "Mega Man 2.yaml": {
       "ut_fuzz": {
@@ -1408,7 +1403,7 @@
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-01-10T18:49:56.740516"
+      "timestamp": "2026-01-10T19:52:25.340274"
     },
     "Risk of Rain 2.yaml": {
       "ut_fuzz": {
@@ -1424,7 +1419,7 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-01-10T18:50:06.071996"
+      "timestamp": "2026-01-10T19:52:34.345113"
     },
     "Super Mario World.yaml": {
       "ut_fuzz": {
@@ -1444,7 +1439,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-01-10T18:50:38.175797"
+      "timestamp": "2026-01-10T19:53:04.390415"
     },
     "Timespinner.yaml": {
       "ut_fuzz": {
@@ -1460,7 +1455,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-01-10T18:50:55.879933"
+      "timestamp": "2026-01-10T19:53:20.735402"
     },
     "Bumper Stickers.yaml": {
       "ut_fuzz": {
@@ -1476,7 +1471,7 @@
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-01-10T18:49:26.827972"
+      "timestamp": "2026-01-10T19:51:35.384716"
     },
     "DOOM 1993.yaml": {
       "ut_fuzz": {
@@ -1492,7 +1487,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-01-10T18:49:35.115012"
+      "timestamp": "2026-01-10T19:51:43.381520"
     },
     "Kingdom Hearts 2.yaml": {
       "ut_fuzz": {
@@ -1523,7 +1518,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-01-10T18:49:47.613070"
+      "timestamp": "2026-01-10T19:51:55.740356"
     },
     "MegaMan Battle Network 3.yaml": {
       "ut_fuzz": {
@@ -1539,7 +1534,7 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-01-10T18:49:54.613543"
+      "timestamp": "2026-01-10T19:52:02.677362"
     },
     "Saving Princess.yaml": {
       "ut_fuzz": {
@@ -1564,7 +1559,7 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-01-10T18:50:00.429686"
+      "timestamp": "2026-01-10T19:52:08.337774"
     },
     "Super Metroid.yaml": {
       "ut_fuzz": {
@@ -1582,14 +1577,14 @@
           "FillError": [
             0,
             2,
-            5,
-            8,
-            9
+            8
           ],
           "None": [
             3,
             4,
-            6
+            5,
+            6,
+            9
           ]
         }
       },
@@ -1597,7 +1592,7 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-01-10T18:50:21.205412"
+      "timestamp": "2026-01-10T19:52:36.448192"
     },
     "Undertale.yaml": {
       "ut_fuzz": {
@@ -1613,7 +1608,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-01-10T18:50:28.586166"
+      "timestamp": "2026-01-10T19:52:43.660988"
     }
   }
 }
