@@ -37,7 +37,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from lib.test_utils import (
     extract_game_name_from_template,
     load_template_exclude_list,
-    get_world_directory_name_from_game_name
+    get_world_directory_name_from_game_name,
+    build_and_load_world_mapping
 )
 
 # Project root
@@ -282,6 +283,18 @@ def main():
         default='modified',
         help='Which version of Universal Tracker to test (default: modified)'
     )
+    parser.add_argument(
+        '--custom-worlds-only',
+        action='store_true',
+        help='Only test games loaded from the custom_worlds directory (apworld files)'
+    )
+    parser.add_argument(
+        '--world-source',
+        type=str,
+        choices=['bundled', 'apworlds'],
+        default=None,
+        help='World source for output filename: bundled (default) or apworlds'
+    )
 
     args = parser.parse_args()
 
@@ -293,16 +306,35 @@ def main():
     seed_type = "random" if is_random_seed_mode else "fixed"
     ut_version = args.ut_version  # 'modified' or 'original'
 
+    # Determine world source (for output filename)
+    # If --world-source is specified, use it; otherwise infer from --custom-worlds-only
+    if args.world_source:
+        world_source = args.world_source
+    elif args.custom_worlds_only:
+        world_source = "apworlds"
+    else:
+        world_source = "bundled"
+
     # Compute output filename if not specified
-    # Format: test-results-{ut_version}-{seed_type}-split-{N}.json
-    # or: test-results-{ut_version}-{seed_type}-seed.json
+    # Format: test-results-{world_source}-{ut_version}-{seed_type}-split-{N}.json
+    # or: test-results-{world_source}-{ut_version}-{seed_type}-seed.json
+    # For bundled worlds, we omit the world_source for backwards compatibility
     if args.output_file is None:
         is_split_job = args.every_nth > 1
-        if is_split_job:
-            split_num = args.skip_first + 1
-            output_filename = f"test-results-{ut_version}-{seed_type}-split-{split_num}.json"
+        if world_source == "bundled":
+            # Backwards compatible naming (no world_source prefix)
+            if is_split_job:
+                split_num = args.skip_first + 1
+                output_filename = f"test-results-{ut_version}-{seed_type}-split-{split_num}.json"
+            else:
+                output_filename = f"test-results-{ut_version}-{seed_type}-seed.json"
         else:
-            output_filename = f"test-results-{ut_version}-{seed_type}-seed.json"
+            # Include world_source in filename for non-bundled (e.g., apworlds)
+            if is_split_job:
+                split_num = args.skip_first + 1
+                output_filename = f"test-results-{world_source}-{ut_version}-{seed_type}-split-{split_num}.json"
+            else:
+                output_filename = f"test-results-{world_source}-{ut_version}-{seed_type}-seed.json"
         args.output_file = f"scripts/output/ut-fuzz/{output_filename}"
         print(f"Auto-computed output file: {args.output_file}")
 
@@ -320,6 +352,35 @@ def main():
     if not template_files:
         print("No template files found to test")
         return 1
+
+    # Apply --custom-worlds-only filtering if requested
+    if args.custom_worlds_only:
+        print("Filtering to custom_worlds only...")
+        world_mapping = build_and_load_world_mapping(PROJECT_ROOT)
+
+        before_filter = len(template_files)
+        filtered_files = []
+
+        for yaml_file in template_files:
+            # Derive game name from yaml filename
+            game_name = extract_game_name_from_template(str(yaml_file))
+            if not game_name:
+                game_name = yaml_file.stem
+
+            # Check if this is a custom world
+            world_info = world_mapping.get(game_name, {})
+            is_custom_world = 'apworld_path' in world_info and world_info['apworld_path'] is not None
+
+            if is_custom_world:
+                filtered_files.append(yaml_file)
+
+        template_files = filtered_files
+        excluded_count = before_filter - len(template_files)
+        print(f"Custom worlds filter: {len(template_files)} templates included, {excluded_count} excluded")
+
+        if not template_files:
+            print("Error: No templates remaining after custom_worlds filter")
+            return 1
 
     # Apply every-nth and skip-first filters for parallel splitting
     if args.skip_first > 0 or args.every_nth > 1:
@@ -349,6 +410,7 @@ def main():
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
             "ut_version": ut_version,
+            "world_source": world_source,
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
             "runs_per_game": args.runs,

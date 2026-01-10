@@ -98,3 +98,5 @@ See the [Project Roadmap](/docs/json/project-roadmap.md) for the latest status, 
 - Uses [Rule Builder](https://github.com/drtchops/Archipelago/tree/rules-engine) ([PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048))
 - Universal Tracker based on [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago)
 - Fuzzer based on [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong
+- APWorld Manager from [silasary/Archipelago](https://github.com/silasary/Archipelago)
+- APWorld Index from [silasary/apworlds](https://github.com/silasary/apworlds)

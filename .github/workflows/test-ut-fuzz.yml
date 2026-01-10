@@ -33,12 +33,17 @@ on:
         default: true
 
       debug_mode:
-        description: 'Debug mode: only process Adventure.yaml (for quick testing)'
+        description: 'Debug mode: only test Adventure.yaml (bundled) or Clique (apworlds) for quick testing'
         type: boolean
         default: false
 
       test_original_ut:
         description: 'Test original Universal Tracker (from FarisTheAncient) instead of modified version'
+        type: boolean
+        default: false
+
+      test_apworlds:
+        description: 'Test stable APWorlds from community index instead of bundled worlds'
         type: boolean
         default: false
 
@@ -165,6 +170,54 @@ jobs:
           source .venv/bin/activate
           python scripts/build/build-world-mapping.py
 
+      - name: Download and install APWorld Manager
+        if: inputs.test_apworlds
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.test_apworlds
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          # In debug mode, only install Clique
+          if [ "${{ inputs.debug_mode }}" = "true" ]; then
+            echo "Debug mode: only installing Clique apworld"
+            python scripts/install_apworlds.py --install clique
+          else
+            echo "Installing all Stable apworlds..."
+            python scripts/install_apworlds.py --install-all
+          fi
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+          # Regenerate templates for installed apworlds
+          echo "Regenerating templates..."
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          # Update world mapping to include new apworlds
+          echo "Updating world mapping..."
+          python scripts/build/build-world-mapping.py
+
       - name: Swap to original Universal Tracker
         if: inputs.test_original_ut
         run: |
@@ -181,6 +234,19 @@ jobs:
           source .venv/bin/activate
           echo "Using seed: ${{ inputs.seed || 'random' }}"
           echo "UT version: ${{ inputs.test_original_ut && 'original' || 'modified' }}"
+          echo "World source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}"
+
+          # Determine debug mode include list
+          # For apworlds: use Clique.yaml, for bundled: use Adventure.yaml
+          DEBUG_INCLUDE=""
+          if [ "${{ inputs.debug_mode }}" = "true" ]; then
+            if [ "${{ inputs.test_apworlds }}" = "true" ]; then
+              DEBUG_INCLUDE="--include-list Clique.yaml"
+            else
+              DEBUG_INCLUDE="--include-list Adventure.yaml"
+            fi
+          fi
+
           python scripts/test/test-all-ut-fuzz.py \
             --runs ${{ inputs.runs_per_game }} \
             --jobs ${{ inputs.jobs }} \
@@ -189,13 +255,14 @@ jobs:
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --ut-version ${{ inputs.test_original_ut && 'original' || 'modified' }} \
-            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
+            ${{ inputs.test_apworlds && '--custom-worlds-only --world-source apworlds' || '' }} \
+            $DEBUG_INCLUDE
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-${{ matrix.split_num }}
+          name: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-${{ matrix.split_num }}
           path: scripts/output/ut-fuzz/test-results-*-split-${{ matrix.split_num }}.json
           retention-days: 7
 
@@ -203,7 +270,7 @@ jobs:
         if: ${{ !cancelled() && failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: fuzz-output-${{ inputs.test_original_ut && 'original' || 'modified' }}-split-${{ matrix.split_num }}
+          name: fuzz-output-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || 'modified' }}-split-${{ matrix.split_num }}
           path: fuzz_output/
           retention-days: 7
 
@@ -234,12 +301,13 @@ jobs:
       - name: Download test artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: test-results-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-*
+          pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-*
           path: artifacts
 
       - name: Combine test results
         env:
           UT_VERSION: ${{ inputs.test_original_ut && 'original' || 'modified' }}
+          WORLD_SOURCE: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
         run: |
           mkdir -p scripts/output/ut-fuzz
 
@@ -251,6 +319,7 @@ jobs:
           from datetime import datetime
 
           ut_version = os.environ.get('UT_VERSION', 'modified')
+          world_source = os.environ.get('WORLD_SOURCE', 'bundled')
 
           # Find all split result files (pattern matches both original and modified artifacts)
           files = glob.glob("artifacts/test-results-*-ut-fuzz-split-*/test-results-*-split-*.json")
@@ -279,7 +348,7 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["ut_version", "seed_mode", "seed", "runs_per_game", "jobs", "timeout"]:
+                  for key in ["ut_version", "world_source", "seed_mode", "seed", "runs_per_game", "jobs", "timeout"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
@@ -288,10 +357,16 @@ jobs:
 
           combined["metadata"]["total_templates"] = len(combined["results"])
 
-          # Determine output filename from ut_version and seed mode
+          # Determine output filename from world_source, ut_version and seed mode
+          ws = combined["metadata"].get("world_source", world_source)
           ut_ver = combined["metadata"].get("ut_version", ut_version)
           seed_mode = combined["metadata"].get("seed_mode", "fixed")
-          output_file = f"scripts/output/ut-fuzz/test-results-{ut_ver}-{seed_mode}-seed.json"
+
+          # For bundled worlds, use backwards compatible naming (no world_source prefix)
+          if ws == "bundled":
+              output_file = f"scripts/output/ut-fuzz/test-results-{ut_ver}-{seed_mode}-seed.json"
+          else:
+              output_file = f"scripts/output/ut-fuzz/test-results-{ws}-{ut_ver}-{seed_mode}-seed.json"
 
           with open(output_file, "w") as fp:
               json.dump(combined, fp, indent=2)
@@ -316,9 +391,10 @@ jobs:
           git add -f docs/json/developer/test-results/test-results-ut-fuzz*.md || true
 
           if ! git diff --staged --quiet; then
-            git commit -m "Update UT fuzz test results (${{ inputs.test_original_ut && 'original' || 'modified' }} UT)
+            git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.test_original_ut && 'original' || 'modified' }} UT)
 
             Generated by workflow run: ${{ github.run_id }}
+            World Source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
             UT Version: ${{ inputs.test_original_ut && 'original' || 'modified' }}
             Seed: ${{ inputs.seed || 'random' }}
             Runs per game: ${{ inputs.runs_per_game }}
