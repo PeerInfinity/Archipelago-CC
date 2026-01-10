@@ -3742,6 +3742,17 @@ class RuleCodeGenerator:
                             arg_strs.append('None')
                     else:
                         arg_strs.append('None')
+                elif isinstance(arg, dict) and arg.get('type') == 'name':
+                    # Handle name references from AST format
+                    name = arg.get('name', '')
+                    if name in ('self', 'world'):
+                        # 'self' or 'world' references represent the game world object in the
+                        # original rule lambda. For worldgen helpers, this is implicitly available
+                        # via state.multiworld.worlds[player], so we skip this argument entirely.
+                        pass  # Skip this argument - don't add to arg_strs
+                    else:
+                        # Unknown name reference - default to None
+                        arg_strs.append('None')
                 else:
                     # For complex args, try to convert
                     arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
@@ -3923,6 +3934,12 @@ class RuleCodeGenerator:
                         elif name == 'entrance' and self._current_entrance:
                             escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
                             arg_strs.append(f'multiworld.get_entrance("{escaped}", player)')
+                        elif name in ('self', 'world'):
+                            # 'self' or 'world' references represent the game world object in the
+                            # original rule lambda. For worldgen helpers, this is implicitly available
+                            # via state.multiworld.worlds[player], so we skip this argument entirely.
+                            # The helper function handles world access internally.
+                            pass  # Skip this argument - don't add to arg_strs
                         else:
                             # Unknown name reference - default to None
                             arg_strs.append('None')
