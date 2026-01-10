@@ -4869,8 +4869,16 @@ class HelperCodeGenerator:
                 function = args.get('function', {})
                 # Try to generate the function call expression
                 if isinstance(function, dict):
+                    # Check if this is a math module function call (e.g., math.ceil)
+                    # and set uses_math flag if so
+                    if function.get('type') == 'attribute':
+                        obj = function.get('object', {})
+                        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
+                            self.uses_math = True
+
                     func_expr = self._generate_expression(function)
-                    call_args = args.get('call_args', [])
+                    # Function call arguments may be in 'call_args' or 'args' (nested)
+                    call_args = args.get('call_args', []) or args.get('args', [])
                     arg_exprs = [self._generate_expression(a) for a in call_args]
 
                     # Special case: can_defeat() needs state as first argument
@@ -5744,6 +5752,15 @@ class HelperCodeGenerator:
         # and are accessed by helper functions. Instead of trying to access via
         # state.multiworld.worlds[player] (which is a SimpleNamespace), we inline the data.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'world':
+            if attr in self.settings:
+                value = self.settings[attr]
+                # Use _expr_constant to convert the value to Python code
+                return self._expr_constant({'type': 'constant', 'value': value})
+
+        # Special case: when accessing world_options.xxx where xxx is a known option
+        # (e.g., world_options.coinbundlequantity), inline the option value.
+        # This handles DLCQuest-style rules that use world_options to access option values.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'world_options':
             if attr in self.settings:
                 value = self.settings[attr]
                 # Use _expr_constant to convert the value to Python code

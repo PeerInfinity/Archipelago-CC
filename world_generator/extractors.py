@@ -722,7 +722,9 @@ def compute_state_counter_accumulator_rules(
             if item_name.endswith(suffix) and item_name != counter_name:
                 try:
                     parts = item_name.split()
-                    if len(parts) >= 2 and parts[-1] == suffix:
+                    # Handle multi-word suffixes like "coins freemium"
+                    # Check if the remaining parts after the number match the suffix
+                    if len(parts) >= 2 and ' '.join(parts[1:]) == suffix:
                         int(parts[0])  # Verify it's a number
                         has_matching_items = True
                         break
@@ -735,7 +737,9 @@ def compute_state_counter_accumulator_rules(
                 if item_name.endswith(suffix) and item_name != counter_name:
                     try:
                         parts = item_name.split()
-                        if len(parts) >= 2 and parts[-1] == suffix:
+                        # Handle multi-word suffixes like "coins freemium"
+                        # Check if the remaining parts after the number match the suffix
+                        if len(parts) >= 2 and ' '.join(parts[1:]) == suffix:
                             int(parts[0])  # Verify it's a number
                             has_matching_items = True
                             break
