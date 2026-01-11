@@ -176,6 +176,17 @@ class TrackerCore():
             self.player_id = 1
             self._tracking_from_worldgen = True
 
+            # Clear precollected items with codes from the worldgen multiworld.
+            # The worldgen world's build_world() runs generation steps that pre-collect
+            # starting items. These items will be added via set_items_received() during
+            # tracking, so we must clear them here to avoid double-counting.
+            # (This is similar to what run_generator does for non-worldgen tracking.)
+            temp_precollect = {}
+            for player_id, items in self.multiworld.precollected_items.items():
+                temp_items = [item for item in items if item.code is None]
+                temp_precollect[player_id] = temp_items
+            self.multiworld.precollected_items = temp_precollect
+
             self.logger.info(
                 f"Initialized tracking from worldgen world: {self.worldgen_world.game}"
             )
