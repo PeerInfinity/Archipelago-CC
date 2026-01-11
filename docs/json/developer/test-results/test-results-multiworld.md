@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-08 20:38:21
+**Generated:** 2026-01-11 11:23:20
 
 ## Summary
 
@@ -30,8 +30,8 @@
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 4.6KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 7.0KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 11.8KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -47,7 +47,7 @@
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Coding Adventure | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 1.0KB | ✅ |
+| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 1.2KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
@@ -57,7 +57,7 @@
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 7.5KB | ✅ |
+| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 10.1KB | ✅ |
@@ -74,7 +74,7 @@
 | Muse Dash | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 1.0KB | ✅ |
-| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 23.1KB | ✅ |
+| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 25.9KB | ✅ |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 2.7KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
@@ -85,7 +85,7 @@
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 28.7KB | 87.5KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
-| Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 12.4KB | ✅ |
+| Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 21.4KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 60.9KB | 114.5KB |
@@ -94,14 +94,14 @@
 | TUNIC | ✅ Passed | ✅ Passed | 6 | 6 | 3.1KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 4.7KB | ✅ |
-| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 14.7KB | ✅ |
+| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 2.3KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | ✅ Passed | 7 | 7 | 3.8KB | ✅ |
+| Yoshi's Island | ✅ Passed | ✅ Passed | 7 | 7 | 9.3KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld

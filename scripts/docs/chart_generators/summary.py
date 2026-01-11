@@ -411,6 +411,14 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         if has_ut_fixed:
             md_content += "- [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)\n"
 
+    # Add UT Fuzz Test section (only for original, not worldgen)
+    if not is_worldgen:
+        md_content += "\n## Universal Tracker Fuzz Tests\n\n"
+        md_content += "These tests validate Universal Tracker compatibility across random option configurations.\n\n"
+        md_content += "- [UT Fuzz Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)\n"
+        md_content += "- [UT Fuzz Results - Original](./test-results-ut-fuzz-original.md)\n"
+        md_content += "- [UT Fuzz Results - Modified](./test-results-ut-fuzz-modified.md)\n"
+
     # Add Excluded Templates section if data exists
     if excluded_games:
         md_content += "\n## Excluded Templates\n\n"

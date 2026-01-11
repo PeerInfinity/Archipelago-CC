@@ -2,7 +2,9 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-11 10:48:18
+[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
+
+**Generated:** 2026-01-11 11:23:01
 
 **Source Data Created:** 2026-01-11T06:18:23.517833
 
@@ -31,81 +33,81 @@
 
 ## Test Results
 
-| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |
-|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|
-| A Hat in Time | ❌ | 100 | 16 | 84 | 0 | 0 | ❌ 16.0% |
-| A Link to the Past | ❌ | 100 | 0 | 94 | 0 | 6 | ❌ 0.0% |
-| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Adventure | ❌ | 100 | 89 | 11 | 0 | 0 | ⚠️ 89.0% |
-| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Bomb Rush Cyberfunk | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Bumper Stickers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Castlevania - Circle of the Moon | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Castlevania 64 | ❌ | 100 | 10 | 90 | 0 | 0 | ❌ 10.0% |
-| Celeste (Open World) | ❌ | 100 | 51 | 49 | 0 | 0 | ⚠️ 51.0% |
-| Celeste 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| ChecksFinder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Choo-Choo Charles | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Civilization VI | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Coding Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| DLCQuest | ❌ | 100 | 46 | 54 | 0 | 0 | ❌ 46.0% |
-| DOOM 1993 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| DOOM II | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Donkey Kong Country 3 | ❌ | 100 | 52 | 48 | 0 | 0 | ⚠️ 52.0% |
-| Factorio | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Faxanadu | ❌ | 100 | 16 | 84 | 0 | 0 | ❌ 16.0% |
-| Final Fantasy Mystic Quest | ❌ | 100 | 1 | 96 | 3 | 0 | ❌ 1.0% |
-| Heretic | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Kingdom Hearts | ❌ | 100 | 18 | 80 | 2 | 0 | ❌ 18.0% |
-| Kingdom Hearts 2 | ❌ | 100 | 37 | 63 | 0 | 0 | ❌ 37.0% |
-| Kirby's Dream Land 3 | ❌ | 100 | 3 | 97 | 0 | 0 | ❌ 3.0% |
-| Landstalker - The Treasures of King Nole | ❌ | 100 | 20 | 80 | 0 | 0 | ❌ 20.0% |
-| Lingo | ❌ | 100 | 21 | 24 | 0 | 55 | ❌ 21.0% |
-| Links Awakening DX | ❌ | 100 | 23 | 77 | 0 | 0 | ❌ 23.0% |
-| Lufia II Ancient Cave | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Mario & Luigi Superstar Saga | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Math Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Mega Man 2 | ❌ | 100 | 90 | 10 | 0 | 0 | 90.0% |
-| MegaMan Battle Network 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Meritous | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Metamath | ❌ | 100 | 76 | 24 | 0 | 0 | ⚠️ 76.0% |
-| Muse Dash | ❌ | 100 | 0 | 97 | 0 | 3 | ❌ 0.0% |
-| Noita | ❌ | 100 | 22 | 78 | 0 | 0 | ❌ 22.0% |
-| Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% |
-| Overcooked! 2 | ❌ | 100 | 12 | 88 | 0 | 0 | ❌ 12.0% |
-| Paint | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% |
-| Raft | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Saving Princess | ❌ | 100 | 28 | 72 | 0 | 0 | ❌ 28.0% |
-| Secret of Evermore | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Shivers | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Sonic Adventure 2 Battle | ❌ | 100 | 8 | 92 | 0 | 0 | ❌ 8.0% |
-| Starcraft 2 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Stardew Valley | ❌ | 100 | 7 | 92 | 1 | 0 | ❌ 7.0% |
-| Subnautica | ❌ | 100 | 10 | 90 | 0 | 0 | ❌ 10.0% |
-| Super Mario 64 | ❌ | 100 | 29 | 71 | 0 | 0 | ❌ 29.0% |
-| Super Mario Land 2 | ❌ | 100 | 14 | 86 | 0 | 0 | ❌ 14.0% |
-| Super Mario World | ❌ | 100 | 54 | 46 | 0 | 0 | ⚠️ 54.0% |
-| Super Metroid | ❌ | 100 | 9 | 90 | 1 | 0 | ❌ 9.0% |
-| TOEM original | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| TOEM rule builder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| TUNIC | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Terraria | ❌ | 100 | 98 | 2 | 0 | 0 | 98.0% |
-| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| The Messenger | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| The Wind Waker | ❌ | 100 | 5 | 52 | 0 | 43 | ❌ 5.0% |
-| The Witness | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Timespinner | ❌ | 100 | 4 | 96 | 0 | 0 | ❌ 4.0% |
-| Undertale | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| VVVVVV | ❌ | 100 | 65 | 35 | 0 | 0 | ⚠️ 65.0% |
-| Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Yoshi's Island | ❌ | 100 | 22 | 78 | 0 | 0 | ❌ 22.0% |
-| shapez | ❌ | 100 | 42 | 31 | 0 | 27 | ❌ 42.0% |
+| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
+|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
+| A Hat in Time | ❌ | 100 | 16 | 84 | 0 | 0 | ❌ 16.0% | 4.6KB | ✅ | 235.0KB |
+| A Link to the Past | ❌ | 100 | 0 | 94 | 0 | 6 | ❌ 0.0% | ✅ | ✅ | 654.1KB |
+| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
+| APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
+| Adventure | ❌ | 100 | 89 | 11 | 0 | 0 | ⚠️ 89.0% | ✅ | ✅ | 26.0KB |
+| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.4KB |
+| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 18.2KB |
+| Bomb Rush Cyberfunk | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.4KB | 40.3KB | 329.0KB |
+| Bumper Stickers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.4KB |
+| Castlevania - Circle of the Moon | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 94.4KB |
+| Castlevania 64 | ❌ | 100 | 10 | 90 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 138.5KB |
+| Celeste (Open World) | ❌ | 100 | 51 | 49 | 0 | 0 | ⚠️ 51.0% | ✅ | ✅ | 1043.3KB |
+| Celeste 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.1KB | ✅ | 53.7KB |
+| ChecksFinder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.2KB |
+| Choo-Choo Charles | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 282.3KB |
+| Civilization VI | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 166.9KB |
+| Coding Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 54.9KB |
+| DLCQuest | ❌ | 100 | 46 | 54 | 0 | 0 | ❌ 46.0% | 1.0KB | ✅ | 51.3KB |
+| DOOM 1993 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 280.1KB |
+| DOOM II | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
+| Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
+| Donkey Kong Country 3 | ❌ | 100 | 52 | 48 | 0 | 0 | ⚠️ 52.0% | ✅ | ✅ | 122.5KB |
+| Factorio | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 5.1KB | ✅ | 298.4KB |
+| Faxanadu | ❌ | 100 | 16 | 84 | 0 | 0 | ❌ 16.0% | ✅ | ✅ | 68.6KB |
+| Final Fantasy Mystic Quest | ❌ | 100 | 1 | 96 | 3 | 0 | ❌ 1.0% | ✅ | ✅ | 1302.5KB |
+| Heretic | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
+| Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
+| Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 7.5KB | ✅ | 84.2KB |
+| Kingdom Hearts | ❌ | 100 | 18 | 80 | 2 | 0 | ❌ 18.0% | ✅ | ✅ | 754.0KB |
+| Kingdom Hearts 2 | ❌ | 100 | 37 | 63 | 0 | 0 | ❌ 37.0% | 19.5KB | ✅ | 1675.2KB |
+| Kirby's Dream Land 3 | ❌ | 100 | 3 | 97 | 0 | 0 | ❌ 3.0% | 10.1KB | ✅ | 688.9KB |
+| Landstalker - The Treasures of King Nole | ❌ | 100 | 20 | 80 | 0 | 0 | ❌ 20.0% | 3.6KB | ✅ | 210.3KB |
+| Lingo | ❌ | 100 | 21 | 24 | 0 | 55 | ❌ 21.0% | 38.0KB | 10.7KB | 946.3KB |
+| Links Awakening DX | ❌ | 100 | 23 | 77 | 0 | 0 | ❌ 23.0% | 7.4KB | ✅ | 714.5KB |
+| Lufia II Ancient Cave | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
+| Mario & Luigi Superstar Saga | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
+| Math Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
+| Mega Man 2 | ❌ | 100 | 90 | 10 | 0 | 0 | 90.0% | ✅ | ✅ | 51.5KB |
+| MegaMan Battle Network 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 209.8KB |
+| Meritous | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.2KB |
+| Metamath | ❌ | 100 | 76 | 24 | 0 | 0 | ⚠️ 76.0% | ✅ | ✅ | 47.5KB |
+| Muse Dash | ❌ | 100 | 0 | 97 | 0 | 3 | ❌ 0.0% | ✅ | ✅ | 231.5KB |
+| Noita | ❌ | 100 | 22 | 78 | 0 | 0 | ❌ 22.0% | ✅ | ✅ | 74.6KB |
+| Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% | 1.0KB | ✅ | 308.9KB |
+| Overcooked! 2 | ❌ | 100 | 12 | 88 | 0 | 0 | ❌ 12.0% | 23.1KB | ✅ | 488.9KB |
+| Paint | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 2.7KB | ✅ | 123.7KB |
+| Raft | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 5.4KB | ✅ | 205.9KB |
+| Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
+| Saving Princess | ❌ | 100 | 28 | 72 | 0 | 0 | ❌ 28.0% | ✅ | ✅ | 33.5KB |
+| Secret of Evermore | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 5.3KB | 6.9KB | 418.7KB |
+| Shivers | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 151.3KB |
+| Sonic Adventure 2 Battle | ❌ | 100 | 8 | 92 | 0 | 0 | ❌ 8.0% | ✅ | ✅ | 266.1KB |
+| Starcraft 2 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.5KB | 1136.1KB |
+| Stardew Valley | ❌ | 100 | 7 | 92 | 1 | 0 | ❌ 7.0% | 18.8KB | 8.0KB | 2430.1KB |
+| Subnautica | ❌ | 100 | 10 | 90 | 0 | 0 | ❌ 10.0% | 2.2KB | ✅ | 207.8KB |
+| Super Mario 64 | ❌ | 100 | 29 | 71 | 0 | 0 | ❌ 29.0% | 12.4KB | ✅ | 92.9KB |
+| Super Mario Land 2 | ❌ | 100 | 14 | 86 | 0 | 0 | ❌ 14.0% | ✅ | ✅ | 875.0KB |
+| Super Mario World | ❌ | 100 | 54 | 46 | 0 | 0 | ⚠️ 54.0% | ✅ | ✅ | 178.2KB |
+| Super Metroid | ❌ | 100 | 9 | 90 | 1 | 0 | ❌ 9.0% | 60.9KB | 114.5KB | 625.1KB |
+| TOEM original | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
+| TOEM rule builder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
+| TUNIC | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 3.1KB | ✅ | 711.6KB |
+| Terraria | ❌ | 100 | 98 | 2 | 0 | 0 | 98.0% | 16.8KB | ✅ | 283.0KB |
+| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.5KB |
+| The Messenger | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 4.7KB | ✅ | 211.8KB |
+| The Wind Waker | ❌ | 100 | 5 | 52 | 0 | 43 | ❌ 5.0% | ✅ | ✅ | 253.9KB |
+| The Witness | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 14.1KB | ✅ | 401.3KB |
+| Timespinner | ❌ | 100 | 4 | 96 | 0 | 0 | ❌ 4.0% | 2.2KB | ✅ | 267.3KB |
+| Undertale | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
+| VVVVVV | ❌ | 100 | 65 | 35 | 0 | 0 | ⚠️ 65.0% | 2.3KB | ✅ | 22.7KB |
+| Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
+| Yoshi's Island | ❌ | 100 | 22 | 78 | 0 | 0 | ❌ 22.0% | 3.8KB | ✅ | 283.2KB |
+| shapez | ❌ | 100 | 42 | 31 | 0 | 27 | ❌ 42.0% | ✅ | ✅ | 155.5KB |
 
 ## Error Details
 
@@ -420,6 +422,9 @@
 - **Timeout:** Number of runs that exceeded the time limit
 - **Ignored:** Number of runs skipped due to option errors
 - **Success Rate:** Percentage of successful runs
+- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
+- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files
+- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)
 
 ### About This Test
 

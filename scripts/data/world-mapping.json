@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 4737,
+    "exporter_size": 7135,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -17,12 +17,21 @@
     "has_custom_game_logic": false,
     "world_directory": "ahit_worldgen"
   },
-  "A Link to the Past": {
+  "A Hat in Time WorldGen2": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ahit_worldgen2"
+  },
+  "A Link to the Past": {
+    "exporter_path": "exporter/games/alttp.py",
+    "exporter_size": 12092,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "alttp"
   },
@@ -35,7 +44,7 @@
     "has_custom_game_logic": false,
     "world_directory": "alttp_worldgen"
   },
-  "A Link to the Past WorldGen 2": {
+  "A Link to the Past WorldGen2": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
@@ -61,6 +70,15 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "shorthike_worldgen"
+  },
+  "A Short Hike WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "shorthike_worldgen2"
   },
   "APQuest": {
     "exporter_path": null,
@@ -106,6 +124,15 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "adventure_worldgen"
+  },
+  "Adventure WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "adventure_worldgen2"
   },
   "Aquaria": {
     "exporter_path": "exporter/games/aquaria.py",
@@ -334,7 +361,7 @@
   },
   "DLCQuest": {
     "exporter_path": "exporter/games/dlcquest.py",
-    "exporter_size": 1004,
+    "exporter_size": 1205,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -532,7 +559,7 @@
   },
   "Inscryption": {
     "exporter_path": "exporter/games/inscryption.py",
-    "exporter_size": 7674,
+    "exporter_size": 8162,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -847,7 +874,7 @@
   },
   "Overcooked! 2": {
     "exporter_path": "exporter/games/overcooked2.py",
-    "exporter_size": 23678,
+    "exporter_size": 26548,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1108,7 +1135,7 @@
   },
   "Super Mario 64": {
     "exporter_path": "exporter/games/sm64ex.py",
-    "exporter_size": 12655,
+    "exporter_size": 21907,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1270,7 +1297,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/messenger.py",
-    "exporter_size": 4822,
+    "exporter_size": 15005,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1287,11 +1314,11 @@
     "world_directory": "messenger_worldgen"
   },
   "The Wind Waker": {
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/tww.py",
+    "exporter_size": 7151,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "tww"
   },
@@ -1369,7 +1396,7 @@
   },
   "VVVVVV": {
     "exporter_path": "exporter/games/v6.py",
-    "exporter_size": 2394,
+    "exporter_size": 3870,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1423,7 +1450,7 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 3924,
+    "exporter_size": 9486,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
