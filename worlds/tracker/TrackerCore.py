@@ -810,7 +810,14 @@ class TrackerCore():
                 world_item = self.multiworld.create_item(item_name, self.player_id)
                 if item_loc>0 and item_player == self.slot and item_loc in location_id_to_name:
                     world_item.location = self.multiworld.get_location(location_id_to_name[item_loc],self.player_id)
-                world_item.classification = world_item.classification | item_flags
+                # Use server's item_flags directly for classification.
+                # The server knows the actual classification of each item instance.
+                # This is important for games like Faxanadu where the same item type
+                # (e.g., Red Potion) can have different classifications: 4 are progression
+                # and 11 are filler. The worldgen exports all as progression because
+                # the item is used in access rules, but we must trust the server's
+                # classification to match the original world's sphere calculation.
+                world_item.classification = item_flags
                 state.collect(world_item, True)
                 if world_item.advancement:
                     prog_items[world_item.name] += 1
