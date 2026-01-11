@@ -255,8 +255,8 @@ def main():
     parser.add_argument(
         '-t', '--timeout',
         type=int,
-        default=15,
-        help='Timeout per generation in seconds (default: 15)'
+        default=60,
+        help='Timeout per generation in seconds (default: 60)'
     )
     parser.add_argument(
         '--seed',
