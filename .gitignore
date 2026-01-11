@@ -264,10 +264,6 @@ scripts/output/multiworld-worldgen/test-results-*
 scripts/output/multiworld-worldgen/test-results_*
 scripts/output/multiworld-apworld/test-results-*
 scripts/output/multiworld-apworld/test-results_*
-scripts/output/multitemplate-minimal/test-results-*
-scripts/output/multitemplate-minimal/test-results_*
-scripts/output/multitemplate-full/test-results-*
-scripts/output/multitemplate-full/test-results_*
 
 !CC/scripts/prompts/gen-errors.txt
 

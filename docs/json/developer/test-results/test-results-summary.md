@@ -193,18 +193,6 @@ Of the 72 templates passing all 4 tests:
 | 5 | Stardew Valley | 8.0KB |
 | 6 | Secret of Evermore | 6.9KB |
 
-## Multi-Template Test Results
-
-These tests check multiple template configurations for the same game.
-
-| Game Name | Minimal (Advancement Items Only) | Full (All Locations) |
-|-----------|----------------------------------|-------------------------------|
-| A Link to the Past | ❌ 168/203 | ❌ 168/203 |
-
-View detailed results:
-- [Multi-Template Minimal](./test-results-multitemplate-minimal.md)
-- [Multi-Template Full](./test-results-multitemplate-full.md)
-
 ## Universal Tracker Comparison
 
 These tests compare Universal Tracker results with our spoiler test results.

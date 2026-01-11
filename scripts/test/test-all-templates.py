@@ -49,7 +49,7 @@ from lib.test_runner import (
 from lib.seed_utils import get_seed_id as compute_seed_id
 
 
-def run_post_processing_scripts(project_root: str, results_file: str, multiclient: bool = False, multiworld: bool = False, multitemplate: bool = False):
+def run_post_processing_scripts(project_root: str, results_file: str, multiclient: bool = False, multiworld: bool = False):
     """Run post-processing scripts to update documentation."""
     print("\n=== Running Post-Processing Scripts ===")
 
@@ -212,11 +212,6 @@ def main():
         help='Show what would be done without actually making changes (useful for testing)'
     )
     parser.add_argument(
-        '--multitemplate',
-        action='store_true',
-        help='Run tests on multiple template configurations for the same game (requires --templates-dir)'
-    )
-    parser.add_argument(
         '--single-client',
         action='store_true',
         help='Use single-client mode for multiclient tests (only valid with --multiclient)'
@@ -359,14 +354,6 @@ def main():
         print("Error: --retry-failed-players must be a non-negative integer")
         sys.exit(1)
 
-    if args.multitemplate and not args.templates_dir:
-        print("Error: --multitemplate requires --templates-dir to be specified")
-        sys.exit(1)
-
-    if args.multitemplate and (args.multiclient or args.multiworld):
-        print("Error: --multitemplate cannot be used with --multiclient or --multiworld")
-        sys.exit(1)
-
     if args.retest and args.include_list is not None:
         print("Error: --retest and --include-list are mutually exclusive")
         sys.exit(1)
@@ -412,8 +399,8 @@ def main():
         print("Error: --skip-first can only be used with --every-nth")
         sys.exit(1)
 
-    if args.test_consistency and (args.multiclient or args.multiworld or args.multitemplate):
-        print("Error: --test-consistency can only be used with spoiler tests (not multiclient, multiworld, or multitemplate)")
+    if args.test_consistency and (args.multiclient or args.multiworld):
+        print("Error: --test-consistency can only be used with spoiler tests (not multiclient or multiworld)")
         sys.exit(1)
 
     if args.test_consistency and args.export_only:
@@ -890,15 +877,6 @@ def main():
         elif args.multiclient:
             # Use multiclient-specific output directory and file name
             args.output_file = 'scripts/output/multiclient/test-results.json'
-        elif args.multitemplate:
-            # Multitemplate mode - check extend_sphere_log_to_all_locations setting
-            host_config = read_host_yaml_config(project_root)
-            extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
-
-            if extend_sphere_log:
-                args.output_file = 'scripts/output/multitemplate-full/test-results.json'
-            else:
-                args.output_file = 'scripts/output/multitemplate-minimal/test-results.json'
         else:
             # Spoiler mode - check extend_sphere_log_to_all_locations setting
             host_config = read_host_yaml_config(project_root)
@@ -1352,22 +1330,8 @@ def main():
                     dry_run=args.dry_run, player=args.player
                 )
             
-            # Store results - in multitemplate mode, nest by game name → template filename
-            if args.multitemplate:
-                # Extract game name from template result
-                game_name = template_result.get('world_info', {}).get('game_name_from_yaml', 'Unknown')
-                # Remove .yaml extension from template filename for cleaner display
-                template_key = yaml_file.replace('.yaml', '')
-
-                # Initialize game entry if it doesn't exist
-                if game_name not in results['results']:
-                    results['results'][game_name] = {}
-
-                # Store template result under game → template
-                results['results'][game_name][template_key] = template_result
-            else:
-                # Normal mode - store by template filename
-                results['results'][yaml_file] = template_result
+            # Store results by template filename
+            results['results'][yaml_file] = template_result
 
             # In retest mode, check if this test is now passing and record intermittent failures
             if args.retest:
@@ -1433,7 +1397,7 @@ def main():
 
             # Run post-processing after each test if requested (do this BEFORE checking retest status)
             if args.post_process:
-                run_post_processing_scripts(project_root, results_file, args.multiclient, args.multiworld, args.multitemplate)
+                run_post_processing_scripts(project_root, results_file, args.multiclient, args.multiworld)
 
             # In retest mode, check if we should stop
             if args.retest:
@@ -1607,7 +1571,7 @@ def main():
 
                     # Run post-processing if requested
                     if args.post_process:
-                        run_post_processing_scripts(project_root, results_file, args.multiclient, args.multiworld, args.multitemplate)
+                        run_post_processing_scripts(project_root, results_file, args.multiclient, args.multiworld)
 
                 except Exception as e:
                     print(f"Error in second pass for {yaml_file}: {e}")
@@ -1785,27 +1749,11 @@ def main():
                 print(f"Single Seed Test Summary: {passed} passed, {failed} failed, 0 errors")
             else:
                 # Spoiler test summary
-                # In multitemplate mode, results are nested by game → template
-                # In normal mode, results are keyed by template filename
-                if args.multitemplate:
-                    # Flatten nested results for counting
-                    all_template_results = []
-                    for game_templates in results['results'].values():
-                        if isinstance(game_templates, dict):
-                            all_template_results.extend(game_templates.values())
-
-                    passed = sum(1 for r in all_template_results
-                                if r.get('spoiler_test', {}).get('pass_fail') == 'passed')
-                    failed = sum(1 for r in all_template_results
-                                if r.get('spoiler_test', {}).get('pass_fail') == 'failed')
-                    errors = len(yaml_files) - passed - failed
-                else:
-                    # Normal mode
-                    passed = sum(1 for r in results['results'].values()
-                                if r.get('spoiler_test', {}).get('pass_fail') == 'passed')
-                    failed = sum(1 for r in results['results'].values()
-                                if r.get('spoiler_test', {}).get('pass_fail') == 'failed')
-                    errors = len(yaml_files) - passed - failed
+                passed = sum(1 for r in results['results'].values()
+                            if r.get('spoiler_test', {}).get('pass_fail') == 'passed')
+                failed = sum(1 for r in results['results'].values()
+                            if r.get('spoiler_test', {}).get('pass_fail') == 'failed')
+                errors = len(yaml_files) - passed - failed
 
                 print(f"Single Seed Test Summary: {passed} passed, {failed} failed, {errors} errors")
     

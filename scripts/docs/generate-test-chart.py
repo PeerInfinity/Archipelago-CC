@@ -33,8 +33,6 @@ from chart_generators import (
     generate_multiclient_markdown,
     extract_multiworld_chart_data,
     generate_multiworld_markdown,
-    extract_multitemplate_chart_data,
-    generate_multitemplate_markdown,
     extract_processing_times_data,
     generate_processing_times_markdown,
     generate_summary_chart,
@@ -45,7 +43,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate test results charts from template test results')
     parser.add_argument('--input-file', type=str, help='Input JSON file path (processes only this file)')
     parser.add_argument('--output-file', type=str, help='Output markdown file path')
-    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'multitemplate-minimal', 'multitemplate-full', 'ut-comparison'],
+    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'ut-comparison'],
                        help='Test type when using --input-file')
     parser.add_argument('--include-timing', action='store_true', default=False,
                        help='Include test timing data in output (default: off)')
@@ -88,10 +86,6 @@ def main():
                 'seed': results.get('seed')
             }
             md_content = generate_multiclient_markdown(chart_data, metadata, top_level)
-        elif args.test_type in ['multitemplate-minimal', 'multitemplate-full']:
-            chart_data = extract_multitemplate_chart_data(results)
-            subtitle = "Multi-Template Test - Advancement Items Only" if args.test_type == 'multitemplate-minimal' else "Multi-Template Test - All Locations"
-            md_content = generate_multitemplate_markdown(chart_data, metadata, subtitle)
         elif args.test_type == 'ut-comparison':
             chart_data = extract_ut_comparison_chart_data(results)
             world_mapping = load_world_mapping(project_root)
@@ -304,38 +298,6 @@ def main():
     else:
         print(f"Info: WorldGen multiworld test results not found: {mw_wg_input}")
 
-    # Load multitemplate minimal test results
-    mtmin_input = os.path.join(project_root, 'scripts/output/multitemplate-minimal/test-results.json')
-    mtmin_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multitemplate-minimal.md')
-
-    mtmin_data = None
-    if os.path.exists(mtmin_input):
-        mtmin_results = load_test_results(mtmin_input)
-        mtmin_data = extract_multitemplate_chart_data(mtmin_results)
-        mtmin_md = generate_multitemplate_markdown(mtmin_data, mtmin_results.get('metadata', {}),
-                                                   "Multi-Template Test - Advancement Items Only")
-        os.makedirs(os.path.dirname(mtmin_output), exist_ok=True)
-        with open(mtmin_output, 'w') as f:
-            f.write(mtmin_md)
-    else:
-        print(f"Info: Multitemplate minimal test results not found: {mtmin_input}")
-
-    # Load multitemplate full test results
-    mtfull_input = os.path.join(project_root, 'scripts/output/multitemplate-full/test-results.json')
-    mtfull_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multitemplate-full.md')
-
-    mtfull_data = None
-    if os.path.exists(mtfull_input):
-        mtfull_results = load_test_results(mtfull_input)
-        mtfull_data = extract_multitemplate_chart_data(mtfull_results)
-        mtfull_md = generate_multitemplate_markdown(mtfull_data, mtfull_results.get('metadata', {}),
-                                                    "Multi-Template Test - All Locations")
-        os.makedirs(os.path.dirname(mtfull_output), exist_ok=True)
-        with open(mtfull_output, 'w') as f:
-            f.write(mtfull_md)
-    else:
-        print(f"Info: Multitemplate full test results not found: {mtfull_input}")
-
     # Load UT comparison test results (both random and fixed seed)
     ut_random_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-random-seed.json')
     ut_fixed_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-fixed-seed.json')
@@ -388,7 +350,7 @@ def main():
     ut_data = ut_fixed_data if ut_fixed_data else ut_random_data
 
     # Generate summary charts (original and WorldGen)
-    if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data or ut_data:
+    if minimal_data or full_data or mp_data or mw_data or ut_data:
         # Load the exclude list with reasons for main tests
         # Convert list of dicts to dict for generate_summary_chart
         excluded_list = load_template_exclude_list(project_root, include_reasons=True, test_type='main')
@@ -406,7 +368,7 @@ def main():
         # Generate original summary with cross-link to worldgen if available
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
         wg_summary_link = './test-results-summary-worldgen.md' if has_wg_summary else None
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games_main, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link, project_root=project_root)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, ut_data, excluded_games_main, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link, project_root=project_root)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 

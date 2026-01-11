@@ -172,18 +172,6 @@ Of the 0 templates passing all 3 tests:
 | 9 | Lingo 2 | 2050.2KB |
 | 10 | Ittle Dew 2 | 1891.8KB |
 
-## Multi-Template Test Results
-
-These tests check multiple template configurations for the same game.
-
-| Game Name | Minimal (Advancement Items Only) | Full (All Locations) |
-|-----------|----------------------------------|-------------------------------|
-| A Link to the Past | ❌ 168/203 | ❌ 168/203 |
-
-View detailed results:
-- [Multi-Template Minimal](./test-results-multitemplate-minimal.md)
-- [Multi-Template Full](./test-results-multitemplate-full.md)
-
 ## Universal Tracker Comparison
 
 These tests compare Universal Tracker results with our spoiler test results.

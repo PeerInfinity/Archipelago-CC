@@ -95,37 +95,6 @@ def is_ut_comparison_structure(results: Dict[str, Any]) -> bool:
     return False
 
 
-def is_multitemplate_structure(results: Dict[str, Any]) -> bool:
-    """
-    Detect if results have multitemplate structure (nested by game name).
-
-    Multitemplate structure: results -> game_name -> template_name -> template_data
-    Regular structure: results -> template_name -> template_data
-    """
-    if 'results' not in results or not results['results']:
-        return False
-
-    # Check the first item in results
-    first_value = next(iter(results['results'].values()))
-
-    # If it's a dict and has nested dicts (not result fields like 'generation', 'spoiler_test'),
-    # it's likely multitemplate
-    if isinstance(first_value, dict):
-        # Check if it looks like a template result (has 'generation' or 'spoiler_test' or 'ut_comparison')
-        # or a game container (has template names as keys)
-        # Also check for world generator format ('original', 'test_world')
-        template_result_keys = {'generation', 'spoiler_test', 'multiclient_test', 'multiworld_test',
-                                'ut_comparison', 'original', 'test_world'}
-        if any(key in first_value for key in template_result_keys):
-            return False
-        # If values are dicts with these fields, it's multitemplate
-        for value in first_value.values():
-            if isinstance(value, dict) and ('generation' in value or 'spoiler_test' in value):
-                return True
-
-    return False
-
-
 def combine_results(input_files: List[str]) -> Dict[str, Any]:
     """
     Combine multiple test results files into a single structure.
@@ -156,9 +125,6 @@ def combine_results(input_files: List[str]) -> Dict[str, Any]:
     if is_ut_comparison_structure(all_results[0]):
         print("Detected UT comparison structure")
         return combine_ut_comparison_results(all_results)
-    elif is_multitemplate_structure(all_results[0]):
-        print("Detected multitemplate structure (nested by game name)")
-        return combine_multitemplate_results(all_results)
     else:
         print("Detected standard structure")
         return combine_standard_results(all_results)
@@ -312,90 +278,9 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
     return combined
 
 
-def combine_multitemplate_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """
-    Combine results with multitemplate structure (results -> game_name -> template_name -> template_data).
-    """
-    # Extract all templates and organize by game -> template -> list of (seed, result_data)
-    game_template_results = {}  # game_name -> template_name -> list of (seed, result_data)
-
-    for result_data in all_results:
-        for game_name, game_templates in result_data.get('results', {}).items():
-            if not isinstance(game_templates, dict):
-                continue
-
-            if game_name not in game_template_results:
-                game_template_results[game_name] = {}
-
-            for template_name, template_result in game_templates.items():
-                # Skip if template_result is not a dictionary
-                if not isinstance(template_result, dict):
-                    print(f"Warning: Skipping malformed template result for {game_name}/{template_name}")
-                    continue
-
-                if template_name not in game_template_results[game_name]:
-                    game_template_results[game_name][template_name] = []
-
-                seed = template_result.get('seed', '1')
-                game_template_results[game_name][template_name].append((seed, template_result))
-
-    # Sort each template's results by seed number and combine
-    combined_results = {}
-
-    for game_name, template_results in game_template_results.items():
-        # Sort each template's results by seed number
-        for template_name in template_results:
-            template_results[template_name].sort(key=lambda x: int(x[0]))
-
-        # Combine results for each template in this game
-        combined_game_results = {}
-        _process_template_results(template_results, combined_game_results)
-        combined_results[game_name] = combined_game_results
-
-    # Merge intermittent_tracking metadata from all input files
-    # Use a dict to deduplicate by (template, seed, timestamp)
-    intermittent_failures_dict = {}
-    for result_data in all_results:
-        metadata = result_data.get('metadata', {})
-        tracking = metadata.get('intermittent_tracking', {})
-        failures = tracking.get('failures', [])
-        for failure in failures:
-            # Create unique key from template, seed, and timestamp
-            key = (failure.get('template'), failure.get('seed'), failure.get('timestamp'))
-            intermittent_failures_dict[key] = failure
-
-    # Convert back to list, sorted by template then seed
-    merged_intermittent_failures = sorted(
-        intermittent_failures_dict.values(),
-        key=lambda f: (f.get('template', ''), f.get('seed') if f.get('seed') is not None else float('inf'))
-    )
-
-    # Create combined output structure
-    combined = {
-        'metadata': {
-            'created': datetime.now().isoformat(),
-            'last_updated': datetime.now().isoformat(),
-            'script_version': '1.0.0',
-            'combined_from': len(all_results),
-            'combination_note': 'Results combined from parallel seed tests (multitemplate structure)'
-        },
-        'results': combined_results
-    }
-
-    # Add intermittent tracking if we have any failures
-    if merged_intermittent_failures:
-        combined['metadata']['intermittent_tracking'] = {
-            'failures': merged_intermittent_failures,
-            'last_updated': datetime.now().isoformat()
-        }
-
-    return combined
-
-
 def _process_template_results(template_results: Dict[str, List], combined_results: Dict[str, Any]) -> None:
     """
     Process template results and add them to combined_results dict.
-    Used by both standard and multitemplate combining.
     """
     for template_name, seed_results in template_results.items():
         if len(seed_results) == 1:
@@ -571,26 +456,10 @@ def main():
     # Show summary
     print("\n=== Combination Summary ===")
 
-    # Check if this is multitemplate structure
-    is_multitemplate = is_multitemplate_structure(combined)
+    print(f"Templates combined: {len(combined['results'])}")
 
-    if is_multitemplate:
-        # Count total templates across all games
-        total_templates = sum(len(templates) for templates in combined['results'].values() if isinstance(templates, dict))
-        print(f"Games: {len(combined['results'])}, Templates combined: {total_templates}")
-
-        for game_name, game_templates in combined['results'].items():
-            if not isinstance(game_templates, dict):
-                continue
-
-            print(f"\n  {game_name}:")
-            for template_name, result in game_templates.items():
-                _print_template_summary(template_name, result, indent="    ")
-    else:
-        print(f"Templates combined: {len(combined['results'])}")
-
-        for template_name, result in combined['results'].items():
-            _print_template_summary(template_name, result, indent="  ")
+    for template_name, result in combined['results'].items():
+        _print_template_summary(template_name, result, indent="  ")
 
     # Write output file
     if args.dry_run:
