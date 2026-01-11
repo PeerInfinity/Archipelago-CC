@@ -39,6 +39,9 @@ from .worldgen_analysis import (
     get_worldgen_rules_comp_failures,
     categorize_world_generation_error,
     categorize_seed_generation_error,
+    load_ut_fuzz_test_results,
+    get_ut_fuzz_worldgen_pass_failures,
+    categorize_ut_fuzz_error,
 )
 
 from .prompt_generators import (
@@ -56,6 +59,8 @@ from .prompt_generators import (
     generate_worldgen_spoiler_failure_prompt,
     generate_worldgen_crossval_failure_prompt,
     generate_worldgen_rules_comp_failure_prompt,
+    # ut fuzz
+    generate_ut_fuzz_failure_prompt,
 )
 
 from .execution import (
@@ -101,6 +106,9 @@ __all__ = [
     'get_worldgen_rules_comp_failures',
     'categorize_world_generation_error',
     'categorize_seed_generation_error',
+    'load_ut_fuzz_test_results',
+    'get_ut_fuzz_worldgen_pass_failures',
+    'categorize_ut_fuzz_error',
     # prompt_generators.standard
     'generate_helper_export_prompt',
     'generate_exporter_simplify_prompt',
@@ -115,6 +123,8 @@ __all__ = [
     'generate_worldgen_spoiler_failure_prompt',
     'generate_worldgen_crossval_failure_prompt',
     'generate_worldgen_rules_comp_failure_prompt',
+    # prompt_generators.ut_fuzz
+    'generate_ut_fuzz_failure_prompt',
     # execution
     'run_template_test',
     'run_prompt_for_game',

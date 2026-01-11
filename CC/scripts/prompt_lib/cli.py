@@ -63,6 +63,10 @@ def create_argument_parser():
                        help='Generate prompts for WorldGen Stage 5 failures (rules.json comparison fails)')
     parser.add_argument('--worldgen-test-mode', type=str, choices=['canonical', 'random'], default='canonical',
                        help='Which world generator test results to use (default: canonical)')
+    parser.add_argument('--ut-fuzz-failures', action='store_true',
+                       help='Generate prompts for games that pass canonical worldgen but fail UT fuzz testing')
+    parser.add_argument('--ut-version', type=str, choices=['original', 'modified'], default='modified',
+                       help='Which UT version results to use for --ut-fuzz-failures (default: modified)')
     parser.add_argument('--all-promptfiles', action='store_true',
                        help='Run all prompt-generating modes and output to separate files in CC/scripts/prompts/')
     parser.add_argument('--exclude-pattern', type=str,
@@ -173,6 +177,18 @@ def validate_arguments(args):
 
     if any(worldgen_modes) and (args.basic_spoiler_debug or args.helper_export or args.exporter_simplify or args.new_rule_types or args.gen_errors):
         print("Error: --worldgen-* modes cannot be combined with other debugging modes")
+        sys.exit(1)
+
+    if args.ut_fuzz_failures and (args.multiclient or args.multiworld):
+        print("Error: --ut-fuzz-failures cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.ut_fuzz_failures and any(worldgen_modes):
+        print("Error: --ut-fuzz-failures cannot be combined with --worldgen-* modes")
+        sys.exit(1)
+
+    if args.ut_fuzz_failures and (args.basic_spoiler_debug or args.helper_export or args.exporter_simplify or args.new_rule_types or args.gen_errors):
+        print("Error: --ut-fuzz-failures cannot be combined with other debugging modes")
         sys.exit(1)
 
     if args.include_pattern and args.exclude_pattern:

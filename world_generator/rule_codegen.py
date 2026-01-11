@@ -719,6 +719,7 @@ class RuleCodeGenerator:
             'ast_any_of': self._convert_ast_any_of,
             'count_true': self._convert_count_true,
             'block': self._convert_ast_block,
+            'bunny_accessibility_check': self._convert_bunny_accessibility_check,
         }
 
         converter = converters.get(rule_type)
@@ -729,6 +730,10 @@ class RuleCodeGenerator:
         rb_rule = rule.get('rule', '')
         if rb_rule == 'AST_block':
             return self._convert_ast_block(rule)
+
+        # Check for AST_bunny_accessibility_check in Rule Builder format
+        if rb_rule == 'AST_bunny_accessibility_check':
+            return self._convert_bunny_accessibility_check(rule)
 
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
@@ -1395,6 +1400,40 @@ class RuleCodeGenerator:
         else:
             return f'HasGroup("{group_escaped}", {count})'
 
+    def _convert_bunny_accessibility_check(self, rule: Dict[str, Any]) -> str:
+        """Convert bunny_accessibility_check to a HelperCall.
+
+        This generates code that calls check_bunny_accessibility() at runtime,
+        which evaluates Moon Pearl OR path from link region based on current
+        game options (inverted mode, glitch mode).
+
+        The generated code uses the check_bunny_accessibility helper function
+        which must be defined in the Rules.py (added by templates.py when
+        bunny_accessibility_check rules are present).
+
+        Handles both native format (type: bunny_accessibility_check with args at top level)
+        and AST format (rule: AST_bunny_accessibility_check with args in 'args' dict).
+        """
+        self.required_imports.add('HelperCall')
+
+        # Handle both native format (args at top level) and AST format (args in 'args' dict)
+        args = rule.get('args', {})
+        location_name = args.get('location_name', '') or rule.get('location_name', '')
+        target_region = args.get('target_region', '') or rule.get('target_region', '')
+
+        location_escaped = self._escape_string(location_name)
+
+        # Mark that we need the bunny accessibility helper
+        self._needs_bunny_helper = True
+
+        # Generate a HelperCall to check_bunny_accessibility
+        # Pass location_name and target_region through the args tuple
+        if target_region:
+            region_escaped = self._escape_string(target_region)
+            return f'HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("{location_escaped}", "{region_escaped}"))'
+        else:
+            return f'HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("{location_escaped}",))'
+
     def _convert_and(self, rule: Dict[str, Any]) -> str:
         """Convert and rule to & expression."""
         conditions = rule.get('conditions', [])
@@ -1775,6 +1814,21 @@ class RuleCodeGenerator:
                     self.required_imports.add('False_')
                     return 'False_()'
 
+        # Check if either side is a placement_lookup
+        # Placement lookups (location_item_name checks) depend on actual item placements
+        # which are not available during tracking. For tracking purposes, these comparisons
+        # should evaluate to False_() so that only the simple item requirement checks matter.
+        # This fixes self-locking rules: OR(placement_lookup == item, Has(item)) -> Has(item)
+        if self._is_placement_lookup(left) or self._is_placement_lookup(right):
+            if op in ('==', 'eq'):
+                # Equality comparison with placement_lookup always fails during tracking
+                self.required_imports.add('False_')
+                return 'False_()'
+            elif op in ('!=', 'ne'):
+                # Inequality comparison with placement_lookup always succeeds during tracking
+                self.required_imports.add('True_')
+                return 'True_()'
+
         # Use Compare class for all other patterns
         # binary_op operands are now handled by _convert_compare_operand -> _convert_binary_op
         self.required_imports.add('Compare')
@@ -1797,6 +1851,31 @@ class RuleCodeGenerator:
                     return 'False_()'
 
         return f'Compare({left_code}, "{op}", {right_code})'
+
+    def _is_placement_lookup(self, operand: Any) -> bool:
+        """
+        Check if an operand is a placement_lookup rule.
+
+        Placement lookups (location_item_name checks) depend on actual item placements
+        which are not available during tracking. These checks should be treated as False
+        during code generation so that tracking works correctly.
+
+        This is used to fix self-locking rules like:
+            OR(location_item_name(state, loc, player) == (item, 1), state.has(item, player))
+        Which should simplify to just Has(item) for tracking purposes.
+        """
+        if not isinstance(operand, dict):
+            return False
+
+        # Check for placement_lookup type
+        if operand.get('type') == 'placement_lookup':
+            return True
+
+        # Check for Rule Builder format AST_placement_lookup
+        if operand.get('rule') == 'AST_placement_lookup':
+            return True
+
+        return False
 
     def _get_list_constant_value(self, operand: Any) -> Optional[tuple]:
         """
@@ -3742,6 +3821,17 @@ class RuleCodeGenerator:
                             arg_strs.append('None')
                     else:
                         arg_strs.append('None')
+                elif isinstance(arg, dict) and arg.get('type') == 'name':
+                    # Handle name references from AST format
+                    name = arg.get('name', '')
+                    if name in ('self', 'world'):
+                        # 'self' or 'world' references represent the game world object in the
+                        # original rule lambda. For worldgen helpers, this is implicitly available
+                        # via state.multiworld.worlds[player], so we skip this argument entirely.
+                        pass  # Skip this argument - don't add to arg_strs
+                    else:
+                        # Unknown name reference - default to None
+                        arg_strs.append('None')
                 else:
                     # For complex args, try to convert
                     arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
@@ -3923,6 +4013,12 @@ class RuleCodeGenerator:
                         elif name == 'entrance' and self._current_entrance:
                             escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
                             arg_strs.append(f'multiworld.get_entrance("{escaped}", player)')
+                        elif name in ('self', 'world'):
+                            # 'self' or 'world' references represent the game world object in the
+                            # original rule lambda. For worldgen helpers, this is implicitly available
+                            # via state.multiworld.worlds[player], so we skip this argument entirely.
+                            # The helper function handles world access internally.
+                            pass  # Skip this argument - don't add to arg_strs
                         else:
                             # Unknown name reference - default to None
                             arg_strs.append('None')
@@ -4653,6 +4749,15 @@ class HelperCodeGenerator:
                 left = args.get('left')
                 op = args.get('op', '==')
                 right = args.get('right')
+                # Check if either side is a placement_lookup
+                # Placement lookups (location_item_name checks) depend on actual item placements
+                # which are not available during tracking. For tracking purposes, these comparisons
+                # should evaluate to False so that only the simple item requirement checks matter.
+                if self._is_placement_lookup(left) or self._is_placement_lookup(right):
+                    if op in ('==', 'eq'):
+                        return 'False'
+                    elif op in ('!=', 'ne'):
+                        return 'True'
                 # Always use _generate_expression to properly handle lists -> tuples
                 left_expr = self._generate_expression(left)
                 right_expr = self._generate_expression(right)
@@ -4869,8 +4974,16 @@ class HelperCodeGenerator:
                 function = args.get('function', {})
                 # Try to generate the function call expression
                 if isinstance(function, dict):
+                    # Check if this is a math module function call (e.g., math.ceil)
+                    # and set uses_math flag if so
+                    if function.get('type') == 'attribute':
+                        obj = function.get('object', {})
+                        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
+                            self.uses_math = True
+
                     func_expr = self._generate_expression(function)
-                    call_args = args.get('call_args', [])
+                    # Function call arguments may be in 'call_args' or 'args' (nested)
+                    call_args = args.get('call_args', []) or args.get('args', [])
                     arg_exprs = [self._generate_expression(a) for a in call_args]
 
                     # Special case: can_defeat() needs state as first argument
@@ -5438,9 +5551,25 @@ class HelperCodeGenerator:
 
     def _expr_compare(self, expr: Dict[str, Any]) -> str:
         """Generate comparison expression."""
-        left = self._generate_expression(expr.get('left', {}))
+        left_expr = expr.get('left', {})
+        right_expr = expr.get('right', {})
         op = expr.get('op', '==')
-        right = self._generate_expression(expr.get('right', {}))
+
+        # Check if either side is a placement_lookup
+        # Placement lookups (location_item_name checks) depend on actual item placements
+        # which are not available during tracking. For tracking purposes, these comparisons
+        # should evaluate to False so that only the simple item requirement checks matter.
+        # This fixes self-locking rules: OR(placement_lookup == item, Has(item)) -> Has(item)
+        if self._is_placement_lookup(left_expr) or self._is_placement_lookup(right_expr):
+            if op in ('==', 'eq'):
+                # Equality comparison with placement_lookup always fails during tracking
+                return 'False'
+            elif op in ('!=', 'ne'):
+                # Inequality comparison with placement_lookup always succeeds during tracking
+                return 'True'
+
+        left = self._generate_expression(left_expr)
+        right = self._generate_expression(right_expr)
 
         # Handle 'in' and 'not in' operators
         if op == 'in':
@@ -5449,6 +5578,25 @@ class HelperCodeGenerator:
             return f"({left} not in {right})"
 
         return f"({left} {op} {right})"
+
+    def _is_placement_lookup(self, expr: Any) -> bool:
+        """Check if an expression is a placement_lookup type.
+
+        Placement lookups depend on actual item placements which are not available
+        during tracking. These should be treated as False in comparisons.
+        """
+        if not isinstance(expr, dict):
+            return False
+
+        # Check for placement_lookup type
+        if expr.get('type') == 'placement_lookup':
+            return True
+
+        # Check for Rule Builder format AST_placement_lookup
+        if expr.get('rule') == 'AST_placement_lookup':
+            return True
+
+        return False
 
     def _expr_binary_op(self, expr: Dict[str, Any]) -> str:
         """Generate binary operation expression."""
@@ -5681,9 +5829,16 @@ class HelperCodeGenerator:
                     location_expr = self._generate_expression(args[0])
                 return f'state.can_reach_location({location_expr}, player)'
 
-        # Generic fallback
+        elif method == 'copy':
+            # state.copy() takes no arguments
+            return 'state.copy()'
+
+        # Generic fallback - methods that take player as an argument
         arg_exprs = [self._generate_expression(a) for a in args]
-        return f'state.{method}({", ".join(arg_exprs)}, player)'
+        if arg_exprs:
+            return f'state.{method}({", ".join(arg_exprs)}, player)'
+        else:
+            return f'state.{method}(player)'
 
     def _expr_subscript(self, expr: Dict[str, Any]) -> str:
         """Generate subscript/index expression."""
@@ -5744,6 +5899,15 @@ class HelperCodeGenerator:
         # and are accessed by helper functions. Instead of trying to access via
         # state.multiworld.worlds[player] (which is a SimpleNamespace), we inline the data.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'world':
+            if attr in self.settings:
+                value = self.settings[attr]
+                # Use _expr_constant to convert the value to Python code
+                return self._expr_constant({'type': 'constant', 'value': value})
+
+        # Special case: when accessing world_options.xxx where xxx is a known option
+        # (e.g., world_options.coinbundlequantity), inline the option value.
+        # This handles DLCQuest-style rules that use world_options to access option values.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'world_options':
             if attr in self.settings:
                 value = self.settings[attr]
                 # Use _expr_constant to convert the value to Python code
