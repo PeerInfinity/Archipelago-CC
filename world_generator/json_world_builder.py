@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import logging
+import types
 from argparse import Namespace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
@@ -202,6 +203,7 @@ class JSONWorldBuilder:
         - auto_scroll_levels: Per-level auto-scroll settings (marioland2)
         - sprite_data: Per-level sprite randomization data (marioland2)
         - difficulty_requirements: Combat difficulty data (osrs)
+        - boss_reqs: Boss requirement data (tww)
 
         These are NOT game options but rather seed-specific generated values that
         the worldgen world's __init__ uses defaults for. We need to update them
@@ -231,13 +233,62 @@ class JSONWorldBuilder:
             # Only copy if the world has this attribute (i.e., it's defined in __init__)
             if hasattr(self.world, attr_name):
                 try:
-                    setattr(self.world, attr_name, attr_value)
+                    # Convert dicts with valid identifier keys to SimpleNamespace
+                    # This matches how the worldgen template generates these attributes
+                    # (e.g., boss_reqs is initialized as types.SimpleNamespace in __init__)
+                    converted_value = self._convert_dict_to_namespace(attr_value)
+                    setattr(self.world, attr_name, converted_value)
                     copied_attrs.append(attr_name)
                 except Exception as e:
                     logger.debug(f"Could not copy world attribute '{attr_name}': {e}")
 
         if copied_attrs:
             logger.debug(f"Copied world attributes from JSON: {copied_attrs}")
+
+    def _convert_dict_to_namespace(self, value: Any) -> Any:
+        """
+        Convert a dict to types.SimpleNamespace if it has valid identifier keys.
+
+        This matches the behavior of the worldgen template generator which creates
+        SimpleNamespace objects for dicts with string keys that are valid Python
+        identifiers (e.g., boss_reqs, slot_data).
+
+        The conversion is applied to the top-level dict only. Nested dicts with
+        valid keys are also converted, but dicts inside lists are not converted
+        to maintain consistency with how data is typically structured.
+
+        Args:
+            value: Any value from the JSON data
+
+        Returns:
+            The value, potentially converted to SimpleNamespace if applicable
+        """
+        if not isinstance(value, dict):
+            return value
+
+        # Check if all keys are valid Python identifiers
+        # This is the same check used in templates.py for worldgen generation
+        has_string_keys = all(isinstance(k, str) for k in value.keys())
+        if not has_string_keys:
+            return value
+
+        all_valid_identifiers = all(
+            k.isidentifier() and not k.startswith('_')
+            for k in value.keys()
+        )
+        if not all_valid_identifiers:
+            return value
+
+        # Empty dicts should stay as dicts (can't usefully be a namespace)
+        if not value:
+            return value
+
+        # Recursively convert nested dicts with valid identifier keys
+        converted = {}
+        for k, v in value.items():
+            converted[k] = self._convert_dict_to_namespace(v)
+
+        return types.SimpleNamespace(**converted)
 
     def get_world(self) -> Optional["World"]:
         """Get the instantiated world, or None if not yet built."""
