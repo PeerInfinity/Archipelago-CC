@@ -65,6 +65,57 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         'bowserdoor_2',
         'bowserdoor_3',
         'bowserdoor_4',
+        # Level-specific helpers (used for boss access, castle clears, etc.)
+        '_68Route',
+        '_68CollectibleRoute',
+        '_68Clear',
+        '_13Game',
+        '_14Clear',
+        '_14Boss',
+        '_14CanFightBoss',
+        '_17Game',
+        '_18Clear',
+        '_18Boss',
+        '_18CanFightBoss',
+        '_21Game',
+        '_23Game',
+        '_24Clear',
+        '_24Boss',
+        '_24CanFightBoss',
+        '_26Game',
+        '_27Game',
+        '_28Clear',
+        '_28Boss',
+        '_28CanFightBoss',
+        '_32Game',
+        '_34Clear',
+        '_34Boss',
+        '_34CanFightBoss',
+        '_37Game',
+        '_38Clear',
+        '_38Boss',
+        '_38CanFightBoss',
+        '_42Game',
+        '_44Clear',
+        '_44Boss',
+        '_44CanFightBoss',
+        '_46Game',
+        '_47Game',
+        '_48Clear',
+        '_48Boss',
+        '_48CanFightBoss',
+        '_51Game',
+        '_54Clear',
+        '_54Boss',
+        '_54CanFightBoss',
+        '_58Clear',
+        '_58Boss',
+        '_58CanFightBoss',
+        '_61Game',
+        '_64Clear',
+        '_64Boss',
+        '_64CanFightBoss',
+        '_67Game',
     }
 
     # Computed world attributes needed by helpers
@@ -168,32 +219,12 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         # Call parent expand_rule first to handle recursive expansion
         result = super().expand_rule(rule, _depth)
 
-        # Post-process: Convert can_reach(boss_room, 'Location') to can_reach(boss_room, 'Region')
-        # Boss room locations are event locations with no access rules, so reaching
-        # the location is equivalent to reaching the region. Using 'Region' is more
-        # reliable for worldgen tracking.
-        # We do this after parent expansion so that subscripts are already resolved.
-        if isinstance(result, dict) and result.get('type') == 'state_method' and result.get('method') == 'can_reach':
-            args = result.get('args', [])
-            if len(args) >= 2:
-                location_arg = args[0]
-                type_arg = args[1]
-
-                # Check if this is can_reach(boss_room_name, 'Location')
-                if (isinstance(location_arg, dict) and location_arg.get('type') == 'constant' and
-                    isinstance(type_arg, dict) and type_arg.get('type') == 'constant' and
-                    type_arg.get('value') == 'Location'):
-
-                    location_name = location_arg.get('value', '')
-                    if location_name.endswith("'s Boss Room"):
-                        # Convert to 'Region' check - boss rooms have the same name
-                        # for both region and location
-                        logger.debug(f"Converting can_reach('{location_name}', 'Location') to 'Region'")
-                        result = dict(result)
-                        result['args'] = [
-                            args[0],  # Keep the location name
-                            {'type': 'constant', 'value': 'Region'}  # Change to Region
-                        ] + list(args[2:])  # Keep any additional args
+        # NOTE: We do NOT convert can_reach(boss_room, 'Location') to 'Region'
+        # Boss room locations have access rules (_*Boss functions) that check for
+        # items required to defeat the boss. With boss shuffle, the boss room
+        # location keeps its original access rule even when accessed from a
+        # different level. So can_reach('Location') correctly checks both
+        # region accessibility AND the boss fight requirements.
 
         return result
 
