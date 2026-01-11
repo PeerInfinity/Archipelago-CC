@@ -2,6 +2,7 @@
 
 Handles:
 - can_clear_required_act: Resolved at export-time to can_reach + location_rule_ref
+- Stamps pseudo-item: Converts Has("Stamps", count=N) to WeightedSum for worldgen
 - Game-specific data: chapter_costs, relic_groups for frontend
 
 Note: hat_yarn_costs and hat_craft_order are auto-discovered and available
@@ -13,6 +14,59 @@ from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
+
+# All Death Wish names for generating stamp items
+DEATH_WISHES = [
+    'Beat the Heat', "Snatcher's Hit List", "So You're Back From Outer Space",
+    'Collect-a-thon', 'Rift Collapse: Mafia of Cooks', 'She Speedran from Outer Space',
+    "Mafia's Jumps", 'Vault Codes in the Wind', 'Encore! Encore!',
+    'Snatcher Coins in Mafia Town', 'Security Breach', 'The Great Big Hootenanny',
+    'Rift Collapse: Dead Bird Studio', '10 Seconds until Self-Destruct',
+    'Killing Two Birds', 'Snatcher Coins in Battle of the Birds', 'Zero Jumps',
+    'Speedrun Well', 'Rift Collapse: Sleepy Subcon', 'Boss Rush',
+    'Quality Time with Snatcher', 'Breaching the Contract',
+    'Snatcher Coins in Subcon Forest', 'Bird Sanctuary', 'Rift Collapse: Alpine Skyline',
+    'Wound-Up Windmill', 'The Illness has Speedrun', 'Snatcher Coins in Alpine Skyline',
+    'Camera Tourist', 'The Mustache Gauntlet', 'No More Bad Guys', 'Seal the Deal',
+    'Rift Collapse: Deep Sea', "Cruisin' for a Bruisin'",
+    'Community Rift: Rhythm Jump Studio', 'Community Rift: Twilight Travels',
+    'Community Rift: The Mountain Rift', 'Snatcher Coins in Nyakuza Metro'
+]
+
+# All Zero Jumps location items (locations completed with zero jumps)
+# Each increments the "Zero Jumps" counter by 1 when collected
+ZERO_JUMPS_LOCATIONS = [
+    "Time Rift - Sewers (Zero Jumps)", "Time Rift - Bazaar (Zero Jumps)",
+    "The Big Parade (Zero Jumps)", "Time Rift - Pipe (Zero Jumps)",
+    "Time Rift - Curly Tail Trail (Zero Jumps)", "Time Rift - The Twilight Bell (Zero Jumps)",
+    "The Illness has Spread (Zero Jumps)", "The Finale (Zero Jumps)",
+    "Pink Paw Station (Zero Jumps)", "The Birdhouse (Zero Jumps)",
+    "The Lava Cake (Zero Jumps)", "The Windmill (Zero Jumps)",
+    "The Twilight Bell (Zero Jumps)", "Sleepy Subcon (Zero Jumps)",
+    "Ship Shape (Zero Jumps)", "Welcome to Mafia Town (Zero Jumps)",
+    "Down with the Mafia! (Zero Jumps)", "Cheating the Race (Zero Jumps)",
+    "The Golden Vault (Zero Jumps)", "Dead Bird Studio (Zero Jumps)",
+    "Murder on the Owl Express (Zero Jumps)", "Picture Perfect (Zero Jumps)",
+    "Train Rush (Zero Jumps)", "Contractual Obligations (Zero Jumps)",
+    "Your Contract has Expired (Zero Jumps)", "Toilet of Doom (Zero Jumps)",
+    "Mail Delivery Service (Zero Jumps)", "Time Rift - Alpine Skyline (Zero Jumps)",
+    "Time Rift - The Lab (Zero Jumps)", "Yellow Overpass Station (Zero Jumps)",
+    "Green Clean Station (Zero Jumps)"
+]
+
+# Enemy items (from hit_list, excluding bosses)
+# Each increments the "Enemy" counter when collected
+ENEMY_ITEMS = [
+    "Mafia Goon", "Sleepy Raccoon", "UFO", "Rat", "Shock Squid",
+    "Shromb Egg", "Spider", "Crow", "Pompous Crow", "Fiery Crow",
+    "Express Owl", "Ninja Cat", "Triple Enemy Photo"
+]
+
+# Boss items (from hit_list bosses)
+# Each increments the "Boss" counter when collected
+BOSS_ITEMS = [
+    "Mafia Boss", "Director", "Toilet", "Snatcher", "Toxic Flower", "Mustache Girl"
+]
 
 # Chapter index to name mapping for timepiece costs
 CHAPTER_NAMES = {
@@ -196,4 +250,183 @@ class AHitGameExportHandler(GenericGameExportHandler):
             }
 
         return game_info
+
+    def postprocess_entrance_rule(self, rule: Optional[Dict[str, Any]], entrance_name: str, connected_region: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """Post-process entrance/exit rules to handle AHIT-specific pseudo-items.
+
+        Converts Has("Stamps", count=N) to weighted_sum format because:
+        - "Stamps" is a virtual item tracked by AHIT's custom collect() method
+        - The worldgen world doesn't have this custom tracking
+        - We convert to weighted_sum which counts actual stamp items:
+          - "1 Stamp - X" items have weight 1.0
+          - "2 Stamp - X" items have weight 2.0
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Process children recursively to convert Stamps checks
+        result = self._postprocess_rule_recursive(rule)
+
+        return result
+
+    def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process location rules to handle AHIT-specific pseudo-items."""
+        if not isinstance(rule, dict):
+            return rule
+
+        # Process children recursively first
+        rule = self._postprocess_rule_recursive(rule)
+
+        return rule
+
+    def _postprocess_rule_recursive(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively post-process a rule, converting Stamps checks.
+
+        Handles both formats:
+        - Rule Builder format: {'rule': 'Has', 'args': {'item_name': 'Stamps'}}
+        - AST format: {'type': 'item_check', 'item': 'Stamps'}
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Check for Rule Builder format: Has for pseudo-items
+        if rule.get('rule') == 'Has':
+            args = rule.get('args', {})
+            item_name = args.get('item_name')
+            count = args.get('count', 1)
+
+            if item_name == 'Stamps':
+                return self._create_stamps_weighted_sum(count)
+            elif item_name == 'Zero Jumps':
+                return self._create_zero_jumps_weighted_sum(count)
+            elif item_name == 'Enemy':
+                return self._create_enemy_weighted_sum(count)
+            elif item_name == 'Boss':
+                return self._create_boss_weighted_sum(count)
+
+        # Check for AST format: item_check for pseudo-items
+        if rule.get('type') == 'item_check':
+            item = rule.get('item')
+            count_val = rule.get('count', 1)
+            # In AST format, count might be a dict like {'type': 'constant', 'value': N}
+            if isinstance(count_val, dict):
+                count = count_val.get('value', 1)
+            else:
+                count = count_val
+
+            if item == 'Stamps':
+                return self._create_stamps_weighted_sum(count)
+            elif item == 'Zero Jumps':
+                return self._create_zero_jumps_weighted_sum(count)
+            elif item == 'Enemy':
+                return self._create_enemy_weighted_sum(count)
+            elif item == 'Boss':
+                return self._create_boss_weighted_sum(count)
+
+        # Recursively process children for Rule Builder And/Or
+        if rule.get('rule') in ('And', 'Or'):
+            children = rule.get('children', [])
+            rule['children'] = [self._postprocess_rule_recursive(c) for c in children]
+
+        # Recursively process conditions for AST format and/or
+        if rule.get('type') in ('and', 'or'):
+            conditions = rule.get('conditions', [])
+            rule['conditions'] = [self._postprocess_rule_recursive(c) for c in conditions]
+
+        # Handle nested rules in args (for Rule Builder format)
+        if 'args' in rule and isinstance(rule['args'], list):
+            rule['args'] = [self._postprocess_rule_recursive(a) if isinstance(a, dict) else a
+                           for a in rule['args']]
+
+        return rule
+
+    def _create_stamps_weighted_sum(self, threshold: int) -> Dict[str, Any]:
+        """Create a weighted_sum rule for stamp counting.
+
+        Each Death Wish has two stamp items:
+        - "1 Stamp - {DW name}": worth 1 stamp
+        - "2 Stamp - {DW name}": worth 2 stamps (bonus completion)
+        """
+        items = []
+        for dw_name in DEATH_WISHES:
+            items.append([f"1 Stamp - {dw_name}", 1.0])
+            items.append([f"2 Stamp - {dw_name}", 2.0])
+
+        logger.debug(f"Converting Has('Stamps', {threshold}) to weighted_sum with {len(items)} items")
+
+        return {
+            "rule": "weighted_sum",
+            "_original_ast_type": "helper",
+            "_converted_from_ast": True,
+            "args": [
+                {"rule": "Constant", "args": {"value": float(threshold)}},
+                {"rule": "Constant", "args": {"value": items}}
+            ]
+        }
+
+    def _create_zero_jumps_weighted_sum(self, threshold: int) -> Dict[str, Any]:
+        """Create a weighted_sum rule for Zero Jumps counting.
+
+        Zero Jumps items are location achievements like "{Location} (Zero Jumps)".
+        Each item counts as 1 toward the "Zero Jumps" counter.
+        """
+        items = []
+        for loc_name in ZERO_JUMPS_LOCATIONS:
+            items.append([loc_name, 1.0])
+
+        logger.debug(f"Converting Has('Zero Jumps', {threshold}) to weighted_sum with {len(items)} items")
+
+        return {
+            "rule": "weighted_sum",
+            "_original_ast_type": "helper",
+            "_converted_from_ast": True,
+            "args": [
+                {"rule": "Constant", "args": {"value": float(threshold)}},
+                {"rule": "Constant", "args": {"value": items}}
+            ]
+        }
+
+    def _create_enemy_weighted_sum(self, threshold: int) -> Dict[str, Any]:
+        """Create a weighted_sum rule for Enemy counting.
+
+        Enemy items are from the hit_list (excluding bosses).
+        Each item counts as 1 toward the "Enemy" counter.
+        """
+        items = []
+        for item_name in ENEMY_ITEMS:
+            items.append([item_name, 1.0])
+
+        logger.debug(f"Converting Has('Enemy', {threshold}) to weighted_sum with {len(items)} items")
+
+        return {
+            "rule": "weighted_sum",
+            "_original_ast_type": "helper",
+            "_converted_from_ast": True,
+            "args": [
+                {"rule": "Constant", "args": {"value": float(threshold)}},
+                {"rule": "Constant", "args": {"value": items}}
+            ]
+        }
+
+    def _create_boss_weighted_sum(self, threshold: int) -> Dict[str, Any]:
+        """Create a weighted_sum rule for Boss counting.
+
+        Boss items are from the bosses list in hit_list.
+        Each item counts as 1 toward the "Boss" counter.
+        """
+        items = []
+        for item_name in BOSS_ITEMS:
+            items.append([item_name, 1.0])
+
+        logger.debug(f"Converting Has('Boss', {threshold}) to weighted_sum with {len(items)} items")
+
+        return {
+            "rule": "weighted_sum",
+            "_original_ast_type": "helper",
+            "_converted_from_ast": True,
+            "args": [
+                {"rule": "Constant", "args": {"value": float(threshold)}},
+                {"rule": "Constant", "args": {"value": items}}
+            ]
+        }
 
