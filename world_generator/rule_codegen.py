@@ -448,6 +448,12 @@ class RuleCodeGenerator:
             if var_name:
                 assigned.add(var_name)
 
+        # Check for augmented assign statements (+=, -=, etc.)
+        if rule_type == 'aug_assign':
+            var_name = rule.get('target')
+            if var_name:
+                assigned.add(var_name)
+
         # Recursively scan nested rules
         for key, value in rule.items():
             if isinstance(value, dict):
@@ -511,6 +517,12 @@ class RuleCodeGenerator:
                 if 'name' in result:
                     result['name'] = rename_map[var_name]
 
+        # Handle augmented assign statements - rename the target variable
+        if rule_type == 'aug_assign':
+            var_name = result.get('target')
+            if var_name and var_name in rename_map:
+                result['target'] = rename_map[var_name]
+
         # Handle name references
         if rule_type == 'name':
             name = result.get('name', '')
@@ -520,6 +532,9 @@ class RuleCodeGenerator:
         # Recursively process nested rules
         for key, value in rule.items():
             if key in ('var', 'name') and rule_type in ('assign', 'name'):
+                # Already handled above
+                continue
+            if key == 'target' and rule_type == 'aug_assign':
                 # Already handled above
                 continue
             if isinstance(value, dict):
@@ -2845,6 +2860,32 @@ class RuleCodeGenerator:
                         # assume 0 (no blocking elements)
                         local_vars[name] = 0
 
+            elif stmt_type == 'aug_assign':
+                # Handle augmented assignment: {"type": "aug_assign", "target": ..., "op": ..., "value": ...}
+                name = stmt.get('target', '')
+                op = stmt.get('op', '+')
+                value = stmt.get('value', {})
+
+                # Try to evaluate the value
+                eval_value = self._try_evaluate_expr(value, local_vars)
+
+                if name in local_vars and eval_value is not None:
+                    try:
+                        if op == '+':
+                            local_vars[name] = local_vars[name] + eval_value
+                        elif op == '-':
+                            local_vars[name] = local_vars[name] - eval_value
+                        elif op == '*':
+                            local_vars[name] = local_vars[name] * eval_value
+                        elif op == '/':
+                            local_vars[name] = local_vars[name] / eval_value
+                        elif op == '//':
+                            local_vars[name] = local_vars[name] // eval_value
+                        elif op == '%':
+                            local_vars[name] = local_vars[name] % eval_value
+                    except (TypeError, ZeroDivisionError):
+                        pass
+
             elif stmt_type == 'if_statement':
                 # Try to evaluate if statements that return early
                 test = stmt.get('test', {})
@@ -3175,6 +3216,20 @@ class RuleCodeGenerator:
                 else:
                     # Unsupported operator
                     return None
+
+            elif stmt_type == 'aug_assign':
+                # Handle augmented assignment in separate format: {"type": "aug_assign", "target": ..., "op": ..., "value": ...}
+                name = stmt.get('target', '')
+                op = stmt.get('op', '+')  # +, -, *, /
+                value = stmt.get('value', {})
+
+                if name not in var_expressions:
+                    return None
+                right_expr = self._expr_to_rule_builder(value, var_expressions)
+                if right_expr is None:
+                    return None
+                self.required_imports.add('Arithmetic')
+                var_expressions[name] = f'Arithmetic({var_expressions[name]}, "{op}", {right_expr})'
 
             elif stmt_type == 'for_range':
                 # Handle: for _ in range(count): body
@@ -4962,6 +5017,8 @@ class HelperCodeGenerator:
 
         if stmt_type == 'assign':
             return self._generate_assign(stmt)
+        elif stmt_type == 'aug_assign':
+            return self._generate_aug_assign(stmt)
         elif stmt_type == 'tuple_assign':
             return self._generate_tuple_assign(stmt)
         elif stmt_type == 'return':
@@ -4992,6 +5049,21 @@ class HelperCodeGenerator:
         if op != '=':
             return f"{name} {op} {value}"
         return f"{name} = {value}"
+
+    def _generate_aug_assign(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python augmented assignment statement (+=, -=, *=, /=, etc.).
+
+        The aug_assign format uses:
+        - 'target': the variable name being modified
+        - 'op': the operator (+, -, *, /, etc.) - note: without the '='
+        - 'value': the expression to apply
+        """
+        target = stmt.get('target', '_')
+        op = stmt.get('op', '+')
+        value = self._generate_expression(stmt.get('value', {'type': 'constant', 'value': 0}))
+
+        # Convert operator to augmented assignment form
+        return f"{target} {op}= {value}"
 
     def _generate_tuple_assign(self, stmt: Dict[str, Any]) -> str:
         """Generate Python tuple unpacking assignment statement (e.g., a, b = func())."""
@@ -5115,6 +5187,7 @@ class HelperCodeGenerator:
             'name': self._expr_name,
             'param_ref': self._expr_name,  # alias for helper parameter references
             'variable': self._expr_name,  # alias
+            'call': self._expr_call,  # for built-in function calls like min, max, len
             'item_check': self._expr_item_check,
             'item_check_count': self._expr_item_check_count,  # for SM helpers
             'item_check_with_mapping': self._expr_item_check_with_mapping,  # for SM item name mapping
@@ -6522,6 +6595,20 @@ class HelperCodeGenerator:
 
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
+
+    def _expr_call(self, expr: Dict[str, Any]) -> str:
+        """Generate expression for simple function calls.
+
+        Handles {"type": "call", "func": "min", "args": [...]} format.
+        This is used for Python built-in functions like min, max, len, etc.
+        """
+        func_name = expr.get('func', '')
+        args = expr.get('args', [])
+
+        # Generate argument expressions
+        arg_exprs = [self._generate_expression(a) for a in args]
+
+        return f"{func_name}({', '.join(arg_exprs)})"
 
     def _expr_function_call(self, expr: Dict[str, Any]) -> str:
         """Generate function call expression."""
