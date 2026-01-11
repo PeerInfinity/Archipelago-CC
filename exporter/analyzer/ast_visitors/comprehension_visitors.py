@@ -299,7 +299,18 @@ class ComprehensionVisitorMixin:
             # Handle 'name' type - this is where we substitute
             if node_type == 'name' and node.get('name') == var_name:
                 # Replace the name reference with a constant value
-                return {'type': 'constant', 'value': value}
+                # For Location/Region/Entrance objects, extract the name and preserve type info
+                if hasattr(value, 'parent_region') and not hasattr(value, 'entrances'):
+                    # This is a Location object - store with type marker
+                    return {'type': 'constant', 'value': value.name if hasattr(value, 'name') else str(value), '_object_type': 'Location'}
+                elif hasattr(value, 'entrances'):
+                    # This is a Region object - store with type marker
+                    return {'type': 'constant', 'value': value.name if hasattr(value, 'name') else str(value), '_object_type': 'Region'}
+                elif hasattr(value, 'connected_region') and hasattr(value, 'parent_region'):
+                    # This is an Entrance object - store with type marker
+                    return {'type': 'constant', 'value': value.name if hasattr(value, 'name') else str(value), '_object_type': 'Entrance'}
+                else:
+                    return {'type': 'constant', 'value': value}
 
             # Handle f_string that might reference the variable
             if node_type == 'f_string':
