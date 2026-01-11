@@ -55,6 +55,12 @@ class Hook(BaseHook):
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 
+        # Collect explain stats as soon as worldgen world is ready (before sphere comparison)
+        # This ensures stats are collected regardless of whether the test passes or fails
+        if not self.explain_stats_collected:
+            self._collect_explain_stats()
+            self.explain_stats_collected = True
+
         # Filter to only hashable addresses (some games like ALTTP have list-type addresses)
         remaining_locations = [location.address for location in mw.worlds[1].get_locations()
                                if location.address is not None and not isinstance(location.address, list)]
@@ -110,12 +116,6 @@ class Hook(BaseHook):
 
 
         # Do the magic here, set `self.status` accordingly to `GenOutcome.Failure`/`GenOutcome.Success`
-
-        # Collect explain stats on first successful run (stats are consistent across runs for same game)
-        # Use the worldgen multiworld from TrackerCore, not the original world
-        if self.status == GenOutcome.Success and not self.explain_stats_collected:
-            self._collect_explain_stats()
-            self.explain_stats_collected = True
 
     def _collect_explain_stats(self) -> None:
         """
