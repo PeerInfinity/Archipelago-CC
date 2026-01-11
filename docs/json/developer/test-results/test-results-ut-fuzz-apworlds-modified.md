@@ -2,11 +2,11 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-11 04:43:38
+**Generated:** 2026-01-11 05:12:23
 
-**Source Data Created:** 2026-01-10T22:27:06.829330
+**Source Data Created:** 2026-01-11T05:12:23.318879
 
-**Source Data Last Updated:** 2026-01-10T22:27:06.829336
+**Source Data Last Updated:** 2026-01-11T05:12:23.318886
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -16,28 +16,28 @@
 
 **Parallel Jobs:** 2
 
-**Timeout Per Generation:** 15s
+**Timeout Per Generation:** 60s
 
 ## Summary
 
 - **Total Games:** 123
-- **Games with 100% Pass Rate:** 21 (17.1%)
-- **Games with Failures:** 102 (82.9%)
+- **Games with 100% Pass Rate:** 23 (18.7%)
+- **Games with Failures:** 100 (81.3%)
 - **Total Fuzz Runs:** 1230
-- **Successful Runs:** 306 (24.9%)
-- **Failed Runs:** 744
-- **Timed Out Runs:** 81
-- **Ignored Runs:** 99
+- **Successful Runs:** 312 (25.4%)
+- **Failed Runs:** 778
+- **Timed Out Runs:** 19
+- **Ignored Runs:** 121
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|
 | [A Dance of Fire and Ice](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=adofai) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [A Difficult Game About Climbing](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=difficult_climbing) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [A Difficult Game About Climbing](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=difficult_climbing) | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
 | [ANIMAL WELL](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=animal_well) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Actraiser](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=actraiser) | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
-| [Against the Storm](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=against_the_storm) | ❌ | 10 | 0 | 4 | 6 | 0 | ❌ 0.0% |
+| [Against the Storm](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=against_the_storm) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Air Delivery](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=air_delivery) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [An Untitled Story](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=aus) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Anodyne](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=anodyne) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
@@ -46,26 +46,26 @@
 | [Ape Escape 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ape_escape_3) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Astalon](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=astalon) | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
 | [Autopelago](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=autopelago) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Axiom Verge](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=axiomverge) | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
+| [Axiom Verge](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=axiomverge) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Balatro](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=balatro) | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
 | [Brotato](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=brotato) | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
-| [Castlevania: Dawn of Sorrow](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=cv_dos) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Cavern of Dreams](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=cavern_of_dreams) | ❌ | 10 | 0 | 8 | 2 | 0 | ❌ 0.0% |
-| [ChecksMate](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=checksmate) | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
+| [Castlevania: Dawn of Sorrow](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=cv_dos) | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
+| [Cavern of Dreams](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=cavern_of_dreams) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [ChecksMate](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=checksmate) | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
 | [Chrono Trigger Jets of Time](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ctjot) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [ClusterTruck](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=cluster_truck) | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
 | [Corn Kidz 64](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=cornkidz64) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [CrossCode](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=crosscode) | ❌ | 10 | 0 | 5 | 5 | 0 | ❌ 0.0% |
+| [CrossCode](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=crosscode) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Crystal Project](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=crystal_project) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Crystalis](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=crystalis) | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
+| [Crystalis](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=crystalis) | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
 | [Cuphead](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=cuphead) | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% |
 | [DORONKO WANKO](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=doronko_wanko) | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
 | [Deep Rock Galactic](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=deep_rock_galactic) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Diddy Kong Racing](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=diddy_kong_racing) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [Diddy Kong Racing](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=diddy_kong_racing) | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
 | [Digimon World](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=dw1) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Dome Keeper](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=dome_keeper) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Duke Nukem 3D](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=duke3d) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Final Fantasy Tactics A2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffta2) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [Duke Nukem 3D](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=duke3d) | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| [Final Fantasy Tactics A2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffta2) | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
 | [Final Fantasy Tactics Advance](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffta) | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | [Fire Emblem Sacred Stones](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=fe8) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Frogmonster](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=frogmonster) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
@@ -74,15 +74,15 @@
 | [Golden Sun The Lost Age](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=gstla) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Grim Dawn](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=grim_dawn) | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% |
 | [Hammerwatch](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=hammerwatch) | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
-| [Hatsune Miku Project Diva Mega Mix+](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=megamix) | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
+| [Hatsune Miku Project Diva Mega Mix+](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=megamix) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Here Comes Niko!](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=hcniko) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Iji](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=iji) | ❌ | 10 | 0 | 4 | 6 | 0 | ❌ 0.0% |
+| [Iji](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=iji) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Into the Breach](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=into_the_breach) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Isles Of Sea And Sky](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=isles_of_sea_and_sky) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Ittle Dew 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ittle_dew_2) | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
 | [Jigsaw](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=jigsaw) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [K-On! After School Live!!](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=kon) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Keep Talking and Nobody Explodes](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ktane) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [Keep Talking and Nobody Explodes](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ktane) | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
 | [Kingdom Hearts Birth by Sleep](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=khbbs) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Kingdom Hearts Chain of Memories](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=khcom) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Kingdom Hearts RE Chain of Memories](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=khrecom) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
@@ -95,19 +95,19 @@
 | [Luigi's Mansion](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=luigismansion) | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
 | [Lunacid](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=lunacid) | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | [Majora's Mask Recompiled](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mm_recomp) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Mario Kart Double Dash](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mario_kart_double_dash) | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% |
+| [Mario Kart Double Dash](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mario_kart_double_dash) | ❌ | 10 | 0 | 1 | 9 | 0 | ❌ 0.0% |
 | [MetroCUBEvania](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=metrocubevania) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Metroid Fusion](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=metroidfusion) | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
+| [Metroid Fusion](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=metroidfusion) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Metroid Zero Mission](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=mzm) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Minishoot Adventures](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=minishoot) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Minit](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=minit) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Monster Sanctuary](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=monster_sanctuary) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Nine Sols](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=nine_sols) | ❌ | 10 | 0 | 0 | 8 | 2 | ❌ 0.0% |
-| [Ori and the Blind Forest](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=oribf) | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% |
-| [Ori and the Will of the Wisps](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ori_wotw) | ❌ | 10 | 0 | 4 | 6 | 0 | ❌ 0.0% |
-| [Oxygen Not Included](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=oni) | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
+| [Nine Sols](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=nine_sols) | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
+| [Ori and the Blind Forest](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=oribf) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [Ori and the Will of the Wisps](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ori_wotw) | ❌ | 10 | 0 | 1 | 7 | 2 | ❌ 0.0% |
+| [Oxygen Not Included](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=oni) | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% |
 | [Pizza Tower](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=pizza_tower) | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
-| [Pokemon FireRed and LeafGreen](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=pokemon_frlg) | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% |
+| [Pokemon FireRed and LeafGreen](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=pokemon_frlg) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Pokemon Mystery Dungeon Explorers of Sky](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=pmd_eos) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Pseudoregalia](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=pseudoregalia) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Rabi-Ribi](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=rabi_ribi) | ❌ | 10 | 0 | 1 | 0 | 9 | ❌ 0.0% |
@@ -120,49 +120,48 @@
 | [Sentinels of the Multiverse](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sotm) | ❌ | 10 | 0 | 8 | 2 | 0 | ❌ 0.0% |
 | [Shadow The Hedgehog](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=shadow_the_hedgehog) | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% |
 | [Ship of Harkinian](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=oot_soh) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Simon Tatham's Portable Puzzle Collection](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sgtpuzzles) | ❌ | 10 | 8 | 0 | 2 | 0 | ⚠️ 80.0% |
+| [Simon Tatham's Portable Puzzle Collection](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sgtpuzzles) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Sly 2: Band of Thieves](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sly2) | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
-| [Sly Cooper and the Thievius Raccoonus](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sly1) | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
+| [Sly Cooper and the Thievius Raccoonus](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sly1) | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
 | [Sonic Adventure DX](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sadx) | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
-| [Sonic Heroes](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sonic_heroes) | ❌ | 10 | 0 | 0 | 6 | 4 | ❌ 0.0% |
+| [Sonic Heroes](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sonic_heroes) | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
 | [Sonic Rush](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sonic_rush) | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
 | [Sonic the Hedgehog 1](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sonic1) | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
 | [Soul Blazer](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=soulblazer) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Spinball](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=spinball) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Spyro 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=spyro3) | ❌ | 10 | 0 | 5 | 3 | 2 | ❌ 0.0% |
+| [Spyro 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=spyro3) | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
 | [Stacklands](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=stacklands) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Star Fox 64](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=star_fox_64) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Star Wars Episode I Racer](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=swr) | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
+| [Star Wars Episode I Racer](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=swr) | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% |
 | [Super Cat Planet](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=scp) | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | [Symphony of the Night](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sotn) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [System Shock 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ss2) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [TCG Card Shop Simulator](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tcg_card_shop_simulator) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [TOEM: A Photo Adventure](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=toem) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Tetris Attack](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tetrisattack) | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| [Tetris Attack](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tetrisattack) | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
 | [Tevi](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tevi) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [The Legend of Zelda - Oracle of Seasons](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tloz_oos) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [The Legend of Zelda - Phantom Hourglass](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tloz_ph) | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% |
+| [The Legend of Zelda - Phantom Hourglass](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tloz_ph) | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
 | [The Sims 4](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sims4) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [ToeJam and Earl](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tje) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [TurnipBoy](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=turnipboy) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Tyrian](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tyrian) | ❌ | 10 | 3 | 5 | 0 | 2 | ❌ 30.0% |
+| [Tyrian](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tyrian) | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% |
 | [Vampire Survivors](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=vampire_survivors) | ❌ | 10 | 3 | 1 | 0 | 6 | ❌ 30.0% |
 | [Wario Land](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=wl) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Watery Words](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=waterywords) | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% |
+| [Watery Words](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=waterywords) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Wordipelago](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=wordipelago) | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
 | [XCOM 2 War of the Chosen](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=x2wotc) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Yu-Gi-Oh! Dungeon Dice Monsters](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=yugiohddm) | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | [Yu-Gi-Oh! Forbidden Memories](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=fm) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Zelda II: The Adventure of Link](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=zelda2) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [osu!](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=osu) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [plateup](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=plateup) | ❌ | 10 | 7 | 1 | 2 | 0 | ⚠️ 70.0% |
+| [plateup](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=plateup) | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
 
 ## Error Details
 
 ### A Difficult Game About Climbing
 
 - **None**: 9 occurrence(s)
-- **FillError**: 1 occurrence(s)
 
 ### ANIMAL WELL
 
@@ -176,7 +175,7 @@
 ### Against the Storm
 
 - **FillError**: 4 occurrence(s)
-- **<class 'TimeoutError'>**: 6 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Air Delivery
 
@@ -213,22 +212,25 @@
 
 ### Axiom Verge
 
-- **None**: 5 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Balatro
 
 - **list index out of range**: 3 occurrence(s)
 - **None**: 3 occurrence(s)
 
+### Castlevania: Dawn of Sorrow
+
+- **None**: 7 occurrence(s)
+
 ### Cavern of Dreams
 
-- **None**: 6 occurrence(s)
-- **<class 'TimeoutError'>**: 2 occurrence(s)
+- **None**: 8 occurrence(s)
 - **FillError**: 2 occurrence(s)
 
 ### ChecksMate
 
-- **None**: 3 occurrence(s)
+- **None**: 2 occurrence(s)
 
 ### Chrono Trigger Jets of Time
 
@@ -244,8 +246,7 @@
 
 ### CrossCode
 
-- **None**: 5 occurrence(s)
-- **<class 'TimeoutError'>**: 5 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Crystal Project
 
@@ -255,7 +256,6 @@
 
 ### Crystalis
 
-- **FillError**: 1 occurrence(s)
 - **None**: 7 occurrence(s)
 
 ### DORONKO WANKO
@@ -269,7 +269,6 @@
 
 ### Diddy Kong Racing
 
-- **FillError**: 5 occurrence(s)
 - **None**: 5 occurrence(s)
 
 ### Digimon World
@@ -280,13 +279,10 @@
 ### Duke Nukem 3D
 
 - **None**: 9 occurrence(s)
-- **FillError**: 1 occurrence(s)
 
 ### Final Fantasy Tactics A2
 
-- **Too many non-special starting units to randomize**: 6 occurrence(s)
-- **FillError**: 3 occurrence(s)
-- **'' is not in list**: 1 occurrence(s)
+- **Too many non-special starting units to randomize**: 7 occurrence(s)
 
 ### Final Fantasy Tactics Advance
 
@@ -320,14 +316,9 @@
 - **FillError**: 1 occurrence(s)
 - **None**: 4 occurrence(s)
 
-### Hatsune Miku Project Diva Mega Mix+
-
-- **None**: 8 occurrence(s)
-
 ### Iji
 
-- **None**: 4 occurrence(s)
-- **<class 'TimeoutError'>**: 6 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Into the Breach
 
@@ -344,7 +335,6 @@
 
 ### Keep Talking and Nobody Explodes
 
-- **FillError**: 3 occurrence(s)
 - **None**: 7 occurrence(s)
 
 ### Kingdom Hearts Birth by Sleep
@@ -378,11 +368,8 @@
 
 ### Mario Kart Double Dash
 
-- **<class 'TimeoutError'>**: 10 occurrence(s)
-
-### Metroid Fusion
-
-- **None**: 2 occurrence(s)
+- **None**: 1 occurrence(s)
+- **<class 'TimeoutError'>**: 9 occurrence(s)
 
 ### Metroid Zero Mission
 
@@ -402,16 +389,15 @@
 
 ### Nine Sols
 
-- **<class 'TimeoutError'>**: 8 occurrence(s)
+- **None**: 8 occurrence(s)
 
 ### Ori and the Blind Forest
 
-- **<class 'TimeoutError'>**: 10 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Ori and the Will of the Wisps
 
-- **FillError**: 3 occurrence(s)
-- **<class 'TimeoutError'>**: 6 occurrence(s)
+- **<class 'TimeoutError'>**: 7 occurrence(s)
 - **None of the available entrances are valid targets for the available exits.
 Randomization stage is placing dead ends and requires new region/exit access by default
 Placeable entrances: {0: [GladesTown.MotayHutInside (Door) (Player 1), GladesTown.StorageHut (Door) (Player 1)]}
@@ -422,7 +408,6 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 ### Oxygen Not Included
 
 - ** - 1 already exists in the location cache.**: 1 occurrence(s)
-- **FillError**: 1 occurrence(s)
 
 ### Pizza Tower
 
@@ -430,7 +415,7 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### Pokemon FireRed and LeafGreen
 
-- **<class 'TimeoutError'>**: 10 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Pokemon Mystery Dungeon Explorers of Sky
 
@@ -484,18 +469,14 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 - **None**: 10 occurrence(s)
 
-### Simon Tatham's Portable Puzzle Collection
-
-- **<class 'TimeoutError'>**: 2 occurrence(s)
-
 ### Sly 2: Band of Thieves
 
 - **None**: 8 occurrence(s)
 
 ### Sly Cooper and the Thievius Raccoonus
 
-- **FillError**: 2 occurrence(s)
-- **None**: 4 occurrence(s)
+- **FillError**: 1 occurrence(s)
+- **None**: 2 occurrence(s)
 
 ### Sonic Adventure DX
 
@@ -503,7 +484,7 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### Sonic Heroes
 
-- **<class 'TimeoutError'>**: 6 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Sonic Rush
 
@@ -519,8 +500,7 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### Spyro 3
 
-- **None**: 5 occurrence(s)
-- **<class 'TimeoutError'>**: 3 occurrence(s)
+- **None**: 8 occurrence(s)
 
 ### Stacklands
 
@@ -532,7 +512,6 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### Star Wars Episode I Racer
 
-- **FillError**: 1 occurrence(s)
 - **None**: 2 occurrence(s)
 
 ### Super Cat Planet
@@ -551,7 +530,6 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 ### Tetris Attack
 
 - **None**: 8 occurrence(s)
-- **FillError**: 1 occurrence(s)
 
 ### The Legend of Zelda - Oracle of Seasons
 
@@ -559,9 +537,7 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### The Legend of Zelda - Phantom Hourglass
 
-- **FillError**: 1 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
-- **None**: 6 occurrence(s)
+- **None**: 7 occurrence(s)
 - **Phantom Hourglass: failed GER after 10 attempts.**: 2 occurrence(s)
 
 ### The Sims 4
@@ -579,7 +555,6 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### Tyrian
 
-- **FillError**: 2 occurrence(s)
 - **None**: 3 occurrence(s)
 
 ### Vampire Survivors
@@ -592,8 +567,7 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### Watery Words
 
-- **None**: 9 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Wordipelago
 
@@ -614,7 +588,6 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 ### plateup
 
 - **FillError**: 1 occurrence(s)
-- **<class 'TimeoutError'>**: 2 occurrence(s)
 
 
 ## Notes
