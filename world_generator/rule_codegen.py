@@ -5208,10 +5208,18 @@ class HelperCodeGenerator:
                 op = args.get('op', '==')
                 right = args.get('right')
                 # Check if either side is a placement_lookup
-                # Placement lookups (location_item_name checks) depend on actual item placements
-                # which are not available during tracking. For tracking purposes, these comparisons
-                # should evaluate to False so that only the simple item requirement checks matter.
+                # Placement lookups (location_item_name checks) depend on actual item placements.
+                # We check the actual placements to determine the correct result.
+                # This correctly handles self-locking rules: if the key IS placed in the locked region,
+                # the placement check should return True, making the region accessible without the key.
                 if self._is_placement_lookup(left) or self._is_placement_lookup(right):
+                    # Try to resolve the comparison using actual placements
+                    placement_result = self._check_placement_comparison(left, right, op)
+                    if placement_result is True:
+                        return 'True'
+                    elif placement_result is False:
+                        return 'False'
+                    # If placement_result is None, fall back to False for safety
                     if op in ('==', 'eq'):
                         return 'False'
                     elif op in ('!=', 'ne'):
