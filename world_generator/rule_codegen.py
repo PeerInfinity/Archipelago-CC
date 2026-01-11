@@ -5631,7 +5631,19 @@ class HelperCodeGenerator:
         return f"({if_true} if {test} else {if_false_code})"
 
     def _expr_min(self, expr: Dict[str, Any]) -> str:
-        """Generate min() call."""
+        """Generate min() call.
+
+        Handles two formats:
+        1. Args list: {"type": "min", "args": [expr1, expr2, ...]}
+        2. Iterable: {"type": "min", "iterable": {...}}
+        """
+        # Handle iterable form (e.g., min(x for x in iterable))
+        iterable = expr.get('iterable')
+        if iterable:
+            iterable_expr = self._generate_expression(iterable)
+            return f"min({iterable_expr})"
+
+        # Handle args list form
         args = expr.get('args', [])
         if not args:
             return '0'
@@ -5639,7 +5651,19 @@ class HelperCodeGenerator:
         return f"min({', '.join(arg_exprs)})"
 
     def _expr_max(self, expr: Dict[str, Any]) -> str:
-        """Generate max() call."""
+        """Generate max() call.
+
+        Handles two formats:
+        1. Args list: {"type": "max", "args": [expr1, expr2, ...]}
+        2. Iterable: {"type": "max", "iterable": {...}}
+        """
+        # Handle iterable form (e.g., max(x for x in iterable))
+        iterable = expr.get('iterable')
+        if iterable:
+            iterable_expr = self._generate_expression(iterable)
+            return f"max({iterable_expr})"
+
+        # Handle args list form
         args = expr.get('args', [])
         if not args:
             return '0'
@@ -6340,10 +6364,18 @@ class HelperCodeGenerator:
         result = f"[{element} for {target_name} in {iterator}]"
 
         # Handle optional if condition
+        # Support both 'condition' (singular) and 'conditions' (plural)
         condition = comprehension.get('condition')
+        conditions = comprehension.get('conditions', [])
+
         if condition:
             cond_expr = self._generate_expression(condition)
             result = f"[{element} for {target_name} in {iterator} if {cond_expr}]"
+        elif conditions:
+            # Join multiple conditions with AND logic
+            cond_exprs = [self._generate_expression(c) for c in conditions]
+            cond_str = ' and '.join(f"({c})" for c in cond_exprs) if len(cond_exprs) > 1 else cond_exprs[0]
+            result = f"[{element} for {target_name} in {iterator} if {cond_str}]"
 
         return result
 

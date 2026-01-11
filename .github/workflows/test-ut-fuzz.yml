@@ -19,7 +19,7 @@ on:
         description: 'Timeout per generation in seconds'
         required: true
         type: number
-        default: 15
+        default: 60
 
       seed:
         description: 'Random seed for reproducibility (leave empty for random)'
