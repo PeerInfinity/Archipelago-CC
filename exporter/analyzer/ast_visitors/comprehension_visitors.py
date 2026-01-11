@@ -157,6 +157,70 @@ class ComprehensionVisitorMixin:
             logging.error(f"Error in visit_ListComp: {e}")
             return None
 
+    def visit_SetComp(self, node: ast.SetComp):
+        """ Handle set comprehensions like {expr for x in items}.
+
+        Set comprehensions are treated similarly to list/generator expressions
+        for the purposes of analysis. They can be used with len(), etc.
+
+        For expressions like {sprites[i]["sprite"] == "Claw Grabber" for i in (17, 18, 25)},
+        we analyze them as set_comprehension type which can be processed by len() handlers.
+        """
+        try:
+            logging.debug(f"\n--- visit_SetComp --- (generators: {len(node.generators)})")
+
+            # Analyze the element expression
+            elt_result = self.visit(node.elt)
+            if elt_result is None:
+                logging.error(f"Failed to analyze element expression in SetComp: {ast.dump(node.elt)}")
+                return None
+
+            # Handle single generator (simple case)
+            if len(node.generators) == 1:
+                comprehension_result = self.visit(node.generators[0])
+                if comprehension_result is None:
+                    logging.error(f"Failed to analyze comprehension in SetComp")
+                    return None
+
+                # Return as set_comprehension type - includes element and iterator info
+                # This allows len() handlers to potentially expand and evaluate the set
+                return {
+                    'type': 'set_comprehension',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
+
+            # Handle multiple generators (nested comprehensions)
+            logging.debug(f"Processing nested set comprehension with {len(node.generators)} generators")
+
+            # Analyze all comprehension generators first
+            comprehension_results = []
+            for i, gen in enumerate(node.generators):
+                comp_result = self.visit(gen)
+                if comp_result is None:
+                    logging.error(f"Failed to analyze comprehension {i} in nested SetComp")
+                    return None
+                comprehension_results.append(comp_result)
+                logging.debug(f"  Generator {i}: target={comp_result.get('target')}, iterator type={comp_result.get('iterator', {}).get('type')}")
+
+            # Build nested structure from inside out
+            current_element = elt_result
+
+            # Process generators in reverse order (innermost first)
+            for i in range(len(comprehension_results) - 1, -1, -1):
+                current_element = {
+                    'type': 'set_comprehension',
+                    'element': current_element,
+                    'comprehension': comprehension_results[i]
+                }
+
+            logging.debug(f"Nested SetComp complete: {len(node.generators)} levels")
+            return current_element
+
+        except Exception as e:
+            logging.error(f"Error in visit_SetComp: {e}")
+            return None
+
     def visit_comprehension(self, node: ast.comprehension):
         """ Handle the 'for target in iter [if condition]' part of comprehensions/generators. """
         try:
