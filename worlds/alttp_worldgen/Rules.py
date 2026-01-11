@@ -159,9 +159,9 @@ def is_not_bunny(state: "CollectionState", player: int, region = None) -> bool:
 
 def tr_big_key_chest_keys_needed(state: "CollectionState", player: int) -> bool:
     item = location_item_name(state, 'Turtle Rock - Big Key Chest', player)
-    if (item in (('Small Key (Turtle Rock)', 1),)):
+    if (item in [('Small Key (Turtle Rock)', 1)]):
         return 0
-    if (item in (('Big Key (Turtle Rock)', 1),)):
+    if (item in [('Big Key (Turtle Rock)', 1)]):
         return 4
     return 6
 
@@ -262,6 +262,13 @@ def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
     multiworld = world.multiworld
+
+    # For no_logic mode, skip all rules (for single-player)
+    if hasattr(world.options, 'glitches_required') and world.options.glitches_required.value == 4:
+        if multiworld.players == 1:
+            for exit in multiworld.get_region('Menu', player).exits:
+                exit.hide_path = True
+            return
 
     # Entrance rules
     world.set_rule(

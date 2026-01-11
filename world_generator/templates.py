@@ -1007,6 +1007,32 @@ def {func_name}(state: "CollectionState", player: int) -> bool:
     if not rules_content.strip():
         rules_content = '    pass  # No non-trivial rules'
 
+    # Check if game has no_logic mode in glitches_required option
+    # If so, add early return for single-player no_logic (skip all rules)
+    no_logic_handling = ''
+    option_defs = data.metadata.option_definitions
+    if 'glitches_required' in option_defs:
+        glitch_opt = option_defs['glitches_required']
+        name_lookup = glitch_opt.get('name_lookup', {})
+        # Check if there's a no_logic option value
+        no_logic_value = None
+        for value, name in name_lookup.items():
+            if name == 'no_logic':
+                no_logic_value = value
+                break
+        if no_logic_value is not None:
+            no_logic_handling = f'''
+    # For no_logic mode, skip all rules (for single-player)
+    if hasattr(world.options, 'glitches_required') and world.options.glitches_required.value == {no_logic_value}:
+        if multiworld.players == 1:
+            for exit in multiworld.get_region('Menu', player).exits:
+                exit.hide_path = True
+            return
+'''
+    # Prepend no_logic handling to rules_content
+    if no_logic_handling:
+        rules_content = no_logic_handling + rules_content
+
     # Add dungeon boss setup call if dungeons exist
     dungeon_setup_section = ''
     dungeon_setup_function = ''
