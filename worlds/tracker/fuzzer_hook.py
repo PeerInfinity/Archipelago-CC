@@ -108,6 +108,11 @@ class Hook(BaseHook):
         # These are configuration issues, not logic mismatches
         if exc is not None and self.status is None:
             exc_str = str(exc)
+            # Handle various fill-related errors that are caused by option configurations
             if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
+                return GenOutcome.OptionError, exc
+            # Handle FillError when options create impossible-to-fill seeds
+            # (e.g., accessibility: minimal combined with level_shuffle in SMW)
+            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
