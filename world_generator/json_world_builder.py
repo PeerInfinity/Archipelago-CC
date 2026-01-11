@@ -154,12 +154,15 @@ class JSONWorldBuilder:
         self.multiworld.state = CollectionState(self.multiworld)
 
         # Run generation steps to create regions, items, and rules
+        # pre_fill is included to place canonical items so location_item_name() works
+        # for self-locking rules during tracking
         gen_steps = [
             "generate_early",
             "create_regions",
             "create_items",
             "set_rules",
             "generate_basic",
+            "pre_fill",
         ]
         for step in gen_steps:
             if hasattr(AutoWorld.World, step):

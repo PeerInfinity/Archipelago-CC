@@ -1775,6 +1775,21 @@ class RuleCodeGenerator:
                     self.required_imports.add('False_')
                     return 'False_()'
 
+        # Check if either side is a placement_lookup
+        # Placement lookups (location_item_name checks) depend on actual item placements
+        # which are not available during tracking. For tracking purposes, these comparisons
+        # should evaluate to False_() so that only the simple item requirement checks matter.
+        # This fixes self-locking rules: OR(placement_lookup == item, Has(item)) -> Has(item)
+        if self._is_placement_lookup(left) or self._is_placement_lookup(right):
+            if op in ('==', 'eq'):
+                # Equality comparison with placement_lookup always fails during tracking
+                self.required_imports.add('False_')
+                return 'False_()'
+            elif op in ('!=', 'ne'):
+                # Inequality comparison with placement_lookup always succeeds during tracking
+                self.required_imports.add('True_')
+                return 'True_()'
+
         # Use Compare class for all other patterns
         # binary_op operands are now handled by _convert_compare_operand -> _convert_binary_op
         self.required_imports.add('Compare')
@@ -1797,6 +1812,31 @@ class RuleCodeGenerator:
                     return 'False_()'
 
         return f'Compare({left_code}, "{op}", {right_code})'
+
+    def _is_placement_lookup(self, operand: Any) -> bool:
+        """
+        Check if an operand is a placement_lookup rule.
+
+        Placement lookups (location_item_name checks) depend on actual item placements
+        which are not available during tracking. These checks should be treated as False
+        during code generation so that tracking works correctly.
+
+        This is used to fix self-locking rules like:
+            OR(location_item_name(state, loc, player) == (item, 1), state.has(item, player))
+        Which should simplify to just Has(item) for tracking purposes.
+        """
+        if not isinstance(operand, dict):
+            return False
+
+        # Check for placement_lookup type
+        if operand.get('type') == 'placement_lookup':
+            return True
+
+        # Check for Rule Builder format AST_placement_lookup
+        if operand.get('rule') == 'AST_placement_lookup':
+            return True
+
+        return False
 
     def _get_list_constant_value(self, operand: Any) -> Optional[tuple]:
         """
@@ -4653,6 +4693,15 @@ class HelperCodeGenerator:
                 left = args.get('left')
                 op = args.get('op', '==')
                 right = args.get('right')
+                # Check if either side is a placement_lookup
+                # Placement lookups (location_item_name checks) depend on actual item placements
+                # which are not available during tracking. For tracking purposes, these comparisons
+                # should evaluate to False so that only the simple item requirement checks matter.
+                if self._is_placement_lookup(left) or self._is_placement_lookup(right):
+                    if op in ('==', 'eq'):
+                        return 'False'
+                    elif op in ('!=', 'ne'):
+                        return 'True'
                 # Always use _generate_expression to properly handle lists -> tuples
                 left_expr = self._generate_expression(left)
                 right_expr = self._generate_expression(right)
@@ -5438,9 +5487,25 @@ class HelperCodeGenerator:
 
     def _expr_compare(self, expr: Dict[str, Any]) -> str:
         """Generate comparison expression."""
-        left = self._generate_expression(expr.get('left', {}))
+        left_expr = expr.get('left', {})
+        right_expr = expr.get('right', {})
         op = expr.get('op', '==')
-        right = self._generate_expression(expr.get('right', {}))
+
+        # Check if either side is a placement_lookup
+        # Placement lookups (location_item_name checks) depend on actual item placements
+        # which are not available during tracking. For tracking purposes, these comparisons
+        # should evaluate to False so that only the simple item requirement checks matter.
+        # This fixes self-locking rules: OR(placement_lookup == item, Has(item)) -> Has(item)
+        if self._is_placement_lookup(left_expr) or self._is_placement_lookup(right_expr):
+            if op in ('==', 'eq'):
+                # Equality comparison with placement_lookup always fails during tracking
+                return 'False'
+            elif op in ('!=', 'ne'):
+                # Inequality comparison with placement_lookup always succeeds during tracking
+                return 'True'
+
+        left = self._generate_expression(left_expr)
+        right = self._generate_expression(right_expr)
 
         # Handle 'in' and 'not in' operators
         if op == 'in':
@@ -5449,6 +5514,25 @@ class HelperCodeGenerator:
             return f"({left} not in {right})"
 
         return f"({left} {op} {right})"
+
+    def _is_placement_lookup(self, expr: Any) -> bool:
+        """Check if an expression is a placement_lookup type.
+
+        Placement lookups depend on actual item placements which are not available
+        during tracking. These should be treated as False in comparisons.
+        """
+        if not isinstance(expr, dict):
+            return False
+
+        # Check for placement_lookup type
+        if expr.get('type') == 'placement_lookup':
+            return True
+
+        # Check for Rule Builder format AST_placement_lookup
+        if expr.get('rule') == 'AST_placement_lookup':
+            return True
+
+        return False
 
     def _expr_binary_op(self, expr: Dict[str, Any]) -> str:
         """Generate binary operation expression."""
