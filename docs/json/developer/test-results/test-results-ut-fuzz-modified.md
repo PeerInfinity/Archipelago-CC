@@ -2,11 +2,11 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-11 03:26:15
+**Generated:** 2026-01-11 04:43:38
 
-**Source Data Created:** 2026-01-11T03:26:14.961938
+**Source Data Created:** 2026-01-11T04:43:38.438812
 
-**Source Data Last Updated:** 2026-01-11T03:26:14.961944
+**Source Data Last Updated:** 2026-01-11T04:43:38.438818
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -16,18 +16,18 @@
 
 **Parallel Jobs:** 2
 
-**Timeout Per Generation:** 15s
+**Timeout Per Generation:** 60s
 
 ## Summary
 
 - **Total Games:** 73
-- **Games with 100% Pass Rate:** 45 (61.6%)
-- **Games with Failures:** 28 (38.4%)
+- **Games with 100% Pass Rate:** 48 (65.8%)
+- **Games with Failures:** 25 (34.2%)
 - **Total Fuzz Runs:** 730
-- **Successful Runs:** 521 (71.4%)
-- **Failed Runs:** 180
-- **Timed Out Runs:** 10
-- **Ignored Runs:** 19
+- **Successful Runs:** 541 (74.1%)
+- **Failed Runs:** 165
+- **Timed Out Runs:** 1
+- **Ignored Runs:** 23
 
 ## Test Results
 
@@ -57,7 +57,7 @@
 | [Donkey Kong Country 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=dkc3) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Factorio](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=factorio) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Faxanadu](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=faxanadu) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Final Fantasy Mystic Quest](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffmq) | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
+| [Final Fantasy Mystic Quest](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffmq) | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% |
 | [Heretic](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=heretic) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Hylics 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=hylics2) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Inscryption](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=inscryption) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
@@ -83,19 +83,19 @@
 | [Risk of Rain 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ror2) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Saving Princess](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=saving_princess) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Secret of Evermore](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=soe) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [Shivers](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=shivers) | ❌ | 10 | 4 | 0 | 6 | 0 | ❌ 40.0% |
-| [Sonic Adventure 2 Battle](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sa2b) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [Shivers](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=shivers) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| [Sonic Adventure 2 Battle](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sa2b) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Starcraft 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sc2) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Stardew Valley](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=stardew_valley) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | [Subnautica](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=subnautica) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Super Mario 64](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm64ex) | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
+| [Super Mario 64](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm64ex) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Super Mario Land 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=marioland2) | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
-| [Super Mario World](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=smw) | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
-| [Super Metroid](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| [Super Mario World](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=smw) | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| [Super Metroid](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm) | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
 | [TOEM original](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=toem_original) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [TOEM rule builder](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=toem_rule_builder) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [TUNIC](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tunic) | ❌ | 10 | 4 | 2 | 4 | 0 | ❌ 40.0% |
-| [Terraria](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=terraria) | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
+| [TUNIC](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tunic) | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
+| [Terraria](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=terraria) | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
 | [The Legend of Zelda](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tloz) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [The Messenger](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=messenger) | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
 | [The Wind Waker](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tww) | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
@@ -133,6 +133,10 @@
 
 - **None**: 10 occurrence(s)
 
+### Final Fantasy Mystic Quest
+
+- **<class 'TimeoutError'>**: 1 occurrence(s)
+
 ### Kingdom Hearts
 
 - **None**: 9 occurrence(s)
@@ -163,14 +167,6 @@
 
 - **None**: 10 occurrence(s)
 
-### Shivers
-
-- **<class 'TimeoutError'>**: 6 occurrence(s)
-
-### Sonic Adventure 2 Battle
-
-- **None**: 10 occurrence(s)
-
 ### Starcraft 2
 
 - **File 0-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
@@ -188,32 +184,21 @@
 
 - **None**: 10 occurrence(s)
 
-### Super Mario 64
-
-- **None**: 3 occurrence(s)
-
 ### Super Mario Land 2
 
 - **None**: 4 occurrence(s)
 
-### Super Mario World
-
-- **FillError**: 1 occurrence(s)
-
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **FillError**: 4 occurrence(s)
-- **None**: 4 occurrence(s)
+- **None**: 5 occurrence(s)
 
 ### TUNIC
 
-- **<class 'TimeoutError'>**: 4 occurrence(s)
-- **None**: 2 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Terraria
 
-- **None**: 2 occurrence(s)
 - **FillError**: 1 occurrence(s)
 
 ### The Messenger
