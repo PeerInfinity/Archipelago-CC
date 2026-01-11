@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-11 22:40:27
+**Generated:** 2026-01-11 23:38:41
 
-**Source Data Created:** 2026-01-11T22:40:27.873414
+**Source Data Created:** 2026-01-11T23:38:41.801717
 
-**Source Data Last Updated:** 2026-01-11T22:40:27.873421
+**Source Data Last Updated:** 2026-01-11T23:38:41.801725
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,30 +23,30 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 57 (67.1%)
-- **Games with Failures:** 28 (32.9%)
+- **Games with 100% Pass Rate:** 60 (70.6%)
+- **Games with Failures:** 25 (29.4%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 595 (70.0%)
-- **Failed Runs:** 212
+- **Successful Runs:** 604 (71.1%)
+- **Failed Runs:** 202
 - **Timed Out Runs:** 0
-- **Ignored Runs:** 43
+- **Ignored Runs:** 44
 
 ### Explain Support Summary
 
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 10,850
-- **Locations without Explain Support:** 1,087
-- **Locations with Default Rule:** 21,235
-- **Overall Explain Coverage:** 90.9%
+- **Locations with Explain Support:** 10,887
+- **Locations without Explain Support:** 1,079
+- **Locations with Default Rule:** 21,212
+- **Overall Explain Coverage:** 91.0%
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% | 11.8KB | ✅ | 654.1KB |
+| A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 7.0KB | ✅ | 235.0KB |
+| A Link to the Past | ❌ | 10 | 3 | 6 | 0 | 1 | ❌ 30.0% | 11.8KB | ✅ | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
@@ -56,7 +56,7 @@
 | Bomb Rush Cyberfunk | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1.4KB | 40.3KB | 329.0KB |
 | Bumper Stickers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 94.4KB |
-| Castlevania 64 | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | 138.5KB |
+| Castlevania 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 138.5KB |
 | Celeste (Open World) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 1043.3KB |
 | Celeste 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 4.1KB | ✅ | 53.7KB |
 | ChecksFinder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.2KB |
@@ -110,16 +110,16 @@
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | 875.0KB |
+| Super Mario Land 2 | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | 875.0KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TUNIC | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 3.1KB | ✅ | 711.6KB |
 | Terraria | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.5KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.7KB | ✅ | 211.8KB |
-| The Wind Waker | ❌ | 10 | 4 | 1 | 0 | 5 | ❌ 40.0% | 7.0KB | ✅ | 253.9KB |
+| The Wind Waker | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 14.1KB | ✅ | 401.3KB |
 | Timespinner | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 267.3KB |
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
@@ -133,13 +133,9 @@
 
 ## Error Details
 
-### A Hat in Time
-
-- **None**: 4 occurrence(s)
-
 ### A Link to the Past
 
-- **None**: 7 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Blasphemous
 
@@ -148,10 +144,6 @@
 ### Bomb Rush Cyberfunk
 
 - **None**: 10 occurrence(s)
-
-### Castlevania 64
-
-- **None**: 2 occurrence(s)
 
 ### Celeste (Open World)
 
@@ -214,8 +206,8 @@
 - **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 
@@ -225,20 +217,16 @@
 
 ### Super Mario Land 2
 
-- **None**: 3 occurrence(s)
+- **None**: 2 occurrence(s)
 
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **None**: 4 occurrence(s)
+- **None**: 3 occurrence(s)
 
 ### TUNIC
 
 - **None**: 6 occurrence(s)
-
-### The Wind Waker
-
-- **None**: 1 occurrence(s)
 
 ### The Witness
 
@@ -266,13 +254,13 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Dark Souls III | 1469 | 0 | 228 | 1241 | ❌ 0% |
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 65 | 0 | 65 | 0 | ❌ 0% |
+| Yacht Dice | 57 | 0 | 57 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
 | DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
 | Kingdom Hearts 2 | 643 | 46 | 30 | 567 | ⚠️ 61% |
 | Mega Man 2 | 51 | 4 | 1 | 46 | ⚠️ 80% |
-| A Link to the Past | 242 | 124 | 28 | 90 | ⚠️ 82% |
+| A Link to the Past | 242 | 148 | 28 | 66 | ⚠️ 84% |
 | The Wind Waker | 228 | 173 | 16 | 39 | ⚠️ 92% |
 | Kirby's Dream Land 3 | 832 | 118 | 5 | 709 | ⚠️ 96% |
 | Blasphemous | 305 | 121 | 3 | 181 | ⚠️ 98% |
@@ -295,7 +283,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | DOOM 1993 | 474 | 0 | 0 | 474 | ✅ 100% |
 | DOOM II | 479 | 0 | 0 | 479 | ✅ 100% |
 | Donkey Kong Country 3 | 220 | 1 | 0 | 219 | ✅ 100% |
-| Factorio | 251 | 251 | 0 | 0 | ✅ 100% |
+| Factorio | 264 | 264 | 0 | 0 | ✅ 100% |
 | Faxanadu | 110 | 24 | 0 | 86 | ✅ 100% |
 | Final Fantasy | 0 | 0 | 0 | 0 | ✅ 100% |
 | Final Fantasy Mystic Quest | 251 | 60 | 0 | 191 | ✅ 100% |
@@ -326,8 +314,8 @@ This section shows which games have rules that support the `explain_json()` meth
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
 | Sonic Adventure 2 Battle | 1036 | 206 | 0 | 830 | ✅ 100% |
-| Stardew Valley | 1080 | 938 | 0 | 142 | ✅ 100% |
-| Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
+| Stardew Valley | 1067 | 924 | 0 | 143 | ✅ 100% |
+| Subnautica | 161 | 161 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
 | Super Mario Land 2 | 2018 | 1889 | 0 | 129 | ✅ 100% |
