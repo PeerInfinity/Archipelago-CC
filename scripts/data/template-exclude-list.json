@@ -1,5 +1,5 @@
 {
-  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
+  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). 'ut_fuzz_timeout_overrides' contains per-game timeout overrides for UT fuzz testing. This file is loaded by scripts/lib/test_utils.py.",
   "exclude_list": [
     {
       "name": "Archipelago.yaml",
@@ -161,5 +161,9 @@
       "name": "A Link to the Past.yaml",
       "reason": "Exporter is already as simplified as it can get."
     }
-  ]
+  ],
+  "ut_fuzz_timeout_overrides": {
+    "comment": "Games that need longer timeouts for UT fuzz testing due to complex option combinations (e.g., large start_inventory). Values are timeout in seconds.",
+    "Shivers.yaml": 60
+  }
 }

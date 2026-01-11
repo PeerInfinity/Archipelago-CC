@@ -37,6 +37,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from lib.test_utils import (
     extract_game_name_from_template,
     load_template_exclude_list,
+    load_ut_fuzz_timeout_overrides,
     get_world_directory_name_from_game_name,
     build_and_load_world_mapping
 )
@@ -347,6 +348,11 @@ def main():
     # Get skip list (use main test exclusions)
     skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='main')
 
+    # Load game-specific timeout overrides
+    timeout_overrides = load_ut_fuzz_timeout_overrides(str(PROJECT_ROOT))
+    if timeout_overrides:
+        print(f"Loaded timeout overrides for {len(timeout_overrides)} games")
+
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)
     if not template_files:
@@ -437,14 +443,17 @@ def main():
             print(f"[{i}/{len(template_files)}] Skipping {game_name} - could not find world directory")
             continue
 
-        print(f"[{i}/{len(template_files)}] Testing {game_name} (world: {world_dir})...")
+        # Get game-specific timeout (use override if available, otherwise default)
+        game_timeout = timeout_overrides.get(template_name, args.timeout)
+        timeout_note = f" [custom timeout: {game_timeout}s]" if template_name in timeout_overrides else ""
+        print(f"[{i}/{len(template_files)}] Testing {game_name} (world: {world_dir}){timeout_note}...")
 
         # Run the fuzzer
         test_result = run_fuzzer_test(
             world_dir=world_dir,
             runs=args.runs,
             jobs=args.jobs,
-            timeout=args.timeout,
+            timeout=game_timeout,
             seed=args.seed
         )
 
