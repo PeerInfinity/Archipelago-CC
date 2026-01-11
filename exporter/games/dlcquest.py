@@ -12,10 +12,15 @@ class DLCQuestGameExportHandler(GenericGameExportHandler):
     USE_RESOLVED_ITEMS = True
 
     # Accumulator rules - pattern matches "4 coins", "46 coins", etc.
+    # Also matches "50 coins freemium" for the Live Freemium or Die campaign
     ACCUMULATOR_RULES = [{
         'pattern': r'^(\d+) coins?$',
         'extract_value': True,
         'target': ' coins',
+    }, {
+        'pattern': r'^(\d+) coins? freemium$',
+        'extract_value': True,
+        'target': ' coins freemium',
     }]
 
     # Initialize coin accumulators (start at 0, accumulate as items collected)
