@@ -4,17 +4,17 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-11 11:23:01
+**Generated:** 2026-01-11 20:29:15
 
-**Source Data Created:** 2026-01-11T06:18:23.517833
+**Source Data Created:** 2026-01-11T20:29:15.868280
 
-**Source Data Last Updated:** 2026-01-11T06:18:23.517838
+**Source Data Last Updated:** 2026-01-11T20:29:15.868287
 
 **Universal Tracker Version:** Original (FarisTheAncient)
 
 **Seed Mode:** Fixed (seed=1)
 
-**Runs Per Game:** 100
+**Runs Per Game:** 10
 
 **Parallel Jobs:** 2
 
@@ -22,230 +22,227 @@
 
 ## Summary
 
-- **Total Games:** 73
-- **Games with 100% Pass Rate:** 35 (47.9%)
-- **Games with Failures:** 38 (52.1%)
-- **Total Fuzz Runs:** 7300
-- **Successful Runs:** 4487 (61.5%)
-- **Failed Runs:** 2661
-- **Timed Out Runs:** 7
-- **Ignored Runs:** 145
+- **Total Games:** 85
+- **Games with 100% Pass Rate:** 40 (47.1%)
+- **Games with Failures:** 45 (52.9%)
+- **Total Fuzz Runs:** 850
+- **Successful Runs:** 485 (57.1%)
+- **Failed Runs:** 339
+- **Timed Out Runs:** 1
+- **Ignored Runs:** 25
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ | 100 | 16 | 84 | 0 | 0 | ❌ 16.0% | 4.6KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ | 100 | 0 | 94 | 0 | 6 | ❌ 0.0% | ✅ | ✅ | 654.1KB |
-| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
-| APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
-| Adventure | ❌ | 100 | 89 | 11 | 0 | 0 | ⚠️ 89.0% | ✅ | ✅ | 26.0KB |
-| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.4KB |
-| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 18.2KB |
-| Bomb Rush Cyberfunk | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.4KB | 40.3KB | 329.0KB |
-| Bumper Stickers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.4KB |
-| Castlevania - Circle of the Moon | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 94.4KB |
-| Castlevania 64 | ❌ | 100 | 10 | 90 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 138.5KB |
-| Celeste (Open World) | ❌ | 100 | 51 | 49 | 0 | 0 | ⚠️ 51.0% | ✅ | ✅ | 1043.3KB |
-| Celeste 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 4.1KB | ✅ | 53.7KB |
-| ChecksFinder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.2KB |
-| Choo-Choo Charles | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 282.3KB |
-| Civilization VI | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 166.9KB |
-| Coding Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 54.9KB |
-| DLCQuest | ❌ | 100 | 46 | 54 | 0 | 0 | ❌ 46.0% | 1.0KB | ✅ | 51.3KB |
-| DOOM 1993 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 280.1KB |
-| DOOM II | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
-| Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
-| Donkey Kong Country 3 | ❌ | 100 | 52 | 48 | 0 | 0 | ⚠️ 52.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 5.1KB | ✅ | 298.4KB |
-| Faxanadu | ❌ | 100 | 16 | 84 | 0 | 0 | ❌ 16.0% | ✅ | ✅ | 68.6KB |
-| Final Fantasy Mystic Quest | ❌ | 100 | 1 | 96 | 3 | 0 | ❌ 1.0% | ✅ | ✅ | 1302.5KB |
-| Heretic | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
-| Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
-| Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 7.5KB | ✅ | 84.2KB |
-| Kingdom Hearts | ❌ | 100 | 18 | 80 | 2 | 0 | ❌ 18.0% | ✅ | ✅ | 754.0KB |
-| Kingdom Hearts 2 | ❌ | 100 | 37 | 63 | 0 | 0 | ❌ 37.0% | 19.5KB | ✅ | 1675.2KB |
-| Kirby's Dream Land 3 | ❌ | 100 | 3 | 97 | 0 | 0 | ❌ 3.0% | 10.1KB | ✅ | 688.9KB |
-| Landstalker - The Treasures of King Nole | ❌ | 100 | 20 | 80 | 0 | 0 | ❌ 20.0% | 3.6KB | ✅ | 210.3KB |
-| Lingo | ❌ | 100 | 21 | 24 | 0 | 55 | ❌ 21.0% | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | ❌ | 100 | 23 | 77 | 0 | 0 | ❌ 23.0% | 7.4KB | ✅ | 714.5KB |
-| Lufia II Ancient Cave | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
-| Mario & Luigi Superstar Saga | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
-| Math Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
-| Mega Man 2 | ❌ | 100 | 90 | 10 | 0 | 0 | 90.0% | ✅ | ✅ | 51.5KB |
-| MegaMan Battle Network 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 209.8KB |
-| Meritous | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.2KB |
-| Metamath | ❌ | 100 | 76 | 24 | 0 | 0 | ⚠️ 76.0% | ✅ | ✅ | 47.5KB |
-| Muse Dash | ❌ | 100 | 0 | 97 | 0 | 3 | ❌ 0.0% | ✅ | ✅ | 231.5KB |
-| Noita | ❌ | 100 | 22 | 78 | 0 | 0 | ❌ 22.0% | ✅ | ✅ | 74.6KB |
-| Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% | 1.0KB | ✅ | 308.9KB |
-| Overcooked! 2 | ❌ | 100 | 12 | 88 | 0 | 0 | ❌ 12.0% | 23.1KB | ✅ | 488.9KB |
-| Paint | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 2.7KB | ✅ | 123.7KB |
-| Raft | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 5.4KB | ✅ | 205.9KB |
-| Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
-| Saving Princess | ❌ | 100 | 28 | 72 | 0 | 0 | ❌ 28.0% | ✅ | ✅ | 33.5KB |
-| Secret of Evermore | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 5.3KB | 6.9KB | 418.7KB |
-| Shivers | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 151.3KB |
-| Sonic Adventure 2 Battle | ❌ | 100 | 8 | 92 | 0 | 0 | ❌ 8.0% | ✅ | ✅ | 266.1KB |
-| Starcraft 2 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.5KB | 1136.1KB |
-| Stardew Valley | ❌ | 100 | 7 | 92 | 1 | 0 | ❌ 7.0% | 18.8KB | 8.0KB | 2430.1KB |
-| Subnautica | ❌ | 100 | 10 | 90 | 0 | 0 | ❌ 10.0% | 2.2KB | ✅ | 207.8KB |
-| Super Mario 64 | ❌ | 100 | 29 | 71 | 0 | 0 | ❌ 29.0% | 12.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ | 100 | 14 | 86 | 0 | 0 | ❌ 14.0% | ✅ | ✅ | 875.0KB |
-| Super Mario World | ❌ | 100 | 54 | 46 | 0 | 0 | ⚠️ 54.0% | ✅ | ✅ | 178.2KB |
-| Super Metroid | ❌ | 100 | 9 | 90 | 1 | 0 | ❌ 9.0% | 60.9KB | 114.5KB | 625.1KB |
-| TOEM original | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
-| TOEM rule builder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
-| TUNIC | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 3.1KB | ✅ | 711.6KB |
-| Terraria | ❌ | 100 | 98 | 2 | 0 | 0 | 98.0% | 16.8KB | ✅ | 283.0KB |
-| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.5KB |
-| The Messenger | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 4.7KB | ✅ | 211.8KB |
-| The Wind Waker | ❌ | 100 | 5 | 52 | 0 | 43 | ❌ 5.0% | ✅ | ✅ | 253.9KB |
-| The Witness | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 14.1KB | ✅ | 401.3KB |
-| Timespinner | ❌ | 100 | 4 | 96 | 0 | 0 | ❌ 4.0% | 2.2KB | ✅ | 267.3KB |
-| Undertale | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
-| VVVVVV | ❌ | 100 | 65 | 35 | 0 | 0 | ⚠️ 65.0% | 2.3KB | ✅ | 22.7KB |
-| Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
-| Yoshi's Island | ❌ | 100 | 22 | 78 | 0 | 0 | ❌ 22.0% | 3.8KB | ✅ | 283.2KB |
-| shapez | ❌ | 100 | 42 | 31 | 0 | 27 | ❌ 42.0% | ✅ | ✅ | 155.5KB |
+| A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 7.0KB | ✅ | 235.0KB |
+| A Link to the Past | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 11.8KB | ✅ | 654.1KB |
+| A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
+| APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
+| Adventure | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | 26.0KB |
+| Aquaria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.4KB |
+| Baking Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 18.2KB |
+| Blasphemous | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |
+| Bomb Rush Cyberfunk | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.4KB | 40.3KB | 329.0KB |
+| Bumper Stickers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.4KB |
+| Castlevania - Circle of the Moon | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 94.4KB |
+| Castlevania 64 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 138.5KB |
+| Celeste (Open World) | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | ✅ | ✅ | 1043.3KB |
+| Celeste 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 4.1KB | ✅ | 53.7KB |
+| ChecksFinder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.2KB |
+| Choo-Choo Charles | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 282.3KB |
+| Civilization VI | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 166.9KB |
+| Coding Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 54.9KB |
+| DLCQuest | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 1.2KB | ✅ | 51.3KB |
+| DOOM 1993 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 280.1KB |
+| DOOM II | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
+| Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
+| Donkey Kong Country 3 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | 122.5KB |
+| Factorio | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.1KB | ✅ | 298.4KB |
+| Faxanadu | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 68.6KB |
+| Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Final Fantasy Mystic Quest | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 1302.5KB |
+| Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
+| Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
+| Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.0KB | ✅ | 84.2KB |
+| Jak and Daxter: The Precursor Legacy | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 21.6KB | 4.6KB | 298.6KB |
+| Kingdom Hearts | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | ✅ | ✅ | 754.0KB |
+| Kingdom Hearts 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 19.5KB | ✅ | 1675.2KB |
+| Kirby's Dream Land 3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 10.1KB | ✅ | 688.9KB |
+| Landstalker - The Treasures of King Nole | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 3.6KB | ✅ | 210.3KB |
+| Lingo | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% | 38.0KB | 10.7KB | 946.3KB |
+| Links Awakening DX | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 7.4KB | ✅ | 714.5KB |
+| Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
+| Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
+| Math Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
+| Mega Man 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 51.5KB |
+| MegaMan Battle Network 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 209.8KB |
+| Meritous | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.2KB |
+| Metamath | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | 47.5KB |
+| Muse Dash | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 231.5KB |
+| Noita | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | 74.6KB |
+| Ocarina of Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.0KB | ✅ | 308.9KB |
+| Overcooked! 2 | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 25.9KB | ✅ | 488.9KB |
+| Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.7KB |
+| Pokemon Emerald | ❌ | 10 | 3 | 5 | 0 | 2 | ❌ 30.0% | 5.2KB | 8.7KB | 1390.9KB |
+| Pokemon Red and Blue | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
+| Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.4KB | ✅ | 205.9KB |
+| Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
+| SMZ3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 61.3KB | 51.3KB | 1044.7KB |
+| Saving Princess | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | ✅ | ✅ | 33.5KB |
+| Secret of Evermore | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.3KB | 6.9KB | 418.7KB |
+| Shivers | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 151.3KB |
+| Sonic Adventure 2 Battle | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 266.1KB |
+| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.5KB | 1136.1KB |
+| Stardew Valley | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.8KB | 8.0KB | 2430.1KB |
+| Subnautica | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 2.2KB | ✅ | 207.8KB |
+| Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Super Mario 64 | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 21.4KB | ✅ | 92.9KB |
+| Super Mario Land 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 875.0KB |
+| Super Mario World | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | 178.2KB |
+| Super Metroid | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
+| TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
+| TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
+| TUNIC | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.1KB | ✅ | 711.6KB |
+| Terraria | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 16.8KB | ✅ | 283.0KB |
+| The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.5KB |
+| The Messenger | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 14.7KB | ✅ | 211.8KB |
+| The Wind Waker | ❌ | 10 | 1 | 4 | 0 | 5 | ❌ 10.0% | 7.0KB | ✅ | 253.9KB |
+| The Witness | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.1KB | ✅ | 401.3KB |
+| Timespinner | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 2.2KB | ✅ | 267.3KB |
+| Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
+| VVVVVV | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | 3.8KB | ✅ | 22.7KB |
+| Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
+| Yacht Dice | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
+| Yoshi's Island | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 9.3KB | ✅ | 283.2KB |
+| Yu-Gi-Oh! 2006 | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | 1.3KB | 21.4KB | 628.0KB |
+| Zillion | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| shapez | ❌ | 10 | 5 | 1 | 0 | 4 | ⚠️ 50.0% | ✅ | ✅ | 155.5KB |
 
 ## Error Details
 
 ### A Hat in Time
 
-- **None**: 83 occurrence(s)
-- **FillError**: 1 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### A Link to the Past
 
-- **None**: 93 occurrence(s)
-- **FillError**: 1 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Adventure
 
-- **None**: 11 occurrence(s)
+- **None**: 1 occurrence(s)
 
 ### Castlevania 64
 
-- **None**: 90 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Celeste (Open World)
 
-- **None**: 49 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### DLCQuest
 
-- **None**: 54 occurrence(s)
+- **None**: 8 occurrence(s)
 
 ### Donkey Kong Country 3
 
-- **None**: 48 occurrence(s)
+- **None**: 3 occurrence(s)
 
 ### Factorio
 
-- **None**: 100 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Faxanadu
 
-- **None**: 84 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Final Fantasy Mystic Quest
 
-- **None**: 80 occurrence(s)
-- **Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'**: 16 occurrence(s)
-- **<class 'TimeoutError'>**: 3 occurrence(s)
+- **None**: 8 occurrence(s)
+- **Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'**: 2 occurrence(s)
+
+### Hollow Knight
+
+- **None**: 10 occurrence(s)
+
+### Jak and Daxter: The Precursor Legacy
+
+- **None**: 7 occurrence(s)
 
 ### Kingdom Hearts
 
-- **None**: 80 occurrence(s)
-- **<class 'TimeoutError'>**: 2 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Kingdom Hearts 2
 
-- **FillError**: 63 occurrence(s)
+- **FillError**: 9 occurrence(s)
 
 ### Kirby's Dream Land 3
 
-- **None**: 94 occurrence(s)
-- **FillError**: 3 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Landstalker - The Treasures of King Nole
 
-- **None**: 80 occurrence(s)
-
-### Lingo
-
-- **None**: 24 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Links Awakening DX
 
-- **None**: 77 occurrence(s)
-
-### Mega Man 2
-
 - **None**: 9 occurrence(s)
-- **FillError**: 1 occurrence(s)
 
 ### Metamath
 
-- **None**: 24 occurrence(s)
+- **None**: 2 occurrence(s)
 
 ### Muse Dash
 
-- **None**: 97 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Noita
 
-- **None**: 78 occurrence(s)
+- **None**: 8 occurrence(s)
+
+### Ocarina of Time
+
+- **<class 'AttributeError'>**: 9 occurrence(s)
+- **FillError**: 1 occurrence(s)
 
 ### Overcooked! 2
 
-- **None**: 55 occurrence(s)
+- **None**: 3 occurrence(s)
 - **Invalid OC2 settings(3-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
 - **Invalid OC2 settings(5-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
 - **Invalid OC2 settings(7-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
 - **Invalid OC2 settings(8-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
 - **Invalid OC2 settings(9-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(11-0): OC2 needs at least 43 NON-PREP levels in the level pool (currently has 0)**: 1 occurrence(s)
-- **Invalid OC2 settings(13-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(14-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(17-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(18-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(19-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(23-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(24-0): OC2 needs at least 43 levels in the level pool (currently has 0)**: 1 occurrence(s)
-- **Invalid OC2 settings(25-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(26-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(35-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(39-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(41-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(43-0): OC2 needs at least 35 levels in the level pool (currently has 0)**: 1 occurrence(s)
-- **Invalid OC2 settings(51-0): OC2 needs at least 43 levels in the level pool (currently has 0)**: 1 occurrence(s)
-- **Invalid OC2 settings(57-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(63-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(67-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(68-0): OC2 needs at least 43 NON-PREP levels in the level pool (currently has 28)**: 1 occurrence(s)
-- **Invalid OC2 settings(70-0): OC2 needs at least 35 levels in the level pool (currently has 0)**: 1 occurrence(s)
-- **Invalid OC2 settings(75-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(76-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(77-0): OC2 needs at least 43 levels in the level pool (currently has 0)**: 1 occurrence(s)
-- **Invalid OC2 settings(80-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(82-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(92-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(97-0): OC2 needs at least 35 NON-PREP levels in the level pool (currently has 19)**: 1 occurrence(s)
+
+### Pokemon Emerald
+
+- **FillError**: 2 occurrence(s)
+- **None**: 3 occurrence(s)
+
+### Pokemon Red and Blue
+
 - **FillError**: 1 occurrence(s)
+- **None**: 9 occurrence(s)
+
+### SMZ3
+
+- **None**: 10 occurrence(s)
 
 ### Saving Princess
 
-- **None**: 72 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Shivers
 
-- **None**: 100 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Sonic Adventure 2 Battle
 
-- **None**: 92 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Starcraft 2
 
@@ -259,158 +256,76 @@
 - **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 10-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 11-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 12-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 13-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 14-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 15-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 16-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 17-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 18-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 19-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 20-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 21-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 22-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 23-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 24-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 25-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 26-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 27-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 28-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 29-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 30-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 31-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 32-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 33-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 34-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 35-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 36-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 37-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 38-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 39-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 40-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 41-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 42-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 43-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 44-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 45-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 46-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 47-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 48-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 49-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 50-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 51-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 52-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 53-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 54-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 55-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 56-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 57-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 58-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 59-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 60-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 61-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 62-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 63-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 64-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 65-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 66-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 67-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 68-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 69-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 70-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 71-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 72-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 73-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 74-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 75-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 76-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 77-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 78-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 79-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 80-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 81-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 82-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 83-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 84-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 85-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 86-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 87-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 88-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 89-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 90-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 91-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 92-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 93-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 94-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 95-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 96-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 97-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 98-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 99-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 
 ### Stardew Valley
 
-- **None**: 92 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Subnautica
 
-- **None**: 84 occurrence(s)
-- **list index out of range**: 5 occurrence(s)
-- **FillError**: 1 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Super Mario 64
 
-- **None**: 71 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Super Mario Land 2
 
-- **None**: 84 occurrence(s)
-- **FillError**: 2 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Super Mario World
 
-- **None**: 44 occurrence(s)
-- **FillError**: 2 occurrence(s)
+- **None**: 2 occurrence(s)
+- **FillError**: 1 occurrence(s)
 
 ### Super Metroid
 
-- **varia_custom was chosen but varia_custom_preset is missing.**: 8 occurrence(s)
-- **FillError**: 46 occurrence(s)
-- **None**: 36 occurrence(s)
+- **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
+- **FillError**: 4 occurrence(s)
+- **None**: 3 occurrence(s)
 - **<class 'TimeoutError'>**: 1 occurrence(s)
 
 ### Terraria
 
-- **FillError**: 2 occurrence(s)
+- **FillError**: 1 occurrence(s)
 
 ### The Messenger
 
-- **None**: 100 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### The Wind Waker
 
-- **None**: 49 occurrence(s)
-- **FillError**: 3 occurrence(s)
+- **None**: 4 occurrence(s)
 
 ### Timespinner
 
-- **None**: 95 occurrence(s)
-- **FillError**: 1 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### VVVVVV
 
-- **None**: 35 occurrence(s)
+- **None**: 2 occurrence(s)
+
+### Yacht Dice
+
+- **None**: 10 occurrence(s)
 
 ### Yoshi's Island
 
-- **None**: 78 occurrence(s)
+- **None**: 8 occurrence(s)
+
+### Yu-Gi-Oh! 2006
+
+- **None**: 5 occurrence(s)
+
+### Zillion
+
+- **None**: 8 occurrence(s)
+- **<class 'AssertionError'>**: 1 occurrence(s)
+- **FillError**: 1 occurrence(s)
 
 ### shapez
 
-- **None**: 31 occurrence(s)
+- **None**: 1 occurrence(s)
 
 
 ## Notes
