@@ -919,6 +919,12 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             try:
                 helper_definitions = game_handler.get_helper_definitions(world)
                 if helper_definitions:
+                    # Allow game handlers to post-process helper definitions
+                    if hasattr(game_handler, 'postprocess_helper'):
+                        for helper_name in list(helper_definitions.keys()):
+                            helper_definitions[helper_name] = game_handler.postprocess_helper(
+                                helper_name, helper_definitions[helper_name]
+                            )
                     export_data['helpers'][player_str] = helper_definitions
                     logger.debug(f"Exported {len(helper_definitions)} helper definitions for player {player}")
             except Exception as e:

@@ -98,6 +98,58 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
         return super().expand_helper(helper_name, args)
 
+    def postprocess_helper(self, helper_name: str, helper_def: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process helper definitions to fix known issues.
+
+        Fixes has_paintings helper structure where nested if statements without else
+        incorrectly have if_false=None instead of the fallthrough item_check.
+        """
+        if helper_name == 'has_paintings':
+            return self._fix_has_paintings_helper(helper_def)
+
+        return helper_def
+
+    def _fix_has_paintings_helper(self, helper_def: Dict[str, Any]) -> Dict[str, Any]:
+        """Fix has_paintings helper structure.
+
+        The original Python has_paintings function has this structure:
+            if not painting_logic(world):
+                return True
+            if not NoPaintingSkips and allow_skip:
+                if difficulty >= MODERATE:
+                    return True
+            return state.has("Progressive Painting Unlock", count)
+
+        The AST analyzer incorrectly captures the nested if's else as None instead of
+        the fallthrough item_check. This method fixes that structure.
+        """
+        body = helper_def.get('body', {})
+        if body.get('type') != 'conditional':
+            return helper_def
+
+        # Structure: if not painting_logic: True else: (inner conditional)
+        if_false = body.get('if_false', {})
+        if not isinstance(if_false, dict) or if_false.get('type') != 'conditional':
+            return helper_def
+
+        # Inner: if not NoPaintingSkips and allow_skip: (difficulty check) else: item_check
+        inner_if_true = if_false.get('if_true', {})
+        inner_if_false = if_false.get('if_false', {})
+
+        # Check if inner_if_true is the difficulty check with if_false=None
+        if (isinstance(inner_if_true, dict) and
+            inner_if_true.get('type') == 'conditional' and
+            inner_if_true.get('if_false') is None):
+
+            # The fallthrough should be the outer if_false (item_check)
+            # If inner_if_false is the item_check, use it as the fallthrough
+            if isinstance(inner_if_false, dict) and inner_if_false.get('type') == 'item_check':
+                # Fix: set the innermost if_false to the item_check
+                inner_if_true['if_false'] = inner_if_false
+                logger.debug("Fixed has_paintings helper: nested if_false now points to item_check")
+
+        return helper_def
+
     def get_game_info(self, world):
         """Get A Hat in Time specific game information.
 
