@@ -1,6 +1,7 @@
 import Utils
 import settings
 import base64
+import logging
 import threading
 import requests
 from worlds.AutoWorld import World, WebWorld
@@ -122,7 +123,12 @@ class FFMQWorld(World):
                     continue
 
                 if not api_urls:
-                    raise Exception("No FFMQR API URLs specified in host.yaml")
+                    logging.warning(
+                        f"FFMQ player {world.player}: No API URLs available, "
+                        f"using default room layout. Shuffle options may not work as expected."
+                    )
+                    world.rooms = rooms
+                    continue
 
                 errors = []
                 for api_url in api_urls.copy():
@@ -140,10 +146,20 @@ class FFMQWorld(World):
                             api_urls.remove(api_url)
                             errors.append([api_url, response])
                 else:
-                    error_text = f"Failed to fetch map shuffle data for FFMQ player {world.player}"
+                    # API unavailable - fall back to default rooms with a warning
+                    error_details = []
                     for error in errors:
-                        error_text += f"\n{error[0]} - got error {error[1].status_code} {error[1].reason} {error[1].text}"
-                    raise Exception(error_text)
+                        if hasattr(error[1], 'status_code'):
+                            error_details.append(f"{error[0]} - {error[1].status_code} {error[1].reason}")
+                        else:
+                            error_details.append(f"{error[0]} - {type(error[1]).__name__}: {error[1]}")
+                    logging.warning(
+                        f"FFMQ player {world.player}: Could not fetch shuffle data from API, "
+                        f"using default room layout. Shuffle options may not work as expected. "
+                        f"Errors: {'; '.join(error_details)}"
+                    )
+                    world.rooms = rooms
+                    continue
                 api_urls.append(api_urls.pop(0))
             else:
                 world.rooms = rooms
