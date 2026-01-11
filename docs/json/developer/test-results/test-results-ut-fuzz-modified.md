@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-11 22:31:39
+**Generated:** 2026-01-11 22:40:27
 
-**Source Data Created:** 2026-01-11T22:31:38.974640
+**Source Data Created:** 2026-01-11T22:40:27.873414
 
-**Source Data Last Updated:** 2026-01-11T22:31:38.974645
+**Source Data Last Updated:** 2026-01-11T22:40:27.873421
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,12 +23,12 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 58 (68.2%)
-- **Games with Failures:** 27 (31.8%)
+- **Games with 100% Pass Rate:** 57 (67.1%)
+- **Games with Failures:** 28 (32.9%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 604 (71.1%)
-- **Failed Runs:** 202
-- **Timed Out Runs:** 1
+- **Successful Runs:** 595 (70.0%)
+- **Failed Runs:** 212
+- **Timed Out Runs:** 0
 - **Ignored Runs:** 43
 
 ### Explain Support Summary
@@ -36,10 +36,10 @@
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 10,868
-- **Locations without Explain Support:** 1,080
-- **Locations with Default Rule:** 21,252
-- **Overall Explain Coverage:** 91.0%
+- **Locations with Explain Support:** 10,850
+- **Locations without Explain Support:** 1,087
+- **Locations with Default Rule:** 21,235
+- **Overall Explain Coverage:** 90.9%
 
 ## Test Results
 
@@ -71,7 +71,7 @@
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.6KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% | ✅ | ✅ | 1302.5KB |
+| Final Fantasy Mystic Quest | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | ✅ | ✅ | 1302.5KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
@@ -86,7 +86,7 @@
 | Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
-| Mega Man 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 51.5KB |
+| Mega Man 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 51.5KB |
 | MegaMan Battle Network 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.2KB |
 | Metamath | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 47.5KB |
@@ -110,7 +110,7 @@
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | 875.0KB |
+| Super Mario Land 2 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | 875.0KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
@@ -119,7 +119,7 @@
 | Terraria | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.5KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.7KB | ✅ | 211.8KB |
-| The Wind Waker | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 7.0KB | ✅ | 253.9KB |
+| The Wind Waker | ❌ | 10 | 4 | 1 | 0 | 5 | ❌ 40.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 14.1KB | ✅ | 401.3KB |
 | Timespinner | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 267.3KB |
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
@@ -157,10 +157,6 @@
 
 - **None**: 10 occurrence(s)
 
-### Final Fantasy Mystic Quest
-
-- **<class 'TimeoutError'>**: 1 occurrence(s)
-
 ### Hollow Knight
 
 - **None**: 10 occurrence(s)
@@ -181,6 +177,10 @@
 ### Lingo
 
 - **None**: 3 occurrence(s)
+
+### Mega Man 2
+
+- **None**: 10 occurrence(s)
 
 ### Ocarina of Time
 
@@ -225,7 +225,7 @@
 
 ### Super Mario Land 2
 
-- **None**: 4 occurrence(s)
+- **None**: 3 occurrence(s)
 
 ### Super Metroid
 
@@ -235,6 +235,10 @@
 ### TUNIC
 
 - **None**: 6 occurrence(s)
+
+### The Wind Waker
+
+- **None**: 1 occurrence(s)
 
 ### The Witness
 
@@ -262,7 +266,7 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Dark Souls III | 1469 | 0 | 228 | 1241 | ❌ 0% |
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 58 | 0 | 58 | 0 | ❌ 0% |
+| Yacht Dice | 65 | 0 | 65 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
 | DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
@@ -297,7 +301,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Final Fantasy Mystic Quest | 251 | 60 | 0 | 191 | ✅ 100% |
 | Heretic | 691 | 0 | 0 | 691 | ✅ 100% |
 | Hollow Knight | 712 | 712 | 0 | 0 | ✅ 100% |
-| Hylics 2 | 166 | 88 | 0 | 78 | ✅ 100% |
+| Hylics 2 | 133 | 70 | 0 | 63 | ✅ 100% |
 | Inscryption | 100 | 65 | 0 | 35 | ✅ 100% |
 | Kingdom Hearts | 523 | 464 | 0 | 59 | ✅ 100% |
 | Landstalker - The Treasures of King Nole | 291 | 1 | 0 | 290 | ✅ 100% |
@@ -322,7 +326,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
 | Sonic Adventure 2 Battle | 1036 | 206 | 0 | 830 | ✅ 100% |
-| Stardew Valley | 1082 | 938 | 0 | 144 | ✅ 100% |
+| Stardew Valley | 1080 | 938 | 0 | 142 | ✅ 100% |
 | Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
