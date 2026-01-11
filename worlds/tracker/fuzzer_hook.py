@@ -256,6 +256,11 @@ class Hook(BaseHook):
             # (e.g., accessibility: minimal combined with level_shuffle in SMW)
             if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
                 return GenOutcome.OptionError, exc
+            # Handle FillError for accessibility check failures - this happens when random
+            # option combinations create seeds where required locations are unreachable
+            # (e.g., Terraria with certain goal/calamity combinations)
+            if "Could not access required locations for accessibility check" in exc_str:
+                return GenOutcome.OptionError, exc
             # Handle FFMQ API errors - the game requires external API for shuffle options
             # but the API may not be available in test environments
             if "Failed to fetch map shuffle data for FFMQ" in exc_str:
@@ -418,6 +423,9 @@ class MultiworldHook(BaseHook):
             if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
                 return GenOutcome.OptionError, exc
             if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
+                return GenOutcome.OptionError, exc
+            # Handle FillError for accessibility check failures
+            if "Could not access required locations for accessibility check" in exc_str:
                 return GenOutcome.OptionError, exc
             # Handle FFMQ API errors - the game requires external API for shuffle options
             # but the API may not be available in test environments
