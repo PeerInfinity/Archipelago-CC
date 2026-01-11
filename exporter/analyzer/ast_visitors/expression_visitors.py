@@ -233,6 +233,13 @@ class ExpressionVisitorMixin:
                     list_value = list(value) if isinstance(value, tuple) else value
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
+                # Handle set/frozenset values - resolve to constant for 'in' / 'not in' comparisons
+                # This enables proper evaluation of patterns like: "item" not in randomized_items
+                elif isinstance(value, (set, frozenset)):
+                    # Convert to sorted list for JSON serialization and deterministic ordering
+                    list_value = sorted(value, key=lambda x: str(x))
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant set (as list): {list_value}")
+                    return {'type': 'constant', 'value': list_value}
                 # Handle dict values - resolve to constant for subscript access and .items() iteration
                 elif isinstance(value, dict):
                     # Convert dict to JSON-serializable format
