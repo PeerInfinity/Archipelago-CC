@@ -61,6 +61,7 @@ class ItemData:
     max_count: int = 1
     is_event: bool = False
     hint_text: Optional[str] = None  # Display name if different from name
+    classification_counts: Optional[Dict[str, int]] = None  # Per-classification counts for mixed items
 
 
 @dataclass
@@ -382,6 +383,7 @@ def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict
             max_count=item_info.get('max_count', 1),
             is_event=is_event,
             hint_text=hint_text,
+            classification_counts=item_info.get('classification_counts'),
         )
 
         # Build item_name_groups mapping

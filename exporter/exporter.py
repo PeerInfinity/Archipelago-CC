@@ -2012,6 +2012,43 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
     except Exception as e:
         logger.warning(f"Could not count starting items for player {player}: {e}")
 
+    # Count items by classification (for items with mixed classifications like Faxanadu's Red Potion)
+    # This tracks how many of each classification exist for each item type
+    classification_counts: Dict[str, Dict[str, int]] = {}
+    try:
+        # Count from placements
+        for location in multiworld.get_locations():
+            if location.item and location.item.player == player:
+                item_name = location.item.name
+                item_classification = classification_to_string(
+                    getattr(location.item, 'classification', ItemClassification.filler)
+                )
+                if item_name not in classification_counts:
+                    classification_counts[item_name] = {}
+                classification_counts[item_name][item_classification] = \
+                    classification_counts[item_name].get(item_classification, 0) + 1
+
+        # Also count starting items
+        for starting_item in multiworld.precollected_items.get(player, []):
+            if hasattr(starting_item, 'name'):
+                item_name = starting_item.name
+                item_classification = classification_to_string(
+                    getattr(starting_item, 'classification', ItemClassification.filler)
+                )
+                if item_name not in classification_counts:
+                    classification_counts[item_name] = {}
+                classification_counts[item_name][item_classification] = \
+                    classification_counts[item_name].get(item_classification, 0) + 1
+
+        # Add classification_counts to items that have mixed classifications
+        # (i.e., more than one classification type with non-zero count)
+        for item_name, counts in classification_counts.items():
+            if item_name in items_data and len(counts) > 1:
+                # Item has mixed classifications - add the counts
+                items_data[item_name]['classification_counts'] = counts
+    except Exception as e:
+        logger.warning(f"Could not count item classifications for player {player}: {e}")
+
     # Update max_count based on actual placements (use max of current max_count and placements)
     for item_name, item_data in items_data.items():
         placement_count = placement_counts.get(item_name, 0)

@@ -285,8 +285,9 @@ def generate_items_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
 
-    # Check if any items have hint_text
+    # Check if any items have hint_text or classification_counts
     has_hint_text = any(item.hint_text for item in data.items.values())
+    has_classification_counts = any(item.classification_counts for item in data.items.values())
 
     # Build item table entries (preserve original order from JSON)
     item_entries = []
@@ -297,22 +298,42 @@ def generate_items_py(data: ExtractedData) -> str:
         # Escape item name for Python string
         name_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
 
-        # Build optional hint_text argument
+        # Build optional arguments
+        optional_args = []
         if item_data.hint_text:
             hint_escaped = item_data.hint_text.replace('\\', '\\\\').replace('"', '\\"')
-            hint_arg = f', "{hint_escaped}"'
+            optional_args.append(f'"{hint_escaped}"')
+        elif has_hint_text:
+            # Need placeholder if other items have hint_text
+            optional_args.append('None')
+
+        if item_data.classification_counts:
+            # Format classification_counts as a dict
+            counts_str = ', '.join(
+                f'"{k}": {v}' for k, v in sorted(item_data.classification_counts.items())
+            )
+            optional_args.append('{' + counts_str + '}')
+        elif has_classification_counts:
+            # Need placeholder if other items have classification_counts
+            optional_args.append('None')
+
+        # Build the full argument string
+        if optional_args:
+            args_str = f'{item_id}, {classification}, ' + ', '.join(optional_args)
         else:
-            hint_arg = ''
+            args_str = f'{item_id}, {classification}'
 
         item_entries.append(
-            f'    "{name_escaped}": ItemData({item_id}, {classification}{hint_arg}),'
+            f'    "{name_escaped}": ItemData({args_str}),'
         )
 
     item_table_content = '\n'.join(item_entries)
 
-    # Generate hint_text parameter in ItemData if needed
+    # Generate optional parameters in ItemData
     hint_text_param = ', hint_text: Optional[str] = None' if has_hint_text else ''
     hint_text_assign = '\n        self.hint_text = hint_text' if has_hint_text else ''
+    classification_counts_param = ', classification_counts: Optional[Dict[str, int]] = None' if has_classification_counts else ''
+    classification_counts_assign = '\n        self.classification_counts = classification_counts' if has_classification_counts else ''
 
     return f'''"""
 Item definitions for {game_name}.
@@ -332,9 +353,9 @@ class {class_name}Item(Item):
 class ItemData:
     """Data container for item definitions."""
 
-    def __init__(self, item_id: Optional[int], classification: ItemClassification{hint_text_param}):
+    def __init__(self, item_id: Optional[int], classification: ItemClassification{hint_text_param}{classification_counts_param}):
         self.id = item_id
-        self.classification = classification{hint_text_assign}
+        self.classification = classification{hint_text_assign}{classification_counts_assign}
 
 
 item_table: Dict[str, ItemData] = {{
@@ -2335,14 +2356,37 @@ class {world_class}(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = {class_name}Item(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {{
+                    'progression': ItemClassification.progression,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }}
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = {class_name}Item(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = {class_name}Item(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
