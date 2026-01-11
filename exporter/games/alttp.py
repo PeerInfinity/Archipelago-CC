@@ -3,7 +3,9 @@
 This exporter handles ALttP-specific patterns:
 - Bunny rules: Complex dynamic rules that check if locations are accessible
   in bunny form (Dark World without Moon Pearl). These rules use lambdas
-  that can't be serialized, so we simplify them to Moon Pearl requirements.
+  that can't be serialized. We detect both function objects (pre-serialization)
+  and their string representations (post-serialization) and replace them with
+  simplified True rules, indicating the location is potentially accessible.
 - Shop price rules: Rules that check if the player has enough resources
   to purchase items from shops.
 """
@@ -56,6 +58,22 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Return the static set - glitch modes have complex path-dependent rules
         # that can't be simplified to a location list
         return set(BUNNY_ACCESSIBLE_LOCATIONS)
+
+    def _is_bunny_rule_value(self, value) -> bool:
+        """Check if a value is a bunny rule lambda (function object or string).
+
+        Handles both:
+        - Actual function objects (before JSON serialization)
+        - String representations like '<function set_bunny_rules...>' (after serialization)
+        """
+        if callable(value):
+            # It's a function object - check its qualified name
+            func_qualname = getattr(value, '__qualname__', '')
+            return 'set_bunny_rules' in func_qualname
+        elif isinstance(value, str):
+            # It's a string - check with regex pattern
+            return bool(self.BUNNY_RULE_PATTERN.search(value))
+        return False
 
     def set_location_context(self, location_name: str) -> None:
         """Set the current location context for rule analysis."""
@@ -112,23 +130,23 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'constant':
             value = rule.get('value')
             if isinstance(value, list) and any(
-                isinstance(v, str) and self.BUNNY_RULE_PATTERN.search(v)
+                self._is_bunny_rule_value(v)
                 for v in value
             ):
                 # Replace entire constant with bunny replacement rule
                 return self._get_bunny_replacement_rule(location_name)
 
-        # Check if this is an item_check with a bunny rule lambda string
+        # Check if this is an item_check with a bunny rule lambda
         if rule.get('type') == 'item_check':
             item = rule.get('item', '')
-            if isinstance(item, str) and self.BUNNY_RULE_PATTERN.search(item):
+            if self._is_bunny_rule_value(item):
                 return self._get_bunny_replacement_rule(location_name)
 
         # Check Rule Builder format Has with bunny rule lambda
         if rule.get('rule') == 'Has':
             args = rule.get('args', {})
             item_name = args.get('item_name', '')
-            if isinstance(item_name, str) and self.BUNNY_RULE_PATTERN.search(item_name):
+            if self._is_bunny_rule_value(item_name):
                 return self._get_bunny_replacement_rule(location_name)
 
         # Check for AST_any_of with bunny rules in iterator
@@ -138,10 +156,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             iterator = iterator_info.get('iterator', {})
             if iterator.get('type') == 'constant':
                 value = iterator.get('value', [])
-                if isinstance(value, list) and any(
-                    isinstance(v, str) and self.BUNNY_RULE_PATTERN.search(v)
+                has_bunny = isinstance(value, list) and any(
+                    self._is_bunny_rule_value(v)
                     for v in value
-                ):
+                )
+                if has_bunny:
                     # This entire any_of is a bunny rule - replace it
                     return self._get_bunny_replacement_rule(location_name)
             # Also check nested element_rule
@@ -150,7 +169,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 processed_element = self._process_bunny_rules(element_rule, location_name)
                 if processed_element != element_rule:
                     # If we replaced something in element_rule, check if it's now a simple rule
+                    # Handle both AST format (type) and Rule Builder format (rule)
                     if processed_element.get('type') in ('constant', 'item_check'):
+                        return processed_element
+                    # Also handle Rule Builder format replacements (e.g., Has, True_)
+                    if processed_element.get('rule') in ('Has', 'True_', 'False_'):
                         return processed_element
                     if 'args' in rule:
                         args = {**args, 'element_rule': processed_element}
@@ -198,25 +221,30 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     def _get_bunny_replacement_rule(self, location_name: str, region_name: str = None) -> Dict[str, Any]:
         """Get the replacement rule for a bunny rule lambda.
 
-        Returns a bunny_accessibility_check rule that evaluates at runtime based on:
-        - Current game mode (inverted or not)
-        - Glitch mode settings
-        - Path availability from link regions
+        Bunny rules check if a location is accessible when in bunny form (Dark World
+        without Moon Pearl in standard mode). The rules evaluate dynamically based on
+        available entrance paths.
 
-        For locations that are always bunny-accessible (like outdoors locations that
-        don't require any actions), returns True directly.
+        Since we can't replicate the dynamic path evaluation, we use this approximation:
+        - Locations in BUNNY_ACCESSIBLE_LOCATIONS are always accessible in bunny form
+        - For other locations, we return True since the bunny rule's existence means
+          the original code determined this location might need bunny accessibility
+          handling, and with entrance shuffle, alternative paths may exist
+
+        Note: This is an approximation. The original bunny rules are complex and
+        evaluate paths dynamically. Some mismatches may occur with unusual entrance
+        shuffle configurations.
         """
         if location_name in self._bunny_accessible_locations:
-            logger.debug(f"ALttP: Location '{location_name}' is always bunny-accessible")
+            logger.debug(f"ALttP: Location '{location_name}' is in bunny-accessible list")
             return {'type': 'constant', 'value': True}
-        else:
-            logger.debug(f"ALttP: Location '{location_name}' requires Moon Pearl (simplified bunny rule)")
-            # For non-bunny-accessible locations in bunny regions, require Moon Pearl
-            # This is a simplification - the original uses path-dependent checks
-            return {
-                'rule': 'Has',
-                'args': {'item_name': 'Moon Pearl'}
-            }
+
+        # For other locations with bunny rules, the presence of the bunny rule
+        # indicates the original code found it needed bunny accessibility handling.
+        # Return True as a safe default - the region's own access rules will
+        # determine if the location is actually reachable.
+        logger.debug(f"ALttP: Replacing bunny rule for '{location_name}' with True")
+        return {'type': 'constant', 'value': True}
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process entire export data to handle bunny rules in entrances/exits.

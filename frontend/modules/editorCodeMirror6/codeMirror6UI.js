@@ -7,7 +7,7 @@
 
 import eventBus from '../../app/core/eventBus.js';
 import { editorDataService, EDITOR_EVENTS } from '../editorCore/index.js';
-import centralRegistry from '../../app/core/centralRegistry.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 // Modes that support the Apply button
 const APPLY_SUPPORTED_MODES = ['rules', 'localStorageMode', 'dataForExport', 'metaGameJsFile', 'latestSnapshot'];

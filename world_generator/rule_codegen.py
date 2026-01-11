@@ -2017,17 +2017,24 @@ class RuleCodeGenerator:
                     return 'False_()'
 
         # Check if either side is a placement_lookup
-        # Placement lookups (location_item_name checks) depend on actual item placements
-        # which are not available during tracking. For tracking purposes, these comparisons
-        # should evaluate to False_() so that only the simple item requirement checks matter.
-        # This fixes self-locking rules: OR(placement_lookup == item, Has(item)) -> Has(item)
+        # Placement lookups (location_item_name checks) depend on actual item placements.
+        # We now check the actual placements to determine the correct result.
+        # This correctly handles self-locking rules: if the key IS placed in the locked region,
+        # the placement check should return True, making the region accessible without the key.
         if self._is_placement_lookup(left) or self._is_placement_lookup(right):
+            # Try to resolve the comparison using actual placements
+            placement_result = self._check_placement_comparison(left, right, op)
+            if placement_result is True:
+                self.required_imports.add('True_')
+                return 'True_()'
+            elif placement_result is False:
+                self.required_imports.add('False_')
+                return 'False_()'
+            # If placement_result is None, fall back to False for safety
             if op in ('==', 'eq'):
-                # Equality comparison with placement_lookup always fails during tracking
                 self.required_imports.add('False_')
                 return 'False_()'
             elif op in ('!=', 'ne'):
-                # Inequality comparison with placement_lookup always succeeds during tracking
                 self.required_imports.add('True_')
                 return 'True_()'
 
@@ -2078,6 +2085,99 @@ class RuleCodeGenerator:
             return True
 
         return False
+
+    def _extract_placement_location(self, operand: Any) -> Optional[str]:
+        """
+        Extract the location name from a placement_lookup expression.
+        Returns the location name as a string, or None if it cannot be extracted.
+        """
+        if not isinstance(operand, dict):
+            return None
+
+        # Handle placement_lookup type
+        if operand.get('type') == 'placement_lookup':
+            location_rule = operand.get('location', {})
+            if isinstance(location_rule, dict):
+                if location_rule.get('type') == 'constant':
+                    return location_rule.get('value', '')
+            elif isinstance(location_rule, str):
+                return location_rule
+            return None
+
+        # Handle Rule Builder format AST_placement_lookup
+        if operand.get('rule') == 'AST_placement_lookup':
+            args = operand.get('args', {})
+            return args.get('location', None)
+
+        return None
+
+    def _check_placement_comparison(self, left: Any, right: Any, op: str) -> Optional[bool]:
+        """
+        Check if a placement comparison can be resolved to a boolean using actual placements.
+
+        For self-locking rules like:
+            location_item_name(state, "Location A", player) == ("Left Tower Key", 1)
+
+        We check if the actual item placed at "Location A" matches the expected item.
+        Returns True/False if the comparison can be resolved, None otherwise.
+        """
+        # Determine which side is the placement_lookup
+        placement_operand = None
+        expected_operand = None
+
+        if self._is_placement_lookup(left):
+            placement_operand = left
+            expected_operand = right
+        elif self._is_placement_lookup(right):
+            placement_operand = right
+            expected_operand = left
+        else:
+            return None
+
+        # Extract the location name from the placement_lookup
+        location_name = self._extract_placement_location(placement_operand)
+        if not location_name:
+            return None
+
+        # Get the actual item placed at this location
+        actual_item = self.placements.get(location_name) if hasattr(self, 'placements') else None
+
+        # Extract the expected item from the comparison value
+        # Expected format is typically [item_name, player] or (item_name, player)
+        expected_item = None
+        if isinstance(expected_operand, list) and len(expected_operand) >= 1:
+            expected_item = expected_operand[0]
+        elif isinstance(expected_operand, dict):
+            # Could be a Tuple or list type in AST format
+            if expected_operand.get('type') == 'list':
+                values = expected_operand.get('value', [])
+                if values and len(values) >= 1:
+                    first_val = values[0]
+                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
+                        expected_item = first_val.get('value')
+                    elif isinstance(first_val, str):
+                        expected_item = first_val
+            elif expected_operand.get('rule') == 'Tuple':
+                values = expected_operand.get('args', {}).get('value', [])
+                if values and len(values) >= 1:
+                    first_val = values[0]
+                    if isinstance(first_val, str):
+                        expected_item = first_val
+
+        if expected_item is None:
+            return None
+
+        # Now compare actual vs expected
+        if op in ('==', 'eq'):
+            if actual_item is None:
+                return False  # No item placed means comparison fails
+            return actual_item == expected_item
+        elif op in ('!=', 'ne'):
+            if actual_item is None:
+                return True  # No item placed means inequality succeeds
+            return actual_item != expected_item
+
+        return None
 
     def _get_list_constant_value(self, operand: Any) -> Optional[tuple]:
         """
@@ -3788,7 +3888,46 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_')
                 return 'True_()'
 
-            # Generate HasAll check for required items
+            # Check the element_rule to determine how to process each item
+            # Case 1: state_method with can_reach - use CanReachLocation
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'can_reach':
+                checks = []
+                for loc in required_items:
+                    loc_escaped = self._escape_string(str(loc), "'")
+                    checks.append(f"CanReachLocation('{loc_escaped}')")
+                self.required_imports.add('CanReachLocation')
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('And')
+                    return f'And({", ".join(checks)})'
+
+            # Case 2: item_check with f_string - substitute values into the template
+            if element_rule.get('type') == 'item_check':
+                item_node = element_rule.get('item', {})
+                if item_node.get('type') == 'f_string':
+                    # Get the template string (e.g., "Automated {ingredient}")
+                    template = item_node.get('value', '')
+                    # Get the target variable name (e.g., "ingredient")
+                    target = iterator_info.get('target', {})
+                    target_name = target.get('name', '') if target.get('type') == 'name' else ''
+
+                    if template and target_name:
+                        # Substitute each iterator value into the template
+                        checks = []
+                        for value in required_items:
+                            # Replace {target_name} with the actual value
+                            item_name = template.replace(f'{{{target_name}}}', str(value))
+                            item_escaped = self._escape_string(item_name, "'")
+                            checks.append(f"Has('{item_escaped}')")
+                        self.required_imports.add('Has')
+                        if len(checks) == 1:
+                            return checks[0]
+                        else:
+                            self.required_imports.add('And')
+                            return f'And({", ".join(checks)})'
+
+            # Default: Generate HasAll check for required items directly
             if len(required_items) == 1:
                 item = required_items[0]
                 item_escaped = self._escape_string(str(item), "'")
@@ -3804,6 +3943,65 @@ class RuleCodeGenerator:
                 self.required_imports.add('And')
                 return f'And({", ".join(has_checks)})'
 
+        # Handle constant iterator type with dict (recipe ingredients)
+        # This occurs when iterating over a dict like:
+        #   all(...for sub_ingredient in recipe.ingredients)
+        # where recipe.ingredients = {"iron-plate": 1, "copper-plate": 1}
+        elif iterator.get('type') == 'constant' and isinstance(iterator.get('value'), dict):
+            recipe_ingredients = iterator.get('value', {})
+
+            if not recipe_ingredients:
+                # Empty dict - all() of nothing is True
+                self.required_imports.add('True_')
+                return 'True_()'
+
+            # Check if element_rule is a nested all_of comprehension (common in Factorio)
+            # This handles patterns like:
+            #   all(all(state.has(tech.name, player) for tech in required_technologies[ingredient])
+            #       for ingredient in recipe.ingredients)
+            if element_rule.get('type') == 'all_of':
+                inner_element_rule = element_rule.get('element_rule', {})
+                inner_iterator_info = element_rule.get('iterator_info', {})
+                inner_iterator = inner_iterator_info.get('iterator', {})
+
+                # Check if inner iterator is a subscript into required_technologies
+                if inner_iterator.get('type') == 'subscript':
+                    inner_value = inner_iterator.get('value', {})
+                    if inner_value.get('type') == 'constant' and isinstance(inner_value.get('value'), dict):
+                        tech_dict = inner_value.get('value')
+
+                        # For each recipe ingredient, look up required technologies
+                        all_checks = []
+                        for ingredient in recipe_ingredients.keys():
+                            required_techs = tech_dict.get(ingredient, [])
+                            if required_techs:
+                                for tech in required_techs:
+                                    tech_escaped = self._escape_string(str(tech), "'")
+                                    all_checks.append(f"Has('{tech_escaped}')")
+
+                        if not all_checks:
+                            self.required_imports.add('True_')
+                            return 'True_()'
+
+                        # Remove duplicates while preserving order
+                        seen = set()
+                        unique_checks = []
+                        for check in all_checks:
+                            if check not in seen:
+                                seen.add(check)
+                                unique_checks.append(check)
+
+                        self.required_imports.add('Has')
+                        if len(unique_checks) == 1:
+                            return unique_checks[0]
+                        else:
+                            self.required_imports.add('And')
+                            return f'And({", ".join(unique_checks)})'
+
+            # Fallback: iterate over dict keys and apply element_rule
+            self.required_imports.add('True_')
+            return 'True_()'
+
         # Couldn't resolve statically - fall back to True_()
         # This shouldn't happen for properly exported Factorio rules
         self.required_imports.add('True_')
@@ -3816,6 +4014,7 @@ class RuleCodeGenerator:
         Similar to AST_all_of but uses Or instead of And.
         """
         args = rule.get('args', {})
+        element_rule = args.get('element_rule', {})
         iterator_info = args.get('iterator_info', {})
 
         # Get the iterator which should be a subscript into a constant dict
@@ -3868,7 +4067,46 @@ class RuleCodeGenerator:
                 self.required_imports.add('False_')
                 return 'False_()'
 
-            # Generate Or check for items
+            # Check the element_rule to determine how to process each item
+            # Case 1: state_method with can_reach - use CanReachLocation
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'can_reach':
+                checks = []
+                for loc in items:
+                    loc_escaped = self._escape_string(str(loc), "'")
+                    checks.append(f"CanReachLocation('{loc_escaped}')")
+                self.required_imports.add('CanReachLocation')
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
+            # Case 2: item_check with f_string - substitute values into the template
+            if element_rule.get('type') == 'item_check':
+                item_node = element_rule.get('item', {})
+                if item_node.get('type') == 'f_string':
+                    # Get the template string (e.g., "Automated {ingredient}")
+                    template = item_node.get('value', '')
+                    # Get the target variable name (e.g., "ingredient")
+                    target = iterator_info.get('target', {})
+                    target_name = target.get('name', '') if target.get('type') == 'name' else ''
+
+                    if template and target_name:
+                        # Substitute each iterator value into the template
+                        checks = []
+                        for value in items:
+                            # Replace {target_name} with the actual value
+                            item_name = template.replace(f'{{{target_name}}}', str(value))
+                            item_escaped = self._escape_string(item_name, "'")
+                            checks.append(f"Has('{item_escaped}')")
+                        self.required_imports.add('Has')
+                        if len(checks) == 1:
+                            return checks[0]
+                        else:
+                            self.required_imports.add('Or')
+                            return f'Or({", ".join(checks)})'
+
+            # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
                 item_escaped = self._escape_string(str(item), "'")
@@ -5775,16 +6013,21 @@ class HelperCodeGenerator:
         op = expr.get('op', '==')
 
         # Check if either side is a placement_lookup
-        # Placement lookups (location_item_name checks) depend on actual item placements
-        # which are not available during tracking. For tracking purposes, these comparisons
-        # should evaluate to False so that only the simple item requirement checks matter.
-        # This fixes self-locking rules: OR(placement_lookup == item, Has(item)) -> Has(item)
+        # Placement lookups (location_item_name checks) depend on actual item placements.
+        # We now check the actual placements to determine the correct result.
+        # This correctly handles self-locking rules: if the key IS placed in the locked region,
+        # the placement check should return True, making the region accessible without the key.
         if self._is_placement_lookup(left_expr) or self._is_placement_lookup(right_expr):
+            # Try to resolve the comparison using actual placements
+            placement_result = self._check_placement_comparison(left_expr, right_expr, op)
+            if placement_result is True:
+                return 'True'
+            elif placement_result is False:
+                return 'False'
+            # If placement_result is None, fall back to False for safety
             if op in ('==', 'eq'):
-                # Equality comparison with placement_lookup always fails during tracking
                 return 'False'
             elif op in ('!=', 'ne'):
-                # Inequality comparison with placement_lookup always succeeds during tracking
                 return 'True'
 
         left = self._generate_expression(left_expr)
@@ -5816,6 +6059,99 @@ class HelperCodeGenerator:
             return True
 
         return False
+
+    def _extract_placement_location(self, operand: Any) -> Optional[str]:
+        """
+        Extract the location name from a placement_lookup expression.
+        Returns the location name as a string, or None if it cannot be extracted.
+        """
+        if not isinstance(operand, dict):
+            return None
+
+        # Handle placement_lookup type
+        if operand.get('type') == 'placement_lookup':
+            location_rule = operand.get('location', {})
+            if isinstance(location_rule, dict):
+                if location_rule.get('type') == 'constant':
+                    return location_rule.get('value', '')
+            elif isinstance(location_rule, str):
+                return location_rule
+            return None
+
+        # Handle Rule Builder format AST_placement_lookup
+        if operand.get('rule') == 'AST_placement_lookup':
+            args = operand.get('args', {})
+            return args.get('location', None)
+
+        return None
+
+    def _check_placement_comparison(self, left: Any, right: Any, op: str) -> Optional[bool]:
+        """
+        Check if a placement comparison can be resolved to a boolean using actual placements.
+
+        For self-locking rules like:
+            location_item_name(state, "Location A", player) == ("Left Tower Key", 1)
+
+        We check if the actual item placed at "Location A" matches the expected item.
+        Returns True/False if the comparison can be resolved, None otherwise.
+        """
+        # Determine which side is the placement_lookup
+        placement_operand = None
+        expected_operand = None
+
+        if self._is_placement_lookup(left):
+            placement_operand = left
+            expected_operand = right
+        elif self._is_placement_lookup(right):
+            placement_operand = right
+            expected_operand = left
+        else:
+            return None
+
+        # Extract the location name from the placement_lookup
+        location_name = self._extract_placement_location(placement_operand)
+        if not location_name:
+            return None
+
+        # Get the actual item placed at this location
+        actual_item = self.placements.get(location_name) if hasattr(self, 'placements') else None
+
+        # Extract the expected item from the comparison value
+        # Expected format is typically [item_name, player] or (item_name, player)
+        expected_item = None
+        if isinstance(expected_operand, list) and len(expected_operand) >= 1:
+            expected_item = expected_operand[0]
+        elif isinstance(expected_operand, dict):
+            # Could be a Tuple or list type in AST format
+            if expected_operand.get('type') == 'list':
+                values = expected_operand.get('value', [])
+                if values and len(values) >= 1:
+                    first_val = values[0]
+                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
+                        expected_item = first_val.get('value')
+                    elif isinstance(first_val, str):
+                        expected_item = first_val
+            elif expected_operand.get('rule') == 'Tuple':
+                values = expected_operand.get('args', {}).get('value', [])
+                if values and len(values) >= 1:
+                    first_val = values[0]
+                    if isinstance(first_val, str):
+                        expected_item = first_val
+
+        if expected_item is None:
+            return None
+
+        # Now compare actual vs expected
+        if op in ('==', 'eq'):
+            if actual_item is None:
+                return False  # No item placed means comparison fails
+            return actual_item == expected_item
+        elif op in ('!=', 'ne'):
+            if actual_item is None:
+                return True  # No item placed means inequality succeeds
+            return actual_item != expected_item
+
+        return None
 
     def _expr_binary_op(self, expr: Dict[str, Any]) -> str:
         """Generate binary operation expression."""

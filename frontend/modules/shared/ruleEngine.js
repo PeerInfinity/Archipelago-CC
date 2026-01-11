@@ -1124,6 +1124,12 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       case 'conditional': {
         // Conditional expression (ternary) - evaluates test and returns if_true or if_false branch
         // Pattern: test ? if_true : if_false
+        if (!rule.test || !rule.if_true) {
+          log('warn', '[evaluateRule Conditional] Malformed conditional rule:', rule);
+          result = undefined;
+          break;
+        }
+
         const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
 
         // If test result is undefined, we can't determine which branch to take
@@ -1134,7 +1140,10 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           result = evaluateRule(rule.if_true, context, depth + 1, localScope);
         } else {
           // Test is falsy - evaluate if_false branch
-          result = evaluateRule(rule.if_false, context, depth + 1, localScope);
+          // Handle null if_false as false (location not accessible)
+          result = rule.if_false === null
+            ? false
+            : evaluateRule(rule.if_false, context, depth + 1, localScope);
         }
         break;
       }
@@ -2263,15 +2272,23 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'index':
       case 'subscript': {
+        // Array/list indexing: obj[index]
+        // Note: 'subscript' is the type from Python analyzer, 'index' is the canonical name
+        // subscript uses 'value' for object, index uses 'object'
         // Pass localScope to resolve parameter references like buildings[index]
-        const list = evaluateRule(rule.value, context, depth + 1, localScope);
+        const list = evaluateRule(rule.object || rule.value, context, depth + 1, localScope);
         const index = evaluateRule(rule.index, context, depth + 1, localScope);
 
         if (list === undefined || index === undefined) {
           result = undefined; // If array/object or index is unknown, result is unknown
+        } else if (Array.isArray(list)) {
+          result = list[index]; // Access array index
+        } else if (typeof list === 'string') {
+          result = list[index]; // String character access
         } else if (list && typeof list === 'object') {
-          result = list[index]; // Access property/index
+          result = list[index]; // Access object property
           // If list[index] itself is undefined (property doesn't exist), result remains undefined.
 
           // If the result is itself a rule object (has a 'type' property), evaluate it recursively.
@@ -2362,7 +2379,10 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'comparison':
       case 'compare': {
+        // Handle comparison operations: ==, !=, <, <=, >, >=
+        // Note: 'compare' is the type from Python analyzer, 'comparison' is the canonical name
         // Special handling for item_check in comparisons
         // When item_check (without a count field) is used as an operand in a comparison,
         // we need the item COUNT, not a boolean. This handles cases like KeyPD >= 4.
@@ -2397,6 +2417,14 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           }
         } else {
           right = evaluateRule(right, context, depth + 1, localScope);
+        }
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
         }
 
         const op = rule.op;
@@ -3036,32 +3064,10 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
-      case 'conditional': {
-        if (!rule.test || !rule.if_true) {
-          log(
-            'warn',
-            '[evaluateRule Conditional] Malformed conditional rule:',
-            rule
-          );
-          result = undefined;
-        } else {
-          const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
-          if (testResult === undefined) {
-            result = undefined; // If test is unknown, outcome is unknown
-          } else if (testResult) {
-            result = evaluateRule(rule.if_true, context, depth + 1, localScope);
-          } else {
-            // Handle null if_false as false (location not accessible)
-            result =
-              rule.if_false === null
-                ? false
-                : evaluateRule(rule.if_false, context, depth + 1, localScope);
-          }
-        }
-        break;
-      }
-
+      case 'binop':
       case 'binary_op': {
+        // Handle binary arithmetic operations: +, -, *, /, //, %, etc.
+        // Note: 'binary_op' is the type from Python analyzer, 'binop' is the canonical name
         let left = evaluateRule(rule.left, context, depth + 1, localScope);
         let right = evaluateRule(rule.right, context, depth + 1, localScope);
         const op = rule.op;
@@ -3997,193 +4003,6 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
-      // ========================================
-      // Imperative rule types for complex helpers
-      // ========================================
-
-      case 'comparison':
-      case 'compare': {
-        // Handle comparison operations: ==, !=, <, <=, >, >=
-        // Note: 'compare' is the type from Python analyzer, 'comparison' is the canonical name
-        let left = evaluateRule(rule.left, context, depth + 1, localScope);
-        let right = evaluateRule(rule.right, context, depth + 1, localScope);
-
-        // Unwrap return markers from block expressions used as operands
-        if (left && typeof left === 'object' && left.__isReturn) {
-          left = left.value;
-        }
-        if (right && typeof right === 'object' && right.__isReturn) {
-          right = right.value;
-        }
-
-        if (left === undefined || right === undefined) {
-          result = undefined;
-          break;
-        }
-
-        switch (rule.op) {
-          case '==': result = left === right; break;
-          case '!=': result = left !== right; break;
-          case '<': result = left < right; break;
-          case '<=': result = left <= right; break;
-          case '>': result = left > right; break;
-          case '>=': result = left >= right; break;
-          default:
-            log('warn', `[evaluateRule] Unknown comparison operator: ${rule.op}`);
-            result = undefined;
-        }
-        break;
-      }
-
-      case 'binop':
-      case 'binary_op': {
-        // Handle binary arithmetic operations: +, -, *, /, //, %
-        // Note: 'binary_op' is the type from Python analyzer, 'binop' is the canonical name
-        let left = evaluateRule(rule.left, context, depth + 1, localScope);
-        let right = evaluateRule(rule.right, context, depth + 1, localScope);
-
-        // Unwrap return markers from block expressions used as operands
-        if (left && typeof left === 'object' && left.__isReturn) {
-          left = left.value;
-        }
-        if (right && typeof right === 'object' && right.__isReturn) {
-          right = right.value;
-        }
-
-        if (left === undefined || right === undefined) {
-          result = undefined;
-          break;
-        }
-
-        switch (rule.op) {
-          case '+': result = left + right; break;
-          case '-': result = left - right; break;
-          case '*': result = left * right; break;
-          case '/': result = left / right; break;
-          case '//': result = Math.floor(left / right); break;
-          case '%': result = left % right; break;
-          default:
-            log('warn', `[evaluateRule] Unknown binary operator: ${rule.op}`);
-            result = undefined;
-        }
-        break;
-      }
-
-      case 'min': {
-        // Return the minimum of evaluated arguments or iterable (block scope version)
-        if (rule.iterable) {
-          const minIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
-          if (minIterableBlock === undefined) {
-            result = undefined;
-          } else if (Array.isArray(minIterableBlock)) {
-            if (minIterableBlock.length === 0) {
-              result = undefined;
-            } else if (minIterableBlock.some((v) => v === undefined)) {
-              result = undefined;
-            } else {
-              result = Math.min(...minIterableBlock);
-            }
-          } else if (typeof minIterableBlock === 'number') {
-            result = minIterableBlock;
-          } else {
-            result = undefined;
-          }
-          break;
-        }
-        if (!rule.args || rule.args.length === 0) {
-          result = undefined;
-          break;
-        }
-        const minArgsBlock = rule.args.map((arg) =>
-          evaluateRule(arg, context, depth + 1, localScope)
-        );
-        if (minArgsBlock.some((arg) => arg === undefined)) {
-          result = undefined;
-          break;
-        }
-        result = Math.min(...minArgsBlock);
-        break;
-      }
-
-      case 'max': {
-        // Return the maximum of evaluated arguments or iterable (block scope version)
-        if (rule.iterable) {
-          const maxIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
-          if (maxIterableBlock === undefined) {
-            result = undefined;
-          } else if (Array.isArray(maxIterableBlock)) {
-            if (maxIterableBlock.length === 0) {
-              result = undefined;
-            } else if (maxIterableBlock.some((v) => v === undefined)) {
-              result = undefined;
-            } else {
-              result = Math.max(...maxIterableBlock);
-            }
-          } else if (typeof maxIterableBlock === 'number') {
-            result = maxIterableBlock;
-          } else {
-            result = undefined;
-          }
-          break;
-        }
-        if (!rule.args || rule.args.length === 0) {
-          result = undefined;
-          break;
-        }
-        const maxArgsBlock = rule.args.map((arg) =>
-          evaluateRule(arg, context, depth + 1, localScope)
-        );
-        if (maxArgsBlock.some((arg) => arg === undefined)) {
-          result = undefined;
-          break;
-        }
-        result = Math.max(...maxArgsBlock);
-        break;
-      }
-
-      case 'sum': {
-        // Sum the values in an iterable (block scope version)
-        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
-        if (!rule.iterable) {
-          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
-          result = 0;
-          break;
-        }
-        const sumIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
-        const startValueBlock = rule.start !== undefined
-          ? evaluateRule(rule.start, context, depth + 1, localScope)
-          : 0;
-
-        if (sumIterableBlock === undefined) {
-          result = undefined;
-          break;
-        }
-        if (startValueBlock === undefined) {
-          result = undefined;
-          break;
-        }
-        if (Array.isArray(sumIterableBlock)) {
-          if (sumIterableBlock.some((v) => v === undefined)) {
-            result = undefined;
-            break;
-          }
-          result = sumIterableBlock.reduce((acc, val) => {
-            if (typeof val === 'number') {
-              return acc + val;
-            } else if (typeof val === 'boolean') {
-              return acc + (val ? 1 : 0);
-            }
-            return acc;
-          }, startValueBlock);
-        } else if (typeof sumIterableBlock === 'number') {
-          result = sumIterableBlock + startValueBlock;
-        } else {
-          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterableBlock, rule });
-          result = undefined;
-        }
-        break;
-      }
-
       case 'negate': {
         // Unary minus operation: -value
         // Generated by Python exporter for non-constant negation
@@ -4604,28 +4423,6 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         // if_statement doesn't return a value unless there was a control flow signal
         if (!(result && typeof result === 'object' &&
               (result.__isReturn || result.__isBreak || result.__isContinue))) {
-          result = undefined;
-        }
-        break;
-      }
-
-      case 'index':
-      case 'subscript': {
-        // Array/list indexing: obj[index]
-        // Note: 'subscript' is the type from Python analyzer, 'index' is the canonical name
-        // subscript uses 'value' for object, index uses 'object'
-        const obj = evaluateRule(rule.object || rule.value, context, depth + 1, localScope);
-        const idx = evaluateRule(rule.index, context, depth + 1, localScope);
-
-        if (obj === undefined || idx === undefined) {
-          result = undefined;
-        } else if (Array.isArray(obj)) {
-          result = obj[idx];
-        } else if (typeof obj === 'object' && obj !== null) {
-          result = obj[idx];
-        } else if (typeof obj === 'string') {
-          result = obj[idx];
-        } else {
           result = undefined;
         }
         break;

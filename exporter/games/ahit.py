@@ -33,8 +33,8 @@ class AHitGameExportHandler(GenericGameExportHandler):
     # Disable location attribute discovery (not needed for AHIT)
     AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
 
-    # Don't export can_clear_required_act as a helper definition since we expand it
-    HELPERS_TO_EXPORT_BLACKLIST = {'can_clear_required_act'}
+    # Don't export these helpers as definitions since we expand them at export time
+    HELPERS_TO_EXPORT_BLACKLIST = {'can_clear_required_act', 'has_relic_combo'}
 
     def _get_entrance_connected_region(self, entrance_name: str) -> Optional[str]:
         """Get the connected region name for an entrance (cached)."""
@@ -58,12 +58,36 @@ class AHitGameExportHandler(GenericGameExportHandler):
         return self._entrance_cache.get(entrance_name)
 
     def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
-        """Expand can_clear_required_act(entrance) at export time.
+        """Expand helpers at export time.
 
-        Returns:
-        - can_reach(connected_region) for Free Roam regions
-        - can_reach(connected_region) AND location_rule_ref("Act Completion (region)") otherwise
+        Handles:
+        - can_clear_required_act(entrance): Expands to can_reach + location_rule_ref
+        - has_relic_combo(relic): Expands to group_check with actual count from world
         """
+        # Handle has_relic_combo: expand to group_check with actual count
+        if helper_name == 'has_relic_combo' and args:
+            relic_arg = args[0]
+
+            # Extract relic name from argument (constant dict or raw string)
+            if isinstance(relic_arg, dict) and relic_arg.get('type') == 'constant':
+                relic_name = relic_arg.get('value')
+            elif isinstance(relic_arg, str):
+                relic_name = relic_arg
+            else:
+                relic_name = None
+
+            if relic_name and self.world and hasattr(self.world, 'item_name_groups'):
+                group_items = self.world.item_name_groups.get(relic_name)
+                if group_items:
+                    count = len(group_items)
+                    logger.debug(f"Expanding has_relic_combo({relic_name}) -> group_check with count={count}")
+                    return {
+                        'type': 'group_check',
+                        'group': relic_name,
+                        'count': count
+                    }
+
+        # Handle can_clear_required_act
         if helper_name == 'can_clear_required_act' and args:
             entrance_arg = args[0]
 
