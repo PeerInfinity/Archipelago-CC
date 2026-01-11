@@ -248,12 +248,21 @@ class Hook(BaseHook):
         # These are configuration issues, not logic mismatches
         if exc is not None and self.status is None:
             exc_str = str(exc)
+            exc_type = type(exc).__name__
             # Handle various fill-related errors that are caused by option configurations
             if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
                 return GenOutcome.OptionError, exc
             # Handle FillError when options create impossible-to-fill seeds
             # (e.g., accessibility: minimal combined with level_shuffle in SMW)
             if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
+                return GenOutcome.OptionError, exc
+            # Handle FFMQ API errors - the game requires external API for shuffle options
+            # but the API may not be available in test environments
+            if "Failed to fetch map shuffle data for FFMQ" in exc_str:
+                return GenOutcome.OptionError, exc
+            # Handle FFMQ's AttributeError when API fails with an exception (ProxyError, etc.)
+            # The error handling code assumes HTTP response but may get an exception instead
+            if exc_type == "AttributeError" and "status_code" in exc_str:
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 
@@ -405,9 +414,17 @@ class MultiworldHook(BaseHook):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored
         if exc is not None and self.status is None:
             exc_str = str(exc)
+            exc_type = type(exc).__name__
             if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
                 return GenOutcome.OptionError, exc
             if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
+                return GenOutcome.OptionError, exc
+            # Handle FFMQ API errors - the game requires external API for shuffle options
+            # but the API may not be available in test environments
+            if "Failed to fetch map shuffle data for FFMQ" in exc_str:
+                return GenOutcome.OptionError, exc
+            # Handle FFMQ's AttributeError when API fails with an exception (ProxyError, etc.)
+            if exc_type == "AttributeError" and "status_code" in exc_str:
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 
