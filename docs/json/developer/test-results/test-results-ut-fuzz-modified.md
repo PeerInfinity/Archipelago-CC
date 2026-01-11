@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-11 21:25:44
+**Generated:** 2026-01-11 22:31:39
 
-**Source Data Created:** 2026-01-11T21:25:43.950179
+**Source Data Created:** 2026-01-11T22:31:38.974640
 
-**Source Data Last Updated:** 2026-01-11T21:25:43.950185
+**Source Data Last Updated:** 2026-01-11T22:31:38.974645
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,23 +23,23 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 54 (63.5%)
-- **Games with Failures:** 31 (36.5%)
+- **Games with 100% Pass Rate:** 58 (68.2%)
+- **Games with Failures:** 27 (31.8%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 591 (69.5%)
-- **Failed Runs:** 225
+- **Successful Runs:** 604 (71.1%)
+- **Failed Runs:** 202
 - **Timed Out Runs:** 1
-- **Ignored Runs:** 33
+- **Ignored Runs:** 43
 
 ### Explain Support Summary
 
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 10,841
-- **Locations without Explain Support:** 1,083
-- **Locations with Default Rule:** 21,236
-- **Overall Explain Coverage:** 90.9%
+- **Locations with Explain Support:** 10,868
+- **Locations without Explain Support:** 1,080
+- **Locations with Default Rule:** 21,252
+- **Overall Explain Coverage:** 91.0%
 
 ## Test Results
 
@@ -92,11 +92,11 @@
 | Metamath | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 47.5KB |
 | Muse Dash | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 231.5KB |
 | Noita | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 74.6KB |
-| Ocarina of Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Ocarina of Time | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.0KB | ✅ | 308.9KB |
-| Overcooked! 2 | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 25.9KB | ✅ | 488.9KB |
+| Overcooked! 2 | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 25.9KB | ✅ | 488.9KB |
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.7KB |
-| Pokemon Emerald | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
+| Pokemon Emerald | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
 | Raft | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.4KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
@@ -116,7 +116,7 @@
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TUNIC | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 3.1KB | ✅ | 711.6KB |
-| Terraria | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 16.8KB | ✅ | 283.0KB |
+| Terraria | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.5KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.7KB | ✅ | 211.8KB |
 | The Wind Waker | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 7.0KB | ✅ | 253.9KB |
@@ -125,11 +125,11 @@
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
-| Yacht Dice | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 0.9KB | 285.0KB | 249.5KB |
-| Yoshi's Island | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 9.3KB | ✅ | 283.2KB |
+| Yacht Dice | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
+| Yoshi's Island | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.3KB | ✅ | 283.2KB |
 | Yu-Gi-Oh! 2006 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
-| Zillion | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| shapez | ❌ | 10 | 2 | 4 | 0 | 4 | ❌ 20.0% | ✅ | ✅ | 155.5KB |
+| Zillion | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
+| shapez | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% | ✅ | ✅ | 155.5KB |
 
 ## Error Details
 
@@ -185,20 +185,9 @@
 ### Ocarina of Time
 
 - **<class 'AttributeError'>**: 9 occurrence(s)
-- **FillError**: 1 occurrence(s)
-
-### Overcooked! 2
-
-- **Invalid OC2 settings(3-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(5-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(7-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(8-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(9-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **None**: 3 occurrence(s)
 
 ### Pokemon Emerald
 
-- **FillError**: 2 occurrence(s)
 - **None**: 6 occurrence(s)
 
 ### Pokemon Red and Blue
@@ -225,8 +214,8 @@
 - **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 
@@ -247,21 +236,13 @@
 
 - **None**: 6 occurrence(s)
 
-### Terraria
-
-- **FillError**: 1 occurrence(s)
-
 ### The Witness
 
 - **None**: 7 occurrence(s)
 
 ### Yacht Dice
 
-- **None**: 9 occurrence(s)
-
-### Yoshi's Island
-
-- **None**: 7 occurrence(s)
+- **None**: 10 occurrence(s)
 
 ### Yu-Gi-Oh! 2006
 
@@ -271,11 +252,6 @@
 
 - **None**: 8 occurrence(s)
 - **<class 'AssertionError'>**: 1 occurrence(s)
-- **FillError**: 1 occurrence(s)
-
-### shapez
-
-- **None**: 4 occurrence(s)
 
 
 ## Explain Support Details
@@ -286,7 +262,7 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Dark Souls III | 1469 | 0 | 228 | 1241 | ❌ 0% |
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 61 | 0 | 61 | 0 | ❌ 0% |
+| Yacht Dice | 58 | 0 | 58 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
 | DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
@@ -321,7 +297,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Final Fantasy Mystic Quest | 251 | 60 | 0 | 191 | ✅ 100% |
 | Heretic | 691 | 0 | 0 | 691 | ✅ 100% |
 | Hollow Knight | 712 | 712 | 0 | 0 | ✅ 100% |
-| Hylics 2 | 133 | 70 | 0 | 63 | ✅ 100% |
+| Hylics 2 | 166 | 88 | 0 | 78 | ✅ 100% |
 | Inscryption | 100 | 65 | 0 | 35 | ✅ 100% |
 | Kingdom Hearts | 523 | 464 | 0 | 59 | ✅ 100% |
 | Landstalker - The Treasures of King Nole | 291 | 1 | 0 | 290 | ✅ 100% |
@@ -332,7 +308,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Math Adventure | 10 | 5 | 0 | 5 | ✅ 100% |
 | MegaMan Battle Network 3 | 263 | 80 | 0 | 183 | ✅ 100% |
 | Meritous | 104 | 0 | 0 | 104 | ✅ 100% |
-| Metamath | 6 | 3 | 0 | 3 | ✅ 100% |
+| Metamath | 3 | 1 | 0 | 2 | ✅ 100% |
 | Muse Dash | 776 | 776 | 0 | 0 | ✅ 100% |
 | Noita | 303 | 0 | 0 | 303 | ✅ 100% |
 | Old School Runescape | 62 | 60 | 0 | 2 | ✅ 100% |
@@ -346,7 +322,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
 | Sonic Adventure 2 Battle | 1036 | 206 | 0 | 830 | ✅ 100% |
-| Stardew Valley | 1069 | 927 | 0 | 142 | ✅ 100% |
+| Stardew Valley | 1082 | 938 | 0 | 144 | ✅ 100% |
 | Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
