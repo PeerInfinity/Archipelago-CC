@@ -47,6 +47,9 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 # Default fuzzer output directory
 FUZZ_OUTPUT_DIR = PROJECT_ROOT / "fuzz_output"
 
+# Explain stats file location (written by fuzzer_hook)
+EXPLAIN_STATS_FILE = FUZZ_OUTPUT_DIR / "explain_stats" / "explain_stats.json"
+
 
 def cleanup_empty_worldgen_dirs():
     """
@@ -99,6 +102,21 @@ def get_template_files(templates_dir: Path, skip_list: List[str], include_list: 
     return yaml_files
 
 
+def read_explain_stats() -> Optional[Dict]:
+    """
+    Read explain stats from the fuzz output directory.
+
+    Returns the explain stats dict if available, None otherwise.
+    """
+    if EXPLAIN_STATS_FILE.exists():
+        try:
+            with open(EXPLAIN_STATS_FILE) as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError):
+            pass
+    return None
+
+
 def run_fuzzer_test(
     world_dir: str,
     runs: int,
@@ -125,6 +143,7 @@ def run_fuzzer_test(
         - ignored: int
         - error: str or None
         - errors: dict of error types
+        - explain_stats: dict with explain support statistics (if available)
     """
     result = {
         "passed": False,
@@ -134,7 +153,8 @@ def run_fuzzer_test(
         "timeout": 0,
         "ignored": 0,
         "error": None,
-        "errors": {}
+        "errors": {},
+        "explain_stats": None
     }
 
     # Clean up any previous fuzz output
@@ -184,6 +204,11 @@ def run_fuzzer_test(
             errors = report.get("errors", {})
             if world_dir in errors:
                 result["errors"] = errors[world_dir]
+
+            # Read explain stats if available
+            explain_stats = read_explain_stats()
+            if explain_stats:
+                result["explain_stats"] = explain_stats
         else:
             # No report file - check for errors
             error_details = []
@@ -344,8 +369,8 @@ def main():
         print(f"Error: Templates directory not found: {templates_dir}")
         return 1
 
-    # Get skip list (use main test exclusions)
-    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='main')
+    # Get skip list (use only permanent exclusions - not main_test_exclude_list)
+    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='permanent')
 
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)
@@ -449,7 +474,7 @@ def main():
         )
 
         # Store result
-        results["results"][template_name] = {
+        result_entry = {
             "ut_fuzz": {
                 "passed": test_result["passed"],
                 "total": test_result["total"],
@@ -465,6 +490,12 @@ def main():
             },
             "timestamp": datetime.now().isoformat()
         }
+
+        # Include explain stats if available
+        if test_result.get("explain_stats"):
+            result_entry["explain_stats"] = test_result["explain_stats"]
+
+        results["results"][template_name] = result_entry
 
         if test_result["error"]:
             results["results"][template_name]["error"] = test_result["error"]
