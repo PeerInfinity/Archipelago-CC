@@ -330,6 +330,49 @@ class RuleCodeGenerator:
 
         return None
 
+    def _evaluate_arithmetic_constant(self, arg: Dict[str, Any]) -> Optional[str]:
+        """
+        Evaluate an Arithmetic rule to a constant repr string if possible.
+
+        Returns repr(result) if both operands are numeric constants,
+        'None' if evaluation fails or operands aren't constants,
+        or None if arg is not an Arithmetic rule.
+        """
+        if not isinstance(arg, dict):
+            return None
+        if arg.get('rule') != 'Arithmetic':
+            return None
+
+        arith_args = arg.get('args', {})
+        left = arith_args.get('left')
+        op = arith_args.get('op', '+')
+        right = arith_args.get('right')
+
+        # Try to evaluate if both operands are numeric constants
+        if not (isinstance(left, (int, float)) and isinstance(right, (int, float))):
+            return 'None'
+
+        try:
+            if op == '+':
+                result = left + right
+            elif op == '-':
+                result = left - right
+            elif op == '*':
+                result = left * right
+            elif op == '/':
+                result = left / right
+            elif op == '//':
+                result = left // right
+            elif op == '%':
+                result = left % right
+            elif op == '**':
+                result = left ** right
+            else:
+                return 'None'
+            return repr(result)
+        except (ZeroDivisionError, TypeError, ValueError):
+            return 'None'
+
     def _deep_equals(self, a: Any, b: Any) -> bool:
         """Deep equality comparison that works with lists."""
         if type(a) != type(b):
@@ -3810,6 +3853,9 @@ class RuleCodeGenerator:
                         arg_strs.append(repr(self.settings[setting]))
                     else:
                         arg_strs.append('None')
+                elif isinstance(arg, dict) and arg.get('rule') == 'Arithmetic':
+                    arith_result = self._evaluate_arithmetic_constant(arg)
+                    arg_strs.append(arith_result if arith_result else 'None')
                 elif isinstance(arg, dict) and arg.get('type') == 'attribute':
                     # Handle attribute access on setting_value (e.g., world.options.goal.value)
                     obj = arg.get('object', {})
@@ -4022,6 +4068,9 @@ class RuleCodeGenerator:
                         else:
                             # Unknown name reference - default to None
                             arg_strs.append('None')
+                    elif arg_rule == 'Arithmetic':
+                        arith_result = self._evaluate_arithmetic_constant(arg)
+                        arg_strs.append(arith_result if arith_result else 'None')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
