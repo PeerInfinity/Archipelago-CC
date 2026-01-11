@@ -3810,6 +3810,40 @@ class RuleCodeGenerator:
                         arg_strs.append(repr(self.settings[setting]))
                     else:
                         arg_strs.append('None')
+                elif isinstance(arg, dict) and arg.get('rule') == 'Arithmetic':
+                    # Handle Arithmetic rule - evaluate to constant if operands are constants
+                    arith_args = arg.get('args', {})
+                    left = arith_args.get('left')
+                    op = arith_args.get('op', '+')
+                    right = arith_args.get('right')
+                    # Try to evaluate if both operands are numeric constants
+                    if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+                        try:
+                            if op == '+':
+                                result = left + right
+                            elif op == '-':
+                                result = left - right
+                            elif op == '*':
+                                result = left * right
+                            elif op == '/':
+                                result = left / right
+                            elif op == '//':
+                                result = left // right
+                            elif op == '%':
+                                result = left % right
+                            elif op == '**':
+                                result = left ** right
+                            else:
+                                result = None
+                            if result is not None:
+                                arg_strs.append(repr(result))
+                            else:
+                                arg_strs.append('None')
+                        except (ZeroDivisionError, TypeError, ValueError):
+                            arg_strs.append('None')
+                    else:
+                        # Operands are not simple constants - default to None
+                        arg_strs.append('None')
                 elif isinstance(arg, dict) and arg.get('type') == 'attribute':
                     # Handle attribute access on setting_value (e.g., world.options.goal.value)
                     obj = arg.get('object', {})
@@ -4021,6 +4055,40 @@ class RuleCodeGenerator:
                             pass  # Skip this argument - don't add to arg_strs
                         else:
                             # Unknown name reference - default to None
+                            arg_strs.append('None')
+                    elif arg_rule == 'Arithmetic':
+                        # Handle Arithmetic rule - evaluate to constant if operands are constants
+                        arith_args = arg.get('args', {})
+                        left = arith_args.get('left')
+                        op = arith_args.get('op', '+')
+                        right = arith_args.get('right')
+                        # Try to evaluate if both operands are numeric constants
+                        if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+                            try:
+                                if op == '+':
+                                    result = left + right
+                                elif op == '-':
+                                    result = left - right
+                                elif op == '*':
+                                    result = left * right
+                                elif op == '/':
+                                    result = left / right
+                                elif op == '//':
+                                    result = left // right
+                                elif op == '%':
+                                    result = left % right
+                                elif op == '**':
+                                    result = left ** right
+                                else:
+                                    result = None
+                                if result is not None:
+                                    arg_strs.append(repr(result))
+                                else:
+                                    arg_strs.append('None')
+                            except (ZeroDivisionError, TypeError, ValueError):
+                                arg_strs.append('None')
+                        else:
+                            # Operands are not simple constants - default to None
                             arg_strs.append('None')
                     else:
                         # For complex args, try to convert
