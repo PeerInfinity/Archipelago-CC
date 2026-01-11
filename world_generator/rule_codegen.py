@@ -6177,10 +6177,11 @@ class HelperCodeGenerator:
         if_false = expr.get('if_false')
 
         if if_false is None:
-            # No else branch - use True as the safe default for boolean rules.
-            # This matches the behavior of functions like shop_price_rules which
-            # have an implicit "return True" for unhandled cases.
-            return f"({if_true} if {test} else True)"
+            # No else branch - use False to let the outer OR/AND structure
+            # handle the "default" case. This is important for nested conditionals
+            # like if/elif chains where the final return is handled by an OR.
+            # Example: (cond1 ? True : (cond2 ? True : False)) OR default_check
+            return f"({if_true} if {test} else False)"
 
         if_false_code = self._generate_expression(if_false)
         return f"({if_true} if {test} else {if_false_code})"
