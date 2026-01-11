@@ -3888,7 +3888,46 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_')
                 return 'True_()'
 
-            # Generate HasAll check for required items
+            # Check the element_rule to determine how to process each item
+            # Case 1: state_method with can_reach - use CanReachLocation
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'can_reach':
+                checks = []
+                for loc in required_items:
+                    loc_escaped = self._escape_string(str(loc), "'")
+                    checks.append(f"CanReachLocation('{loc_escaped}')")
+                self.required_imports.add('CanReachLocation')
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('And')
+                    return f'And({", ".join(checks)})'
+
+            # Case 2: item_check with f_string - substitute values into the template
+            if element_rule.get('type') == 'item_check':
+                item_node = element_rule.get('item', {})
+                if item_node.get('type') == 'f_string':
+                    # Get the template string (e.g., "Automated {ingredient}")
+                    template = item_node.get('value', '')
+                    # Get the target variable name (e.g., "ingredient")
+                    target = iterator_info.get('target', {})
+                    target_name = target.get('name', '') if target.get('type') == 'name' else ''
+
+                    if template and target_name:
+                        # Substitute each iterator value into the template
+                        checks = []
+                        for value in required_items:
+                            # Replace {target_name} with the actual value
+                            item_name = template.replace(f'{{{target_name}}}', str(value))
+                            item_escaped = self._escape_string(item_name, "'")
+                            checks.append(f"Has('{item_escaped}')")
+                        self.required_imports.add('Has')
+                        if len(checks) == 1:
+                            return checks[0]
+                        else:
+                            self.required_imports.add('And')
+                            return f'And({", ".join(checks)})'
+
+            # Default: Generate HasAll check for required items directly
             if len(required_items) == 1:
                 item = required_items[0]
                 item_escaped = self._escape_string(str(item), "'")
@@ -3904,6 +3943,65 @@ class RuleCodeGenerator:
                 self.required_imports.add('And')
                 return f'And({", ".join(has_checks)})'
 
+        # Handle constant iterator type with dict (recipe ingredients)
+        # This occurs when iterating over a dict like:
+        #   all(...for sub_ingredient in recipe.ingredients)
+        # where recipe.ingredients = {"iron-plate": 1, "copper-plate": 1}
+        elif iterator.get('type') == 'constant' and isinstance(iterator.get('value'), dict):
+            recipe_ingredients = iterator.get('value', {})
+
+            if not recipe_ingredients:
+                # Empty dict - all() of nothing is True
+                self.required_imports.add('True_')
+                return 'True_()'
+
+            # Check if element_rule is a nested all_of comprehension (common in Factorio)
+            # This handles patterns like:
+            #   all(all(state.has(tech.name, player) for tech in required_technologies[ingredient])
+            #       for ingredient in recipe.ingredients)
+            if element_rule.get('type') == 'all_of':
+                inner_element_rule = element_rule.get('element_rule', {})
+                inner_iterator_info = element_rule.get('iterator_info', {})
+                inner_iterator = inner_iterator_info.get('iterator', {})
+
+                # Check if inner iterator is a subscript into required_technologies
+                if inner_iterator.get('type') == 'subscript':
+                    inner_value = inner_iterator.get('value', {})
+                    if inner_value.get('type') == 'constant' and isinstance(inner_value.get('value'), dict):
+                        tech_dict = inner_value.get('value')
+
+                        # For each recipe ingredient, look up required technologies
+                        all_checks = []
+                        for ingredient in recipe_ingredients.keys():
+                            required_techs = tech_dict.get(ingredient, [])
+                            if required_techs:
+                                for tech in required_techs:
+                                    tech_escaped = self._escape_string(str(tech), "'")
+                                    all_checks.append(f"Has('{tech_escaped}')")
+
+                        if not all_checks:
+                            self.required_imports.add('True_')
+                            return 'True_()'
+
+                        # Remove duplicates while preserving order
+                        seen = set()
+                        unique_checks = []
+                        for check in all_checks:
+                            if check not in seen:
+                                seen.add(check)
+                                unique_checks.append(check)
+
+                        self.required_imports.add('Has')
+                        if len(unique_checks) == 1:
+                            return unique_checks[0]
+                        else:
+                            self.required_imports.add('And')
+                            return f'And({", ".join(unique_checks)})'
+
+            # Fallback: iterate over dict keys and apply element_rule
+            self.required_imports.add('True_')
+            return 'True_()'
+
         # Couldn't resolve statically - fall back to True_()
         # This shouldn't happen for properly exported Factorio rules
         self.required_imports.add('True_')
@@ -3916,6 +4014,7 @@ class RuleCodeGenerator:
         Similar to AST_all_of but uses Or instead of And.
         """
         args = rule.get('args', {})
+        element_rule = args.get('element_rule', {})
         iterator_info = args.get('iterator_info', {})
 
         # Get the iterator which should be a subscript into a constant dict
@@ -3968,7 +4067,46 @@ class RuleCodeGenerator:
                 self.required_imports.add('False_')
                 return 'False_()'
 
-            # Generate Or check for items
+            # Check the element_rule to determine how to process each item
+            # Case 1: state_method with can_reach - use CanReachLocation
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'can_reach':
+                checks = []
+                for loc in items:
+                    loc_escaped = self._escape_string(str(loc), "'")
+                    checks.append(f"CanReachLocation('{loc_escaped}')")
+                self.required_imports.add('CanReachLocation')
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
+            # Case 2: item_check with f_string - substitute values into the template
+            if element_rule.get('type') == 'item_check':
+                item_node = element_rule.get('item', {})
+                if item_node.get('type') == 'f_string':
+                    # Get the template string (e.g., "Automated {ingredient}")
+                    template = item_node.get('value', '')
+                    # Get the target variable name (e.g., "ingredient")
+                    target = iterator_info.get('target', {})
+                    target_name = target.get('name', '') if target.get('type') == 'name' else ''
+
+                    if template and target_name:
+                        # Substitute each iterator value into the template
+                        checks = []
+                        for value in items:
+                            # Replace {target_name} with the actual value
+                            item_name = template.replace(f'{{{target_name}}}', str(value))
+                            item_escaped = self._escape_string(item_name, "'")
+                            checks.append(f"Has('{item_escaped}')")
+                        self.required_imports.add('Has')
+                        if len(checks) == 1:
+                            return checks[0]
+                        else:
+                            self.required_imports.add('Or')
+                            return f'Or({", ".join(checks)})'
+
+            # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
                 item_escaped = self._escape_string(str(item), "'")
