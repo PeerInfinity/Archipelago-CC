@@ -70,11 +70,14 @@ class Hook(BaseHook):
                 missed_locations = []
                 for in_logic_location in update_ret.in_logic_locations:
                     if in_logic_location in current_sphere:
-                        true_item = current_sphere[in_logic_location].item
-                        new_items.append(NetworkItem(true_item.code,true_item.location.address,true_item.player,true_item.classification))
+                        location = current_sphere[in_logic_location]
+                        true_item = location.item
+                        # Use location.address directly instead of true_item.location.address
+                        # Some worlds set location.item without setting item.location back-reference
+                        new_items.append(NetworkItem(true_item.code, location.address, true_item.player, true_item.classification))
                         if ItemClassification.progression in true_item.classification:
                             new_inventory.append(true_item.name)
-                        remaining_locations.remove(current_sphere[in_logic_location].address)
+                        remaining_locations.remove(location.address)
                         del current_sphere[in_logic_location]
                     else:
                         missed_locations.append(in_logic_location)
