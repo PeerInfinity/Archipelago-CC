@@ -18,6 +18,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List
 
+# Add parent directory to path to import from chart_generators
+sys.path.insert(0, str(Path(__file__).parent))
+from chart_generators.utils import format_file_size, get_rules_json_size
+
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
     """Load the UT fuzz test results from JSON file."""
@@ -29,19 +33,17 @@ def load_test_results(results_file: str) -> Dict[str, Any]:
         return {}
 
 
-def load_world_mapping(project_root: str) -> Dict[str, str]:
+def load_world_mapping(project_root: str) -> Dict[str, Dict[str, Any]]:
     """
     Load the world mapping from JSON file.
 
-    Returns a dict mapping game names to world directory names.
+    Returns the full world mapping dict with all game info including
+    world_directory, exporter_size, game_logic_size, etc.
     """
     mapping_file = os.path.join(project_root, 'scripts/data/world-mapping.json')
     try:
         with open(mapping_file, 'r') as f:
-            data = json.load(f)
-            return {game_name: info['world_directory']
-                    for game_name, info in data.items()
-                    if 'world_directory' in info}
+            return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"Warning: Could not load world mapping file {mapping_file}: {e}")
         return {}
@@ -111,14 +113,18 @@ def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
 
 def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
                                metadata: Dict[str, Any],
-                               world_mapping: Dict[str, str]) -> str:
+                               world_mapping: Dict[str, Dict[str, Any]],
+                               project_root: str = None,
+                               world_source: str = "bundled") -> str:
     """
     Generate a markdown table for UT fuzz test data.
 
     Args:
         chart_data: List of test result data dicts
         metadata: Metadata from the test results
-        world_mapping: Mapping of game names to world directories
+        world_mapping: Full world mapping dict with game info
+        project_root: Project root path for looking up rules.json sizes
+        world_source: Source of worlds (bundled or apworlds)
     """
     # Determine seed info and UT version
     seed = metadata.get('seed', 'random')
@@ -134,6 +140,12 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     # Add navigation links
     md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add link to comparison doc
+    if world_source == "apworlds":
+        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md)\n\n"
+    else:
+        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)\n\n"
 
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -191,11 +203,16 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"- **Overall Explain Coverage:** {overall_explain_coverage:.1f}%\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |\n"
-    md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|\n"
+    if world_source == "apworlds":
+        md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |\n"
+        md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|\n"
+    else:
+        md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|\n"
 
     for data in chart_data:
         game_name = data['game_name']
+        world_dir = data.get('world_directory')
 
         passed = data['passed']
         total = data['total']
@@ -218,10 +235,32 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         else:
             rate_display = f"❌ {success_rate:.1f}%"
 
-        md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
+        if world_source == "apworlds":
+            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
+        else:
+            # Get exporter and game logic sizes from world mapping
+            exporter_indicator = "N/A"
+            logic_indicator = "N/A"
+            if game_name in world_mapping:
+                exporter_size = world_mapping[game_name].get('exporter_size', 0)
+                game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+                exporter_indicator = format_file_size(exporter_size)
+                logic_indicator = format_file_size(game_logic_size)
+
+            # Get rules.json size
+            rules_size_indicator = "N/A"
+            if project_root and world_dir:
+                rules_size = get_rules_json_size(project_root, world_dir)
+                if rules_size > 0:
+                    rules_size_indicator = f"{rules_size / 1024:.1f}KB"
+
+            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
 
     if not chart_data:
-        md_content += "| No data available | - | - | - | - | - | - | - |\n"
+        if world_source == "apworlds":
+            md_content += "| No data available | - | - | - | - | - | - | - |\n"
+        else:
+            md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
 
     # Add error details section if there are any failures
     games_with_errors = [d for d in chart_data if d['failure'] > 0 or d.get('errors')]
@@ -280,7 +319,12 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Failure:** Number of runs where UT mismatched or encountered errors\n"
     md_content += "- **Timeout:** Number of runs that exceeded the time limit\n"
     md_content += "- **Ignored:** Number of runs skipped due to option errors\n"
-    md_content += "- **Success Rate:** Percentage of successful runs\n\n"
+    md_content += "- **Success Rate:** Percentage of successful runs\n"
+    if world_source != "apworlds":
+        md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+        md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
+        md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
+    md_content += "\n"
 
     if games_with_explain_stats:
         md_content += "### Explain Support Columns\n\n"
@@ -299,6 +343,241 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "5. Comparing UT's accessibility calculations to the Python sphere log\n\n"
     md_content += "Failures indicate that for certain option combinations, UT's logic "
     md_content += "differs from Python's logic. This helps identify edge cases that need fixing.\n"
+
+    return md_content
+
+
+def generate_comparison_markdown(original_data: List[Dict[str, Any]],
+                                  modified_data: List[Dict[str, Any]],
+                                  world_mapping: Dict[str, Dict[str, Any]],
+                                  project_root: str = None,
+                                  world_source: str = "bundled") -> str:
+    """
+    Generate a markdown comparison between original and modified UT fuzz test results.
+
+    Args:
+        original_data: Chart data from original UT tests
+        modified_data: Chart data from modified UT tests
+        world_mapping: Full world mapping dict with game info
+        project_root: Project root path for looking up rules.json sizes
+        world_source: Source of worlds being tested (bundled or apworlds)
+    """
+    # Build lookup dicts by game name
+    original_by_game = {d['game_name']: d for d in original_data}
+    modified_by_game = {d['game_name']: d for d in modified_data}
+
+    # Get all unique game names
+    all_games = sorted(set(original_by_game.keys()) | set(modified_by_game.keys()))
+
+    # Categorize games
+    passing_both = []
+    passing_original_only = []
+    passing_modified_only = []
+    passing_neither = []
+
+    for game in all_games:
+        orig = original_by_game.get(game)
+        mod = modified_by_game.get(game)
+
+        orig_passed = orig['passed'] if orig else False
+        mod_passed = mod['passed'] if mod else False
+
+        if orig_passed and mod_passed:
+            passing_both.append(game)
+        elif orig_passed and not mod_passed:
+            passing_original_only.append(game)
+        elif not orig_passed and mod_passed:
+            passing_modified_only.append(game)
+        else:
+            passing_neither.append(game)
+
+    # Helper to get exporter/logic/rules info for a game
+    def get_game_info(game_name: str) -> tuple:
+        """Returns (exporter_indicator, logic_indicator, rules_size_indicator)"""
+        exporter_indicator = "N/A"
+        logic_indicator = "N/A"
+        rules_size_indicator = "N/A"
+
+        if game_name in world_mapping:
+            exporter_size = world_mapping[game_name].get('exporter_size', 0)
+            game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+            exporter_indicator = format_file_size(exporter_size)
+            logic_indicator = format_file_size(game_logic_size)
+
+            world_dir = world_mapping[game_name].get('world_directory')
+            if project_root and world_dir:
+                rules_size = get_rules_json_size(project_root, world_dir)
+                if rules_size > 0:
+                    rules_size_indicator = f"{rules_size / 1024:.1f}KB"
+
+        return exporter_indicator, logic_indicator, rules_size_indicator
+
+    # Helper to check if a game has no custom exporter or game logic
+    def has_no_custom_code(game_name: str) -> bool:
+        """Returns True if the game uses generic exporter AND generic game logic."""
+        if game_name not in world_mapping:
+            return False
+        exporter_size = world_mapping[game_name].get('exporter_size', 0)
+        game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+        return exporter_size == 0 and game_logic_size == 0
+
+    # Calculate games passing modified (both + modified only) with no custom code
+    passing_modified = passing_both + passing_modified_only
+    passing_modified_no_custom = [g for g in passing_modified if has_no_custom_code(g)]
+    passing_modified_only_no_custom = [g for g in passing_modified_only if has_no_custom_code(g)]
+
+    # Start building markdown
+    title_suffix = " (APWorlds)" if world_source == "apworlds" else ""
+    md_content = f"# Universal Tracker Fuzz Test Comparison{title_suffix}\n\n"
+    md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+    md_content += "This report compares fuzz test results between the Original Universal Tracker "
+    md_content += "(FarisTheAncient) and the Modified Universal Tracker (this repository).\n\n"
+
+    # Add navigation links
+    md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add links to individual result docs
+    md_content += "### Individual Test Results\n\n"
+    if world_source == "apworlds":
+        md_content += "- [Original UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-original.md)\n"
+        md_content += "- [Modified UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-modified.md)\n\n"
+    else:
+        md_content += "- [Original UT Results](./test-results-ut-fuzz-original.md)\n"
+        md_content += "- [Modified UT Results](./test-results-ut-fuzz-modified.md)\n\n"
+
+    # Summary statistics
+    md_content += "## Summary\n\n"
+    md_content += f"- **Total Games Tested:** {len(all_games)}\n"
+    md_content += f"- **Passing Both:** {len(passing_both)} ({len(passing_both)/len(all_games)*100:.1f}%)\n"
+    md_content += f"- **Passing Original Only:** {len(passing_original_only)} ({len(passing_original_only)/len(all_games)*100:.1f}%)\n"
+    md_content += f"- **Passing Modified Only:** {len(passing_modified_only)} ({len(passing_modified_only)/len(all_games)*100:.1f}%)\n"
+    md_content += f"- **Passing Neither:** {len(passing_neither)} ({len(passing_neither)/len(all_games)*100:.1f}%)\n"
+    # Only show custom code stats for bundled worlds (not apworlds)
+    if world_source != "apworlds":
+        md_content += f"- **Passing Modified with no custom code:** {len(passing_modified_no_custom)} ({len(passing_modified_no_custom)/len(all_games)*100:.1f}%)\n"
+        md_content += f"- **Passing Modified Only with no custom code:** {len(passing_modified_only_no_custom)} ({len(passing_modified_only_no_custom)/len(all_games)*100:.1f}%)\n"
+    md_content += "\n"
+
+    # Main comparison table
+    md_content += "## Full Comparison\n\n"
+    if world_source == "apworlds":
+        md_content += "| Game Name | Original Success Rate | Modified Success Rate |\n"
+        md_content += "|-----------|:---------------------:|:---------------------:|\n"
+    else:
+        md_content += "| Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|\n"
+
+    for game in all_games:
+        orig = original_by_game.get(game)
+        mod = modified_by_game.get(game)
+
+        # Format success rates
+        if orig:
+            orig_rate = orig['success_rate']
+            if orig['passed']:
+                orig_display = f"✅ {orig_rate:.1f}%"
+            elif orig_rate >= 50:
+                orig_display = f"⚠️ {orig_rate:.1f}%"
+            else:
+                orig_display = f"❌ {orig_rate:.1f}%"
+        else:
+            orig_display = "N/A"
+
+        if mod:
+            mod_rate = mod['success_rate']
+            if mod['passed']:
+                mod_display = f"✅ {mod_rate:.1f}%"
+            elif mod_rate >= 50:
+                mod_display = f"⚠️ {mod_rate:.1f}%"
+            else:
+                mod_display = f"❌ {mod_rate:.1f}%"
+        else:
+            mod_display = "N/A"
+
+        if world_source == "apworlds":
+            md_content += f"| {game} | {orig_display} | {mod_display} |\n"
+        else:
+            exporter, logic, rules_size = get_game_info(game)
+            md_content += f"| {game} | {orig_display} | {mod_display} | {exporter} | {logic} | {rules_size} |\n"
+
+    # Games passing both
+    if passing_both:
+        md_content += f"\n## Games Passing Both ({len(passing_both)})\n\n"
+        md_content += "These games have 100% success rate in both Universal Tracker versions.\n\n"
+        if world_source == "apworlds":
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+        else:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        for game in passing_both:
+            if world_source == "apworlds":
+                md_content += f"| {game} |\n"
+            else:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+
+    # Games passing original only
+    if passing_original_only:
+        md_content += f"\n## Games Passing Original Only ({len(passing_original_only)})\n\n"
+        md_content += "These games pass in the Original UT but fail in the Modified UT.\n\n"
+        if world_source == "apworlds":
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+        else:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        for game in passing_original_only:
+            if world_source == "apworlds":
+                md_content += f"| {game} |\n"
+            else:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+
+    # Games passing modified only
+    if passing_modified_only:
+        md_content += f"\n## Games Passing Modified Only ({len(passing_modified_only)})\n\n"
+        md_content += "These games pass in the Modified UT but fail in the Original UT.\n\n"
+        if world_source == "apworlds":
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+        else:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        for game in passing_modified_only:
+            if world_source == "apworlds":
+                md_content += f"| {game} |\n"
+            else:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+
+    # Games passing neither
+    if passing_neither:
+        md_content += f"\n## Games Passing Neither ({len(passing_neither)})\n\n"
+        md_content += "These games fail in both Universal Tracker versions.\n\n"
+        if world_source == "apworlds":
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+        else:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        for game in passing_neither:
+            if world_source == "apworlds":
+                md_content += f"| {game} |\n"
+            else:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+
+    # Notes section
+    md_content += "\n## Notes\n\n"
+    md_content += "- **Original Success Rate:** Percentage of fuzz runs that passed in the Original Universal Tracker\n"
+    md_content += "- **Modified Success Rate:** Percentage of fuzz runs that passed in the Modified Universal Tracker\n"
+    if world_source != "apworlds":
+        md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+        md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
+        md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
+    md_content += "- A game is considered \"passing\" if it has a 100% success rate (0 failures, 0 timeouts)\n"
 
     return md_content
 
@@ -389,6 +668,10 @@ def main():
         print(f"Error: No result files found in {results_dir}")
         return 1
 
+    # Track chart data for comparisons
+    # Keys: 'bundled-original', 'bundled-modified', 'apworlds-original', 'apworlds-modified'
+    chart_data_by_type = {}
+
     # Process each result file
     for results_path in result_files:
         if not os.path.exists(results_path):
@@ -403,8 +686,26 @@ def main():
         metadata = results.get('metadata', {})
         chart_data = extract_ut_fuzz_chart_data(results)
 
+        # Determine world_source and ut_version from filename or metadata
+        basename = os.path.basename(results_path)
+        parts = basename.replace('.json', '').split('-')
+
+        if len(parts) == 6:  # test-results-{world_source}-{ut_version}-{seed_type}-seed
+            world_source = parts[2]
+            ut_version = parts[3]
+        elif len(parts) == 5:  # test-results-{ut_version}-{seed_type}-seed
+            world_source = 'bundled'
+            ut_version = parts[2]
+        else:
+            world_source = metadata.get('world_source', 'bundled')
+            ut_version = metadata.get('ut_version', 'modified')
+
+        # Store chart data for comparison generation
+        key = f"{world_source}-{ut_version}"
+        chart_data_by_type[key] = chart_data
+
         # Generate markdown
-        md_content = generate_ut_fuzz_markdown(chart_data, metadata, world_mapping)
+        md_content = generate_ut_fuzz_markdown(chart_data, metadata, world_mapping, project_root, world_source)
 
         # Determine output path
         if args.output and len(result_files) == 1:
@@ -418,6 +719,32 @@ def main():
             f.write(md_content)
 
         print(f"Chart saved to: {output_path} (from {os.path.basename(results_path)})")
+
+    # Generate comparison files if we have both original and modified for a world source
+    for world_source in ['bundled', 'apworlds']:
+        original_key = f"{world_source}-original"
+        modified_key = f"{world_source}-modified"
+
+        if original_key in chart_data_by_type and modified_key in chart_data_by_type:
+            comparison_md = generate_comparison_markdown(
+                chart_data_by_type[original_key],
+                chart_data_by_type[modified_key],
+                world_mapping,
+                project_root,
+                world_source
+            )
+
+            # Determine output filename
+            if world_source == 'bundled':
+                comparison_filename = 'test-results-ut-fuzz-comparison.md'
+            else:
+                comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison.md'
+
+            comparison_path = os.path.join(output_dir, comparison_filename)
+            with open(comparison_path, 'w') as f:
+                f.write(comparison_md)
+
+            print(f"Comparison saved to: {comparison_path}")
 
     return 0
 

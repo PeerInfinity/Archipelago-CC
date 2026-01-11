@@ -184,22 +184,6 @@ jobs:
             output_dir: "multiworld"
             output_md_file: "test-results-multiworld.md"
 
-          # Multitemplate test for ALTTP, minimal
-          - test_name: "Multitemplate ALTTP Minimal"
-            host_config: "minimal-spoilers"
-            setup_multitemplate: true
-            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
-            output_dir: "multitemplate-minimal"
-            output_md_file: "test-results-multitemplate-minimal.md"
-
-          # Multitemplate test for ALTTP, full
-          - test_name: "Multitemplate ALTTP Full"
-            host_config: "full-spoilers"
-            setup_multitemplate: true
-            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
-            output_dir: "multitemplate-full"
-            output_md_file: "test-results-multitemplate-full.md"
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -239,12 +223,6 @@ jobs:
         run: |
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
-      - name: Generate multitemplate configurations
-        if: matrix.setup_multitemplate
-        run: |
-          source .venv/bin/activate
-          python scripts/build/generate-multitemplate-configs.py
 
       - name: Configure host settings
         run: |
@@ -443,8 +421,6 @@ jobs:
           git add -f scripts/output/spoiler-full/test-results.json
           git add -f scripts/output/multiclient/test-results.json
           git add -f scripts/output/multiworld/test-results.json
-          git add -f scripts/output/multitemplate-minimal/test-results.json
-          git add -f scripts/output/multitemplate-full/test-results.json
           git add docs/json/developer/test-results/*.md
 
           # Check if there are changes to commit

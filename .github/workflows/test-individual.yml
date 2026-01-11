@@ -16,8 +16,6 @@ on:
           - full-spoiler-retest
           - multiclient
           - multiworld
-          - multitemplate-minimal
-          - multitemplate-full
 
 permissions:
   contents: write  # Allow pushing commits and creating branches
@@ -68,17 +66,11 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Generate multitemplate configurations
-        if: github.event.inputs.test_type == 'multitemplate-minimal' || github.event.inputs.test_type == 'multitemplate-full'
-        run: |
-          source .venv/bin/activate
-          python scripts/build/generate-multitemplate-configs.py
-
       - name: Configure host settings
         run: |
           source .venv/bin/activate
           python Launcher.py --update_settings
-          if [[ "${{ github.event.inputs.test_type }}" == "full-spoiler" ]] || [[ "${{ github.event.inputs.test_type }}" == "full-spoiler-retest" ]] || [[ "${{ github.event.inputs.test_type }}" == "multitemplate-full" ]]; then
+          if [[ "${{ github.event.inputs.test_type }}" == "full-spoiler" ]] || [[ "${{ github.event.inputs.test_type }}" == "full-spoiler-retest" ]]; then
             python scripts/setup/update_host_settings.py full-spoilers
           else
             python scripts/setup/update_host_settings.py minimal-spoilers
@@ -137,12 +129,6 @@ jobs:
             "multiworld")
               python scripts/test/test-all-templates.py --multiworld -p
               ;;
-            "multitemplate-minimal")
-              python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p
-              ;;
-            "multitemplate-full")
-              python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p
-              ;;
           esac
 
       - name: Upload test results
@@ -157,9 +143,7 @@ jobs:
               github.event.inputs.test_type == 'full-spoiler' && 'spoiler-full/' ||
               github.event.inputs.test_type == 'full-spoiler-retest' && 'spoiler-full/' ||
               github.event.inputs.test_type == 'multiclient' && 'multiclient/' ||
-              github.event.inputs.test_type == 'multiworld' && 'multiworld/' ||
-              github.event.inputs.test_type == 'multitemplate-minimal' && 'multitemplate-minimal/' ||
-              'multitemplate-full/'
+              'multiworld/'
             }}
             docs/json/developer/test-results/
           retention-days: 7
@@ -241,8 +225,6 @@ jobs:
           mkdir -p /tmp/merged-results/scripts/output/spoiler-full
           mkdir -p /tmp/merged-results/scripts/output/multiclient
           mkdir -p /tmp/merged-results/scripts/output/multiworld
-          mkdir -p /tmp/merged-results/scripts/output/multitemplate-minimal
-          mkdir -p /tmp/merged-results/scripts/output/multitemplate-full
           mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
           # Copy JSON results to temp based on test type
@@ -265,16 +247,6 @@ jobs:
             "multiworld")
               if [ -f artifacts/scripts/output/multiworld/test-results.json ]; then
                 cp artifacts/scripts/output/multiworld/test-results.json /tmp/merged-results/scripts/output/multiworld/test-results.json
-              fi
-              ;;
-            "multitemplate-minimal")
-              if [ -f artifacts/scripts/output/multitemplate-minimal/test-results.json ]; then
-                cp artifacts/scripts/output/multitemplate-minimal/test-results.json /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json
-              fi
-              ;;
-            "multitemplate-full")
-              if [ -f artifacts/scripts/output/multitemplate-full/test-results.json ]; then
-                cp artifacts/scripts/output/multitemplate-full/test-results.json /tmp/merged-results/scripts/output/multitemplate-full/test-results.json
               fi
               ;;
           esac
@@ -346,8 +318,6 @@ jobs:
           git add -f scripts/output/spoiler-full/test-results.json || true
           git add -f scripts/output/multiclient/test-results.json || true
           git add -f scripts/output/multiworld/test-results.json || true
-          git add -f scripts/output/multitemplate-minimal/test-results.json || true
-          git add -f scripts/output/multitemplate-full/test-results.json || true
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit

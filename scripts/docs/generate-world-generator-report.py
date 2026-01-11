@@ -653,6 +653,8 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
     lines = [
         "# World Generator Test Results",
         "",
+        "[<- Back to Test Results Summary](./test-results-summary.md)",
+        "",
         f"**Generated:** {timestamp_display}",
         "",
         f"**Seed:** {seed_display}",
@@ -708,6 +710,8 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
 
     lines = [
         "# World Generator Test Results",
+        "",
+        "[<- Back to Test Results Summary](./test-results-summary.md)",
         "",
         f"**Generated:** {timestamp_display}",
         "",

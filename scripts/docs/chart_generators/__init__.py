@@ -10,7 +10,6 @@ from .utils import format_file_size, get_rules_json_size
 from .spoiler import extract_spoiler_chart_data, generate_spoiler_markdown
 from .multiclient import extract_multiclient_chart_data, generate_multiclient_markdown
 from .multiworld import extract_multiworld_chart_data, generate_multiworld_markdown
-from .multitemplate import extract_multitemplate_chart_data, generate_multitemplate_markdown
 from .processing_times import extract_processing_times_data, generate_processing_times_markdown
 from .summary import generate_summary_chart
 
@@ -30,9 +29,6 @@ __all__ = [
     # Multiworld tests
     'extract_multiworld_chart_data',
     'generate_multiworld_markdown',
-    # Multitemplate tests
-    'extract_multitemplate_chart_data',
-    'generate_multitemplate_markdown',
     # Processing times
     'extract_processing_times_data',
     'generate_processing_times_markdown',

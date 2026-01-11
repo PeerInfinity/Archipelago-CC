@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-08 20:38:21
+**Generated:** 2026-01-11 11:23:20
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -38,23 +38,23 @@ This summary combines results from 4 types of tests:
 
 Of the 53 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 39/53 (73.6%)
+- **Passing with Generic Exporter:** 37/53 (69.8%)
 - **Passing with Generic Logic:** 53/53 (100.0%)
-- **Passing with Both Generic:** 39/53 (73.6%)
+- **Passing with Both Generic:** 37/53 (69.8%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 110.2KB
+- **Total Exporter Code:** 160.7KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 110.2KB
+- **Combined Total:** 160.7KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.6KB | ✅ | 237.9KB |
+| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 237.9KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.4KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.8KB | ✅ | 666.4KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.4KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -71,7 +71,7 @@ Of the 53 templates passing all 4 tests:
 | Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 310.6KB |
 | Civilization VI WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 181.2KB |
 | Coding Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 55.1KB |
-| DLCQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 50.5KB |
+| DLCQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 1.2KB | ✅ | 50.5KB |
 | DOOM 1993 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 302.4KB |
 | DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 356.1KB |
 | Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1090.0KB |
@@ -81,7 +81,7 @@ Of the 53 templates passing all 4 tests:
 | Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 558.3KB |
 | Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 401.4KB |
 | Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 104.2KB |
-| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.5KB | ✅ | 88.6KB |
+| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 88.6KB |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.6KB | ✅ | 230.7KB |
 | Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.4KB | ✅ | 714.1KB |
 | Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 134.2KB |
@@ -94,27 +94,27 @@ Of the 53 templates passing all 4 tests:
 | Muse Dash WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 235.9KB |
 | Noita WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 81.0KB |
 | Old School Runescape WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.0KB | ✅ | 310.7KB |
-| Overcooked! 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 23.1KB | ✅ | 486.4KB |
+| Overcooked! 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 25.9KB | ✅ | 486.4KB |
 | Paint WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 113.5KB |
 | Risk of Rain 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 156.2KB |
 | Saving Princess WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 34.0KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 152.0KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 275.3KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 183.1KB |
-| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.4KB | ✅ | 100.6KB |
+| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 21.4KB | ✅ | 100.6KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 876.3KB |
 | Super Mario World WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 184.0KB |
 | TOEM original WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.9KB |
 | TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.9KB |
 | Terraria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.8KB | ✅ | 255.7KB |
 | The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 439.9KB |
-| The Messenger WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.7KB | ✅ | 217.8KB |
-| The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 253.8KB |
+| The Messenger WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.7KB | ✅ | 217.8KB |
+| The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 253.8KB |
 | Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 261.3KB |
 | Undertale WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 60.2KB |
-| VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | ✅ | 24.0KB |
+| VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 24.0KB |
 | Wargroove WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 47.0KB |
-| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 221.7KB |
+| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.3KB | ✅ | 221.7KB |
 | shapez WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 157.3KB |
 
 ### Largest Rules Files
@@ -136,25 +136,27 @@ Of the 53 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | Overcooked! 2 WorldGen | 23.1KB |
-| 2 | Terraria WorldGen | 16.8KB |
-| 3 | Super Mario 64 WorldGen | 12.4KB |
-| 4 | Inscryption WorldGen | 7.5KB |
-| 5 | Links Awakening DX WorldGen | 7.4KB |
-| 6 | Factorio WorldGen | 5.1KB |
-| 7 | The Messenger WorldGen | 4.7KB |
-| 8 | A Hat in Time WorldGen | 4.6KB |
-| 9 | Celeste 64 WorldGen | 4.1KB |
-| 10 | Castlevania - Circle of the Moon WorldGen | 4.0KB |
-| 11 | Yoshi's Island WorldGen | 3.8KB |
-| 12 | Landstalker - The Treasures of King Nole WorldGen | 3.6KB |
-| 13 | Paint WorldGen | 2.7KB |
-| 14 | VVVVVV WorldGen | 2.3KB |
-| 15 | Timespinner WorldGen | 2.2KB |
-| 16 | Subnautica WorldGen | 2.2KB |
-| 17 | Aquaria WorldGen | 1.8KB |
-| 18 | Old School Runescape WorldGen | 1.0KB |
-| 19 | DLCQuest WorldGen | 1.0KB |
+| 1 | Overcooked! 2 WorldGen | 25.9KB |
+| 2 | Super Mario 64 WorldGen | 21.4KB |
+| 3 | Terraria WorldGen | 16.8KB |
+| 4 | The Messenger WorldGen | 14.7KB |
+| 5 | A Link to the Past WorldGen | 11.8KB |
+| 6 | Yoshi's Island WorldGen | 9.3KB |
+| 7 | Inscryption WorldGen | 8.0KB |
+| 8 | Links Awakening DX WorldGen | 7.4KB |
+| 9 | The Wind Waker WorldGen | 7.0KB |
+| 10 | A Hat in Time WorldGen | 7.0KB |
+| 11 | Factorio WorldGen | 5.1KB |
+| 12 | Celeste 64 WorldGen | 4.1KB |
+| 13 | Castlevania - Circle of the Moon WorldGen | 4.0KB |
+| 14 | VVVVVV WorldGen | 3.8KB |
+| 15 | Landstalker - The Treasures of King Nole WorldGen | 3.6KB |
+| 16 | Paint WorldGen | 2.7KB |
+| 17 | Timespinner WorldGen | 2.2KB |
+| 18 | Subnautica WorldGen | 2.2KB |
+| 19 | Aquaria WorldGen | 1.8KB |
+| 20 | DLCQuest WorldGen | 1.2KB |
+| 21 | Old School Runescape WorldGen | 1.0KB |
 
 ## Excluded Templates
 
@@ -172,8 +174,8 @@ These templates are excluded from testing:
 | Bomb Rush Cyberfunk.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Celeste (Open World) WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Celeste (Open World).yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Final Fantasy WorldGen.yaml | Requires manual configuration and is not compatible with automated testing. |
-| Final Fantasy.yaml | Requires manual configuration and is not compatible with automated testing. |
+| Final Fantasy WorldGen.yaml | Requires manual configuration and is not compatible with the spoiler test. |
+| Final Fantasy.yaml | Requires manual configuration and is not compatible with the spoiler test. |
 | Hollow Knight WorldGen.yaml | The spoiler test currently freezes. |
 | Hollow Knight.yaml | The spoiler test currently freezes. |
 | JSON Tools Installer WorldGen.yaml | Not a game. |
@@ -186,6 +188,8 @@ These templates are excluded from testing:
 | Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Landstalker - The Treasures of King Nole WorldGen WorldGen.yaml | Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code. |
+| Landstalker - The Treasures of King Nole WorldGen.yaml | Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code. |
 | Lingo WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Ocarina of Time WorldGen.yaml | The default yaml file fails to generate. |
