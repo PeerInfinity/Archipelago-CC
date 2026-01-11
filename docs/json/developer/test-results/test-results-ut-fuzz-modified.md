@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-11 20:29:15
+**Generated:** 2026-01-11 21:25:44
 
-**Source Data Created:** 2026-01-11T18:59:05.330357
+**Source Data Created:** 2026-01-11T21:25:43.950179
 
-**Source Data Last Updated:** 2026-01-11T18:59:05.330362
+**Source Data Last Updated:** 2026-01-11T21:25:43.950185
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,29 +23,29 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 53 (62.4%)
-- **Games with Failures:** 32 (37.6%)
+- **Games with 100% Pass Rate:** 54 (63.5%)
+- **Games with Failures:** 31 (36.5%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 574 (67.5%)
-- **Failed Runs:** 241
+- **Successful Runs:** 591 (69.5%)
+- **Failed Runs:** 225
 - **Timed Out Runs:** 1
-- **Ignored Runs:** 34
+- **Ignored Runs:** 33
 
 ### Explain Support Summary
 
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 10,939
-- **Locations without Explain Support:** 1,085
-- **Locations with Default Rule:** 20,806
-- **Overall Explain Coverage:** 91.0%
+- **Locations with Explain Support:** 10,841
+- **Locations without Explain Support:** 1,083
+- **Locations with Default Rule:** 21,236
+- **Overall Explain Coverage:** 90.9%
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 7.0KB | ✅ | 235.0KB |
+| A Hat in Time | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 7.0KB | ✅ | 235.0KB |
 | A Link to the Past | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% | 11.8KB | ✅ | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
@@ -68,7 +68,7 @@
 | DOOM II | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.1KB | ✅ | 298.4KB |
+| Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.6KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Final Fantasy Mystic Quest | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% | ✅ | ✅ | 1302.5KB |
@@ -112,7 +112,7 @@
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
 | Super Mario Land 2 | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | 875.0KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TUNIC | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 3.1KB | ✅ | 711.6KB |
@@ -125,7 +125,7 @@
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
-| Yacht Dice | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
+| Yacht Dice | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 0.9KB | 285.0KB | 249.5KB |
 | Yoshi's Island | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 9.3KB | ✅ | 283.2KB |
 | Yu-Gi-Oh! 2006 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -135,7 +135,7 @@
 
 ### A Hat in Time
 
-- **None**: 10 occurrence(s)
+- **None**: 4 occurrence(s)
 
 ### A Link to the Past
 
@@ -154,10 +154,6 @@
 - **None**: 2 occurrence(s)
 
 ### Celeste (Open World)
-
-- **None**: 10 occurrence(s)
-
-### Factorio
 
 - **None**: 10 occurrence(s)
 
@@ -229,8 +225,8 @@
 - **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 
@@ -245,7 +241,7 @@
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **None**: 3 occurrence(s)
+- **None**: 4 occurrence(s)
 
 ### TUNIC
 
@@ -261,7 +257,7 @@
 
 ### Yacht Dice
 
-- **None**: 10 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Yoshi's Island
 
@@ -290,13 +286,13 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Dark Souls III | 1469 | 0 | 228 | 1241 | ❌ 0% |
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 63 | 0 | 63 | 0 | ❌ 0% |
+| Yacht Dice | 61 | 0 | 61 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
 | DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
 | Kingdom Hearts 2 | 643 | 46 | 30 | 567 | ⚠️ 61% |
 | Mega Man 2 | 51 | 4 | 1 | 46 | ⚠️ 80% |
-| A Link to the Past | 242 | 152 | 28 | 62 | ⚠️ 84% |
+| A Link to the Past | 242 | 124 | 28 | 90 | ⚠️ 82% |
 | The Wind Waker | 228 | 173 | 16 | 39 | ⚠️ 92% |
 | Kirby's Dream Land 3 | 832 | 118 | 5 | 709 | ⚠️ 96% |
 | Blasphemous | 305 | 121 | 3 | 181 | ⚠️ 98% |
@@ -336,7 +332,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Math Adventure | 10 | 5 | 0 | 5 | ✅ 100% |
 | MegaMan Battle Network 3 | 263 | 80 | 0 | 183 | ✅ 100% |
 | Meritous | 104 | 0 | 0 | 104 | ✅ 100% |
-| Metamath | 3 | 1 | 0 | 2 | ✅ 100% |
+| Metamath | 6 | 3 | 0 | 3 | ✅ 100% |
 | Muse Dash | 776 | 776 | 0 | 0 | ✅ 100% |
 | Noita | 303 | 0 | 0 | 303 | ✅ 100% |
 | Old School Runescape | 62 | 60 | 0 | 2 | ✅ 100% |
@@ -349,8 +345,8 @@ This section shows which games have rules that support the `explain_json()` meth
 | Saving Princess | 24 | 9 | 0 | 15 | ✅ 100% |
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
-| Sonic Adventure 2 Battle | 708 | 277 | 0 | 431 | ✅ 100% |
-| Stardew Valley | 1068 | 928 | 0 | 140 | ✅ 100% |
+| Sonic Adventure 2 Battle | 1036 | 206 | 0 | 830 | ✅ 100% |
+| Stardew Valley | 1069 | 927 | 0 | 142 | ✅ 100% |
 | Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |

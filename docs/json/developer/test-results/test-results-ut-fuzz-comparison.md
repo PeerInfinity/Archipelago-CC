@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison
 
-**Generated:** 2026-01-11 20:29:15
+**Generated:** 2026-01-11 21:25:44
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -16,8 +16,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 85
 - **Passing Both:** 33 (38.8%)
 - **Passing Original Only:** 7 (8.2%)
-- **Passing Modified Only:** 20 (23.5%)
-- **Passing Neither:** 25 (29.4%)
+- **Passing Modified Only:** 21 (24.7%)
+- **Passing Neither:** 24 (28.2%)
 - **Passing Modified with no custom code:** 37 (43.5%)
 - **Passing Modified Only with no custom code:** 10 (11.8%)
 
@@ -25,7 +25,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ 0.0% | ❌ 0.0% | 7.0KB | ✅ | 235.0KB |
+| A Hat in Time | ❌ 0.0% | ⚠️ 60.0% | 7.0KB | ✅ | 235.0KB |
 | A Link to the Past | ❌ 0.0% | ❌ 20.0% | 11.8KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
@@ -48,7 +48,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ⚠️ 70.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 0.0% | ❌ 0.0% | 5.1KB | ✅ | 298.4KB |
+| Factorio | ❌ 0.0% | ✅ 100.0% | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ❌ 10.0% | ✅ 100.0% | ✅ | ✅ | 68.6KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Final Fantasy Mystic Quest | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | 1302.5KB |
@@ -105,7 +105,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Undertale | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 58.0KB |
 | VVVVVV | ⚠️ 80.0% | ✅ 100.0% | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 44.7KB |
-| Yacht Dice | ❌ 0.0% | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
+| Yacht Dice | ❌ 0.0% | ❌ 10.0% | 0.9KB | 285.0KB | 249.5KB |
 | Yoshi's Island | ❌ 20.0% | ❌ 30.0% | 9.3KB | ✅ | 283.2KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 50.0% | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -165,7 +165,7 @@ These games pass in the Original UT but fail in the Modified UT.
 | TUNIC | 3.1KB | ✅ | 711.6KB |
 | The Witness | 14.1KB | ✅ | 401.3KB |
 
-## Games Passing Modified Only (20)
+## Games Passing Modified Only (21)
 
 These games pass in the Modified UT but fail in the Original UT.
 
@@ -174,6 +174,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | Adventure | ✅ | ✅ | 26.0KB |
 | DLCQuest | 1.2KB | ✅ | 51.3KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
+| Factorio | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ | ✅ | 68.6KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 688.9KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.3KB |
@@ -192,7 +193,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | Timespinner | 2.2KB | ✅ | 267.3KB |
 | VVVVVV | 3.8KB | ✅ | 22.7KB |
 
-## Games Passing Neither (25)
+## Games Passing Neither (24)
 
 These games fail in both Universal Tracker versions.
 
@@ -202,7 +203,6 @@ These games fail in both Universal Tracker versions.
 | A Link to the Past | 11.8KB | ✅ | 654.1KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.3KB |
-| Factorio | 5.1KB | ✅ | 298.4KB |
 | Final Fantasy Mystic Quest | ✅ | ✅ | 1302.5KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
