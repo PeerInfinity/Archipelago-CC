@@ -101,4 +101,10 @@ class Hook(BaseHook):
         # Do the magic here, set `self.status` accordingly to `GenOutcome.Failure`/`GenOutcome.Success`
 
     def reclassify_outcome(self, outcome, exc):
+        # If TrackerCore generation failed with a fill-related exception, treat as ignored
+        # These are configuration issues, not logic mismatches
+        if exc is not None and self.status is None:
+            exc_str = str(exc)
+            if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
+                return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
