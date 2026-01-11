@@ -79,7 +79,9 @@ def create_all_items(world: NoitaWorld) -> None:
         if world.multiworld.players == 1:
             for location in world.multiworld.get_unfilled_locations(player):
                 if "Shop Item" in location.name:
-                    location.item = create_item(player, itempool.pop())
+                    item = create_item(player, itempool.pop())
+                    location.item = item
+                    item.location = location  # Set back-reference for fuzzer compatibility
             locations_to_fill = len(world.multiworld.get_unfilled_locations(player))
 
     itempool += create_random_items(world, filler_weights, locations_to_fill - len(itempool))
