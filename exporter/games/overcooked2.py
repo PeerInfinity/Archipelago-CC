@@ -295,40 +295,83 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                     return {'type': 'item_check', 'item': 'Blue Ramp'}
 
             elif overworld_region == OverworldRegion.sky_shelf:
-                # Original logic: Green Ramp OR (with tricks: Dash + access to pink_island)
-                # Pink island requires: Pink Ramp OR (Dash + sky_shelf access)
-                # With mutual recursion and cycle detection:
-                # - sky_shelf via tricks needs: Dash + Pink Ramp (pink_island's base case)
-                # - pink_island via tricks needs: Dash + Green Ramp (sky_shelf's base case)
-                if allow_tricks:
-                    return {
-                        'type': 'or',
+                # Original logic from can_reach_sky_shelf:
+                # 1. Green Ramp
+                # 2. 5-1 Level Complete + Purple Ramp (always, not just with tricks)
+                # 3. (with tricks) Pink Island access + Progressive Dash
+                #    -> Pink Ramp + Progressive Dash (pink_island's base case)
+                # 4. Tip of the map access (via out_of_bounds)
+                #    -> Progressive Dash + Dark Green Ramp + Kevin-1
+                # The visited list in Python prevents infinite recursion
+                conditions = [
+                    {'type': 'item_check', 'item': 'Green Ramp'},
+                    # Path 2: via Purple Ramp + 5-1 completion
+                    {
+                        'type': 'and',
                         'conditions': [
-                            {'type': 'item_check', 'item': 'Green Ramp'},
-                            {
-                                'type': 'and',
-                                'conditions': [
-                                    {'type': 'item_check', 'item': 'Progressive Dash'},
-                                    {'type': 'item_check', 'item': 'Pink Ramp'}
-                                ]
-                            }
+                            {'type': 'item_check', 'item': '5-1 Level Complete'},
+                            {'type': 'item_check', 'item': 'Purple Ramp'}
+                        ]
+                    },
+                    # Path 4: via out_of_bounds (tip_of_the_map path)
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Progressive Dash'},
+                            {'type': 'item_check', 'item': 'Dark Green Ramp'},
+                            {'type': 'item_check', 'item': 'Kevin-1'}
                         ]
                     }
-                else:
-                    return {'type': 'item_check', 'item': 'Green Ramp'}
+                ]
+                if allow_tricks:
+                    # Path 3: via Pink Island + Dash (pink_island's base case is Pink Ramp)
+                    conditions.append({
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Progressive Dash'},
+                            {'type': 'item_check', 'item': 'Pink Ramp'}
+                        ]
+                    })
+                return {'type': 'or', 'conditions': conditions}
 
             elif overworld_region == OverworldRegion.pink_island:
-                # Pink Ramp OR (dash from sky shelf with tricks)
+                # Original logic from can_reach_pink_island:
+                # 1. Pink Ramp
+                # 2. (with tricks) Progressive Dash + can_reach_sky_shelf
+                #    sky_shelf can be reached via:
+                #    - Green Ramp
+                #    - 5-1 Level Complete + Purple Ramp
+                #    - out_of_bounds (Dash + Dark Green Ramp + Kevin-1)
                 if allow_tricks:
                     return {
                         'type': 'or',
                         'conditions': [
                             {'type': 'item_check', 'item': 'Pink Ramp'},
+                            # Via sky_shelf: Green Ramp + Dash
                             {
                                 'type': 'and',
                                 'conditions': [
                                     {'type': 'item_check', 'item': 'Progressive Dash'},
-                                    {'type': 'item_check', 'item': 'Green Ramp'}  # Need green ramp to reach sky shelf
+                                    {'type': 'item_check', 'item': 'Green Ramp'}
+                                ]
+                            },
+                            # Via sky_shelf: 5-1 + Purple + Dash
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Progressive Dash'},
+                                    {'type': 'item_check', 'item': '5-1 Level Complete'},
+                                    {'type': 'item_check', 'item': 'Purple Ramp'}
+                                ]
+                            },
+                            # Via sky_shelf via out_of_bounds: Dash + Dark Green Ramp + Kevin-1
+                            # (Dash already required, so just need Dark Green Ramp + Kevin-1)
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Progressive Dash'},
+                                    {'type': 'item_check', 'item': 'Dark Green Ramp'},
+                                    {'type': 'item_check', 'item': 'Kevin-1'}
                                 ]
                             }
                         ]

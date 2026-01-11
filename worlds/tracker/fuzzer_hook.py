@@ -264,6 +264,10 @@ class Hook(BaseHook):
             # The error handling code assumes HTTP response but may get an exception instead
             if exc_type == "AttributeError" and "status_code" in exc_str:
                 return GenOutcome.OptionError, exc
+            # Handle Overcooked! 2 option validation errors
+            # These occur when the fuzzer generates invalid option combinations
+            if "Invalid OC2 settings" in exc_str or "OC2 needs at least" in exc_str:
+                return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 
 
@@ -425,6 +429,10 @@ class MultiworldHook(BaseHook):
                 return GenOutcome.OptionError, exc
             # Handle FFMQ's AttributeError when API fails with an exception (ProxyError, etc.)
             if exc_type == "AttributeError" and "status_code" in exc_str:
+                return GenOutcome.OptionError, exc
+            # Handle Overcooked! 2 option validation errors
+            # These occur when the fuzzer generates invalid option combinations
+            if "Invalid OC2 settings" in exc_str or "OC2 needs at least" in exc_str:
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 
