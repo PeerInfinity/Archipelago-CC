@@ -62,6 +62,7 @@ def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
         - ignored: int
         - success_rate: float
         - errors: dict
+        - explain_stats: dict (optional) with explain support statistics
     """
     chart_data = []
 
@@ -87,6 +88,9 @@ def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
 
         success_rate = (success / total * 100) if total > 0 else 0
 
+        # Extract explain stats if available
+        explain_stats = template_data.get('explain_stats')
+
         chart_data.append({
             'game_name': game_name,
             'world_directory': world_directory,
@@ -97,7 +101,8 @@ def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
             'timeout': timeout,
             'ignored': ignored,
             'success_rate': success_rate,
-            'errors': errors
+            'errors': errors,
+            'explain_stats': explain_stats
         })
 
     chart_data.sort(key=lambda x: x['game_name'])
@@ -163,6 +168,28 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"- **Timed Out Runs:** {total_timeout}\n"
         md_content += f"- **Ignored Runs:** {total_ignored}\n\n"
 
+        # Add explain stats summary if available
+        games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
+        if games_with_explain_stats:
+            total_locs_with_explain = sum(d['explain_stats'].get('locations_with_explain', 0) for d in games_with_explain_stats)
+            total_locs_without_explain = sum(d['explain_stats'].get('locations_without_explain', 0) for d in games_with_explain_stats)
+            total_locs_default = sum(d['explain_stats'].get('locations_default_rule', 0) for d in games_with_explain_stats)
+            total_custom_locs = total_locs_with_explain + total_locs_without_explain
+
+            games_full_explain = sum(1 for d in games_with_explain_stats if d['explain_stats'].get('explain_coverage_percent', 0) == 100)
+            games_no_explain = sum(1 for d in games_with_explain_stats if d['explain_stats'].get('locations_with_explain', 0) == 0 and d['explain_stats'].get('locations_without_explain', 0) > 0)
+
+            overall_explain_coverage = (total_locs_with_explain / total_custom_locs * 100) if total_custom_locs > 0 else 100
+
+            md_content += "### Explain Support Summary\n\n"
+            md_content += f"- **Games with Explain Stats:** {len(games_with_explain_stats)}\n"
+            md_content += f"- **Games with 100% Explain Coverage:** {games_full_explain}\n"
+            md_content += f"- **Games with No Explain Support:** {games_no_explain}\n"
+            md_content += f"- **Locations with Explain Support:** {total_locs_with_explain:,}\n"
+            md_content += f"- **Locations without Explain Support:** {total_locs_without_explain:,}\n"
+            md_content += f"- **Locations with Default Rule:** {total_locs_default:,}\n"
+            md_content += f"- **Overall Explain Coverage:** {overall_explain_coverage:.1f}%\n\n"
+
     md_content += "## Test Results\n\n"
     md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |\n"
     md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|\n"
@@ -219,6 +246,40 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
                         md_content += f"- **{error_type}**: {occurrences}\n"
                 md_content += "\n"
 
+    # Add explain support section if data is available
+    games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
+    if games_with_explain_stats:
+        md_content += "\n## Explain Support Details\n\n"
+        md_content += "This section shows which games have rules that support the `explain_json()` method, "
+        md_content += "which provides human-readable explanations of access rule logic.\n\n"
+        md_content += "| Game Name | Total Locs | With Explain | Without Explain | Default Rule | Coverage |\n"
+        md_content += "|-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|\n"
+
+        # Sort by explain coverage (ascending to highlight games needing work)
+        sorted_explain_data = sorted(games_with_explain_stats,
+                                     key=lambda x: x['explain_stats'].get('explain_coverage_percent', 100))
+
+        for data in sorted_explain_data:
+            game_name = data['game_name']
+            stats = data['explain_stats']
+            total_locs = stats.get('total_locations', 0)
+            with_explain = stats.get('locations_with_explain', 0)
+            without_explain = stats.get('locations_without_explain', 0)
+            default_rule = stats.get('locations_default_rule', 0)
+            coverage = stats.get('explain_coverage_percent', 100)
+
+            # Format coverage with indicator
+            if coverage == 100:
+                coverage_display = f"✅ {coverage:.0f}%"
+            elif coverage >= 50:
+                coverage_display = f"⚠️ {coverage:.0f}%"
+            elif coverage > 0:
+                coverage_display = f"🔶 {coverage:.0f}%"
+            else:
+                coverage_display = f"❌ {coverage:.0f}%"
+
+            md_content += f"| {game_name} | {total_locs} | {with_explain} | {without_explain} | {default_rule} | {coverage_display} |\n"
+
     md_content += "\n## Notes\n\n"
     md_content += "- **Result:** ✅ if all fuzz runs passed (0 failures, 0 timeouts), ❌ otherwise\n"
     md_content += "- **Total:** Number of fuzz runs attempted for this game\n"
@@ -227,6 +288,15 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Timeout:** Number of runs that exceeded the time limit\n"
     md_content += "- **Ignored:** Number of runs skipped due to option errors\n"
     md_content += "- **Success Rate:** Percentage of successful runs\n\n"
+
+    if games_with_explain_stats:
+        md_content += "### Explain Support Columns\n\n"
+        md_content += "- **Total Locs:** Total number of locations with addresses (excludes events)\n"
+        md_content += "- **With Explain:** Locations with rules that have `explain_json()` support\n"
+        md_content += "- **Without Explain:** Locations with custom rules but no explain support (lambdas/functions)\n"
+        md_content += "- **Default Rule:** Locations with no access rule set (always accessible)\n"
+        md_content += "- **Coverage:** Percentage of custom-rule locations that have explain support\n\n"
+
     md_content += "### About This Test\n\n"
     md_content += "The UT fuzzer tests Universal Tracker compatibility by:\n"
     md_content += "1. Generating random game configurations (YAML options)\n"

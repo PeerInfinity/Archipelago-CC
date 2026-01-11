@@ -1,17 +1,24 @@
 from fuzz import BaseHook, GenOutcome
-from typing import List, Dict, Set
+from typing import List, Dict, Set, Any
 import collections
+import json
 import logging
+import os
 from . import TrackerCore, DeferredEntranceMode
 from BaseClasses import MultiWorld,Location,ItemClassification
 from NetUtils import NetworkItem
 logger = logging.getLogger("Fuzzer")
+
+# Directory for explain stats output (relative to fuzz output directory)
+EXPLAIN_STATS_DIR = "fuzz_output/explain_stats"
 
 
 class Hook(BaseHook):
     ut_core:TrackerCore.TrackerCore
     player_files_path:str
     status = None
+    run_id: int = 0  # Track run ID for explain stats files
+    explain_stats_collected: bool = False  # Track if we've collected explain stats for this game
 
     def before_generate(self, args):
         self.status = None
@@ -19,6 +26,7 @@ class Hook(BaseHook):
         self.ut_core = TrackerCore.TrackerCore(logger,False,False)
         self.ut_core.enforce_deferred_connections = DeferredEntranceMode.disabled
         self.ut_core.run_generator(None,None,args.player_files_path) #initial UT gen
+        self.run_id = getattr(args, 'run_id', self.run_id)
 
     def after_generate(self, mw:MultiWorld, output_path):
         if mw is None:
@@ -100,8 +108,82 @@ class Hook(BaseHook):
             else:
                 return #if get_sendable_spheres returns an empty sphere that means we're done, the next sphere will be any unreachable locations... which aren't reachable...
 
-                
+
         # Do the magic here, set `self.status` accordingly to `GenOutcome.Failure`/`GenOutcome.Success`
+
+        # Collect explain stats on first successful run (stats are consistent across runs for same game)
+        if self.status == GenOutcome.Success and not self.explain_stats_collected:
+            self._collect_explain_stats(mw)
+            self.explain_stats_collected = True
+
+    def _collect_explain_stats(self, mw: MultiWorld) -> None:
+        """
+        Collect explain support statistics for all locations in the world.
+
+        Counts:
+        - total_locations: Total number of locations with addresses
+        - locations_with_explain: Locations whose access_rule has explain_json method
+        - locations_default_rule: Locations using default access_rule (always True)
+        - locations_without_explain: Locations with custom rules but no explain_json
+        """
+        try:
+            world = mw.worlds[1]
+            locations = list(world.get_locations())
+
+            total_locations = 0
+            locations_with_explain = 0
+            locations_default_rule = 0
+            locations_without_explain = 0
+
+            for location in locations:
+                # Skip event locations (no address)
+                if location.address is None:
+                    continue
+
+                total_locations += 1
+                access_rule = location.access_rule
+
+                # Check if using default access rule (always True, no custom logic)
+                if access_rule is Location.access_rule:
+                    locations_default_rule += 1
+                # Check if rule has explain_json method (Rule Builder or compatible)
+                elif hasattr(access_rule, 'explain_json'):
+                    locations_with_explain += 1
+                else:
+                    # Custom rule without explain support (lambda/function)
+                    locations_without_explain += 1
+
+            # Calculate explain coverage percentage
+            # Locations with custom rules that have explain support
+            custom_rule_locations = locations_with_explain + locations_without_explain
+            explain_coverage = (locations_with_explain / custom_rule_locations * 100) if custom_rule_locations > 0 else 100.0
+
+            stats = {
+                "game": world.game,
+                "total_locations": total_locations,
+                "locations_with_explain": locations_with_explain,
+                "locations_default_rule": locations_default_rule,
+                "locations_without_explain": locations_without_explain,
+                "explain_coverage_percent": round(explain_coverage, 2)
+            }
+
+            # Write stats to file
+            self._write_explain_stats(stats)
+
+        except Exception as e:
+            logger.warning(f"Failed to collect explain stats: {e}")
+
+    def _write_explain_stats(self, stats: Dict[str, Any]) -> None:
+        """Write explain stats to a JSON file in the fuzz output directory."""
+        try:
+            os.makedirs(EXPLAIN_STATS_DIR, exist_ok=True)
+            stats_file = os.path.join(EXPLAIN_STATS_DIR, "explain_stats.json")
+
+            with open(stats_file, 'w') as f:
+                json.dump(stats, f, indent=2)
+
+        except Exception as e:
+            logger.warning(f"Failed to write explain stats: {e}")
 
     def reclassify_outcome(self, outcome, exc):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored
