@@ -2,11 +2,11 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-11 05:12:23
+**Generated:** 2026-01-11 05:45:54
 
-**Source Data Created:** 2026-01-11T04:43:38.438812
+**Source Data Created:** 2026-01-11T05:45:53.946324
 
-**Source Data Last Updated:** 2026-01-11T04:43:38.438818
+**Source Data Last Updated:** 2026-01-11T05:45:53.946331
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -21,13 +21,13 @@
 ## Summary
 
 - **Total Games:** 73
-- **Games with 100% Pass Rate:** 48 (65.8%)
-- **Games with Failures:** 25 (34.2%)
+- **Games with 100% Pass Rate:** 52 (71.2%)
+- **Games with Failures:** 21 (28.8%)
 - **Total Fuzz Runs:** 730
-- **Successful Runs:** 541 (74.1%)
-- **Failed Runs:** 165
+- **Successful Runs:** 561 (76.8%)
+- **Failed Runs:** 144
 - **Timed Out Runs:** 1
-- **Ignored Runs:** 23
+- **Ignored Runs:** 24
 
 ## Test Results
 
@@ -91,21 +91,21 @@
 | [Super Mario 64](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm64ex) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Super Mario Land 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=marioland2) | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | [Super Mario World](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=smw) | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
-| [Super Metroid](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm) | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
+| [Super Metroid](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm) | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
 | [TOEM original](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=toem_original) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [TOEM rule builder](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=toem_rule_builder) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [TUNIC](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tunic) | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
 | [Terraria](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=terraria) | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
 | [The Legend of Zelda](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tloz) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [The Messenger](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=messenger) | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
-| [The Wind Waker](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tww) | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
+| [The Messenger](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=messenger) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| [The Wind Waker](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tww) | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% |
 | [The Witness](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=witness) | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
 | [Timespinner](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=timespinner) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Undertale](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=undertale) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [VVVVVV](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=v6) | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
+| [VVVVVV](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=v6) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | [Wargroove](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=wargroove) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| [Yoshi's Island](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=yoshisisland) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| [shapez](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=shapez) | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% |
+| [Yoshi's Island](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=yoshisisland) | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
+| [shapez](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=shapez) | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% |
 
 ## Error Details
 
@@ -176,8 +176,8 @@
 - **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 
 ### Stardew Valley
@@ -191,7 +191,7 @@
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **None**: 5 occurrence(s)
+- **None**: 4 occurrence(s)
 
 ### TUNIC
 
@@ -201,29 +201,13 @@
 
 - **FillError**: 1 occurrence(s)
 
-### The Messenger
-
-- **None**: 7 occurrence(s)
-
-### The Wind Waker
-
-- **None**: 5 occurrence(s)
-
 ### The Witness
 
 - **None**: 7 occurrence(s)
 
-### VVVVVV
-
-- **None**: 2 occurrence(s)
-
 ### Yoshi's Island
 
-- **None**: 10 occurrence(s)
-
-### shapez
-
-- **None**: 3 occurrence(s)
+- **None**: 7 occurrence(s)
 
 
 ## Notes
