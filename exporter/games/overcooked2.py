@@ -76,7 +76,13 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                 level_name_val = closure_vars.get('level_name', level_name)
                 previous_level = closure_vars.get('previous_level_completed_event_name')
                 required_stars = closure_vars.get('required_star_count', 0)
-                allow_tricks = closure_vars.get('allow_ramp_tricks', False)
+
+                # Get allow_tricks from world options (not from closure - it's passed directly)
+                # The original lambda passes self.options.ramp_tricks.result to the helper function
+                allow_tricks = False
+                if self.world and hasattr(self.world, 'options') and hasattr(self.world.options, 'ramp_tricks'):
+                    allow_tricks = bool(self.world.options.ramp_tricks.result)
+                    logger.info(f"[{rule_target_name}] Using ramp_tricks from world options: {allow_tricks}")
 
                 # Create a helper rule and EXPAND IT IMMEDIATELY
                 # (because override results bypass the normal expansion flow)
@@ -289,27 +295,27 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                     return {'type': 'item_check', 'item': 'Blue Ramp'}
 
             elif overworld_region == OverworldRegion.sky_shelf:
-                # Green Ramp OR (5-1 Complete + Purple Ramp) OR tricks
-                conditions = [
-                    {'type': 'item_check', 'item': 'Green Ramp'},
-                    {
-                        'type': 'and',
+                # Original logic: Green Ramp OR (with tricks: Dash + access to pink_island)
+                # Pink island requires: Pink Ramp OR (Dash + sky_shelf access)
+                # With mutual recursion and cycle detection:
+                # - sky_shelf via tricks needs: Dash + Pink Ramp (pink_island's base case)
+                # - pink_island via tricks needs: Dash + Green Ramp (sky_shelf's base case)
+                if allow_tricks:
+                    return {
+                        'type': 'or',
                         'conditions': [
-                            {'type': 'item_check', 'item': '5-1 Level Complete'},
-                            {'type': 'item_check', 'item': 'Purple Ramp'}
+                            {'type': 'item_check', 'item': 'Green Ramp'},
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Progressive Dash'},
+                                    {'type': 'item_check', 'item': 'Pink Ramp'}
+                                ]
+                            }
                         ]
                     }
-                ]
-                if allow_tricks:
-                    # Can dash from pink island
-                    conditions.append({
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': 'Progressive Dash'},
-                            {'type': 'item_check', 'item': 'Pink Ramp'}
-                        ]
-                    })
-                return {'type': 'or', 'conditions': conditions}
+                else:
+                    return {'type': 'item_check', 'item': 'Green Ramp'}
 
             elif overworld_region == OverworldRegion.pink_island:
                 # Pink Ramp OR (dash from sky shelf with tricks)
@@ -331,7 +337,10 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                     return {'type': 'item_check', 'item': 'Pink Ramp'}
 
             elif overworld_region == OverworldRegion.tip_of_the_map:
-                # (5-1 Complete + Purple Ramp) OR out of bounds tricks
+                # Original logic:
+                # 1. 5-1 Level Complete + Purple Ramp, OR
+                # 2. can_reach_out_of_bounds (Dash + Dark Green Ramp + Kevin-1), OR
+                # 3. (with tricks) can_reach_sky_shelf
                 conditions = [
                     {
                         'type': 'and',
@@ -339,21 +348,28 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                             {'type': 'item_check', 'item': '5-1 Level Complete'},
                             {'type': 'item_check', 'item': 'Purple Ramp'}
                         ]
+                    },
+                    # Out of bounds path (always available, not just with tricks)
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Progressive Dash'},
+                            {'type': 'item_check', 'item': 'Dark Green Ramp'},
+                            {'type': 'item_check', 'item': 'Kevin-1'}
+                        ]
                     }
                 ]
                 if allow_tricks:
+                    # From sky shelf (which requires Green Ramp OR Dash + Pink Ramp)
                     conditions.extend([
-                        # Out of bounds via dark green mountain
+                        {'type': 'item_check', 'item': 'Green Ramp'},
                         {
                             'type': 'and',
                             'conditions': [
                                 {'type': 'item_check', 'item': 'Progressive Dash'},
-                                {'type': 'item_check', 'item': 'Dark Green Ramp'},
-                                {'type': 'item_check', 'item': 'Kevin-1'}
+                                {'type': 'item_check', 'item': 'Pink Ramp'}
                             ]
-                        },
-                        # Or from sky shelf
-                        {'type': 'item_check', 'item': 'Green Ramp'}
+                        }
                     ])
                 return {'type': 'or', 'conditions': conditions}
 
@@ -373,24 +389,65 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             logger.error(f"Error building overworld access rule for {level_name}: {e}", exc_info=True)
             return None
 
-    def _build_mars_shelf_access_rule(self, allow_tricks: bool) -> Dict[str, Any]:
-        """Build access rule for mars shelf / kevin eight island regions."""
-        base_conditions = [
+    def _build_tip_of_the_map_access_conditions(self, allow_tricks: bool) -> list:
+        """Build the list of access conditions for tip_of_the_map region.
+
+        Original logic:
+        1. 5-1 Level Complete + Purple Ramp, OR
+        2. out_of_bounds (Dash + Dark Green Ramp + Kevin-1), OR
+        3. (with tricks) sky_shelf access
+        """
+        conditions = [
             {
                 'type': 'and',
                 'conditions': [
                     {'type': 'item_check', 'item': '5-1 Level Complete'},
                     {'type': 'item_check', 'item': 'Purple Ramp'}
                 ]
+            },
+            # Out of bounds path (always available, not just with tricks)
+            {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Progressive Dash'},
+                    {'type': 'item_check', 'item': 'Dark Green Ramp'},
+                    {'type': 'item_check', 'item': 'Kevin-1'}
+                ]
             }
         ]
+        if allow_tricks:
+            # From sky shelf (which requires Green Ramp OR Dash + Pink Ramp)
+            conditions.extend([
+                {'type': 'item_check', 'item': 'Green Ramp'},
+                {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'item_check', 'item': 'Progressive Dash'},
+                        {'type': 'item_check', 'item': 'Pink Ramp'}
+                    ]
+                }
+            ])
+        return conditions
+
+    def _build_mars_shelf_access_rule(self, allow_tricks: bool) -> Dict[str, Any]:
+        """Build access rule for mars shelf / kevin eight island regions.
+
+        Original logic:
+        1. tip_of_the_map access + allow_tricks, OR
+        2. tip_of_the_map access + 6-1 Level Complete + Red Ramp
+        """
+        tip_conditions = self._build_tip_of_the_map_access_conditions(allow_tricks)
 
         if allow_tricks:
-            return {'type': 'or', 'conditions': base_conditions}
+            # With tricks, just need tip_of_the_map access
+            return {'type': 'or', 'conditions': tip_conditions}
         else:
+            # Without tricks, need tip_of_the_map + 6-1 + Red Ramp
+            # Create: (tip_path_1 OR tip_path_2) AND 6-1 AND Red Ramp
             return {
                 'type': 'and',
-                'conditions': base_conditions + [
+                'conditions': [
+                    {'type': 'or', 'conditions': tip_conditions},
                     {'type': 'item_check', 'item': '6-1 Level Complete'},
                     {'type': 'item_check', 'item': 'Red Ramp'}
                 ]
