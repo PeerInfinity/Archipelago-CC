@@ -1,0 +1,188 @@
+{
+  "metadata": {
+    "created": "2026-01-11T22:17:19.723023",
+    "last_updated": "2026-01-11T22:17:53.822016",
+    "script_version": "1.0.0",
+    "seed_mode": "fixed",
+    "seed": 1,
+    "runs_per_test": 3,
+    "max_players": 20,
+    "total_templates_considered": 2
+  },
+  "assembly_order": [
+    "adventure",
+    "dark_souls_3"
+  ],
+  "final_multiworld": [
+    "adventure",
+    "dark_souls_3"
+  ],
+  "rejected_games": [],
+  "results": {
+    "Adventure.yaml": {
+      "template": "Adventure.yaml",
+      "game": "Adventure",
+      "world_dir": "adventure",
+      "player_number": 1,
+      "timestamp": "2026-01-11T22:17:19.928564",
+      "multiworld_size": 1,
+      "games_in_multiworld": [
+        "adventure"
+      ],
+      "status": "passed",
+      "skip_reason": "Waiting for 2+ players",
+      "second_pass": {
+        "timestamp": "2026-01-11T22:17:53.821560",
+        "multiworld_size": 2,
+        "games_in_multiworld": [
+          "adventure",
+          "dark_souls_3"
+        ],
+        "test_result": {
+          "passed": true,
+          "total": 3,
+          "success": 3,
+          "failure": 0,
+          "run_results": [
+            {
+              "seed": 1,
+              "result": {
+                "passed": true,
+                "generation_success": true,
+                "player_results": {
+                  "1": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "2": {
+                    "passed": true,
+                    "error": ""
+                  }
+                },
+                "error": null,
+                "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+              }
+            },
+            {
+              "seed": 2,
+              "result": {
+                "passed": true,
+                "generation_success": true,
+                "player_results": {
+                  "1": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "2": {
+                    "passed": true,
+                    "error": ""
+                  }
+                },
+                "error": null,
+                "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_01043188731678011336.zip"
+              }
+            },
+            {
+              "seed": 3,
+              "result": {
+                "passed": true,
+                "generation_success": true,
+                "player_results": {
+                  "1": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "2": {
+                    "passed": true,
+                    "error": ""
+                  }
+                },
+                "error": null,
+                "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_84719271504320872445.zip"
+              }
+            }
+          ]
+        },
+        "status": "passed"
+      }
+    },
+    "Dark Souls III.yaml": {
+      "template": "Dark Souls III.yaml",
+      "game": "Dark Souls III",
+      "world_dir": "dark_souls_3",
+      "player_number": 2,
+      "timestamp": "2026-01-11T22:17:20.149727",
+      "multiworld_size": 2,
+      "games_in_multiworld": [
+        "adventure",
+        "dark_souls_3"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 3,
+        "success": 3,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          },
+          {
+            "seed": 2,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_01043188731678011336.zip"
+            }
+          },
+          {
+            "seed": 3,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_84719271504320872445.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    }
+  }
+}

@@ -60,6 +60,43 @@ MULTIWORLD_DIR = PROJECT_ROOT / "Players" / "presets" / "Multiworld"
 TEMPLATES_DIR = PROJECT_ROOT / "Players" / "Templates"
 OUTPUT_DIR = PROJECT_ROOT / "scripts" / "output" / "multiworld-ut-fuzz"
 
+
+def cleanup_empty_worldgen_directories():
+    """
+    Remove empty worldgen directories that were created during testing.
+
+    The UT validation process creates temporary worldgen directories
+    that may not get cleaned up properly if the test fails or is interrupted.
+    They typically have names like 'adventure_worldgen_86998726363870010506'.
+    """
+    worlds_dir = PROJECT_ROOT / "worlds"
+    if not worlds_dir.exists():
+        return
+
+    removed_count = 0
+    for entry in worlds_dir.iterdir():
+        if not entry.is_dir():
+            continue
+
+        # Look for directories matching the pattern: *_worldgen_<numbers>
+        # or *_<numbers> that don't have an __init__.py
+        name = entry.name
+        if "_worldgen_" in name or (name.split("_")[-1].isdigit() and len(name.split("_")[-1]) > 10):
+            init_file = entry / "__init__.py"
+            if not init_file.exists():
+                try:
+                    shutil.rmtree(entry)
+                    removed_count += 1
+                except OSError:
+                    pass  # Ignore errors during cleanup
+
+    if removed_count > 0:
+        print(f"Cleaned up {removed_count} empty worldgen directories")
+
+
+# Clean up empty worldgen directories before importing fuzz (which triggers world loading)
+cleanup_empty_worldgen_directories()
+
 # Import fuzz.py's YAML generation logic
 from fuzz import generate_random_yaml, world_from_apworld_name
 
@@ -518,6 +555,11 @@ def main():
         default=0,
         help='Skip the first N templates before applying every-nth filter'
     )
+    parser.add_argument(
+        '--second-pass',
+        action='store_true',
+        help='After first pass, run a second pass to test games that were pending (added when < 2 players)'
+    )
 
     args = parser.parse_args()
 
@@ -746,6 +788,108 @@ def main():
         results["rejected_games"] = rejected_games.copy()
         with open(output_path, 'w') as f:
             json.dump(results, f, indent=2)
+
+    # === SECOND PASS ===
+    # After first pass, test games that were pending (added when < 2 players)
+    if args.second_pass and len(games_in_multiworld) >= 2:
+        print(f"\n{'='*60}")
+        print("=== SECOND PASS ===")
+        print(f"{'='*60}")
+
+        # Identify pending games
+        pending_games = []
+        for template_name, game_result in results["results"].items():
+            if game_result.get("status") == "pending":
+                pending_games.append({
+                    "template": template_name,
+                    "game": game_result.get("game"),
+                    "world_dir": game_result.get("world_dir"),
+                    "player_number": game_result.get("player_number")
+                })
+
+        if not pending_games:
+            print("No pending games to test in second pass")
+        else:
+            print(f"Found {len(pending_games)} pending game(s) to test with full multiworld ({len(games_in_multiworld)} players):")
+            for pg in pending_games:
+                print(f"  - {pg['game']} (player {pg['player_number']})")
+
+            # Test each pending game
+            for idx, pg in enumerate(pending_games, 1):
+                template_name = pg["template"]
+                game_name = pg["game"]
+                world_dir = pg["world_dir"]
+
+                print(f"\n[Second Pass {idx}/{len(pending_games)}] Testing {game_name}...")
+
+                # Run multiworld tests with full player count
+                print(f"  Running {args.runs} multiworld test(s) with {len(games_in_multiworld)} players...")
+                test_result = run_multiple_tests(
+                    multiworld_dir=multiworld_dir,
+                    runs=args.runs,
+                    base_seed=args.seed,
+                    project_root=PROJECT_ROOT,
+                    world_dirs=games_in_multiworld
+                )
+
+                # Update the game result with second pass data
+                second_pass_result = {
+                    "timestamp": datetime.now().isoformat(),
+                    "multiworld_size": len(games_in_multiworld),
+                    "games_in_multiworld": games_in_multiworld.copy(),
+                    "test_result": test_result
+                }
+
+                if test_result.get("error"):
+                    print(f"  Test error: {test_result['error'][:100]}...")
+                    second_pass_result["status"] = "error"
+                    results["results"][template_name]["status"] = "error"
+                elif test_result["passed"]:
+                    print(f"  PASSED: {test_result['success']}/{test_result['total']} runs succeeded")
+                    second_pass_result["status"] = "passed"
+                    results["results"][template_name]["status"] = "passed"
+                else:
+                    print(f"  FAILED: {test_result['failure']}/{test_result['total']} runs failed")
+                    second_pass_result["status"] = "failed"
+                    results["results"][template_name]["status"] = "failed"
+
+                    # Remove the failed game from multiworld
+                    yaml_filename = f"{world_dir}_{pg['player_number']}.yaml"
+                    yaml_path = multiworld_dir / yaml_filename
+                    try:
+                        if yaml_path.exists():
+                            yaml_path.unlink()
+                            print(f"  Removed {yaml_filename} from multiworld directory")
+                        if world_dir in games_in_multiworld:
+                            games_in_multiworld.remove(world_dir)
+                    except (OSError, ValueError) as e:
+                        print(f"  Warning: Could not remove {yaml_filename}: {e}")
+
+                    rejected_games.append({
+                        "template": template_name,
+                        "game": game_name,
+                        "world_dir": world_dir,
+                        "reason": "Multiworld test failed (second pass)",
+                        "failures": test_result["failure"],
+                        "total": test_result["total"]
+                    })
+
+                # Store second pass result
+                results["results"][template_name]["second_pass"] = second_pass_result
+
+                # Save intermediate results
+                results["metadata"]["last_updated"] = datetime.now().isoformat()
+                results["final_multiworld"] = games_in_multiworld.copy()
+                results["rejected_games"] = rejected_games.copy()
+                with open(output_path, 'w') as f:
+                    json.dump(results, f, indent=2)
+
+            # Print second pass summary
+            second_pass_passed = sum(1 for pg in pending_games
+                                     if results["results"].get(pg["template"], {}).get("status") == "passed")
+            second_pass_failed = len(pending_games) - second_pass_passed
+            print(f"\n=== Second Pass Complete ===")
+            print(f"Tested: {len(pending_games)}, Passed: {second_pass_passed}, Failed: {second_pass_failed}")
 
     # Final summary
     results["metadata"]["last_updated"] = datetime.now().isoformat()
