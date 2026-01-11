@@ -26,13 +26,18 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
     def __init__(self, world=None):
         super().__init__(world=world)
-        self._rule_expressions = {}  # Cache for parsed rules
+        self._rule_expressions = {}  # Cache for parsed location/subregion rules
+        self._entrance_rules = {}  # Cache for parsed entrance rules (keyed by destination key)
         self._token_table = {}  # Token -> item name mapping from RuleFactory
+
+        # Maps destination keys to actual region names after randomization
+        self._destination_mapping = {}
 
         # Parse rules file if world is available
         if world:
             self.parse_rules_file(world)
             self._load_token_table()
+            self._build_destination_mapping(world)
 
     def parse_rules_file(self, world):
         """Parse the SM64 Rules.py file to extract rule expressions."""
@@ -61,6 +66,31 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
             logger.info(f"Parsed {len(self._rule_expressions)} rule expressions from Rules.py")
 
+            # Also parse connect_regions calls with rf.build_rule()
+            # There are two patterns:
+            # 1. Fixed source: connect_regions(world, player, "Fixed Region", randomized_entrances_s["dest"], rf.build_rule("expr"))
+            # 2. Both randomized: connect_regions(world, player, randomized_entrances_s["src"], randomized_entrances_s["dest"], rf.build_rule("expr"))
+
+            # Pattern for both source and destination randomized
+            both_rando_pattern = r'connect_regions\([^,]+,\s*[^,]+,\s*randomized_entrances_s\[["\']([^"\']+)["\']\]\s*,\s*randomized_entrances_s\[["\']([^"\']+)["\']\]\s*,\s*rf\.build_rule\(\s*["\']([^"\']+)["\']\s*\)'
+            both_matches = re.findall(both_rando_pattern, content)
+
+            for src_key, dest_key, rule_expr in both_matches:
+                # Store with both keys so we can match by both source and destination
+                self._entrance_rules[(src_key, dest_key)] = rule_expr
+                logger.debug(f"Parsed entrance rule ({src_key} -> {dest_key}): {rule_expr}")
+
+            # Pattern for fixed source, randomized destination
+            fixed_src_pattern = r'connect_regions\([^,]+,\s*[^,]+,\s*["\']([^"\']+)["\']\s*,\s*randomized_entrances_s\[["\']([^"\']+)["\']\]\s*,\s*rf\.build_rule\(\s*["\']([^"\']+)["\']\s*\)'
+            fixed_matches = re.findall(fixed_src_pattern, content)
+
+            for src_region, dest_key, rule_expr in fixed_matches:
+                # Fixed source uses region name directly, destination is randomized
+                self._entrance_rules[(src_region, dest_key)] = rule_expr
+                logger.debug(f"Parsed entrance rule ({src_region} -> {dest_key}): {rule_expr}")
+
+            logger.info(f"Parsed {len(self._entrance_rules)} entrance rules from Rules.py")
+
         except Exception as e:
             logger.error(f"Error parsing Rules.py: {e}", exc_info=True)
 
@@ -69,6 +99,82 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         from worlds.sm64ex.Rules import RuleFactory
         self._token_table = RuleFactory.token_table.copy()
         logger.debug(f"Loaded {len(self._token_table)} tokens from RuleFactory")
+
+    def _build_destination_mapping(self, world):
+        """Build mapping from entrance keys to actual region names.
+
+        SM64 uses area_connections to store the randomized entrance mappings.
+        We need to map entrance keys (str) to actual region names (str).
+
+        The _entrance_rules dict now uses tuple keys (src_key, dest_key) where:
+        - src_key is either a fixed region name or an entrance key
+        - dest_key is an entrance key
+
+        We build _destination_mapping as entrance_key -> actual_region_name.
+        """
+        try:
+            from worlds.sm64ex.Regions import sm64_level_to_entrances, sm64_entrances_to_level
+
+            # Get area_connections from the world object (set during set_rules)
+            area_connections = getattr(world, 'area_connections', {})
+
+            if area_connections:
+                # area_connections maps entrance_level_int -> destination_level_int
+                # We need to map entrance_key (str) -> actual_region_name (str)
+
+                # Reverse the sm64_level_to_entrances to get int -> name
+                level_int_to_name = {int(level): name for level, name in sm64_level_to_entrances.items()}
+
+                # Collect all unique entrance keys from the tuple keys
+                entrance_keys = set()
+                for key in self._entrance_rules.keys():
+                    if isinstance(key, tuple):
+                        src_key, dest_key = key
+                        # Only add if it's an entrance key (not a fixed region name)
+                        if src_key in sm64_entrances_to_level:
+                            entrance_keys.add(src_key)
+                        entrance_keys.add(dest_key)
+                    else:
+                        entrance_keys.add(key)
+
+                # Build mapping for each entrance key
+                for entrance_key in entrance_keys:
+                    if entrance_key in sm64_entrances_to_level:
+                        entrance_level = int(sm64_entrances_to_level[entrance_key])
+                        if entrance_level in area_connections:
+                            dest_level = area_connections[entrance_level]
+                            if dest_level in level_int_to_name:
+                                self._destination_mapping[entrance_key] = level_int_to_name[dest_level]
+                                logger.debug(f"Mapped {entrance_key} -> {level_int_to_name[dest_level]}")
+                        else:
+                            # Entrance not randomized, use default
+                            self._destination_mapping[entrance_key] = entrance_key
+                    else:
+                        # Not an entrance key (fixed region name), use as-is
+                        self._destination_mapping[entrance_key] = entrance_key
+
+                logger.info(f"Built destination mapping with {len(self._destination_mapping)} entries")
+            else:
+                # No area connections (area_rando disabled), use default mapping
+                for key in self._entrance_rules.keys():
+                    if isinstance(key, tuple):
+                        src_key, dest_key = key
+                        self._destination_mapping[src_key] = src_key
+                        self._destination_mapping[dest_key] = dest_key
+                    else:
+                        self._destination_mapping[key] = key
+                logger.info(f"No area_connections found, using default mapping for {len(self._destination_mapping)} entries")
+
+        except Exception as e:
+            logger.warning(f"Could not build destination mapping: {e}")
+            # Fallback: use keys as actual names (works when not randomized)
+            for key in self._entrance_rules.keys():
+                if isinstance(key, tuple):
+                    src_key, dest_key = key
+                    self._destination_mapping[src_key] = src_key
+                    self._destination_mapping[dest_key] = dest_key
+                else:
+                    self._destination_mapping[key] = key
 
     def _get_option(self, option_name: str, default=None):
         """Get an option value from the world, with fallback to default."""
@@ -252,15 +358,48 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
             if token in self.CAP_TOKENS:
                 return item_name
 
-            # Movement ability tokens depend on enable_move_rando
-            # If move randomizer is disabled, all moves are available from the start
-            if not bool(self._get_option('enable_move_rando', False)):
+            # Movement ability tokens depend on move_rando_bitvec
+            # If the specific move's bit is not set, the move is always available
+            if not self._is_move_randomized(item_name):
                 return True  # Move is always available
             return item_name
 
         # Unknown token
         logger.warning(f"Unknown SM64 token: {token}")
         return None
+
+    def _is_move_randomized(self, item_name: str) -> bool:
+        """Check if a specific move is randomized using the move_rando_bitvec.
+
+        The bitvec has a bit set for each move that IS randomized.
+        If the bit is 0, the move is always available.
+        """
+        if not self.world:
+            return False
+
+        # Get move_rando_bitvec from the world
+        move_rando_bitvec = getattr(self.world, 'move_rando_bitvec', 0)
+
+        if move_rando_bitvec == 0:
+            # No moves are randomized
+            return False
+
+        # Get the action item data to determine the bitvec offset
+        try:
+            from worlds.sm64ex.Items import action_item_data_table
+
+            if item_name not in action_item_data_table:
+                return False
+
+            double_jump_bitvec_offset = action_item_data_table['Double Jump'].code
+            item_offset = action_item_data_table[item_name].code - double_jump_bitvec_offset
+
+            # Check if this move's bit is set in the bitvec
+            return (move_rando_bitvec & (1 << item_offset)) != 0
+
+        except Exception as e:
+            logger.warning(f"Could not check move randomization for {item_name}: {e}")
+            return False
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for locations with known rule expressions.
@@ -297,4 +436,47 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
                 return None
 
         # Return None to use normal analysis
+        return None
+
+    def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
+        """Handle complex exit rules created by connect_regions with rf.build_rule().
+
+        SM64 uses rf.build_rule() for entrances that have complex rule expressions.
+        These create nested lambda functions that the generic analyzer can't handle.
+        We detect these by matching both source and destination regions to our known
+        entrance rules.
+
+        Args:
+            exit_name: The exit name in format "SourceRegion -> DestRegion"
+            rule_func: The lambda function to analyze (unused, we use our parsed rules)
+
+        Returns:
+            Parsed rule dict if we have a known rule for this exit, None otherwise.
+        """
+        if not exit_name or ' -> ' not in exit_name:
+            return None
+
+        # Extract source and destination regions from exit name
+        source_region, connected_region = exit_name.split(' -> ', 1)
+
+        # Check if this exit matches any of our known entrance connections
+        for key, rule_expr in self._entrance_rules.items():
+            if not isinstance(key, tuple):
+                continue
+
+            src_key, dest_key = key
+
+            # Get the actual region names for source and destination
+            actual_src = self._destination_mapping.get(src_key, src_key)
+            actual_dest = self._destination_mapping.get(dest_key, dest_key)
+
+            # Match BOTH source and destination to avoid applying the wrong rule
+            if source_region == actual_src and connected_region == actual_dest:
+                logger.info(f"Handling entrance rule for {exit_name}: {rule_expr}")
+                try:
+                    return self.parse_rule_expression(rule_expr)
+                except Exception as e:
+                    logger.error(f"Error parsing entrance rule for {exit_name}: {e}")
+                    return None
+
         return None
