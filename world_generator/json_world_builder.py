@@ -141,11 +141,26 @@ class JSONWorldBuilder:
         self.multiworld.set_seed(seed=1)  # Deterministic
         self.multiworld.generation_is_fake = True  # Mark as tracker-generated
 
-        # Set up options with defaults
+        # Set up options from JSON data if available, otherwise use defaults
         world_type = AutoWorldRegister.world_types[worldgen_game_name]
         args = Namespace()
+
+        # Get actual options from JSON if available
+        json_options = {}
+        if self._json_data:
+            world_data = self._json_data.get('world', {}).get('1', {})
+            json_options = world_data.get('options', {})
+
         for name, option in world_type.options_dataclass.type_hints.items():
-            setattr(args, name, {1: option.from_any(option.default)})
+            # Use actual value from JSON if available, otherwise use default
+            if name in json_options:
+                try:
+                    setattr(args, name, {1: option.from_any(json_options[name])})
+                except Exception:
+                    # If option value is invalid, fall back to default
+                    setattr(args, name, {1: option.from_any(option.default)})
+            else:
+                setattr(args, name, {1: option.from_any(option.default)})
 
         # This instantiates the world
         self.multiworld.set_options(args)
