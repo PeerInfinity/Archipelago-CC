@@ -541,6 +541,165 @@ class RuleCodeGenerator:
         """
         return helper_name
 
+    def _is_rule_builder_convertible(self, rule: Dict[str, Any], depth: int = 0) -> bool:
+        """
+        Check if a rule can be converted to a native Rule Builder expression.
+
+        This is used to determine if a helper body can be converted to body_rule
+        for HelperCall, enabling Tier 1 explain support (full state-aware explain).
+
+        Convertible types are those that produce boolean results and have
+        corresponding Rule Builder classes with explain_json support.
+
+        Args:
+            rule: AST format rule dict
+            depth: Recursion depth for cycle prevention
+
+        Returns:
+            True if the rule can be fully converted to Rule Builder format
+        """
+        if depth > 20:
+            return False  # Prevent infinite recursion
+
+        if not isinstance(rule, dict):
+            # Primitive values are convertible (as constants)
+            return True
+
+        rule_type = rule.get('type', '')
+
+        # Handle Rule Builder format ('rule' key)
+        if not rule_type:
+            rb_rule = rule.get('rule', '')
+            if rb_rule in ('True_', 'False_', 'Has', 'HasAll', 'HasAny', 'HasGroup',
+                          'And', 'Or', 'Not', 'CanReachRegion', 'CanReachLocation',
+                          'CanReachEntrance', 'Compare', 'Conditional'):
+                # Check children recursively
+                for child in rule.get('children', []):
+                    if not self._is_rule_builder_convertible(child, depth + 1):
+                        return False
+                return True
+            # Unknown Rule Builder type
+            return False
+
+        # Convertible AST types (produce boolean, have Rule Builder equivalents)
+        convertible_types = {
+            'constant',
+            'item_check',
+            'count_check',
+            'group_check',
+            'and',
+            'or',
+            'not',
+            'can_reach',
+            'region_check',
+            'location_check',
+            'can_reach_entrance',
+            'compare',
+            'comparison',
+        }
+
+        if rule_type not in convertible_types:
+            # Special case: state_method with 'has' is convertible
+            if rule_type == 'state_method':
+                method = rule.get('method', '')
+                if method in ('has', 'has_all', 'has_any', 'has_group'):
+                    return True
+            # Special case: conditional is convertible if all branches are
+            if rule_type == 'conditional':
+                test = rule.get('test', {})
+                if_true = rule.get('if_true', {})
+                if_false = rule.get('if_false', {})
+                return (self._is_rule_builder_convertible(test, depth + 1) and
+                        self._is_rule_builder_convertible(if_true, depth + 1) and
+                        self._is_rule_builder_convertible(if_false, depth + 1))
+            return False
+
+        # Recursively check nested rules
+        nested_keys = ['conditions', 'condition', 'operand', 'left', 'right',
+                       'test', 'if_true', 'if_false']
+        for key in nested_keys:
+            nested = rule.get(key)
+            if nested is None:
+                continue
+            if isinstance(nested, list):
+                for item in nested:
+                    if isinstance(item, dict) and not self._is_rule_builder_convertible(item, depth + 1):
+                        return False
+            elif isinstance(nested, dict):
+                if not self._is_rule_builder_convertible(nested, depth + 1):
+                    return False
+
+        return True
+
+    def _try_convert_helper_body_to_rule(self, helper_name: str, args: List[Any]) -> Optional[str]:
+        """
+        Try to convert a helper body to a Rule Builder expression.
+
+        This enables Tier 1 support in HelperCall: if the helper body can be
+        converted to a Rule Builder rule, we include it as body_rule for
+        full state-aware explain support.
+
+        Args:
+            helper_name: Name of the helper
+            args: Arguments passed to the helper
+
+        Returns:
+            Rule Builder expression string if convertible, None otherwise
+        """
+        if helper_name not in self.helper_bodies:
+            return None
+
+        helper_body = self.helper_bodies[helper_name]
+
+        # Block bodies are too complex to convert
+        if isinstance(helper_body, dict) and helper_body.get('type') == 'block':
+            return None
+
+        # Check if the helper body is convertible
+        if not self._is_rule_builder_convertible(helper_body):
+            return None
+
+        # Expand the helper body with parameter substitution
+        expanded_body = copy.deepcopy(helper_body)
+
+        # Substitute parameters with argument values
+        if helper_name in self.helper_params:
+            params = self.helper_params[helper_name]
+            defaults = self.helper_defaults.get(helper_name, {})
+            param_to_arg = {}
+
+            for i, param in enumerate(params):
+                if i < len(args):
+                    arg = args[i]
+                    # Convert arg to AST format if needed
+                    if isinstance(arg, dict) and arg.get('type') == 'constant':
+                        param_to_arg[param] = arg
+                    elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
+                        # Rule Builder format constant
+                        param_to_arg[param] = {'type': 'constant', 'value': arg.get('args', {}).get('value')}
+                    else:
+                        # Wrap primitive value as constant
+                        param_to_arg[param] = {'type': 'constant', 'value': arg}
+                elif param in defaults:
+                    param_to_arg[param] = {'type': 'constant', 'value': defaults[param]}
+
+            if param_to_arg:
+                expanded_body = self._substitute_names(expanded_body, param_to_arg)
+
+        # Also expand setting_value references
+        expanded_body = self._expand_helper_refs(expanded_body)
+
+        # Try to convert the expanded body
+        try:
+            rule_code = self._convert_rule(expanded_body)
+            # Verify it's not just True_() placeholder (which means conversion failed)
+            if rule_code and rule_code != 'True_()':
+                return rule_code
+        except Exception:
+            pass
+
+        return None
+
     def get_imports(self) -> List[str]:
         """Get the list of required Rule Builder imports."""
         # Always include base imports
@@ -3883,14 +4042,18 @@ class RuleCodeGenerator:
                     arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
 
             # Build HelperCall with helper_func reference
-            # Note: body_data is NOT included here anymore - helper bodies are now
-            # exported via get_helper_definitions() in the Rules.py module, and the
-            # frontend looks them up from the helpers section instead of inlining
-            # them at every call site.
+            # Try to convert the helper body to a Rule Builder expression for Tier 1 support
+            # This enables full state-aware explain for simple helpers
+            body_rule_code = self._try_convert_helper_body_to_rule(helper_name, args)
+
             parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
 
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
+
+            if body_rule_code:
+                # Tier 1: Include body_rule for full explain support
+                parts.append(f'body_rule={body_rule_code}')
 
             return f'HelperCall({", ".join(parts)})'
 
@@ -4078,10 +4241,17 @@ class RuleCodeGenerator:
                     arg_strs.append(repr(arg))
 
             # Build HelperCall with helper_func reference
+            # Try to convert the helper body to a Rule Builder expression for Tier 1 support
+            body_rule_code = self._try_convert_helper_body_to_rule(helper_name, args)
+
             parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
 
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
+
+            if body_rule_code:
+                # Tier 1: Include body_rule for full explain support
+                parts.append(f'body_rule={body_rule_code}')
 
             return f'HelperCall({", ".join(parts)})'
 
