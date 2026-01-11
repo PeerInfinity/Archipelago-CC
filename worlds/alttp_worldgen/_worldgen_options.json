@@ -40,7 +40,7 @@
   "local_items": [],
   "map_shuffle": 0,
   "menuspeed": 0,
-  "misery_mire_medallion": 1,
+  "misery_mire_medallion": 2,
   "mode": 1,
   "music": true,
   "non_local_items": [],
@@ -85,6 +85,6 @@
   "triforce_pieces_percentage": 150,
   "triforce_pieces_required": 20,
   "triforcehud": 0,
-  "turtle_rock_medallion": 1,
+  "turtle_rock_medallion": 0,
   "uw_palettes": 0
 }

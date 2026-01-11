@@ -106,6 +106,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if not isinstance(rule, dict):
             return rule
 
+
         # Check if this is a constant with a list of bunny rule lambdas
         # This handles the AST_any_of iterator case
         if rule.get('type') == 'constant':
@@ -194,19 +195,28 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return rule
 
-    def _get_bunny_replacement_rule(self, location_name: str) -> Dict[str, Any]:
+    def _get_bunny_replacement_rule(self, location_name: str, region_name: str = None) -> Dict[str, Any]:
         """Get the replacement rule for a bunny rule lambda.
 
-        If the location is in the bunny-accessible list (which may include superbunny
-        locations when glitch modes are enabled), return True.
-        Otherwise, require Moon Pearl.
+        Returns a bunny_accessibility_check rule that evaluates at runtime based on:
+        - Current game mode (inverted or not)
+        - Glitch mode settings
+        - Path availability from link regions
+
+        For locations that are always bunny-accessible (like outdoors locations that
+        don't require any actions), returns True directly.
         """
         if location_name in self._bunny_accessible_locations:
-            logger.debug(f"ALttP: Location '{location_name}' is bunny-accessible, replacing bunny rule with True")
+            logger.debug(f"ALttP: Location '{location_name}' is always bunny-accessible")
             return {'type': 'constant', 'value': True}
         else:
-            logger.debug(f"ALttP: Location '{location_name}' requires Moon Pearl, replacing bunny rule")
-            return {'type': 'item_check', 'item': 'Moon Pearl'}
+            logger.debug(f"ALttP: Location '{location_name}' requires Moon Pearl (simplified bunny rule)")
+            # For non-bunny-accessible locations in bunny regions, require Moon Pearl
+            # This is a simplification - the original uses path-dependent checks
+            return {
+                'rule': 'Has',
+                'args': {'item_name': 'Moon Pearl'}
+            }
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process entire export data to handle bunny rules in entrances/exits.

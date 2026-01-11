@@ -433,6 +433,76 @@ def find_paths_to_region(
     return valid_paths
 
 
+@dataclasses.dataclass()
+class BunnyAccessibilityCheck:
+    """
+    Rule that checks if a location/region is accessible in bunny form.
+
+    This rule evaluates to True if:
+    1. The player has Moon Pearl, OR
+    2. There's a path from a link region to the target that doesn't require Moon Pearl
+
+    The rule is option-aware: it reads inverted mode and glitch mode from
+    the world options at evaluation time.
+
+    Attributes:
+        target_region: Name of the region to check accessibility for
+        location_name: Optional location name (for superbunny accessibility checks)
+    """
+
+    target_region: str
+    location_name: Optional[str] = None
+
+    def evaluate(self, state: CollectionState, player: int) -> bool:
+        """Evaluate bunny accessibility at runtime."""
+        # Get options from world
+        world = state.multiworld.worlds[player]
+        is_inverted = getattr(world.options, 'mode', None)
+        if is_inverted is not None:
+            is_inverted = str(is_inverted) == 'inverted' or getattr(is_inverted, 'value', 0) == 2
+        else:
+            is_inverted = False
+
+        glitch_mode = getattr(world.options, 'glitches_required', None)
+        if glitch_mode is not None:
+            # Convert to string name
+            glitch_value = getattr(glitch_mode, 'value', 0)
+            glitch_names = {0: 'no_glitches', 1: 'minor_glitches', 2: 'overworld_glitches',
+                          3: 'hybrid_major_glitches', 4: 'no_logic'}
+            glitch_mode = glitch_names.get(glitch_value, 'no_glitches')
+        else:
+            glitch_mode = 'no_glitches'
+
+        return can_reach_via_bunny_path(
+            state, player, self.target_region,
+            is_inverted=is_inverted,
+            glitch_mode=glitch_mode
+        )
+
+    def __call__(self, state: CollectionState) -> bool:
+        """Make the rule callable for use as an access_rule."""
+        # This requires player to be bound - typically done via lambda wrapper
+        raise NotImplementedError("BunnyAccessibilityCheck requires player binding")
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize to JSON-compatible dict."""
+        result = {
+            "type": "bunny_accessibility_check",
+            "target_region": self.target_region,
+        }
+        if self.location_name:
+            result["location_name"] = self.location_name
+        return result
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "BunnyAccessibilityCheck":
+        """Deserialize from JSON dict."""
+        return cls(
+            target_region=data["target_region"],
+            location_name=data.get("location_name"),
+        )
+
+
 def can_reach_via_bunny_path(
     state: CollectionState,
     player: int,

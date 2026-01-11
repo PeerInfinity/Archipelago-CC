@@ -719,6 +719,7 @@ class RuleCodeGenerator:
             'ast_any_of': self._convert_ast_any_of,
             'count_true': self._convert_count_true,
             'block': self._convert_ast_block,
+            'bunny_accessibility_check': self._convert_bunny_accessibility_check,
         }
 
         converter = converters.get(rule_type)
@@ -729,6 +730,10 @@ class RuleCodeGenerator:
         rb_rule = rule.get('rule', '')
         if rb_rule == 'AST_block':
             return self._convert_ast_block(rule)
+
+        # Check for AST_bunny_accessibility_check in Rule Builder format
+        if rb_rule == 'AST_bunny_accessibility_check':
+            return self._convert_bunny_accessibility_check(rule)
 
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
@@ -1394,6 +1399,40 @@ class RuleCodeGenerator:
             return f'HasGroup("{group_escaped}")'
         else:
             return f'HasGroup("{group_escaped}", {count})'
+
+    def _convert_bunny_accessibility_check(self, rule: Dict[str, Any]) -> str:
+        """Convert bunny_accessibility_check to a HelperCall.
+
+        This generates code that calls check_bunny_accessibility() at runtime,
+        which evaluates Moon Pearl OR path from link region based on current
+        game options (inverted mode, glitch mode).
+
+        The generated code uses the check_bunny_accessibility helper function
+        which must be defined in the Rules.py (added by templates.py when
+        bunny_accessibility_check rules are present).
+
+        Handles both native format (type: bunny_accessibility_check with args at top level)
+        and AST format (rule: AST_bunny_accessibility_check with args in 'args' dict).
+        """
+        self.required_imports.add('HelperCall')
+
+        # Handle both native format (args at top level) and AST format (args in 'args' dict)
+        args = rule.get('args', {})
+        location_name = args.get('location_name', '') or rule.get('location_name', '')
+        target_region = args.get('target_region', '') or rule.get('target_region', '')
+
+        location_escaped = self._escape_string(location_name)
+
+        # Mark that we need the bunny accessibility helper
+        self._needs_bunny_helper = True
+
+        # Generate a HelperCall to check_bunny_accessibility
+        # Pass location_name and target_region through the args tuple
+        if target_region:
+            region_escaped = self._escape_string(target_region)
+            return f'HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("{location_escaped}", "{region_escaped}"))'
+        else:
+            return f'HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("{location_escaped}",))'
 
     def _convert_and(self, rule: Dict[str, Any]) -> str:
         """Convert and rule to & expression."""
