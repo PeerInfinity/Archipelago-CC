@@ -227,35 +227,53 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         Since we can't replicate the dynamic path evaluation, we use this approximation:
         - Locations in BUNNY_ACCESSIBLE_LOCATIONS are always accessible in bunny form
-        - For other locations, we return True since the bunny rule's existence means
-          the original code determined this location might need bunny accessibility
-          handling, and with entrance shuffle, alternative paths may exist
+        - For other Dark World locations, require Moon Pearl since the player needs it
+          to not be a bunny and interact with most objects/NPCs
 
-        Note: This is an approximation. The original bunny rules are complex and
-        evaluate paths dynamically. Some mismatches may occur with unusual entrance
-        shuffle configurations.
+        Note: This is an approximation for no_glitches mode. Glitch modes have more
+        complex path-dependent rules with superbunny and mirror revival options that
+        can't be easily replicated in exported rules.
         """
         if location_name in self._bunny_accessible_locations:
             logger.debug(f"ALttP: Location '{location_name}' is in bunny-accessible list")
-            return {'type': 'constant', 'value': True}
+            return {'rule': 'True_'}
 
-        # For other locations with bunny rules, the presence of the bunny rule
-        # indicates the original code found it needed bunny accessibility handling.
-        # Return True as a safe default - the region's own access rules will
-        # determine if the location is actually reachable.
-        logger.debug(f"ALttP: Replacing bunny rule for '{location_name}' with True")
-        return {'type': 'constant', 'value': True}
+        # For other locations with bunny rules, require Moon Pearl.
+        # The bunny rule's existence means the location is in a Dark World region
+        # and the player needs Moon Pearl to not be a bunny.
+        logger.debug(f"ALttP: Replacing bunny rule for '{location_name}' with Moon Pearl requirement")
+        return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Post-process entire export data to handle bunny rules in entrances/exits.
+        """Post-process entire export data to handle bunny rules.
 
-        The post_process_location_data hook handles locations, but entrances/exits
-        need to be processed here since there's no per-entrance hook.
+        Handles:
+        1. Exit/entrance rules with bunny rule lambdas
+        2. Location rules in mixed regions (both Light World and Dark World)
+
+        For mixed regions, the Moon Pearl requirement added by _get_bunny_replacement_rule
+        is removed since there are Light World paths available. Only pure Dark World
+        regions require Moon Pearl.
         """
-        # Process regions to handle entrance/exit rules
+        # Process regions to handle entrance/exit rules and fix mixed region locations
         regions = data.get('regions', {})
         for player_id, player_regions in regions.items():
             for region_name, region_data in player_regions.items():
+                is_dark_world = region_data.get('is_dark_world', False)
+                is_light_world = region_data.get('is_light_world', False)
+                is_mixed_region = is_dark_world and is_light_world
+
+                # Process locations in mixed regions
+                # For mixed regions, we don't need Moon Pearl since there are Light World paths
+                if is_mixed_region:
+                    for location_data in region_data.get('locations', []):
+                        location_name = location_data.get('name', '')
+                        access_rule = location_data.get('access_rule', {})
+                        if self._is_bunny_moon_pearl_rule(access_rule, location_name):
+                            # Remove Moon Pearl requirement for mixed regions
+                            location_data['access_rule'] = {'rule': 'True_'}
+                            logger.debug(f"ALttP: Removed Moon Pearl from mixed region location '{location_name}'")
+
                 # Process exits
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
@@ -271,3 +289,56 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             entrance_data['access_rule'], entrance_name
                         )
         return data
+
+    def _is_bunny_moon_pearl_rule(self, rule: Dict[str, Any], location_name: str) -> bool:
+        """Check if this is a Moon Pearl rule added by bunny rule replacement.
+
+        Returns True if the entire rule is ONLY about Moon Pearl requirements
+        (either a simple Has(Moon Pearl) or a compound AND of Moon Pearl requirements).
+        This handles cases where multiple bunny rules were added to the same location.
+
+        Only applies to locations NOT in the bunny-accessible list.
+        """
+        if location_name in self._bunny_accessible_locations:
+            return False
+
+        if not isinstance(rule, dict):
+            return False
+
+        return self._is_pure_moon_pearl_rule(rule)
+
+    def _is_pure_moon_pearl_rule(self, rule: Dict[str, Any]) -> bool:
+        """Recursively check if a rule is purely about Moon Pearl.
+
+        Returns True if the rule is:
+        - Has(Moon Pearl)
+        - AND of pure Moon Pearl rules
+        - Nested structure that only contains Moon Pearl requirements
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        # Check for Has(Moon Pearl) - Rule Builder format
+        if rule.get('rule') == 'Has':
+            args = rule.get('args', {})
+            return args.get('item_name') == 'Moon Pearl'
+
+        # Check for item_check(Moon Pearl) - AST format
+        if rule.get('type') == 'item_check':
+            return rule.get('item') == 'Moon Pearl'
+
+        # Check for AND rule - all conditions must be Moon Pearl
+        if rule.get('type') == 'and':
+            conditions = rule.get('conditions', [])
+            if not conditions:
+                return False
+            return all(self._is_pure_moon_pearl_rule(c) for c in conditions)
+
+        # Check for Rule Builder And
+        if rule.get('rule') == 'And':
+            children = rule.get('children', [])
+            if not children:
+                return False
+            return all(self._is_pure_moon_pearl_rule(c) for c in children)
+
+        return False
