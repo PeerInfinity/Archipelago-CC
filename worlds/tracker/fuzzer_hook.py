@@ -145,6 +145,7 @@ class Hook(BaseHook):
             locations_with_explain = 0
             locations_default_rule = 0
             locations_without_explain = 0
+            locations_without_explain_names = []  # Track names for debugging
 
             for location in locations:
                 # Skip event locations (no address)
@@ -163,6 +164,11 @@ class Hook(BaseHook):
                 else:
                     # Custom rule without explain support (lambda/function)
                     locations_without_explain += 1
+                    region_name = location.parent_region.name if location.parent_region else "Unknown"
+                    locations_without_explain_names.append({
+                        "name": location.name,
+                        "region": region_name
+                    })
 
             # Calculate explain coverage percentage
             # Locations with custom rules that have explain support
@@ -175,7 +181,8 @@ class Hook(BaseHook):
                 "locations_with_explain": locations_with_explain,
                 "locations_default_rule": locations_default_rule,
                 "locations_without_explain": locations_without_explain,
-                "explain_coverage_percent": round(explain_coverage, 2)
+                "explain_coverage_percent": round(explain_coverage, 2),
+                "locations_without_explain_list": locations_without_explain_names
             }
 
             # Write stats to file
