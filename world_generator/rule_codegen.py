@@ -1892,9 +1892,10 @@ class RuleCodeGenerator:
 
         first_arg = args[0]
 
-        # Handle 'set' type with 'elements' array (AST format)
+        # Handle 'set' or 'tuple' type with 'elements' array (AST format)
         # Example: {"type": "set", "elements": [{"type": "constant", "value": "Item1"}, ...]}
-        if first_arg.get('type') == 'set':
+        # Example: {"type": "tuple", "elements": [{"type": "constant", "value": "Item1"}, ...]}
+        if first_arg.get('type') in ('set', 'tuple'):
             elements = first_arg.get('elements', [])
             items = []
             for elem in elements:
