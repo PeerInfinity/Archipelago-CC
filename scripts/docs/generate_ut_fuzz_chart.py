@@ -196,13 +196,6 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     for data in chart_data:
         game_name = data['game_name']
-        world_dir = data.get('world_directory') or world_mapping.get(game_name)
-
-        # Create link to game in frontend
-        if world_dir:
-            game_link = f"[{game_name}](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game={world_dir})"
-        else:
-            game_link = game_name
 
         passed = data['passed']
         total = data['total']
@@ -225,7 +218,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         else:
             rate_display = f"❌ {success_rate:.1f}%"
 
-        md_content += f"| {game_link} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
+        md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - |\n"

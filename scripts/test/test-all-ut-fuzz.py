@@ -369,8 +369,8 @@ def main():
         print(f"Error: Templates directory not found: {templates_dir}")
         return 1
 
-    # Get skip list (use main test exclusions)
-    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='main')
+    # Get skip list (use only permanent exclusions - not main_test_exclude_list)
+    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='permanent')
 
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)
