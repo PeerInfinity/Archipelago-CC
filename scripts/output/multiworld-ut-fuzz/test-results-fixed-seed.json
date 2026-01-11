@@ -1,47 +1,101 @@
 {
   "metadata": {
-    "created": "2026-01-11T22:17:19.723023",
-    "last_updated": "2026-01-11T22:17:53.822016",
+    "created": "2026-01-11T22:49:34.992745",
+    "last_updated": "2026-01-11T22:54:01.474136",
     "script_version": "1.0.0",
     "seed_mode": "fixed",
     "seed": 1,
-    "runs_per_test": 3,
+    "runs_per_test": 1,
     "max_players": 20,
-    "total_templates_considered": 2
+    "total_templates_considered": 55
   },
   "assembly_order": [
+    "shorthike",
+    "apquest",
     "adventure",
-    "dark_souls_3"
+    "aquaria",
+    "bakingadventure",
+    "bumpstik",
+    "cvcotm",
+    "celeste64",
+    "checksfinder",
+    "cccharles",
+    "civ_6",
+    "codingadventure",
+    "dlcquest",
+    "doom_1993",
+    "doom_ii",
+    "dark_souls_3",
+    "dkc3",
+    "factorio",
+    "faxanadu",
+    "ffmq"
   ],
   "final_multiworld": [
+    "shorthike",
+    "apquest",
     "adventure",
-    "dark_souls_3"
+    "aquaria",
+    "bakingadventure",
+    "bumpstik",
+    "cvcotm",
+    "celeste64",
+    "checksfinder",
+    "cccharles",
+    "civ_6",
+    "codingadventure",
+    "dlcquest",
+    "doom_1993",
+    "doom_ii",
+    "dark_souls_3",
+    "dkc3",
+    "factorio",
+    "faxanadu",
+    "ffmq"
   ],
   "rejected_games": [],
   "results": {
-    "Adventure.yaml": {
-      "template": "Adventure.yaml",
-      "game": "Adventure",
-      "world_dir": "adventure",
+    "A Short Hike.yaml": {
+      "template": "A Short Hike.yaml",
+      "game": "A Short Hike",
+      "world_dir": "shorthike",
       "player_number": 1,
-      "timestamp": "2026-01-11T22:17:19.928564",
+      "timestamp": "2026-01-11T22:49:35.214238",
       "multiworld_size": 1,
       "games_in_multiworld": [
-        "adventure"
+        "shorthike"
       ],
       "status": "passed",
       "skip_reason": "Waiting for 2+ players",
       "second_pass": {
-        "timestamp": "2026-01-11T22:17:53.821560",
-        "multiworld_size": 2,
+        "timestamp": "2026-01-11T22:54:01.471918",
+        "multiworld_size": 20,
         "games_in_multiworld": [
+          "shorthike",
+          "apquest",
           "adventure",
-          "dark_souls_3"
+          "aquaria",
+          "bakingadventure",
+          "bumpstik",
+          "cvcotm",
+          "celeste64",
+          "checksfinder",
+          "cccharles",
+          "civ_6",
+          "codingadventure",
+          "dlcquest",
+          "doom_1993",
+          "doom_ii",
+          "dark_souls_3",
+          "dkc3",
+          "factorio",
+          "faxanadu",
+          "ffmq"
         ],
         "test_result": {
           "passed": true,
-          "total": 3,
-          "success": 3,
+          "total": 1,
+          "success": 1,
           "failure": 0,
           "run_results": [
             {
@@ -57,48 +111,82 @@
                   "2": {
                     "passed": true,
                     "error": ""
+                  },
+                  "3": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "4": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "5": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "6": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "7": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "8": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "9": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "10": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "11": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "12": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "13": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "14": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "15": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "16": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "17": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "18": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "19": {
+                    "passed": true,
+                    "error": ""
+                  },
+                  "20": {
+                    "passed": true,
+                    "error": ""
                   }
                 },
                 "error": null,
                 "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
-              }
-            },
-            {
-              "seed": 2,
-              "result": {
-                "passed": true,
-                "generation_success": true,
-                "player_results": {
-                  "1": {
-                    "passed": true,
-                    "error": ""
-                  },
-                  "2": {
-                    "passed": true,
-                    "error": ""
-                  }
-                },
-                "error": null,
-                "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_01043188731678011336.zip"
-              }
-            },
-            {
-              "seed": 3,
-              "result": {
-                "passed": true,
-                "generation_success": true,
-                "player_results": {
-                  "1": {
-                    "passed": true,
-                    "error": ""
-                  },
-                  "2": {
-                    "passed": true,
-                    "error": ""
-                  }
-                },
-                "error": null,
-                "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_84719271504320872445.zip"
               }
             }
           ]
@@ -106,21 +194,21 @@
         "status": "passed"
       }
     },
-    "Dark Souls III.yaml": {
-      "template": "Dark Souls III.yaml",
-      "game": "Dark Souls III",
-      "world_dir": "dark_souls_3",
+    "APQuest.yaml": {
+      "template": "APQuest.yaml",
+      "game": "APQuest",
+      "world_dir": "apquest",
       "player_number": 2,
-      "timestamp": "2026-01-11T22:17:20.149727",
+      "timestamp": "2026-01-11T22:49:35.243793",
       "multiworld_size": 2,
       "games_in_multiworld": [
-        "adventure",
-        "dark_souls_3"
+        "shorthike",
+        "apquest"
       ],
       "test_result": {
         "passed": true,
-        "total": 3,
-        "success": 3,
+        "total": 1,
+        "success": 1,
         "failure": 0,
         "run_results": [
           {
@@ -141,9 +229,31 @@
               "error": null,
               "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
             }
-          },
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Adventure.yaml": {
+      "template": "Adventure.yaml",
+      "game": "Adventure",
+      "world_dir": "adventure",
+      "player_number": 3,
+      "timestamp": "2026-01-11T22:49:39.940188",
+      "multiworld_size": 3,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
           {
-            "seed": 2,
+            "seed": 1,
             "result": {
               "passed": true,
               "generation_success": true,
@@ -155,14 +265,41 @@
                 "2": {
                   "passed": true,
                   "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
                 }
               },
               "error": null,
-              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_01043188731678011336.zip"
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
             }
-          },
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Aquaria.yaml": {
+      "template": "Aquaria.yaml",
+      "game": "Aquaria",
+      "world_dir": "aquaria",
+      "player_number": 4,
+      "timestamp": "2026-01-11T22:49:44.737159",
+      "multiworld_size": 4,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
           {
-            "seed": 3,
+            "seed": 1,
             "result": {
               "passed": true,
               "generation_success": true,
@@ -174,10 +311,1498 @@
                 "2": {
                   "passed": true,
                   "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
                 }
               },
               "error": null,
-              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_84719271504320872445.zip"
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Baking Adventure.yaml": {
+      "template": "Baking Adventure.yaml",
+      "game": "Baking Adventure",
+      "world_dir": "bakingadventure",
+      "player_number": 5,
+      "timestamp": "2026-01-11T22:49:51.112416",
+      "multiworld_size": 5,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Bumper Stickers.yaml": {
+      "template": "Bumper Stickers.yaml",
+      "game": "Bumper Stickers",
+      "world_dir": "bumpstik",
+      "player_number": 6,
+      "timestamp": "2026-01-11T22:49:57.572770",
+      "multiworld_size": 6,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Castlevania - Circle of the Moon.yaml": {
+      "template": "Castlevania - Circle of the Moon.yaml",
+      "game": "Castlevania - Circle of the Moon",
+      "world_dir": "cvcotm",
+      "player_number": 7,
+      "timestamp": "2026-01-11T22:50:04.432199",
+      "multiworld_size": 7,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Celeste 64.yaml": {
+      "template": "Celeste 64.yaml",
+      "game": "Celeste 64",
+      "world_dir": "celeste64",
+      "player_number": 8,
+      "timestamp": "2026-01-11T22:50:11.898235",
+      "multiworld_size": 8,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "ChecksFinder.yaml": {
+      "template": "ChecksFinder.yaml",
+      "game": "ChecksFinder",
+      "world_dir": "checksfinder",
+      "player_number": 9,
+      "timestamp": "2026-01-11T22:50:19.979011",
+      "multiworld_size": 9,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Choo-Choo Charles.yaml": {
+      "template": "Choo-Choo Charles.yaml",
+      "game": "Choo-Choo Charles",
+      "world_dir": "cccharles",
+      "player_number": 10,
+      "timestamp": "2026-01-11T22:50:28.075280",
+      "multiworld_size": 10,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Civilization VI.yaml": {
+      "template": "Civilization VI.yaml",
+      "game": "Civilization VI",
+      "world_dir": "civ_6",
+      "player_number": 11,
+      "timestamp": "2026-01-11T22:50:36.655784",
+      "multiworld_size": 11,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Coding Adventure.yaml": {
+      "template": "Coding Adventure.yaml",
+      "game": "Coding Adventure",
+      "world_dir": "codingadventure",
+      "player_number": 12,
+      "timestamp": "2026-01-11T22:50:46.886004",
+      "multiworld_size": 12,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "DLCQuest.yaml": {
+      "template": "DLCQuest.yaml",
+      "game": "DLCQuest",
+      "world_dir": "dlcquest",
+      "player_number": 13,
+      "timestamp": "2026-01-11T22:50:57.245422",
+      "multiworld_size": 13,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "DOOM 1993.yaml": {
+      "template": "DOOM 1993.yaml",
+      "game": "DOOM 1993",
+      "world_dir": "doom_1993",
+      "player_number": 14,
+      "timestamp": "2026-01-11T22:51:08.404902",
+      "multiworld_size": 14,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest",
+        "doom_1993"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                },
+                "14": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "DOOM II.yaml": {
+      "template": "DOOM II.yaml",
+      "game": "DOOM II",
+      "world_dir": "doom_ii",
+      "player_number": 15,
+      "timestamp": "2026-01-11T22:51:20.853077",
+      "multiworld_size": 15,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest",
+        "doom_1993",
+        "doom_ii"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                },
+                "14": {
+                  "passed": true,
+                  "error": ""
+                },
+                "15": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Dark Souls III.yaml": {
+      "template": "Dark Souls III.yaml",
+      "game": "Dark Souls III",
+      "world_dir": "dark_souls_3",
+      "player_number": 16,
+      "timestamp": "2026-01-11T22:51:34.597423",
+      "multiworld_size": 16,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest",
+        "doom_1993",
+        "doom_ii",
+        "dark_souls_3"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                },
+                "14": {
+                  "passed": true,
+                  "error": ""
+                },
+                "15": {
+                  "passed": true,
+                  "error": ""
+                },
+                "16": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Donkey Kong Country 3.yaml": {
+      "template": "Donkey Kong Country 3.yaml",
+      "game": "Donkey Kong Country 3",
+      "world_dir": "dkc3",
+      "player_number": 17,
+      "timestamp": "2026-01-11T22:51:51.945434",
+      "multiworld_size": 17,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest",
+        "doom_1993",
+        "doom_ii",
+        "dark_souls_3",
+        "dkc3"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                },
+                "14": {
+                  "passed": true,
+                  "error": ""
+                },
+                "15": {
+                  "passed": true,
+                  "error": ""
+                },
+                "16": {
+                  "passed": true,
+                  "error": ""
+                },
+                "17": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Factorio.yaml": {
+      "template": "Factorio.yaml",
+      "game": "Factorio",
+      "world_dir": "factorio",
+      "player_number": 18,
+      "timestamp": "2026-01-11T22:52:11.122777",
+      "multiworld_size": 18,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest",
+        "doom_1993",
+        "doom_ii",
+        "dark_souls_3",
+        "dkc3",
+        "factorio"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                },
+                "14": {
+                  "passed": true,
+                  "error": ""
+                },
+                "15": {
+                  "passed": true,
+                  "error": ""
+                },
+                "16": {
+                  "passed": true,
+                  "error": ""
+                },
+                "17": {
+                  "passed": true,
+                  "error": ""
+                },
+                "18": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Faxanadu.yaml": {
+      "template": "Faxanadu.yaml",
+      "game": "Faxanadu",
+      "world_dir": "faxanadu",
+      "player_number": 19,
+      "timestamp": "2026-01-11T22:52:33.252456",
+      "multiworld_size": 19,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest",
+        "doom_1993",
+        "doom_ii",
+        "dark_souls_3",
+        "dkc3",
+        "factorio",
+        "faxanadu"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                },
+                "14": {
+                  "passed": true,
+                  "error": ""
+                },
+                "15": {
+                  "passed": true,
+                  "error": ""
+                },
+                "16": {
+                  "passed": true,
+                  "error": ""
+                },
+                "17": {
+                  "passed": true,
+                  "error": ""
+                },
+                "18": {
+                  "passed": true,
+                  "error": ""
+                },
+                "19": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
+            }
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "Final Fantasy Mystic Quest.yaml": {
+      "template": "Final Fantasy Mystic Quest.yaml",
+      "game": "Final Fantasy Mystic Quest",
+      "world_dir": "ffmq",
+      "player_number": 20,
+      "timestamp": "2026-01-11T22:52:56.574005",
+      "multiworld_size": 20,
+      "games_in_multiworld": [
+        "shorthike",
+        "apquest",
+        "adventure",
+        "aquaria",
+        "bakingadventure",
+        "bumpstik",
+        "cvcotm",
+        "celeste64",
+        "checksfinder",
+        "cccharles",
+        "civ_6",
+        "codingadventure",
+        "dlcquest",
+        "doom_1993",
+        "doom_ii",
+        "dark_souls_3",
+        "dkc3",
+        "factorio",
+        "faxanadu",
+        "ffmq"
+      ],
+      "test_result": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "failure": 0,
+        "run_results": [
+          {
+            "seed": 1,
+            "result": {
+              "passed": true,
+              "generation_success": true,
+              "player_results": {
+                "1": {
+                  "passed": true,
+                  "error": ""
+                },
+                "2": {
+                  "passed": true,
+                  "error": ""
+                },
+                "3": {
+                  "passed": true,
+                  "error": ""
+                },
+                "4": {
+                  "passed": true,
+                  "error": ""
+                },
+                "5": {
+                  "passed": true,
+                  "error": ""
+                },
+                "6": {
+                  "passed": true,
+                  "error": ""
+                },
+                "7": {
+                  "passed": true,
+                  "error": ""
+                },
+                "8": {
+                  "passed": true,
+                  "error": ""
+                },
+                "9": {
+                  "passed": true,
+                  "error": ""
+                },
+                "10": {
+                  "passed": true,
+                  "error": ""
+                },
+                "11": {
+                  "passed": true,
+                  "error": ""
+                },
+                "12": {
+                  "passed": true,
+                  "error": ""
+                },
+                "13": {
+                  "passed": true,
+                  "error": ""
+                },
+                "14": {
+                  "passed": true,
+                  "error": ""
+                },
+                "15": {
+                  "passed": true,
+                  "error": ""
+                },
+                "16": {
+                  "passed": true,
+                  "error": ""
+                },
+                "17": {
+                  "passed": true,
+                  "error": ""
+                },
+                "18": {
+                  "passed": true,
+                  "error": ""
+                },
+                "19": {
+                  "passed": true,
+                  "error": ""
+                },
+                "20": {
+                  "passed": true,
+                  "error": ""
+                }
+              },
+              "error": null,
+              "archive_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/output/AP_14089154938208861744.zip"
             }
           }
         ]
