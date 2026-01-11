@@ -17,6 +17,17 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
         """Get the required epitaph count from the world."""
         return getattr(self.world, 'required_epitaph_pieces_count', 9)
 
+    @property
+    def _required_epitaph_name(self) -> str:
+        """Get the required epitaph item name from the world.
+
+        This varies based on the epitaph_pieces_randomization option:
+        - all_pieces: 'Epitaph Piece' (9 individual items)
+        - in_groups: 'Epitaph Pieces' (3 grouped items)
+        - as_one_item: 'Epitaph Pieces' (1 item)
+        """
+        return getattr(self.world, 'required_epitaph_pieces_name', 'Epitaph Piece')
+
     # ==========================================================================
     # Rule construction helpers
     # ==========================================================================
@@ -45,8 +56,8 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
         return self._has_all_items(['Camera Replica', 'Pile Of Meat'])
 
     def _epitaph_pieces_rule(self) -> Dict[str, Any]:
-        """Epitaph Piece with required count."""
-        return self._item_check('Epitaph Piece', self._required_epitaph_count)
+        """Epitaph item with required count (name varies by option)."""
+        return self._item_check(self._required_epitaph_name, self._required_epitaph_count)
 
     def _bridge_requirements_rule(self) -> Dict[str, Any]:
         """Camera+Meat OR All Epitaph Pieces."""
