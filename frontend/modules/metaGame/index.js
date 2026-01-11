@@ -23,6 +23,33 @@ function handleLocationCheck(eventData, context) {
   return { action: 'continue' };
 }
 
+/**
+ * Handle editor config Apply events
+ * Allows users to edit the metaGame configuration in the editor and apply changes
+ * @param {Object} eventData - Event data containing the configuration
+ */
+async function handleEditorConfigApply(eventData) {
+  console.log('[MetaGame] Editor config Apply requested', eventData);
+
+  if (!eventData || !eventData.configuration) {
+    console.warn('[MetaGame] No configuration data in editor:metaGameConfigApply event');
+    return;
+  }
+
+  if (!metaGameLogic) {
+    console.error('[MetaGame] Module not initialized, cannot apply configuration');
+    return;
+  }
+
+  try {
+    // Update the JSON configuration using the existing API
+    await metaGameLogic.updateJSONConfiguration(eventData.configuration);
+    console.log('[MetaGame] Applied configuration from editor');
+  } catch (error) {
+    console.error('[MetaGame] Error applying configuration from editor:', error);
+  }
+}
+
 export function register(registrationApi) {
   // Store registrationApi for later use when configuration is loaded
   storedRegistrationApi = registrationApi;
@@ -64,9 +91,9 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   const dispatcher = initializationApi.getDispatcher();
   const eventBus = initializationApi.getEventBus();
   const logger = initializationApi.getLogger();
-  
+
   logger.info('metaGame', 'Initializing MetaGame module...');
-  
+
   try {
     // Create the MetaGameLogic instance
     metaGameLogic = new MetaGameLogic({
@@ -78,10 +105,14 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       initializationApi,
       registrationApi: storedRegistrationApi
     });
-    
+
+    // Subscribe to editor config Apply events
+    eventBus.subscribe('editor:metaGameConfigApply', handleEditorConfigApply, moduleId);
+    logger.info('metaGame', 'Subscribed to editor:metaGameConfigApply events');
+
     // Event handlers are registered during the registration phase
     // and will be called automatically by the event dispatcher system
-    
+
     logger.info('metaGame', 'MetaGame module initialized successfully');
     
     // Return cleanup function
