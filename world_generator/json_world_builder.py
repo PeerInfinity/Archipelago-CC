@@ -185,8 +185,59 @@ class JSONWorldBuilder:
 
         self.world = self.multiworld.worlds[1]
 
+        # Copy world attributes from JSON onto the world instance
+        # These are runtime values that affect rule evaluation (e.g., auto_scroll_levels)
+        # but aren't game options
+        self._copy_world_attributes_from_json(world_data)
+
         logger.info(f"Built world instance for '{worldgen_game_name}'")
         return self.world
+
+    def _copy_world_attributes_from_json(self, world_data: dict) -> None:
+        """
+        Copy world attributes from JSON data onto the world instance.
+
+        World data from the JSON export may contain runtime values that affect
+        rule evaluation, such as:
+        - auto_scroll_levels: Per-level auto-scroll settings (marioland2)
+        - sprite_data: Per-level sprite randomization data (marioland2)
+        - difficulty_requirements: Combat difficulty data (osrs)
+
+        These are NOT game options but rather seed-specific generated values that
+        the worldgen world's __init__ uses defaults for. We need to update them
+        to match the actual seed's values.
+
+        Args:
+            world_data: The world[player] section from the rules.json
+        """
+        if not world_data or not self.world:
+            return
+
+        # Attributes that should NOT be copied (handled elsewhere or internal)
+        skip_attrs = {
+            'options',           # Handled by set_options()
+            'option_definitions',  # Schema metadata
+            'game',              # World identity
+            'world_class_name',  # World identity
+            'world_description', # Metadata
+            'web',               # Metadata
+        }
+
+        copied_attrs = []
+        for attr_name, attr_value in world_data.items():
+            if attr_name in skip_attrs:
+                continue
+
+            # Only copy if the world has this attribute (i.e., it's defined in __init__)
+            if hasattr(self.world, attr_name):
+                try:
+                    setattr(self.world, attr_name, attr_value)
+                    copied_attrs.append(attr_name)
+                except Exception as e:
+                    logger.debug(f"Could not copy world attribute '{attr_name}': {e}")
+
+        if copied_attrs:
+            logger.debug(f"Copied world attributes from JSON: {copied_attrs}")
 
     def get_world(self) -> Optional["World"]:
         """Get the instantiated world, or None if not yet built."""
