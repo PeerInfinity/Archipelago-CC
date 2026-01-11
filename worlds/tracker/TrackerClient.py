@@ -1778,7 +1778,7 @@ def explain(ctx: TrackerGameContext, dest_name: str):
         if hasattr(location.access_rule,"explain_json"):
             ctx.ui.print_json(location.access_rule.explain_json(state))
         elif location.access_rule is Location.access_rule:
-            logger.info("Location has a default access rule")
+            logger.info("Location has a default access rule (always accessible): True")
         else:
             # Try worldgen fallback for explain support
             wg_explanation = ctx.tracker_core.explain_location_rule(dest_name, state)
