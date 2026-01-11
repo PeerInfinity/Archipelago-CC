@@ -1,0 +1,206 @@
+name: Test Multiworld UT Fuzz Assembly
+
+on:
+  workflow_dispatch:
+    inputs:
+      runs_per_test:
+        description: 'Number of test runs per game addition'
+        required: true
+        type: number
+        default: 3
+
+      seed:
+        description: 'Base random seed for reproducibility (leave empty for random)'
+        required: false
+        type: number
+        default: 1
+
+      max_players:
+        description: 'Maximum number of players in multiworld'
+        required: true
+        type: number
+        default: 20
+
+      clean_start:
+        description: 'Clean multiworld directory before starting'
+        type: boolean
+        default: true
+
+      debug_mode:
+        description: 'Debug mode: only test Adventure.yaml and Dark Souls III.yaml for quick testing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
+jobs:
+  # Initial setup job - creates/updates branch
+  setup-branch:
+    name: Setup Multiworld UT Fuzz Test Branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Create or switch to multiworld-ut-fuzz-test branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin multiworld-ut-fuzz-test; then
+            git checkout multiworld-ut-fuzz-test
+            git pull origin multiworld-ut-fuzz-test
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync multiworld-ut-fuzz-test with main"
+              git push origin multiworld-ut-fuzz-test
+            fi
+          else
+            git checkout -b multiworld-ut-fuzz-test origin/main
+            git push -u origin multiworld-ut-fuzz-test
+          fi
+
+  # Multiworld UT Fuzz Tests
+  test-multiworld-ut-fuzz:
+    name: Test Multiworld UT Fuzz Assembly
+    runs-on: ubuntu-latest
+    needs: setup-branch
+    timeout-minutes: 360  # 6 hours - multiworld tests take longer
+
+    steps:
+      - name: Checkout multiworld-ut-fuzz-test branch
+        uses: actions/checkout@v4
+        with:
+          ref: multiworld-ut-fuzz-test
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Update world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
+
+      - name: Run multiworld UT fuzz assembly test
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+          echo "Using seed: ${{ inputs.seed || 'random' }}"
+          echo "Runs per test: ${{ inputs.runs_per_test }}"
+          echo "Max players: ${{ inputs.max_players }}"
+
+          # Determine debug mode include list
+          DEBUG_INCLUDE=""
+          if [ "${{ inputs.debug_mode }}" = "true" ]; then
+            DEBUG_INCLUDE="--include-list 'Adventure.yaml' 'Dark Souls III.yaml'"
+          fi
+
+          # Build command
+          CMD="python scripts/test/test-multiworld-ut-fuzz.py"
+          CMD="$CMD --runs ${{ inputs.runs_per_test }}"
+          CMD="$CMD --max-players ${{ inputs.max_players }}"
+
+          if [ "${{ inputs.seed }}" != "" ]; then
+            CMD="$CMD --seed ${{ inputs.seed }}"
+          fi
+
+          if [ "${{ inputs.clean_start }}" = "true" ]; then
+            CMD="$CMD --clean-start"
+          fi
+
+          if [ "${{ inputs.debug_mode }}" = "true" ]; then
+            CMD="$CMD --include-list 'Adventure.yaml' 'Dark Souls III.yaml'"
+          fi
+
+          echo "Running: $CMD"
+          eval $CMD
+
+      - name: Upload test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: multiworld-ut-fuzz-results
+          path: scripts/output/multiworld-ut-fuzz/test-results-*.json
+          retention-days: 30
+
+      - name: Commit and push results
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin multiworld-ut-fuzz-test || true
+
+          # Add test results JSON
+          mkdir -p scripts/output/multiworld-ut-fuzz
+          git add -f scripts/output/multiworld-ut-fuzz/test-results-*.json || true
+
+          # Add multiworld templates (to show final assembled multiworld)
+          mkdir -p Players/presets/Multiworld
+          git add -f Players/presets/Multiworld/*.yaml || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update multiworld UT fuzz test results
+
+            Generated by workflow run: ${{ github.run_id }}
+            Seed: ${{ inputs.seed || 'random' }}
+            Runs per test: ${{ inputs.runs_per_test }}
+            Max players: ${{ inputs.max_players }}
+            Clean start: ${{ inputs.clean_start }}
+            Debug mode: ${{ inputs.debug_mode }}
+
+            Includes:
+            - Test results JSON
+            - Final multiworld templates
+            "
+            git push origin multiworld-ut-fuzz-test
+          fi
