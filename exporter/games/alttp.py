@@ -29,6 +29,59 @@ BUNNY_ACCESSIBLE_LOCATIONS = {
     "Desert Ledge"
 }
 
+# Glitch modes that enable superbunny accessibility
+GLITCH_MODES_WITH_SUPERBUNNY = {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+
+# Locations with mandatory superbunny paths that work in glitch modes
+# These are locations where the superbunny entrance path is always available
+# (not shuffled), so they don't require Moon Pearl in glitch modes.
+# From Rules.py set_bunny_rules: if new_region.name == 'Superbunny Cave (Bottom)'
+# or region.name == 'Kakariko Well (top)', superbunny state works without mirror.
+# The 'Superbunny Cave Climb' entrance is in mandatory_connections (EntranceShuffle.py:2617)
+MANDATORY_SUPERBUNNY_LOCATIONS = {
+    # Superbunny Cave (Top) region - reached via mandatory Superbunny Cave Climb
+    "Superbunny Cave - Top",
+    "Superbunny Cave - Bottom",
+    # Kakariko Well (top) region - accessible in bunny form per Rules.py
+    "Kakariko Well - Left",
+    "Kakariko Well - Middle",
+    "Kakariko Well - Right",
+    "Kakariko Well - Bottom",
+}
+
+# Other superbunny accessible locations in glitch modes that require Magic Mirror
+# (in addition to Moon Pearl as an alternative). These are from
+# OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
+# For these, the rule is: Moon Pearl OR Magic Mirror
+MIRROR_SUPERBUNNY_LOCATIONS = {
+    "Blind's Hideout - Far Left",
+    "Blind's Hideout - Far Right",
+    "Blind's Hideout - Left",
+    "Blind's Hideout - Right",
+    "Bonk Rock Cave",
+    "Brewery",
+    "C-Shaped House",
+    "Cave 45",
+    "Chest Game",
+    "Floodgate",
+    "Floodgate Chest",
+    "Ice Rod Cave",
+    "Kakariko Tavern",
+    "King's Tomb",
+    "Library",
+    "Mire Shed - Left",
+    "Mire Shed - Right",
+    "Pyramid Fairy - Left",
+    "Pyramid Fairy - Right",
+    "Sahasrahla's Hut - Left",
+    "Sahasrahla's Hut - Middle",
+    "Sahasrahla's Hut - Right",
+    "Secret Passage",
+    "Spiral Cave",
+    "Waterfall of Wishing - Left",
+    "Waterfall of Wishing - Right",
+}
+
 
 
 class ALttPGameExportHandler(GenericGameExportHandler):
@@ -42,21 +95,31 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         super().__init__(world)
         self._current_location_context = None
         self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
+        self._is_glitch_mode = self._check_glitch_mode(world)
+
+    def _check_glitch_mode(self, world) -> bool:
+        """Check if the world is in a glitch mode that enables superbunny accessibility."""
+        if world is None or not hasattr(world, 'options'):
+            return False
+        if not hasattr(world.options, 'glitches_required'):
+            return False
+        glitches_required = world.options.glitches_required.current_key
+        return glitches_required in GLITCH_MODES_WITH_SUPERBUNNY
 
     def _compute_bunny_accessible_locations(self, world) -> Set[str]:
         """Compute the set of bunny-accessible locations based on world options.
 
-        The bunny-accessible list is the set of locations that never require Moon Pearl.
+        The bunny-accessible list is the set of locations that NEVER require Moon Pearl.
         These are locations that can be accessed in bunny form regardless of game mode
-        or glitch settings.
+        or glitch settings. From ALttP Rules.py bunny_accessible_locations list.
 
-        Note: ALttP has complex path-dependent bunny rules for glitch modes that can't
-        be easily replicated. The original rules check entrance paths and add options
-        for superbunny or mirror accessibility. We simplify to the basic set of always-
-        accessible locations to avoid logic mismatches.
+        Note: Superbunny accessible locations (from OverworldGlitchRules.get_superbunny_accessible_locations)
+        are NOT included here because they require EITHER Moon Pearl OR specific superbunny
+        entrance paths. Since we can't replicate the path-dependent logic in exports,
+        we conservatively require Moon Pearl for those locations.
         """
-        # Return the static set - glitch modes have complex path-dependent rules
-        # that can't be simplified to a location list
+        # Return only the static bunny-accessible locations
+        # These locations can ALWAYS be collected in bunny form, no Moon Pearl needed
         return set(BUNNY_ACCESSIBLE_LOCATIONS)
 
     def _is_bunny_rule_value(self, value) -> bool:
@@ -227,16 +290,33 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         Since we can't replicate the dynamic path evaluation, we use this approximation:
         - Locations in BUNNY_ACCESSIBLE_LOCATIONS are always accessible in bunny form
+        - In glitch modes, locations in MANDATORY_SUPERBUNNY_LOCATIONS are also accessible
+          without Moon Pearl (their superbunny entrance paths are mandatory connections)
         - For other Dark World locations, require Moon Pearl since the player needs it
           to not be a bunny and interact with most objects/NPCs
-
-        Note: This is an approximation for no_glitches mode. Glitch modes have more
-        complex path-dependent rules with superbunny and mirror revival options that
-        can't be easily replicated in exported rules.
         """
+        # Always-accessible locations (bunny can collect in any mode)
         if location_name in self._bunny_accessible_locations:
             logger.debug(f"ALttP: Location '{location_name}' is in bunny-accessible list")
             return {'rule': 'True_'}
+
+        # In glitch modes, certain locations have mandatory superbunny paths
+        # that are never shuffled, so they don't require Moon Pearl
+        if self._is_glitch_mode and location_name in MANDATORY_SUPERBUNNY_LOCATIONS:
+            logger.debug(f"ALttP: Location '{location_name}' has mandatory superbunny path in glitch mode")
+            return {'rule': 'True_'}
+
+        # In glitch modes, other superbunny locations can be accessed with Mirror
+        # The rule is: Moon Pearl OR Magic Mirror (for superbunny revival)
+        if self._is_glitch_mode and location_name in MIRROR_SUPERBUNNY_LOCATIONS:
+            logger.debug(f"ALttP: Location '{location_name}' can use superbunny with mirror in glitch mode")
+            return {
+                'rule': 'Or',
+                'children': [
+                    {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
+                    {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
+                ]
+            }
 
         # For other locations with bunny rules, require Moon Pearl.
         # The bunny rule's existence means the location is in a Dark World region

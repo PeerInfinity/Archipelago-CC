@@ -680,6 +680,15 @@ class TrackerCore():
                 args[option_name].update(player_mapping)
 
         try:
+            # Clear any cached state from previous generations
+            # Some worlds (like Landstalker) use class-level caches that persist
+            # across generations and can cause issues with stale player IDs
+            try:
+                from worlds.landstalker import LandstalkerWorld
+                LandstalkerWorld.cached_spheres = []
+            except ImportError:
+                pass
+
             yaml_path, self.output_format, self.hide_excluded, self.use_split, enforce_deferred_connections, self.enable_glitched_logic = self._set_host_settings()
             if self.enforce_deferred_connections is None: self.enforce_deferred_connections = enforce_deferred_connections
             # strip command line args, they won't be useful from the client anyway
