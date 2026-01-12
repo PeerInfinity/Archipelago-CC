@@ -1432,9 +1432,18 @@ class CallVisitorMixin:
 
                 # Check if we successfully resolved an object with a 'name' attribute
                 if resolved_obj is not None and hasattr(resolved_obj, 'name') and isinstance(resolved_obj.name, str):
-                    # Determine if it's a Region (has 'entrances') or Location (no 'entrances')
+                    # Determine object type:
+                    # - Entrance: has 'connected_region' (must check BEFORE Location since both have parent_region)
+                    # - Region: has 'entrances'
+                    # - Location: has 'parent_region' but neither 'entrances' nor 'connected_region'
+                    has_connected_region = hasattr(resolved_obj, 'connected_region')
                     has_entrances = hasattr(resolved_obj, 'entrances')
-                    obj_type = 'Region' if has_entrances else 'Location'
+                    if has_connected_region:
+                        obj_type = 'Entrance'
+                    elif has_entrances:
+                        obj_type = 'Region'
+                    else:
+                        obj_type = 'Location'
                     obj_name_value = resolved_obj.name
 
                     logging.debug(f"Resolved {obj_name} to {obj_type} object with name: {obj_name_value}")

@@ -8,31 +8,13 @@ The fork's exporter was calling `fill_slot_data()` after `stage_modify_multidata
 
 ## The Fix
 
-The fix respects Archipelago's intended lifecycle: **compute → use → cleanup**.
+The fix has two parts:
+1. Cache slot data so the exporter doesn't need to call `fill_slot_data()`
+2. Clear exporter caches after use to release world references
 
-### 1. Move exporter before `modify_multidata` (Main.py)
+### 1. Cache slot data (Main.py, exporter/games/base/world_data.py)
 
-The exporter call was moved inside `write_multidata`, before the `modify_multidata` call:
-
-```python
-# Export rules data BEFORE modify_multidata clears world caches
-# (some worlds like Landstalker use class variables in fill_slot_data
-# that are cleared by stage_modify_multidata)
-settings = get_settings()
-if settings.general_options.save_rules_json:
-    from exporter import clear_rule_cache
-    from exporter.games import clear_handler_cache
-    export_game_rules(...)
-    clear_rule_cache()
-    clear_handler_cache()
-
-# TODO: change to `"version": version_tuple` after getting better serialization
-AutoWorld.call_all(multiworld, "modify_multidata", multidata)
-```
-
-### 2. Use cached slot data (exporter/games/base/world_data.py)
-
-Main.py now caches `slot_data` on the world object after calling `fill_slot_data`:
+Main.py caches `slot_data` on the world object after calling `fill_slot_data`:
 
 ```python
 slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
@@ -51,32 +33,42 @@ if hasattr(world, '_cached_slot_data') and world._cached_slot_data:
     world_data['slot_data'] = world._cached_slot_data
 ```
 
-### 3. Clear handler cache after `create_playthrough` (Main.py)
+### 2. Export after create_playthrough, then clear caches (Main.py)
 
-The sphere logger (`create_playthrough_with_logging`) creates export handlers that hold references to world objects. These must be cleared after playthrough calculation:
+The exporter runs after `create_playthrough` so that sphere_log.jsonl is included in the export. Then caches are cleared to release world references:
 
 ```python
 if args.spoiler > 1:
     logger.info('Calculating playthrough.')
     multiworld.spoiler.create_playthrough(create_paths=args.spoiler > 2)
-    # Clear handler cache - create_playthrough_with_logging may have created
-    # handlers that hold world references
-    try:
-        from exporter.games import clear_handler_cache
-        clear_handler_cache()
-    except ImportError:
-        pass
+
+if args.spoiler:
+    multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
+
+# Export rules data after create_playthrough so sphere_log.jsonl is included.
+# The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
+# so it won't repopulate caches that were cleared by stage_modify_multidata.
+settings = get_settings()
+if settings.general_options.save_rules_json:
+    from exporter import clear_rule_cache
+    from exporter.games import clear_handler_cache
+    export_game_rules(...)
+    # Clear exporter caches to allow GC
+    clear_rule_cache()
+    clear_handler_cache()
 ```
 
 ## Why This Works
 
-The new call order:
-1. `fill_slot_data()` called → populates `cached_spheres`
-2. `export_game_rules()` called → uses cached `_cached_slot_data`
-3. `modify_multidata` called → `stage_modify_multidata` clears `cached_spheres`
-4. `create_playthrough` called → sphere logger creates handlers
-5. Handler cache cleared → releases world references
+The call order:
+1. `fill_slot_data()` called → populates `cached_spheres`, result cached as `_cached_slot_data`
+2. `modify_multidata` called → `stage_modify_multidata` clears `cached_spheres`
+3. `create_playthrough` called → creates sphere_log.jsonl
+4. `export_game_rules()` called → uses cached `_cached_slot_data`, doesn't call `fill_slot_data`
+5. Exporter caches cleared → releases world references
 6. No lingering references → garbage collection succeeds
+
+The key insight is that since the exporter uses `_cached_slot_data` instead of calling `fill_slot_data()`, it doesn't repopulate `cached_spheres` even though it runs after `stage_modify_multidata` has cleared it.
 
 ## Alternative: Instance Variable Approach
 

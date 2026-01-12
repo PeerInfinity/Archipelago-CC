@@ -6763,9 +6763,14 @@ class HelperCodeGenerator:
         2. A Region object - can be used directly
 
         We generate code that handles both cases at runtime.
+        For is_light_world/is_dark_world, we default to True if region is None (allows access).
         """
         region_expr = expr.get('region', {})
         attr = expr.get('attr', '')
+
+        # Determine default value for None region (True allows access, which is safer)
+        # For light/dark world checks, if we can't determine the region, allow access
+        default_value = "True"
 
         # Check if region expression is a parameter reference (variable name)
         # The variable could contain either a region name (string) or a Region object
@@ -6773,11 +6778,13 @@ class HelperCodeGenerator:
         if isinstance(region_expr, dict) and region_expr.get('type') in ('name', 'param_ref', 'variable'):
             region_var = region_expr.get('name', 'region')
             # Generate code that handles both string and Region object cases
-            return f"(state.multiworld.get_region({region_var}, player) if isinstance({region_var}, str) else {region_var}).{attr}"
+            # Also handle None region by returning default value
+            region_lookup = f"(state.multiworld.get_region({region_var}, player) if isinstance({region_var}, str) else {region_var})"
+            return f"({default_value} if (_r := {region_lookup}) is None else _r.{attr})"
 
         # Otherwise, generate the region expression directly
         region_code = self._generate_expression(region_expr)
-        return f"{region_code}.{attr}"
+        return f"({default_value} if (_r := {region_code}) is None else _r.{attr})"
 
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for region."""
