@@ -629,6 +629,14 @@ class RuleCodeGenerator:
                         self._is_rule_builder_convertible(if_false, depth + 1))
             return False
 
+        # For item_check and count_check, verify the item name is a constant
+        # (not a dynamic reference like world_attribute)
+        if rule_type in ('item_check', 'count_check'):
+            item = rule.get('item')
+            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'setting_value', 'option_value'):
+                # Dynamic item reference - not convertible to static Rule Builder
+                return False
+
         # Recursively check nested rules
         nested_keys = ['conditions', 'condition', 'operand', 'left', 'right',
                        'test', 'if_true', 'if_false']

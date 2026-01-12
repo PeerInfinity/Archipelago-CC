@@ -223,6 +223,7 @@ class JSONWorldBuilder:
             'world_class_name',  # World identity
             'world_description', # Metadata
             'web',               # Metadata
+            'shops',             # Handled by _create_shops() in __init__ - must be ShopWrapper objects
         }
 
         copied_attrs = []
