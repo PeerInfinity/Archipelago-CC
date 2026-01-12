@@ -63,6 +63,8 @@ class TrackerCore():
         self.missing_locations: set[int] = set()
         self.seed_override: int | None = None  # Optional seed to use for generation (for UT comparison testing)
         self.sphere_log_mode: bool = False  # Enable lenient error handling for UT comparison testing
+        self.auto_collect_events: bool = True  # Auto-collect event items when locations become accessible
+        self.filter_event_items: bool = True  # Filter out event locations/items from output (default UT behavior)
 
         # Worldgen world support for rule explain and tracking functionality
         self.worldgen_builder: Optional["JSONWorldBuilder"] = None
@@ -108,6 +110,15 @@ class TrackerCore():
     
     def set_get_ut_color(self,get_ut_color:Optional[Callable[[str],str]]):
         self._get_ut_color = get_ut_color
+
+    def set_debug_logger(self, debug_logger: Optional[Callable[[str, dict], None]]):
+        """Set callback for debug logging (used by TrackerClient for debug log file)."""
+        self._debug_logger = debug_logger
+
+    def _log_debug(self, event_type: str, data: dict):
+        """Log a debug event if debug logger is configured."""
+        if hasattr(self, '_debug_logger') and self._debug_logger:
+            self._debug_logger(event_type, data)
 
     def get_current_world(self):
         if self.player_id and self.multiworld:
@@ -165,6 +176,17 @@ class TrackerCore():
             self.player_id = 1
             self._tracking_from_worldgen = True
 
+            # Clear precollected items with codes from the worldgen multiworld.
+            # The worldgen world's build_world() runs generation steps that pre-collect
+            # starting items. These items will be added via set_items_received() during
+            # tracking, so we must clear them here to avoid double-counting.
+            # (This is similar to what run_generator does for non-worldgen tracking.)
+            temp_precollect = {}
+            for player_id, items in self.multiworld.precollected_items.items():
+                temp_items = [item for item in items if item.code is None]
+                temp_precollect[player_id] = temp_items
+            self.multiworld.precollected_items = temp_precollect
+
             self.logger.info(
                 f"Initialized tracking from worldgen world: {self.worldgen_world.game}"
             )
@@ -200,12 +222,16 @@ class TrackerCore():
                 json_data = json.load(f)
 
             game_name = json_data.get('game_name', 'Unknown')
-            worldgen_game_name = f"{game_name} WorldGen"
 
-            # Derive output directory
+            # Include seed name in directory and game name for parallel-safe operation
+            # This allows multiple fuzzer processes to run simultaneously without conflicts
+            seed_suffix = f"_{self.seed_name}" if self.seed_name else ""
+            worldgen_game_name = f"{game_name} WorldGen{seed_suffix}"
+
+            # Derive output directory with seed-specific suffix
             game_directory = json_data.get('game_directory', game_name.lower().replace(' ', '_'))
-            output_dir = Path('worlds') / f"{game_directory}_worldgen"
-            module_name = output_dir.name  # e.g., "adventure_worldgen"
+            output_dir = Path('worlds') / f"{game_directory}_worldgen{seed_suffix}"
+            module_name = output_dir.name  # e.g., "adventure_worldgen_12345"
 
             self.logger.info(f"Generating worldgen world from {json_path}")
 
@@ -400,6 +426,7 @@ class TrackerCore():
         Returns:
             True if rules were loaded successfully, False otherwise
         """
+        self._log_debug("auto_discover_rules_json", {"game": self.game, "seed_name": self.seed_name})
         if not self.game or not self.seed_name:
             self.logger.debug("Cannot auto-discover: game or seed_name not set")
             return False
@@ -462,6 +489,7 @@ class TrackerCore():
                         continue
 
                     self.logger.info(f"Auto-discovered rules JSON: {json_path}")
+                    self._log_debug("rules_json_found", {"path": json_path})
 
                     # If auto_generate_worldgen is enabled, generate and load the worldgen world
                     if self.auto_generate_worldgen:
@@ -474,9 +502,12 @@ class TrackerCore():
                             self.logger.warning("Worldgen generation failed, falling back to direct AST explain")
 
                     # Default: just load the rules JSON for direct AST explain
-                    return self.load_rules_json(json_path)
+                    result = self.load_rules_json(json_path)
+                    self._log_debug("load_rules_json_result", {"result": result, "rules_json_path": self.rules_json_path})
+                    return result
 
         self.logger.debug(f"No rules JSON found for {self.game} seed {self.seed_name}")
+        self._log_debug("rules_json_not_found", {"game": self.game, "seed_name": self.seed_name})
         return False
 
     def load_rules_json(self, json_path: str) -> bool:
@@ -649,6 +680,15 @@ class TrackerCore():
                 args[option_name].update(player_mapping)
 
         try:
+            # Clear any cached state from previous generations
+            # Some worlds (like Landstalker) use class-level caches that persist
+            # across generations and can cause issues with stale player IDs
+            try:
+                from worlds.landstalker import LandstalkerWorld
+                LandstalkerWorld.cached_spheres = []
+            except ImportError:
+                pass
+
             yaml_path, self.output_format, self.hide_excluded, self.use_split, enforce_deferred_connections, self.enable_glitched_logic = self._set_host_settings()
             if self.enforce_deferred_connections is None: self.enforce_deferred_connections = enforce_deferred_connections
             # strip command line args, they won't be useful from the client anyway
@@ -726,6 +766,7 @@ class TrackerCore():
                 "set_rules",
                 "connect_entrances",
                 "generate_basic",
+                "pre_fill",  # Needed for worldgen worlds that place items in pre_fill (e.g., for location_item_name checks)
             )
         )
 
@@ -789,16 +830,25 @@ class TrackerCore():
                 world_item = self.multiworld.create_item(item_name, self.player_id)
                 if item_loc>0 and item_player == self.slot and item_loc in location_id_to_name:
                     world_item.location = self.multiworld.get_location(location_id_to_name[item_loc],self.player_id)
-                world_item.classification = world_item.classification | item_flags
+                # Use server's item_flags directly for classification.
+                # The server knows the actual classification of each item instance.
+                # This is important for games like Faxanadu where the same item type
+                # (e.g., Red Potion) can have different classifications: 4 are progression
+                # and 11 are filler. The worldgen exports all as progression because
+                # the item is used in access rules, but we must trust the server's
+                # classification to match the original world's sphere calculation.
+                world_item.classification = item_flags
                 state.collect(world_item, True)
                 if world_item.advancement:
                     prog_items[world_item.name] += 1
-                if world_item.code is not None:
+                # Add to all_items unless filtering event items (code is None)
+                if not self.filter_event_items or world_item.code is not None:
                     all_items[world_item.name] += 1
             except Exception:
                 self.log_to_tab("Item id " + str(item_name) + " not able to be created", False)
-        state.sweep_for_advancements(
-            locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
+        if self.auto_collect_events:
+            state.sweep_for_advancements(
+                locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
 
         self.clear_page()
         regions = []
@@ -807,7 +857,8 @@ class TrackerCore():
         glitches_locations:list[int] = []
         hinted_locations = []
         for temp_loc in self.multiworld.get_reachable_locations(state, self.player_id):
-            if temp_loc.address is None or isinstance(temp_loc.address, list):
+            # Filter event locations (address is None) if filter_event_items is enabled
+            if self.filter_event_items and (temp_loc.address is None or isinstance(temp_loc.address, list)):
                 continue
             elif self.hide_excluded and temp_loc.progress_type == LocationProgressType.EXCLUDED:
                 continue
@@ -863,10 +914,12 @@ class TrackerCore():
             except Exception:
                 self.log_to_tab("Item id " + str(glitches_item_name) + " not able to be created", False)
             else:
-                state.sweep_for_advancements(
-                    locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
+                if self.auto_collect_events:
+                    state.sweep_for_advancements(
+                        locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
                 for temp_loc in self.multiworld.get_reachable_locations(state, self.player_id):
-                    if temp_loc.address is None or isinstance(temp_loc.address, list):
+                    # Filter event locations (address is None) if filter_event_items is enabled
+                    if self.filter_event_items and (temp_loc.address is None or isinstance(temp_loc.address, list)):
                         continue
                     elif self.hide_excluded and temp_loc.progress_type == LocationProgressType.EXCLUDED:
                         continue
@@ -929,13 +982,20 @@ class TrackerCore():
             return
 
         # Try worldgen-based tracking first if rules.json is available
+        self._log_debug("initalize_tracker_core", {"rules_json_path": self.rules_json_path})
         if self.rules_json_path:
             self.logger.info(f"Attempting worldgen-based tracking from {self.rules_json_path}")
+            self._log_debug("attempting_worldgen_tracking", {"rules_json_path": self.rules_json_path})
             # Generate a fresh worldgen world from the rules.json file
             # This ensures the worldgen world matches the specific seed we're connecting to
-            if self.generate_and_load_worldgen_world(self.rules_json_path):
-                if self.initialize_tracking_from_worldgen():
+            worldgen_result = self.generate_and_load_worldgen_world(self.rules_json_path)
+            self._log_debug("generate_worldgen_result", {"success": worldgen_result})
+            if worldgen_result:
+                tracking_result = self.initialize_tracking_from_worldgen()
+                self._log_debug("initialize_tracking_result", {"success": tracking_result})
+                if tracking_result:
                     self.logger.info("Using worldgen-based tracking")
+                    self._log_debug("using_worldgen_tracking", {"success": True})
                     return
                 else:
                     self.logger.warning("Failed to initialize tracking from worldgen, falling back")

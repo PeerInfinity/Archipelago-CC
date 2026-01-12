@@ -449,20 +449,45 @@ class PythonToJSON:
         return {'type': 'group_count', 'group': self._extract_value(args[0])}
 
     def _make_can_reach(self, args: List[Dict]) -> Dict[str, Any]:
-        """Create a can_reach rule from args."""
+        """Create a can_reach rule from args.
+
+        Handles:
+        1. Explicit type argument: state.can_reach(name, "Location") -> location_check
+        2. Location objects: state.can_reach(loc) where loc is a Location -> location_check
+        3. Region objects: state.can_reach(region) where region is a Region -> can_reach
+        4. Default (strings without type): treated as region names
+        """
         if not args:
             return {'type': 'can_reach', 'region': ''}
 
         target = self._extract_value(args[0])
 
-        # Check for type argument
+        # Check for explicit type argument first
         if len(args) > 1:
             reach_type = self._extract_value(args[1])
             if reach_type == 'Location':
+                # If target is a Location object, extract its name
+                if hasattr(target, 'name') and isinstance(target.name, str):
+                    target = target.name
                 return {'type': 'location_check', 'location': target}
             elif reach_type == 'Entrance':
+                # If target is an Entrance object, extract its name
+                if hasattr(target, 'name') and isinstance(target.name, str):
+                    target = target.name
                 return {'type': 'can_reach_entrance', 'entrance': target}
 
+        # No explicit type argument - infer from object type
+        # Check if target is a Location object (has parent_region but not entrances)
+        if hasattr(target, 'parent_region') and not hasattr(target, 'entrances'):
+            location_name = target.name if hasattr(target, 'name') else str(target)
+            return {'type': 'location_check', 'location': location_name}
+
+        # Check if target is a Region object (has entrances)
+        if hasattr(target, 'entrances'):
+            region_name = target.name if hasattr(target, 'name') else str(target)
+            return {'type': 'can_reach', 'region': region_name}
+
+        # Default: treat as region name (string)
         return {'type': 'can_reach', 'region': target}
 
     def _make_state_method(self, method: str, args: List[Dict]) -> Dict[str, Any]:

@@ -285,8 +285,9 @@ def generate_items_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
 
-    # Check if any items have hint_text
+    # Check if any items have hint_text or classification_counts
     has_hint_text = any(item.hint_text for item in data.items.values())
+    has_classification_counts = any(item.classification_counts for item in data.items.values())
 
     # Build item table entries (preserve original order from JSON)
     item_entries = []
@@ -297,22 +298,42 @@ def generate_items_py(data: ExtractedData) -> str:
         # Escape item name for Python string
         name_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
 
-        # Build optional hint_text argument
+        # Build optional arguments
+        optional_args = []
         if item_data.hint_text:
             hint_escaped = item_data.hint_text.replace('\\', '\\\\').replace('"', '\\"')
-            hint_arg = f', "{hint_escaped}"'
+            optional_args.append(f'"{hint_escaped}"')
+        elif has_hint_text:
+            # Need placeholder if other items have hint_text
+            optional_args.append('None')
+
+        if item_data.classification_counts:
+            # Format classification_counts as a dict
+            counts_str = ', '.join(
+                f'"{k}": {v}' for k, v in sorted(item_data.classification_counts.items())
+            )
+            optional_args.append('{' + counts_str + '}')
+        elif has_classification_counts:
+            # Need placeholder if other items have classification_counts
+            optional_args.append('None')
+
+        # Build the full argument string
+        if optional_args:
+            args_str = f'{item_id}, {classification}, ' + ', '.join(optional_args)
         else:
-            hint_arg = ''
+            args_str = f'{item_id}, {classification}'
 
         item_entries.append(
-            f'    "{name_escaped}": ItemData({item_id}, {classification}{hint_arg}),'
+            f'    "{name_escaped}": ItemData({args_str}),'
         )
 
     item_table_content = '\n'.join(item_entries)
 
-    # Generate hint_text parameter in ItemData if needed
+    # Generate optional parameters in ItemData
     hint_text_param = ', hint_text: Optional[str] = None' if has_hint_text else ''
     hint_text_assign = '\n        self.hint_text = hint_text' if has_hint_text else ''
+    classification_counts_param = ', classification_counts: Optional[Dict[str, int]] = None' if has_classification_counts else ''
+    classification_counts_assign = '\n        self.classification_counts = classification_counts' if has_classification_counts else ''
 
     return f'''"""
 Item definitions for {game_name}.
@@ -332,9 +353,9 @@ class {class_name}Item(Item):
 class ItemData:
     """Data container for item definitions."""
 
-    def __init__(self, item_id: Optional[int], classification: ItemClassification{hint_text_param}):
+    def __init__(self, item_id: Optional[int], classification: ItemClassification{hint_text_param}{classification_counts_param}):
         self.id = item_id
-        self.classification = classification{hint_text_assign}
+        self.classification = classification{hint_text_assign}{classification_counts_assign}
 
 
 item_table: Dict[str, ItemData] = {{
@@ -893,7 +914,10 @@ def generate_rules_py(data: ExtractedData) -> str:
                 )
             else:
                 # Use Rule Builder
+                # Set context so 'entrance' variable references can be substituted
+                rule_builder_generator.set_context(entrance=exit_name)
                 rule_code = rule_builder_generator.generate(exit_data.access_rule)
+                rule_builder_generator.set_context()  # Clear context
                 entrance_rules.append(
                     f'    world.set_rule(\n'
                     f'        multiworld.get_entrance("{exit_escaped}", player),\n'
@@ -918,7 +942,10 @@ def generate_rules_py(data: ExtractedData) -> str:
                 )
             else:
                 # Use Rule Builder
+                # Set context so 'location' variable references can be substituted
+                rule_builder_generator.set_context(location=loc_name)
                 rule_code = rule_builder_generator.generate(loc_data.access_rule)
+                rule_builder_generator.set_context()  # Clear context
                 location_rules.append(
                     f'    world.set_rule(\n'
                     f'        multiworld.get_location("{loc_escaped}", player),\n'
@@ -1001,6 +1028,92 @@ def {func_name}(state: "CollectionState", player: int) -> bool:
     if not rules_content.strip():
         rules_content = '    pass  # No non-trivial rules'
 
+    # Check if game has no_logic mode in glitches_required option
+    # If so, add early return for single-player no_logic (skip all rules)
+    no_logic_handling = ''
+    option_defs = data.metadata.option_definitions
+    if 'glitches_required' in option_defs:
+        glitch_opt = option_defs['glitches_required']
+        name_lookup = glitch_opt.get('name_lookup', {})
+        # Check if there's a no_logic option value
+        no_logic_value = None
+        for value, name in name_lookup.items():
+            if name == 'no_logic':
+                no_logic_value = value
+                break
+        if no_logic_value is not None:
+            no_logic_handling = f'''
+    # For no_logic mode, skip all rules (for single-player)
+    if hasattr(world.options, 'glitches_required') and world.options.glitches_required.value == {no_logic_value}:
+        if multiworld.players == 1:
+            for exit in multiworld.get_region('Menu', player).exits:
+                exit.hide_path = True
+            return
+'''
+    # Prepend no_logic handling to rules_content
+    if no_logic_handling:
+        rules_content = no_logic_handling + rules_content
+
+    # Check if any rules use bunny_accessibility_check
+    # If so, add the check_bunny_accessibility helper function
+    needs_bunny_helper = _check_for_bunny_rules(data)
+    bunny_helper_section = ''
+    bunny_import_section = ''
+    if needs_bunny_helper:
+        bunny_import_section = 'from rule_builder.pathfinding import can_reach_via_bunny_path\n'
+        bunny_helper_section = '''
+
+# Bunny accessibility helper for ALttP-style path-dependent rules
+def check_bunny_accessibility(state: "CollectionState", player: int, location_name: str = None, target_region: str = None) -> bool:
+    """Check if a location/region is accessible considering bunny form.
+
+    Returns True if:
+    1. Player has Moon Pearl, OR
+    2. There's a path from a link region without needing Moon Pearl
+
+    Reads inverted mode and glitch mode from world options at evaluation time.
+    """
+    # Quick check: Moon Pearl always allows access
+    if state.has('Moon Pearl', player):
+        return True
+
+    # Get options from world
+    world = state.multiworld.worlds[player]
+    is_inverted = getattr(world.options, 'mode', None)
+    if is_inverted is not None:
+        is_inverted = str(is_inverted) == 'inverted' or getattr(is_inverted, 'value', 0) == 2
+    else:
+        is_inverted = False
+
+    glitch_mode = getattr(world.options, 'glitches_required', None)
+    if glitch_mode is not None:
+        glitch_value = getattr(glitch_mode, 'value', 0)
+        glitch_names = {0: 'no_glitches', 1: 'minor_glitches', 2: 'overworld_glitches',
+                       3: 'hybrid_major_glitches', 4: 'no_logic'}
+        glitch_mode = glitch_names.get(glitch_value, 'no_glitches')
+    else:
+        glitch_mode = 'no_glitches'
+
+    # Determine target region for pathfinding
+    region_name = target_region
+    if not region_name and location_name:
+        try:
+            location = state.multiworld.get_location(location_name, player)
+            region_name = location.parent_region.name
+        except (KeyError, AttributeError):
+            return False
+
+    if not region_name:
+        return False
+
+    return can_reach_via_bunny_path(state, player, region_name, is_inverted, glitch_mode)
+check_bunny_accessibility._internal_function = True
+'''
+
+    # Add bunny helper to helpers section
+    if bunny_helper_section:
+        helpers_section += bunny_helper_section
+
     # Add dungeon boss setup call if dungeons exist
     dungeon_setup_section = ''
     dungeon_setup_function = ''
@@ -1048,9 +1161,9 @@ def _setup_dungeon_bosses(multiworld, player: int) -> None:
     if rule_builder_imports:
         imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
 
-    # Add CollectionState import if we have helpers, lambda rules, or dungeons
+    # Add CollectionState import if we have helpers, lambda rules, dungeons, or bunny rules
     collection_state_import = ''
-    if has_helpers or needs_lambda or defeat_rule_functions:
+    if has_helpers or needs_lambda or defeat_rule_functions or needs_bunny_helper:
         collection_state_import = 'from BaseClasses import CollectionState\n'
 
     # Add math import if needed for sqrt, floor, etc.
@@ -1078,7 +1191,7 @@ Auto-generated by world_generator.
 
 from typing import {typing_import_str}
 {math_import}
-{placement_lookup_import}{collection_state_import}{imports_section}
+{placement_lookup_import}{collection_state_import}{bunny_import_section}{imports_section}
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
@@ -1133,6 +1246,48 @@ def _collect_rule_settings(data: ExtractedData) -> Set[str]:
             _extract_setting_values(exit_data.access_rule, settings)
 
     return settings - BUILTIN_SETTINGS
+
+
+def _check_for_bunny_rules(data: ExtractedData) -> bool:
+    """Check if any rules in the data use bunny_accessibility_check type.
+
+    Used to determine if we need to generate the check_bunny_accessibility helper.
+    """
+    def has_bunny_check(rule: Any) -> bool:
+        if not isinstance(rule, dict):
+            return False
+        # Check both native format and AST format
+        if rule.get('type') == 'bunny_accessibility_check':
+            return True
+        if rule.get('rule') == 'AST_bunny_accessibility_check':
+            return True
+        # Check nested structures
+        for value in rule.values():
+            if isinstance(value, dict):
+                if has_bunny_check(value):
+                    return True
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict) and has_bunny_check(item):
+                        return True
+        return False
+
+    # Check location access rules
+    for loc_data in data.locations.values():
+        if loc_data.access_rule and has_bunny_check(loc_data.access_rule):
+            return True
+
+    # Check exit access rules
+    for exit_data in data.exits.values():
+        if exit_data.access_rule and has_bunny_check(exit_data.access_rule):
+            return True
+
+    # Check helper bodies
+    for helper_data in data.helpers.values():
+        if helper_data.body and has_bunny_check(helper_data.body):
+            return True
+
+    return False
 
 
 def _generate_option_class_from_definition(setting_name: str, option_def: Dict[str, Any]) -> tuple:
@@ -1612,8 +1767,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         # Add pre_fill section for canonical placement
         pre_fill_section = f'''
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
             self._place_original_items()
 
     def _place_original_items(self) -> None:
@@ -2197,14 +2356,37 @@ class {world_class}(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = {class_name}Item(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {{
+                    'progression': ItemClassification.progression,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }}
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = {class_name}Item(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = {class_name}Item(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 

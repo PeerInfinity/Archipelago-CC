@@ -153,8 +153,8 @@ test.describe('Application End-to-End Tests', () => {
         return flag === true;
       },
       null,
-      { timeout: 300000, polling: 500 }
-    ); // Poll every 500ms (increased timeout for games with many events like yugioh06)
+      { timeout: parseInt(process.env.TEST_TIMEOUT) || 300000, polling: 500 }
+    ); // Poll every 500ms. Timeout can be overridden via TEST_TIMEOUT env var.
 
     console.log(
       'PW DEBUG: __playwrightTestsComplete__ flag detected as true.'

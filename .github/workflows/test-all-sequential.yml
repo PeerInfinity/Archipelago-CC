@@ -66,22 +66,13 @@ on:
           - 'parallel-10-jobs'
         default: 'parallel-10-jobs'
 
-      # multitemplate_tests:
-      #   description: 'Multitemplate tests'
-      #   type: choice
-      #   options:
-      #     - 'skip'
-      #     - 'minimal-only'
-      #     - 'full-only'
-      #     - 'both'
-      #   default: 'both'
-
       template_type:
         description: 'Template type to test'
         type: choice
         options:
           - 'original'
           - 'worldgen'
+          - 'apworld'
         default: 'original'
 
 permissions:
@@ -135,17 +126,19 @@ jobs:
             git rm -f scripts/output/spoiler-full/test-results.json || true
             git rm -f scripts/output/multiclient/test-results.json || true
             git rm -f scripts/output/multiworld/test-results.json || true
-          else
+          elif [[ "${{ inputs.template_type }}" == "worldgen" ]]; then
             # WorldGen template results
             git rm -f scripts/output/spoiler-minimal-worldgen/test-results.json || true
             git rm -f scripts/output/spoiler-full-worldgen/test-results.json || true
             git rm -f scripts/output/multiclient-worldgen/test-results.json || true
             git rm -f scripts/output/multiworld-worldgen/test-results.json || true
+          else
+            # APWorld template results
+            git rm -f scripts/output/spoiler-minimal-apworld/test-results.json || true
+            git rm -f scripts/output/spoiler-full-apworld/test-results.json || true
+            git rm -f scripts/output/multiclient-apworld/test-results.json || true
+            git rm -f scripts/output/multiworld-apworld/test-results.json || true
           fi
-
-          # Multitemplate results (commented out for now)
-          # git rm -f scripts/output/multitemplate-minimal/test-results.json || true
-          # git rm -f scripts/output/multitemplate-full/test-results.json || true
 
           # Commit if there are changes
           if ! git diff --staged --quiet; then
@@ -207,6 +200,48 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
+      - name: Download and install APWorld Manager
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          echo "Installing all Stable apworlds..."
+          python scripts/install_apworlds.py --install-all
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+          # Regenerate templates for installed apworlds
+          echo "Regenerating templates..."
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          # Update world mapping to include new apworlds
+          echo "Updating world mapping..."
+          python scripts/build/build-world-mapping.py
+
       - name: Configure host settings
         run: |
           source .venv/bin/activate
@@ -246,8 +281,8 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -263,8 +298,8 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -286,8 +321,8 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed' && inputs.test_generation_consistency
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -304,8 +339,8 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -319,8 +354,8 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -342,8 +377,8 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds' && inputs.test_generation_consistency
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -359,7 +394,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-minimal-spoiler-${{ inputs.template_type }}-split-${{ matrix.split_num }}
-          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}/test-results-split-${{ matrix.split_num }}.json
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine minimal spoiler results
@@ -393,7 +428,7 @@ jobs:
 
       - name: Combine test results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
         run: |
           mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
@@ -402,7 +437,7 @@ jobs:
 
       - name: Copy results and generate documentation
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
         run: |
           mkdir -p scripts/output/${OUTPUT_DIR}
           cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
@@ -411,7 +446,7 @@ jobs:
 
       - name: Commit and push results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -484,6 +519,48 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
+      - name: Download and install APWorld Manager
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          echo "Installing all Stable apworlds..."
+          python scripts/install_apworlds.py --install-all
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+          # Regenerate templates for installed apworlds
+          echo "Regenerating templates..."
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          # Update world mapping to include new apworlds
+          echo "Updating world mapping..."
+          python scripts/build/build-world-mapping.py
+
       - name: Configure host settings
         run: |
           source .venv/bin/activate
@@ -523,8 +600,8 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -540,8 +617,8 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -563,8 +640,8 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -578,8 +655,8 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -602,7 +679,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-full-spoiler-${{ inputs.template_type }}-split-${{ matrix.split_num }}
-          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}/test-results-split-${{ matrix.split_num }}.json
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine full spoiler results
@@ -636,7 +713,7 @@ jobs:
 
       - name: Combine test results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
         run: |
           mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
@@ -645,7 +722,7 @@ jobs:
 
       - name: Copy results and generate documentation
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
         run: |
           mkdir -p scripts/output/${OUTPUT_DIR}
           cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
@@ -654,7 +731,7 @@ jobs:
 
       - name: Commit and push results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -728,6 +805,48 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
+      - name: Download and install APWorld Manager
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          echo "Installing all Stable apworlds..."
+          python scripts/install_apworlds.py --install-all
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+          # Regenerate templates for installed apworlds
+          echo "Regenerating templates..."
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          # Update world mapping to include new apworlds
+          echo "Updating world mapping..."
+          python scripts/build/build-world-mapping.py
+
       - name: Configure host settings
         run: |
           source .venv/bin/activate
@@ -766,8 +885,8 @@ jobs:
       - name: Run multiclient test
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -783,8 +902,8 @@ jobs:
         if: inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -806,7 +925,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiclient-${{ inputs.template_type }}-split-${{ matrix.split_num }}
-          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}/test-results-split-${{ matrix.split_num }}.json
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine multiclient results
@@ -840,7 +959,7 @@ jobs:
 
       - name: Combine test results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
         run: |
           mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
@@ -849,7 +968,7 @@ jobs:
 
       - name: Copy results and generate documentation
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
         run: |
           mkdir -p scripts/output/${OUTPUT_DIR}
           cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
@@ -858,7 +977,7 @@ jobs:
 
       - name: Commit and push results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -923,6 +1042,48 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
+      - name: Download and install APWorld Manager
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          echo "Installing all Stable apworlds..."
+          python scripts/install_apworlds.py --install-all
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+          # Regenerate templates for installed apworlds
+          echo "Regenerating templates..."
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          # Update world mapping to include new apworlds
+          echo "Updating world mapping..."
+          python scripts/build/build-world-mapping.py
+
       - name: Configure host settings
         run: |
           source .venv/bin/activate
@@ -961,8 +1122,8 @@ jobs:
       - name: Run multiworld test
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           RETRY_COUNT: ${{ inputs.retest_failures == 'disabled' && '0' || inputs.retest_failures == '1-time' && '1' || inputs.retest_failures == '2-times' && '2' || '3' }}
         run: |
           source .venv/bin/activate
@@ -981,7 +1142,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiworld-single-${{ inputs.template_type }}
-          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}/test-results.json
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results.json
           retention-days: 7
 
   # Combine multiworld results (single job version)
@@ -1016,7 +1177,7 @@ jobs:
 
       - name: Copy results and generate documentation
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
         run: |
           mkdir -p scripts/output/${OUTPUT_DIR}
           cp artifacts/test-results.json scripts/output/${OUTPUT_DIR}/test-results.json
@@ -1024,7 +1185,7 @@ jobs:
 
       - name: Commit and push results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -1096,6 +1257,48 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
+      - name: Download and install APWorld Manager
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          echo "Installing all Stable apworlds..."
+          python scripts/install_apworlds.py --install-all
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+          # Regenerate templates for installed apworlds
+          echo "Regenerating templates..."
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          # Update world mapping to include new apworlds
+          echo "Updating world mapping..."
+          python scripts/build/build-world-mapping.py
+
       - name: Configure host settings
         run: |
           source .venv/bin/activate
@@ -1134,8 +1337,8 @@ jobs:
       - name: Run multiworld test
         env:
           PYTHONUNBUFFERED: "1"
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           RETRY_COUNT: ${{ inputs.retest_failures == 'disabled' && '0' || inputs.retest_failures == '1-time' && '1' || inputs.retest_failures == '2-times' && '2' || '3' }}
         run: |
           source .venv/bin/activate
@@ -1156,7 +1359,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiworld-${{ inputs.template_type }}-split-${{ matrix.split_num }}
-          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}/test-results-split-${{ matrix.split_num }}.json
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine multiworld results
@@ -1190,7 +1393,7 @@ jobs:
 
       - name: Combine test results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
         run: |
           mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
@@ -1199,7 +1402,7 @@ jobs:
 
       - name: Copy results and generate documentation
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
         run: |
           mkdir -p scripts/output/${OUTPUT_DIR}
           cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
@@ -1208,7 +1411,7 @@ jobs:
 
       - name: Commit and push results
         env:
-          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -1224,362 +1427,3 @@ jobs:
             git push origin test-results-update
           fi
 
-  # Optional: Minimal Multitemplate Tests (10 parallel jobs) - DISABLED
-  test-minimal-multitemplate:
-    name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
-    runs-on: ubuntu-latest
-    needs: [setup-branch, combine-multiworld, combine-multiworld-single]
-    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
-    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success') }}
-    if: false
-    timeout-minutes: 180
-
-    strategy:
-      fail-fast: false
-      matrix:
-        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        split_total: [10]
-
-    steps:
-      - name: Checkout test-results-update branch
-        uses: actions/checkout@v4
-        with:
-          ref: test-results-update
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '~3.12.7'
-          check-latest: true
-
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
-      - name: Cache Python virtual environment
-        uses: actions/cache@v4
-        id: cache-venv
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
-
-      - name: Create virtual environment and install dependencies
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run ModuleUpdate
-        run: |
-          source .venv/bin/activate
-          python ModuleUpdate.py --yes
-
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
-      - name: Generate multitemplate configurations
-        run: |
-          source .venv/bin/activate
-          python scripts/build/generate-multitemplate-configs.py
-
-      - name: Configure host settings
-        run: |
-          source .venv/bin/activate
-          python Launcher.py --update_settings
-          python scripts/setup/update_host_settings.py minimal-spoilers
-
-      - name: Cache Node.js dependencies
-        uses: actions/cache@v4
-        id: cache-node
-        with:
-          path: node_modules
-          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Node.js dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: npm install
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        id: cache-playwright
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Playwright browsers
-        if: steps.cache-playwright.outputs.cache-hit != 'true'
-        run: |
-          source .venv/bin/activate
-          npx playwright install chromium
-
-      - name: Start HTTP server
-        run: |
-          python -m http.server 8000 &
-          sleep 2
-
-      - name: Run minimal multitemplate test
-        env:
-          PYTHONUNBUFFERED: "1"
-        run: |
-          source .venv/bin/activate
-          python scripts/test/test-all-templates.py \
-            --templates-dir Players/presets/multitemplate/alttp \
-            --multitemplate \
-            --every-nth ${{ matrix.split_total }} \
-            --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/multitemplate-minimal/test-results-split-${{ matrix.split_num }}.json \
-            --no-backup \
-            -p
-
-      - name: Upload test results for split ${{ matrix.split_num }}
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-minimal-multitemplate-split-${{ matrix.split_num }}
-          path: scripts/output/multitemplate-minimal/test-results-split-${{ matrix.split_num }}.json
-          retention-days: 7
-
-  # Combine minimal multitemplate results - DISABLED
-  combine-minimal-multitemplate:
-    name: Combine Minimal Multitemplate Results
-    runs-on: ubuntu-latest
-    needs: test-minimal-multitemplate
-    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
-    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') }}
-    if: false
-
-    steps:
-      - name: Checkout test-results-update branch
-        uses: actions/checkout@v4
-        with:
-          ref: test-results-update
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '~3.12.7'
-          check-latest: true
-
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml
-
-      - name: Download all test artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Combine test results
-        run: |
-          mkdir -p /tmp/merged-results/scripts/output/multitemplate-minimal
-          python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-minimal-multitemplate-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json
-
-      - name: Copy results and generate documentation
-        run: |
-          mkdir -p scripts/output/multitemplate-minimal
-          cp /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json \
-             scripts/output/multitemplate-minimal/test-results.json
-          python scripts/docs/generate-test-chart.py
-
-      - name: Commit and push results
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/multitemplate-minimal/test-results.json
-          git add docs/json/developer/test-results/*.md || true
-
-          if ! git diff --staged --quiet; then
-            git commit -m "Update minimal multitemplate test results (sequential workflow)
-
-            Generated by workflow run: ${{ github.run_id }}
-            "
-            git push origin test-results-update
-          fi
-
-  # Optional: Full Multitemplate Tests (10 parallel jobs) - DISABLED
-  test-full-multitemplate:
-    name: Test Full Multitemplate Split ${{ matrix.split_num }}
-    runs-on: ubuntu-latest
-    needs: [setup-branch, combine-minimal-multitemplate]
-    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
-    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success') }}
-    if: false
-    timeout-minutes: 180
-
-    strategy:
-      fail-fast: false
-      matrix:
-        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        split_total: [10]
-
-    steps:
-      - name: Checkout test-results-update branch
-        uses: actions/checkout@v4
-        with:
-          ref: test-results-update
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '~3.12.7'
-          check-latest: true
-
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
-      - name: Cache Python virtual environment
-        uses: actions/cache@v4
-        id: cache-venv
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
-
-      - name: Create virtual environment and install dependencies
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run ModuleUpdate
-        run: |
-          source .venv/bin/activate
-          python ModuleUpdate.py --yes
-
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
-      - name: Generate multitemplate configurations
-        run: |
-          source .venv/bin/activate
-          python scripts/build/generate-multitemplate-configs.py
-
-      - name: Configure host settings
-        run: |
-          source .venv/bin/activate
-          python Launcher.py --update_settings
-          python scripts/setup/update_host_settings.py full-spoilers
-
-      - name: Cache Node.js dependencies
-        uses: actions/cache@v4
-        id: cache-node
-        with:
-          path: node_modules
-          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Node.js dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: npm install
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        id: cache-playwright
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Playwright browsers
-        if: steps.cache-playwright.outputs.cache-hit != 'true'
-        run: |
-          source .venv/bin/activate
-          npx playwright install chromium
-
-      - name: Start HTTP server
-        run: |
-          python -m http.server 8000 &
-          sleep 2
-
-      - name: Run full multitemplate test
-        env:
-          PYTHONUNBUFFERED: "1"
-        run: |
-          source .venv/bin/activate
-          python scripts/test/test-all-templates.py \
-            --templates-dir Players/presets/multitemplate/alttp \
-            --multitemplate \
-            --every-nth ${{ matrix.split_total }} \
-            --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/multitemplate-full/test-results-split-${{ matrix.split_num }}.json \
-            --no-backup \
-            -p
-
-      - name: Upload test results for split ${{ matrix.split_num }}
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-full-multitemplate-split-${{ matrix.split_num }}
-          path: scripts/output/multitemplate-full/test-results-split-${{ matrix.split_num }}.json
-          retention-days: 7
-
-  # Combine full multitemplate results - DISABLED
-  combine-full-multitemplate:
-    name: Combine Full Multitemplate Results
-    runs-on: ubuntu-latest
-    needs: test-full-multitemplate
-    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
-    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') }}
-    if: false
-
-    steps:
-      - name: Checkout test-results-update branch
-        uses: actions/checkout@v4
-        with:
-          ref: test-results-update
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '~3.12.7'
-          check-latest: true
-
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml
-
-      - name: Download all test artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Combine test results
-        run: |
-          mkdir -p /tmp/merged-results/scripts/output/multitemplate-full
-          python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-full-multitemplate-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/multitemplate-full/test-results.json
-
-      - name: Copy results and generate documentation
-        run: |
-          mkdir -p scripts/output/multitemplate-full
-          cp /tmp/merged-results/scripts/output/multitemplate-full/test-results.json \
-             scripts/output/multitemplate-full/test-results.json
-          python scripts/docs/generate-test-chart.py
-
-      - name: Commit and push results
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/multitemplate-full/test-results.json
-          git add docs/json/developer/test-results/*.md || true
-
-          if ! git diff --staged --quiet; then
-            git commit -m "Update full multitemplate test results (sequential workflow)
-
-            Generated by workflow run: ${{ github.run_id }}
-            "
-            git push origin test-results-update
-          fi

@@ -8,7 +8,7 @@ from typing import Dict, Any, List, Optional
 from .utils import format_file_size, get_rules_json_size
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None, project_root=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None, project_root=None) -> str:
     """Generate a combined summary chart with all test results."""
     title_suffix = " (WorldGen)" if is_worldgen else ""
     md_content = f"# Archipelago Template Test Results Summary{title_suffix}\n\n"
@@ -364,44 +364,6 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             for rank, (game_name, size) in enumerate(logic_sizes, 1):
                 md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
 
-    # Add Multi-Template Results section if data exists
-    if multitemplate_minimal_data or multitemplate_full_data:
-        md_content += "\n## Multi-Template Test Results\n\n"
-        md_content += "These tests check multiple template configurations for the same game.\n\n"
-
-        # Collect all games with multitemplate data
-        mt_games = set()
-        if multitemplate_minimal_data:
-            mt_games.update(multitemplate_minimal_data.keys())
-        if multitemplate_full_data:
-            mt_games.update(multitemplate_full_data.keys())
-
-        md_content += "| Game Name | Minimal (Advancement Items Only) | Full (All Locations) |\n"
-        md_content += "|-----------|----------------------------------|-------------------------------|\n"
-
-        for game in sorted(mt_games):
-            # Calculate stats for minimal
-            mtmin_link = "❓ N/A"
-            if multitemplate_minimal_data and game in multitemplate_minimal_data:
-                templates = multitemplate_minimal_data[game]
-                passed = sum(1 for _, pf, *_ in templates if pf.lower() == 'passed')
-                total = len(templates)
-                mtmin_link = f"✅ {passed}/{total}" if passed == total else f"❌ {passed}/{total}"
-
-            # Calculate stats for full
-            mtfull_link = "❓ N/A"
-            if multitemplate_full_data and game in multitemplate_full_data:
-                templates = multitemplate_full_data[game]
-                passed = sum(1 for _, pf, *_ in templates if pf.lower() == 'passed')
-                total = len(templates)
-                mtfull_link = f"✅ {passed}/{total}" if passed == total else f"❌ {passed}/{total}"
-
-            md_content += f"| {game} | {mtmin_link} | {mtfull_link} |\n"
-
-        md_content += "\nView detailed results:\n"
-        md_content += "- [Multi-Template Minimal](./test-results-multitemplate-minimal.md)\n"
-        md_content += "- [Multi-Template Full](./test-results-multitemplate-full.md)\n"
-
     # Add UT Comparison section links if data exists (only for original, not worldgen)
     if not is_worldgen and (has_ut_random or has_ut_fixed):
         md_content += "\n## Universal Tracker Comparison\n\n"
@@ -410,6 +372,14 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             md_content += "- [UT Comparison - Random Seed](./test-results-ut-comparison-random-seed.md)\n"
         if has_ut_fixed:
             md_content += "- [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)\n"
+
+    # Add UT Fuzz Test section (only for original, not worldgen)
+    if not is_worldgen:
+        md_content += "\n## Universal Tracker Fuzz Tests\n\n"
+        md_content += "These tests validate Universal Tracker compatibility across random option configurations.\n\n"
+        md_content += "- [UT Fuzz Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)\n"
+        md_content += "- [UT Fuzz Results - Original](./test-results-ut-fuzz-original.md)\n"
+        md_content += "- [UT Fuzz Results - Modified](./test-results-ut-fuzz-modified.md)\n"
 
     # Add Excluded Templates section if data exists
     if excluded_games:

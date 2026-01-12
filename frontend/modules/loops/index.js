@@ -102,6 +102,19 @@ export function register(registrationApi) {
     LoopUI // Pass the class constructor directly
   );
 
+  // Register public functions for external access (e.g., tests)
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getLoopState', () => {
+    return loopStateSingleton;
+  });
+
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getPlayerStateAPI', () => {
+    return _playerStateAPI;
+  });
+
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getLoopsModuleDispatcher', () => {
+    return moduleDispatcher;
+  });
+
   // Register Loops settings schema snippet
   registrationApi.registerSettingsSchema({
     type: 'object',

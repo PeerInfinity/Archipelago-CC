@@ -206,7 +206,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         result['generation']['note'] = 'Skipped in test-only mode'
 
     # Check if rules file exists (files are actually in frontend/presets/)
-    # Use world_directory from world_info if available (for multitemplate mode),
+    # Use world_directory from world_info if available,
     # otherwise fall back to game_name_from_filename
     preset_dir = world_info.get('world_directory', game_name_from_filename) if world_info else game_name_from_filename
     rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"

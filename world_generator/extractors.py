@@ -61,6 +61,7 @@ class ItemData:
     max_count: int = 1
     is_event: bool = False
     hint_text: Optional[str] = None  # Display name if different from name
+    classification_counts: Optional[Dict[str, int]] = None  # Per-classification counts for mixed items
 
 
 @dataclass
@@ -382,6 +383,7 @@ def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict
             max_count=item_info.get('max_count', 1),
             is_event=is_event,
             hint_text=hint_text,
+            classification_counts=item_info.get('classification_counts'),
         )
 
         # Build item_name_groups mapping
@@ -722,7 +724,9 @@ def compute_state_counter_accumulator_rules(
             if item_name.endswith(suffix) and item_name != counter_name:
                 try:
                     parts = item_name.split()
-                    if len(parts) >= 2 and parts[-1] == suffix:
+                    # Handle multi-word suffixes like "coins freemium"
+                    # Check if the remaining parts after the number match the suffix
+                    if len(parts) >= 2 and ' '.join(parts[1:]) == suffix:
                         int(parts[0])  # Verify it's a number
                         has_matching_items = True
                         break
@@ -735,7 +739,9 @@ def compute_state_counter_accumulator_rules(
                 if item_name.endswith(suffix) and item_name != counter_name:
                     try:
                         parts = item_name.split()
-                        if len(parts) >= 2 and parts[-1] == suffix:
+                        # Handle multi-word suffixes like "coins freemium"
+                        # Check if the remaining parts after the number match the suffix
+                        if len(parts) >= 2 and ' '.join(parts[1:]) == suffix:
                             int(parts[0])  # Verify it's a number
                             has_matching_items = True
                             break

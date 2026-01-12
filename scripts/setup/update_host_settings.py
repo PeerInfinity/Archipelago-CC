@@ -16,6 +16,8 @@ BOOLEAN_SETTINGS = [
     'extend_sphere_log_to_all_locations',
     'log_fractional_sphere_details',
     'log_integer_sphere_details',
+    'auto_collect_events',
+    'filter_event_items',
     'update_frontend_presets',
 ]
 
@@ -35,6 +37,8 @@ PRESETS = {
         'extend_sphere_log_to_all_locations': False,
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
         'update_frontend_presets': False,
     },
     'minimal-spoilers': {
@@ -47,6 +51,8 @@ PRESETS = {
         'extend_sphere_log_to_all_locations': False,
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
         'update_frontend_presets': True,
     },
     'full-spoilers': {
@@ -59,6 +65,22 @@ PRESETS = {
         'extend_sphere_log_to_all_locations': True,
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
+        'update_frontend_presets': True,
+    },
+    'ut-comparison': {
+        'skip_required_files': True,
+        'save_rules_json': True,
+        'rules_json_format': 'rule_builder',
+        'skip_preset_copy_if_rules_identical': False,
+        'save_sphere_log': True,
+        'verbose_sphere_log': False,
+        'extend_sphere_log_to_all_locations': False,
+        'log_fractional_sphere_details': True,
+        'log_integer_sphere_details': False,
+        'auto_collect_events': True,  # Enable event auto-collection to match UT behavior
+        'filter_event_items': True,  # Filter out event locations/items to match UT output
         'update_frontend_presets': True,
     },
 }

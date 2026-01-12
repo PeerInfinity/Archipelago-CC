@@ -146,6 +146,65 @@ function getRegionDiff(pythonRegions, utRegions) {
 }
 
 /**
+ * Check if two item names are alternate versions of the same progressive item.
+ * E.g., "Progressive Bow" and "Progressive Bow (Alt)" are alternates.
+ * @param {string} item1 - First item name
+ * @param {string} item2 - Second item name
+ * @returns {boolean} True if the items are alternate versions of each other
+ */
+function areProgressiveItemAlternates(item1, item2) {
+  // Check if one is a base name and the other has a suffix like (Alt), (Left), (Right), etc.
+  const suffixPattern = /^(.+?)\s*\((Alt|Left|Right|Upper|Lower|\d+)\)$/i;
+
+  const match1 = item1.match(suffixPattern);
+  const match2 = item2.match(suffixPattern);
+
+  // If item1 has suffix and item2 is the base name
+  if (match1 && match1[1] === item2) return true;
+  // If item2 has suffix and item1 is the base name
+  if (match2 && match2[1] === item1) return true;
+  // If both have suffixes but same base name
+  if (match1 && match2 && match1[1] === match2[1]) return true;
+
+  return false;
+}
+
+/**
+ * Remove matched progressive item alternates from missing/extra diffs.
+ * If "Progressive Bow" is missing with count 1 and "Progressive Bow (Alt)" is extra with count 1,
+ * they cancel each other out.
+ * @param {Object} diff - Object with missing and extra properties
+ */
+function reconcileProgressiveItemAlternates(diff) {
+  const missingItems = Object.keys(diff.missing);
+  const extraItems = Object.keys(diff.extra);
+
+  for (const missingItem of missingItems) {
+    for (const extraItem of extraItems) {
+      if (areProgressiveItemAlternates(missingItem, extraItem)) {
+        const missingCount = diff.missing[missingItem];
+        const extraCount = diff.extra[extraItem];
+
+        if (missingCount === extraCount) {
+          // Same count - they match, remove both
+          delete diff.missing[missingItem];
+          delete diff.extra[extraItem];
+        } else if (missingCount < extraCount) {
+          // More extra than missing - reduce extra, remove missing
+          diff.extra[extraItem] = extraCount - missingCount;
+          delete diff.missing[missingItem];
+        } else {
+          // More missing than extra - reduce missing, remove extra
+          diff.missing[missingItem] = missingCount - extraCount;
+          delete diff.extra[extraItem];
+        }
+        break; // Move to next missing item
+      }
+    }
+  }
+}
+
+/**
  * Compare inventory between Python and UT logs.
  * @param {Object} pythonInventory - Inventory from Python log
  * @param {Object} utInventory - Inventory from UT log
@@ -189,6 +248,9 @@ function getInventoryDiff(pythonInventory, utInventory, ignoreItems = null) {
     }
   }
 
+  // Reconcile progressive item alternates (e.g., "Progressive Bow" vs "Progressive Bow (Alt)")
+  reconcileProgressiveItemAlternates(baseItemsDiff);
+
   // Compare resolved_items
   for (const [item, count] of Object.entries(pythonResolved)) {
     if (ignoreItems && ignoreItems.has(item)) continue;
@@ -205,17 +267,28 @@ function getInventoryDiff(pythonInventory, utInventory, ignoreItems = null) {
     }
   }
 
-  const match = Object.keys(baseItemsDiff.missing).length === 0 &&
-                Object.keys(baseItemsDiff.extra).length === 0 &&
-                Object.keys(baseItemsDiff.mismatch).length === 0 &&
-                Object.keys(resolvedItemsDiff.missing).length === 0 &&
-                Object.keys(resolvedItemsDiff.extra).length === 0 &&
-                Object.keys(resolvedItemsDiff.mismatch).length === 0;
+  // Reconcile progressive item alternates in resolved items too
+  reconcileProgressiveItemAlternates(resolvedItemsDiff);
+
+  const baseItemsMatch = Object.keys(baseItemsDiff.missing).length === 0 &&
+                         Object.keys(baseItemsDiff.extra).length === 0 &&
+                         Object.keys(baseItemsDiff.mismatch).length === 0;
+
+  const resolvedItemsMatch = Object.keys(resolvedItemsDiff.missing).length === 0 &&
+                             Object.keys(resolvedItemsDiff.extra).length === 0 &&
+                             Object.keys(resolvedItemsDiff.mismatch).length === 0;
+
+  // Match if EITHER base_items OR resolved_items match.
+  // This handles the case where Python resolves progressive items (e.g., "Progressive Sword" -> "Fighter Sword")
+  // but UT reports the base name. Both representations are valid.
+  const match = baseItemsMatch || resolvedItemsMatch;
 
   return {
     base_items: baseItemsDiff,
     resolved_items: resolvedItemsDiff,
-    match
+    match,
+    base_items_match: baseItemsMatch,
+    resolved_items_match: resolvedItemsMatch
   };
 }
 

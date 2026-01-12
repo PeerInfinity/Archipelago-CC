@@ -284,6 +284,10 @@ def get_random_value(name, option):
         if not valid_choices:
             valid_choices = list(option.options.keys())
 
+        # Handle TextChoice and other Choice subclasses with no predefined options
+        if not valid_choices:
+            return option.default
+
         return random.choice(valid_choices)
 
     if issubclass(option, Range):
@@ -327,6 +331,15 @@ def get_random_value(name, option):
 def call_generate(yaml_path, args, output_path):
     from settings import get_settings
 
+    # Clear any cached state from previous generations
+    # Some worlds (like Landstalker) use class-level caches that persist
+    # across generations and can cause issues with stale player IDs
+    try:
+        from worlds.landstalker import LandstalkerWorld
+        LandstalkerWorld.cached_spheres = []
+    except ImportError:
+        pass
+
     settings = get_settings()
 
     args = Namespace(
@@ -359,6 +372,11 @@ def call_generate(yaml_path, args, output_path):
 
 def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
     global MP_HOOKS
+
+    # Seed random for reproducibility if seed is provided
+    # Use seed + iteration to ensure each worker gets a unique but deterministic seed
+    if args.seed is not None:
+        random.seed(args.seed + i)
 
     out_buf = StringIO()
 
@@ -727,6 +745,11 @@ if __name__ == "__main__":
         timeout_handler.start()
 
         while i < args.runs:
+            # Seed random for this iteration if seed is provided
+            # This ensures YAML generation in main process is deterministic
+            if args.seed is not None:
+                random.seed(args.seed + i)
+
             if apworld_name is None:
                 actual_apworld = random.choice(valid_worlds)
             else:
@@ -787,6 +810,7 @@ if __name__ == "__main__":
     parser.add_argument("--with-static-worlds", default=None)
     parser.add_argument("--hook", action="append", default=[])
     parser.add_argument("--skip-output", default=False, action="store_true")
+    parser.add_argument("--seed", default=None, type=int, help="Random seed for reproducible fuzzing")
 
     args = parser.parse_args()
 

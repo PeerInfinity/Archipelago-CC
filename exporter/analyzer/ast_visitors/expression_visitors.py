@@ -233,6 +233,13 @@ class ExpressionVisitorMixin:
                     list_value = list(value) if isinstance(value, tuple) else value
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
+                # Handle set/frozenset values - resolve to constant for 'in' / 'not in' comparisons
+                # This enables proper evaluation of patterns like: "item" not in randomized_items
+                elif isinstance(value, (set, frozenset)):
+                    # Convert to sorted list for JSON serialization and deterministic ordering
+                    list_value = sorted(value, key=lambda x: str(x))
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant set (as list): {list_value}")
+                    return {'type': 'constant', 'value': list_value}
                 # Handle dict values - resolve to constant for subscript access and .items() iteration
                 elif isinstance(value, dict):
                     # Convert dict to JSON-serializable format
@@ -597,11 +604,26 @@ class ExpressionVisitorMixin:
             if resolved_container is not None and resolved_index is not None:
                 try:
                     # Try to perform the subscript operation
-                    if isinstance(resolved_container, (dict, list, tuple)):
+                    if isinstance(resolved_container, dict):
+                        # For dictionaries, handle the case where keys may have been stringified
+                        # for JSON serialization (e.g., {0: val} -> {"0": val})
+                        if resolved_index in resolved_container:
+                            subscript_result = resolved_container[resolved_index]
+                        elif isinstance(resolved_index, int) and str(resolved_index) in resolved_container:
+                            # Fallback: try string version of integer key
+                            subscript_result = resolved_container[str(resolved_index)]
+                            logging.debug(f"Used stringified key '{resolved_index}' -> '{str(resolved_index)}' for dict subscript")
+                        else:
+                            raise KeyError(resolved_index)
+                        logging.debug(f"Successfully resolved subscript operation: dict[{resolved_index}] = {subscript_result}")
+                    elif isinstance(resolved_container, (list, tuple)):
                         subscript_result = resolved_container[resolved_index]
                         logging.debug(f"Successfully resolved subscript operation: {type(resolved_container).__name__}[{resolved_index}] = {subscript_result}")
+                    else:
+                        subscript_result = None
 
-                        # Return as a constant if it's a simple value
+                    # Return as a constant if it's a simple value
+                    if subscript_result is not None:
                         if isinstance(subscript_result, (int, float, str, bool, type(None))):
                             return {'type': 'constant', 'value': subscript_result}
                         # Handle enum values

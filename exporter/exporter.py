@@ -17,7 +17,7 @@ from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB_BASE, MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
 from .profiling import profiler, auto_enable_from_env
 from BaseClasses import ItemClassification
 
@@ -919,6 +919,12 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             try:
                 helper_definitions = game_handler.get_helper_definitions(world)
                 if helper_definitions:
+                    # Allow game handlers to post-process helper definitions
+                    if hasattr(game_handler, 'postprocess_helper'):
+                        for helper_name in list(helper_definitions.keys()):
+                            helper_definitions[helper_name] = game_handler.postprocess_helper(
+                                helper_name, helper_definitions[helper_name]
+                            )
                     export_data['helpers'][player_str] = helper_definitions
                     logger.debug(f"Exported {len(helper_definitions)} helper definitions for player {player}")
             except Exception as e:
@@ -1736,12 +1742,18 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         serializable_data = stringify_keys(regions_data)
                         current_size = len(json.dumps(serializable_data, default=str))
                         current_size_mb = current_size / (1024 * 1024)
-                        if current_size_mb > MAX_EXPORT_SIZE_MB:
+                        # Dynamic limit: 10 MB base + 1 MB per additional game in multiworld
+                        num_players = getattr(multiworld, 'players', 1)
+                        max_size_mb = MAX_EXPORT_SIZE_MB_BASE + (MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+                        if current_size_mb > max_size_mb:
                             error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
-                                        f"({MAX_EXPORT_SIZE_MB} MB) after processing region '{region_name}'. "
-                                        f"This likely indicates a rule analysis loop. Aborting export.")
+                                        f"({max_size_mb} MB) after processing region '{region_name}'. "
+                                        f"This may indicate a rule analysis loop or exceptionally large game data.")
                             logger.error(error_msg)
-                            raise RuntimeError(error_msg)
+                            # Return partial data instead of raising - allow export to complete with what we have
+                            logger.warning(f"Stopping region processing for this player due to size limit. "
+                                          f"Processed {region_count} regions before limit.")
+                            return regions_data, dungeons_data
                     except (TypeError, ValueError, RecursionError) as e:
                         # If serialization fails, just log and continue
                         logger.warning(f"Could not check export size: {e}")
@@ -2005,6 +2017,43 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 placement_counts[item_name] = placement_counts.get(item_name, 0) + 1
     except Exception as e:
         logger.warning(f"Could not count starting items for player {player}: {e}")
+
+    # Count items by classification (for items with mixed classifications like Faxanadu's Red Potion)
+    # This tracks how many of each classification exist for each item type
+    classification_counts: Dict[str, Dict[str, int]] = {}
+    try:
+        # Count from placements
+        for location in multiworld.get_locations():
+            if location.item and location.item.player == player:
+                item_name = location.item.name
+                item_classification = classification_to_string(
+                    getattr(location.item, 'classification', ItemClassification.filler)
+                )
+                if item_name not in classification_counts:
+                    classification_counts[item_name] = {}
+                classification_counts[item_name][item_classification] = \
+                    classification_counts[item_name].get(item_classification, 0) + 1
+
+        # Also count starting items
+        for starting_item in multiworld.precollected_items.get(player, []):
+            if hasattr(starting_item, 'name'):
+                item_name = starting_item.name
+                item_classification = classification_to_string(
+                    getattr(starting_item, 'classification', ItemClassification.filler)
+                )
+                if item_name not in classification_counts:
+                    classification_counts[item_name] = {}
+                classification_counts[item_name][item_classification] = \
+                    classification_counts[item_name].get(item_classification, 0) + 1
+
+        # Add classification_counts to items that have mixed classifications
+        # (i.e., more than one classification type with non-zero count)
+        for item_name, counts in classification_counts.items():
+            if item_name in items_data and len(counts) > 1:
+                # Item has mixed classifications - add the counts
+                items_data[item_name]['classification_counts'] = counts
+    except Exception as e:
+        logger.warning(f"Could not count item classifications for player {player}: {e}")
 
     # Update max_count based on actual placements (use max of current max_count and placements)
     for item_name, item_data in items_data.items():

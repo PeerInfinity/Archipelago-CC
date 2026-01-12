@@ -483,14 +483,62 @@ class ASTToRuleBuilder:
 
         elif method == 'can_reach':
             # can_reach state method
+            # Handle Location/Region/Entrance objects passed directly (without type hint)
             name = get_arg_value(0, '')
-            reach_type = get_arg_value(1, 'Region')
+            reach_type = get_arg_value(1, None)  # None means not specified
+
+            # Check for _object_type marker from comprehension substitution
+            # This is set when Location/Region/Entrance objects are substituted in comprehensions
+            first_arg = args[0] if args else {}
+            object_type = first_arg.get('_object_type') if isinstance(first_arg, dict) else None
+
+            # Debug logging to trace Location/Region/Entrance object handling
+            if object_type:
+                logger.debug(f"can_reach handler: detected object_type={object_type} for name={name}")
+
+            # If reach_type is explicitly specified, use it
             if reach_type == 'Location':
+                # Extract name if it's a Location object
+                if hasattr(name, 'name') and isinstance(name.name, str):
+                    name = name.name
                 return self._make_rule('CanReachLocation', {'location_name': name})
             elif reach_type == 'Entrance':
+                # Extract name if it's an Entrance object
+                if hasattr(name, 'name') and isinstance(name.name, str):
+                    name = name.name
                 return self._make_rule('CanReachEntrance', {'entrance_name': name})
-            else:
+            elif reach_type == 'Region':
+                # Extract name if it's a Region object
+                if hasattr(name, 'name') and isinstance(name.name, str):
+                    name = name.name
                 return self._make_rule('CanReachRegion', {'region_name': name})
+
+            # Check for _object_type marker (set during comprehension expansion)
+            if object_type == 'Location':
+                return self._make_rule('CanReachLocation', {'location_name': name})
+            elif object_type == 'Entrance':
+                return self._make_rule('CanReachEntrance', {'entrance_name': name})
+            elif object_type == 'Region':
+                return self._make_rule('CanReachRegion', {'region_name': name})
+
+            # No explicit type - infer from object type
+            # Check if name is a Location object (has parent_region but not entrances)
+            if hasattr(name, 'parent_region') and not hasattr(name, 'entrances'):
+                location_name = name.name if hasattr(name, 'name') else str(name)
+                return self._make_rule('CanReachLocation', {'location_name': location_name})
+
+            # Check if name is an Entrance object (has 'connected_region' and 'parent_region')
+            if hasattr(name, 'connected_region') and hasattr(name, 'parent_region'):
+                entrance_name = name.name if hasattr(name, 'name') else str(name)
+                return self._make_rule('CanReachEntrance', {'entrance_name': entrance_name})
+
+            # Check if name is a Region object (has entrances)
+            if hasattr(name, 'entrances'):
+                region_name = name.name if hasattr(name, 'name') else str(name)
+                return self._make_rule('CanReachRegion', {'region_name': region_name})
+
+            # Default: treat as region name (string or unknown)
+            return self._make_rule('CanReachRegion', {'region_name': name})
 
         elif method == 'can_reach_region':
             # can_reach_region state method (direct region name)

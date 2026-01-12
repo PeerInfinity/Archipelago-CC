@@ -1,7 +1,10 @@
 """Yoshi's Island game-specific export handler."""
 
-from typing import Any, Callable, Dict
+import logging
+from typing import Any, Callable, Dict, Optional
 from .generic import GenericGameExportHandler
+
+logger = logging.getLogger(__name__)
 
 
 # Default boss order when world.boss_order is not set
@@ -62,6 +65,57 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         'bowserdoor_2',
         'bowserdoor_3',
         'bowserdoor_4',
+        # Level-specific helpers (used for boss access, castle clears, etc.)
+        '_68Route',
+        '_68CollectibleRoute',
+        '_68Clear',
+        '_13Game',
+        '_14Clear',
+        '_14Boss',
+        '_14CanFightBoss',
+        '_17Game',
+        '_18Clear',
+        '_18Boss',
+        '_18CanFightBoss',
+        '_21Game',
+        '_23Game',
+        '_24Clear',
+        '_24Boss',
+        '_24CanFightBoss',
+        '_26Game',
+        '_27Game',
+        '_28Clear',
+        '_28Boss',
+        '_28CanFightBoss',
+        '_32Game',
+        '_34Clear',
+        '_34Boss',
+        '_34CanFightBoss',
+        '_37Game',
+        '_38Clear',
+        '_38Boss',
+        '_38CanFightBoss',
+        '_42Game',
+        '_44Clear',
+        '_44Boss',
+        '_44CanFightBoss',
+        '_46Game',
+        '_47Game',
+        '_48Clear',
+        '_48Boss',
+        '_48CanFightBoss',
+        '_51Game',
+        '_54Clear',
+        '_54Boss',
+        '_54CanFightBoss',
+        '_58Clear',
+        '_58Boss',
+        '_58CanFightBoss',
+        '_61Game',
+        '_64Clear',
+        '_64Boss',
+        '_64CanFightBoss',
+        '_67Game',
     }
 
     # Computed world attributes needed by helpers
@@ -96,3 +150,86 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         # boss_unlock: castle_clear_condition option value
         'boss_unlock': lambda w, m, p: _get_option(w, 'castle_clear_condition', 0),
     }
+
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+        """Expand rules with game-specific handling for boss_order subscripts.
+
+        Resolves patterns like self.boss_order[6] to the actual boss room name
+        at export time. This is necessary because boss_order is shuffled per-seed
+        and the worldgen world doesn't have access to the original boss_order.
+
+        Also simplifies conditionals where if_true is True and if_false is None,
+        converting them to just the test expression. This fixes the _*CanFightBoss
+        pattern which would otherwise be interpreted as always True.
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # Handle subscript on self.boss_order -> resolve to actual boss room name
+        if rule.get('type') == 'subscript':
+            value = rule.get('value', {})
+            index_node = rule.get('index', {})
+
+            # Check if this is self.boss_order[constant_index]
+            if (value.get('type') == 'attribute' and
+                value.get('attr') == 'boss_order' and
+                value.get('object', {}).get('type') == 'name' and
+                value.get('object', {}).get('name') == 'self' and
+                index_node.get('type') == 'constant'):
+
+                index = index_node.get('value')
+                if isinstance(index, int):
+                    # Get the boss_order from the world
+                    boss_order = self._get_boss_order()
+                    if boss_order and 0 <= index < len(boss_order):
+                        boss_room = boss_order[index]
+                        logger.debug(f"Resolved self.boss_order[{index}] to '{boss_room}'")
+                        return {'type': 'constant', 'value': boss_room}
+                    else:
+                        logger.warning(f"boss_order index {index} out of range (len={len(boss_order) if boss_order else 0})")
+
+        # Simplify conditionals where if_true=True and if_false=None
+        # Pattern: {test: X, if_true: True, if_false: None} -> just X
+        # This fixes the _*CanFightBoss pattern which is:
+        #   if can_reach(boss_room): return True
+        # Without explicit else, Python returns None. The world_generator
+        # interprets if_false=None as "else True", making the rule always pass.
+        # We simplify to just the test expression, which correctly fails when
+        # the can_reach check fails.
+        if rule.get('type') == 'conditional':
+            if_true = rule.get('if_true', {})
+            if_false = rule.get('if_false')
+
+            # Check if this is the pattern: if_true=True, if_false=None
+            is_if_true_just_true = (
+                isinstance(if_true, dict) and
+                if_true.get('type') == 'constant' and
+                if_true.get('value') is True
+            )
+            is_if_false_none = if_false is None
+
+            if is_if_true_just_true and is_if_false_none:
+                # Simplify to just the test - this makes the rule behave correctly:
+                # - If test passes, it's truthy
+                # - If test fails, it's falsy
+                test = rule.get('test', {})
+                logger.debug(f"Simplified conditional (if_true=True, if_false=None) to just the test: {test.get('type', 'unknown')}")
+                return self.expand_rule(test, _depth)
+
+        # Call parent expand_rule first to handle recursive expansion
+        result = super().expand_rule(rule, _depth)
+
+        # NOTE: We do NOT convert can_reach(boss_room, 'Location') to 'Region'
+        # Boss room locations have access rules (_*Boss functions) that check for
+        # items required to defeat the boss. With boss shuffle, the boss room
+        # location keeps its original access rule even when accessed from a
+        # different level. So can_reach('Location') correctly checks both
+        # region accessibility AND the boss fight requirements.
+
+        return result
+
+    def _get_boss_order(self) -> Optional[list]:
+        """Get the boss_order from the world, falling back to default if not available."""
+        if self.world and hasattr(self.world, 'boss_order') and self.world.boss_order:
+            return list(self.world.boss_order)
+        return DEFAULT_BOSS_ORDER

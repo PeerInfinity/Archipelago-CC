@@ -679,3 +679,221 @@ Either:
 1. Fix the world generator to produce identical rules.json output, OR
 2. Add the difference to the ignore list if it's expected/acceptable
 """
+
+
+def generate_ut_fuzz_failure_prompt(game_name, template_file, world_dir, ut_fuzz_info, world_mapping, seed=1):
+    """Generate a prompt for debugging UT fuzz failures on games that pass canonical worldgen.
+
+    These failures occur when:
+    - The game passes all canonical worldgen tests (seed=1 with default options)
+    - But UT fuzz testing reveals logic mismatches under random option configurations
+
+    This indicates that:
+    - The core rules export/import is working correctly
+    - But certain option combinations cause rule evaluation differences between
+      the original Python world and the worldgen-based tracker
+    """
+    setup_doc = "CC/cloud-setup.md"
+    fuzz_doc = "CC/docs/fuzzer-testing.md"
+
+    # Extract stats
+    total = ut_fuzz_info.get('total', 0)
+    success = ut_fuzz_info.get('success', 0)
+    failure = ut_fuzz_info.get('failure', 0)
+    timeout = ut_fuzz_info.get('timeout', 0)
+    success_rate = ut_fuzz_info.get('success_rate', 0)
+    error_types = ut_fuzz_info.get('error_types', [])
+    error_runs = ut_fuzz_info.get('error_runs', {})
+
+    # Format error runs for display
+    error_runs_text = ""
+    for error_type, runs in error_runs.items():
+        run_list = ', '.join(str(r) for r in runs[:10])
+        if len(runs) > 10:
+            run_list += f', ... ({len(runs)} total)'
+        error_runs_text += f"  - {error_type or 'Logic mismatch'}: runs [{run_list}]\n"
+
+    # Build error type guidance
+    error_guidance = ""
+    if 'None' in error_types:
+        error_guidance = """
+## Error Analysis: Logic Mismatch
+
+The most common UT fuzz failure type is **logic mismatch** (error type: `None`).
+This means the Universal Tracker and the server disagree about which locations are accessible.
+
+**Common causes:**
+1. **Option-dependent rules**: Rules that behave differently based on game options
+2. **Dynamic state**: Rules involving inventory counts or item combinations
+3. **Progressive items**: Progressive item tiers evaluated differently
+4. **Item groups**: Group membership evaluated inconsistently
+5. **Helper function logic**: Helper functions with option-dependent branches
+
+**Investigation approach:**
+1. Find which options combination causes the failure
+2. Compare rule evaluation in UT vs server for a specific location
+3. Check if the rule or helper needs option-aware adjustments
+"""
+    else:
+        error_guidance = f"""
+## Error Analysis: Exception Errors
+
+The UT fuzz test encountered Python exceptions: {', '.join(error_types)}
+
+This typically means:
+1. Missing helper functions under certain option configurations
+2. Type errors in rule evaluation
+3. Key errors when looking up option-dependent data
+"""
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {fuzz_doc} for background on UT fuzzer testing.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `worlds/{world_dir}/`
+
+## The Problem
+
+This game **passes canonical worldgen testing** (all 5 stages with seed=1 and default options),
+but **fails UT fuzz testing** which tests random option configurations.
+
+### UT Fuzz Test Results
+
+- **Total runs**: {total}
+- **Success**: {success} ({success_rate:.1f}%)
+- **Failures**: {failure}
+- **Timeouts**: {timeout}
+
+**Failing runs by error type:**
+{error_runs_text}
+{error_guidance}
+
+## Investigation Steps
+
+### 1. Reproduce a failing configuration
+
+Pick a specific failing run number from the error list above and reproduce it:
+
+```bash
+source .venv/bin/activate
+
+# Run the fuzzer with a specific seed to reproduce a failure
+# The run number becomes the seed for the random option generator
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+```
+
+For example, to reproduce run 2:
+```bash
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed 2
+```
+
+### 2. Check the failure log
+
+Look at the generated log file for the failed run:
+
+```bash
+cat fuzz_output/error/{world_dir}/0/0.log
+```
+
+The log shows:
+- The YAML options used for this run
+- Which locations disagree between UT and server
+- "Locations X were in server logic but not expected in UT" (or vice versa)
+
+### 3. Check the YAML configuration
+
+```bash
+cat fuzz_output/error/{world_dir}/0/0.yaml
+```
+
+This shows the exact option values that caused the failure.
+
+### 4. Compare rule evaluation
+
+Once you identify a disagreeing location, check how its rule is evaluated:
+
+```bash
+# Find the location's rule in the original rules.json
+python -c "
+import json
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+
+loc_name = 'LOCATION_NAME_HERE'  # Replace with actual location
+regions = data.get('regions', {{}}).get('1', {{}})
+for region_name, region in regions.items():
+    for loc in region.get('locations', []):
+        if loc.get('name') == loc_name:
+            print(f'Region: {{region_name}}')
+            print(f'Rule: {{json.dumps(loc.get(\"rule\"), indent=2)}}')
+            break
+"
+```
+
+### 5. Check option-dependent helpers
+
+If the rule uses helper functions, check if they have option-dependent behavior:
+
+```bash
+# Search for option checks in helpers
+grep -n "options\\|self\\.multiworld" worlds/{world_dir}/Rules.py | head -30
+```
+
+## Common Fixes
+
+### Option-dependent rules not exported
+
+If a rule behaves differently based on options, ensure the exporter handles all cases:
+
+```python
+# In exporter/games/{world_dir}.py (if it exists)
+# Check if option-specific logic is being exported
+```
+
+### Helper function with unhandled options
+
+If a helper has option branches, you may need to:
+1. Export the helper with option parameters
+2. Ensure the helper is correctly evaluated in the tracker
+
+### Progressive item handling
+
+If progressive items are involved, check:
+```bash
+grep -n "Progressive" worlds/{world_dir}/Rules.py
+grep -n "progressive" frontend/presets/{world_dir}/AP_*/AP_*_rules.json | head -10
+```
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Single fuzzer run (specific seed to reproduce)
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+
+# Multiple runs to check success rate
+python fuzz.py -r 10 -j 4 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+
+# Full test via the test runner
+python scripts/test/test-all-ut-fuzz.py --runs 10 --include-list "{template_file}"
+```
+
+## Goal
+
+Fix the rule export/evaluation so that UT fuzz testing passes (or has a significantly higher success rate).
+
+The rules must produce the **same accessibility determinations** regardless of which option combinations are used.
+
+## Reference Files
+
+- `worlds/{world_dir}/Rules.py` - Original rule definitions
+- `worlds/{world_dir}/Options.py` - Game options that affect rules
+- `exporter/exporter.py` - Rules export logic
+- `exporter/games/{world_dir}.py` - Game-specific exporter (if exists)
+- `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
+"""
