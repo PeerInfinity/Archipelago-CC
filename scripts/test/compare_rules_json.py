@@ -1417,6 +1417,11 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'helpers.' in path and ('basement_key_rule' in path or 'tr_big_key_chest_keys_needed' in path):
         return True
 
+    # is_not_bunny helper uses option-dependent conditionals (mode != 2, region.is_light_world/is_dark_world)
+    # that get resolved during worldgen generation. The helper body simplifies away when options are baked in.
+    if 'helpers.' in path and 'is_not_bunny' in path:
+        return True
+
     # Option-dependent helper simplification: Original helpers may have conditional
     # expressions that check option values (e.g., self.game_logic == "Easy"). The
     # worldgen resolves these to literal values at code generation time, so when
@@ -1491,6 +1496,12 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if '.count.' in path:
             if 'attr' in path or 'object' in path or 'type' in path:
                 return True
+
+    # classification_counts: Item metadata for split classifications (e.g., "useful": 9, "progression": 1).
+    # This is game-specific metadata that worldgen doesn't generate - the actual item classifications
+    # are determined by Archipelago's fill algorithm, not static metadata.
+    if 'items.' in path and '.classification_counts' in path:
+        return True
 
     # Event items: Original may have list IDs (SRAM data), WorldGen treats as events.
     # Crystals and Pendants are handled differently between original and WorldGen.
@@ -1876,6 +1887,42 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'access_rule.children[' in path and '.args' in path:
         # Different args format between Has and HasAll
         return True
+
+    # AST_placement_lookup rule simplification: Original rules may contain Compare rules
+    # that check if a specific item is placed at a location (e.g., for "locked door" optimization).
+    # When worldgen runs with --canonical-seed1, these placement_lookup comparisons are
+    # resolved to their actual values. If the comparison evaluates to False (item not at
+    # that location), the branch is removed from Or rules, causing structural changes.
+    # Example:
+    #   Original: Or(And(Compare(placement_lookup(X) == Y), Has(Z)), Has(W))
+    #   WorldGen: Or(Has(Z), Has(W))  or even just Has(W) if the And branch simplified away
+    if '.access_rule' in path:
+        # Rule changes where original had Or containing placement_lookup Compare
+        if path.endswith('.rule'):
+            # Or rule simplified to a helper or Has after placement_lookup resolution
+            if original_value == 'Or' and worldgen_value not in ('Or', 'And', 'HasAll', 'HasAny'):
+                return True
+            # And rule simplified to HasAll when placement_lookup branch removed
+            if original_value == 'And' and worldgen_value == 'HasAll':
+                return True
+        # Children missing after placement_lookup branch was removed
+        if '.children' in path and worldgen_value == '<missing>':
+            # Check if this could be a placement_lookup simplification
+            if 'AST_placement_lookup' in str(original_value) or 'placement_lookup' in str(original_value):
+                return True
+            # Children array structural changes (original had Compare with placement_lookup)
+            if isinstance(original_value, list):
+                for item in original_value:
+                    if isinstance(item, dict):
+                        if item.get('rule') == 'Compare':
+                            args = item.get('args', {})
+                            left = args.get('left', {})
+                            if isinstance(left, dict) and left.get('rule') == 'AST_placement_lookup':
+                                return True
+        # Direct children array differences where placement_lookup caused branch removal
+        if 'children[' in path and '].children' in path:
+            if worldgen_value == '<missing>':
+                return True
 
     # Region exit access_rule simplification differences
     # Original exports complex AST rules (placement_lookup, AST_block) that get

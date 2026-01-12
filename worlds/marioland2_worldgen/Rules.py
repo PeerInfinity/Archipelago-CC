@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasFromListUnique, HelperCall, Not, Or
+from rule_builder import True_, False_, And, False_, Has, HasAny, HasFromListUnique, HelperCall, Not, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -41,10 +41,7 @@ def hippo_zone_normal_or_secret_exit(state: "CollectionState", player: int) -> b
 
 
 def is_auto_scroll(state: "CollectionState", player: int, level = None) -> bool:
-    level_id = {'Mushroom Zone': 0, 'Scenic Course': 25, 'Tree Zone 1': 1, 'Tree Zone 2': 2, 'Tree Zone 3': 4, 'Tree Zone 4': 3, 'Tree Zone 5': 5, 'Tree Zone Secret Course': 29, 'Hippo Zone': 17, 'Space Zone 1': 18, 'Space Zone Secret Course': 28, 'Space Zone 2': 19, 'Macro Zone 1': 20, 'Macro Zone 2': 21, 'Macro Zone 3': 22, 'Macro Zone 4': 23, 'Macro Zone Secret Course': 30, 'Pumpkin Zone 1': 6, 'Pumpkin Zone 2': 7, 'Pumpkin Zone 3': 8, 'Pumpkin Zone 4': 9, 'Pumpkin Zone Secret Course 1': 27, 'Pumpkin Zone Secret Course 2': 31, 'Mario Zone 1': 10, 'Mario Zone 2': 11, 'Mario Zone 3': 12, 'Mario Zone 4': 13, 'Turtle Zone 1': 14, 'Turtle Zone 2': 15, 'Turtle Zone 3': 16, 'Turtle Zone Secret Course': 26, "Mario's Castle": 24}[level]
-    if state.has_any(('Cancel Auto Scroll', f"Cancel Auto Scroll - {level}"), player):
-        return False
-    return (state.multiworld.worlds[player].auto_scroll_levels[level_id] > 0)
+    return False
 
 
 def macro_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
@@ -96,14 +93,7 @@ def marios_castle_wario(state: "CollectionState", player: int) -> bool:
 
 
 def not_blocked_by_sharks(state: "CollectionState", player: int) -> bool:
-    sharks = tuple([state.multiworld.worlds[player].sprite_data['Turtle Zone 1'][i]['sprite'] for i in (27, 28)]).count('Shark')
-    if (state.has('Carrot', player)) or (not (sharks)):
-        return True
-    if (sharks == 2):
-        return state.has_all(['Fire Flower', 'Mushroom'], player)
-    if (sharks == 1):
-        return state.has_any(['Fire Flower', 'Mushroom'], player)
-    return False
+    return True
 
 
 def pumpkin_zone_1_midway_bell(state: "CollectionState", player: int) -> bool:
@@ -136,10 +126,6 @@ def space_zone_1_normal_exit(state: "CollectionState", player: int) -> bool:
 
 def space_zone_1_secret_exit(state: "CollectionState", player: int) -> bool:
     return (state.has_any(['Carrot', 'Space Physics'], player)) and (not (is_auto_scroll(state, player, 'Space Zone 1')))
-
-
-def space_zone_2_boss(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Space Physics', player)) or (((True if state.has_any(['Carrot', 'Fire Flower', 'Mushroom'], player) else None) if (state.has('Space Zone 2 Midway Bell', player)) or (not (state.multiworld.worlds[player].options.shuffle_midway_bells)) else (True if (state.has('Mushroom', player)) and (state.has_any(['Carrot', 'Fire Flower'], player)) else None))) if has_pipe_right(state, player) else False)
 
 
 def space_zone_2_midway_bell(state: "CollectionState", player: int) -> bool:
@@ -198,6 +184,377 @@ def turtle_zone_secret_course_normal_exit(state: "CollectionState", player: int)
     return state.has_any(['Carrot', 'Fire Flower'], player)
 
 
+def mario_zone_3_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Mario Zone 3')
+    reachable_coins = 10
+    if state.has('Carrot', player):
+        reachable_spike_coins = 15
+    else:
+        reachable_spike_coins = (min(3, ((1 + state.has('Mushroom', player)) + state.has('Fire Flower', player))) * 5)
+    reachable_coins += reachable_spike_coins
+    if not (auto_scroll):
+        reachable_coins += 10
+    if state.has('Fire Flower', player):
+        reachable_coins += 22
+        if auto_scroll:
+            reachable_coins -= (3 + reachable_spike_coins)
+    return (coins <= reachable_coins)
+
+
+def turtle_zone_1_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Turtle Zone 1')
+    reachable_coins = 30
+    if not_blocked_by_sharks(state, player):
+        reachable_coins += 13
+        if auto_scroll:
+            reachable_coins -= 1
+    if (state.has('Water Physics', player)) or (state.has('Carrot', player)):
+        reachable_coins += 10
+    if state.has('Carrot', player):
+        reachable_coins += 24
+        if auto_scroll:
+            reachable_coins -= 10
+    return (coins <= reachable_coins)
+
+
+def mushroom_zone_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Mushroom Zone')
+    reachable_coins = 38
+    if (state.has_any(['Mushroom', 'Fire Flower'], player)) or (not (auto_scroll)):
+        reachable_coins += 2
+    if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+        reachable_coins += 19
+        if (state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player)) or (not (auto_scroll)):
+            reachable_coins += 5
+        if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+            reachable_coins += 20
+            if not (auto_scroll):
+                reachable_coins += 4
+    return (coins <= reachable_coins)
+
+
+def tree_zone_1_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    return ((coins <= 87)) or (not (is_auto_scroll(state, player, 'Tree Zone 1')))
+
+
+def tree_zone_2_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Tree Zone 2')
+    reachable_coins = 18
+    if state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player):
+        reachable_coins += 38
+        if state.has('Carrot', player):
+            reachable_coins += 12
+            if not (auto_scroll):
+                reachable_coins += 30
+    else:
+        if state.has('Tree Zone 2 Midway Bell', player):
+            reachable_coins = 30
+            if not (auto_scroll):
+                reachable_coins += 8
+    return (coins <= reachable_coins)
+
+
+def tree_zone_3_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    if is_auto_scroll(state, player, 'Tree Zone 3'):
+        return (coins <= 4)
+    if (coins <= 19):
+        return True
+    if (state.has_any(['Mushroom', 'Fire Flower'], player)) and ((coins <= 21)):
+        return True
+    return state.has('Carrot', player)
+
+
+def tree_zone_4_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Tree Zone 4')
+    reachable_coins = 0
+    if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+        reachable_coins += 14
+        if state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player):
+            reachable_coins += 4
+            if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+                if auto_scroll:
+                    reachable_coins += 12
+                else:
+                    reachable_coins += 56
+    if state.has('Tree Zone 4 Midway Bell', player):
+        bell_coins = 10
+        if not (auto_scroll):
+            bell_coins += 46
+        if (bell_coins > reachable_coins):
+            reachable_coins = bell_coins
+    return (coins <= reachable_coins)
+
+
+def tree_zone_5_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Tree Zone 5')
+    reachable_coins = 0
+    if state.has_any(['Mushroom', 'Fire Flower'], player):
+        reachable_coins += 2
+    if state.has('Carrot', player):
+        reachable_coins += 18
+        if (state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player)) and (not (auto_scroll)):
+            reachable_coins += 13
+    else:
+        if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+            reachable_coins += 13
+    return (coins <= reachable_coins)
+
+
+def pumpkin_zone_1_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Pumpkin Zone 1')
+    if auto_scroll:
+        return ((coins <= 12)) and (state.has('Pumpkin Zone 1 Midway Bell', player))
+    reachable_coins = 0
+    if (state.has('Pumpkin Zone 1 Midway Bell', player)) or (state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player)):
+        reachable_coins += 38
+        if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+            reachable_coins += 2
+    return (coins <= reachable_coins)
+
+
+def pumpkin_zone_2_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Pumpkin Zone 2')
+    reachable_coins = 17
+    if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+        if not (auto_scroll):
+            reachable_coins += 7
+        if ((state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player)) or (auto_scroll)) and (state.has('Water Physics', player)):
+            reachable_coins += 6
+            if (state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player)) and (not (auto_scroll)):
+                reachable_coins += 1
+                if state.has_any(['Mushroom', 'Fire Flower'], player):
+                    reachable_coins += 5
+    return (coins <= reachable_coins)
+
+
+def pumpkin_zone_secret_course_1_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Pumpkin Zone Secret Course 1')
+    if (coins <= 40):
+        return True
+    if state.has('Carrot', player):
+        if auto_scroll:
+            return (coins <= 172)
+        else:
+            return True
+    return False
+
+
+def pumpkin_zone_3_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Pumpkin Zone 3')
+    reachable_coins = 38
+    if (state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player)) and ((not (auto_scroll)) or (state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player))):
+        reachable_coins += 12
+    if (state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player)) and (not (auto_scroll)):
+        reachable_coins += 11
+    return (coins <= reachable_coins)
+
+
+def pumpkin_zone_4_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Pumpkin Zone 4')
+    reachable_coins = 29
+    if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+        if auto_scroll:
+            if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+                reachable_coins += 16
+            else:
+                reachable_coins += 4
+        else:
+            reachable_coins += 28
+            if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+                reachable_coins += 16
+    return (coins <= reachable_coins)
+
+
+def mario_zone_1_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Mario Zone 1')
+    reachable_coins = 0
+    if (state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player)) or ((state.has_any(['Pipe Traversal - Left', 'Pipe Traversal'], player)) and (state.has('Mario Zone 1 Midway Bell', player)) and (not (auto_scroll))):
+        reachable_coins += 32
+    if (state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player)) and ((state.has_any(['Mushroom', 'Fire Flower', 'Carrot'], player)) or (not (auto_scroll))):
+        reachable_coins += 8
+        if state.has('Carrot', player):
+            reachable_coins += 28
+        else:
+            reachable_coins += 12
+        if (state.has('Fire Flower', player)) and (not (auto_scroll)):
+            reachable_coins += 46
+    return (coins <= reachable_coins)
+
+
+def mario_zone_4_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    return ((coins <= 60)) or (not (is_auto_scroll(state, player, 'Mario Zone 4')))
+
+
+def turtle_zone_2_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Turtle Zone 2')
+    reachable_coins = 2
+    if auto_scroll:
+        if state.has('Water Physics', player):
+            reachable_coins += 6
+    else:
+        reachable_coins += 2
+        if state.has('Water Physics', player):
+            reachable_coins += 20
+        else:
+            if state.has('Turtle Zone 2 Midway Bell', player):
+                reachable_coins += 4
+        if (state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player)) and (state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player)) and (state.has_any(['Water Physics', 'Turtle Zone 2 Midway Bell'], player)):
+            reachable_coins += 1
+            if (state.has_any(['Pipe Traversal - Left', 'Pipe Traversal'], player)) and (state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player)):
+                reachable_coins += 1
+                if state.has('Water Physics', player):
+                    reachable_coins += 1
+    return (coins <= reachable_coins)
+
+
+def turtle_zone_3_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    return (state.has_any(['Water Physics', 'Mushroom', 'Fire Flower', 'Carrot'], player)) or ((coins <= 51))
+
+
+def turtle_zone_secret_course_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    reachable_coins = 53
+    if state.has('Carrot', player):
+        reachable_coins += 44
+    else:
+        if state.has('Fire Flower', player):
+            reachable_coins += 36
+    return (coins <= reachable_coins)
+
+
+def hippo_zone_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Hippo Zone')
+    reachable_coins = 4
+    if auto_scroll:
+        if state.has('Hippo Bubble', player):
+            reachable_coins = 160
+        else:
+            if state.has('Carrot', player):
+                reachable_coins = 90
+            else:
+                if state.has('Water Physics', player):
+                    reachable_coins = 28
+    else:
+        if state.has_any(['Water Physics', 'Hippo Bubble', 'Carrot'], player):
+            reachable_coins += 108
+            if state.has_any(['Mushroom', 'Fire Flower', 'Hippo Bubble'], player):
+                reachable_coins += 6
+        if state.has_all(['Fire Flower', 'Water Physics'], player):
+            reachable_coins += 1
+        if state.has('Hippo Bubble', player):
+            reachable_coins += 52
+    return (coins <= reachable_coins)
+
+
+def space_zone_1_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Space Zone 1')
+    if auto_scroll:
+        reachable_coins = 12
+        if state.has_any(['Carrot', 'Space Physics'], player):
+            reachable_coins += 20
+        if state.has('Space Physics', player):
+            reachable_coins += 40
+        return (coins <= reachable_coins)
+    return ((coins <= 21)) or (((coins <= 50)) and (state.has_any(['Mushroom', 'Fire Flower'], player))) or (state.has_any(['Carrot', 'Space Physics'], player))
+
+
+def space_zone_2_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Space Zone 2')
+    reachable_coins = 12
+    if state.has_any(['Mushroom', 'Fire Flower', 'Carrot', 'Space Physics'], player):
+        reachable_coins += 15
+        if (state.has('Space Physics', player)) or (not (auto_scroll)):
+            reachable_coins += 4
+    if (state.has('Space Physics', player)) or ((state.has('Mushroom', player)) and (state.has_any(['Fire Flower', 'Carrot'], player))):
+        reachable_coins += 3
+    if state.has('Space Physics', player):
+        reachable_coins += 79
+        if not (auto_scroll):
+            reachable_coins += 21
+    return (coins <= reachable_coins)
+
+
+def space_zone_secret_course_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    return ((coins <= 96)) or (not (is_auto_scroll(state, player, 'Space Zone Secret Course')))
+
+
+def macro_zone_1_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Macro Zone 1')
+    reachable_coins = 0
+    if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+        reachable_coins += 69
+        if auto_scroll:
+            if state.has_any(['Mushroom', 'Fire Flower'], player):
+                reachable_coins += 5
+        else:
+            reachable_coins += 9
+            if state.has('Fire Flower', player):
+                reachable_coins += 19
+    else:
+        if state.has('Macro Zone 1 Midway Bell', player):
+            if auto_scroll:
+                reachable_coins += 16
+                if state.has_any(['Mushroom', 'Fire Flower'], player):
+                    reachable_coins += 5
+            else:
+                reachable_coins += 67
+    return (coins <= reachable_coins)
+
+
+def macro_zone_2_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Macro Zone 2')
+    if (coins <= 27):
+        return True
+    if (state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player)) and (state.has('Water Physics', player)) and (not (auto_scroll)):
+        if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+            return True
+        if state.has('Macro Zone 2 Midway Bell', player):
+            return (coins <= 42)
+    return False
+
+
+def macro_zone_3_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Macro Zone 3')
+    reachable_coins = 7
+    if not (auto_scroll):
+        reachable_coins += 17
+    if (state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player)) and (state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player)):
+        if auto_scroll:
+            reachable_coins += 56
+        else:
+            return True
+    else:
+        if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+            if auto_scroll:
+                reachable_coins += 12
+            else:
+                reachable_coins += 36
+        else:
+            if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+                reachable_coins += 18
+    if state.has('Macro Zone 3 - Midway Bell', player):
+        if (30 > reachable_coins):
+            reachable_coins = 30
+    return (coins <= reachable_coins)
+
+
+def macro_zone_4_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    auto_scroll = is_auto_scroll(state, player, 'Macro Zone 4')
+    reachable_coins = 61
+    if auto_scroll:
+        reachable_coins -= 8
+        if state.has('Carrot', player):
+            reachable_coins += 6
+    return (coins <= reachable_coins)
+
+
+def macro_zone_secret_course_coins(state: "CollectionState", player: int, coins = None) -> bool:
+    return state.has_any(['Mushroom', 'Fire Flower'], player)
+
+
+def space_zone_2_boss(state: "CollectionState", player: int) -> bool:
+    return (state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player)) and ((state.has('Space Physics', player)) or (state.has_any(['Mushroom', 'Fire Flower', 'Carrot'], player)))
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -206,7 +563,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Menu -> Space Zone 1", player),
-        Or(And(Not(HelperCall(helper_func=is_auto_scroll, helper_name="is_auto_scroll", args=('Hippo Zone',))), Has('Carrot')), Has('Hippo Bubble'))
+        Or(And(Not(HelperCall(helper_func=is_auto_scroll, helper_name="is_auto_scroll", args=('Hippo Zone',), body_rule=False_())), Has('Carrot')), Has('Hippo Bubble'))
     )
 
     world.set_rule(
@@ -371,7 +728,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Space Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=space_zone_1_normal_exit, helper_name="space_zone_1_normal_exit")
+        HelperCall(helper_func=space_zone_1_normal_exit, helper_name="space_zone_1_normal_exit", body_rule=HasAny('Carrot', 'Space Physics'))
     )
 
     world.set_rule(
@@ -381,12 +738,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Space Zone 2 - Boss", player),
-        HelperCall(helper_func=space_zone_2_boss, helper_name="space_zone_2_boss")
+        HelperCall(helper_func=space_zone_2_boss, helper_name="space_zone_2_boss", body_rule=(HasAny('Pipe Traversal - Right', 'Pipe Traversal')) & ((Has("Space Physics")) | (HasAny('Mushroom', 'Fire Flower', 'Carrot'))))
     )
 
     world.set_rule(
         multiworld.get_location("Space Zone 2 - Midway Bell", player),
-        HelperCall(helper_func=space_zone_2_midway_bell, helper_name="space_zone_2_midway_bell")
+        HelperCall(helper_func=space_zone_2_midway_bell, helper_name="space_zone_2_midway_bell", body_rule=HasAny('Carrot', 'Fire Flower', 'Mushroom', 'Space Physics', 'Space Zone 2 Midway Bell'))
     )
 
     world.set_rule(
@@ -451,7 +808,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 3 - Secret Exit", player),
-        HelperCall(helper_func=pumpkin_zone_3_secret_exit, helper_name="pumpkin_zone_3_secret_exit")
+        HelperCall(helper_func=pumpkin_zone_3_secret_exit, helper_name="pumpkin_zone_3_secret_exit", body_rule=Has("Carrot"))
     )
 
     world.set_rule(
@@ -501,7 +858,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Zone Secret Course - Normal Exit", player),
-        HelperCall(helper_func=turtle_zone_secret_course_normal_exit, helper_name="turtle_zone_secret_course_normal_exit")
+        HelperCall(helper_func=turtle_zone_secret_course_normal_exit, helper_name="turtle_zone_secret_course_normal_exit", body_rule=HasAny('Carrot', 'Fire Flower'))
     )
 
     world.set_rule(
