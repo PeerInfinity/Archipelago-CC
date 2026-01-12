@@ -5576,8 +5576,15 @@ class HelperCodeGenerator:
                             setting_name = param_mappings[param]
                             # Check if it's an option or a world attribute
                             if setting_name in self.option_definitions:
-                                # Option: access via state.multiworld.worlds[player].options.<name>.value
-                                arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
+                                # Option: prefer inlined value from export, fallback to runtime lookup
+                                # Using resolved values ensures worldgen worlds use the same option
+                                # values as the original export, even if their defaults differ.
+                                if setting_name in self.settings:
+                                    # Inline the actual value from the export
+                                    arg_exprs.append(repr(self.settings[setting_name]))
+                                else:
+                                    # Fallback to runtime lookup (for dynamic options)
+                                    arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
                             else:
                                 # World attribute: access via state.multiworld.worlds[player].<name>
                                 arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
