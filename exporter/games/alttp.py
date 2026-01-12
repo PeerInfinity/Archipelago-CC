@@ -84,6 +84,14 @@ MIRROR_SUPERBUNNY_LOCATIONS = {
 
 
 
+# Set of dungeon names for small key mapping
+DUNGEON_NAMES = {
+    'Hyrule Castle', 'Agahnims Tower', 'Eastern Palace', 'Desert Palace',
+    'Tower of Hera', 'Palace of Darkness', 'Swamp Palace', 'Skull Woods',
+    'Thieves Town', 'Ice Palace', 'Misery Mire', 'Turtle Rock', 'Ganons Tower'
+}
+
+
 class ALttPGameExportHandler(GenericGameExportHandler):
     """Export handler for A Link to the Past."""
 
@@ -96,6 +104,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._current_location_context = None
         self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
         self._is_glitch_mode = self._check_glitch_mode(world)
+        self._is_universal_keys = self._check_universal_keys(world)
 
     def _check_glitch_mode(self, world) -> bool:
         """Check if the world is in a glitch mode that enables superbunny accessibility."""
@@ -105,6 +114,136 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             return False
         glitches_required = world.options.glitches_required.current_key
         return glitches_required in GLITCH_MODES_WITH_SUPERBUNNY
+
+    def _check_universal_keys(self, world) -> bool:
+        """Check if the world uses universal small keys.
+
+        When small_key_shuffle is 'universal', all dungeon-specific small keys
+        are replaced with a universal key that can be bought from shops.
+        The server's _lttp_has_key method returns True when any shop with
+        unlimited universal keys is reachable (can_buy_unlimited).
+
+        For export simplification, we treat universal key checks as always True
+        since universal key shops are accessible in normal gameplay.
+        """
+        if world is None or not hasattr(world, 'options'):
+            return False
+        if not hasattr(world.options, 'small_key_shuffle'):
+            return False
+        small_key_value = world.options.small_key_shuffle.current_key
+        is_universal = small_key_value == 'universal'
+        if is_universal:
+            logger.info(f"ALttP: Universal small keys detected (small_key_shuffle={small_key_value})")
+        return is_universal
+
+    def _is_dungeon_small_key_check(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is a dungeon-specific small key check.
+
+        Returns True if the rule checks for 'Small Key (DungeonName)'.
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        # Check count_check type (from _lttp_has_key analysis)
+        if rule.get('type') == 'count_check':
+            item = rule.get('item', '')
+            if isinstance(item, str) and item.startswith('Small Key ('):
+                dungeon = item[11:-1]  # Extract dungeon name from 'Small Key (X)'
+                return dungeon in DUNGEON_NAMES
+
+        # Check item_check type
+        if rule.get('type') == 'item_check':
+            item = rule.get('item', '')
+            if isinstance(item, str) and item.startswith('Small Key ('):
+                dungeon = item[11:-1]
+                return dungeon in DUNGEON_NAMES
+
+        # Check Rule Builder Has format
+        if rule.get('rule') == 'Has':
+            args = rule.get('args', {})
+            item_name = args.get('item_name', '')
+            if isinstance(item_name, str) and item_name.startswith('Small Key ('):
+                dungeon = item_name[11:-1]
+                return dungeon in DUNGEON_NAMES
+
+        return False
+
+    def _replace_small_key_checks(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Replace dungeon-specific small key checks with True_ for universal keys.
+
+        When small_key_shuffle is 'universal', the server uses can_buy_unlimited
+        which checks if any shop with unlimited universal keys is reachable.
+        Since these shops are accessible during normal gameplay, we simplify
+        to True_ for the exported rules.
+
+        Recursively processes the rule tree to replace all small key checks.
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Check if this is a small key check that should be replaced
+        if self._is_dungeon_small_key_check(rule):
+            return {'rule': 'True_'}
+
+        # Handle Or/And conditions - recursively process and simplify
+        if rule.get('type') in ('or', 'and'):
+            conditions = rule.get('conditions', [])
+            processed = [self._replace_small_key_checks(c) for c in conditions]
+            # Filter out True_ from And (and True_ and X = X)
+            if rule.get('type') == 'and':
+                processed = [c for c in processed if not (c.get('rule') == 'True_')]
+                if not processed:
+                    return {'rule': 'True_'}
+                if len(processed) == 1:
+                    return processed[0]
+            # For Or, if any is True_, the whole thing is True
+            if rule.get('type') == 'or':
+                if any(c.get('rule') == 'True_' for c in processed):
+                    return {'rule': 'True_'}
+            return {**rule, 'conditions': processed}
+
+        # Handle Rule Builder Or/And format
+        if rule.get('rule') in ('Or', 'And'):
+            children = rule.get('children', [])
+            processed = [self._replace_small_key_checks(c) for c in children]
+            if rule.get('rule') == 'And':
+                processed = [c for c in processed if not (c.get('rule') == 'True_')]
+                if not processed:
+                    return {'rule': 'True_'}
+                if len(processed) == 1:
+                    return processed[0]
+            if rule.get('rule') == 'Or':
+                if any(c.get('rule') == 'True_' for c in processed):
+                    return {'rule': 'True_'}
+            return {**rule, 'children': processed}
+
+        # Handle Conditional rules - if both branches are True_, simplify to True_
+        if rule.get('rule') == 'Conditional':
+            args = rule.get('args', {})
+            processed_args = {}
+            for key, value in args.items():
+                if isinstance(value, dict):
+                    processed_args[key] = self._replace_small_key_checks(value)
+                else:
+                    processed_args[key] = value
+            # If both if_true and if_false are True_, the whole conditional is True_
+            if_true = processed_args.get('if_true', {})
+            if_false = processed_args.get('if_false', {})
+            if if_true.get('rule') == 'True_' and if_false.get('rule') == 'True_':
+                return {'rule': 'True_'}
+            return {**rule, 'args': processed_args}
+
+        # Handle args dict for nested rules
+        if 'args' in rule and isinstance(rule['args'], dict):
+            processed_args = {}
+            for key, value in rule['args'].items():
+                if isinstance(value, dict):
+                    processed_args[key] = self._replace_small_key_checks(value)
+                else:
+                    processed_args[key] = value
+            return {**rule, 'args': processed_args}
+
+        return rule
 
     def _compute_bunny_accessible_locations(self, world) -> Set[str]:
         """Compute the set of bunny-accessible locations based on world options.
@@ -325,15 +464,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Post-process entire export data to handle bunny rules.
+        """Post-process entire export data to handle bunny rules and universal keys.
 
         Handles:
         1. Exit/entrance rules with bunny rule lambdas
         2. Location rules in mixed regions (both Light World and Dark World)
+        3. Universal small key conversion when small_key_shuffle is 'universal'
 
         For mixed regions, the Moon Pearl requirement added by _get_bunny_replacement_rule
         is removed since there are Light World paths available. Only pure Dark World
         regions require Moon Pearl.
+
+        For universal keys, all dungeon-specific small key checks are replaced with True_
+        since universal keys can be purchased from shops with unlimited stock.
         """
         # Process regions to handle entrance/exit rules and fix mixed region locations
         regions = data.get('regions', {})
@@ -343,16 +486,20 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 is_light_world = region_data.get('is_light_world', False)
                 is_mixed_region = is_dark_world and is_light_world
 
-                # Process locations in mixed regions
-                # For mixed regions, we don't need Moon Pearl since there are Light World paths
-                if is_mixed_region:
-                    for location_data in region_data.get('locations', []):
-                        location_name = location_data.get('name', '')
+                # Process locations
+                for location_data in region_data.get('locations', []):
+                    location_name = location_data.get('name', '')
+                    access_rule = location_data.get('access_rule', {})
+
+                    # For mixed regions, remove Moon Pearl requirement
+                    if is_mixed_region and self._is_bunny_moon_pearl_rule(access_rule, location_name):
+                        location_data['access_rule'] = {'rule': 'True_'}
+                        logger.debug(f"ALttP: Removed Moon Pearl from mixed region location '{location_name}'")
                         access_rule = location_data.get('access_rule', {})
-                        if self._is_bunny_moon_pearl_rule(access_rule, location_name):
-                            # Remove Moon Pearl requirement for mixed regions
-                            location_data['access_rule'] = {'rule': 'True_'}
-                            logger.debug(f"ALttP: Removed Moon Pearl from mixed region location '{location_name}'")
+
+                                # Replace dungeon small key checks when universal keys are enabled
+                    if self._is_universal_keys and access_rule:
+                        location_data['access_rule'] = self._replace_small_key_checks(access_rule)
 
                 # Process exits
                 for exit_data in region_data.get('exits', []):
@@ -367,6 +514,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
+                        # Replace dungeon small key checks when universal keys are enabled
+                        if self._is_universal_keys:
+                            exit_data['access_rule'] = self._replace_small_key_checks(
+                                exit_data['access_rule']
+                            )
+
                 # Process entrances
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
@@ -374,6 +527,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         entrance_data['access_rule'] = self._process_bunny_rules(
                             entrance_data['access_rule'], entrance_name
                         )
+                        # Replace dungeon small key checks when universal keys are enabled
+                        if self._is_universal_keys:
+                            entrance_data['access_rule'] = self._replace_small_key_checks(
+                                entrance_data['access_rule']
+                            )
+
         return data
 
     def _is_bunny_moon_pearl_rule(self, rule: Dict[str, Any], location_name: str) -> bool:
