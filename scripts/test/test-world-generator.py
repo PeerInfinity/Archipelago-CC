@@ -936,6 +936,12 @@ def main():
 
         print("Templates regenerated.")
 
+        # Clear and rebuild the world mapping cache so it includes the newly created worldgen worlds
+        global _world_mapping
+        _world_mapping = {}
+        print("Rebuilding world mapping to include _worldgen worlds...")
+        _world_mapping = build_and_load_world_mapping(project_root)
+
     # Phase: Run spoiler tests
     http_server_process = None
     if args.phase in ['test', 'all']:
