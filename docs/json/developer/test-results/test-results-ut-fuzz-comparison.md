@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison
 
-**Generated:** 2026-01-12 19:44:53
+**Generated:** 2026-01-12 21:40:25
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -74,7 +74,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Noita | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Old School Runescape | ✅ 100.0% | ✅ 100.0% | 1.0KB | ✅ | 308.9KB |
-| Overcooked! 2 | ❌ 20.0% | ✅ 50.0% | 25.9KB | ✅ | 488.9KB |
+| Overcooked! 2 | ❌ 20.0% | ✅ 50.0% | 25.9KB | ✅ | 489.2KB |
 | Paint | ✅ 100.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ 30.0% | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
@@ -183,7 +183,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | Metamath | ✅ | ✅ | 47.5KB |
 | Muse Dash | ✅ | ✅ | 231.5KB |
 | Noita | ✅ | ✅ | 74.6KB |
-| Overcooked! 2 | 25.9KB | ✅ | 488.9KB |
+| Overcooked! 2 | 25.9KB | ✅ | 489.2KB |
 | Saving Princess | ✅ | ✅ | 33.5KB |
 | Shivers | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | 266.1KB |

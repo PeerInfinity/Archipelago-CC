@@ -305,21 +305,52 @@ def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fi
         return {}
 
 
+def load_worldgen_exclude_list(project_root, include_all_excludes=False):
+    """Load the worldgen_test_exclude_list from template-exclude-list.json.
+
+    Args:
+        project_root: Path to the project root
+        include_all_excludes: If True, also include exclude_list and main_test_exclude_list
+
+    Returns a set of template names that are excluded from worldgen tests.
+    """
+    exclude_file = Path(project_root) / 'scripts' / 'data' / 'template-exclude-list.json'
+    if not exclude_file.exists():
+        return set()
+
+    try:
+        with open(exclude_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        worldgen_excludes = data.get('worldgen_test_exclude_list', [])
+        result = {item['name'] for item in worldgen_excludes}
+
+        if include_all_excludes:
+            # Also include permanent excludes and main test excludes
+            permanent_excludes = data.get('exclude_list', [])
+            main_excludes = data.get('main_test_exclude_list', [])
+            result.update({item['name'] for item in permanent_excludes})
+            result.update({item['name'] for item in main_excludes})
+
+        return result
+    except Exception as e:
+        print(f"Error loading worldgen exclude list: {e}", file=sys.stderr)
+        return set()
+
+
 def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='modified', worldgen_test_mode='canonical'):
-    """Get games that pass canonical worldgen test but fail UT fuzz test.
+    """Get games that fail UT fuzz test, excluding those in exclude lists.
 
     This identifies games where:
-    - The world generator successfully round-trips the rules (canonical test passes)
-    - But UT fuzz testing reveals logic mismatches under random option configurations
+    - The game fails UT fuzz testing (logic mismatches)
+    - The game is NOT in worldgen_test_exclude_list, exclude_list, or main_test_exclude_list
 
-    Returns list of dicts with game_name, template, ut_fuzz stats, and worldgen status.
+    Returns list of dicts with game_name, template, ut_fuzz stats.
     """
-    # Load both result sets
+    # Load UT fuzz results and combined exclude list (worldgen + permanent + main test excludes)
     ut_fuzz_data = load_ut_fuzz_test_results(project_root, ut_version=ut_version)
-    worldgen_data = load_worldgen_test_results(project_root, test_mode=worldgen_test_mode)
+    worldgen_exclude_list = load_worldgen_exclude_list(project_root, include_all_excludes=True)
 
     ut_results = ut_fuzz_data.get('results', {})
-    wg_results = worldgen_data.get('results', {})
 
     failures = []
 
@@ -337,61 +368,25 @@ def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='modified', worl
         if actual_failures == 0:
             continue
 
-        # Check if this game passes the canonical worldgen test
-        wg_result = wg_results.get(game_name, {})
-        if not wg_result:
-            # Not in worldgen results - could be a different naming convention
-            # Try to find by template name
-            for wg_game, wg_data in wg_results.items():
-                if wg_data.get('template') == template_name:
-                    wg_result = wg_data
-                    game_name = wg_game
-                    break
-
-        if not wg_result:
-            # Game not in worldgen results, skip
+        # Skip games that are in the worldgen exclude list
+        if template_name in worldgen_exclude_list:
             continue
 
-        # Check if worldgen passes (all stages)
-        test_world = wg_result.get('test_world', {})
-        original = wg_result.get('original', {})
-
-        # Check original spoiler test
-        orig_spoiler_pass = original.get('spoiler_test', {}).get('pass_fail') == 'pass'
-
-        # Check all worldgen stages
-        world_gen_success = test_world.get('world_generation', {}).get('success', False)
-        seed_gen_success = test_world.get('seed_generation', {}).get('success', False)
-        wg_spoiler_pass = test_world.get('spoiler_test', {}).get('pass_fail') == 'pass'
-        crossval_pass = test_world.get('cross_validation', {}).get('pass_fail') != 'fail'
-        rules_comp_pass = test_world.get('rules_comparison', {}).get('pass_fail') != 'fail'
-
-        # Overall worldgen pass
-        worldgen_passes = (
-            orig_spoiler_pass and
-            world_gen_success and
-            seed_gen_success and
-            wg_spoiler_pass and
-            crossval_pass and
-            rules_comp_pass
-        )
-
-        if worldgen_passes:
-            # This game passes worldgen but fails UT fuzz - add to failures
-            failures.append({
-                'game_name': game_name,
-                'template': template_name,
-                'world_directory': world_info.get('world_directory'),
-                'ut_fuzz': {
-                    'total': ut_fuzz.get('total', 0),
-                    'success': ut_fuzz.get('success', 0),
-                    'failure': ut_fuzz.get('failure', 0),
-                    'timeout': ut_fuzz.get('timeout', 0),
-                    'success_rate': (ut_fuzz.get('success', 0) / ut_fuzz.get('total', 1)) * 100,
-                    'error_types': list(ut_fuzz.get('errors', {}).keys()),
-                    'error_runs': ut_fuzz.get('errors', {}),
-                },
-            })
+        # This game fails UT fuzz and is not excluded - add to failures
+        failures.append({
+            'game_name': game_name,
+            'template': template_name,
+            'world_directory': world_info.get('world_directory'),
+            'ut_fuzz': {
+                'total': ut_fuzz.get('total', 0),
+                'success': ut_fuzz.get('success', 0),
+                'failure': ut_fuzz.get('failure', 0),
+                'timeout': ut_fuzz.get('timeout', 0),
+                'success_rate': (ut_fuzz.get('success', 0) / ut_fuzz.get('total', 1)) * 100,
+                'error_types': list(ut_fuzz.get('errors', {}).keys()),
+                'error_runs': ut_fuzz.get('errors', {}),
+            },
+        })
 
     return failures
 
