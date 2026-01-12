@@ -6,28 +6,28 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-01-11 11:23:20
+**Generated:** 2026-01-12 22:05:08
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 43/72 (59.7% of passed)
-- **Passing with Generic Logic:** 66/72 (91.7% of passed)
-- **Passing with Both Generic:** 43/72 (59.7% of passed)
+- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 40/73 (54.8% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 7.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 7/7 | ✅ | 268/268 | 11.8KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 18.0KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 7/7 | ✅ | 268/268 | 45.6KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
@@ -57,7 +57,7 @@
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | ✅ |
-| Landstalker - The Treasures of King Nole | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 3.6KB | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 3.6KB | ✅ |
 | Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
@@ -70,7 +70,7 @@
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 1.0KB | ✅ |
-| Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 25.9KB | ✅ |
+| Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
@@ -78,11 +78,11 @@
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 28.7KB | 87.5KB |
+| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 28.7KB | 87.4KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 21.4KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | 92.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
@@ -97,7 +97,7 @@
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 9.3KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 9.2KB | ✅ |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
