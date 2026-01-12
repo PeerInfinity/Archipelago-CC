@@ -1777,6 +1777,21 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 
     def _place_original_items(self) -> None:
         """Place items in their canonical locations when not randomized."""
+        # Track remaining classification counts for items with mixed classifications
+        classification_remaining: Dict[str, Dict[str, int]] = {{}}
+        for item_name, item_data in item_table.items():
+            cc = getattr(item_data, 'classification_counts', None)
+            if cc:
+                classification_remaining[item_name] = dict(cc)
+
+        classification_map = {{
+            'progression': ItemClassification.progression,
+            'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+            'useful': ItemClassification.useful,
+            'trap': ItemClassification.trap,
+            'filler': ItemClassification.filler,
+        }}
+
         for location_name, item_name in self.canonical_placements.items():
             location = self.multiworld.get_location(location_name, self.player)
 
@@ -1784,7 +1799,19 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
+            # Check if this item has mixed classifications
+            if item_name in classification_remaining and classification_remaining[item_name]:
+                # Find a classification that still has remaining count
+                item_data = item_table[item_name]
+                classification = item_data.classification  # default fallback
+                for class_name, remaining in classification_remaining[item_name].items():
+                    if remaining > 0:
+                        classification = classification_map.get(class_name, item_data.classification)
+                        classification_remaining[item_name][class_name] -= 1
+                        break
+                item = {class_name}Item(item_name, classification, item_data.id, self.player)
+            else:
+                item = self.create_item(item_name)
             location.place_locked_item(item)
 
             # Remove the item from the pool if it exists
@@ -2363,6 +2390,7 @@ class {world_class}(RuleWorldMixin, World):
                 # Create items with per-classification counts
                 classification_map = {{
                     'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
                     'useful': ItemClassification.useful,
                     'trap': ItemClassification.trap,
                     'filler': ItemClassification.filler,
