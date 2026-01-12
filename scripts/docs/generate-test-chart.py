@@ -387,7 +387,7 @@ def main():
 
         summary_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-worldgen.md')
         orig_summary_link = './test-results-summary.md'
-        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games_worldgen, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link, project_root=project_root)
+        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, excluded_games_worldgen, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link, project_root=project_root)
         with open(summary_wg_output, 'w') as f:
             f.write(summary_wg_md)
 
