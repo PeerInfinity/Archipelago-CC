@@ -645,7 +645,8 @@ def run_multiple_tests(
     base_seed: Optional[int],
     project_root: Path,
     world_dirs: List[str],
-    use_sphere_validation: bool = False
+    use_sphere_validation: bool = False,
+    test_iteration: int = 0
 ) -> Dict:
     """
     Run multiple multiworld tests with different seeds.
@@ -658,6 +659,9 @@ def run_multiple_tests(
         project_root: Path to project root
         world_dirs: List of world directory names in the multiworld
         use_sphere_validation: If True, use in-process generation with sphere validation
+        test_iteration: Counter for how many times this function has been called,
+            used to ensure different YAMLs are generated each time the multiworld
+            composition changes (even with the same base_seed)
 
     Returns aggregated results.
     """
@@ -683,8 +687,9 @@ def run_multiple_tests(
 
     for i in range(runs):
         # Determine seed for this run
+        # Include test_iteration to ensure different YAMLs when multiworld composition changes
         if base_seed is not None:
-            seed = base_seed + i
+            seed = base_seed + i + (test_iteration * 100000)
         else:
             seed = random.randint(1, 999999999)
 
@@ -699,6 +704,7 @@ def run_multiple_tests(
                 pass
 
         # Regenerate random YAMLs for this run
+        # Each game gets a unique seed based on: base_seed + run_index + test_iteration + player_offset
         for j, world_dir in enumerate(world_dirs):
             yaml_content = generate_random_yaml_for_game(world_dir, j + 1, seed + j * 1000)
             if yaml_content:
@@ -911,6 +917,7 @@ def main():
     # Track statistics
     games_in_multiworld: List[str] = []  # List of world directory names
     rejected_games: List[Dict] = []
+    test_iteration = 0  # Counter to ensure different YAMLs each time the test is run
 
     # Process each template
     for i, yaml_file in enumerate(template_files, 1):
@@ -1021,8 +1028,10 @@ def main():
             base_seed=args.seed,
             project_root=PROJECT_ROOT,
             world_dirs=games_in_multiworld,
-            use_sphere_validation=args.sphere_validation and not args.ut_validation
+            use_sphere_validation=args.sphere_validation and not args.ut_validation,
+            test_iteration=test_iteration
         )
+        test_iteration += 1  # Increment for next test to get different YAMLs
 
         game_result["test_result"] = test_result
 
