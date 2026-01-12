@@ -256,24 +256,11 @@ class WorldDataMixin:
             lines = [line.strip() for line in docstring.strip().split('\n')]
             world_data['world_description'] = '\n'.join(lines)
 
-        # Export fill_slot_data return value if available
-        # This captures the data the world sends to the client
-        if hasattr(world, 'fill_slot_data') and callable(world.fill_slot_data):
-            try:
-                slot_data = world.fill_slot_data()
-                if slot_data and isinstance(slot_data, dict):
-                    world_data['slot_data'] = slot_data
-                # Clear Landstalker's cached_spheres to prevent memory leak
-                # fill_slot_data populates this class variable with MultiWorld references
-                # that would otherwise prevent garbage collection
-                if world.game == "Landstalker - The Treasures of King Nole":
-                    try:
-                        from worlds.landstalker import LandstalkerWorld
-                        LandstalkerWorld.cached_spheres = []
-                    except ImportError:
-                        pass
-            except Exception as e:
-                logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
+        # Export slot_data if available (cached by Main.py before exporter is called)
+        # This avoids calling fill_slot_data twice, which can cause memory leaks
+        # for worlds that populate class variables (like Landstalker's cached_spheres)
+        if hasattr(world, '_cached_slot_data') and world._cached_slot_data:
+            world_data['slot_data'] = world._cached_slot_data
 
         # Export WebWorld metadata if available
         # This mirrors Archipelago's world.web structure

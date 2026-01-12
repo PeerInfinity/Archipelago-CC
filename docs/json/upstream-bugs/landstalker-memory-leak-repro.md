@@ -28,12 +28,14 @@ AssertionError: MultiWorld object was not de-allocated, it's referenced 67 times
 
 ## Root Cause
 
-The call order in the fork's Main.py caused the issue:
-1. Line 296: `fill_slot_data()` called → populates `cached_spheres`
-2. Line 369: `modify_multidata` called → triggers `stage_modify_multidata` → clears cache
-3. Line 407: `export_game_rules()` called → calls `fill_slot_data()` again → **repopulates cache**
+The old call order in the fork's Main.py caused the issue:
+1. `fill_slot_data()` called → populates `cached_spheres`
+2. `modify_multidata` called → triggers `stage_modify_multidata` → clears cache
+3. `export_game_rules()` called → called `fill_slot_data()` again → **repopulated cache**
 
 The second call to `fill_slot_data` (from the exporter) repopulated the cache after it was cleared.
+
+Additionally, the sphere logger (`create_playthrough_with_logging`) created export handlers that held world references, which weren't cleared.
 
 ## Manual reproduction test
 
@@ -70,4 +72,4 @@ else:
 
 - The memory leak assertion in `Generate.py` only triggers when `__debug__` is True (default)
 - Upstream never had this issue - only the fork's exporter caused it
-- Fix: Clear `LandstalkerWorld.cached_spheres` in exporter after calling `fill_slot_data`
+- Fix: Move exporter before `modify_multidata`, use cached slot data, clear handler cache after `create_playthrough`

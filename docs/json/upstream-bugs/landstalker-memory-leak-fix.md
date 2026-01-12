@@ -4,111 +4,91 @@
 
 ## Overview
 
-The fork's exporter calls `fill_slot_data()` after `stage_modify_multidata` has already cleared the cache, repopulating it and causing the memory leak.
+The fork's exporter was calling `fill_slot_data()` after `stage_modify_multidata` had already cleared the cache, repopulating it and causing the memory leak.
 
-## The Actual Fix (Applied)
+## The Fix
 
-Added cleanup in `exporter/games/base/world_data.py` after calling `fill_slot_data` for Landstalker:
+The fix respects Archipelago's intended lifecycle: **compute → use → cleanup**.
+
+### 1. Move exporter before `modify_multidata` (Main.py)
+
+The exporter call was moved inside `write_multidata`, before the `modify_multidata` call:
 
 ```python
-# Clear Landstalker's cached_spheres to prevent memory leak
-# fill_slot_data populates this class variable with MultiWorld references
-# that would otherwise prevent garbage collection
-if world.game == "Landstalker - The Treasures of King Nole":
+# Export rules data BEFORE modify_multidata clears world caches
+# (some worlds like Landstalker use class variables in fill_slot_data
+# that are cleared by stage_modify_multidata)
+settings = get_settings()
+if settings.general_options.save_rules_json:
+    from exporter import clear_rule_cache
+    from exporter.games import clear_handler_cache
+    export_game_rules(...)
+    clear_rule_cache()
+    clear_handler_cache()
+
+# TODO: change to `"version": version_tuple` after getting better serialization
+AutoWorld.call_all(multiworld, "modify_multidata", multidata)
+```
+
+### 2. Use cached slot data (exporter/games/base/world_data.py)
+
+Main.py now caches `slot_data` on the world object after calling `fill_slot_data`:
+
+```python
+slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
+# Cache slot_data on the world for the exporter to use
+# This avoids calling fill_slot_data twice
+multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
+```
+
+The exporter uses this cached data instead of calling `fill_slot_data` again:
+
+```python
+# Export slot_data if available (cached by Main.py before exporter is called)
+# This avoids calling fill_slot_data twice, which can cause memory leaks
+# for worlds that populate class variables (like Landstalker's cached_spheres)
+if hasattr(world, '_cached_slot_data') and world._cached_slot_data:
+    world_data['slot_data'] = world._cached_slot_data
+```
+
+### 3. Clear handler cache after `create_playthrough` (Main.py)
+
+The sphere logger (`create_playthrough_with_logging`) creates export handlers that hold references to world objects. These must be cleared after playthrough calculation:
+
+```python
+if args.spoiler > 1:
+    logger.info('Calculating playthrough.')
+    multiworld.spoiler.create_playthrough(create_paths=args.spoiler > 2)
+    # Clear handler cache - create_playthrough_with_logging may have created
+    # handlers that hold world references
     try:
-        from worlds.landstalker import LandstalkerWorld
-        LandstalkerWorld.cached_spheres = []
+        from exporter.games import clear_handler_cache
+        clear_handler_cache()
     except ImportError:
         pass
 ```
 
-## Alternative Fix: Instance Variable Approach
+## Why This Works
 
-The changes below describe an alternative approach that converts `cached_spheres` to an instance variable, which would be a more robust solution that doesn't rely on cleanup after `fill_slot_data`.
+The new call order:
+1. `fill_slot_data()` called → populates `cached_spheres`
+2. `export_game_rules()` called → uses cached `_cached_slot_data`
+3. `modify_multidata` called → `stage_modify_multidata` clears `cached_spheres`
+4. `create_playthrough` called → sphere logger creates handlers
+5. Handler cache cleared → releases world references
+6. No lingering references → garbage collection succeeds
 
-## Changes to `worlds/landstalker/__init__.py`
+## Alternative: Instance Variable Approach
 
-### 1. Change the class variable declaration (around line 41)
+An alternative fix would convert `cached_spheres` to an instance variable in upstream Landstalker. This would be a more robust solution but requires upstream changes. See the detailed steps below if this approach is ever needed.
 
-**Before:**
-```python
-cached_spheres: List[Set[Location]] = []
-```
+### Changes to `worlds/landstalker/__init__.py`
 
-**After:**
-```python
-cached_spheres: List[Set[Location]]
-```
-
-### 2. Initialize instance variable in `__init__` (around line 48)
-
-**Before:**
-```python
-def __init__(self, multiworld, player):
-    super().__init__(multiworld, player)
-    self.regions_table: Dict[str, LandstalkerRegion] = {}
-    self.dark_dungeon_id = "None"
-    self.dark_region_ids = []
-    self.teleport_tree_pairs = []
-    self.jewel_items = []
-```
-
-**After:**
-```python
-def __init__(self, multiworld, player):
-    super().__init__(multiworld, player)
-    self.regions_table: Dict[str, LandstalkerRegion] = {}
-    self.dark_dungeon_id = "None"
-    self.dark_region_ids = []
-    self.teleport_tree_pairs = []
-    self.jewel_items = []
-    self.cached_spheres = []
-```
-
-### 3. Update `fill_slot_data` to use instance variable (around line 51)
-
-**Before:**
-```python
-def fill_slot_data(self) -> dict:
-    if not LandstalkerWorld.cached_spheres:
-        LandstalkerWorld.cached_spheres = list(self.multiworld.get_spheres())
-```
-
-**After:**
-```python
-def fill_slot_data(self) -> dict:
-    if not self.cached_spheres:
-        self.cached_spheres = list(self.multiworld.get_spheres())
-```
-
-### 4. Update `adjust_shop_prices` to use instance variable (around line 250)
-
-**Before:**
-```python
-spheres = LandstalkerWorld.cached_spheres
-```
-
-**After:**
-```python
-spheres = self.cached_spheres
-```
-
-### 5. Update `stage_modify_multidata` to clear instance variables (around line 237)
-
-**Before:**
-```python
-@classmethod
-def stage_modify_multidata(cls, multiworld: MultiWorld, *_):
-    LandstalkerWorld.cached_spheres = []
-```
-
-**After:**
-```python
-@classmethod
-def stage_modify_multidata(cls, multiworld: MultiWorld, *_):
-    for world in multiworld.get_game_worlds(cls.game):
-        world.cached_spheres = []
-```
+1. Change class variable to instance variable declaration
+2. Initialize in `__init__`
+3. Update `fill_slot_data` to use `self.cached_spheres`
+4. Update `adjust_shop_prices` to use `self.cached_spheres`
+5. Update `stage_modify_multidata` to iterate over world instances
 
 ## Verification
 
