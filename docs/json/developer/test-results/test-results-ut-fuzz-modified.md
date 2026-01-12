@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-11 23:38:41
+**Generated:** 2026-01-12 00:51:24
 
-**Source Data Created:** 2026-01-11T23:38:41.801717
+**Source Data Created:** 2026-01-12T00:51:24.305939
 
-**Source Data Last Updated:** 2026-01-11T23:38:41.801725
+**Source Data Last Updated:** 2026-01-12T00:51:24.305945
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,30 +23,30 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 60 (70.6%)
-- **Games with Failures:** 25 (29.4%)
+- **Games with 100% Pass Rate:** 61 (71.8%)
+- **Games with Failures:** 24 (28.2%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 604 (71.1%)
-- **Failed Runs:** 202
-- **Timed Out Runs:** 0
-- **Ignored Runs:** 44
+- **Successful Runs:** 616 (72.5%)
+- **Failed Runs:** 190
+- **Timed Out Runs:** 1
+- **Ignored Runs:** 43
 
 ### Explain Support Summary
 
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 10,887
-- **Locations without Explain Support:** 1,079
+- **Locations with Explain Support:** 10,865
+- **Locations without Explain Support:** 1,086
 - **Locations with Default Rule:** 21,212
-- **Overall Explain Coverage:** 91.0%
+- **Overall Explain Coverage:** 90.9%
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ | 10 | 3 | 6 | 0 | 1 | ❌ 30.0% | 11.8KB | ✅ | 654.1KB |
+| A Link to the Past | ❌ | 10 | 4 | 5 | 0 | 1 | ❌ 40.0% | 11.8KB | ✅ | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
@@ -71,7 +71,7 @@
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.6KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | ✅ | ✅ | 1302.5KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% | ✅ | ✅ | 1302.5KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
@@ -86,7 +86,7 @@
 | Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
-| Mega Man 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 51.5KB |
+| Mega Man 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 51.5KB |
 | MegaMan Battle Network 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.2KB |
 | Metamath | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 47.5KB |
@@ -110,9 +110,9 @@
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | 875.0KB |
+| Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 875.0KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TUNIC | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 3.1KB | ✅ | 711.6KB |
@@ -135,7 +135,7 @@
 
 ### A Link to the Past
 
-- **None**: 6 occurrence(s)
+- **None**: 5 occurrence(s)
 
 ### Blasphemous
 
@@ -148,6 +148,10 @@
 ### Celeste (Open World)
 
 - **None**: 10 occurrence(s)
+
+### Final Fantasy Mystic Quest
+
+- **<class 'TimeoutError'>**: 1 occurrence(s)
 
 ### Hollow Knight
 
@@ -169,10 +173,6 @@
 ### Lingo
 
 - **None**: 3 occurrence(s)
-
-### Mega Man 2
-
-- **None**: 10 occurrence(s)
 
 ### Ocarina of Time
 
@@ -203,11 +203,11 @@
 - **File 0-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 1-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 2-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 
@@ -215,14 +215,10 @@
 
 - **None**: 10 occurrence(s)
 
-### Super Mario Land 2
-
-- **None**: 2 occurrence(s)
-
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **None**: 3 occurrence(s)
+- **None**: 4 occurrence(s)
 
 ### TUNIC
 
@@ -254,7 +250,7 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Dark Souls III | 1469 | 0 | 228 | 1241 | ❌ 0% |
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 57 | 0 | 57 | 0 | ❌ 0% |
+| Yacht Dice | 64 | 0 | 64 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
 | DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
@@ -283,7 +279,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | DOOM 1993 | 474 | 0 | 0 | 474 | ✅ 100% |
 | DOOM II | 479 | 0 | 0 | 479 | ✅ 100% |
 | Donkey Kong Country 3 | 220 | 1 | 0 | 219 | ✅ 100% |
-| Factorio | 264 | 264 | 0 | 0 | ✅ 100% |
+| Factorio | 251 | 251 | 0 | 0 | ✅ 100% |
 | Faxanadu | 110 | 24 | 0 | 86 | ✅ 100% |
 | Final Fantasy | 0 | 0 | 0 | 0 | ✅ 100% |
 | Final Fantasy Mystic Quest | 251 | 60 | 0 | 191 | ✅ 100% |
@@ -300,7 +296,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Math Adventure | 10 | 5 | 0 | 5 | ✅ 100% |
 | MegaMan Battle Network 3 | 263 | 80 | 0 | 183 | ✅ 100% |
 | Meritous | 104 | 0 | 0 | 104 | ✅ 100% |
-| Metamath | 3 | 1 | 0 | 2 | ✅ 100% |
+| Metamath | 6 | 3 | 0 | 3 | ✅ 100% |
 | Muse Dash | 776 | 776 | 0 | 0 | ✅ 100% |
 | Noita | 303 | 0 | 0 | 303 | ✅ 100% |
 | Old School Runescape | 62 | 60 | 0 | 2 | ✅ 100% |
@@ -314,8 +310,8 @@ This section shows which games have rules that support the `explain_json()` meth
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
 | Sonic Adventure 2 Battle | 1036 | 206 | 0 | 830 | ✅ 100% |
-| Stardew Valley | 1067 | 924 | 0 | 143 | ✅ 100% |
-| Subnautica | 161 | 161 | 0 | 0 | ✅ 100% |
+| Stardew Valley | 1069 | 927 | 0 | 142 | ✅ 100% |
+| Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
 | Super Mario Land 2 | 2018 | 1889 | 0 | 129 | ✅ 100% |
