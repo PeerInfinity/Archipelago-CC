@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-12 19:23:23
+**Generated:** 2026-01-12 21:51:58
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,9 +44,9 @@ Of the 53 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 288.8KB
+- **Total Exporter Code:** 300.3KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 288.8KB
+- **Combined Total:** 300.3KB
 
 ## Test Results
 
@@ -54,7 +54,7 @@ Of the 53 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 237.9KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 34.4KB | ✅ | 666.4KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 45.6KB | ✅ | 666.4KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.4KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -94,7 +94,7 @@ Of the 53 templates passing all 4 tests:
 | Muse Dash WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 235.9KB |
 | Noita WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 81.0KB |
 | Old School Runescape WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 1.0KB | ✅ | 310.7KB |
-| Overcooked! 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 28.2KB | ✅ | 486.4KB |
+| Overcooked! 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 28.5KB | ✅ | 486.4KB |
 | Paint WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 113.5KB |
 | Risk of Rain 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 156.2KB |
 | Saving Princess WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 34.0KB |
@@ -137,8 +137,8 @@ Of the 53 templates passing all 4 tests:
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
 | 1 | Super Mario Land 2 WorldGen | 92.3KB |
-| 2 | A Link to the Past WorldGen | 34.4KB |
-| 3 | Overcooked! 2 WorldGen | 28.2KB |
+| 2 | A Link to the Past WorldGen | 45.6KB |
+| 3 | Overcooked! 2 WorldGen | 28.5KB |
 | 4 | Super Mario 64 WorldGen | 21.4KB |
 | 5 | A Hat in Time WorldGen | 18.0KB |
 | 6 | Terraria WorldGen | 16.8KB |

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-12 19:23:23
+**Generated:** 2026-01-12 21:51:58
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -17,13 +17,13 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 72/73 passed (98.6%)
+- **Minimal Test:** 73/73 passed (100.0%)
 - **Full Test:** 0/0 passed (0.0%)
 - **Multiclient Test:** 0/0 passed (0.0%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
 
@@ -31,8 +31,8 @@ Additional test results:
 
 - **Templates passing all 3 tests:** 0/73 (0.0%)
 - **Templates passing 2 tests:** 0/73 (0.0%)
-- **Templates passing 1 test:** 72/73 (98.6%)
-- **Templates passing 0 tests:** 1/73 (1.4%)
+- **Templates passing 1 test:** 73/73 (100.0%)
+- **Templates passing 0 tests:** 0/73 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -44,16 +44,16 @@ Of the 0 templates passing all 3 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 494.1KB
+- **Total Exporter Code:** 505.6KB
 - **Total Game Logic Code:** 267.8KB
-- **Combined Total:** 762.0KB
+- **Combined Total:** 773.4KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 34.4KB | ✅ | 654.1KB |
+| A Link to the Past | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 45.6KB | ✅ | 654.1KB |
 | A Short Hike | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 26.0KB |
@@ -96,7 +96,7 @@ Of the 0 templates passing all 3 tests:
 | Muse Dash | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 231.5KB |
 | Noita | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 74.6KB |
 | Old School Runescape | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 1.0KB | ✅ | 308.9KB |
-| Overcooked! 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 28.2KB | ✅ | 488.9KB |
+| Overcooked! 2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 2.7KB | ✅ | 123.7KB |
 | Raft | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 5.4KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 146.1KB |
@@ -147,10 +147,10 @@ Of the 0 templates passing all 3 tests:
 |------|-----------|---------------|
 | 1 | Super Mario Land 2 | 92.3KB |
 | 2 | Super Metroid | 60.9KB |
-| 3 | Lingo | 38.0KB |
-| 4 | A Link to the Past | 34.4KB |
+| 3 | A Link to the Past | 45.6KB |
+| 4 | Lingo | 38.0KB |
 | 5 | Starcraft 2 | 28.7KB |
-| 6 | Overcooked! 2 | 28.2KB |
+| 6 | Overcooked! 2 | 28.5KB |
 | 7 | Super Mario 64 | 21.4KB |
 | 8 | Kingdom Hearts 2 | 19.5KB |
 | 9 | Stardew Valley | 18.8KB |

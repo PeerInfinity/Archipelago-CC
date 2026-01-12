@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-12 19:23:23
+**Generated:** 2026-01-12 21:51:58
 
-**Source Data Created:** 2026-01-12T19:23:22.956550
+**Source Data Created:** 2026-01-12T21:51:57.884936
 
-**Source Data Last Updated:** 2026-01-12T19:23:22.956557
+**Source Data Last Updated:** 2026-01-12T21:51:57.884941
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/72 (55.6% of passed)
-- **Passing with Generic Logic:** 66/72 (91.7% of passed)
-- **Passing with Both Generic:** 40/72 (55.6% of passed)
+- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 40/73 (54.8% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 34.4KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 45.6KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -74,7 +74,7 @@
 | Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 1.0KB | ✅ |
-| Overcooked! 2 | ❌ Failed | 0 | 4.6 | 18.2 | 🟡 25.3% | 28.2KB | ✅ |
+| Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
@@ -103,6 +103,15 @@
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 9.2KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Super Mario 64 | 1 | 2026-01-12 21:50 | Previously failed, now passing |
+
 
 ## Notes
 
