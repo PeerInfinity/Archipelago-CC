@@ -332,6 +332,11 @@ def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='modified', worl
         if ut_fuzz.get('passed', False):
             continue
 
+        # Skip if the only "failures" are timeouts (no actual logic failures)
+        actual_failures = ut_fuzz.get('failure', 0)
+        if actual_failures == 0:
+            continue
+
         # Check if this game passes the canonical worldgen test
         wg_result = wg_results.get(game_name, {})
         if not wg_result:
