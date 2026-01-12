@@ -1,37 +1,30 @@
 # Reproducing the Landstalker Memory Leak
 
+> **Note:** This bug has been fixed in upstream Archipelago (as of Jan 2026). These reproduction steps now only work in this fork (Archipelago-CC) or older versions of upstream.
+
 ## Prerequisites
 
 - Python 3.12+
 - Git
 
-## Steps
+## Steps (Archipelago-CC fork)
 
-### 1. Clone Archipelago
-
-```bash
-git clone https://github.com/ArchipelagoMW/Archipelago.git
-cd Archipelago
-```
-
-### 2. Set up environment
+The simplest way to reproduce the bug in this fork:
 
 ```bash
-python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-python ModuleUpdate.py -y
+python Generate.py --weights_file_path "Templates/Landstalker - The Treasures of King Nole.yaml" --multi 1
 ```
 
-### 3. Generate Landstalker template
+### Expected output
 
-```bash
-mkdir -p Players/Templates
-python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-cp "Players/Templates/Landstalker - The Treasures of King Nole.yaml" Players/Landstalker.yaml
+```
+AssertionError: MultiWorld object was not de-allocated, it's referenced 67 times. This would be a memory leak.
 ```
 
-### 4. Run the memory leak test
+## Manual reproduction test
+
+To manually test the memory leak mechanism:
 
 ```bash
 python -c "
@@ -70,5 +63,6 @@ MEMORY LEAK: MultiWorld still referenced 67 times
 ## Notes
 
 - The memory leak assertion in `Generate.py` only triggers when `__debug__` is True (default)
-- The leak occurs because `stage_modify_multidata` is never called - Main.py uses `call_all()` instead of `call_stage()`
+- In this fork, the leak occurs because `stage_modify_multidata` is never called
+- Upstream fixed this by calling `stage_modify_multidata` via `call_stage` during `generate_output`
 - Clearing `LandstalkerWorld.cached_spheres = []` resolves the leak

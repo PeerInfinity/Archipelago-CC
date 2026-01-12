@@ -1,8 +1,18 @@
 # Fixing the Landstalker Memory Leak
 
+> **Note:** This bug has been fixed in upstream Archipelago (as of Jan 2026) using a different approach - upstream now calls `stage_modify_multidata` via `call_stage` during `generate_output`, which properly clears the class variable. The fix below describes an alternative instance variable approach.
+
 ## Overview
 
 The fix converts `cached_spheres` from a class variable to an instance variable, preventing references from persisting after generation completes.
+
+## How Upstream Fixed It
+
+Upstream fixed the bug by ensuring `stage_modify_multidata` is called during the `generate_output` stage via `call_stage`. This allows the existing class variable cleanup code to execute properly.
+
+## Alternative Fix: Instance Variable Approach
+
+The changes below convert `cached_spheres` to an instance variable, which is a more robust solution that doesn't rely on `stage_modify_multidata` being called.
 
 ## Changes to `worlds/landstalker/__init__.py`
 
@@ -90,7 +100,16 @@ def stage_modify_multidata(cls, multiworld: MultiWorld, *_):
 
 ## Verification
 
-After applying the fix, run the memory leak test:
+After applying either fix, run the generation command:
+
+```bash
+source .venv/bin/activate
+python Generate.py --weights_file_path "Templates/Landstalker - The Treasures of King Nole.yaml" --multi 1
+```
+
+The command should complete without the `AssertionError: MultiWorld object was not de-allocated` error.
+
+### Manual verification test
 
 ```bash
 python -c "
