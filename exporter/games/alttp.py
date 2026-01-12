@@ -281,6 +281,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         exit_data['access_rule'] = self._process_bunny_rules(
                             exit_data['access_rule'], exit_name
                         )
+                        # For exits from mixed regions, remove Moon Pearl requirement
+                        # since there are Light World paths available
+                        if is_mixed_region:
+                            exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                                exit_data['access_rule'], exit_name
+                            )
                 # Process entrances
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
@@ -342,3 +348,69 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             return all(self._is_pure_moon_pearl_rule(c) for c in children)
 
         return False
+
+    def _remove_moon_pearl_from_rule(self, rule: Dict[str, Any], rule_name: str) -> Dict[str, Any]:
+        """Remove Moon Pearl requirements from a rule, keeping other requirements.
+
+        For mixed regions (both Light World and Dark World accessible), the bunny
+        rule system adds Moon Pearl requirements. But since there are Light World
+        paths available, Moon Pearl isn't actually required.
+
+        This handles:
+        - Pure Moon Pearl rules: Replace with True_
+        - AND rules with Moon Pearl: Remove Moon Pearl children, keep others
+        - Nested structures: Recursively process
+
+        Args:
+            rule: The rule dict to process
+            rule_name: Name of the rule (for logging)
+
+        Returns:
+            The rule with Moon Pearl requirements removed
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # If this is a pure Moon Pearl rule, replace with True_
+        if self._is_pure_moon_pearl_rule(rule):
+            logger.debug(f"ALttP: Removed Moon Pearl from mixed region exit '{rule_name}'")
+            return {'rule': 'True_'}
+
+        # Handle Rule Builder And - filter out Moon Pearl children
+        if rule.get('rule') == 'And':
+            children = rule.get('children', [])
+            # Remove children that are pure Moon Pearl rules
+            filtered_children = [
+                child for child in children
+                if not self._is_pure_moon_pearl_rule(child)
+            ]
+            if len(filtered_children) != len(children):
+                logger.debug(f"ALttP: Removed Moon Pearl from AND rule for exit '{rule_name}'")
+
+            if not filtered_children:
+                return {'rule': 'True_'}
+            elif len(filtered_children) == 1:
+                return filtered_children[0]
+            else:
+                return {'rule': 'And', 'children': filtered_children}
+
+        # Handle AST-style 'and' rules
+        if rule.get('type') == 'and':
+            conditions = rule.get('conditions', [])
+            # Remove conditions that are pure Moon Pearl rules
+            filtered_conditions = [
+                cond for cond in conditions
+                if not self._is_pure_moon_pearl_rule(cond)
+            ]
+            if len(filtered_conditions) != len(conditions):
+                logger.debug(f"ALttP: Removed Moon Pearl from AND rule for exit '{rule_name}'")
+
+            if not filtered_conditions:
+                return {'rule': 'True_'}
+            elif len(filtered_conditions) == 1:
+                return filtered_conditions[0]
+            else:
+                return {'type': 'and', 'conditions': filtered_conditions}
+
+        # No changes needed
+        return rule
