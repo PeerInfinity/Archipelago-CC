@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison
 
-**Generated:** 2026-01-12 00:51:24
+**Generated:** 2026-01-12 02:23:16
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -26,7 +26,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 0.0% | ✅ 100.0% | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ 0.0% | ❌ 40.0% | 11.8KB | ✅ | 654.1KB |
+| A Link to the Past | ❌ 0.0% | ⚠️ 60.0% | 11.8KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 90.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |

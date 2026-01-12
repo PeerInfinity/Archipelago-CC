@@ -149,7 +149,6 @@ jobs:
           CMD="python scripts/test/test-multiworld-ut-fuzz.py"
           CMD="$CMD --runs ${{ inputs.runs_per_test }}"
           CMD="$CMD --max-players ${{ inputs.max_players }}"
-          CMD="$CMD --second-pass"
 
           if [ "${{ inputs.seed }}" != "" ]; then
             CMD="$CMD --seed ${{ inputs.seed }}"

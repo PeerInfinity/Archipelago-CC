@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-12 00:51:24
+**Generated:** 2026-01-12 02:23:16
 
-**Source Data Created:** 2026-01-12T00:51:24.305939
+**Source Data Created:** 2026-01-12T02:23:16.332924
 
-**Source Data Last Updated:** 2026-01-12T00:51:24.305945
+**Source Data Last Updated:** 2026-01-12T02:23:16.332929
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -26,8 +26,8 @@
 - **Games with 100% Pass Rate:** 61 (71.8%)
 - **Games with Failures:** 24 (28.2%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 616 (72.5%)
-- **Failed Runs:** 190
+- **Successful Runs:** 618 (72.7%)
+- **Failed Runs:** 188
 - **Timed Out Runs:** 1
 - **Ignored Runs:** 43
 
@@ -36,17 +36,17 @@
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 10,865
-- **Locations without Explain Support:** 1,086
-- **Locations with Default Rule:** 21,212
-- **Overall Explain Coverage:** 90.9%
+- **Locations with Explain Support:** 10,947
+- **Locations without Explain Support:** 1,085
+- **Locations with Default Rule:** 20,812
+- **Overall Explain Coverage:** 91.0%
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ | 10 | 4 | 5 | 0 | 1 | ❌ 40.0% | 11.8KB | ✅ | 654.1KB |
+| A Link to the Past | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% | 11.8KB | ✅ | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
@@ -135,7 +135,7 @@
 
 ### A Link to the Past
 
-- **None**: 5 occurrence(s)
+- **None**: 3 occurrence(s)
 
 ### Blasphemous
 
@@ -203,8 +203,8 @@
 - **File 0-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 1-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 2-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
@@ -250,7 +250,7 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Dark Souls III | 1469 | 0 | 228 | 1241 | ❌ 0% |
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 64 | 0 | 64 | 0 | ❌ 0% |
+| Yacht Dice | 63 | 0 | 63 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
 | DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
@@ -309,8 +309,8 @@ This section shows which games have rules that support the `explain_json()` meth
 | Saving Princess | 24 | 9 | 0 | 15 | ✅ 100% |
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
-| Sonic Adventure 2 Battle | 1036 | 206 | 0 | 830 | ✅ 100% |
-| Stardew Valley | 1069 | 927 | 0 | 142 | ✅ 100% |
+| Sonic Adventure 2 Battle | 708 | 277 | 0 | 431 | ✅ 100% |
+| Stardew Valley | 1079 | 938 | 0 | 141 | ✅ 100% |
 | Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
