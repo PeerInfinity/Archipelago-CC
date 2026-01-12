@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-12T02:23:16.332924",
-    "last_updated": "2026-01-12T02:23:16.332929",
+    "created": "2026-01-12T18:48:21.381624",
+    "last_updated": "2026-01-12T18:48:21.381632",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "modified",
@@ -28,7 +28,7 @@
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-01-12T02:19:48.249377",
+      "timestamp": "2026-01-12T18:45:00.658429",
       "explain_stats": {
         "game": "A Hat in Time WorldGen_79645483297583998146",
         "total_locations": 301,
@@ -59,7 +59,7 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-01-12T02:19:55.171751",
+      "timestamp": "2026-01-12T18:45:08.368697",
       "explain_stats": {
         "game": "Castlevania - Circle of the Moon WorldGen_79645483297583998146",
         "total_locations": 123,
@@ -90,7 +90,7 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-01-12T02:20:04.279447",
+      "timestamp": "2026-01-12T18:45:18.081844",
       "explain_stats": {
         "game": "DOOM II WorldGen_79645483297583998146",
         "total_locations": 479,
@@ -121,7 +121,7 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-01-12T02:20:11.085933",
+      "timestamp": "2026-01-12T18:45:25.119934",
       "explain_stats": {
         "game": "Inscryption WorldGen_79645483297583998146",
         "total_locations": 100,
@@ -152,7 +152,7 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-01-12T02:20:16.822374",
+      "timestamp": "2026-01-12T18:45:31.084888",
       "explain_stats": {
         "game": "Math Adventure WorldGen_79645483297583998146",
         "total_locations": 10,
@@ -183,7 +183,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-01-12T02:20:24.047925",
+      "timestamp": "2026-01-12T18:45:38.362079",
       "explain_stats": {
         "game": "Paint WorldGen_79645483297583998146",
         "total_locations": 89,
@@ -224,14 +224,14 @@
           "File 4-0.yaml is invalid. Please fix your yaml.": [
             4
           ],
-          "File 5-0.yaml is invalid. Please fix your yaml.": [
-            5
-          ],
           "File 6-0.yaml is invalid. Please fix your yaml.": [
             6
           ],
           "File 7-0.yaml is invalid. Please fix your yaml.": [
             7
+          ],
+          "File 5-0.yaml is invalid. Please fix your yaml.": [
+            5
           ],
           "File 8-0.yaml is invalid. Please fix your yaml.": [
             8
@@ -245,20 +245,21 @@
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-01-12T02:20:32.244371"
+      "timestamp": "2026-01-12T18:45:46.085185"
     },
     "TUNIC.yaml": {
       "ut_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 4,
-        "failure": 6,
+        "success": 3,
+        "failure": 7,
         "timeout": 0,
         "ignored": 0,
         "errors": {
           "None": [
             0,
             1,
+            2,
             6,
             5,
             8,
@@ -270,7 +271,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-01-12T02:21:35.931782",
+      "timestamp": "2026-01-12T18:46:46.813398",
       "explain_stats": {
         "game": "TUNIC WorldGen_79645483297583998146",
         "total_locations": 6804,
@@ -314,13 +315,13 @@
         "game_name": "Yacht Dice",
         "world_directory": "yachtdice"
       },
-      "timestamp": "2026-01-12T02:21:45.728841",
+      "timestamp": "2026-01-12T18:46:56.935835",
       "explain_stats": {
         "game": "Yacht Dice",
-        "total_locations": 63,
+        "total_locations": 57,
         "locations_with_explain": 0,
         "locations_default_rule": 0,
-        "locations_without_explain": 63,
+        "locations_without_explain": 57,
         "explain_coverage_percent": 0.0,
         "locations_without_explain_list": [
           {
@@ -348,11 +349,7 @@
             "region": "Board"
           },
           {
-            "name": "7 score",
-            "region": "Board"
-          },
-          {
-            "name": "10 score",
+            "name": "9 score",
             "region": "Board"
           },
           {
@@ -376,35 +373,31 @@
             "region": "Board"
           },
           {
-            "name": "31 score",
+            "name": "32 score",
             "region": "Board"
           },
           {
-            "name": "36 score",
+            "name": "37 score",
             "region": "Board"
           },
           {
-            "name": "41 score",
+            "name": "43 score",
             "region": "Board"
           },
           {
-            "name": "46 score",
+            "name": "49 score",
             "region": "Board"
           },
           {
-            "name": "52 score",
+            "name": "56 score",
             "region": "Board"
           },
           {
-            "name": "58 score",
+            "name": "63 score",
             "region": "Board"
           },
           {
-            "name": "64 score",
-            "region": "Board"
-          },
-          {
-            "name": "71 score",
+            "name": "70 score",
             "region": "Board"
           },
           {
@@ -416,39 +409,35 @@
             "region": "Board"
           },
           {
-            "name": "93 score",
+            "name": "95 score",
             "region": "Board"
           },
           {
-            "name": "101 score",
+            "name": "103 score",
             "region": "Board"
           },
           {
-            "name": "110 score",
+            "name": "113 score",
             "region": "Board"
           },
           {
-            "name": "118 score",
+            "name": "123 score",
             "region": "Board"
           },
           {
-            "name": "127 score",
+            "name": "133 score",
             "region": "Board"
           },
           {
-            "name": "137 score",
+            "name": "143 score",
             "region": "Board"
           },
           {
-            "name": "146 score",
+            "name": "154 score",
             "region": "Board"
           },
           {
-            "name": "156 score",
-            "region": "Board"
-          },
-          {
-            "name": "166 score",
+            "name": "165 score",
             "region": "Board"
           },
           {
@@ -456,39 +445,35 @@
             "region": "Board"
           },
           {
-            "name": "188 score",
+            "name": "189 score",
             "region": "Board"
           },
           {
-            "name": "199 score",
+            "name": "202 score",
             "region": "Board"
           },
           {
-            "name": "211 score",
+            "name": "214 score",
             "region": "Board"
           },
           {
-            "name": "223 score",
+            "name": "228 score",
             "region": "Board"
           },
           {
-            "name": "235 score",
+            "name": "241 score",
             "region": "Board"
           },
           {
-            "name": "247 score",
+            "name": "255 score",
             "region": "Board"
           },
           {
-            "name": "260 score",
+            "name": "270 score",
             "region": "Board"
           },
           {
-            "name": "273 score",
-            "region": "Board"
-          },
-          {
-            "name": "287 score",
+            "name": "284 score",
             "region": "Board"
           },
           {
@@ -500,79 +485,71 @@
             "region": "Board"
           },
           {
-            "name": "329 score",
+            "name": "331 score",
             "region": "Board"
           },
           {
-            "name": "344 score",
+            "name": "347 score",
             "region": "Board"
           },
           {
-            "name": "359 score",
+            "name": "364 score",
             "region": "Board"
           },
           {
-            "name": "374 score",
+            "name": "381 score",
             "region": "Board"
           },
           {
-            "name": "390 score",
+            "name": "398 score",
             "region": "Board"
           },
           {
-            "name": "406 score",
+            "name": "416 score",
             "region": "Board"
           },
           {
-            "name": "422 score",
+            "name": "434 score",
             "region": "Board"
           },
           {
-            "name": "439 score",
+            "name": "453 score",
             "region": "Board"
           },
           {
-            "name": "455 score",
+            "name": "472 score",
             "region": "Board"
           },
           {
-            "name": "473 score",
+            "name": "491 score",
             "region": "Board"
           },
           {
-            "name": "490 score",
+            "name": "511 score",
             "region": "Board"
           },
           {
-            "name": "508 score",
+            "name": "531 score",
             "region": "Board"
           },
           {
-            "name": "526 score",
+            "name": "552 score",
             "region": "Board"
           },
           {
-            "name": "545 score",
+            "name": "573 score",
             "region": "Board"
           },
           {
-            "name": "563 score",
+            "name": "594 score",
             "region": "Board"
           },
           {
-            "name": "582 score",
+            "name": "615 score",
             "region": "Board"
           },
           {
-            "name": "602 score",
-            "region": "Board"
-          },
-          {
-            "name": "622 score",
-            "region": "Board"
-          },
-          {
-            "name": "642 score",
+            "name": "637 score",
             "region": "Board"
           }
         ],
@@ -598,7 +575,7 @@
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-01-12T02:19:42.404545",
+      "timestamp": "2026-01-12T18:44:42.191923",
       "explain_stats": {
         "game": "Bumper Stickers WorldGen_79645483297583998146",
         "total_locations": 100,
@@ -629,7 +606,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-01-12T02:19:50.422878",
+      "timestamp": "2026-01-12T18:44:50.717361",
       "explain_stats": {
         "game": "DOOM 1993 WorldGen_79645483297583998146",
         "total_locations": 474,
@@ -660,18 +637,18 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-01-12T02:19:57.766505",
+      "timestamp": "2026-01-12T18:44:58.396996",
       "explain_stats": {
-        "game": "Hylics 2 WorldGen_79645483297583998146",
-        "total_locations": 133,
-        "locations_with_explain": 70,
-        "locations_default_rule": 63,
+        "game": "Hylics 2 WorldGen_22708164196567875238",
+        "total_locations": 166,
+        "locations_with_explain": 88,
+        "locations_default_rule": 78,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 50,
-        "entrances_with_explain": 26,
-        "entrances_default_rule": 24,
+        "entrances_with_explain": 24,
+        "entrances_default_rule": 26,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -691,7 +668,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-01-12T02:20:08.367419",
+      "timestamp": "2026-01-12T18:45:09.494473",
       "explain_stats": {
         "game": "Mario & Luigi Superstar Saga WorldGen_79645483297583998146",
         "total_locations": 555,
@@ -738,7 +715,7 @@
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-01-12T02:20:14.261547",
+      "timestamp": "2026-01-12T18:45:15.773810",
       "explain_stats": {
         "game": "Overcooked! 2 WorldGen_79645483297583998146",
         "total_locations": 35,
@@ -769,7 +746,7 @@
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-01-12T02:20:41.933963",
+      "timestamp": "2026-01-12T18:45:45.249262",
       "explain_stats": {
         "game": "Sonic Adventure 2 Battle WorldGen_22708164196567875238",
         "total_locations": 708,
@@ -800,7 +777,7 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-01-12T02:20:48.024126",
+      "timestamp": "2026-01-12T18:45:51.671906",
       "explain_stats": {
         "game": "TOEM rule builder WorldGen_79645483297583998146",
         "total_locations": 191,
@@ -831,7 +808,7 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-01-12T02:20:54.704891",
+      "timestamp": "2026-01-12T18:45:58.711088",
       "explain_stats": {
         "game": "Wargroove WorldGen_79645483297583998146",
         "total_locations": 38,
@@ -858,7 +835,7 @@
         "ignored": 1,
         "errors": {
           "None": [
-            3,
+            0,
             5,
             8
           ]
@@ -868,7 +845,7 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-01-12T02:20:08.064067",
+      "timestamp": "2026-01-12T18:45:01.150366",
       "explain_stats": {
         "game": "A Link to the Past WorldGen_22708164196567875238",
         "total_locations": 242,
@@ -991,10 +968,10 @@
           }
         ],
         "total_entrances": 391,
-        "entrances_with_explain": 174,
-        "entrances_default_rule": 204,
+        "entrances_with_explain": 175,
+        "entrances_default_rule": 203,
         "entrances_without_explain": 13,
-        "entrance_explain_coverage_percent": 93.05,
+        "entrance_explain_coverage_percent": 93.09,
         "entrances_without_explain_list": [
           {
             "name": "Sewers Door",
@@ -1078,7 +1055,7 @@
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-01-12T02:20:17.608954",
+      "timestamp": "2026-01-12T18:45:09.862918",
       "explain_stats": {
         "game": "Castlevania 64 WorldGen_79645483297583998146",
         "total_locations": 339,
@@ -1109,7 +1086,7 @@
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-01-12T02:20:32.683000",
+      "timestamp": "2026-01-12T18:45:24.157081",
       "explain_stats": {
         "game": "Dark Souls III",
         "total_locations": 1469,
@@ -2169,7 +2146,7 @@
         "game_name": "Jak and Daxter: The Precursor Legacy",
         "world_directory": "jakanddaxter"
       },
-      "timestamp": "2026-01-12T02:20:44.098769",
+      "timestamp": "2026-01-12T18:45:34.732764",
       "explain_stats": {
         "game": "Jak and Daxter: The Precursor Legacy",
         "total_locations": 289,
@@ -3193,7 +3170,7 @@
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-01-12T02:20:51.847148",
+      "timestamp": "2026-01-12T18:45:41.861146",
       "explain_stats": {
         "game": "Mega Man 2 WorldGen_79645483297583998146",
         "total_locations": 51,
@@ -3238,7 +3215,7 @@
         "game_name": "Pokemon Emerald",
         "world_directory": "pokemon_emerald"
       },
-      "timestamp": "2026-01-12T02:21:19.216318",
+      "timestamp": "2026-01-12T18:46:11.771237",
       "explain_stats": {
         "game": "Pokemon Emerald WorldGen_55977854110148887761",
         "total_locations": 695,
@@ -3379,8 +3356,8 @@
             1,
             0,
             2,
-            3,
             4,
+            3,
             6,
             5,
             7,
@@ -3393,12 +3370,12 @@
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-01-12T02:22:02.574692",
+      "timestamp": "2026-01-12T18:46:48.277188",
       "explain_stats": {
         "game": "Stardew Valley WorldGen_22708164196567875238",
         "total_locations": 1079,
-        "locations_with_explain": 938,
-        "locations_default_rule": 141,
+        "locations_with_explain": 935,
+        "locations_default_rule": 144,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -3424,7 +3401,7 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-01-12T02:22:11.422011",
+      "timestamp": "2026-01-12T18:46:56.883722",
       "explain_stats": {
         "game": "Terraria WorldGen_79645483297583998146",
         "total_locations": 128,
@@ -3455,7 +3432,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-01-12T02:22:27.253444",
+      "timestamp": "2026-01-12T18:47:11.893271",
       "explain_stats": {
         "game": "Yoshi's Island WorldGen_79645483297583998146",
         "total_locations": 221,
@@ -3486,7 +3463,7 @@
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-01-12T02:19:32.745418",
+      "timestamp": "2026-01-12T18:44:53.681130",
       "explain_stats": {
         "game": "A Short Hike WorldGen_79645483297583998146",
         "total_locations": 131,
@@ -3519,8 +3496,8 @@
             3,
             4,
             5,
-            6,
             7,
+            6,
             8,
             9
           ]
@@ -3530,7 +3507,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-01-12T02:20:22.854378",
+      "timestamp": "2026-01-12T18:45:39.384179",
       "explain_stats": {
         "game": "Celeste (Open World) WorldGen_79645483297583998146",
         "total_locations": 1035,
@@ -3561,7 +3538,7 @@
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-01-12T02:20:30.022251",
+      "timestamp": "2026-01-12T18:45:45.942812",
       "explain_stats": {
         "game": "Donkey Kong Country 3 WorldGen_79645483297583998146",
         "total_locations": 220,
@@ -3623,10 +3600,10 @@
             2,
             3,
             4,
-            5,
             6,
-            7,
+            5,
             8,
+            7,
             9
           ],
           "None": [
@@ -3638,7 +3615,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-01-12T02:20:42.726571",
+      "timestamp": "2026-01-12T18:45:57.646023",
       "explain_stats": {
         "game": "Kingdom Hearts 2 WorldGen_79645483297583998146",
         "total_locations": 643,
@@ -3790,7 +3767,7 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-01-12T02:20:50.010752",
+      "timestamp": "2026-01-12T18:46:04.498246",
       "explain_stats": {
         "game": "MegaMan Battle Network 3 WorldGen_79645483297583998146",
         "total_locations": 263,
@@ -3833,7 +3810,7 @@
         "game_name": "Pokemon Red and Blue",
         "world_directory": "pokemon_rb"
       },
-      "timestamp": "2026-01-12T02:21:44.916494",
+      "timestamp": "2026-01-12T18:46:56.039912",
       "explain_stats": {
         "game": "Pokemon Red and Blue WorldGen_11408892729106005028",
         "total_locations": 578,
@@ -4587,7 +4564,7 @@
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-01-12T02:21:55.573694",
+      "timestamp": "2026-01-12T18:47:05.653611",
       "explain_stats": {
         "game": "Subnautica WorldGen_79645483297583998146",
         "total_locations": 147,
@@ -4618,7 +4595,7 @@
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-01-12T02:22:05.607211",
+      "timestamp": "2026-01-12T18:47:14.878650",
       "explain_stats": {
         "game": "The Legend of Zelda WorldGen_22708164196567875238",
         "total_locations": 155,
@@ -4662,7 +4639,7 @@
         "game_name": "Yu-Gi-Oh! 2006",
         "world_directory": "yugioh06"
       },
-      "timestamp": "2026-01-12T02:22:19.490276",
+      "timestamp": "2026-01-12T18:47:27.805474",
       "explain_stats": {
         "game": "Yu-Gi-Oh! 2006 WorldGen_79645483297583998146",
         "total_locations": 151,
@@ -4693,7 +4670,7 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-01-12T02:19:33.342765",
+      "timestamp": "2026-01-12T18:44:44.467647",
       "explain_stats": {
         "game": "APQuest WorldGen_79645483297583998146",
         "total_locations": 6,
@@ -4724,7 +4701,7 @@
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-01-12T02:19:39.310299",
+      "timestamp": "2026-01-12T18:44:50.625472",
       "explain_stats": {
         "game": "Celeste 64 WorldGen_79645483297583998146",
         "total_locations": 40,
@@ -4755,7 +4732,7 @@
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-01-12T02:19:51.273724",
+      "timestamp": "2026-01-12T18:45:02.980556",
       "explain_stats": {
         "game": "Factorio WorldGen_79645483297583998146",
         "total_locations": 251,
@@ -4798,7 +4775,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-01-12T02:20:23.871483",
+      "timestamp": "2026-01-12T18:45:36.191475",
       "explain_stats": {
         "game": "Kingdom Hearts WorldGen_79645483297583998146",
         "total_locations": 523,
@@ -4829,7 +4806,7 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-01-12T02:20:29.758140",
+      "timestamp": "2026-01-12T18:45:42.224577",
       "explain_stats": {
         "game": "Meritous WorldGen_79645483297583998146",
         "total_locations": 104,
@@ -4873,7 +4850,7 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-01-12T02:20:36.970094",
+      "timestamp": "2026-01-12T18:45:49.411610",
       "explain_stats": {
         "game": "Raft WorldGen_79645483297583998146",
         "total_locations": 154,
@@ -4904,7 +4881,7 @@
         "game_name": "Sudoku",
         "world_directory": "apsudoku"
       },
-      "timestamp": "2026-01-12T02:20:42.057566",
+      "timestamp": "2026-01-12T18:45:54.527904",
       "explain_stats": {
         "game": "Sudoku",
         "total_locations": 0,
@@ -4935,7 +4912,7 @@
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-01-12T02:20:51.187503",
+      "timestamp": "2026-01-12T18:46:03.785521",
       "explain_stats": {
         "game": "The Messenger WorldGen_79645483297583998146",
         "total_locations": 136,
@@ -4974,8 +4951,8 @@
             4,
             5,
             7,
-            8,
-            9
+            9,
+            8
           ],
           "<class 'AssertionError'>": [
             3
@@ -4986,7 +4963,7 @@
         "game_name": "Zillion",
         "world_directory": "zillion"
       },
-      "timestamp": "2026-01-12T02:22:30.589083",
+      "timestamp": "2026-01-12T18:47:46.707834",
       "explain_stats": {
         "game": "Zillion WorldGen_22708164196567875238",
         "total_locations": 147,
@@ -5017,7 +4994,7 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-01-12T02:19:36.983029",
+      "timestamp": "2026-01-12T18:44:39.508947",
       "explain_stats": {
         "game": "Adventure WorldGen_79645483297583998146",
         "total_locations": 21,
@@ -5048,7 +5025,7 @@
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-01-12T02:19:41.816504",
+      "timestamp": "2026-01-12T18:44:44.303348",
       "explain_stats": {
         "game": "ChecksFinder WorldGen_79645483297583998146",
         "total_locations": 25,
@@ -5079,7 +5056,7 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-01-12T02:19:47.712311",
+      "timestamp": "2026-01-12T18:44:50.179874",
       "explain_stats": {
         "game": "Faxanadu WorldGen_79645483297583998146",
         "total_locations": 110,
@@ -5110,7 +5087,7 @@
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-01-12T02:20:05.367877",
+      "timestamp": "2026-01-12T18:45:07.660543",
       "explain_stats": {
         "game": "Kirby's Dream Land 3 WorldGen_79645483297583998146",
         "total_locations": 832,
@@ -5162,18 +5139,18 @@
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-01-12T02:21:16.662797",
+      "timestamp": "2026-01-12T18:46:17.690385",
       "explain_stats": {
-        "game": "Metamath WorldGen_22708164196567875238",
-        "total_locations": 6,
-        "locations_with_explain": 3,
-        "locations_default_rule": 3,
+        "game": "Metamath WorldGen_79645483297583998146",
+        "total_locations": 3,
+        "locations_with_explain": 1,
+        "locations_default_rule": 2,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 12,
-        "entrances_with_explain": 6,
-        "entrances_default_rule": 6,
+        "total_entrances": 6,
+        "entrances_with_explain": 3,
+        "entrances_default_rule": 3,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -5193,7 +5170,7 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-01-12T02:21:26.331258",
+      "timestamp": "2026-01-12T18:46:26.934995",
       "explain_stats": {
         "game": "Risk of Rain 2 WorldGen_79645483297583998146",
         "total_locations": 159,
@@ -5224,7 +5201,7 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-01-12T02:21:33.935357",
+      "timestamp": "2026-01-12T18:46:34.334325",
       "explain_stats": {
         "game": "Super Mario 64 WorldGen_79645483297583998146",
         "total_locations": 164,
@@ -5255,7 +5232,7 @@
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-01-12T02:21:47.752208",
+      "timestamp": "2026-01-12T18:46:47.726891",
       "explain_stats": {
         "game": "The Wind Waker WorldGen_81209627519868761947",
         "total_locations": 228,
@@ -5351,7 +5328,7 @@
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-01-12T02:21:56.809071",
+      "timestamp": "2026-01-12T18:46:56.536259",
       "explain_stats": {
         "game": "shapez WorldGen_22708164196567875238",
         "total_locations": 1267,
@@ -5382,7 +5359,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-01-12T02:19:41.353993",
+      "timestamp": "2026-01-12T18:44:54.563043",
       "explain_stats": {
         "game": "Aquaria WorldGen_79645483297583998146",
         "total_locations": 218,
@@ -5413,9 +5390,9 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-01-12T02:19:47.377286",
+      "timestamp": "2026-01-12T18:45:01.098718",
       "explain_stats": {
-        "game": "Choo-Choo Charles WorldGen_22708164196567875238",
+        "game": "Choo-Choo Charles WorldGen_79645483297583998146",
         "total_locations": 691,
         "locations_with_explain": 64,
         "locations_default_rule": 627,
@@ -5448,7 +5425,7 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-01-12T02:20:50.521702",
+      "timestamp": "2026-01-12T18:46:04.581363",
       "explain_stats": {
         "game": "Final Fantasy Mystic Quest WorldGen_79645483297583998146",
         "total_locations": 251,
@@ -5479,7 +5456,7 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-01-12T02:20:57.571328",
+      "timestamp": "2026-01-12T18:46:12.183651",
       "explain_stats": {
         "game": "Landstalker - The Treasures of King Nole WorldGen_79645483297583998146",
         "total_locations": 291,
@@ -5510,7 +5487,7 @@
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-01-12T02:21:06.420873",
+      "timestamp": "2026-01-12T18:46:21.567851",
       "explain_stats": {
         "game": "Muse Dash WorldGen_79645483297583998146",
         "total_locations": 776,
@@ -5554,7 +5531,7 @@
         "game_name": "SMZ3",
         "world_directory": "smz3"
       },
-      "timestamp": "2026-01-12T02:21:19.772217",
+      "timestamp": "2026-01-12T18:46:36.039655",
       "explain_stats": {
         "game": "SMZ3 WorldGen_79645483297583998146",
         "total_locations": 316,
@@ -5591,7 +5568,7 @@
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-01-12T02:21:32.549655",
+      "timestamp": "2026-01-12T18:46:49.514652",
       "explain_stats": {
         "game": "Super Mario Land 2 WorldGen_22708164196567875238",
         "total_locations": 2018,
@@ -5632,7 +5609,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-01-12T02:21:43.095277",
+      "timestamp": "2026-01-12T18:47:00.902032",
       "explain_stats": {
         "game": "The Witness WorldGen_79645483297583998146",
         "total_locations": 133,
@@ -5641,9 +5618,9 @@
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 226,
+        "total_entrances": 225,
         "entrances_with_explain": 99,
-        "entrances_default_rule": 127,
+        "entrances_default_rule": 126,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -5663,7 +5640,7 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-01-12T02:19:31.800756",
+      "timestamp": "2026-01-12T18:44:43.457357",
       "explain_stats": {
         "game": "Baking Adventure WorldGen_79645483297583998146",
         "total_locations": 15,
@@ -5694,7 +5671,7 @@
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-01-12T02:19:39.015946",
+      "timestamp": "2026-01-12T18:44:50.244750",
       "explain_stats": {
         "game": "Civilization VI WorldGen_22708164196567875238",
         "total_locations": 268,
@@ -5725,7 +5702,7 @@
         "game_name": "Final Fantasy",
         "world_directory": "ff1"
       },
-      "timestamp": "2026-01-12T02:19:44.199520",
+      "timestamp": "2026-01-12T18:44:55.122219",
       "explain_stats": {
         "game": "Final Fantasy WorldGen_79645483297583998146",
         "total_locations": 0,
@@ -5762,7 +5739,7 @@
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-01-12T02:19:56.213762",
+      "timestamp": "2026-01-12T18:45:06.657116",
       "explain_stats": {
         "game": "Lingo WorldGen_79645483297583998146",
         "total_locations": 165,
@@ -5793,7 +5770,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-01-12T02:20:02.720460",
+      "timestamp": "2026-01-12T18:45:12.800778",
       "explain_stats": {
         "game": "Noita WorldGen_79645483297583998146",
         "total_locations": 303,
@@ -5824,7 +5801,7 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-01-12T02:20:08.749597",
+      "timestamp": "2026-01-12T18:45:18.612350",
       "explain_stats": {
         "game": "Saving Princess WorldGen_79645483297583998146",
         "total_locations": 24,
@@ -5855,7 +5832,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-01-12T02:20:41.587607",
+      "timestamp": "2026-01-12T18:45:48.511874",
       "explain_stats": {
         "game": "Super Mario World WorldGen_79645483297583998146",
         "total_locations": 708,
@@ -5897,7 +5874,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-01-12T02:20:58.922506",
+      "timestamp": "2026-01-12T18:46:05.064093",
       "explain_stats": {
         "game": "Timespinner WorldGen_22708164196567875238",
         "total_locations": 684,
@@ -7780,7 +7757,7 @@
         "game_name": "Blasphemous",
         "world_directory": "blasphemous"
       },
-      "timestamp": "2026-01-12T02:19:49.604755",
+      "timestamp": "2026-01-12T18:44:48.372995",
       "explain_stats": {
         "game": "Blasphemous WorldGen_55977854110148887761",
         "total_locations": 305,
@@ -7925,7 +7902,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-01-12T02:19:54.849242",
+      "timestamp": "2026-01-12T18:44:53.419778",
       "explain_stats": {
         "game": "Coding Adventure WorldGen_79645483297583998146",
         "total_locations": 61,
@@ -7956,7 +7933,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-01-12T02:20:04.780375",
+      "timestamp": "2026-01-12T18:45:03.032977",
       "explain_stats": {
         "game": "Heretic WorldGen_79645483297583998146",
         "total_locations": 691,
@@ -7975,19 +7952,28 @@
     },
     "Links Awakening DX.yaml": {
       "ut_fuzz": {
-        "passed": true,
+        "passed": false,
         "total": 10,
-        "success": 10,
-        "failure": 0,
+        "success": 4,
+        "failure": 6,
         "timeout": 0,
         "ignored": 0,
-        "errors": {}
+        "errors": {
+          "None": [
+            4,
+            5,
+            6,
+            8,
+            7,
+            9
+          ]
+        }
       },
       "world_info": {
         "game_name": "Links Awakening DX",
         "world_directory": "ladx"
       },
-      "timestamp": "2026-01-12T02:20:46.606949",
+      "timestamp": "2026-01-12T18:45:34.898779",
       "explain_stats": {
         "game": "Links Awakening DX WorldGen_22708164196567875238",
         "total_locations": 220,
@@ -8030,7 +8016,7 @@
         "game_name": "Ocarina of Time",
         "world_directory": "oot"
       },
-      "timestamp": "2026-01-12T02:21:18.092552"
+      "timestamp": "2026-01-12T18:46:04.094256"
     },
     "Secret of Evermore.yaml": {
       "ut_fuzz": {
@@ -8049,8 +8035,8 @@
             4,
             5,
             6,
-            7,
             8,
+            7,
             9
           ]
         }
@@ -8059,7 +8045,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-01-12T02:21:29.550571",
+      "timestamp": "2026-01-12T18:46:15.213472",
       "explain_stats": {
         "game": "Secret of Evermore WorldGen_79645483297583998146",
         "total_locations": 913,
@@ -8081,9 +8067,9 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 6,
+        "failure": 5,
         "timeout": 0,
-        "ignored": 4,
+        "ignored": 5,
         "errors": {
           "varia_custom was chosen but varia_custom_preset is missing.": [
             1,
@@ -8092,7 +8078,6 @@
           "None": [
             3,
             4,
-            5,
             6
           ]
         }
@@ -8101,7 +8086,7 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-01-12T02:21:53.095615",
+      "timestamp": "2026-01-12T18:46:37.467563",
       "explain_stats": {
         "game": "Super Metroid WorldGen_86998726363870010506",
         "total_locations": 43,
@@ -8132,7 +8117,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-01-12T02:22:00.884447",
+      "timestamp": "2026-01-12T18:46:44.868854",
       "explain_stats": {
         "game": "Undertale WorldGen_22708164196567875238",
         "total_locations": 106,
@@ -8182,7 +8167,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-01-12T02:19:43.823135",
+      "timestamp": "2026-01-12T18:45:00.093302",
       "explain_stats": {
         "game": "Bomb Rush Cyberfunk WorldGen_79645483297583998146",
         "total_locations": 230,
@@ -8213,7 +8198,7 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-01-12T02:19:52.175621",
+      "timestamp": "2026-01-12T18:45:07.666629",
       "explain_stats": {
         "game": "DLCQuest WorldGen_22708164196567875238",
         "total_locations": 38,
@@ -8322,7 +8307,7 @@
         "game_name": "Hollow Knight",
         "world_directory": "hk"
       },
-      "timestamp": "2026-01-12T02:21:15.740629",
+      "timestamp": "2026-01-12T18:46:24.738660",
       "explain_stats": {
         "game": "Hollow Knight WorldGen_22708164196567875238",
         "total_locations": 712,
@@ -8353,7 +8338,7 @@
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-01-12T02:21:24.024877",
+      "timestamp": "2026-01-12T18:46:32.157119",
       "explain_stats": {
         "game": "Lufia II Ancient Cave WorldGen_79645483297583998146",
         "total_locations": 66,
@@ -8384,7 +8369,7 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-01-12T02:21:35.754109",
+      "timestamp": "2026-01-12T18:46:42.848817",
       "explain_stats": {
         "game": "Old School Runescape WorldGen_79645483297583998146",
         "total_locations": 62,
@@ -8415,7 +8400,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-01-12T02:22:47.350688",
+      "timestamp": "2026-01-12T18:47:49.491212",
       "explain_stats": {
         "game": "Shivers WorldGen_79645483297583998146",
         "total_locations": 113,
@@ -8467,7 +8452,7 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-01-12T02:22:53.782221",
+      "timestamp": "2026-01-12T18:47:55.030644",
       "explain_stats": {
         "game": "TOEM original WorldGen_79645483297583998146",
         "total_locations": 191,
@@ -8498,7 +8483,7 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-01-12T02:23:00.010931",
+      "timestamp": "2026-01-12T18:48:00.638287",
       "explain_stats": {
         "game": "VVVVVV WorldGen_79645483297583998146",
         "total_locations": 20,
