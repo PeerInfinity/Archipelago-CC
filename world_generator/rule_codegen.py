@@ -2187,6 +2187,15 @@ class RuleCodeGenerator:
                     first_val = values[0]
                     if isinstance(first_val, str):
                         expected_item = first_val
+            elif expected_operand.get('type') == 'tuple':
+                # Handle tuple type with 'elements' key: {"type": "tuple", "elements": [...]}
+                elements = expected_operand.get('elements', [])
+                if elements and len(elements) >= 1:
+                    first_val = elements[0]
+                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
+                        expected_item = first_val.get('value')
+                    elif isinstance(first_val, str):
+                        expected_item = first_val
 
         if expected_item is None:
             return None
@@ -6233,6 +6242,15 @@ class HelperCodeGenerator:
                 if values and len(values) >= 1:
                     first_val = values[0]
                     if isinstance(first_val, str):
+                        expected_item = first_val
+            elif expected_operand.get('type') == 'tuple':
+                # Handle tuple type with 'elements' key: {"type": "tuple", "elements": [...]}
+                elements = expected_operand.get('elements', [])
+                if elements and len(elements) >= 1:
+                    first_val = elements[0]
+                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
+                        expected_item = first_val.get('value')
+                    elif isinstance(first_val, str):
                         expected_item = first_val
 
         if expected_item is None:
