@@ -168,7 +168,8 @@ class Marioland2GameExportHandler(BaseGameExportHandler):
 
         if not auto_scroll_level_names:
             # No auto-scroll levels - always returns False
-            return {'type': 'constant', 'value': False}
+            # Still include params so the generated function accepts the level argument
+            return {'params': ['level'], 'body': {'type': 'constant', 'value': False}}
 
         # Build explicit checks for each auto-scroll level with their level-specific cancel items.
         # For each level: (level == "LevelName") AND NOT has_any(["Cancel Auto Scroll", "Cancel Auto Scroll - LevelName"])
