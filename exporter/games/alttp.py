@@ -169,12 +169,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         return False
 
     def _replace_small_key_checks(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Replace dungeon-specific small key checks with True_ for universal keys.
+        """Replace dungeon-specific small key checks with can_buy_unlimited helper.
 
         When small_key_shuffle is 'universal', the server uses can_buy_unlimited
         which checks if any shop with unlimited universal keys is reachable.
-        Since these shops are accessible during normal gameplay, we simplify
-        to True_ for the exported rules.
+        We emit a helper call so the worldgen can properly evaluate shop reachability.
 
         Recursively processes the rule tree to replace all small key checks.
         """
@@ -183,7 +182,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Check if this is a small key check that should be replaced
         if self._is_dungeon_small_key_check(rule):
-            return {'rule': 'True_'}
+            # Return a helper call to can_buy_unlimited instead of True_
+            # This allows proper evaluation of shop reachability
+            return {
+                'type': 'helper',
+                'name': 'can_buy_unlimited',
+                'args': [
+                    {'type': 'constant', 'value': 'Small Key (Universal)'}
+                ]
+            }
 
         # Handle Or/And conditions - recursively process and simplify
         if rule.get('type') in ('or', 'and'):
@@ -475,8 +482,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         is removed since there are Light World paths available. Only pure Dark World
         regions require Moon Pearl.
 
-        For universal keys, all dungeon-specific small key checks are replaced with True_
-        since universal keys can be purchased from shops with unlimited stock.
+        For universal keys, all dungeon-specific small key checks are replaced with
+        can_buy_unlimited helper calls to properly evaluate shop reachability.
         """
         # Process regions to handle entrance/exit rules and fix mixed region locations
         regions = data.get('regions', {})
