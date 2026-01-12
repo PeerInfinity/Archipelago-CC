@@ -305,8 +305,12 @@ def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fi
         return {}
 
 
-def load_worldgen_exclude_list(project_root):
+def load_worldgen_exclude_list(project_root, include_all_excludes=False):
     """Load the worldgen_test_exclude_list from template-exclude-list.json.
+
+    Args:
+        project_root: Path to the project root
+        include_all_excludes: If True, also include exclude_list and main_test_exclude_list
 
     Returns a set of template names that are excluded from worldgen tests.
     """
@@ -318,24 +322,33 @@ def load_worldgen_exclude_list(project_root):
         with open(exclude_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
         worldgen_excludes = data.get('worldgen_test_exclude_list', [])
-        return {item['name'] for item in worldgen_excludes}
+        result = {item['name'] for item in worldgen_excludes}
+
+        if include_all_excludes:
+            # Also include permanent excludes and main test excludes
+            permanent_excludes = data.get('exclude_list', [])
+            main_excludes = data.get('main_test_exclude_list', [])
+            result.update({item['name'] for item in permanent_excludes})
+            result.update({item['name'] for item in main_excludes})
+
+        return result
     except Exception as e:
         print(f"Error loading worldgen exclude list: {e}", file=sys.stderr)
         return set()
 
 
 def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='modified', worldgen_test_mode='canonical'):
-    """Get games that fail UT fuzz test, excluding those in worldgen_test_exclude_list.
+    """Get games that fail UT fuzz test, excluding those in exclude lists.
 
     This identifies games where:
     - The game fails UT fuzz testing (logic mismatches)
-    - The game is NOT in worldgen_test_exclude_list (i.e., worldgen should work for it)
+    - The game is NOT in worldgen_test_exclude_list, exclude_list, or main_test_exclude_list
 
     Returns list of dicts with game_name, template, ut_fuzz stats.
     """
-    # Load UT fuzz results and worldgen exclude list
+    # Load UT fuzz results and combined exclude list (worldgen + permanent + main test excludes)
     ut_fuzz_data = load_ut_fuzz_test_results(project_root, ut_version=ut_version)
-    worldgen_exclude_list = load_worldgen_exclude_list(project_root)
+    worldgen_exclude_list = load_worldgen_exclude_list(project_root, include_all_excludes=True)
 
     ut_results = ut_fuzz_data.get('results', {})
 
