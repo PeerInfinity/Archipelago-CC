@@ -498,10 +498,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     location_name = location_data.get('name', '')
                     access_rule = location_data.get('access_rule', {})
 
-                    # For mixed regions, remove Moon Pearl requirement
-                    if is_mixed_region and self._is_bunny_moon_pearl_rule(access_rule, location_name):
-                        location_data['access_rule'] = {'rule': 'True_'}
-                        logger.debug(f"ALttP: Removed Moon Pearl from mixed region location '{location_name}'")
+                    # For mixed regions, remove Moon Pearl requirement from compound rules
+                    # (since Light World paths are available, Moon Pearl isn't required)
+                    if is_mixed_region and access_rule and location_name not in self._bunny_accessible_locations:
+                        location_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                            access_rule, location_name
+                        )
                         access_rule = location_data.get('access_rule', {})
 
                                 # Replace dungeon small key checks when universal keys are enabled
@@ -657,6 +659,35 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return filtered_conditions[0]
             else:
                 return {'type': 'and', 'conditions': filtered_conditions}
+
+        # Handle Rule Builder HasAll - filter out Moon Pearl from items list
+        if rule.get('rule') == 'HasAll':
+            args = rule.get('args', {})
+            items = args.get('items', [])
+            if 'Moon Pearl' in items:
+                filtered_items = [item for item in items if item != 'Moon Pearl']
+                logger.debug(f"ALttP: Removed Moon Pearl from HasAll rule for '{rule_name}'")
+                if not filtered_items:
+                    return {'rule': 'True_'}
+                elif len(filtered_items) == 1:
+                    return {'rule': 'Has', 'args': {'item_name': filtered_items[0]}}
+                else:
+                    return {'rule': 'HasAll', 'args': {'items': filtered_items}}
+
+        # Handle Rule Builder HasAny - filter out Moon Pearl from items list
+        if rule.get('rule') == 'HasAny':
+            args = rule.get('args', {})
+            items = args.get('items', [])
+            if 'Moon Pearl' in items:
+                filtered_items = [item for item in items if item != 'Moon Pearl']
+                logger.debug(f"ALttP: Removed Moon Pearl from HasAny rule for '{rule_name}'")
+                if not filtered_items:
+                    # If only Moon Pearl was in HasAny, that means Moon Pearl was the only option
+                    # In a mixed region, this becomes True_
+                    return {'rule': 'True_'}
+                else:
+                    # Keep the rest of the items as valid options (the original HasAny becomes simpler)
+                    return {'rule': 'HasAny', 'args': {'items': filtered_items}}
 
         # No changes needed
         return rule
