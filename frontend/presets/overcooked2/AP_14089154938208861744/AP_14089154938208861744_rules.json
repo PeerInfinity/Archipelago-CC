@@ -13643,7 +13643,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Progressive Dash": {
         "name": "Progressive Dash",
@@ -13654,7 +13658,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Progressive Throw/Catch": {
         "name": "Progressive Throw/Catch",
@@ -13665,7 +13673,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Coin Purse": {
         "name": "Coin Purse",
