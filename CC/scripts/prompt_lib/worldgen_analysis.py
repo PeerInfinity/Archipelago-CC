@@ -415,3 +415,72 @@ def categorize_ut_fuzz_error(error_types):
 
     # Only exception-based errors
     return ('exceptions', {'types': error_types})
+
+
+def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode='fixed'):
+    """Get apworlds that fail the UT fuzz test.
+
+    This identifies apworlds (community-built .apworld files) that fail the
+    Universal Tracker fuzz test, which may indicate logic mismatches or
+    compatibility issues.
+
+    Args:
+        project_root: Path to the project root
+        ut_version: 'original' or 'modified' (default: 'modified')
+        seed_mode: 'fixed' or 'random' (default: 'fixed')
+
+    Returns:
+        List of dicts with game_name, template, world_directory, download_url,
+        ut_fuzz stats, and error information.
+    """
+    # Load apworld test results
+    ut_fuzz_data = load_ut_fuzz_test_results(
+        project_root,
+        ut_version=ut_version,
+        seed_mode=seed_mode,
+        world_source='apworlds'
+    )
+
+    ut_results = ut_fuzz_data.get('results', {})
+    failures = []
+
+    for template_name, ut_result in ut_results.items():
+        ut_fuzz = ut_result.get('ut_fuzz', {})
+        world_info = ut_result.get('world_info', {})
+        game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
+
+        # Skip if UT fuzz test passed
+        if ut_fuzz.get('passed', False):
+            continue
+
+        # Build failure entry
+        failure_entry = {
+            'game_name': game_name,
+            'template': template_name,
+            'world_directory': world_info.get('world_directory'),
+            'apworld_download_url': world_info.get('apworld_download_url'),
+            'ut_fuzz': {
+                'total': ut_fuzz.get('total', 0),
+                'success': ut_fuzz.get('success', 0),
+                'failure': ut_fuzz.get('failure', 0),
+                'timeout': ut_fuzz.get('timeout', 0),
+                'ignored': ut_fuzz.get('ignored', 0),
+                'success_rate': (ut_fuzz.get('success', 0) / max(ut_fuzz.get('total', 1), 1)) * 100,
+                'error_types': list(ut_fuzz.get('errors', {}).keys()),
+                'error_runs': ut_fuzz.get('errors', {}),
+            },
+        }
+
+        # Categorize the error type
+        error_category, error_details = categorize_ut_fuzz_error(
+            failure_entry['ut_fuzz']['error_types']
+        )
+        failure_entry['error_category'] = error_category
+        failure_entry['error_details'] = error_details
+
+        failures.append(failure_entry)
+
+    # Sort by success rate (lowest first) so worst failures come first
+    failures.sort(key=lambda x: x['ut_fuzz']['success_rate'])
+
+    return failures
