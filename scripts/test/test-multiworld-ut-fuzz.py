@@ -275,6 +275,15 @@ def run_generation_inprocess(
         from Generate import main as generate_main, mystery_argparse
         from Main import main as ERmain
 
+        # Clear any cached state from previous in-process generations
+        # Some worlds (like Landstalker) use class-level caches that persist
+        # across generations and can cause issues with stale player IDs
+        try:
+            from worlds.landstalker import LandstalkerWorld
+            LandstalkerWorld.cached_spheres = []
+        except ImportError:
+            pass
+
         # Build args similar to what Generate.py does
         argv = [
             "--player_files_path", str(multiworld_dir),
@@ -724,7 +733,7 @@ def run_multiple_tests(
         else:
             results["failure"] += 1
             results["passed"] = False
-            error = test_result.get("error", "Unknown error")
+            error = test_result.get("error") or "Unknown error"
             print(f"FAIL: {error[:50]}...")
 
     return results
