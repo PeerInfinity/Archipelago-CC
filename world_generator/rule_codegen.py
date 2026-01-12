@@ -1439,6 +1439,7 @@ class RuleCodeGenerator:
 
         Args:
             value: Either a raw value (int, str, etc.) or a dict like {"type": "constant", "value": X}
+                   or an f_string where all parts are constants
             default: Default value if extraction fails
 
         Returns:
@@ -1447,6 +1448,29 @@ class RuleCodeGenerator:
         if isinstance(value, dict):
             if value.get('type') == 'constant':
                 return value.get('value', default)
+            # Handle f_strings with all-constant parts (e.g., after parameter substitution)
+            if value.get('type') == 'f_string':
+                parts = value.get('parts', [])
+                result_parts = []
+                for part in parts:
+                    if isinstance(part, dict):
+                        part_type = part.get('type', '')
+                        if part_type == 'constant':
+                            result_parts.append(str(part.get('value', '')))
+                        elif part_type == 'formatted_value':
+                            # Try to extract constant from the inner value
+                            inner = part.get('value', {})
+                            inner_val = self._extract_constant_value(inner, None)
+                            if inner_val is None:
+                                return default  # Not all parts are constants
+                            result_parts.append(str(inner_val))
+                        else:
+                            return default  # Unknown part type
+                    elif isinstance(part, str):
+                        result_parts.append(part)
+                    else:
+                        return default
+                return ''.join(result_parts)
             return default
         return value if value is not None else default
 
