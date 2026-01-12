@@ -33,9 +33,12 @@ MAX_HELPER_DISCOVERY_ITERATIONS = 10
 # Rules larger than this likely indicate runaway expansion.
 MAX_RULE_SIZE_KB = 100
 
-# Maximum size of total export data in megabytes.
+# Maximum size of total export data in megabytes (per game).
 # Checked periodically during region processing.
-MAX_EXPORT_SIZE_MB = 10
+# The effective limit is: BASE + (EXTRA_PER_GAME * (num_players - 1))
+# This allows larger exports for multiworld while still catching loops.
+MAX_EXPORT_SIZE_MB_BASE = 10
+MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME = 1
 
 # =============================================================================
 # Sorting Configuration
