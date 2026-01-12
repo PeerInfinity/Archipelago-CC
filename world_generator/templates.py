@@ -1784,14 +1784,36 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Prefer progression items first since they may be needed for accessibility
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Use progression item first if available, otherwise filler
+            chosen_idx = progression_idx if progression_idx is not None else filler_idx
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 '''
     else:
         pre_fill_section = ''
