@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-12 02:23:16
+**Generated:** 2026-01-12 18:48:21
 
-**Source Data Created:** 2026-01-12T02:23:16.332924
+**Source Data Created:** 2026-01-12T18:48:21.381624
 
-**Source Data Last Updated:** 2026-01-12T02:23:16.332929
+**Source Data Last Updated:** 2026-01-12T18:48:21.381632
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,22 +23,22 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 61 (71.8%)
-- **Games with Failures:** 24 (28.2%)
+- **Games with 100% Pass Rate:** 60 (70.6%)
+- **Games with Failures:** 25 (29.4%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 618 (72.7%)
-- **Failed Runs:** 188
+- **Successful Runs:** 611 (71.9%)
+- **Failed Runs:** 194
 - **Timed Out Runs:** 1
-- **Ignored Runs:** 43
+- **Ignored Runs:** 44
 
 ### Explain Support Summary
 
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 10,947
-- **Locations without Explain Support:** 1,085
-- **Locations with Default Rule:** 20,812
+- **Locations with Explain Support:** 10,960
+- **Locations without Explain Support:** 1,079
+- **Locations with Default Rule:** 20,829
 - **Overall Explain Coverage:** 91.0%
 
 ## Test Results
@@ -82,7 +82,7 @@
 | Kirby's Dream Land 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.1KB | ✅ | 688.9KB |
 | Landstalker - The Treasures of King Nole | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.6KB | ✅ | 210.3KB |
 | Lingo | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 7.4KB | ✅ | 714.5KB |
+| Links Awakening DX | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 7.4KB | ✅ | 714.5KB |
 | Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
@@ -112,10 +112,10 @@
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
 | Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 875.0KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
-| TUNIC | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 3.1KB | ✅ | 711.6KB |
+| TUNIC | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 3.1KB | ✅ | 711.6KB |
 | Terraria | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.5KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.7KB | ✅ | 211.8KB |
@@ -174,6 +174,10 @@
 
 - **None**: 3 occurrence(s)
 
+### Links Awakening DX
+
+- **None**: 6 occurrence(s)
+
 ### Ocarina of Time
 
 - **<class 'AttributeError'>**: 9 occurrence(s)
@@ -205,9 +209,9 @@
 - **File 2-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
+- **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 - **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
 
@@ -218,11 +222,11 @@
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **None**: 4 occurrence(s)
+- **None**: 3 occurrence(s)
 
 ### TUNIC
 
-- **None**: 6 occurrence(s)
+- **None**: 7 occurrence(s)
 
 ### The Witness
 
@@ -250,7 +254,7 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Dark Souls III | 1469 | 0 | 228 | 1241 | ❌ 0% |
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 63 | 0 | 63 | 0 | ❌ 0% |
+| Yacht Dice | 57 | 0 | 57 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
 | DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
@@ -285,7 +289,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Final Fantasy Mystic Quest | 251 | 60 | 0 | 191 | ✅ 100% |
 | Heretic | 691 | 0 | 0 | 691 | ✅ 100% |
 | Hollow Knight | 712 | 712 | 0 | 0 | ✅ 100% |
-| Hylics 2 | 133 | 70 | 0 | 63 | ✅ 100% |
+| Hylics 2 | 166 | 88 | 0 | 78 | ✅ 100% |
 | Inscryption | 100 | 65 | 0 | 35 | ✅ 100% |
 | Kingdom Hearts | 523 | 464 | 0 | 59 | ✅ 100% |
 | Landstalker - The Treasures of King Nole | 291 | 1 | 0 | 290 | ✅ 100% |
@@ -296,7 +300,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Math Adventure | 10 | 5 | 0 | 5 | ✅ 100% |
 | MegaMan Battle Network 3 | 263 | 80 | 0 | 183 | ✅ 100% |
 | Meritous | 104 | 0 | 0 | 104 | ✅ 100% |
-| Metamath | 6 | 3 | 0 | 3 | ✅ 100% |
+| Metamath | 3 | 1 | 0 | 2 | ✅ 100% |
 | Muse Dash | 776 | 776 | 0 | 0 | ✅ 100% |
 | Noita | 303 | 0 | 0 | 303 | ✅ 100% |
 | Old School Runescape | 62 | 60 | 0 | 2 | ✅ 100% |
@@ -310,7 +314,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
 | Sonic Adventure 2 Battle | 708 | 277 | 0 | 431 | ✅ 100% |
-| Stardew Valley | 1079 | 938 | 0 | 141 | ✅ 100% |
+| Stardew Valley | 1079 | 935 | 0 | 144 | ✅ 100% |
 | Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
