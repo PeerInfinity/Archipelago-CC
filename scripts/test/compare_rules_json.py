@@ -1646,6 +1646,16 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if path == 'world.1.world_class_name' and worldgen_value == '<missing>':
         return True
 
+    # Option values promoted to world attributes for param_mapping support.
+    # WorldGen stores option values as world attributes when they're referenced via
+    # helper param_mappings, enabling proper param_mapping discovery during re-export.
+    # These attributes only exist in WorldGen and are simple values (int, bool, etc.).
+    # Pattern: world.1.<attribute_name> where original is <missing> and worldgen is a simple value
+    if path.startswith('world.1.') and original_value == '<missing>':
+        # Check if it's a simple value (not a complex object) that could be an option value
+        if isinstance(worldgen_value, (int, bool, float, str)):
+            return True
+
     # world_classes section - WorldGen exports this separately
     if path.startswith('world_classes'):
         return True
