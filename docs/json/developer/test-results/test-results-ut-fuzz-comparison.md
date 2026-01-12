@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison
 
-**Generated:** 2026-01-12 02:23:16
+**Generated:** 2026-01-12 18:48:21
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -16,8 +16,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 85
 - **Passing Both:** 33 (38.8%)
 - **Passing Original Only:** 7 (8.2%)
-- **Passing Modified Only:** 28 (32.9%)
-- **Passing Neither:** 17 (20.0%)
+- **Passing Modified Only:** 27 (31.8%)
+- **Passing Neither:** 18 (21.2%)
 - **Passing Modified with no custom code:** 40 (47.1%)
 - **Passing Modified Only with no custom code:** 13 (15.3%)
 
@@ -62,7 +62,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Kirby's Dream Land 3 | ❌ 0.0% | ✅ 100.0% | 10.1KB | ✅ | 688.9KB |
 | Landstalker - The Treasures of King Nole | ❌ 10.0% | ✅ 100.0% | 3.6KB | ✅ | 210.3KB |
 | Lingo | ✅ 30.0% | ❌ 0.0% | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | ❌ 10.0% | ✅ 100.0% | 7.4KB | ✅ | 714.5KB |
+| Links Awakening DX | ❌ 10.0% | ❌ 40.0% | 7.4KB | ✅ | 714.5KB |
 | Lufia II Ancient Cave | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 12.6KB |
@@ -95,7 +95,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Super Metroid | ❌ 0.0% | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
-| TUNIC | ✅ 100.0% | ❌ 40.0% | 3.1KB | ✅ | 711.6KB |
+| TUNIC | ✅ 100.0% | ❌ 30.0% | 3.1KB | ✅ | 711.6KB |
 | Terraria | ⚠️ 90.0% | ✅ 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 555.5KB |
 | The Messenger | ❌ 10.0% | ✅ 100.0% | 14.7KB | ✅ | 211.8KB |
@@ -165,7 +165,7 @@ These games pass in the Original UT but fail in the Modified UT.
 | TUNIC | 3.1KB | ✅ | 711.6KB |
 | The Witness | 14.1KB | ✅ | 401.3KB |
 
-## Games Passing Modified Only (28)
+## Games Passing Modified Only (27)
 
 These games pass in the Modified UT but fail in the Original UT.
 
@@ -180,7 +180,6 @@ These games pass in the Modified UT but fail in the Original UT.
 | Faxanadu | ✅ | ✅ | 68.6KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 688.9KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.3KB |
-| Links Awakening DX | 7.4KB | ✅ | 714.5KB |
 | Metamath | ✅ | ✅ | 47.5KB |
 | Muse Dash | ✅ | ✅ | 231.5KB |
 | Noita | ✅ | ✅ | 74.6KB |
@@ -200,7 +199,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | Yoshi's Island | 9.3KB | ✅ | 283.2KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Neither (17)
+## Games Passing Neither (18)
 
 These games fail in both Universal Tracker versions.
 
@@ -213,6 +212,7 @@ These games fail in both Universal Tracker versions.
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ✅ | ✅ | 754.0KB |
 | Kingdom Hearts 2 | 19.5KB | ✅ | 1675.2KB |
+| Links Awakening DX | 7.4KB | ✅ | 714.5KB |
 | Ocarina of Time | ✅ | ✅ | N/A |
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
