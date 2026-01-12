@@ -629,6 +629,14 @@ class RuleCodeGenerator:
                         self._is_rule_builder_convertible(if_false, depth + 1))
             return False
 
+        # For item_check and count_check, verify the item name is a constant
+        # (not a dynamic reference like world_attribute)
+        if rule_type in ('item_check', 'count_check'):
+            item = rule.get('item')
+            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'setting_value', 'option_value'):
+                # Dynamic item reference - not convertible to static Rule Builder
+                return False
+
         # Recursively check nested rules
         nested_keys = ['conditions', 'condition', 'operand', 'left', 'right',
                        'test', 'if_true', 'if_false']
@@ -5568,8 +5576,15 @@ class HelperCodeGenerator:
                             setting_name = param_mappings[param]
                             # Check if it's an option or a world attribute
                             if setting_name in self.option_definitions:
-                                # Option: access via state.multiworld.worlds[player].options.<name>.value
-                                arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
+                                # Option: prefer inlined value from export, fallback to runtime lookup
+                                # Using resolved values ensures worldgen worlds use the same option
+                                # values as the original export, even if their defaults differ.
+                                if setting_name in self.settings:
+                                    # Inline the actual value from the export
+                                    arg_exprs.append(repr(self.settings[setting_name]))
+                                else:
+                                    # Fallback to runtime lookup (for dynamic options)
+                                    arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
                             else:
                                 # World attribute: access via state.multiworld.worlds[player].<name>
                                 arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')

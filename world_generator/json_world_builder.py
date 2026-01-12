@@ -223,6 +223,7 @@ class JSONWorldBuilder:
             'world_class_name',  # World identity
             'world_description', # Metadata
             'web',               # Metadata
+            'shops',             # Handled by _create_shops() in __init__ - must be ShopWrapper objects
         }
 
         copied_attrs = []
@@ -276,7 +277,24 @@ class JSONWorldBuilder:
             k.isidentifier() and not k.startswith('_')
             for k in value.keys()
         )
+
+        # If keys are not valid identifiers, check if they're numeric strings
+        # JSON always has string keys, but the worldgen template generates integer keys
+        # for dicts like wily_5_weapons = {0: [], 1: [3, 4], ...}
+        # We need to convert these back to integers for rule evaluation to work correctly
         if not all_valid_identifiers:
+            # Check if all keys are numeric strings (representing integers)
+            all_numeric_keys = all(
+                isinstance(k, str) and k.lstrip('-').isdigit()
+                for k in value.keys()
+            )
+            if all_numeric_keys and value:
+                # Convert string keys to integers and recursively process values
+                converted = {}
+                for k, v in value.items():
+                    converted[int(k)] = self._convert_dict_to_namespace(v)
+                return converted
+            # Not valid identifiers and not all numeric, return as-is
             return value
 
         # Empty dicts should stay as dicts (can't usefully be a namespace)
