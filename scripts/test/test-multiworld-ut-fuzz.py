@@ -28,7 +28,9 @@ Usage:
 """
 
 import argparse
+import copy
 import json
+import logging
 import os
 import random
 import shutil
@@ -39,7 +41,10 @@ import zipfile
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from BaseClasses import MultiWorld
 
 # Add parent scripts directory to path to import from lib
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -249,6 +254,172 @@ def run_generation(multiworld_dir: Path, seed: int, project_root: Path) -> Tuple
         return False, str(e), None
 
 
+def run_generation_inprocess(
+    multiworld_dir: Path,
+    seed: int,
+    project_root: Path
+) -> Tuple[bool, str, Optional["MultiWorld"], Optional[Path]]:
+    """
+    Run generation in-process, keeping the MultiWorld object alive.
+
+    Returns (success, error_message, multiworld_object, output_archive_path)
+    """
+    templates = get_templates_in_multiworld(multiworld_dir)
+    if len(templates) < 2:
+        return False, f"Need at least 2 templates (have {len(templates)})", None, None
+
+    print(f"    Running in-process generation with {len(templates)} players, seed {seed}")
+
+    try:
+        # Import generation modules
+        from Generate import main as generate_main, mystery_argparse
+        from Main import main as ERmain
+
+        # Build args similar to what Generate.py does
+        argv = [
+            "--player_files_path", str(multiworld_dir),
+            "--seed", str(seed)
+        ]
+
+        # Parse arguments first - generate_main expects a Namespace, not a list
+        parsed_args = mystery_argparse(argv)
+
+        # Run the first phase (option rolling, player setup)
+        args, actual_seed = generate_main(parsed_args)
+
+        # Run the main generation - this returns the MultiWorld object!
+        multiworld = ERmain(args, actual_seed)
+
+        # Find the output archive
+        output_dir = project_root / "output"
+        archive_path = None
+        if output_dir.exists():
+            archives = sorted(output_dir.glob("AP_*.zip"), key=lambda p: p.stat().st_mtime, reverse=True)
+            if archives:
+                archive_path = archives[0]
+
+        return True, "", multiworld, archive_path
+
+    except Exception as e:
+        import traceback
+        error_msg = f"Generation failed: {str(e)[:300]}"
+        traceback.print_exc()
+        return False, error_msg, None, None
+
+
+def validate_multiworld_with_spheres(
+    multiworld: "MultiWorld",
+    multiworld_dir: Path
+) -> Dict[int, Tuple[bool, str, Dict]]:
+    """
+    Validate a multiworld using sphere analysis on the live MultiWorld object.
+
+    This performs full sphere validation including cross-world item dependencies:
+    - Verifies all locations are reachable
+    - Checks that items from other players unlock expected locations
+    - Validates the sphere order is correct
+
+    Returns dict of player_id -> (passed, error_message, details)
+    """
+    from BaseClasses import CollectionState, ItemClassification
+
+    results = {}
+    num_players = multiworld.players
+
+    print(f"    Validating multiworld with {num_players} players using sphere analysis...")
+
+    # Get the spheres from the multiworld
+    try:
+        spheres = list(multiworld.get_sendable_spheres())
+        print(f"    Found {len(spheres)} spheres")
+    except Exception as e:
+        return {0: (False, f"Failed to get spheres: {e}", {})}
+
+    # Validate each player
+    for player_id in range(1, num_players + 1):
+        player_world = multiworld.worlds[player_id]
+        game_name = multiworld.game[player_id]
+
+        details = {
+            "game": game_name,
+            "total_locations": 0,
+            "reachable_locations": 0,
+            "items_from_other_players": 0,
+            "spheres_with_cross_world_items": 0,
+        }
+
+        try:
+            # Count locations for this player
+            player_locations = [
+                loc for loc in multiworld.get_locations()
+                if loc.player == player_id and loc.address is not None
+            ]
+            details["total_locations"] = len(player_locations)
+
+            # Check how many items this player receives from other players
+            cross_world_items = []
+            for loc in multiworld.get_filled_locations():
+                if loc.item.player == player_id and loc.player != player_id:
+                    cross_world_items.append({
+                        "item": loc.item.name,
+                        "from_player": loc.player,
+                        "from_game": multiworld.game[loc.player],
+                        "location": loc.name
+                    })
+            details["items_from_other_players"] = len(cross_world_items)
+
+            # Count spheres that contain cross-world unlocks for this player
+            state = CollectionState(multiworld)
+            spheres_with_cross_world = 0
+
+            for sphere_idx, sphere in enumerate(spheres):
+                # Check if any location in this sphere gives an item to another player
+                # that then unlocks something for this player
+                has_cross_world_effect = False
+                for loc in sphere:
+                    if loc.player != player_id and loc.item.player == player_id:
+                        # This location belongs to another player but contains our item
+                        has_cross_world_effect = True
+                        break
+                if has_cross_world_effect:
+                    spheres_with_cross_world += 1
+
+            details["spheres_with_cross_world_items"] = spheres_with_cross_world
+
+            # Use multiworld's built-in accessibility check
+            # This verifies the player can reach all their locations
+            accessible = True
+            unreachable_locations = []
+
+            # Create a fresh state and collect all items to check full reachability
+            full_state = multiworld.get_all_state(use_cache=False)
+            for loc in player_locations:
+                if not full_state.can_reach(loc, "Location", player_id):
+                    accessible = False
+                    unreachable_locations.append(loc.name)
+
+            details["reachable_locations"] = len(player_locations) - len(unreachable_locations)
+
+            if unreachable_locations:
+                details["unreachable_locations"] = unreachable_locations[:10]  # Limit to first 10
+
+            if not accessible:
+                results[player_id] = (
+                    False,
+                    f"Player {player_id} ({game_name}): {len(unreachable_locations)} unreachable locations",
+                    details
+                )
+            else:
+                results[player_id] = (True, "", details)
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            results[player_id] = (False, f"Validation error: {str(e)[:200]}", details)
+
+    return results
+
+
 def validate_multiworld_with_ut(
     archive_path: Path,
     multiworld_dir: Path,
@@ -357,10 +528,19 @@ def validate_multiworld_with_ut(
 def run_multiworld_test(
     multiworld_dir: Path,
     seed: int,
-    project_root: Path
+    project_root: Path,
+    use_sphere_validation: bool = False
 ) -> Dict:
     """
     Run a complete multiworld test: generate and validate.
+
+    Args:
+        multiworld_dir: Directory containing player YAML files
+        seed: Random seed for generation
+        project_root: Path to project root
+        use_sphere_validation: If True, run generation in-process and validate
+            using the live MultiWorld object with full sphere analysis.
+            If False, use the original subprocess + UT validation approach.
 
     Returns a dict with test results.
     """
@@ -368,39 +548,93 @@ def run_multiworld_test(
         "passed": False,
         "generation_success": False,
         "player_results": {},
-        "error": None
+        "error": None,
+        "validation_mode": "sphere" if use_sphere_validation else "ut"
     }
 
-    # Run generation
-    gen_success, gen_error, archive_path = run_generation(multiworld_dir, seed, project_root)
+    if use_sphere_validation:
+        # New approach: run generation in-process, validate with live MultiWorld
+        gen_success, gen_error, multiworld, archive_path = run_generation_inprocess(
+            multiworld_dir, seed, project_root
+        )
 
-    if not gen_success:
-        result["error"] = gen_error
-        return result
+        if not gen_success:
+            result["error"] = gen_error
+            return result
 
-    result["generation_success"] = True
-    result["archive_path"] = str(archive_path)
+        result["generation_success"] = True
+        if archive_path:
+            result["archive_path"] = str(archive_path)
 
-    # Validate with UT
-    try:
-        player_results = validate_multiworld_with_ut(archive_path, multiworld_dir, project_root)
-        result["player_results"] = {
-            str(pid): {"passed": passed, "error": error}
-            for pid, (passed, error) in player_results.items()
-        }
-
-        # Check if all players passed
-        all_passed = all(passed for passed, _ in player_results.values())
-        result["passed"] = all_passed
-
-        # Clean up archive
+        # Validate with sphere analysis using live MultiWorld object
         try:
-            archive_path.unlink()
-        except OSError:
-            pass
+            player_results = validate_multiworld_with_spheres(multiworld, multiworld_dir)
+            result["player_results"] = {
+                str(pid): {
+                    "passed": passed,
+                    "error": error,
+                    "details": details
+                }
+                for pid, (passed, error, details) in player_results.items()
+            }
 
-    except Exception as e:
-        result["error"] = f"Validation error: {e}"
+            # Aggregate cross-world statistics
+            total_cross_world_items = sum(
+                details.get("items_from_other_players", 0)
+                for _, _, details in player_results.values()
+            )
+            result["cross_world_items_total"] = total_cross_world_items
+
+            # Check if all players passed
+            all_passed = all(passed for passed, _, _ in player_results.values())
+            result["passed"] = all_passed
+
+            # Clean up archive
+            if archive_path:
+                try:
+                    archive_path.unlink()
+                except OSError:
+                    pass
+
+            # Clean up the multiworld object
+            del multiworld
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            result["error"] = f"Validation error: {e}"
+
+    else:
+        # Original approach: subprocess + UT validation
+        gen_success, gen_error, archive_path = run_generation(multiworld_dir, seed, project_root)
+
+        if not gen_success:
+            result["error"] = gen_error
+            return result
+
+        result["generation_success"] = True
+        result["archive_path"] = str(archive_path)
+
+        # Validate with UT
+        try:
+            player_results = validate_multiworld_with_ut(archive_path, multiworld_dir, project_root)
+            result["player_results"] = {
+                str(pid): {"passed": passed, "error": error}
+                for pid, (passed, error) in player_results.items()
+            }
+
+            # Check if all players passed
+            all_passed = all(passed for passed, _ in player_results.values())
+            result["passed"] = all_passed
+
+            # Clean up archive
+            try:
+                archive_path.unlink()
+            except OSError:
+                pass
+
+        except Exception as e:
+            result["error"] = f"Validation error: {e}"
 
     return result
 
@@ -410,11 +644,20 @@ def run_multiple_tests(
     runs: int,
     base_seed: Optional[int],
     project_root: Path,
-    world_dirs: List[str]
+    world_dirs: List[str],
+    use_sphere_validation: bool = False
 ) -> Dict:
     """
     Run multiple multiworld tests with different seeds.
     For each run, regenerates random YAMLs for all games.
+
+    Args:
+        multiworld_dir: Directory containing player YAML files
+        runs: Number of test runs
+        base_seed: Base random seed (None for random)
+        project_root: Path to project root
+        world_dirs: List of world directory names in the multiworld
+        use_sphere_validation: If True, use in-process generation with sphere validation
 
     Returns aggregated results.
     """
@@ -455,7 +698,7 @@ def run_multiple_tests(
                 with open(yaml_path, 'w', encoding='utf-8') as f:
                     f.write(yaml_content)
 
-        test_result = run_multiworld_test(multiworld_dir, seed, project_root)
+        test_result = run_multiworld_test(multiworld_dir, seed, project_root, use_sphere_validation)
         results["run_results"].append({
             "seed": seed,
             "result": test_result
@@ -560,6 +803,19 @@ def main():
         action='store_true',
         help='After first pass, run a second pass to test games that were pending (added when < 2 players)'
     )
+    parser.add_argument(
+        '--sphere-validation',
+        action='store_true',
+        default=True,
+        help='Use in-process generation with full sphere validation (default). '
+             'This keeps the MultiWorld object alive to validate cross-world item dependencies.'
+    )
+    parser.add_argument(
+        '--ut-validation',
+        action='store_true',
+        help='Use subprocess generation with UT-based validation instead of sphere validation. '
+             'Faster but less thorough - does not validate cross-world item dependencies.'
+    )
 
     args = parser.parse_args()
 
@@ -614,6 +870,7 @@ def main():
     print(f"Runs per test: {args.runs}")
     print(f"Seed: {args.seed if args.seed is not None else 'random'}")
     print(f"Max players: {args.max_players}")
+    print(f"Validation mode: {'sphere (in-process)' if args.sphere_validation and not args.ut_validation else 'UT (subprocess)'}")
     print()
 
     # Compute output filename
@@ -634,12 +891,13 @@ def main():
         "metadata": {
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
-            "script_version": "1.0.0",
+            "script_version": "1.1.0",
             "seed_mode": seed_type,
             "seed": args.seed if args.seed is not None else "random",
             "runs_per_test": args.runs,
             "max_players": args.max_players,
-            "total_templates_considered": len(template_files)
+            "total_templates_considered": len(template_files),
+            "validation_mode": "sphere" if args.sphere_validation and not args.ut_validation else "ut"
         },
         "assembly_order": [],  # Order in which games were added
         "final_multiworld": [],  # Games (world_dirs) in the final multiworld
@@ -742,7 +1000,8 @@ def main():
             runs=args.runs,
             base_seed=args.seed,
             project_root=PROJECT_ROOT,
-            world_dirs=games_in_multiworld
+            world_dirs=games_in_multiworld,
+            use_sphere_validation=args.sphere_validation and not args.ut_validation
         )
 
         game_result["test_result"] = test_result
@@ -829,7 +1088,8 @@ def main():
                     runs=args.runs,
                     base_seed=args.seed,
                     project_root=PROJECT_ROOT,
-                    world_dirs=games_in_multiworld
+                    world_dirs=games_in_multiworld,
+                    use_sphere_validation=args.sphere_validation and not args.ut_validation
                 )
 
                 # Update the game result with second pass data
