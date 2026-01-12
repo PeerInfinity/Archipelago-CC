@@ -2264,6 +2264,45 @@ class _ShopWrapper:
             item._hint_text = data.hint_text
 ''' if has_hint_text else ''
 
+    # Check if any items have classification_counts for create_item method
+    has_classification_counts = any(item.classification_counts for item in data.items.values())
+
+    # Generate create_item method with or without classification_counts handling
+    if has_classification_counts:
+        create_item_body = f'''        # Handle items with mixed classifications (e.g., some progression, some filler)
+        classification_counts = getattr(data, 'classification_counts', None)
+        if classification_counts:
+            # Get or initialize the tracker for this item
+            if not hasattr(self, '_classification_trackers'):
+                self._classification_trackers = {{}}
+            if name not in self._classification_trackers:
+                self._classification_trackers[name] = {{}}
+            tracker = self._classification_trackers[name]
+
+            # Find the classification to use based on counts and what's been created
+            classification = data.classification  # Default
+            classification_map = {{
+                'progression': ItemClassification.progression,
+                'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                'useful': ItemClassification.useful,
+                'trap': ItemClassification.trap,
+                'filler': ItemClassification.filler,
+            }}
+            for class_name_str, quota in classification_counts.items():
+                created_count = tracker.get(class_name_str, 0)
+                if created_count < quota:
+                    classification = classification_map.get(class_name_str, ItemClassification.filler)
+                    tracker[class_name_str] = created_count + 1
+                    break
+
+            item = {class_name}Item(name, classification, data.id, self.player)
+        else:
+            item = {class_name}Item(name, data.classification, data.id, self.player)
+{hint_text_code}        return item'''
+    else:
+        create_item_body = f'''        item = {class_name}Item(name, data.classification, data.id, self.player)
+{hint_text_code}        return item'''
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
@@ -2363,6 +2402,7 @@ class {world_class}(RuleWorldMixin, World):
                 # Create items with per-classification counts
                 classification_map = {{
                     'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
                     'useful': ItemClassification.useful,
                     'trap': ItemClassification.trap,
                     'filler': ItemClassification.filler,
@@ -2415,8 +2455,7 @@ class {world_class}(RuleWorldMixin, World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = {class_name}Item(name, data.classification, data.id, self.player)
-{hint_text_code}        return item
+{create_item_body}
 
 {collect_item_section}{fill_slot_data_section}'''
 
