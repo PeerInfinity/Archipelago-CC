@@ -562,6 +562,31 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return data
 
+    def get_game_info(self, world) -> Dict[str, Any]:
+        """Get ALttP-specific game information for the frontend.
+
+        Exports bunny rule metadata that enables path-based bunny evaluation
+        in the Universal Tracker. This allows proper handling of the complex
+        path-dependent bunny rules in ALttP.
+
+        Metadata exported:
+        - bunny_impassable_caves: Regions where bunnies cannot pass through
+        - bunny_accessible_locations: Locations accessible in bunny form
+        - mandatory_superbunny_locations: Locations with mandatory superbunny paths (glitch modes)
+        - mirror_superbunny_locations: Locations with mirror superbunny paths (glitch modes)
+        """
+        game_info = super().get_game_info(world)
+
+        # Add bunny rule metadata for path-based evaluation
+        game_info['bunny_rules'] = {
+            'bunny_impassable_caves': sorted(BUNNY_IMPASSABLE_CAVES),
+            'bunny_accessible_locations': sorted(BUNNY_ACCESSIBLE_LOCATIONS),
+            'mandatory_superbunny_locations': sorted(MANDATORY_SUPERBUNNY_LOCATIONS),
+            'mirror_superbunny_locations': sorted(MIRROR_SUPERBUNNY_LOCATIONS),
+        }
+
+        return game_info
+
     def _is_bunny_moon_pearl_rule(self, rule: Dict[str, Any], location_name: str) -> bool:
         """Check if this is a Moon Pearl rule added by bunny rule replacement.
 
