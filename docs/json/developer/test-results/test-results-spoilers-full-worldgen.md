@@ -4,7 +4,9 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-12 21:51:58
+[View Original Template Results](./test-results-spoilers-full.md)
+
+**Generated:** 2026-01-12 21:58:15
 
 **Source Data Created:** 2026-01-08T06:00:46.621947
 
