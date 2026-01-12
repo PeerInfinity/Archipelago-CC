@@ -46,6 +46,7 @@ from prompt_lib import (
     categorize_world_generation_error,
     categorize_seed_generation_error,
     get_ut_fuzz_worldgen_pass_failures,
+    get_ut_fuzz_apworld_failures,
     # prompt_generators.standard
     generate_helper_export_prompt,
     generate_exporter_simplify_prompt,
@@ -62,6 +63,8 @@ from prompt_lib import (
     generate_worldgen_rules_comp_failure_prompt,
     # prompt_generators.ut_fuzz
     generate_ut_fuzz_failure_prompt,
+    # prompt_generators.worldgen (apworld)
+    generate_ut_fuzz_apworld_failure_prompt,
     # execution
     run_template_test,
     run_prompt_for_game,
@@ -303,6 +306,67 @@ def main():
 
             prompt = generate_ut_fuzz_failure_prompt(
                 game_name, template_file, world_dir, ut_fuzz_info, world_mapping, args.seed
+            )
+
+            if args.promptfile:
+                collected_prompts.append(prompt)
+            else:
+                print(prompt)
+                if args.text or args.prompt:
+                    return 0
+
+            if args.max_files and (i + 1) >= args.max_files:
+                if not quiet_mode:
+                    print(f"\n Reached maximum file limit ({args.max_files}), stopping...")
+                break
+
+        # Write collected prompts to file if in --promptfile mode
+        if args.promptfile and collected_prompts:
+            output_file = Path(project_root) / 'CC' / 'scripts' / 'prompts.txt'
+            write_collected_prompts(collected_prompts, output_file)
+
+        return 0
+
+    # Handle UT fuzz apworld failures mode - community apworlds that fail UT fuzz
+    if args.ut_fuzz_apworld_failures:
+        quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
+        collected_prompts = [] if args.promptfile else None
+
+        failures = get_ut_fuzz_apworld_failures(
+            project_root,
+            ut_version=args.ut_version,
+            seed_mode=args.ut_seed_mode
+        )
+
+        if not quiet_mode:
+            print(f"Found {len(failures)} apworlds that fail UT fuzz ({args.ut_version} UT, {args.ut_seed_mode} seed)")
+
+        for i, failure in enumerate(failures):  # Already sorted by success rate (worst first)
+            game_name = failure['game_name']
+            template_file = failure['template']
+            world_dir = failure['world_directory']
+            ut_fuzz_info = failure['ut_fuzz']
+            download_url = failure.get('apworld_download_url')
+            error_category = failure.get('error_category', 'unknown')
+            error_details = failure.get('error_details')
+
+            if not quiet_mode:
+                print(f"\n{'='*60}")
+                print(f"[{i+1}/{len(failures)}] {game_name}")
+                print(f"UT Fuzz: {ut_fuzz_info['success']}/{ut_fuzz_info['total']} passed ({ut_fuzz_info['success_rate']:.1f}%)")
+                print(f"Error type: {error_category}")
+                if download_url:
+                    print(f"Download URL: {download_url}")
+                print('='*60)
+
+            prompt = generate_ut_fuzz_apworld_failure_prompt(
+                game_name=game_name,
+                template_file=template_file,
+                world_dir=world_dir,
+                ut_fuzz_info=ut_fuzz_info,
+                download_url=download_url,
+                error_category=error_category,
+                error_details=error_details,
             )
 
             if args.promptfile:

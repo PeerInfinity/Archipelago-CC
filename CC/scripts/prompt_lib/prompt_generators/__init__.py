@@ -19,6 +19,7 @@ from .worldgen import (
     generate_worldgen_crossval_failure_prompt,
     generate_worldgen_rules_comp_failure_prompt,
     generate_ut_fuzz_failure_prompt,
+    generate_ut_fuzz_apworld_failure_prompt,
 )
 
 __all__ = [
@@ -38,4 +39,6 @@ __all__ = [
     'generate_worldgen_rules_comp_failure_prompt',
     # ut fuzz
     'generate_ut_fuzz_failure_prompt',
+    # apworld fuzz
+    'generate_ut_fuzz_apworld_failure_prompt',
 ]

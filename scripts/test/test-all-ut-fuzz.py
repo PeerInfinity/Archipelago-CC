@@ -41,6 +41,9 @@ from lib.test_utils import (
     build_and_load_world_mapping
 )
 
+# Global variable to cache apworld download URLs
+_apworld_download_urls: Dict[str, str] = {}
+
 # Project root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
@@ -114,6 +117,91 @@ def read_explain_stats() -> Optional[Dict]:
                 return json.load(f)
         except (json.JSONDecodeError, IOError):
             pass
+    return None
+
+
+def load_apworld_download_urls() -> Dict[str, str]:
+    """
+    Load download URLs for all available apworlds from the apworld_manager.
+
+    Returns a dict mapping world_id (lowercase) to download URL.
+    The URL can be used to download the apworld file directly.
+    """
+    global _apworld_download_urls
+
+    if _apworld_download_urls:
+        return _apworld_download_urls
+
+    try:
+        from worlds.apworld_manager.world_manager import (
+            repositories, refresh_apworld_table
+        )
+        from worlds.apworld_manager import RepoWorld
+
+        print("Loading apworld download URLs from repositories...")
+        repositories.load_repos_from_settings()
+        repositories.refresh()
+
+        apworlds = refresh_apworld_table()
+
+        for world in apworlds:
+            latest = world.get('latest_version')
+            if latest and hasattr(latest, 'id'):
+                world_id = latest.id.lower()
+                # Get the download URL from the latest_version object
+                # The URL is typically in the format used by download_remote_world
+                if hasattr(latest, 'download_url'):
+                    _apworld_download_urls[world_id] = latest.download_url
+                elif hasattr(latest, 'url'):
+                    _apworld_download_urls[world_id] = latest.url
+                else:
+                    # Construct URL from repository info if direct URL not available
+                    # Format: https://github.com/<owner>/<repo>/releases/download/<tag>/<filename>
+                    if hasattr(latest, 'repository') and hasattr(latest, 'tag_name'):
+                        repo = latest.repository
+                        if hasattr(repo, 'url'):
+                            # repo.url is typically "https://github.com/<owner>/<repo>"
+                            filename = f"{world_id}.apworld"
+                            _apworld_download_urls[world_id] = f"{repo.url}/releases/download/{latest.tag_name}/{filename}"
+
+        print(f"Loaded {len(_apworld_download_urls)} apworld download URLs")
+        return _apworld_download_urls
+
+    except ImportError as e:
+        print(f"Warning: Could not load apworld_manager: {e}")
+        return {}
+    except Exception as e:
+        print(f"Warning: Error loading apworld download URLs: {e}")
+        return {}
+
+
+def get_apworld_download_url(world_directory: str, world_mapping: Dict) -> Optional[str]:
+    """
+    Get the download URL for a specific apworld.
+
+    Args:
+        world_directory: The world directory name (e.g., 'actraiser')
+        world_mapping: The world mapping dict from build_and_load_world_mapping()
+
+    Returns:
+        The download URL if available, None otherwise.
+    """
+    # First check if we have it cached
+    if world_directory.lower() in _apworld_download_urls:
+        return _apworld_download_urls[world_directory.lower()]
+
+    # Try to find it in the world mapping
+    for game_name, info in world_mapping.items():
+        if info.get('world_directory') == world_directory:
+            apworld_path = info.get('apworld_path')
+            if apworld_path:
+                # Extract world_id from apworld path
+                # apworld_path is like "custom_worlds/actraiser.apworld"
+                apworld_filename = Path(apworld_path).stem  # "actraiser"
+                if apworld_filename.lower() in _apworld_download_urls:
+                    return _apworld_download_urls[apworld_filename.lower()]
+            break
+
     return None
 
 
@@ -378,6 +466,9 @@ def main():
         print("No template files found to test")
         return 1
 
+    # Initialize world_mapping - needed for custom worlds filtering and download URLs
+    world_mapping = {}
+
     # Apply --custom-worlds-only filtering if requested
     if args.custom_worlds_only:
         print("Filtering to custom_worlds only...")
@@ -406,6 +497,10 @@ def main():
         if not template_files:
             print("Error: No templates remaining after custom_worlds filter")
             return 1
+
+    # Load apworld download URLs when testing apworlds
+    if world_source == "apworlds":
+        load_apworld_download_urls()
 
     # Apply every-nth and skip-first filters for parallel splitting
     if args.skip_first > 0 or args.every_nth > 1:
@@ -490,6 +585,12 @@ def main():
             },
             "timestamp": datetime.now().isoformat()
         }
+
+        # Include apworld download URL if testing apworlds
+        if world_source == "apworlds":
+            download_url = get_apworld_download_url(world_dir, world_mapping)
+            if download_url:
+                result_entry["world_info"]["apworld_download_url"] = download_url
 
         # Include explain stats if available
         if test_result.get("explain_stats"):
