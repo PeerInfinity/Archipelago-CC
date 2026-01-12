@@ -117,6 +117,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
         self._is_glitch_mode = self._check_glitch_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
+        self._item_placements: Dict[str, str] = {}
 
     def _check_glitch_mode(self, world) -> bool:
         """Check if the world is in a glitch mode that enables superbunny accessibility."""
@@ -147,6 +148,236 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if is_universal:
             logger.info(f"ALttP: Universal small keys detected (small_key_shuffle={small_key_value})")
         return is_universal
+
+    def _extract_item_placements_from_data(self, data: Dict[str, Any]) -> Dict[str, str]:
+        """Extract item placements from the exported data structure.
+
+        The exporter stores item placements in each location's 'item' field:
+        location_data['item']['name'] = placed item name
+
+        This allows us to evaluate item_name_in_location_names conditionals
+        at post-processing time, resolving them to the correct branch based
+        on actual item placements.
+
+        Args:
+            data: The export data dict containing regions with location data
+
+        Returns:
+            Dict mapping location names to item names (e.g., {"Ice Palace - Spike Room": "Big Key (Ice Palace)"})
+        """
+        placements: Dict[str, str] = {}
+
+        try:
+            regions = data.get('regions', {})
+            for player_id, player_regions in regions.items():
+                for region_name, region_data in player_regions.items():
+                    for location_data in region_data.get('locations', []):
+                        location_name = location_data.get('name', '')
+                        item_info = location_data.get('item')
+                        if item_info and location_name:
+                            item_name = item_info.get('name')
+                            if item_name:
+                                placements[location_name] = item_name
+        except Exception as e:
+            logger.debug(f"ALttP: Could not extract item placements from data: {e}")
+
+        if placements:
+            logger.debug(f"ALttP: Extracted {len(placements)} item placements from export data")
+
+        return placements
+
+    def _evaluate_placement_search(self, item_name: str, player: int, locations: List[Any]) -> bool:
+        """Evaluate an item_name_in_location_names check using actual item placements.
+
+        Args:
+            item_name: The item to search for (e.g., "Big Key (Ice Palace)")
+            player: The player number
+            locations: List of location specifications, either as [name, player] pairs or
+                      as nested structures
+
+        Returns:
+            True if the item is placed in any of the specified locations, False otherwise
+        """
+        if not self._item_placements:
+            # No placements available, return True as fallback (conservative)
+            logger.debug(f"ALttP: No item placements available for placement_search evaluation")
+            return True
+
+        # Flatten locations list
+        location_names = []
+        for loc in locations:
+            if isinstance(loc, list) and len(loc) >= 1:
+                location_names.append(loc[0])  # First element is the location name
+            elif isinstance(loc, str):
+                location_names.append(loc)
+
+        # Check if the item is placed in any of the locations
+        for loc_name in location_names:
+            placed_item = self._item_placements.get(loc_name)
+            if placed_item == item_name:
+                logger.debug(f"ALttP: placement_search found '{item_name}' at '{loc_name}'")
+                return True
+
+        logger.debug(f"ALttP: placement_search did not find '{item_name}' in {location_names}")
+        return False
+
+    def _evaluate_placement_comparison(self, rule: Dict[str, Any]) -> Optional[bool]:
+        """Evaluate a Compare rule that uses AST_placement_lookup.
+
+        Handles patterns like:
+        {
+            "rule": "Compare",
+            "args": {
+                "left": {"rule": "AST_placement_lookup", "args": {"location": "Loc Name"}},
+                "op": "in",
+                "right": [["Item Name", player], ...]
+            }
+        }
+
+        Returns True/False if the comparison can be evaluated, None otherwise.
+        """
+        if not isinstance(rule, dict) or rule.get('rule') != 'Compare':
+            return None
+
+        args = rule.get('args', {})
+        left = args.get('left', {})
+        op = args.get('op', '')
+        right = args.get('right', [])
+
+        # Check if left is an AST_placement_lookup
+        if not isinstance(left, dict) or left.get('rule') != 'AST_placement_lookup':
+            return None
+
+        location_name = left.get('args', {}).get('location', '')
+        if not location_name:
+            return None
+
+        # Get the actual item at this location
+        actual_item = self._item_placements.get(location_name)
+        if actual_item is None:
+            return None
+
+        # Handle 'in' operator - check if (item_name, player) tuple is in the right list
+        if op == 'in':
+            for item_spec in right:
+                if isinstance(item_spec, list) and len(item_spec) >= 1:
+                    item_name = item_spec[0]
+                    if actual_item == item_name:
+                        logger.debug(f"ALttP: Compare '{location_name}' contains '{item_name}' -> True")
+                        return True
+            logger.debug(f"ALttP: Compare '{location_name}' (has '{actual_item}') not in expected items -> False")
+            return False
+
+        # Handle '==' operator
+        if op in ('==', 'Eq'):
+            if isinstance(right, list) and len(right) >= 1:
+                expected_item = right[0] if isinstance(right[0], str) else right[0][0] if isinstance(right[0], list) else None
+                result = actual_item == expected_item
+                logger.debug(f"ALttP: Compare '{location_name}' ('{actual_item}') == '{expected_item}' -> {result}")
+                return result
+
+        return None
+
+    def _evaluate_placement_test(self, test: Dict[str, Any]) -> Optional[bool]:
+        """Evaluate a test expression that may contain placement checks.
+
+        Handles:
+        - AST_placement_search: Check if item is at any of the listed locations
+        - Or/And of Compare rules with AST_placement_lookup
+        """
+        if not isinstance(test, dict):
+            return None
+
+        rule_type = test.get('rule')
+
+        # Handle AST_placement_search directly
+        if rule_type == 'AST_placement_search':
+            test_args = test.get('args', {})
+            item_name = test_args.get('item', '')
+            player = test_args.get('player', 1)
+            locations = test_args.get('locations', [])
+            return self._evaluate_placement_search(item_name, player, locations)
+
+        # Handle Compare with AST_placement_lookup
+        if rule_type == 'Compare':
+            return self._evaluate_placement_comparison(test)
+
+        # Handle Or of placement comparisons
+        if rule_type == 'Or':
+            children = test.get('children', [])
+            results = [self._evaluate_placement_comparison(c) for c in children]
+            # If all results are known, return the OR of them
+            if all(r is not None for r in results):
+                return any(results)
+            # If any result is True, we know the OR is True
+            if any(r is True for r in results):
+                return True
+            return None
+
+        # Handle And of placement comparisons
+        if rule_type == 'And':
+            children = test.get('children', [])
+            results = [self._evaluate_placement_comparison(c) for c in children]
+            # If all results are known, return the AND of them
+            if all(r is not None for r in results):
+                return all(results)
+            # If any result is False, we know the AND is False
+            if any(r is False for r in results):
+                return False
+            return None
+
+        return None
+
+    def _resolve_placement_conditionals(self, rule: Dict[str, Any], depth: int = 0) -> Dict[str, Any]:
+        """Resolve conditionals with placement-dependent tests to the correct branch.
+
+        When a Conditional has a test that depends on item placements (AST_placement_search
+        or Compare with AST_placement_lookup), we can evaluate it at export time since we
+        know the actual item placements. This resolves complex key logic rules in dungeons.
+
+        Args:
+            rule: A rule dictionary that may contain conditionals
+            depth: Recursion depth for debugging
+
+        Returns:
+            The rule with placement conditionals resolved
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('rule') or rule.get('type')
+
+        # Handle Conditional rules
+        if rule_type == 'Conditional':
+            args = rule.get('args', {})
+            test = args.get('test', {})
+
+            # Try to evaluate the test using placement information
+            test_result = self._evaluate_placement_test(test)
+            if test_result is not None:
+                # Return the appropriate branch
+                if test_result:
+                    if_true = args.get('if_true', {'rule': 'True_'})
+                    logger.debug(f"ALttP: Resolved Conditional to if_true (test evaluated to True)")
+                    return self._resolve_placement_conditionals(if_true, depth + 1)
+                else:
+                    if_false = args.get('if_false', {'rule': 'True_'})
+                    logger.debug(f"ALttP: Resolved Conditional to if_false (test evaluated to False)")
+                    return self._resolve_placement_conditionals(if_false, depth + 1)
+
+        # Recursively process children
+        if 'children' in rule:
+            rule['children'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('children', [])]
+        if 'conditions' in rule:
+            rule['conditions'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('conditions', [])]
+        if 'args' in rule and isinstance(rule['args'], dict):
+            for key, value in rule['args'].items():
+                if isinstance(value, dict):
+                    rule['args'][key] = self._resolve_placement_conditionals(value, depth + 1)
+                elif isinstance(value, list):
+                    rule['args'][key] = [self._resolve_placement_conditionals(v, depth + 1) if isinstance(v, dict) else v for v in value]
+
+        return rule
 
     def _is_dungeon_small_key_check(self, rule: Dict[str, Any]) -> bool:
         """Check if a rule is a dungeon-specific small key check.
@@ -489,6 +720,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         1. Exit/entrance rules with bunny rule lambdas
         2. Location rules in mixed regions (both Light World and Dark World)
         3. Universal small key conversion when small_key_shuffle is 'universal'
+        4. Placement-dependent conditional resolution (item_name_in_location_names)
 
         For mixed regions, the Moon Pearl requirement added by _get_bunny_replacement_rule
         is removed since there are Light World paths available. Only pure Dark World
@@ -496,7 +728,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         For universal keys, all dungeon-specific small key checks are replaced with
         can_buy_unlimited helper calls to properly evaluate shop reachability.
+
+        For placement conditionals, rules that check where items are placed are
+        resolved using the actual item placements from the export data.
         """
+        # Extract item placements from the export data for resolving placement conditionals
+        self._item_placements = self._extract_item_placements_from_data(data)
+
         # Process regions to handle entrance/exit rules and fix mixed region locations
         regions = data.get('regions', {})
         for player_id, player_regions in regions.items():
@@ -509,6 +747,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 for location_data in region_data.get('locations', []):
                     location_name = location_data.get('name', '')
                     access_rule = location_data.get('access_rule', {})
+
+                    # Resolve placement search conditionals first
+                    if access_rule and self._item_placements:
+                        location_data['access_rule'] = self._resolve_placement_conditionals(access_rule)
+                        access_rule = location_data.get('access_rule', {})
 
                     # For mixed regions, remove Moon Pearl requirement from compound rules
                     # (since Light World paths are available, Moon Pearl isn't required)
@@ -530,6 +773,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
                     if 'access_rule' in exit_data and exit_data['access_rule']:
+                        # Resolve placement search conditionals first
+                        if self._item_placements:
+                            exit_data['access_rule'] = self._resolve_placement_conditionals(
+                                exit_data['access_rule']
+                            )
                         exit_data['access_rule'] = self._process_bunny_rules(
                             exit_data['access_rule'], exit_name
                         )
@@ -551,6 +799,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
                     if 'access_rule' in entrance_data and entrance_data['access_rule']:
+                        # Resolve placement search conditionals first
+                        if self._item_placements:
+                            entrance_data['access_rule'] = self._resolve_placement_conditionals(
+                                entrance_data['access_rule']
+                            )
                         entrance_data['access_rule'] = self._process_bunny_rules(
                             entrance_data['access_rule'], entrance_name
                         )
