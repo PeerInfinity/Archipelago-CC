@@ -263,6 +263,15 @@ class WorldDataMixin:
                 slot_data = world.fill_slot_data()
                 if slot_data and isinstance(slot_data, dict):
                     world_data['slot_data'] = slot_data
+                # Clear Landstalker's cached_spheres to prevent memory leak
+                # fill_slot_data populates this class variable with MultiWorld references
+                # that would otherwise prevent garbage collection
+                if world.game == "Landstalker - The Treasures of King Nole":
+                    try:
+                        from worlds.landstalker import LandstalkerWorld
+                        LandstalkerWorld.cached_spheres = []
+                    except ImportError:
+                        pass
             except Exception as e:
                 logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
 

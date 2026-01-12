@@ -1,18 +1,30 @@
 # Fixing the Landstalker Memory Leak
 
-> **Note:** This bug has been fixed in upstream Archipelago (as of Jan 2026) using a different approach - upstream now calls `stage_modify_multidata` via `call_stage` during `generate_output`, which properly clears the class variable. The fix below describes an alternative instance variable approach.
+> **Note:** This was a **fork-specific bug**, not an upstream bug. Upstream has always properly called `stage_modify_multidata` via `call_stage` (since d743d10b, Oct 2023).
 
 ## Overview
 
-The fix converts `cached_spheres` from a class variable to an instance variable, preventing references from persisting after generation completes.
+The fork's exporter calls `fill_slot_data()` after `stage_modify_multidata` has already cleared the cache, repopulating it and causing the memory leak.
 
-## How Upstream Fixed It
+## The Actual Fix (Applied)
 
-Upstream fixed the bug by ensuring `stage_modify_multidata` is called during the `generate_output` stage via `call_stage`. This allows the existing class variable cleanup code to execute properly.
+Added cleanup in `exporter/games/base/world_data.py` after calling `fill_slot_data` for Landstalker:
+
+```python
+# Clear Landstalker's cached_spheres to prevent memory leak
+# fill_slot_data populates this class variable with MultiWorld references
+# that would otherwise prevent garbage collection
+if world.game == "Landstalker - The Treasures of King Nole":
+    try:
+        from worlds.landstalker import LandstalkerWorld
+        LandstalkerWorld.cached_spheres = []
+    except ImportError:
+        pass
+```
 
 ## Alternative Fix: Instance Variable Approach
 
-The changes below convert `cached_spheres` to an instance variable, which is a more robust solution that doesn't rely on `stage_modify_multidata` being called.
+The changes below describe an alternative approach that converts `cached_spheres` to an instance variable, which would be a more robust solution that doesn't rely on cleanup after `fill_slot_data`.
 
 ## Changes to `worlds/landstalker/__init__.py`
 
@@ -100,7 +112,7 @@ def stage_modify_multidata(cls, multiworld: MultiWorld, *_):
 
 ## Verification
 
-After applying either fix, run the generation command:
+After applying the fix, run the generation command:
 
 ```bash
 source .venv/bin/activate
@@ -109,30 +121,9 @@ python Generate.py --weights_file_path "Templates/Landstalker - The Treasures of
 
 The command should complete without the `AssertionError: MultiWorld object was not de-allocated` error.
 
-### Manual verification test
-
-```bash
-python -c "
-import gc
-import weakref
-import sys
-
-from worlds.landstalker import LandstalkerWorld
-from test.general import setup_solo_multiworld
-
-multiworld = setup_solo_multiworld(LandstalkerWorld)
-for player in multiworld.player_ids:
-    multiworld.worlds[player].cached_spheres = list(multiworld.get_spheres())
-
-weak = weakref.ref(multiworld)
-del multiworld
-gc.collect()
-
-if weak():
-    print(f'MEMORY LEAK: MultiWorld still referenced {sys.getrefcount(weak())} times')
-else:
-    print('No memory leak - fix successful')
-"
+Expected output ends with:
+```
+Done. Enjoy. Total Time: ...
 ```
 
-Expected output: `No memory leak - fix successful`
+(No assertion error means the fix is working.)
