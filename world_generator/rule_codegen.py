@@ -6757,14 +6757,26 @@ class HelperCodeGenerator:
         Used for rules that reference region properties like is_light_world, is_dark_world.
 
         AST format: {"type": "region_attribute", "region": {"type": "name", "name": "region"}, "attr": "is_light_world"}
-        Returns: region.is_light_world
+
+        The region can be either:
+        1. A region name (string) - needs to be looked up
+        2. A Region object - can be used directly
+
+        We generate code that handles both cases at runtime.
         """
         region_expr = expr.get('region', {})
         attr = expr.get('attr', '')
 
-        # Generate the region expression (usually just 'region')
-        region_code = self._generate_expression(region_expr)
+        # Check if region expression is a parameter reference (variable name)
+        # The variable could contain either a region name (string) or a Region object
+        # We generate code that handles both cases at runtime
+        if isinstance(region_expr, dict) and region_expr.get('type') in ('name', 'param_ref', 'variable'):
+            region_var = region_expr.get('name', 'region')
+            # Generate code that handles both string and Region object cases
+            return f"(state.multiworld.get_region({region_var}, player) if isinstance({region_var}, str) else {region_var}).{attr}"
 
+        # Otherwise, generate the region expression directly
+        region_code = self._generate_expression(region_expr)
         return f"{region_code}.{attr}"
 
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
