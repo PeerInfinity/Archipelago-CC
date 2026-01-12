@@ -368,25 +368,6 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                     "datapackage": data_package,
                     "race_mode": int(multiworld.is_race),
                 }
-                # Export rules data BEFORE modify_multidata clears world caches
-                # (some worlds like Landstalker use class variables in fill_slot_data
-                # that are cleared by stage_modify_multidata)
-                settings = get_settings()
-                if settings.general_options.save_rules_json:
-                    from exporter import clear_rule_cache
-                    from exporter.games import clear_handler_cache
-                    export_game_rules(
-                        multiworld,
-                        temp_dir,
-                        outfilebase,
-                        settings.general_options.update_frontend_presets,
-                        settings.general_options.skip_preset_copy_if_rules_identical,
-                        settings.general_options.rules_json_format
-                    )
-                    # Clear exporter caches to allow GC (but don't touch multiworld itself)
-                    clear_rule_cache()
-                    clear_handler_cache()
-
                 # TODO: change to `"version": version_tuple` after getting better serialization
                 AutoWorld.call_all(multiworld, "modify_multidata", multidata)
 
@@ -419,16 +400,28 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
         if args.spoiler > 1:
             logger.info('Calculating playthrough.')
             multiworld.spoiler.create_playthrough(create_paths=args.spoiler > 2)
-            # Clear handler cache - create_playthrough_with_logging may have created
-            # handlers that hold world references
-            try:
-                from exporter.games import clear_handler_cache
-                clear_handler_cache()
-            except ImportError:
-                pass
 
         if args.spoiler:
             multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
+
+        # Export rules data after create_playthrough so sphere_log.jsonl is included.
+        # The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
+        # so it won't repopulate caches that were cleared by stage_modify_multidata.
+        settings = get_settings()
+        if settings.general_options.save_rules_json:
+            from exporter import clear_rule_cache
+            from exporter.games import clear_handler_cache
+            export_game_rules(
+                multiworld,
+                temp_dir,
+                outfilebase,
+                settings.general_options.update_frontend_presets,
+                settings.general_options.skip_preset_copy_if_rules_identical,
+                settings.general_options.rules_json_format
+            )
+            # Clear exporter caches to allow GC
+            clear_rule_cache()
+            clear_handler_cache()
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")
