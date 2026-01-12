@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison (APWorlds)
 
-**Generated:** 2026-01-12 18:48:21
+**Generated:** 2026-01-12 19:44:53
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -13,11 +13,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 ## Summary
 
-- **Total Games Tested:** 123
-- **Passing Both:** 13 (10.6%)
-- **Passing Original Only:** 29 (23.6%)
+- **Total Games Tested:** 124
+- **Passing Both:** 13 (10.5%)
+- **Passing Original Only:** 29 (23.4%)
 - **Passing Modified Only:** 10 (8.1%)
-- **Passing Neither:** 71 (57.7%)
+- **Passing Neither:** 72 (58.1%)
 
 ## Full Comparison
 
@@ -25,8 +25,9 @@ This report compares fuzz test results between the Original Universal Tracker (F
 |-----------|:---------------------:|:---------------------:|
 | A Dance of Fire and Ice | ❌ 0.0% | ✅ 100.0% |
 | A Difficult Game About Climbing | ⚠️ 90.0% | ❌ 0.0% |
+| A Link Between Worlds | N/A | ❌ 0.0% |
 | ANIMAL WELL | ⚠️ 90.0% | ❌ 0.0% |
-| Actraiser | ⚠️ 80.0% | ⚠️ 80.0% |
+| Actraiser | ⚠️ 80.0% | ✅ 80.0% |
 | Against the Storm | ❌ 0.0% | ❌ 0.0% |
 | Air Delivery | ✅ 100.0% | ❌ 0.0% |
 | An Untitled Story | ✅ 100.0% | ❌ 0.0% |
@@ -54,7 +55,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Diddy Kong Racing | ⚠️ 50.0% | ❌ 0.0% |
 | Digimon World | ⚠️ 60.0% | ❌ 0.0% |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 0.0% |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% |
 | Final Fantasy Tactics Advance | ⚠️ 70.0% | ⚠️ 60.0% |
 | Fire Emblem Sacred Stones | ❌ 40.0% | ❌ 0.0% |
@@ -65,7 +66,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Grim Dawn | ⚠️ 70.0% | ⚠️ 60.0% |
 | Hammerwatch | ❌ 40.0% | ⚠️ 50.0% |
 | Hatsune Miku Project Diva Mega Mix+ | ❌ 10.0% | ✅ 100.0% |
-| Here Comes Niko! | ⚠️ 80.0% | ✅ 100.0% |
+| Here Comes Niko! | ⚠️ 80.0% | ❌ 40.0% |
 | Iji | ❌ 30.0% | ❌ 0.0% |
 | Into the Breach | ❌ 20.0% | ❌ 0.0% |
 | Isles Of Sea And Sky | ✅ 100.0% | ✅ 100.0% |
@@ -112,7 +113,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% |
 | Sonic Heroes | ❌ 0.0% | ❌ 0.0% |
 | Sonic Rush | ✅ 100.0% | ❌ 20.0% |
@@ -210,9 +211,9 @@ These games pass in the Modified UT but fail in the Original UT.
 | Game Name |
 |-----------|
 | A Dance of Fire and Ice |
+| Actraiser |
 | Brotato |
 | Hatsune Miku Project Diva Mega Mix+ |
-| Here Comes Niko! |
 | League of Legends |
 | Luigi's Mansion |
 | Metroid Fusion |
@@ -220,15 +221,15 @@ These games pass in the Modified UT but fail in the Original UT.
 | Zelda II: The Adventure of Link |
 | osu! |
 
-## Games Passing Neither (71)
+## Games Passing Neither (72)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name |
 |-----------|
 | A Difficult Game About Climbing |
+| A Link Between Worlds |
 | ANIMAL WELL |
-| Actraiser |
 | Against the Storm |
 | Another Crabs Treasure |
 | Ape Escape |
@@ -253,6 +254,7 @@ These games fail in both Universal Tracker versions.
 | Golden Sun The Lost Age |
 | Grim Dawn |
 | Hammerwatch |
+| Here Comes Niko! |
 | Iji |
 | Into the Breach |
 | Jigsaw |
