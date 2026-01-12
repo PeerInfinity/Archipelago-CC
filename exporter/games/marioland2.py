@@ -24,9 +24,41 @@ logger = logging.getLogger(__name__)
 class Marioland2GameExportHandler(BaseGameExportHandler):
     """Super Mario Land 2 specific export handler."""
 
-    # Only blacklist coin helpers that have complex logic we can't analyze.
-    # Core helpers like is_auto_scroll are NOT blacklisted - we provide custom definitions.
-    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
+    # Blacklist all coin helpers that call is_auto_scroll.
+    # These can't be analyzed automatically because is_auto_scroll accesses
+    # runtime world data (auto_scroll_levels). We provide custom definitions instead.
+    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
+        'mushroom_zone_coins',
+        'tree_zone_1_coins',
+        'tree_zone_2_coins',
+        'tree_zone_3_coins',
+        'tree_zone_4_coins',
+        'tree_zone_5_coins',
+        'hippo_zone_coins',
+        'macro_zone_1_coins',
+        'macro_zone_2_coins',
+        'macro_zone_3_coins',
+        'macro_zone_4_coins',
+        'mario_zone_1_coins',
+        'mario_zone_3_coins',
+        'mario_zone_4_coins',
+        'pumpkin_zone_1_coins',
+        'pumpkin_zone_2_coins',
+        'pumpkin_zone_secret_course_1_coins',
+        'pumpkin_zone_3_coins',
+        'pumpkin_zone_4_coins',
+        'space_zone_1_coins',
+        'space_zone_2_coins',
+        'space_zone_secret_course_coins',
+        'turtle_zone_1_coins',
+        'turtle_zone_2_coins',
+        'turtle_zone_3_coins',
+        # These don't call is_auto_scroll but are still complex:
+        'turtle_zone_secret_course_coins',
+        'macro_zone_secret_course_coins',
+        # This helper accesses options.shuffle_midway_bells which is runtime data:
+        'space_zone_2_boss',
+    }
 
     # Whitelist the helpers we want to ensure are exported with custom definitions
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
@@ -64,10 +96,43 @@ class Marioland2GameExportHandler(BaseGameExportHandler):
         shark_count = self._sprite_computations.get('turtle_zone_1_sharks', 0)
         helpers['not_blocked_by_sharks'] = self._build_not_blocked_by_sharks_helper(shark_count)
 
-        # Provide custom mario_zone_3_coins definition
-        # This helper uses a set comprehension that can't be properly analyzed
+        # Provide custom definitions for all coin helpers
         claw_set_len = self._sprite_computations.get('mario_zone_3_claw_set_len', 1)
         helpers['mario_zone_3_coins'] = self._build_mario_zone_3_coins_helper(claw_set_len)
+        helpers['turtle_zone_1_coins'] = self._build_turtle_zone_1_coins_helper(shark_count)
+
+        # Add definitions for all other coin helpers
+        helpers['mushroom_zone_coins'] = self._build_mushroom_zone_coins_helper()
+        helpers['tree_zone_1_coins'] = self._build_tree_zone_1_coins_helper()
+        helpers['tree_zone_2_coins'] = self._build_tree_zone_2_coins_helper()
+        helpers['tree_zone_3_coins'] = self._build_tree_zone_3_coins_helper()
+        helpers['tree_zone_4_coins'] = self._build_tree_zone_4_coins_helper()
+        helpers['tree_zone_5_coins'] = self._build_tree_zone_5_coins_helper()
+        helpers['pumpkin_zone_1_coins'] = self._build_pumpkin_zone_1_coins_helper()
+        helpers['pumpkin_zone_2_coins'] = self._build_pumpkin_zone_2_coins_helper()
+        helpers['pumpkin_zone_secret_course_1_coins'] = self._build_pumpkin_zone_secret_course_1_coins_helper()
+        helpers['pumpkin_zone_3_coins'] = self._build_pumpkin_zone_3_coins_helper()
+        helpers['pumpkin_zone_4_coins'] = self._build_pumpkin_zone_4_coins_helper()
+        helpers['mario_zone_1_coins'] = self._build_mario_zone_1_coins_helper()
+        helpers['mario_zone_4_coins'] = self._build_mario_zone_4_coins_helper()
+        helpers['turtle_zone_2_coins'] = self._build_turtle_zone_2_coins_helper()
+        helpers['turtle_zone_3_coins'] = self._build_turtle_zone_3_coins_helper()
+        helpers['turtle_zone_secret_course_coins'] = self._build_turtle_zone_secret_course_coins_helper()
+        helpers['hippo_zone_coins'] = self._build_hippo_zone_coins_helper()
+        helpers['space_zone_1_coins'] = self._build_space_zone_1_coins_helper()
+        helpers['space_zone_2_coins'] = self._build_space_zone_2_coins_helper()
+        helpers['space_zone_secret_course_coins'] = self._build_space_zone_secret_course_coins_helper()
+        helpers['macro_zone_1_coins'] = self._build_macro_zone_1_coins_helper()
+        helpers['macro_zone_2_coins'] = self._build_macro_zone_2_coins_helper()
+        helpers['macro_zone_3_coins'] = self._build_macro_zone_3_coins_helper()
+        helpers['macro_zone_4_coins'] = self._build_macro_zone_4_coins_helper()
+        helpers['macro_zone_secret_course_coins'] = self._build_macro_zone_secret_course_coins_helper()
+
+        # Build space_zone_2_boss helper with pre-computed shuffle_midway_bells value
+        shuffle_midway_bells = True  # Default value
+        if hasattr(world, 'options') and hasattr(world.options, 'shuffle_midway_bells'):
+            shuffle_midway_bells = bool(world.options.shuffle_midway_bells.value)
+        helpers['space_zone_2_boss'] = self._build_space_zone_2_boss_helper(shuffle_midway_bells)
 
         return helpers
 
@@ -536,3 +601,1190 @@ class Marioland2GameExportHandler(BaseGameExportHandler):
                 ]
             }
         }
+
+    # -------------------------------------------------------------------------
+    # Coin helper builders for all zones
+    # These are converted from worlds/marioland2/logic.py
+    # -------------------------------------------------------------------------
+
+    def _build_mushroom_zone_coins_helper(self) -> Dict[str, Any]:
+        """Build mushroom_zone_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Mushroom Zone'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 38}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'or', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]},
+                            {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                        ]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 2}}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 19}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'or', 'conditions': [
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]},
+                                {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                            ]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 5}}
+                        ]},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 20}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 4}}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_tree_zone_1_coins_helper(self) -> Dict[str, Any]:
+        """coins <= 87 or not is_auto_scroll("Tree Zone 1")"""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                     'op': '<=', 'right': {'type': 'constant', 'value': 87}},
+                    {'type': 'not', 'condition': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Tree Zone 1'}]
+                    }}
+                ]
+            }
+        }
+
+    def _build_tree_zone_2_coins_helper(self) -> Dict[str, Any]:
+        """Build tree_zone_2_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Tree Zone 2'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 18}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 38}},
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Carrot'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 12}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 30}}
+                            ]}
+                        ]}
+                    ], 'orelse': [
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Tree Zone 2 Midway Bell'},
+                         'body': [
+                            {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 30}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 8}}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_tree_zone_3_coins_helper(self) -> Dict[str, Any]:
+        """Build tree_zone_3_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'if_statement', 'test': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Tree Zone 3'}]
+                    }, 'body': [
+                        {'type': 'return', 'value': {
+                            'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                            'op': '<=', 'right': {'type': 'constant', 'value': 4}
+                        }}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'constant', 'value': 19}
+                    }, 'body': [
+                        {'type': 'return', 'value': {'type': 'constant', 'value': True}}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'and', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]},
+                            {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                             'op': '<=', 'right': {'type': 'constant', 'value': 21}}
+                        ]
+                    }, 'body': [
+                        {'type': 'return', 'value': {'type': 'constant', 'value': True}}
+                    ]},
+                    {'type': 'return', 'value': {'type': 'item_check', 'item': 'Carrot'}}
+                ]
+            }
+        }
+
+    def _build_tree_zone_4_coins_helper(self) -> Dict[str, Any]:
+        """Build tree_zone_4_coins helper - simplified."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Tree Zone 4'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 0}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 14}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 4}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'state_method', 'method': 'has_any',
+                                'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
+                            }, 'body': [
+                                {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                                 'body': [
+                                    {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                     'value': {'type': 'constant', 'value': 12}}
+                                ], 'orelse': [
+                                    {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                     'value': {'type': 'constant', 'value': 56}}
+                                ]}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Tree Zone 4 Midway Bell'},
+                     'body': [
+                        {'type': 'assign', 'name': 'bell_coins', 'value': {'type': 'constant', 'value': 10}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'bell_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 46}}
+                        ]},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'compare', 'left': {'type': 'name', 'name': 'bell_coins'},
+                            'op': '>', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                        }, 'body': [
+                            {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'name', 'name': 'bell_coins'}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_tree_zone_5_coins_helper(self) -> Dict[str, Any]:
+        """Build tree_zone_5_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Tree Zone 5'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 0}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 2}}
+                    ]},
+                    {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Carrot'},
+                     'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 18}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'and', 'conditions': [
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]},
+                                {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                            ]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 13}}
+                        ]}
+                    ], 'orelse': [
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 13}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_pumpkin_zone_1_coins_helper(self) -> Dict[str, Any]:
+        """Build pumpkin_zone_1_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Pumpkin Zone 1'}]
+                    }},
+                    {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                     'body': [
+                        {'type': 'return', 'value': {
+                            'type': 'and', 'conditions': [
+                                {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                                 'op': '<=', 'right': {'type': 'constant', 'value': 12}},
+                                {'type': 'item_check', 'item': 'Pumpkin Zone 1 Midway Bell'}
+                            ]
+                        }}
+                    ]},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 0}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'or', 'conditions': [
+                            {'type': 'item_check', 'item': 'Pumpkin Zone 1 Midway Bell'},
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]}
+                        ]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 38}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 2}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_pumpkin_zone_2_coins_helper(self) -> Dict[str, Any]:
+        """Build pumpkin_zone_2_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Pumpkin Zone 2'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 17}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
+                    }, 'body': [
+                        {'type': 'if_statement', 'test': {
+                            'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 7}}
+                        ]},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'and', 'conditions': [
+                                {'type': 'or', 'conditions': [
+                                    {'type': 'state_method', 'method': 'has_any',
+                                     'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]},
+                                    {'type': 'name', 'name': 'auto_scroll'}
+                                ]},
+                                {'type': 'item_check', 'item': 'Water Physics'}
+                            ]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 6}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'and', 'conditions': [
+                                    {'type': 'state_method', 'method': 'has_any',
+                                     'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]},
+                                    {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                                ]
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 1}},
+                                {'type': 'if_statement', 'test': {
+                                    'type': 'state_method', 'method': 'has_any',
+                                    'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]
+                                }, 'body': [
+                                    {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                     'value': {'type': 'constant', 'value': 5}}
+                                ]}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_pumpkin_zone_secret_course_1_coins_helper(self) -> Dict[str, Any]:
+        """Build pumpkin_zone_secret_course_1_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Pumpkin Zone Secret Course 1'}]
+                    }},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'constant', 'value': 40}
+                    }, 'body': [
+                        {'type': 'return', 'value': {'type': 'constant', 'value': True}}
+                    ]},
+                    {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Carrot'},
+                     'body': [
+                        {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                         'body': [
+                            {'type': 'return', 'value': {
+                                'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                                'op': '<=', 'right': {'type': 'constant', 'value': 172}
+                            }}
+                        ], 'orelse': [
+                            {'type': 'return', 'value': {'type': 'constant', 'value': True}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {'type': 'constant', 'value': False}}
+                ]
+            }
+        }
+
+    def _build_pumpkin_zone_3_coins_helper(self) -> Dict[str, Any]:
+        """Build pumpkin_zone_3_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Pumpkin Zone 3'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 38}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'and', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]},
+                            {'type': 'or', 'conditions': [
+                                {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}},
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]}
+                            ]}
+                        ]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 12}}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'and', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]},
+                            {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                        ]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 11}}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_pumpkin_zone_4_coins_helper(self) -> Dict[str, Any]:
+        """Build pumpkin_zone_4_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Pumpkin Zone 4'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 29}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
+                    }, 'body': [
+                        {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                         'body': [
+                            {'type': 'if_statement', 'test': {
+                                'type': 'state_method', 'method': 'has_any',
+                                'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 16}}
+                            ], 'orelse': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 4}}
+                            ]}
+                        ], 'orelse': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 28}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'state_method', 'method': 'has_any',
+                                'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 16}}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_mario_zone_1_coins_helper(self) -> Dict[str, Any]:
+        """Build mario_zone_1_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Mario Zone 1'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 0}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'or', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]},
+                            {'type': 'and', 'conditions': [
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Pipe Traversal - Left', 'Pipe Traversal']}]},
+                                {'type': 'item_check', 'item': 'Mario Zone 1 Midway Bell'},
+                                {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                            ]}
+                        ]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 32}}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'and', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]},
+                            {'type': 'or', 'conditions': [
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower', 'Carrot']}]},
+                                {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                            ]}
+                        ]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 8}},
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Carrot'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 28}}
+                        ], 'orelse': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 12}}
+                        ]},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'and', 'conditions': [
+                                {'type': 'item_check', 'item': 'Fire Flower'},
+                                {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                            ]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 46}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_mario_zone_4_coins_helper(self) -> Dict[str, Any]:
+        """coins <= 60 or not is_auto_scroll("Mario Zone 4")"""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                     'op': '<=', 'right': {'type': 'constant', 'value': 60}},
+                    {'type': 'not', 'condition': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Mario Zone 4'}]
+                    }}
+                ]
+            }
+        }
+
+    def _build_turtle_zone_2_coins_helper(self) -> Dict[str, Any]:
+        """Build turtle_zone_2_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Turtle Zone 2'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 2}},
+                    {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                     'body': [
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Water Physics'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 6}}
+                        ]}
+                    ], 'orelse': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 2}},
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Water Physics'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 20}}
+                        ], 'orelse': [
+                            {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Turtle Zone 2 Midway Bell'},
+                             'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 4}}
+                            ]}
+                        ]},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'and', 'conditions': [
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]},
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]},
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Water Physics', 'Turtle Zone 2 Midway Bell']}]}
+                            ]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 1}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'and', 'conditions': [
+                                    {'type': 'state_method', 'method': 'has_any',
+                                     'args': [{'type': 'constant', 'value': ['Pipe Traversal - Left', 'Pipe Traversal']}]},
+                                    {'type': 'state_method', 'method': 'has_any',
+                                     'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]}
+                                ]
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 1}},
+                                {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Water Physics'},
+                                 'body': [
+                                    {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                     'value': {'type': 'constant', 'value': 1}}
+                                ]}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_turtle_zone_3_coins_helper(self) -> Dict[str, Any]:
+        """Build turtle_zone_3_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'state_method', 'method': 'has_any',
+                     'args': [{'type': 'constant', 'value': ['Water Physics', 'Mushroom', 'Fire Flower', 'Carrot']}]},
+                    {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                     'op': '<=', 'right': {'type': 'constant', 'value': 51}}
+                ]
+            }
+        }
+
+    def _build_turtle_zone_secret_course_coins_helper(self) -> Dict[str, Any]:
+        """Build turtle_zone_secret_course_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 53}},
+                    {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Carrot'},
+                     'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 44}}
+                    ], 'orelse': [
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Fire Flower'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 36}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_hippo_zone_coins_helper(self) -> Dict[str, Any]:
+        """Build hippo_zone_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Hippo Zone'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 4}},
+                    {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                     'body': [
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Hippo Bubble'},
+                         'body': [
+                            {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 160}}
+                        ], 'orelse': [
+                            {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Carrot'},
+                             'body': [
+                                {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 90}}
+                            ], 'orelse': [
+                                {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Water Physics'},
+                                 'body': [
+                                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 28}}
+                                ]}
+                            ]}
+                        ]}
+                    ], 'orelse': [
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Water Physics', 'Hippo Bubble', 'Carrot']}]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 108}},
+                            {'type': 'if_statement', 'test': {
+                                'type': 'state_method', 'method': 'has_any',
+                                'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower', 'Hippo Bubble']}]
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 6}}
+                            ]}
+                        ]},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_all',
+                            'args': [{'type': 'constant', 'value': ['Fire Flower', 'Water Physics']}]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 1}}
+                        ]},
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Hippo Bubble'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 52}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_space_zone_1_coins_helper(self) -> Dict[str, Any]:
+        """Build space_zone_1_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Space Zone 1'}]
+                    }},
+                    {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                     'body': [
+                        {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 12}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Carrot', 'Space Physics']}]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 20}}
+                        ]},
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Space Physics'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 40}}
+                        ]},
+                        {'type': 'return', 'value': {
+                            'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                            'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                        }}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'or', 'conditions': [
+                            {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                             'op': '<=', 'right': {'type': 'constant', 'value': 21}},
+                            {'type': 'and', 'conditions': [
+                                {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                                 'op': '<=', 'right': {'type': 'constant', 'value': 50}},
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]}
+                            ]},
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Carrot', 'Space Physics']}]}
+                        ]
+                    }}
+                ]
+            }
+        }
+
+    def _build_space_zone_2_coins_helper(self) -> Dict[str, Any]:
+        """Build space_zone_2_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Space Zone 2'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 12}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower', 'Carrot', 'Space Physics']}]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 15}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'or', 'conditions': [
+                                {'type': 'item_check', 'item': 'Space Physics'},
+                                {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                            ]
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 4}}
+                        ]}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'or', 'conditions': [
+                            {'type': 'item_check', 'item': 'Space Physics'},
+                            {'type': 'and', 'conditions': [
+                                {'type': 'item_check', 'item': 'Mushroom'},
+                                {'type': 'state_method', 'method': 'has_any',
+                                 'args': [{'type': 'constant', 'value': ['Fire Flower', 'Carrot']}]}
+                            ]}
+                        ]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 3}}
+                    ]},
+                    {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Space Physics'},
+                     'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 79}},
+                        {'type': 'if_statement', 'test': {
+                            'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                        }, 'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 21}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_space_zone_secret_course_coins_helper(self) -> Dict[str, Any]:
+        """coins <= 96 or not is_auto_scroll("Space Zone Secret Course")"""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                     'op': '<=', 'right': {'type': 'constant', 'value': 96}},
+                    {'type': 'not', 'condition': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Space Zone Secret Course'}]
+                    }}
+                ]
+            }
+        }
+
+    def _build_macro_zone_1_coins_helper(self) -> Dict[str, Any]:
+        """Build macro_zone_1_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Macro Zone 1'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 0}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'state_method', 'method': 'has_any',
+                        'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 69}},
+                        {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                         'body': [
+                            {'type': 'if_statement', 'test': {
+                                'type': 'state_method', 'method': 'has_any',
+                                'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 5}}
+                            ]}
+                        ], 'orelse': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 9}},
+                            {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Fire Flower'},
+                             'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 19}}
+                            ]}
+                        ]}
+                    ], 'orelse': [
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Macro Zone 1 Midway Bell'},
+                         'body': [
+                            {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                             'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 16}},
+                                {'type': 'if_statement', 'test': {
+                                    'type': 'state_method', 'method': 'has_any',
+                                    'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]
+                                }, 'body': [
+                                    {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                     'value': {'type': 'constant', 'value': 5}}
+                                ]}
+                            ], 'orelse': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 67}}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_macro_zone_2_coins_helper(self) -> Dict[str, Any]:
+        """Build macro_zone_2_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Macro Zone 2'}]
+                    }},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'constant', 'value': 27}
+                    }, 'body': [
+                        {'type': 'return', 'value': {'type': 'constant', 'value': True}}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'and', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]},
+                            {'type': 'item_check', 'item': 'Water Physics'},
+                            {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                        ]
+                    }, 'body': [
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
+                        }, 'body': [
+                            {'type': 'return', 'value': {'type': 'constant', 'value': True}}
+                        ]},
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Macro Zone 2 Midway Bell'},
+                         'body': [
+                            {'type': 'return', 'value': {
+                                'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                                'op': '<=', 'right': {'type': 'constant', 'value': 42}
+                            }}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {'type': 'constant', 'value': False}}
+                ]
+            }
+        }
+
+    def _build_macro_zone_3_coins_helper(self) -> Dict[str, Any]:
+        """Build macro_zone_3_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Macro Zone 3'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 7}},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                    }, 'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                         'value': {'type': 'constant', 'value': 17}}
+                    ]},
+                    {'type': 'if_statement', 'test': {
+                        'type': 'and', 'conditions': [
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]},
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]}
+                        ]
+                    }, 'body': [
+                        {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 56}}
+                        ], 'orelse': [
+                            {'type': 'return', 'value': {'type': 'constant', 'value': True}}
+                        ]}
+                    ], 'orelse': [
+                        {'type': 'if_statement', 'test': {
+                            'type': 'state_method', 'method': 'has_any',
+                            'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
+                        }, 'body': [
+                            {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                             'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 12}}
+                            ], 'orelse': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 36}}
+                            ]}
+                        ], 'orelse': [
+                            {'type': 'if_statement', 'test': {
+                                'type': 'state_method', 'method': 'has_any',
+                                'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
+                            }, 'body': [
+                                {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                 'value': {'type': 'constant', 'value': 18}}
+                            ]}
+                        ]}
+                    ]},
+                    {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Macro Zone 3 - Midway Bell'},
+                     'body': [
+                        {'type': 'if_statement', 'test': {
+                            'type': 'compare', 'left': {'type': 'constant', 'value': 30},
+                            'op': '>', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                        }, 'body': [
+                            {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 30}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_macro_zone_4_coins_helper(self) -> Dict[str, Any]:
+        """Build macro_zone_4_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'block',
+                'statements': [
+                    {'type': 'assign', 'name': 'auto_scroll', 'value': {
+                        'type': 'helper', 'name': 'is_auto_scroll',
+                        'args': [{'type': 'constant', 'value': 'Macro Zone 4'}]
+                    }},
+                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 61}},
+                    {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
+                     'body': [
+                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '-',
+                         'value': {'type': 'constant', 'value': 8}},
+                        {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Carrot'},
+                         'body': [
+                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                             'value': {'type': 'constant', 'value': 6}}
+                        ]}
+                    ]},
+                    {'type': 'return', 'value': {
+                        'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
+                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                    }}
+                ]
+            }
+        }
+
+    def _build_macro_zone_secret_course_coins_helper(self) -> Dict[str, Any]:
+        """Build macro_zone_secret_course_coins helper."""
+        return {
+            'params': ['coins'],
+            'body': {
+                'type': 'state_method',
+                'method': 'has_any',
+                'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower']}]
+            }
+        }
+
+    def _build_space_zone_2_boss_helper(self, shuffle_midway_bells: bool) -> Dict[str, Any]:
+        """
+        Build space_zone_2_boss helper with pre-computed shuffle_midway_bells value.
+
+        Original logic:
+        def space_zone_2_boss(state, player):
+            if has_pipe_right(state, player):
+                if state.has("Space Physics", player):
+                    return True
+                if (state.has("Space Zone 2 Midway Bell", player)
+                        or not state.multiworld.worlds[player].options.shuffle_midway_bells):
+                    if state.has_any(["Mushroom", "Fire Flower", "Carrot"], player):
+                        return True
+                else:
+                    if state.has("Mushroom", player) and state.has_any(["Fire Flower", "Carrot"], player):
+                        return True
+            return False
+        """
+        if shuffle_midway_bells:
+            # With shuffle_midway_bells enabled, need midway bell OR extra damage protection
+            return {
+                'type': 'and',
+                'conditions': [
+                    # has_pipe_right
+                    {'type': 'state_method', 'method': 'has_any',
+                     'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]},
+                    # Main condition
+                    {'type': 'or', 'conditions': [
+                        # Space Physics alone is enough
+                        {'type': 'item_check', 'item': 'Space Physics'},
+                        # With midway bell: need any damage item
+                        {'type': 'and', 'conditions': [
+                            {'type': 'item_check', 'item': 'Space Zone 2 Midway Bell'},
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower', 'Carrot']}]}
+                        ]},
+                        # Without midway bell: need Mushroom AND (Fire Flower OR Carrot)
+                        {'type': 'and', 'conditions': [
+                            {'type': 'item_check', 'item': 'Mushroom'},
+                            {'type': 'state_method', 'method': 'has_any',
+                             'args': [{'type': 'constant', 'value': ['Fire Flower', 'Carrot']}]}
+                        ]}
+                    ]}
+                ]
+            }
+        else:
+            # Without shuffle_midway_bells, midway bell is always accessible
+            return {
+                'type': 'and',
+                'conditions': [
+                    # has_pipe_right
+                    {'type': 'state_method', 'method': 'has_any',
+                     'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]},
+                    # Main condition
+                    {'type': 'or', 'conditions': [
+                        # Space Physics alone is enough
+                        {'type': 'item_check', 'item': 'Space Physics'},
+                        # Any damage item is enough (midway bell always available)
+                        {'type': 'state_method', 'method': 'has_any',
+                         'args': [{'type': 'constant', 'value': ['Mushroom', 'Fire Flower', 'Carrot']}]}
+                    ]}
+                ]
+            }
