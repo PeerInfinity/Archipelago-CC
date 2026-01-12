@@ -176,7 +176,14 @@ yaml.SafeDumper.ignore_aliases = lambda *args: True
 
 # Adapted from archipelago'd generate_yaml_templates
 # https://github.com/ArchipelagoMW/Archipelago/blob/f75a1ae1174fb467e5c5bd5568d7de3c806d5b1c/Options.py#L1504
-def generate_random_yaml(world_name, meta):
+def generate_random_yaml(world_name, meta, default_options=None):
+    """Generate a random YAML for the given world.
+
+    Args:
+        world_name: The apworld name to generate for
+        meta: Dictionary of option overrides
+        default_options: Set of option names to leave at their defaults instead of randomizing
+    """
     def dictify_range(option):
         data = {option.default: 50}
         for sub_option in ["random", "random-low", "random-high"]:
@@ -199,6 +206,9 @@ def generate_random_yaml(world_name, meta):
             return list(value)
         return value
 
+    if default_options is None:
+        default_options = set()
+
     game_name, world = world_from_apworld_name(world_name)
     if world is None:
         raise Exception(f"Failed to resolve apworld from apworld name: {world_name}")
@@ -210,6 +220,11 @@ def generate_random_yaml(world_name, meta):
     option_groups = get_option_groups(world)
     for group, options in option_groups.items():
         for option_name, option_value in options.items():
+            # Check if this option should be left at default
+            if option_name in default_options:
+                game_options[option_name] = sanitize(option_value.default)
+                continue
+
             override = global_meta.get(option_name)
             if not override:
                 override = game_meta.get(option_name)
@@ -666,6 +681,12 @@ if __name__ == "__main__":
         else:
             meta = {}
 
+        # Parse default_options into a set
+        if args.default_options:
+            default_options = set(opt.strip() for opt in args.default_options.split(","))
+        else:
+            default_options = set()
+
         if apworld_name is not None:
             world = world_from_apworld_name(apworld_name)
             if world is None:
@@ -764,7 +785,7 @@ if __name__ == "__main__":
                 )
 
             random_yamls = [
-                generate_random_yaml(actual_apworld, meta) for _ in range(yamls_this_run)
+                generate_random_yaml(actual_apworld, meta, default_options) for _ in range(yamls_this_run)
             ]
 
             if i % 100 == 0:
@@ -811,6 +832,9 @@ if __name__ == "__main__":
     parser.add_argument("--hook", action="append", default=[])
     parser.add_argument("--skip-output", default=False, action="store_true")
     parser.add_argument("--seed", default=None, type=int, help="Random seed for reproducible fuzzing")
+    parser.add_argument("--default-options", default=None, type=str,
+                        help="Comma-separated list of option names to leave at their defaults instead of randomizing. "
+                             "Example: --default-options mode,entrance_shuffle,glitches_required")
 
     args = parser.parse_args()
 

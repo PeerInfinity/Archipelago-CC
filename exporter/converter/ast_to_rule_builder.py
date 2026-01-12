@@ -522,15 +522,16 @@ class ASTToRuleBuilder:
                 return self._make_rule('CanReachRegion', {'region_name': name})
 
             # No explicit type - infer from object type
+            # Check if name is an Entrance object (has 'connected_region' and 'parent_region')
+            # This must be checked BEFORE Location since both have parent_region
+            if hasattr(name, 'connected_region') and hasattr(name, 'parent_region'):
+                entrance_name = name.name if hasattr(name, 'name') else str(name)
+                return self._make_rule('CanReachEntrance', {'entrance_name': entrance_name})
+
             # Check if name is a Location object (has parent_region but not entrances)
             if hasattr(name, 'parent_region') and not hasattr(name, 'entrances'):
                 location_name = name.name if hasattr(name, 'name') else str(name)
                 return self._make_rule('CanReachLocation', {'location_name': location_name})
-
-            # Check if name is an Entrance object (has 'connected_region' and 'parent_region')
-            if hasattr(name, 'connected_region') and hasattr(name, 'parent_region'):
-                entrance_name = name.name if hasattr(name, 'name') else str(name)
-                return self._make_rule('CanReachEntrance', {'entrance_name': entrance_name})
 
             # Check if name is a Region object (has entrances)
             if hasattr(name, 'entrances'):
