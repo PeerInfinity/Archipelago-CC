@@ -1158,6 +1158,29 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Extract game-specific world attributes
     world_attributes = extract_world_attributes(json_data, player_id=player_id)
 
+    # Add option values from helper param_mappings to world_attributes.
+    # This ensures that options referenced via param_mappings are accessible as
+    # world attributes at runtime, which enables proper param_mapping discovery
+    # when the worldgen world is re-exported.
+    # Get the option values and definitions from metadata extraction above
+    world_data = json_data.get('world', {}).get(player_id, {})
+    game_options = world_data.get('options', {})
+    option_definitions = world_data.get('option_definitions', {})
+    for helper_data in helpers.values():
+        for param, setting_name in helper_data.param_mappings.items():
+            # Check if this setting_name refers to an option (not already a world attribute)
+            if setting_name in option_definitions or setting_name in game_options:
+                if setting_name not in world_attributes:
+                    # Get the option value and add it as a world attribute
+                    if setting_name in game_options:
+                        value = game_options[setting_name]
+                        # Convert string booleans
+                        if value == 'true':
+                            value = True
+                        elif value == 'false':
+                            value = False
+                        world_attributes[setting_name] = value
+
     # Extract dungeon data (including bosses and defeat rules)
     dungeons = extract_dungeons(json_data, player_id=player_id)
 

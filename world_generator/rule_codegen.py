@@ -5603,24 +5603,16 @@ class HelperCodeGenerator:
                     param_mappings = helper_info.get('param_mappings', {})
 
                     # Build argument list based on param_mappings
+                    # All param_mapping values are accessed as world attributes (not inlined)
+                    # to enable proper param_mapping discovery during re-export.
+                    # Option values referenced in param_mappings are stored as world
+                    # attributes during extraction (see extract_all in extractors.py).
                     arg_exprs = []
                     for param in params:
                         if param in param_mappings:
                             setting_name = param_mappings[param]
-                            # Check if it's an option or a world attribute
-                            if setting_name in self.option_definitions:
-                                # Option: prefer inlined value from export, fallback to runtime lookup
-                                # Using resolved values ensures worldgen worlds use the same option
-                                # values as the original export, even if their defaults differ.
-                                if setting_name in self.settings:
-                                    # Inline the actual value from the export
-                                    arg_exprs.append(repr(self.settings[setting_name]))
-                                else:
-                                    # Fallback to runtime lookup (for dynamic options)
-                                    arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
-                            else:
-                                # World attribute: access via state.multiworld.worlds[player].<name>
-                                arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
+                            # Access as world attribute for all param_mapping values
+                            arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
                         else:
                             # No mapping, use None as default
                             arg_exprs.append('None')
