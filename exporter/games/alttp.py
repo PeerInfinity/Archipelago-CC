@@ -29,6 +29,79 @@ BUNNY_ACCESSIBLE_LOCATIONS = {
     "Desert Ledge"
 }
 
+# Glitch modes that enable superbunny accessibility
+GLITCH_MODES_WITH_SUPERBUNNY = {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+
+# Locations with mandatory superbunny paths that work in glitch modes
+# These are locations where the superbunny entrance path is always available
+# (not shuffled), so they don't require Moon Pearl in glitch modes.
+# From Rules.py set_bunny_rules: if new_region.name == 'Superbunny Cave (Bottom)'
+# or region.name == 'Kakariko Well (top)', superbunny state works without mirror.
+# The 'Superbunny Cave Climb' entrance is in mandatory_connections (EntranceShuffle.py:2617)
+MANDATORY_SUPERBUNNY_LOCATIONS = {
+    # Superbunny Cave (Top) region - reached via mandatory Superbunny Cave Climb
+    "Superbunny Cave - Top",
+    "Superbunny Cave - Bottom",
+    # Kakariko Well (top) region - accessible in bunny form per Rules.py
+    "Kakariko Well - Left",
+    "Kakariko Well - Middle",
+    "Kakariko Well - Right",
+    "Kakariko Well - Bottom",
+}
+
+# Other superbunny accessible locations in glitch modes that require Magic Mirror
+# (in addition to Moon Pearl as an alternative). These are from
+# OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
+# For these, the rule is: Moon Pearl OR Magic Mirror
+MIRROR_SUPERBUNNY_LOCATIONS = {
+    "Blind's Hideout - Far Left",
+    "Blind's Hideout - Far Right",
+    "Blind's Hideout - Left",
+    "Blind's Hideout - Right",
+    "Bonk Rock Cave",
+    "Brewery",
+    "C-Shaped House",
+    "Cave 45",
+    "Chest Game",
+    "Floodgate",
+    "Floodgate Chest",
+    "Ice Rod Cave",
+    "Kakariko Tavern",
+    "King's Tomb",
+    "Library",
+    "Mire Shed - Left",
+    "Mire Shed - Right",
+    "Pyramid Fairy - Left",
+    "Pyramid Fairy - Right",
+    "Sahasrahla's Hut - Left",
+    "Sahasrahla's Hut - Middle",
+    "Sahasrahla's Hut - Right",
+    "Secret Passage",
+    "Spiral Cave",
+    "Waterfall of Wishing - Left",
+    "Waterfall of Wishing - Right",
+}
+
+
+
+# Bunny-impassable caves (from set_bunny_rules in ALttP Rules.py)
+# These are regions where bunnies cannot pass through - if you enter as a bunny,
+# you cannot exit. In inverted mode, these regions require Moon Pearl to exit
+# even if they are mixed regions (both Light World and Dark World accessible).
+BUNNY_IMPASSABLE_CAVES = {
+    'Bumper Cave', 'Two Brothers House', 'Hookshot Cave', 'Skull Woods First Section (Right)',
+    'Skull Woods First Section (Left)', 'Skull Woods First Section (Top)', 'Turtle Rock (Entrance)',
+    'Turtle Rock (Second Section)', 'Turtle Rock (Big Chest)', 'Skull Woods Second Section (Drop)',
+    'Turtle Rock (Eye Bridge)', 'Sewers', 'Pyramid', 'Spiral Cave (Top)',
+    'Desert Palace Main (Inner)', 'Fairy Ascension Cave (Drop)'
+}
+
+# Set of dungeon names for small key mapping
+DUNGEON_NAMES = {
+    'Hyrule Castle', 'Agahnims Tower', 'Eastern Palace', 'Desert Palace',
+    'Tower of Hera', 'Palace of Darkness', 'Swamp Palace', 'Skull Woods',
+    'Thieves Town', 'Ice Palace', 'Misery Mire', 'Turtle Rock', 'Ganons Tower'
+}
 
 
 class ALttPGameExportHandler(GenericGameExportHandler):
@@ -42,21 +115,169 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         super().__init__(world)
         self._current_location_context = None
         self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
+        self._is_glitch_mode = self._check_glitch_mode(world)
+        self._is_universal_keys = self._check_universal_keys(world)
+
+    def _check_glitch_mode(self, world) -> bool:
+        """Check if the world is in a glitch mode that enables superbunny accessibility."""
+        if world is None or not hasattr(world, 'options'):
+            return False
+        if not hasattr(world.options, 'glitches_required'):
+            return False
+        glitches_required = world.options.glitches_required.current_key
+        return glitches_required in GLITCH_MODES_WITH_SUPERBUNNY
+
+    def _check_universal_keys(self, world) -> bool:
+        """Check if the world uses universal small keys.
+
+        When small_key_shuffle is 'universal', all dungeon-specific small keys
+        are replaced with a universal key that can be bought from shops.
+        The server's _lttp_has_key method returns True when any shop with
+        unlimited universal keys is reachable (can_buy_unlimited).
+
+        For export simplification, we treat universal key checks as always True
+        since universal key shops are accessible in normal gameplay.
+        """
+        if world is None or not hasattr(world, 'options'):
+            return False
+        if not hasattr(world.options, 'small_key_shuffle'):
+            return False
+        small_key_value = world.options.small_key_shuffle.current_key
+        is_universal = small_key_value == 'universal'
+        if is_universal:
+            logger.info(f"ALttP: Universal small keys detected (small_key_shuffle={small_key_value})")
+        return is_universal
+
+    def _is_dungeon_small_key_check(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is a dungeon-specific small key check.
+
+        Returns True if the rule checks for 'Small Key (DungeonName)'.
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        # Check count_check type (from _lttp_has_key analysis)
+        if rule.get('type') == 'count_check':
+            item = rule.get('item', '')
+            if isinstance(item, str) and item.startswith('Small Key ('):
+                dungeon = item[11:-1]  # Extract dungeon name from 'Small Key (X)'
+                return dungeon in DUNGEON_NAMES
+
+        # Check item_check type
+        if rule.get('type') == 'item_check':
+            item = rule.get('item', '')
+            if isinstance(item, str) and item.startswith('Small Key ('):
+                dungeon = item[11:-1]
+                return dungeon in DUNGEON_NAMES
+
+        # Check Rule Builder Has format
+        if rule.get('rule') == 'Has':
+            args = rule.get('args', {})
+            item_name = args.get('item_name', '')
+            if isinstance(item_name, str) and item_name.startswith('Small Key ('):
+                dungeon = item_name[11:-1]
+                return dungeon in DUNGEON_NAMES
+
+        return False
+
+    def _replace_small_key_checks(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Replace dungeon-specific small key checks with can_buy_unlimited helper.
+
+        When small_key_shuffle is 'universal', the server uses can_buy_unlimited
+        which checks if any shop with unlimited universal keys is reachable.
+        We emit a helper call so the worldgen can properly evaluate shop reachability.
+
+        Recursively processes the rule tree to replace all small key checks.
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Check if this is a small key check that should be replaced
+        if self._is_dungeon_small_key_check(rule):
+            # Return a helper call to can_buy_unlimited instead of True_
+            # This allows proper evaluation of shop reachability
+            return {
+                'type': 'helper',
+                'name': 'can_buy_unlimited',
+                'args': [
+                    {'type': 'constant', 'value': 'Small Key (Universal)'}
+                ]
+            }
+
+        # Handle Or/And conditions - recursively process and simplify
+        if rule.get('type') in ('or', 'and'):
+            conditions = rule.get('conditions', [])
+            processed = [self._replace_small_key_checks(c) for c in conditions]
+            # Filter out True_ from And (and True_ and X = X)
+            if rule.get('type') == 'and':
+                processed = [c for c in processed if not (c.get('rule') == 'True_')]
+                if not processed:
+                    return {'rule': 'True_'}
+                if len(processed) == 1:
+                    return processed[0]
+            # For Or, if any is True_, the whole thing is True
+            if rule.get('type') == 'or':
+                if any(c.get('rule') == 'True_' for c in processed):
+                    return {'rule': 'True_'}
+            return {**rule, 'conditions': processed}
+
+        # Handle Rule Builder Or/And format
+        if rule.get('rule') in ('Or', 'And'):
+            children = rule.get('children', [])
+            processed = [self._replace_small_key_checks(c) for c in children]
+            if rule.get('rule') == 'And':
+                processed = [c for c in processed if not (c.get('rule') == 'True_')]
+                if not processed:
+                    return {'rule': 'True_'}
+                if len(processed) == 1:
+                    return processed[0]
+            if rule.get('rule') == 'Or':
+                if any(c.get('rule') == 'True_' for c in processed):
+                    return {'rule': 'True_'}
+            return {**rule, 'children': processed}
+
+        # Handle Conditional rules - if both branches are True_, simplify to True_
+        if rule.get('rule') == 'Conditional':
+            args = rule.get('args', {})
+            processed_args = {}
+            for key, value in args.items():
+                if isinstance(value, dict):
+                    processed_args[key] = self._replace_small_key_checks(value)
+                else:
+                    processed_args[key] = value
+            # If both if_true and if_false are True_, the whole conditional is True_
+            if_true = processed_args.get('if_true', {})
+            if_false = processed_args.get('if_false', {})
+            if if_true.get('rule') == 'True_' and if_false.get('rule') == 'True_':
+                return {'rule': 'True_'}
+            return {**rule, 'args': processed_args}
+
+        # Handle args dict for nested rules
+        if 'args' in rule and isinstance(rule['args'], dict):
+            processed_args = {}
+            for key, value in rule['args'].items():
+                if isinstance(value, dict):
+                    processed_args[key] = self._replace_small_key_checks(value)
+                else:
+                    processed_args[key] = value
+            return {**rule, 'args': processed_args}
+
+        return rule
 
     def _compute_bunny_accessible_locations(self, world) -> Set[str]:
         """Compute the set of bunny-accessible locations based on world options.
 
-        The bunny-accessible list is the set of locations that never require Moon Pearl.
+        The bunny-accessible list is the set of locations that NEVER require Moon Pearl.
         These are locations that can be accessed in bunny form regardless of game mode
-        or glitch settings.
+        or glitch settings. From ALttP Rules.py bunny_accessible_locations list.
 
-        Note: ALttP has complex path-dependent bunny rules for glitch modes that can't
-        be easily replicated. The original rules check entrance paths and add options
-        for superbunny or mirror accessibility. We simplify to the basic set of always-
-        accessible locations to avoid logic mismatches.
+        Note: Superbunny accessible locations (from OverworldGlitchRules.get_superbunny_accessible_locations)
+        are NOT included here because they require EITHER Moon Pearl OR specific superbunny
+        entrance paths. Since we can't replicate the path-dependent logic in exports,
+        we conservatively require Moon Pearl for those locations.
         """
-        # Return the static set - glitch modes have complex path-dependent rules
-        # that can't be simplified to a location list
+        # Return only the static bunny-accessible locations
+        # These locations can ALWAYS be collected in bunny form, no Moon Pearl needed
         return set(BUNNY_ACCESSIBLE_LOCATIONS)
 
     def _is_bunny_rule_value(self, value) -> bool:
@@ -227,16 +448,33 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         Since we can't replicate the dynamic path evaluation, we use this approximation:
         - Locations in BUNNY_ACCESSIBLE_LOCATIONS are always accessible in bunny form
+        - In glitch modes, locations in MANDATORY_SUPERBUNNY_LOCATIONS are also accessible
+          without Moon Pearl (their superbunny entrance paths are mandatory connections)
         - For other Dark World locations, require Moon Pearl since the player needs it
           to not be a bunny and interact with most objects/NPCs
-
-        Note: This is an approximation for no_glitches mode. Glitch modes have more
-        complex path-dependent rules with superbunny and mirror revival options that
-        can't be easily replicated in exported rules.
         """
+        # Always-accessible locations (bunny can collect in any mode)
         if location_name in self._bunny_accessible_locations:
             logger.debug(f"ALttP: Location '{location_name}' is in bunny-accessible list")
             return {'rule': 'True_'}
+
+        # In glitch modes, certain locations have mandatory superbunny paths
+        # that are never shuffled, so they don't require Moon Pearl
+        if self._is_glitch_mode and location_name in MANDATORY_SUPERBUNNY_LOCATIONS:
+            logger.debug(f"ALttP: Location '{location_name}' has mandatory superbunny path in glitch mode")
+            return {'rule': 'True_'}
+
+        # In glitch modes, other superbunny locations can be accessed with Mirror
+        # The rule is: Moon Pearl OR Magic Mirror (for superbunny revival)
+        if self._is_glitch_mode and location_name in MIRROR_SUPERBUNNY_LOCATIONS:
+            logger.debug(f"ALttP: Location '{location_name}' can use superbunny with mirror in glitch mode")
+            return {
+                'rule': 'Or',
+                'children': [
+                    {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
+                    {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
+                ]
+            }
 
         # For other locations with bunny rules, require Moon Pearl.
         # The bunny rule's existence means the location is in a Dark World region
@@ -245,15 +483,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Post-process entire export data to handle bunny rules.
+        """Post-process entire export data to handle bunny rules and universal keys.
 
         Handles:
         1. Exit/entrance rules with bunny rule lambdas
         2. Location rules in mixed regions (both Light World and Dark World)
+        3. Universal small key conversion when small_key_shuffle is 'universal'
 
         For mixed regions, the Moon Pearl requirement added by _get_bunny_replacement_rule
         is removed since there are Light World paths available. Only pure Dark World
         regions require Moon Pearl.
+
+        For universal keys, all dungeon-specific small key checks are replaced with
+        can_buy_unlimited helper calls to properly evaluate shop reachability.
         """
         # Process regions to handle entrance/exit rules and fix mixed region locations
         regions = data.get('regions', {})
@@ -263,18 +505,28 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 is_light_world = region_data.get('is_light_world', False)
                 is_mixed_region = is_dark_world and is_light_world
 
-                # Process locations in mixed regions
-                # For mixed regions, we don't need Moon Pearl since there are Light World paths
-                if is_mixed_region:
-                    for location_data in region_data.get('locations', []):
-                        location_name = location_data.get('name', '')
+                # Process locations
+                for location_data in region_data.get('locations', []):
+                    location_name = location_data.get('name', '')
+                    access_rule = location_data.get('access_rule', {})
+
+                    # For mixed regions, remove Moon Pearl requirement from compound rules
+                    # (since Light World paths are available, Moon Pearl isn't required)
+                    if is_mixed_region and access_rule and location_name not in self._bunny_accessible_locations:
+                        location_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                            access_rule, location_name
+                        )
                         access_rule = location_data.get('access_rule', {})
-                        if self._is_bunny_moon_pearl_rule(access_rule, location_name):
-                            # Remove Moon Pearl requirement for mixed regions
-                            location_data['access_rule'] = {'rule': 'True_'}
-                            logger.debug(f"ALttP: Removed Moon Pearl from mixed region location '{location_name}'")
+
+                                # Replace dungeon small key checks when universal keys are enabled
+                    if self._is_universal_keys and access_rule:
+                        location_data['access_rule'] = self._replace_small_key_checks(access_rule)
 
                 # Process exits
+                # Check if this is a bunny-impassable cave - these need Moon Pearl
+                # to exit even in mixed regions (inverted mode specific)
+                is_bunny_impassable = region_name in BUNNY_IMPASSABLE_CAVES
+
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
                     if 'access_rule' in exit_data and exit_data['access_rule']:
@@ -282,11 +534,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'], exit_name
                         )
                         # For exits from mixed regions, remove Moon Pearl requirement
-                        # since there are Light World paths available
-                        if is_mixed_region:
+                        # since there are Light World paths available.
+                        # BUT: Don't remove Moon Pearl from bunny-impassable caves -
+                        # these require Moon Pearl to exit even in mixed regions.
+                        if is_mixed_region and not is_bunny_impassable:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
+                        # Replace dungeon small key checks when universal keys are enabled
+                        if self._is_universal_keys:
+                            exit_data['access_rule'] = self._replace_small_key_checks(
+                                exit_data['access_rule']
+                            )
+
                 # Process entrances
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
@@ -294,7 +554,38 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         entrance_data['access_rule'] = self._process_bunny_rules(
                             entrance_data['access_rule'], entrance_name
                         )
+                        # Replace dungeon small key checks when universal keys are enabled
+                        if self._is_universal_keys:
+                            entrance_data['access_rule'] = self._replace_small_key_checks(
+                                entrance_data['access_rule']
+                            )
+
         return data
+
+    def get_game_info(self, world) -> Dict[str, Any]:
+        """Get ALttP-specific game information for the frontend.
+
+        Exports bunny rule metadata that enables path-based bunny evaluation
+        in the Universal Tracker. This allows proper handling of the complex
+        path-dependent bunny rules in ALttP.
+
+        Metadata exported:
+        - bunny_impassable_caves: Regions where bunnies cannot pass through
+        - bunny_accessible_locations: Locations accessible in bunny form
+        - mandatory_superbunny_locations: Locations with mandatory superbunny paths (glitch modes)
+        - mirror_superbunny_locations: Locations with mirror superbunny paths (glitch modes)
+        """
+        game_info = super().get_game_info(world)
+
+        # Add bunny rule metadata for path-based evaluation
+        game_info['bunny_rules'] = {
+            'bunny_impassable_caves': sorted(BUNNY_IMPASSABLE_CAVES),
+            'bunny_accessible_locations': sorted(BUNNY_ACCESSIBLE_LOCATIONS),
+            'mandatory_superbunny_locations': sorted(MANDATORY_SUPERBUNNY_LOCATIONS),
+            'mirror_superbunny_locations': sorted(MIRROR_SUPERBUNNY_LOCATIONS),
+        }
+
+        return game_info
 
     def _is_bunny_moon_pearl_rule(self, rule: Dict[str, Any], location_name: str) -> bool:
         """Check if this is a Moon Pearl rule added by bunny rule replacement.
@@ -411,6 +702,35 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return filtered_conditions[0]
             else:
                 return {'type': 'and', 'conditions': filtered_conditions}
+
+        # Handle Rule Builder HasAll - filter out Moon Pearl from items list
+        if rule.get('rule') == 'HasAll':
+            args = rule.get('args', {})
+            items = args.get('items', [])
+            if 'Moon Pearl' in items:
+                filtered_items = [item for item in items if item != 'Moon Pearl']
+                logger.debug(f"ALttP: Removed Moon Pearl from HasAll rule for '{rule_name}'")
+                if not filtered_items:
+                    return {'rule': 'True_'}
+                elif len(filtered_items) == 1:
+                    return {'rule': 'Has', 'args': {'item_name': filtered_items[0]}}
+                else:
+                    return {'rule': 'HasAll', 'args': {'items': filtered_items}}
+
+        # Handle Rule Builder HasAny - filter out Moon Pearl from items list
+        if rule.get('rule') == 'HasAny':
+            args = rule.get('args', {})
+            items = args.get('items', [])
+            if 'Moon Pearl' in items:
+                filtered_items = [item for item in items if item != 'Moon Pearl']
+                logger.debug(f"ALttP: Removed Moon Pearl from HasAny rule for '{rule_name}'")
+                if not filtered_items:
+                    # If only Moon Pearl was in HasAny, that means Moon Pearl was the only option
+                    # In a mixed region, this becomes True_
+                    return {'rule': 'True_'}
+                else:
+                    # Keep the rest of the items as valid options (the original HasAny becomes simpler)
+                    return {'rule': 'HasAny', 'args': {'items': filtered_items}}
 
         # No changes needed
         return rule

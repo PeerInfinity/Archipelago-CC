@@ -1,119 +1,109 @@
 # Fixing the Landstalker Memory Leak
 
+> **Note:** This was a **fork-specific bug**, not an upstream bug. Upstream has always properly called `stage_modify_multidata` via `call_stage` (since d743d10b, Oct 2023).
+
 ## Overview
 
-The fix converts `cached_spheres` from a class variable to an instance variable, preventing references from persisting after generation completes.
+The fork's exporter was calling `fill_slot_data()` after `stage_modify_multidata` had already cleared the cache, repopulating it and causing the memory leak.
 
-## Changes to `worlds/landstalker/__init__.py`
+## The Fix
 
-### 1. Change the class variable declaration (around line 41)
+The fix respects Archipelago's intended lifecycle: **compute → use → cleanup**.
 
-**Before:**
+### 1. Move exporter before `modify_multidata` (Main.py)
+
+The exporter call was moved inside `write_multidata`, before the `modify_multidata` call:
+
 ```python
-cached_spheres: List[Set[Location]] = []
+# Export rules data BEFORE modify_multidata clears world caches
+# (some worlds like Landstalker use class variables in fill_slot_data
+# that are cleared by stage_modify_multidata)
+settings = get_settings()
+if settings.general_options.save_rules_json:
+    from exporter import clear_rule_cache
+    from exporter.games import clear_handler_cache
+    export_game_rules(...)
+    clear_rule_cache()
+    clear_handler_cache()
+
+# TODO: change to `"version": version_tuple` after getting better serialization
+AutoWorld.call_all(multiworld, "modify_multidata", multidata)
 ```
 
-**After:**
+### 2. Use cached slot data (exporter/games/base/world_data.py)
+
+Main.py now caches `slot_data` on the world object after calling `fill_slot_data`:
+
 ```python
-cached_spheres: List[Set[Location]]
+slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
+# Cache slot_data on the world for the exporter to use
+# This avoids calling fill_slot_data twice
+multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
 ```
 
-### 2. Initialize instance variable in `__init__` (around line 48)
+The exporter uses this cached data instead of calling `fill_slot_data` again:
 
-**Before:**
 ```python
-def __init__(self, multiworld, player):
-    super().__init__(multiworld, player)
-    self.regions_table: Dict[str, LandstalkerRegion] = {}
-    self.dark_dungeon_id = "None"
-    self.dark_region_ids = []
-    self.teleport_tree_pairs = []
-    self.jewel_items = []
+# Export slot_data if available (cached by Main.py before exporter is called)
+# This avoids calling fill_slot_data twice, which can cause memory leaks
+# for worlds that populate class variables (like Landstalker's cached_spheres)
+if hasattr(world, '_cached_slot_data') and world._cached_slot_data:
+    world_data['slot_data'] = world._cached_slot_data
 ```
 
-**After:**
+### 3. Clear handler cache after `create_playthrough` (Main.py)
+
+The sphere logger (`create_playthrough_with_logging`) creates export handlers that hold references to world objects. These must be cleared after playthrough calculation:
+
 ```python
-def __init__(self, multiworld, player):
-    super().__init__(multiworld, player)
-    self.regions_table: Dict[str, LandstalkerRegion] = {}
-    self.dark_dungeon_id = "None"
-    self.dark_region_ids = []
-    self.teleport_tree_pairs = []
-    self.jewel_items = []
-    self.cached_spheres = []
+if args.spoiler > 1:
+    logger.info('Calculating playthrough.')
+    multiworld.spoiler.create_playthrough(create_paths=args.spoiler > 2)
+    # Clear handler cache - create_playthrough_with_logging may have created
+    # handlers that hold world references
+    try:
+        from exporter.games import clear_handler_cache
+        clear_handler_cache()
+    except ImportError:
+        pass
 ```
 
-### 3. Update `fill_slot_data` to use instance variable (around line 51)
+## Why This Works
 
-**Before:**
-```python
-def fill_slot_data(self) -> dict:
-    if not LandstalkerWorld.cached_spheres:
-        LandstalkerWorld.cached_spheres = list(self.multiworld.get_spheres())
-```
+The new call order:
+1. `fill_slot_data()` called → populates `cached_spheres`
+2. `export_game_rules()` called → uses cached `_cached_slot_data`
+3. `modify_multidata` called → `stage_modify_multidata` clears `cached_spheres`
+4. `create_playthrough` called → sphere logger creates handlers
+5. Handler cache cleared → releases world references
+6. No lingering references → garbage collection succeeds
 
-**After:**
-```python
-def fill_slot_data(self) -> dict:
-    if not self.cached_spheres:
-        self.cached_spheres = list(self.multiworld.get_spheres())
-```
+## Alternative: Instance Variable Approach
 
-### 4. Update `adjust_shop_prices` to use instance variable (around line 250)
+An alternative fix would convert `cached_spheres` to an instance variable in upstream Landstalker. This would be a more robust solution but requires upstream changes. See the detailed steps below if this approach is ever needed.
 
-**Before:**
-```python
-spheres = LandstalkerWorld.cached_spheres
-```
+### Changes to `worlds/landstalker/__init__.py`
 
-**After:**
-```python
-spheres = self.cached_spheres
-```
-
-### 5. Update `stage_modify_multidata` to clear instance variables (around line 237)
-
-**Before:**
-```python
-@classmethod
-def stage_modify_multidata(cls, multiworld: MultiWorld, *_):
-    LandstalkerWorld.cached_spheres = []
-```
-
-**After:**
-```python
-@classmethod
-def stage_modify_multidata(cls, multiworld: MultiWorld, *_):
-    for world in multiworld.get_game_worlds(cls.game):
-        world.cached_spheres = []
-```
+1. Change class variable to instance variable declaration
+2. Initialize in `__init__`
+3. Update `fill_slot_data` to use `self.cached_spheres`
+4. Update `adjust_shop_prices` to use `self.cached_spheres`
+5. Update `stage_modify_multidata` to iterate over world instances
 
 ## Verification
 
-After applying the fix, run the memory leak test:
+After applying the fix, run the generation command:
 
 ```bash
-python -c "
-import gc
-import weakref
-import sys
-
-from worlds.landstalker import LandstalkerWorld
-from test.general import setup_solo_multiworld
-
-multiworld = setup_solo_multiworld(LandstalkerWorld)
-for player in multiworld.player_ids:
-    multiworld.worlds[player].cached_spheres = list(multiworld.get_spheres())
-
-weak = weakref.ref(multiworld)
-del multiworld
-gc.collect()
-
-if weak():
-    print(f'MEMORY LEAK: MultiWorld still referenced {sys.getrefcount(weak())} times')
-else:
-    print('No memory leak - fix successful')
-"
+source .venv/bin/activate
+python Generate.py --weights_file_path "Templates/Landstalker - The Treasures of King Nole.yaml" --multi 1
 ```
 
-Expected output: `No memory leak - fix successful`
+The command should complete without the `AssertionError: MultiWorld object was not de-allocated` error.
+
+Expected output ends with:
+```
+Done. Enjoy. Total Time: ...
+```
+
+(No assertion error means the fix is working.)

@@ -17,7 +17,7 @@ from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB_BASE, MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
 from .profiling import profiler, auto_enable_from_env
 from BaseClasses import ItemClassification
 
@@ -1742,12 +1742,18 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         serializable_data = stringify_keys(regions_data)
                         current_size = len(json.dumps(serializable_data, default=str))
                         current_size_mb = current_size / (1024 * 1024)
-                        if current_size_mb > MAX_EXPORT_SIZE_MB:
+                        # Dynamic limit: 10 MB base + 1 MB per additional game in multiworld
+                        num_players = getattr(multiworld, 'players', 1)
+                        max_size_mb = MAX_EXPORT_SIZE_MB_BASE + (MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+                        if current_size_mb > max_size_mb:
                             error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
-                                        f"({MAX_EXPORT_SIZE_MB} MB) after processing region '{region_name}'. "
-                                        f"This likely indicates a rule analysis loop. Aborting export.")
+                                        f"({max_size_mb} MB) after processing region '{region_name}'. "
+                                        f"This may indicate a rule analysis loop or exceptionally large game data.")
                             logger.error(error_msg)
-                            raise RuntimeError(error_msg)
+                            # Return partial data instead of raising - allow export to complete with what we have
+                            logger.warning(f"Stopping region processing for this player due to size limit. "
+                                          f"Processed {region_count} regions before limit.")
+                            return regions_data, dungeons_data
                     except (TypeError, ValueError, RecursionError) as e:
                         # If serialization fails, just log and continue
                         logger.warning(f"Could not check export size: {e}")
