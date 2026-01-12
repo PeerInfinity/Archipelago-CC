@@ -300,8 +300,8 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                 # 2. 5-1 Level Complete + Purple Ramp (always, not just with tricks)
                 # 3. (with tricks) Pink Island access + Progressive Dash
                 #    -> Pink Ramp + Progressive Dash (pink_island's base case)
-                # 4. Tip of the map access (via out_of_bounds)
-                #    -> Progressive Dash + Dark Green Ramp + Kevin-1
+                # 4. Tip of the map access - only via Purple Ramp path without tricks,
+                #    or via out_of_bounds with tricks
                 # The visited list in Python prevents infinite recursion
                 conditions = [
                     {'type': 'item_check', 'item': 'Green Ramp'},
@@ -312,15 +312,6 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                             {'type': 'item_check', 'item': '5-1 Level Complete'},
                             {'type': 'item_check', 'item': 'Purple Ramp'}
                         ]
-                    },
-                    # Path 4: via out_of_bounds (tip_of_the_map path)
-                    {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': 'Progressive Dash'},
-                            {'type': 'item_check', 'item': 'Dark Green Ramp'},
-                            {'type': 'item_check', 'item': 'Kevin-1'}
-                        ]
                     }
                 ]
                 if allow_tricks:
@@ -330,6 +321,16 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                         'conditions': [
                             {'type': 'item_check', 'item': 'Progressive Dash'},
                             {'type': 'item_check', 'item': 'Pink Ramp'}
+                        ]
+                    })
+                    # Path 4: via out_of_bounds (requires tricks!)
+                    # out_of_bounds = allow_tricks AND Dash AND Dark Green Ramp AND Kevin-1
+                    conditions.append({
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Progressive Dash'},
+                            {'type': 'item_check', 'item': 'Dark Green Ramp'},
+                            {'type': 'item_check', 'item': 'Kevin-1'}
                         ]
                     })
                 return {'type': 'or', 'conditions': conditions}
@@ -382,8 +383,9 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             elif overworld_region == OverworldRegion.tip_of_the_map:
                 # Original logic:
                 # 1. 5-1 Level Complete + Purple Ramp, OR
-                # 2. can_reach_out_of_bounds (Dash + Dark Green Ramp + Kevin-1), OR
+                # 2. can_reach_out_of_bounds (requires allow_tricks!), OR
                 # 3. (with tricks) can_reach_sky_shelf
+                # Note: out_of_bounds REQUIRES allow_tricks in Python!
                 conditions = [
                     {
                         'type': 'and',
@@ -391,18 +393,19 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                             {'type': 'item_check', 'item': '5-1 Level Complete'},
                             {'type': 'item_check', 'item': 'Purple Ramp'}
                         ]
-                    },
-                    # Out of bounds path (always available, not just with tricks)
-                    {
+                    }
+                ]
+                if allow_tricks:
+                    # Out of bounds path (REQUIRES tricks!)
+                    # out_of_bounds = allow_tricks AND Dash AND Dark Green Ramp AND Kevin-1
+                    conditions.append({
                         'type': 'and',
                         'conditions': [
                             {'type': 'item_check', 'item': 'Progressive Dash'},
                             {'type': 'item_check', 'item': 'Dark Green Ramp'},
                             {'type': 'item_check', 'item': 'Kevin-1'}
                         ]
-                    }
-                ]
-                if allow_tricks:
+                    })
                     # From sky shelf (which requires Green Ramp OR Dash + Pink Ramp)
                     conditions.extend([
                         {'type': 'item_check', 'item': 'Green Ramp'},
@@ -437,8 +440,10 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
         Original logic:
         1. 5-1 Level Complete + Purple Ramp, OR
-        2. out_of_bounds (Dash + Dark Green Ramp + Kevin-1), OR
+        2. out_of_bounds (REQUIRES allow_tricks!), OR
         3. (with tricks) sky_shelf access
+
+        Note: out_of_bounds REQUIRES allow_tricks in Python!
         """
         conditions = [
             {
@@ -447,18 +452,18 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                     {'type': 'item_check', 'item': '5-1 Level Complete'},
                     {'type': 'item_check', 'item': 'Purple Ramp'}
                 ]
-            },
-            # Out of bounds path (always available, not just with tricks)
-            {
+            }
+        ]
+        if allow_tricks:
+            # Out of bounds path (REQUIRES tricks!)
+            conditions.append({
                 'type': 'and',
                 'conditions': [
                     {'type': 'item_check', 'item': 'Progressive Dash'},
                     {'type': 'item_check', 'item': 'Dark Green Ramp'},
                     {'type': 'item_check', 'item': 'Kevin-1'}
                 ]
-            }
-        ]
-        if allow_tricks:
+            })
             # From sky shelf (which requires Green Ramp OR Dash + Pink Ramp)
             conditions.extend([
                 {'type': 'item_check', 'item': 'Green Ramp'},

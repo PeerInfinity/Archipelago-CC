@@ -47,6 +47,9 @@ _apworld_download_urls: Dict[str, str] = {}
 # Project root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
+# Path to saved download URLs file (created by install_apworlds.py)
+DOWNLOAD_URLS_FILE = PROJECT_ROOT / "scripts" / "data" / "apworld-download-urls.json"
+
 # Default fuzzer output directory
 FUZZ_OUTPUT_DIR = PROJECT_ROOT / "fuzz_output"
 
@@ -122,7 +125,10 @@ def read_explain_stats() -> Optional[Dict]:
 
 def load_apworld_download_urls() -> Dict[str, str]:
     """
-    Load download URLs for all available apworlds from the apworld_manager.
+    Load download URLs for all available apworlds.
+
+    First tries to load from the JSON file created by install_apworlds.py.
+    Falls back to querying the apworld_manager repositories if the file doesn't exist.
 
     Returns a dict mapping world_id (lowercase) to download URL.
     The URL can be used to download the apworld file directly.
@@ -132,11 +138,29 @@ def load_apworld_download_urls() -> Dict[str, str]:
     if _apworld_download_urls:
         return _apworld_download_urls
 
+    # First try to load from the saved JSON file (created by install_apworlds.py)
+    if DOWNLOAD_URLS_FILE.exists():
+        try:
+            with open(DOWNLOAD_URLS_FILE, 'r') as f:
+                data = json.load(f)
+            urls = data.get('urls', {})
+            for world_id, info in urls.items():
+                if isinstance(info, dict) and 'download_url' in info:
+                    _apworld_download_urls[world_id.lower()] = info['download_url']
+                elif isinstance(info, str):
+                    # Handle simple string format for backwards compatibility
+                    _apworld_download_urls[world_id.lower()] = info
+            print(f"Loaded {len(_apworld_download_urls)} apworld download URLs from {DOWNLOAD_URLS_FILE}")
+            return _apworld_download_urls
+        except Exception as e:
+            print(f"Warning: Error loading download URLs from file: {e}")
+            # Fall through to repository loading
+
+    # Fall back to loading from apworld_manager repositories
     try:
         from worlds.apworld_manager.world_manager import (
             repositories, refresh_apworld_table
         )
-        from worlds.apworld_manager import RepoWorld
 
         print("Loading apworld download URLs from repositories...")
         repositories.load_repos_from_settings()
@@ -149,22 +173,16 @@ def load_apworld_download_urls() -> Dict[str, str]:
             if latest and hasattr(latest, 'id'):
                 world_id = latest.id.lower()
                 # Get the download URL from the latest_version object
-                # The URL is typically in the format used by download_remote_world
-                if hasattr(latest, 'download_url'):
-                    _apworld_download_urls[world_id] = latest.download_url
-                elif hasattr(latest, 'url'):
-                    _apworld_download_urls[world_id] = latest.url
-                else:
-                    # Construct URL from repository info if direct URL not available
-                    # Format: https://github.com/<owner>/<repo>/releases/download/<tag>/<filename>
-                    if hasattr(latest, 'repository') and hasattr(latest, 'tag_name'):
-                        repo = latest.repository
-                        if hasattr(repo, 'url'):
-                            # repo.url is typically "https://github.com/<owner>/<repo>"
-                            filename = f"{world_id}.apworld"
-                            _apworld_download_urls[world_id] = f"{repo.url}/releases/download/{latest.tag_name}/{filename}"
+                try:
+                    if hasattr(latest, 'download_url'):
+                        _apworld_download_urls[world_id] = latest.download_url
+                    elif hasattr(latest, 'url'):
+                        _apworld_download_urls[world_id] = latest.url
+                except Exception:
+                    # Skip if download_url property throws an error
+                    pass
 
-        print(f"Loaded {len(_apworld_download_urls)} apworld download URLs")
+        print(f"Loaded {len(_apworld_download_urls)} apworld download URLs from repositories")
         return _apworld_download_urls
 
     except ImportError as e:

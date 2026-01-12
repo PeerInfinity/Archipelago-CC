@@ -109,12 +109,12 @@ def get_project_root() -> str:
 
 
 def cleanup_test_worlds(project_root: str) -> List[str]:
-    """Delete all *_test and *_worldgen world directories and return list of deleted dirs."""
+    """Delete all *_test, *_worldgen, and *_worldgen2 world directories and return list of deleted dirs."""
     worlds_dir = os.path.join(project_root, 'worlds')
     deleted = []
 
     for item in os.listdir(worlds_dir):
-        if item.endswith('_test') or item.endswith('_worldgen'):
+        if item.endswith('_test') or item.endswith('_worldgen') or item.endswith('_worldgen2'):
             path = os.path.join(worlds_dir, item)
             if os.path.isdir(path):
                 shutil.rmtree(path)
@@ -125,12 +125,12 @@ def cleanup_test_worlds(project_root: str) -> List[str]:
 
 
 def cleanup_test_templates(project_root: str) -> List[str]:
-    """Delete all *Test.yaml and *WorldGen.yaml template files and return list of deleted files."""
+    """Delete all *Test.yaml, *WorldGen.yaml, and *WorldGen2.yaml template files and return list of deleted files."""
     templates_dir = os.path.join(project_root, 'Players', 'Templates')
     deleted = []
 
     for item in os.listdir(templates_dir):
-        if item.endswith(' Test.yaml') or item.endswith(' WorldGen.yaml'):
+        if item.endswith(' Test.yaml') or item.endswith(' WorldGen.yaml') or item.endswith(' WorldGen2.yaml'):
             path = os.path.join(templates_dir, item)
             os.remove(path)
             deleted.append(item)
@@ -140,7 +140,7 @@ def cleanup_test_templates(project_root: str) -> List[str]:
 
 
 def cleanup_test_presets(project_root: str) -> List[str]:
-    """Delete all *_test and *_worldgen preset directories and return list of deleted dirs."""
+    """Delete all *_test, *_worldgen, and *_worldgen2 preset directories and return list of deleted dirs."""
     presets_dir = os.path.join(project_root, 'frontend', 'presets')
     deleted = []
 
@@ -148,7 +148,7 @@ def cleanup_test_presets(project_root: str) -> List[str]:
         return deleted
 
     for item in os.listdir(presets_dir):
-        if item.endswith('_test') or item.endswith('_worldgen'):
+        if item.endswith('_test') or item.endswith('_worldgen') or item.endswith('_worldgen2'):
             path = os.path.join(presets_dir, item)
             if os.path.isdir(path):
                 shutil.rmtree(path)
@@ -176,8 +176,8 @@ def get_template_list(project_root: str, skip_list: List[str] = None, include_te
     templates = []
     for item in sorted(os.listdir(templates_dir)):
         if item.endswith('.yaml') and item not in skip_list:
-            # Skip _test and _worldgen templates unless explicitly included
-            if ' Test.yaml' in item or ' WorldGen.yaml' in item:
+            # Skip _test, _worldgen, and _worldgen2 templates unless explicitly included
+            if ' Test.yaml' in item or ' WorldGen.yaml' in item or ' WorldGen2.yaml' in item:
                 if include_test:
                     templates.append(item)
             else:
@@ -187,19 +187,22 @@ def get_template_list(project_root: str, skip_list: List[str] = None, include_te
 
 
 def get_test_template_list(project_root: str) -> List[str]:
-    """Get list of _test and _worldgen template files."""
+    """Get list of _test, _worldgen, and _worldgen2 template files."""
     templates_dir = os.path.join(project_root, 'Players', 'Templates')
     templates = []
     for item in sorted(os.listdir(templates_dir)):
-        if item.endswith(' Test.yaml') or item.endswith(' WorldGen.yaml'):
+        if item.endswith(' Test.yaml') or item.endswith(' WorldGen.yaml') or item.endswith(' WorldGen2.yaml'):
             templates.append(item)
     return templates
 
 
 def get_original_for_test_template(test_template: str) -> str:
-    """Get the original template name from a test or worldgen template name."""
+    """Get the original template name from a test, worldgen, or worldgen2 template name."""
     # "Game Test.yaml" -> "Game.yaml"
     # "Game WorldGen.yaml" -> "Game.yaml"
+    # "Game WorldGen2.yaml" -> "Game.yaml"
+    if test_template.endswith(' WorldGen2.yaml'):
+        return test_template.replace(' WorldGen2.yaml', '.yaml')
     if test_template.endswith(' WorldGen.yaml'):
         return test_template.replace(' WorldGen.yaml', '.yaml')
     return test_template.replace(' Test.yaml', '.yaml')
@@ -932,6 +935,12 @@ def main():
             return 1
 
         print("Templates regenerated.")
+
+        # Clear and rebuild the world mapping cache so it includes the newly created worldgen worlds
+        global _world_mapping
+        _world_mapping = {}
+        print("Rebuilding world mapping to include _worldgen worlds...")
+        _world_mapping = build_and_load_world_mapping(project_root)
 
     # Phase: Run spoiler tests
     http_server_process = None
