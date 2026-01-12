@@ -455,14 +455,17 @@ jobs:
           # Clean _test and _worldgen worlds (if any were committed)
           find worlds -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
           find worlds -maxdepth 1 -type d -name '*_worldgen' -exec rm -rf {} + 2>/dev/null || true
+          find worlds -maxdepth 1 -type d -name '*_worldgen2' -exec rm -rf {} + 2>/dev/null || true
 
           # Clean _test and _worldgen templates
           find Players/Templates -name '* Test.yaml' -delete 2>/dev/null || true
           find Players/Templates -name '* WorldGen.yaml' -delete 2>/dev/null || true
+          find Players/Templates -name '* WorldGen2.yaml' -delete 2>/dev/null || true
 
           # Clean _test and _worldgen presets
           find frontend/presets -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
           find frontend/presets -maxdepth 1 -type d -name '*_worldgen' -exec rm -rf {} + 2>/dev/null || true
+          find frontend/presets -maxdepth 1 -type d -name '*_worldgen2' -exec rm -rf {} + 2>/dev/null || true
 
           # Regenerate clean templates
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
