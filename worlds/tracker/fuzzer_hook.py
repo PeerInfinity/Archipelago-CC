@@ -273,6 +273,19 @@ class Hook(BaseHook):
             # These occur when the fuzzer generates invalid option combinations
             if "Invalid OC2 settings" in exc_str or "OC2 needs at least" in exc_str:
                 return GenOutcome.OptionError, exc
+            # Handle TimeoutError for FFMQ - the game requires external API calls for shuffle
+            # options, and the API may be slow or unresponsive in test environments
+            if exc_type == "TimeoutError":
+                # Check if this is an FFMQ test by looking at the ut_core's multiworld
+                try:
+                    if (hasattr(self, 'ut_core') and self.ut_core and
+                        hasattr(self.ut_core, 'multiworld') and self.ut_core.multiworld and
+                        hasattr(self.ut_core.multiworld, 'game')):
+                        game = self.ut_core.multiworld.game.get(1, '')
+                        if game == "Final Fantasy Mystic Quest":
+                            return GenOutcome.OptionError, exc
+                except Exception:
+                    pass  # If we can't determine the game, don't reclassify
         return (self.status if self.status is not None else outcome), exc
 
 
