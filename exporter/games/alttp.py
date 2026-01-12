@@ -84,6 +84,18 @@ MIRROR_SUPERBUNNY_LOCATIONS = {
 
 
 
+# Bunny-impassable caves (from set_bunny_rules in ALttP Rules.py)
+# These are regions where bunnies cannot pass through - if you enter as a bunny,
+# you cannot exit. In inverted mode, these regions require Moon Pearl to exit
+# even if they are mixed regions (both Light World and Dark World accessible).
+BUNNY_IMPASSABLE_CAVES = {
+    'Bumper Cave', 'Two Brothers House', 'Hookshot Cave', 'Skull Woods First Section (Right)',
+    'Skull Woods First Section (Left)', 'Skull Woods First Section (Top)', 'Turtle Rock (Entrance)',
+    'Turtle Rock (Second Section)', 'Turtle Rock (Big Chest)', 'Skull Woods Second Section (Drop)',
+    'Turtle Rock (Eye Bridge)', 'Sewers', 'Pyramid', 'Spiral Cave (Top)',
+    'Desert Palace Main (Inner)', 'Fairy Ascension Cave (Drop)'
+}
+
 # Set of dungeon names for small key mapping
 DUNGEON_NAMES = {
     'Hyrule Castle', 'Agahnims Tower', 'Eastern Palace', 'Desert Palace',
@@ -511,6 +523,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         location_data['access_rule'] = self._replace_small_key_checks(access_rule)
 
                 # Process exits
+                # Check if this is a bunny-impassable cave - these need Moon Pearl
+                # to exit even in mixed regions (inverted mode specific)
+                is_bunny_impassable = region_name in BUNNY_IMPASSABLE_CAVES
+
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
                     if 'access_rule' in exit_data and exit_data['access_rule']:
@@ -518,8 +534,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'], exit_name
                         )
                         # For exits from mixed regions, remove Moon Pearl requirement
-                        # since there are Light World paths available
-                        if is_mixed_region:
+                        # since there are Light World paths available.
+                        # BUT: Don't remove Moon Pearl from bunny-impassable caves -
+                        # these require Moon Pearl to exit even in mixed regions.
+                        if is_mixed_region and not is_bunny_impassable:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
