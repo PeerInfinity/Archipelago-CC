@@ -295,6 +295,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             location_name = left.get('args', {}).get('location', '')
         else:
             location_name = left.get('location', '')
+
+        # Handle case where location_name is a constant dict
+        if isinstance(location_name, dict) and location_name.get('type') == 'constant':
+            location_name = location_name.get('value', '')
+
         if not location_name:
             return None
 
@@ -397,8 +402,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Handle Or of placement comparisons (both Rule Builder and AST format)
         if rule_type in ('Or', 'or', 'bool_or'):
-            # Rule Builder uses 'children', AST uses 'operands'
-            children = test.get('children', []) or test.get('operands', [])
+            # Rule Builder uses 'children', AST uses 'operands' or 'conditions'
+            children = test.get('children', []) or test.get('operands', []) or test.get('conditions', [])
             results = [self._evaluate_placement_comparison(c) for c in children]
             # If all results are known, return the OR of them
             if all(r is not None for r in results):
@@ -410,8 +415,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Handle And of placement comparisons (both Rule Builder and AST format)
         if rule_type in ('And', 'and', 'bool_and'):
-            # Rule Builder uses 'children', AST uses 'operands'
-            children = test.get('children', []) or test.get('operands', [])
+            # Rule Builder uses 'children', AST uses 'operands' or 'conditions'
+            children = test.get('children', []) or test.get('operands', []) or test.get('conditions', [])
             results = [self._evaluate_placement_comparison(c) for c in children]
             # If all results are known, return the AND of them
             if all(r is not None for r in results):
