@@ -1807,7 +1807,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Heart-Pounding Flight": {
         "name": "Heart-Pounding Flight",
@@ -1820,7 +1824,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Pancake is Love": {
         "name": "Pancake is Love",
@@ -1832,7 +1840,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Shiguang Tuya": {
         "name": "Shiguang Tuya",
@@ -1856,7 +1868,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Dolphin and Broadcast": {
         "name": "Dolphin and Broadcast",
@@ -1868,7 +1884,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Yuki no Shizuku Ame no Oto": {
         "name": "Yuki no Shizuku Ame no Oto",
@@ -1905,7 +1925,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Night Wander": {
         "name": "Night Wander",
@@ -1929,7 +1953,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Spring Carnival": {
         "name": "Spring Carnival",
@@ -1977,7 +2005,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Lights of Muse": {
         "name": "Lights of Muse",
@@ -1989,7 +2021,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "midstream jam": {
         "name": "midstream jam",
@@ -2025,7 +2061,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Galaxy Striker": {
         "name": "Galaxy Striker",
@@ -2037,7 +2077,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Departure Road": {
         "name": "Departure Road",
@@ -2085,7 +2129,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Blackest Luxury Car": {
         "name": "Blackest Luxury Car",
@@ -2097,7 +2145,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Medicine of Sing": {
         "name": "Medicine of Sing",
@@ -2169,7 +2221,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "NISEGAO": {
         "name": "NISEGAO",
@@ -2302,7 +2358,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "INTERNET OVERDOSE": {
         "name": "INTERNET OVERDOSE",
@@ -5639,7 +5699,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Irreplaceable": {
         "name": "Irreplaceable",
@@ -6671,7 +6735,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "My Life Is For You": {
         "name": "My Life Is For You",
@@ -6696,7 +6764,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Goodbye Boss": {
         "name": "Goodbye Boss",
@@ -6720,7 +6792,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Lys Tourbillon": {
         "name": "Lys Tourbillon",
@@ -6732,7 +6808,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Thirty Million Persona": {
         "name": "Thirty Million Persona",
@@ -9312,7 +9392,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Aventyr": {
         "name": "Aventyr",

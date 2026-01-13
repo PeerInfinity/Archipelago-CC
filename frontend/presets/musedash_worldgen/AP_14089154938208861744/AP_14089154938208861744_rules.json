@@ -264,7 +264,7 @@
             "item": {
               "name": "Ira",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -281,7 +281,7 @@
             "item": {
               "name": "Dolphin and Broadcast",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -332,7 +332,7 @@
             "item": {
               "name": "Evolution",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -349,7 +349,7 @@
             "item": {
               "name": "Lys Tourbillon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -400,7 +400,7 @@
             "item": {
               "name": "Out of Sense",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -536,7 +536,7 @@
             "item": {
               "name": "Pancake is Love",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -553,7 +553,7 @@
             "item": {
               "name": "Frost Land",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -672,7 +672,7 @@
             "item": {
               "name": "Heart-Pounding Flight",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -757,7 +757,7 @@
             "item": {
               "name": "EXIST",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -791,7 +791,7 @@
             "item": {
               "name": "Blackest Luxury Car",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -825,7 +825,7 @@
             "item": {
               "name": "Candy-coloured Love Theory",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -842,7 +842,7 @@
             "item": {
               "name": "Heart Message feat. Aoi Tokimori",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -910,7 +910,7 @@
             "item": {
               "name": "Etude -Sunset-",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -995,7 +995,7 @@
             "item": {
               "name": "Clock Room & Spiritual World",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1131,7 +1131,7 @@
             "item": {
               "name": "Galaxy Striker",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1199,7 +1199,7 @@
             "item": {
               "name": "Dohna Dohna no Uta",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1233,7 +1233,7 @@
             "item": {
               "name": "Stargazer",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1301,7 +1301,7 @@
             "item": {
               "name": "From the New World",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1454,7 +1454,7 @@
             "item": {
               "name": "Confession",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1505,7 +1505,7 @@
             "item": {
               "name": "Lights of Muse",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1539,7 +1539,7 @@
             "item": {
               "name": "Lian Ai Audio Navigation",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1807,7 +1807,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Heart-Pounding Flight": {
         "name": "Heart-Pounding Flight",
@@ -1820,7 +1824,11 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "hint_text": "Heart Pounding Flight"
+        "hint_text": "Heart Pounding Flight",
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Pancake is Love": {
         "name": "Pancake is Love",
@@ -1832,7 +1840,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Shiguang Tuya": {
         "name": "Shiguang Tuya",
@@ -1856,7 +1868,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Dolphin and Broadcast": {
         "name": "Dolphin and Broadcast",
@@ -1868,7 +1884,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Yuki no Shizuku Ame no Oto": {
         "name": "Yuki no Shizuku Ame no Oto",
@@ -1905,7 +1925,11 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "hint_text": "Candy coloured Love Theory"
+        "hint_text": "Candy coloured Love Theory",
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Night Wander": {
         "name": "Night Wander",
@@ -1929,7 +1953,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Spring Carnival": {
         "name": "Spring Carnival",
@@ -1977,7 +2005,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Lights of Muse": {
         "name": "Lights of Muse",
@@ -1989,7 +2021,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "midstream jam": {
         "name": "midstream jam",
@@ -2025,7 +2061,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Galaxy Striker": {
         "name": "Galaxy Striker",
@@ -2037,7 +2077,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Departure Road": {
         "name": "Departure Road",
@@ -2085,7 +2129,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Blackest Luxury Car": {
         "name": "Blackest Luxury Car",
@@ -2097,7 +2145,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Medicine of Sing": {
         "name": "Medicine of Sing",
@@ -2169,7 +2221,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "NISEGAO": {
         "name": "NISEGAO",
@@ -2302,7 +2358,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "INTERNET OVERDOSE": {
         "name": "INTERNET OVERDOSE",
@@ -5639,7 +5699,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Irreplaceable": {
         "name": "Irreplaceable",
@@ -6671,7 +6735,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "My Life Is For You": {
         "name": "My Life Is For You",
@@ -6696,7 +6764,11 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "hint_text": "Etude  Sunset "
+        "hint_text": "Etude  Sunset ",
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Goodbye Boss": {
         "name": "Goodbye Boss",
@@ -6720,7 +6792,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Lys Tourbillon": {
         "name": "Lys Tourbillon",
@@ -6732,7 +6808,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "useful": 1,
+          "progression": 1
+        }
       },
       "Thirty Million Persona": {
         "name": "Thirty Million Persona",
@@ -9312,7 +9392,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Aventyr": {
         "name": "Aventyr",
@@ -9893,86 +9977,86 @@
       "Koi no Moonlight-1": "Dohna Dohna no Uta",
       "Yuki no Shizuku Ame no Oto-0": "Stargazer",
       "Yuki no Shizuku Ame no Oto-1": "Miss To Great (5 Pack)",
+      "Mopemope-0": "Etude -Sunset-",
+      "Mopemope-1": "Frost Land",
+      "Ira-0": "Lys Tourbillon",
+      "Ira-1": "Stargazer",
+      "Bass Telekinesis-0": "Dolphin and Broadcast",
+      "Bass Telekinesis-1": "Great To Perfect (10 Pack)",
+      "Dohna Dohna no Uta-0": "Pancake is Love",
+      "Dohna Dohna no Uta-1": "Confession",
+      "Pancake is Love-0": "Departure Road",
+      "Pancake is Love-1": "Shenri Kuaira -repeat-",
+      "Confession-0": "From the New World",
+      "Confession-1": "Miss To Great (5 Pack)",
+      "Stargazer-0": "Candy-coloured Love Theory",
+      "Stargazer-1": "DISCO NIGHT",
+      "Frost Land-0": "Great To Perfect (10 Pack)",
+      "Frost Land-1": "Blackest Luxury Car",
+      "Departure Road-0": "MilK",
+      "Departure Road-1": "Blackest Luxury Car",
+      "Shenri Kuaira -repeat--0": "Lights of Muse",
+      "Shenri Kuaira -repeat--1": "Music Sheet",
+      "Candy-coloured Love Theory-0": "EXIST",
+      "Candy-coloured Love Theory-1": "Lights of Muse",
+      "DISCO NIGHT-0": "Say! Fanfare!",
+      "DISCO NIGHT-1": "From the New World",
+      "EXIST-0": "Music Sheet",
+      "EXIST-1": "Mezame Eurythmics",
+      "Lights of Muse-0": "Music Sheet",
+      "Lights of Muse-1": "Great To Perfect (10 Pack)",
+      "Say! Fanfare!-0": "Etude -Sunset-",
+      "Say! Fanfare!-1": "umpopoff",
+      "From the New World-0": "Heart-Pounding Flight",
+      "From the New World-1": "Lian Ai Audio Navigation",
+      "MilK-0": "Mujinku-Vacuum",
+      "MilK-1": "Candy-coloured Love Theory",
+      "Blackest Luxury Car-0": "Galaxy Striker",
+      "Blackest Luxury Car-1": "Out of Sense",
+      "Galaxy Striker-0": "Funkotsu Saishin Casino",
+      "Galaxy Striker-1": "Lian Ai Audio Navigation",
+      "Out of Sense-0": "Clock Room & Spiritual World",
+      "Out of Sense-1": "Night Wander",
+      "Mezame Eurythmics-0": "Extra Life",
+      "Mezame Eurythmics-1": "Great To Perfect (10 Pack)",
+      "Heart-Pounding Flight-0": "Music Sheet",
+      "Heart-Pounding Flight-1": "Galaxy Striker",
+      "Mujinku-Vacuum-0": "Goodbye Boss",
+      "Mujinku-Vacuum-1": "EXIST",
+      "Etude -Sunset--0": "Great To Perfect (10 Pack)",
+      "Etude -Sunset--1": "Heart Message feat. Aoi Tokimori",
+      "umpopoff-0": "irregulyze",
+      "umpopoff-1": "Yume Ou Mono Yo",
+      "Funkotsu Saishin Casino-0": "Great To Perfect (10 Pack)",
+      "Funkotsu Saishin Casino-1": "Clock Room & Spiritual World",
+      "Lian Ai Audio Navigation-0": "Confession",
+      "Lian Ai Audio Navigation-1": "Great To Perfect (10 Pack)",
+      "Goodbye Boss-0": "Latitude",
+      "Goodbye Boss-1": "Music Sheet",
+      "Clock Room & Spiritual World-0": "Great To Perfect (10 Pack)",
+      "Clock Room & Spiritual World-1": "Miss To Great (5 Pack)",
+      "Night Wander-0": "Evolution",
+      "Night Wander-1": "Iyaiya",
+      "irregulyze-0": "Ira",
+      "irregulyze-1": "Dolphin and Broadcast",
+      "Yume Ou Mono Yo-0": "Heart Message feat. Aoi Tokimori",
+      "Yume Ou Mono Yo-1": "Great To Perfect (10 Pack)",
+      "Latitude-0": "Evolution",
+      "Latitude-1": "Lys Tourbillon",
+      "Evolution-0": "Out of Sense",
+      "Evolution-1": "Great To Perfect (10 Pack)",
       "Iyaiya-0": "Great To Perfect (10 Pack)",
       "Iyaiya-1": "Great To Perfect (10 Pack)",
       "Heart Message feat. Aoi Tokimori-0": "Miss To Great (5 Pack)",
       "Heart Message feat. Aoi Tokimori-1": "Medicine of Sing",
-      "irregulyze-0": "Ira",
-      "irregulyze-1": "Dolphin and Broadcast",
-      "Clock Room & Spiritual World-0": "Great To Perfect (10 Pack)",
-      "Clock Room & Spiritual World-1": "Miss To Great (5 Pack)",
-      "Latitude-0": "Evolution",
-      "Latitude-1": "Lys Tourbillon",
-      "Etude -Sunset--0": "Great To Perfect (10 Pack)",
-      "Etude -Sunset--1": "Heart Message feat. Aoi Tokimori",
-      "Evolution-0": "Out of Sense",
-      "Evolution-1": "Great To Perfect (10 Pack)",
-      "Blackest Luxury Car-0": "Galaxy Striker",
-      "Blackest Luxury Car-1": "Out of Sense",
-      "Bass Telekinesis-0": "Dolphin and Broadcast",
-      "Bass Telekinesis-1": "Great To Perfect (10 Pack)",
-      "Confession-0": "From the New World",
-      "Confession-1": "Miss To Great (5 Pack)",
-      "Lys Tourbillon-0": "Pancake is Love",
-      "Lys Tourbillon-1": "Frost Land",
-      "Pancake is Love-0": "Departure Road",
-      "Pancake is Love-1": "Shenri Kuaira -repeat-",
-      "umpopoff-0": "irregulyze",
-      "umpopoff-1": "Yume Ou Mono Yo",
-      "Night Wander-0": "Evolution",
-      "Night Wander-1": "Iyaiya",
       "Dolphin and Broadcast-0": "Heart-Pounding Flight",
       "Dolphin and Broadcast-1": "Aqua Stars",
-      "Mezame Eurythmics-0": "Extra Life",
-      "Mezame Eurythmics-1": "Great To Perfect (10 Pack)",
-      "Mujinku-Vacuum-0": "Goodbye Boss",
-      "Mujinku-Vacuum-1": "EXIST",
-      "Departure Road-0": "MilK",
-      "Departure Road-1": "Blackest Luxury Car",
-      "MilK-0": "Mujinku-Vacuum",
-      "MilK-1": "Candy-coloured Love Theory",
-      "Yume Ou Mono Yo-0": "Heart Message feat. Aoi Tokimori",
-      "Yume Ou Mono Yo-1": "Great To Perfect (10 Pack)",
-      "Frost Land-0": "Great To Perfect (10 Pack)",
-      "Frost Land-1": "Blackest Luxury Car",
-      "Say! Fanfare!-0": "Etude -Sunset-",
-      "Say! Fanfare!-1": "umpopoff",
-      "Out of Sense-0": "Clock Room & Spiritual World",
-      "Out of Sense-1": "Night Wander",
-      "Funkotsu Saishin Casino-0": "Great To Perfect (10 Pack)",
-      "Funkotsu Saishin Casino-1": "Clock Room & Spiritual World",
-      "Medicine of Sing-0": "Great To Perfect (10 Pack)",
-      "Medicine of Sing-1": "Music Sheet",
-      "Goodbye Boss-0": "Latitude",
-      "Goodbye Boss-1": "Music Sheet",
-      "Dohna Dohna no Uta-0": "Pancake is Love",
-      "Dohna Dohna no Uta-1": "Confession",
-      "Heart-Pounding Flight-0": "Music Sheet",
-      "Heart-Pounding Flight-1": "Galaxy Striker",
-      "Stargazer-0": "Candy-coloured Love Theory",
-      "Stargazer-1": "DISCO NIGHT",
       "Aqua Stars-0": "Great To Perfect (10 Pack)",
       "Aqua Stars-1": "Dohna Dohna no Uta",
-      "Ira-0": "Lys Tourbillon",
-      "Ira-1": "Stargazer",
-      "Mopemope-0": "Etude -Sunset-",
-      "Mopemope-1": "Frost Land",
-      "DISCO NIGHT-0": "Say! Fanfare!",
-      "DISCO NIGHT-1": "From the New World",
-      "From the New World-0": "Heart-Pounding Flight",
-      "From the New World-1": "Lian Ai Audio Navigation",
-      "Lights of Muse-0": "Music Sheet",
-      "Lights of Muse-1": "Great To Perfect (10 Pack)",
-      "Shenri Kuaira -repeat--0": "Lights of Muse",
-      "Shenri Kuaira -repeat--1": "Music Sheet",
-      "EXIST-0": "Music Sheet",
-      "EXIST-1": "Mezame Eurythmics",
-      "Lian Ai Audio Navigation-0": "Confession",
-      "Lian Ai Audio Navigation-1": "Great To Perfect (10 Pack)",
-      "Candy-coloured Love Theory-0": "EXIST",
-      "Candy-coloured Love Theory-1": "Lights of Muse",
-      "Galaxy Striker-0": "Funkotsu Saishin Casino",
-      "Galaxy Striker-1": "Lian Ai Audio Navigation"
+      "Medicine of Sing-0": "Great To Perfect (10 Pack)",
+      "Medicine of Sing-1": "Music Sheet",
+      "Lys Tourbillon-0": "Pancake is Love",
+      "Lys Tourbillon-1": "Frost Land"
     }
   },
   "progression_mapping": {
