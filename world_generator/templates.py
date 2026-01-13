@@ -1784,8 +1784,13 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             if location.item is not None:
                 continue
 
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
+
             # Try to find and use an item from the pool (preserves correct classification)
-            # Prefer progression items first since they may be needed for accessibility
             # Note: Must use index-based removal because Item.__eq__ only compares name/player,
             # not classification, so list.remove() would remove the wrong item
             item = None
@@ -1805,8 +1810,17 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                     if progression_idx is not None and filler_idx is not None:
                         break
 
-            # Use progression item first if available, otherwise filler
-            chosen_idx = progression_idx if progression_idx is not None else filler_idx
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
             if chosen_idx is not None:
                 item = self.multiworld.itempool.pop(chosen_idx)
             else:
@@ -2004,6 +2018,22 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 '''
     else:
         canonical_placements_section = ''
+
+    # Generate canonical_placement_advancements class attribute (for items with mixed classification)
+    canonical_placement_advancements_section = ''
+    if canonical_seed is not None and data.canonical_placement_advancements:
+        adv_entries = []
+        for loc_name, is_advancement in data.canonical_placement_advancements.items():
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            adv_entries.append(f'        "{loc_escaped}": {is_advancement},')
+        adv_content = '\n'.join(adv_entries)
+        canonical_placement_advancements_section = f'''
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {{
+{adv_content}
+    }}
+'''
 
     # Generate __init__ method for world_attributes (game-specific instance attributes)
     init_section = ''
@@ -2396,7 +2426,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
