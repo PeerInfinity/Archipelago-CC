@@ -436,6 +436,22 @@ perform_merge() {
             esac
         fi
 
+        # Ask if user wants to abort the merge
+        echo
+        read -p "Do you want to abort the merge? [y/N]: " abort_confirm
+
+        # Default to N if user just presses enter
+        if [ -z "$abort_confirm" ]; then
+            abort_confirm="N"
+        fi
+
+        if [[ "$abort_confirm" =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}Aborting merge...${NC}"
+            git merge --abort
+            echo -e "${GREEN}Merge aborted.${NC}"
+            return 1
+        fi
+
         return 0
     else
         echo -e "${BLUE}Skipped merge.${NC}"
