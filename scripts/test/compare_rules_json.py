@@ -1991,6 +1991,21 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             if path.endswith(f'.{opt}'):
                 return True
 
+    # World attributes derived from options via helper param_mappings:
+    # The world generator adds option values from helper param_mappings to world_attributes
+    # (see extractors.py:1161-1182) so the generated world can access them at runtime.
+    # When re-exported, these appear as world-level attributes that the original doesn't have.
+    # Pattern: world.N.<attribute_name> where original is <missing> and worldgen has a value.
+    # Common examples: wily_5_requirement (MM2), other option-backed world attributes.
+    world_attr_match = re.match(r'^world\.(\d+)\.([a-z_][a-z0-9_]*)$', path)
+    if world_attr_match and original_value == '<missing>':
+        attr_name = world_attr_match.group(2)
+        # Exclude known world metadata that should always be compared
+        known_metadata = {'game', 'world_class_name', 'world_description', 'slot_data', 'options', 'option_definitions', 'web'}
+        if attr_name not in known_metadata:
+            # This is likely an option value promoted to world attribute
+            return True
+
     return False
 
 

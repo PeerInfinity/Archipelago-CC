@@ -418,11 +418,12 @@ def categorize_ut_fuzz_error(error_types):
 
 
 def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode='fixed'):
-    """Get apworlds that fail the UT fuzz test.
+    """Get apworlds that fail the UT fuzz test in modified UT but pass in original UT.
 
     This identifies apworlds (community-built .apworld files) that fail the
-    Universal Tracker fuzz test, which may indicate logic mismatches or
-    compatibility issues.
+    Universal Tracker fuzz test with the modified UT, but pass with the original UT.
+    This helps identify issues introduced by modifications rather than pre-existing
+    compatibility problems.
 
     Args:
         project_root: Path to the project root
@@ -433,13 +434,22 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
         List of dicts with game_name, template, world_directory, download_url,
         ut_fuzz stats, and error information.
     """
-    # Load apworld test results
+    # Load apworld test results for the specified version
     ut_fuzz_data = load_ut_fuzz_test_results(
         project_root,
         ut_version=ut_version,
         seed_mode=seed_mode,
         world_source='apworlds'
     )
+
+    # Also load original UT results to filter out games that fail in both
+    original_ut_data = load_ut_fuzz_test_results(
+        project_root,
+        ut_version='original',
+        seed_mode=seed_mode,
+        world_source='apworlds'
+    )
+    original_results = original_ut_data.get('results', {})
 
     ut_results = ut_fuzz_data.get('results', {})
     failures = []
@@ -451,6 +461,14 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
 
         # Skip if UT fuzz test passed
         if ut_fuzz.get('passed', False):
+            continue
+
+        # Check if the game passes in the original UT
+        # Only include games that fail in modified but pass in original
+        original_result = original_results.get(template_name, {})
+        original_ut_fuzz = original_result.get('ut_fuzz', {})
+        if not original_ut_fuzz.get('passed', False):
+            # Game also fails in original UT - skip it
             continue
 
         # Build failure entry

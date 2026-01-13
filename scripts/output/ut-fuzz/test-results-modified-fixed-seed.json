@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-12T18:48:21.381624",
-    "last_updated": "2026-01-12T18:48:21.381632",
+    "created": "2026-01-13T02:44:44.682438",
+    "last_updated": "2026-01-13T02:44:44.682447",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "modified",
@@ -28,7 +28,7 @@
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-01-12T18:45:00.658429",
+      "timestamp": "2026-01-13T02:41:03.500749",
       "explain_stats": {
         "game": "A Hat in Time WorldGen_79645483297583998146",
         "total_locations": 301,
@@ -59,7 +59,7 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-01-12T18:45:08.368697",
+      "timestamp": "2026-01-13T02:41:10.595868",
       "explain_stats": {
         "game": "Castlevania - Circle of the Moon WorldGen_79645483297583998146",
         "total_locations": 123,
@@ -90,7 +90,7 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-01-12T18:45:18.081844",
+      "timestamp": "2026-01-13T02:41:19.538492",
       "explain_stats": {
         "game": "DOOM II WorldGen_79645483297583998146",
         "total_locations": 479,
@@ -121,7 +121,7 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-01-12T18:45:25.119934",
+      "timestamp": "2026-01-13T02:41:26.058305",
       "explain_stats": {
         "game": "Inscryption WorldGen_79645483297583998146",
         "total_locations": 100,
@@ -152,7 +152,7 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-01-12T18:45:31.084888",
+      "timestamp": "2026-01-13T02:41:31.632156",
       "explain_stats": {
         "game": "Math Adventure WorldGen_79645483297583998146",
         "total_locations": 10,
@@ -183,7 +183,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-01-12T18:45:38.362079",
+      "timestamp": "2026-01-13T02:41:38.313840",
       "explain_stats": {
         "game": "Paint WorldGen_79645483297583998146",
         "total_locations": 89,
@@ -224,14 +224,14 @@
           "File 4-0.yaml is invalid. Please fix your yaml.": [
             4
           ],
+          "File 5-0.yaml is invalid. Please fix your yaml.": [
+            5
+          ],
           "File 6-0.yaml is invalid. Please fix your yaml.": [
             6
           ],
           "File 7-0.yaml is invalid. Please fix your yaml.": [
             7
-          ],
-          "File 5-0.yaml is invalid. Please fix your yaml.": [
-            5
           ],
           "File 8-0.yaml is invalid. Please fix your yaml.": [
             8
@@ -245,7 +245,7 @@
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-01-12T18:45:46.085185"
+      "timestamp": "2026-01-13T02:41:45.928884"
     },
     "TUNIC.yaml": {
       "ut_fuzz": {
@@ -271,7 +271,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-01-12T18:46:46.813398",
+      "timestamp": "2026-01-13T02:43:02.068847",
       "explain_stats": {
         "game": "TUNIC WorldGen_79645483297583998146",
         "total_locations": 6804,
@@ -304,8 +304,8 @@
             3,
             5,
             4,
-            7,
             6,
+            7,
             8,
             9
           ]
@@ -315,13 +315,13 @@
         "game_name": "Yacht Dice",
         "world_directory": "yachtdice"
       },
-      "timestamp": "2026-01-12T18:46:56.935835",
+      "timestamp": "2026-01-13T02:43:11.803689",
       "explain_stats": {
         "game": "Yacht Dice",
-        "total_locations": 57,
+        "total_locations": 62,
         "locations_with_explain": 0,
         "locations_default_rule": 0,
-        "locations_without_explain": 57,
+        "locations_without_explain": 62,
         "explain_coverage_percent": 0.0,
         "locations_without_explain_list": [
           {
@@ -349,15 +349,19 @@
             "region": "Board"
           },
           {
-            "name": "9 score",
+            "name": "7 score",
             "region": "Board"
           },
           {
-            "name": "12 score",
+            "name": "10 score",
             "region": "Board"
           },
           {
-            "name": "15 score",
+            "name": "13 score",
+            "region": "Board"
+          },
+          {
+            "name": "16 score",
             "region": "Board"
           },
           {
@@ -381,39 +385,43 @@
             "region": "Board"
           },
           {
-            "name": "43 score",
+            "name": "42 score",
             "region": "Board"
           },
           {
-            "name": "49 score",
+            "name": "48 score",
             "region": "Board"
           },
           {
-            "name": "56 score",
+            "name": "54 score",
             "region": "Board"
           },
           {
-            "name": "63 score",
+            "name": "60 score",
             "region": "Board"
           },
           {
-            "name": "70 score",
+            "name": "66 score",
             "region": "Board"
           },
           {
-            "name": "78 score",
+            "name": "73 score",
             "region": "Board"
           },
           {
-            "name": "86 score",
+            "name": "81 score",
             "region": "Board"
           },
           {
-            "name": "95 score",
+            "name": "88 score",
             "region": "Board"
           },
           {
-            "name": "103 score",
+            "name": "96 score",
+            "region": "Board"
+          },
+          {
+            "name": "104 score",
             "region": "Board"
           },
           {
@@ -421,47 +429,51 @@
             "region": "Board"
           },
           {
-            "name": "123 score",
+            "name": "122 score",
             "region": "Board"
           },
           {
-            "name": "133 score",
+            "name": "131 score",
             "region": "Board"
           },
           {
-            "name": "143 score",
+            "name": "141 score",
             "region": "Board"
           },
           {
-            "name": "154 score",
+            "name": "151 score",
             "region": "Board"
           },
           {
-            "name": "165 score",
+            "name": "161 score",
             "region": "Board"
           },
           {
-            "name": "177 score",
+            "name": "172 score",
             "region": "Board"
           },
           {
-            "name": "189 score",
+            "name": "183 score",
             "region": "Board"
           },
           {
-            "name": "202 score",
+            "name": "194 score",
             "region": "Board"
           },
           {
-            "name": "214 score",
+            "name": "205 score",
             "region": "Board"
           },
           {
-            "name": "228 score",
+            "name": "217 score",
             "region": "Board"
           },
           {
-            "name": "241 score",
+            "name": "230 score",
+            "region": "Board"
+          },
+          {
+            "name": "242 score",
             "region": "Board"
           },
           {
@@ -469,87 +481,95 @@
             "region": "Board"
           },
           {
-            "name": "270 score",
+            "name": "268 score",
             "region": "Board"
           },
           {
-            "name": "284 score",
+            "name": "282 score",
             "region": "Board"
           },
           {
-            "name": "300 score",
+            "name": "296 score",
             "region": "Board"
           },
           {
-            "name": "315 score",
+            "name": "310 score",
             "region": "Board"
           },
           {
-            "name": "331 score",
+            "name": "324 score",
             "region": "Board"
           },
           {
-            "name": "347 score",
+            "name": "339 score",
             "region": "Board"
           },
           {
-            "name": "364 score",
+            "name": "354 score",
             "region": "Board"
           },
           {
-            "name": "381 score",
+            "name": "370 score",
             "region": "Board"
           },
           {
-            "name": "398 score",
+            "name": "386 score",
             "region": "Board"
           },
           {
-            "name": "416 score",
+            "name": "402 score",
             "region": "Board"
           },
           {
-            "name": "434 score",
+            "name": "418 score",
             "region": "Board"
           },
           {
-            "name": "453 score",
+            "name": "435 score",
             "region": "Board"
           },
           {
-            "name": "472 score",
+            "name": "452 score",
             "region": "Board"
           },
           {
-            "name": "491 score",
+            "name": "470 score",
             "region": "Board"
           },
           {
-            "name": "511 score",
+            "name": "487 score",
             "region": "Board"
           },
           {
-            "name": "531 score",
+            "name": "505 score",
             "region": "Board"
           },
           {
-            "name": "552 score",
+            "name": "524 score",
             "region": "Board"
           },
           {
-            "name": "573 score",
+            "name": "543 score",
             "region": "Board"
           },
           {
-            "name": "594 score",
+            "name": "562 score",
             "region": "Board"
           },
           {
-            "name": "615 score",
+            "name": "581 score",
             "region": "Board"
           },
           {
-            "name": "637 score",
+            "name": "601 score",
+            "region": "Board"
+          },
+          {
+            "name": "621 score",
+            "region": "Board"
+          },
+          {
+            "name": "641 score",
             "region": "Board"
           }
         ],
@@ -575,7 +595,7 @@
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-01-12T18:44:42.191923",
+      "timestamp": "2026-01-13T02:40:54.348274",
       "explain_stats": {
         "game": "Bumper Stickers WorldGen_79645483297583998146",
         "total_locations": 100,
@@ -606,7 +626,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-01-12T18:44:50.717361",
+      "timestamp": "2026-01-13T02:41:02.354682",
       "explain_stats": {
         "game": "DOOM 1993 WorldGen_79645483297583998146",
         "total_locations": 474,
@@ -637,7 +657,7 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-01-12T18:44:58.396996",
+      "timestamp": "2026-01-13T02:41:09.854548",
       "explain_stats": {
         "game": "Hylics 2 WorldGen_22708164196567875238",
         "total_locations": 166,
@@ -668,7 +688,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-01-12T18:45:09.494473",
+      "timestamp": "2026-01-13T02:41:20.397390",
       "explain_stats": {
         "game": "Mario & Luigi Superstar Saga WorldGen_79645483297583998146",
         "total_locations": 555,
@@ -715,7 +735,7 @@
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-01-12T18:45:15.773810",
+      "timestamp": "2026-01-13T02:41:26.269058",
       "explain_stats": {
         "game": "Overcooked! 2 WorldGen_79645483297583998146",
         "total_locations": 35,
@@ -746,7 +766,7 @@
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-01-12T18:45:45.249262",
+      "timestamp": "2026-01-13T02:41:53.911467",
       "explain_stats": {
         "game": "Sonic Adventure 2 Battle WorldGen_22708164196567875238",
         "total_locations": 708,
@@ -777,7 +797,7 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-01-12T18:45:51.671906",
+      "timestamp": "2026-01-13T02:42:00.046805",
       "explain_stats": {
         "game": "TOEM rule builder WorldGen_79645483297583998146",
         "total_locations": 191,
@@ -808,7 +828,7 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-01-12T18:45:58.711088",
+      "timestamp": "2026-01-13T02:42:06.926144",
       "explain_stats": {
         "game": "Wargroove WorldGen_79645483297583998146",
         "total_locations": 38,
@@ -845,7 +865,7 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-01-12T18:45:01.150366",
+      "timestamp": "2026-01-13T02:41:11.845844",
       "explain_stats": {
         "game": "A Link to the Past WorldGen_22708164196567875238",
         "total_locations": 242,
@@ -1055,7 +1075,7 @@
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-01-12T18:45:09.862918",
+      "timestamp": "2026-01-13T02:41:20.424608",
       "explain_stats": {
         "game": "Castlevania 64 WorldGen_79645483297583998146",
         "total_locations": 339,
@@ -1086,1040 +1106,21 @@
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-01-12T18:45:24.157081",
+      "timestamp": "2026-01-13T02:41:33.887062",
       "explain_stats": {
-        "game": "Dark Souls III",
+        "game": "Dark Souls III WorldGen_79645483297583998146",
         "total_locations": 1469,
-        "locations_with_explain": 0,
+        "locations_with_explain": 228,
         "locations_default_rule": 1241,
-        "locations_without_explain": 228,
-        "explain_coverage_percent": 0.0,
-        "locations_without_explain_list": [
-          {
-            "name": "FS: Lift Chamber Key - Leonhard",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Alluring Skull - Mortician's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Ember - Mortician's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Grave Key - Mortician's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Life Ring - Dreamchaser's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Hidden Blessing - Dreamchaser's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Lloyd's Shield Ring - Paladin's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Ember - Grave Warden's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Karla's Pointed Hat - Prisoner Chief's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Karla's Coat - Prisoner Chief's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Karla's Gloves - Prisoner Chief's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Karla's Trousers - Prisoner Chief's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Xanthous Overcoat - Xanthous Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Xanthous Gloves - Xanthous Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Xanthous Trousers - Xanthous Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Ember - Dragon Chaser's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Washing Pole - Easterner's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Eastern Helm - Easterner's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Eastern Armor - Easterner's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Eastern Gauntlets - Easterner's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Eastern Leggings - Easterner's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Wood Grain Ring - Easterner's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Millwood Knight Helm - Captain's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Millwood Knight Armor - Captain's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Millwood Knight Gauntlets - Captain's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Millwood Knight Leggings - Captain's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Refined Gem - Captain's Ashes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Vordt's Great Hammer - Ludleth for Vordt",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Pontiff's Left Eye - Ludleth for Vordt",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Bountiful Sunlight - Ludleth for Rosaria",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Darkmoon Longbow - Ludleth for Aldrich",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Lifehunt Scythe - Ludleth for Aldrich",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Hollowslayer Greatsword - Ludleth for Greatwood",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Arstor's Spear - Ludleth for Greatwood",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Crystal Sage's Rapier - Ludleth for Sage",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Crystal Hail - Ludleth for Sage",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Cleric's Candlestick - Ludleth for Deacons",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Deep Soul - Ludleth for Deacons",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Havel's Ring - Ludleth for Stray Demon",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Boulder Heave - Ludleth for Stray Demon",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Farron Greatsword - Ludleth for Abyss Watchers",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Wolf Knight's Greatsword - Ludleth for Abyss Watchers",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Wolnir's Holy Sword - Ludleth for Wolnir",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Black Serpent - Ludleth for Wolnir",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Demon's Greataxe - Ludleth for Fire Demon",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Demon's Fist - Ludleth for Fire Demon",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Old King's Great Hammer - Ludleth for Old Demon King",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Chaos Bed Vestiges - Ludleth for Old Demon King",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Greatsword of Judgment - Ludleth for Pontiff",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Profaned Greatsword - Ludleth for Pontiff",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Yhorm's Great Machete - Ludleth for Yhorm",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Yhorm's Greatshield - Ludleth for Yhorm",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Dancer's Enchanted Swords - Ludleth for Dancer",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Soothing Sunlight - Ludleth for Dancer",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Dragonslayer Greataxe - Ludleth for Dragonslayer",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Dragonslayer Greatshield - Ludleth for Dragonslayer",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Moonlight Greatsword - Ludleth for Oceiros",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: White Dragon Breath - Ludleth for Oceiros",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Lorian's Greatsword - Ludleth for Princes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Lothric's Holy Sword - Ludleth for Princes",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Gundyr's Halberd - Ludleth for Champion",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Prisoner's Chain - Ludleth for Champion",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Storm Curved Sword - Ludleth for Nameless",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Dragonslayer Swordspear - Ludleth for Nameless",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Lightning Storm - Ludleth for Nameless",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Firelink Greatsword - Ludleth for Cinder",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Sunlight Spear - Ludleth for Cinder",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Friede's Great Scythe - Ludleth for Friede",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Rose of Ariandel - Ludleth for Friede",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Demon's Scar - Ludleth for Demon Prince",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Seething Chaos - Ludleth for Demon Prince",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Frayed Blade - Ludleth for Midir",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Old Moonlight - Ludleth for Midir",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Gael's Greatsword - Ludleth for Gael",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FS: Repeating Crossbow - Ludleth for Gael",
-            "region": "Firelink Shrine"
-          },
-          {
-            "name": "FSBT: Ring of Sacrifice - crow for Loretta's Bone",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Sunlight Shield - crow for Mendicant's Staff",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Hollow Gem - crow for Eleonora",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Titanite Scale - crow for Blacksmith Hammer",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Titanite Slab - crow for Coiled Sword Fragment",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Armor of the Sun - crow for Siegbr\u00e4u",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Iron Leggings - crow for Seed of a Giant Tree",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Lightning Gem - crow for Xanthous Crown",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Twinkling Titanite - crow for Large Leather Shield",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "FSBT: Blessed Gem - crow for Moaning Shield",
-            "region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "HWL: Soul of the Dancer",
-            "region": "High Wall of Lothric"
-          },
-          {
-            "name": "HWL: Basin of Vows - Emma",
-            "region": "High Wall of Lothric"
-          },
-          {
-            "name": "HWL: Red Eye Orb - wall tower, miniboss",
-            "region": "High Wall of Lothric"
-          },
-          {
-            "name": "US: Old Sage's Blindfold - kill Cornyx",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "US: Cornyx's Garb - kill Cornyx",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "US: Cornyx's Wrap - kill Cornyx",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "US: Cornyx's Skirt - kill Cornyx",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "US: Tower Key - kill Irina",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Poison Mist - Cornyx for Great Swamp Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Fire Orb - Cornyx for Great Swamp Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Profuse Sweat - Cornyx for Great Swamp Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Bursting Fireball - Cornyx for Great Swamp Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Acid Surge - Cornyx for Carthus Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Carthus Flame Arc - Cornyx for Carthus Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Carthus Beacon - Cornyx for Carthus Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Great Chaos Fire Orb - Cornyx for Izalith Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Chaos Storm - Cornyx for Izalith Tome",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Med Heal - Irina for Tome of Carim",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Tears of Denial - Irina for Tome of Carim",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Force - Irina for Tome of Carim",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Bountiful Light - Irina for Tome of Lothric",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Magic Barrier - Irina for Tome of Lothric",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Blessed Weapon - Irina for Tome of Lothric",
-            "region": "Undead Settlement"
-          },
-          {
-            "name": "FS: Pestilent Mist - Orbeck for any scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Great Farron Dart - Orbeck for Sage's Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Farron Hail - Orbeck for Sage's Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Homing Soulmass - Orbeck for Logan's Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Soul Spear - Orbeck for Logan's Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Homing Crystal Soulmass - Orbeck for Crystal Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Crystal Soul Spear - Orbeck for Crystal Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Crystal Magic Weapon - Orbeck for Crystal Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Cast Light - Orbeck for Golden Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Twisted Wall of Light - Orbeck for Golden Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Hidden Weapon - Orbeck for Golden Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Hidden Body - Orbeck for Golden Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Repair - Orbeck for Golden Scroll",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Clandestine Coat - shop with Orbeck's Ashes",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Young Dragon Ring - Orbeck for one scroll and buying three spells",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "FS: Morion Blade - Yuria for Orbeck's Ashes",
-            "region": "Road of Sacrifices"
-          },
-          {
-            "name": "CD: Black Eye Orb - Rosaria from Leonhard's quest",
-            "region": "Cathedral of the Deep"
-          },
-          {
-            "name": "CD: Winged Spear - kill Patches",
-            "region": "Cathedral of the Deep"
-          },
-          {
-            "name": "FS: Rusted Gold Coin - don't forgive Patches",
-            "region": "Cathedral of the Deep"
-          },
-          {
-            "name": "CD: Shotel - Patches",
-            "region": "Cathedral of the Deep"
-          },
-          {
-            "name": "CD: Ember - Patches",
-            "region": "Cathedral of the Deep"
-          },
-          {
-            "name": "CD: Horsehoof Ring - Patches",
-            "region": "Cathedral of the Deep"
-          },
-          {
-            "name": "FK: Soul of the Blood of the Wolf",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FK: Cinders of a Lord - Abyss Watcher",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FS: Farron Ring - Hawkwood",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FS: Undead Legion Helm - shop after killing FK boss",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FS: Undead Legion Armor - shop after killing FK boss",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FS: Undead Legion Gauntlet - shop after killing FK boss",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FS: Undead Legion Leggings - shop after killing FK boss",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FK: Havel's Helm - upper keep, after killing AP belfry roof NPC",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FK: Havel's Armor - upper keep, after killing AP belfry roof NPC",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC",
-            "region": "Farron Keep"
-          },
-          {
-            "name": "IBV: Soul of Pontiff Sulyvahn",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "IBV: Ring of the Evil Eye - Anri",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "FS: Mail Breaker - Sirris for killing Creighton",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "FS: Silvercat Ring - Sirris for killing Creighton",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "IBV: Dragonslayer's Axe - Creighton drop",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "IBV: Creighton's Steel Mask - bridge after killing Creighton",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "IBV: Mirrah Chain Mail - bridge after killing Creighton",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "IBV: Mirrah Chain Gloves - bridge after killing Creighton",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "IBV: Mirrah Chain Leggings - bridge after killing Creighton",
-            "region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "ID: Titanite Slab - Siegward",
-            "region": "Irithyll Dungeon"
-          },
-          {
-            "name": "ID: Bellowing Dragoncrest Ring - drop from B1 towards pit",
-            "region": "Irithyll Dungeon"
-          },
-          {
-            "name": "ID: Covetous Gold Serpent Ring - Siegward's cell",
-            "region": "Irithyll Dungeon"
-          },
-          {
-            "name": "ID: Prisoner Chief's Ashes - B2 near, locked cell by stairs",
-            "region": "Irithyll Dungeon"
-          },
-          {
-            "name": "PC: Soul of Yhorm the Giant",
-            "region": "Profaned Capital"
-          },
-          {
-            "name": "PC: Cinders of a Lord - Yhorm the Giant",
-            "region": "Profaned Capital"
-          },
-          {
-            "name": "PC: Siegbr\u00e4u - Siegward after killing boss",
-            "region": "Profaned Capital"
-          },
-          {
-            "name": "PC: Storm Ruler - Siegward",
-            "region": "Profaned Capital"
-          },
-          {
-            "name": "PC: Pierce Shield - Siegward",
-            "region": "Profaned Capital"
-          },
-          {
-            "name": "AL: Yorshka's Chime - kill Yorshka",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Budding Green Blossom - shop after killing Creighton and AL boss",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Sunset Shield - by grave after killing Hodrick w/Sirris",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "US: Sunset Helm - Pit of Hollows after killing Hodrick w/Sirris",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "US: Sunset Armor - pit of hollows after killing Hodrick w/Sirris",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "US: Sunset Gauntlets - pit of hollows after killing Hodrick w/Sirris",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "US: Sunset Leggings - pit of hollows after killing Hodrick w/Sirris",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "AL: Chameleon - tomb after marrying Anri",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "AL: Anri's Straight Sword - Anri quest",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Leonhard's Garb - shop after killing Leonhard",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Leonhard's Gauntlets - shop after killing Leonhard",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Leonhard's Trousers - shop after killing Leonhard",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "AL: Crescent Moon Sword - Leonhard drop",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "AL: Silver Mask - Leonhard drop",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "AL: Soul of Rosaria - Leonhard drop",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Elite Knight Helm - shop after Anri quest",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Elite Knight Armor - shop after Anri quest",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Elite Knight Gauntlets - shop after Anri quest",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "FS: Elite Knight Leggings - shop after Anri quest",
-            "region": "Anor Londo"
-          },
-          {
-            "name": "LC: Gotthard Twinswords - by Grand Archives door, after PC and AL bosses",
-            "region": "Lothric Castle"
-          },
-          {
-            "name": "LC: Grand Archives Key - by Grand Archives door, after PC and AL bosses",
-            "region": "Lothric Castle"
-          },
-          {
-            "name": "FS: Morne's Great Hammer - Eygon",
-            "region": "Lothric Castle"
-          },
-          {
-            "name": "FS: Moaning Shield - Eygon",
-            "region": "Lothric Castle"
-          },
-          {
-            "name": "CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC",
-            "region": "Consumed King's Garden"
-          },
-          {
-            "name": "CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC",
-            "region": "Consumed King's Garden"
-          },
-          {
-            "name": "CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC",
-            "region": "Consumed King's Garden"
-          },
-          {
-            "name": "CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC",
-            "region": "Consumed King's Garden"
-          },
-          {
-            "name": "FS: Sunless Talisman - Sirris, kill GA boss",
-            "region": "Grand Archives"
-          },
-          {
-            "name": "FS: Sunless Veil - shop, Sirris quest, kill GA boss",
-            "region": "Grand Archives"
-          },
-          {
-            "name": "FS: Sunless Armor - shop, Sirris quest, kill GA boss",
-            "region": "Grand Archives"
-          },
-          {
-            "name": "FS: Sunless Gauntlets - shop, Sirris quest, kill GA boss",
-            "region": "Grand Archives"
-          },
-          {
-            "name": "FS: Sunless Leggings - shop, Sirris quest, kill GA boss",
-            "region": "Grand Archives"
-          },
-          {
-            "name": "FS: Hidden Blessing - Patches after searching GA",
-            "region": "Grand Archives"
-          },
-          {
-            "name": "UG: Hornet Ring - environs, right of main path after killing FK boss",
-            "region": "Untended Graves"
-          },
-          {
-            "name": "UG: Wolf Knight Helm - shop after killing FK boss",
-            "region": "Untended Graves"
-          },
-          {
-            "name": "UG: Wolf Knight Armor - shop after killing FK boss",
-            "region": "Untended Graves"
-          },
-          {
-            "name": "UG: Wolf Knight Gauntlets - shop after killing FK boss",
-            "region": "Untended Graves"
-          },
-          {
-            "name": "UG: Wolf Knight Leggings - shop after killing FK boss",
-            "region": "Untended Graves"
-          },
-          {
-            "name": "FS: Hawkwood's Swordgrass - Andre after gesture in AP summit",
-            "region": "Archdragon Peak"
-          },
-          {
-            "name": "FK: Twinkling Dragon Head Stone - Hawkwood drop",
-            "region": "Archdragon Peak"
-          },
-          {
-            "name": "FS: Divine Blessing - Greirat from US",
-            "region": "Greirat's Shop"
-          },
-          {
-            "name": "FS: Ember - Greirat from US",
-            "region": "Greirat's Shop"
-          },
-          {
-            "name": "FS: Divine Blessing - Greirat from IBV",
-            "region": "Greirat's Shop"
-          },
-          {
-            "name": "FS: Hidden Blessing - Greirat from IBV",
-            "region": "Greirat's Shop"
-          },
-          {
-            "name": "FS: Titanite Scale - Greirat from IBV",
-            "region": "Greirat's Shop"
-          },
-          {
-            "name": "FS: Twinkling Titanite - Greirat from IBV",
-            "region": "Greirat's Shop"
-          },
-          {
-            "name": "FS: Ember - shop for Greirat's Ashes",
-            "region": "Greirat's Shop"
-          },
-          {
-            "name": "FS: Firestorm - Karla for Quelana Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Rapport - Karla for Quelana Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Fire Whip - Karla for Quelana Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Black Flame - Karla for Grave Warden Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Black Fire Orb - Karla for Grave Warden Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Gnaw - Karla for Deep Braille Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Deep Protection - Karla for Deep Braille Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Vow of Silence - Karla for Londor Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Dark Blade - Karla for Londor Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Dead Again - Karla for Londor Tome",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Karla's Pointed Hat - kill Karla",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Karla's Coat - kill Karla",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Karla's Gloves - kill Karla",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "FS: Karla's Trousers - kill Karla",
-            "region": "Karla's Shop"
-          },
-          {
-            "name": "RC: Dragonhead Shield - streets monument, across bridge",
-            "region": "Ringed City"
-          },
-          {
-            "name": "RC: Large Soul of a Crestfallen Knight - streets monument, across bridge",
-            "region": "Ringed City"
-          },
-          {
-            "name": "RC: Divine Blessing - streets monument, mob drop",
-            "region": "Ringed City"
-          },
-          {
-            "name": "RC: Lapp's Helm - Lapp",
-            "region": "Ringed City"
-          },
-          {
-            "name": "RC: Lapp's Armor - Lapp",
-            "region": "Ringed City"
-          },
-          {
-            "name": "RC: Lapp's Gauntlets - Lapp",
-            "region": "Ringed City"
-          },
-          {
-            "name": "RC: Lapp's Leggings - Lapp",
-            "region": "Ringed City"
-          }
-        ],
+        "locations_without_explain": 0,
+        "explain_coverage_percent": 100.0,
+        "locations_without_explain_list": [],
         "total_entrances": 26,
-        "entrances_with_explain": 0,
+        "entrances_with_explain": 21,
         "entrances_default_rule": 5,
-        "entrances_without_explain": 21,
-        "entrance_explain_coverage_percent": 0.0,
-        "entrances_without_explain_list": [
-          {
-            "name": "Go To Firelink Shrine Bell Tower",
-            "from_region": "Firelink Shrine",
-            "to_region": "Firelink Shrine Bell Tower"
-          },
-          {
-            "name": "Go To Kiln of the First Flame",
-            "from_region": "Firelink Shrine",
-            "to_region": "Kiln of the First Flame"
-          },
-          {
-            "name": "Go To Undead Settlement",
-            "from_region": "High Wall of Lothric",
-            "to_region": "Undead Settlement"
-          },
-          {
-            "name": "Go To Lothric Castle",
-            "from_region": "High Wall of Lothric",
-            "to_region": "Lothric Castle"
-          },
-          {
-            "name": "Go To Greirat's Shop",
-            "from_region": "High Wall of Lothric",
-            "to_region": "Greirat's Shop"
-          },
-          {
-            "name": "Go To Road of Sacrifices",
-            "from_region": "Undead Settlement",
-            "to_region": "Road of Sacrifices"
-          },
-          {
-            "name": "Go To Cathedral of the Deep",
-            "from_region": "Road of Sacrifices",
-            "to_region": "Cathedral of the Deep"
-          },
-          {
-            "name": "Go To Farron Keep",
-            "from_region": "Road of Sacrifices",
-            "to_region": "Farron Keep"
-          },
-          {
-            "name": "Go To Painted World of Ariandel (Before Contraption)",
-            "from_region": "Cathedral of the Deep",
-            "to_region": "Painted World of Ariandel (Before Contraption)"
-          },
-          {
-            "name": "Go To Catacombs of Carthus",
-            "from_region": "Farron Keep",
-            "to_region": "Catacombs of Carthus"
-          },
-          {
-            "name": "Go To Irithyll of the Boreal Valley",
-            "from_region": "Catacombs of Carthus",
-            "to_region": "Irithyll of the Boreal Valley"
-          },
-          {
-            "name": "Go To Irithyll Dungeon",
-            "from_region": "Irithyll of the Boreal Valley",
-            "to_region": "Irithyll Dungeon"
-          },
-          {
-            "name": "Go To Anor Londo",
-            "from_region": "Irithyll of the Boreal Valley",
-            "to_region": "Anor Londo"
-          },
-          {
-            "name": "Go To Archdragon Peak",
-            "from_region": "Irithyll Dungeon",
-            "to_region": "Archdragon Peak"
-          },
-          {
-            "name": "Go To Karla's Shop",
-            "from_region": "Irithyll Dungeon",
-            "to_region": "Karla's Shop"
-          },
-          {
-            "name": "Go To Consumed King's Garden",
-            "from_region": "Lothric Castle",
-            "to_region": "Consumed King's Garden"
-          },
-          {
-            "name": "Go To Grand Archives",
-            "from_region": "Lothric Castle",
-            "to_region": "Grand Archives"
-          },
-          {
-            "name": "Go To Untended Graves",
-            "from_region": "Consumed King's Garden",
-            "to_region": "Untended Graves"
-          },
-          {
-            "name": "Go To Painted World of Ariandel (After Contraption)",
-            "from_region": "Painted World of Ariandel (Before Contraption)",
-            "to_region": "Painted World of Ariandel (After Contraption)"
-          },
-          {
-            "name": "Go To Dreg Heap",
-            "from_region": "Painted World of Ariandel (After Contraption)",
-            "to_region": "Dreg Heap"
-          },
-          {
-            "name": "Go To Ringed City",
-            "from_region": "Dreg Heap",
-            "to_region": "Ringed City"
-          }
-        ]
+        "entrances_without_explain": 0,
+        "entrance_explain_coverage_percent": 100.0,
+        "entrances_without_explain_list": []
       }
     },
     "Jak and Daxter The Precursor Legacy.yaml": {
@@ -2146,7 +1147,7 @@
         "game_name": "Jak and Daxter: The Precursor Legacy",
         "world_directory": "jakanddaxter"
       },
-      "timestamp": "2026-01-12T18:45:34.732764",
+      "timestamp": "2026-01-13T02:41:44.339808",
       "explain_stats": {
         "game": "Jak and Daxter: The Precursor Legacy",
         "total_locations": 289,
@@ -3170,7 +2171,7 @@
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-01-12T18:45:41.861146",
+      "timestamp": "2026-01-13T02:41:51.320462",
       "explain_stats": {
         "game": "Mega Man 2 WorldGen_79645483297583998146",
         "total_locations": 51,
@@ -3215,7 +2216,7 @@
         "game_name": "Pokemon Emerald",
         "world_directory": "pokemon_emerald"
       },
-      "timestamp": "2026-01-12T18:46:11.771237",
+      "timestamp": "2026-01-13T02:42:10.419629",
       "explain_stats": {
         "game": "Pokemon Emerald WorldGen_55977854110148887761",
         "total_locations": 695,
@@ -3354,14 +2355,14 @@
         "errors": {
           "None": [
             1,
-            0,
             2,
-            4,
+            0,
             3,
+            4,
             6,
             5,
-            7,
             8,
+            7,
             9
           ]
         }
@@ -3370,12 +2371,12 @@
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-01-12T18:46:48.277188",
+      "timestamp": "2026-01-13T02:42:44.775274",
       "explain_stats": {
         "game": "Stardew Valley WorldGen_22708164196567875238",
-        "total_locations": 1079,
-        "locations_with_explain": 935,
-        "locations_default_rule": 144,
+        "total_locations": 1069,
+        "locations_with_explain": 927,
+        "locations_default_rule": 142,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -3401,7 +2402,7 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-01-12T18:46:56.883722",
+      "timestamp": "2026-01-13T02:42:52.931732",
       "explain_stats": {
         "game": "Terraria WorldGen_79645483297583998146",
         "total_locations": 128,
@@ -3432,7 +2433,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-01-12T18:47:11.893271",
+      "timestamp": "2026-01-13T02:43:07.590386",
       "explain_stats": {
         "game": "Yoshi's Island WorldGen_79645483297583998146",
         "total_locations": 221,
@@ -3463,7 +2464,7 @@
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-01-12T18:44:53.681130",
+      "timestamp": "2026-01-13T02:40:58.313092",
       "explain_stats": {
         "game": "A Short Hike WorldGen_79645483297583998146",
         "total_locations": 131,
@@ -3496,8 +2497,8 @@
             3,
             4,
             5,
-            7,
             6,
+            7,
             8,
             9
           ]
@@ -3507,7 +2508,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-01-12T18:45:39.384179",
+      "timestamp": "2026-01-13T02:41:22.114132",
       "explain_stats": {
         "game": "Celeste (Open World) WorldGen_79645483297583998146",
         "total_locations": 1035,
@@ -3538,7 +2539,7 @@
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-01-12T18:45:45.942812",
+      "timestamp": "2026-01-13T02:41:29.113237",
       "explain_stats": {
         "game": "Donkey Kong Country 3 WorldGen_79645483297583998146",
         "total_locations": 220,
@@ -3600,10 +2601,10 @@
             2,
             3,
             4,
-            6,
             5,
-            8,
+            6,
             7,
+            8,
             9
           ],
           "None": [
@@ -3615,7 +2616,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-01-12T18:45:57.646023",
+      "timestamp": "2026-01-13T02:41:42.098891",
       "explain_stats": {
         "game": "Kingdom Hearts 2 WorldGen_79645483297583998146",
         "total_locations": 643,
@@ -3767,7 +2768,7 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-01-12T18:46:04.498246",
+      "timestamp": "2026-01-13T02:41:49.288009",
       "explain_stats": {
         "game": "MegaMan Battle Network 3 WorldGen_79645483297583998146",
         "total_locations": 263,
@@ -3810,7 +2811,7 @@
         "game_name": "Pokemon Red and Blue",
         "world_directory": "pokemon_rb"
       },
-      "timestamp": "2026-01-12T18:46:56.039912",
+      "timestamp": "2026-01-13T02:42:36.599228",
       "explain_stats": {
         "game": "Pokemon Red and Blue WorldGen_11408892729106005028",
         "total_locations": 578,
@@ -4564,7 +3565,7 @@
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-01-12T18:47:05.653611",
+      "timestamp": "2026-01-13T02:42:46.934272",
       "explain_stats": {
         "game": "Subnautica WorldGen_79645483297583998146",
         "total_locations": 147,
@@ -4595,7 +3596,7 @@
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-01-12T18:47:14.878650",
+      "timestamp": "2026-01-13T02:42:56.635886",
       "explain_stats": {
         "game": "The Legend of Zelda WorldGen_22708164196567875238",
         "total_locations": 155,
@@ -4639,7 +3640,7 @@
         "game_name": "Yu-Gi-Oh! 2006",
         "world_directory": "yugioh06"
       },
-      "timestamp": "2026-01-12T18:47:27.805474",
+      "timestamp": "2026-01-13T02:43:09.704125",
       "explain_stats": {
         "game": "Yu-Gi-Oh! 2006 WorldGen_79645483297583998146",
         "total_locations": 151,
@@ -4670,7 +3671,7 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-01-12T18:44:44.467647",
+      "timestamp": "2026-01-13T02:40:57.069627",
       "explain_stats": {
         "game": "APQuest WorldGen_79645483297583998146",
         "total_locations": 6,
@@ -4701,7 +3702,7 @@
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-01-12T18:44:50.625472",
+      "timestamp": "2026-01-13T02:41:02.983474",
       "explain_stats": {
         "game": "Celeste 64 WorldGen_79645483297583998146",
         "total_locations": 40,
@@ -4732,7 +3733,7 @@
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-01-12T18:45:02.980556",
+      "timestamp": "2026-01-13T02:41:14.858103",
       "explain_stats": {
         "game": "Factorio WorldGen_79645483297583998146",
         "total_locations": 251,
@@ -4775,7 +3776,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-01-12T18:45:36.191475",
+      "timestamp": "2026-01-13T02:41:46.293544",
       "explain_stats": {
         "game": "Kingdom Hearts WorldGen_79645483297583998146",
         "total_locations": 523,
@@ -4806,7 +3807,7 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-01-12T18:45:42.224577",
+      "timestamp": "2026-01-13T02:41:52.267909",
       "explain_stats": {
         "game": "Meritous WorldGen_79645483297583998146",
         "total_locations": 104,
@@ -4850,7 +3851,7 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-01-12T18:45:49.411610",
+      "timestamp": "2026-01-13T02:41:59.146516",
       "explain_stats": {
         "game": "Raft WorldGen_79645483297583998146",
         "total_locations": 154,
@@ -4881,7 +3882,7 @@
         "game_name": "Sudoku",
         "world_directory": "apsudoku"
       },
-      "timestamp": "2026-01-12T18:45:54.527904",
+      "timestamp": "2026-01-13T02:42:03.992390",
       "explain_stats": {
         "game": "Sudoku",
         "total_locations": 0,
@@ -4912,7 +3913,7 @@
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-01-12T18:46:03.785521",
+      "timestamp": "2026-01-13T02:42:12.611050",
       "explain_stats": {
         "game": "The Messenger WorldGen_79645483297583998146",
         "total_locations": 136,
@@ -4963,7 +3964,7 @@
         "game_name": "Zillion",
         "world_directory": "zillion"
       },
-      "timestamp": "2026-01-12T18:47:46.707834",
+      "timestamp": "2026-01-13T02:43:52.311873",
       "explain_stats": {
         "game": "Zillion WorldGen_22708164196567875238",
         "total_locations": 147,
@@ -4994,7 +3995,7 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-01-12T18:44:39.508947",
+      "timestamp": "2026-01-13T02:40:50.804893",
       "explain_stats": {
         "game": "Adventure WorldGen_79645483297583998146",
         "total_locations": 21,
@@ -5025,9 +4026,9 @@
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-01-12T18:44:44.303348",
+      "timestamp": "2026-01-13T02:40:55.495307",
       "explain_stats": {
-        "game": "ChecksFinder WorldGen_79645483297583998146",
+        "game": "ChecksFinder WorldGen_22708164196567875238",
         "total_locations": 25,
         "locations_with_explain": 20,
         "locations_default_rule": 5,
@@ -5056,7 +4057,7 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-01-12T18:44:50.179874",
+      "timestamp": "2026-01-13T02:41:01.397228",
       "explain_stats": {
         "game": "Faxanadu WorldGen_79645483297583998146",
         "total_locations": 110,
@@ -5087,7 +4088,7 @@
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-01-12T18:45:07.660543",
+      "timestamp": "2026-01-13T02:41:16.345926",
       "explain_stats": {
         "game": "Kirby's Dream Land 3 WorldGen_79645483297583998146",
         "total_locations": 832,
@@ -5139,7 +4140,7 @@
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-01-12T18:46:17.690385",
+      "timestamp": "2026-01-13T02:42:27.339075",
       "explain_stats": {
         "game": "Metamath WorldGen_79645483297583998146",
         "total_locations": 3,
@@ -5170,7 +4171,7 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-01-12T18:46:26.934995",
+      "timestamp": "2026-01-13T02:42:36.752486",
       "explain_stats": {
         "game": "Risk of Rain 2 WorldGen_79645483297583998146",
         "total_locations": 159,
@@ -5201,7 +4202,7 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-01-12T18:46:34.334325",
+      "timestamp": "2026-01-13T02:42:44.274074",
       "explain_stats": {
         "game": "Super Mario 64 WorldGen_79645483297583998146",
         "total_locations": 164,
@@ -5232,7 +4233,7 @@
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-01-12T18:46:47.726891",
+      "timestamp": "2026-01-13T02:42:58.202359",
       "explain_stats": {
         "game": "The Wind Waker WorldGen_81209627519868761947",
         "total_locations": 228,
@@ -5328,7 +4329,7 @@
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-01-12T18:46:56.536259",
+      "timestamp": "2026-01-13T02:43:07.031594",
       "explain_stats": {
         "game": "shapez WorldGen_22708164196567875238",
         "total_locations": 1267,
@@ -5359,7 +4360,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-01-12T18:44:54.563043",
+      "timestamp": "2026-01-13T02:40:57.307791",
       "explain_stats": {
         "game": "Aquaria WorldGen_79645483297583998146",
         "total_locations": 218,
@@ -5390,7 +4391,7 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-01-12T18:45:01.098718",
+      "timestamp": "2026-01-13T02:41:04.427861",
       "explain_stats": {
         "game": "Choo-Choo Charles WorldGen_79645483297583998146",
         "total_locations": 691,
@@ -5425,7 +4426,7 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-01-12T18:46:04.581363",
+      "timestamp": "2026-01-13T02:42:07.928496",
       "explain_stats": {
         "game": "Final Fantasy Mystic Quest WorldGen_79645483297583998146",
         "total_locations": 251,
@@ -5456,7 +4457,7 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-01-12T18:46:12.183651",
+      "timestamp": "2026-01-13T02:42:15.620941",
       "explain_stats": {
         "game": "Landstalker - The Treasures of King Nole WorldGen_79645483297583998146",
         "total_locations": 291,
@@ -5487,7 +4488,7 @@
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-01-12T18:46:21.567851",
+      "timestamp": "2026-01-13T02:42:25.501745",
       "explain_stats": {
         "game": "Muse Dash WorldGen_79645483297583998146",
         "total_locations": 776,
@@ -5520,10 +4521,10 @@
             3,
             4,
             5,
-            6,
             7,
-            8,
-            9
+            6,
+            9,
+            8
           ]
         }
       },
@@ -5531,7 +4532,7 @@
         "game_name": "SMZ3",
         "world_directory": "smz3"
       },
-      "timestamp": "2026-01-12T18:46:36.039655",
+      "timestamp": "2026-01-13T02:42:40.052414",
       "explain_stats": {
         "game": "SMZ3 WorldGen_79645483297583998146",
         "total_locations": 316,
@@ -5568,7 +4569,7 @@
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-01-12T18:46:49.514652",
+      "timestamp": "2026-01-13T02:42:54.620346",
       "explain_stats": {
         "game": "Super Mario Land 2 WorldGen_22708164196567875238",
         "total_locations": 2018,
@@ -5609,7 +4610,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-01-12T18:47:00.902032",
+      "timestamp": "2026-01-13T02:43:06.459246",
       "explain_stats": {
         "game": "The Witness WorldGen_79645483297583998146",
         "total_locations": 133,
@@ -5640,7 +4641,7 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-01-12T18:44:43.457357",
+      "timestamp": "2026-01-13T02:40:50.979196",
       "explain_stats": {
         "game": "Baking Adventure WorldGen_79645483297583998146",
         "total_locations": 15,
@@ -5671,7 +4672,7 @@
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-01-12T18:44:50.244750",
+      "timestamp": "2026-01-13T02:40:57.553754",
       "explain_stats": {
         "game": "Civilization VI WorldGen_22708164196567875238",
         "total_locations": 268,
@@ -5702,7 +4703,7 @@
         "game_name": "Final Fantasy",
         "world_directory": "ff1"
       },
-      "timestamp": "2026-01-12T18:44:55.122219",
+      "timestamp": "2026-01-13T02:41:02.258603",
       "explain_stats": {
         "game": "Final Fantasy WorldGen_79645483297583998146",
         "total_locations": 0,
@@ -5739,7 +4740,7 @@
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-01-12T18:45:06.657116",
+      "timestamp": "2026-01-13T02:41:10.592515",
       "explain_stats": {
         "game": "Lingo WorldGen_79645483297583998146",
         "total_locations": 165,
@@ -5770,7 +4771,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-01-12T18:45:12.800778",
+      "timestamp": "2026-01-13T02:41:16.509052",
       "explain_stats": {
         "game": "Noita WorldGen_79645483297583998146",
         "total_locations": 303,
@@ -5801,7 +4802,7 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-01-12T18:45:18.612350",
+      "timestamp": "2026-01-13T02:41:22.219045",
       "explain_stats": {
         "game": "Saving Princess WorldGen_79645483297583998146",
         "total_locations": 24,
@@ -5832,7 +4833,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-01-12T18:45:48.511874",
+      "timestamp": "2026-01-13T02:41:51.374168",
       "explain_stats": {
         "game": "Super Mario World WorldGen_79645483297583998146",
         "total_locations": 708,
@@ -5874,7 +4875,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-01-12T18:46:05.064093",
+      "timestamp": "2026-01-13T02:42:07.253599",
       "explain_stats": {
         "game": "Timespinner WorldGen_22708164196567875238",
         "total_locations": 684,
@@ -7757,7 +6758,7 @@
         "game_name": "Blasphemous",
         "world_directory": "blasphemous"
       },
-      "timestamp": "2026-01-12T18:44:48.372995",
+      "timestamp": "2026-01-13T02:41:06.280712",
       "explain_stats": {
         "game": "Blasphemous WorldGen_55977854110148887761",
         "total_locations": 305,
@@ -7902,7 +6903,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-01-12T18:44:53.419778",
+      "timestamp": "2026-01-13T02:41:11.442870",
       "explain_stats": {
         "game": "Coding Adventure WorldGen_79645483297583998146",
         "total_locations": 61,
@@ -7933,7 +6934,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-01-12T18:45:03.032977",
+      "timestamp": "2026-01-13T02:41:21.032232",
       "explain_stats": {
         "game": "Heretic WorldGen_79645483297583998146",
         "total_locations": 691,
@@ -7952,28 +6953,19 @@
     },
     "Links Awakening DX.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 4,
-        "failure": 6,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            4,
-            5,
-            6,
-            8,
-            7,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Links Awakening DX",
         "world_directory": "ladx"
       },
-      "timestamp": "2026-01-12T18:45:34.898779",
+      "timestamp": "2026-01-13T02:41:48.566257",
       "explain_stats": {
         "game": "Links Awakening DX WorldGen_22708164196567875238",
         "total_locations": 220,
@@ -8016,7 +7008,7 @@
         "game_name": "Ocarina of Time",
         "world_directory": "oot"
       },
-      "timestamp": "2026-01-12T18:46:04.094256"
+      "timestamp": "2026-01-13T02:42:18.588591"
     },
     "Secret of Evermore.yaml": {
       "ut_fuzz": {
@@ -8035,8 +7027,8 @@
             4,
             5,
             6,
-            8,
             7,
+            8,
             9
           ]
         }
@@ -8045,7 +7037,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-01-12T18:46:15.213472",
+      "timestamp": "2026-01-13T02:42:29.672024",
       "explain_stats": {
         "game": "Secret of Evermore WorldGen_79645483297583998146",
         "total_locations": 913,
@@ -8067,9 +7059,9 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 5,
+        "failure": 8,
         "timeout": 0,
-        "ignored": 5,
+        "ignored": 2,
         "errors": {
           "varia_custom was chosen but varia_custom_preset is missing.": [
             1,
@@ -8077,8 +7069,11 @@
           ],
           "None": [
             3,
+            2,
             4,
-            6
+            5,
+            6,
+            9
           ]
         }
       },
@@ -8086,11 +7081,11 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-01-12T18:46:37.467563",
+      "timestamp": "2026-01-13T02:42:59.008110",
       "explain_stats": {
-        "game": "Super Metroid WorldGen_86998726363870010506",
-        "total_locations": 43,
-        "locations_with_explain": 43,
+        "game": "Super Metroid WorldGen_11408892729106005028",
+        "total_locations": 30,
+        "locations_with_explain": 30,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -8117,7 +7112,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-01-12T18:46:44.868854",
+      "timestamp": "2026-01-13T02:43:06.706775",
       "explain_stats": {
         "game": "Undertale WorldGen_22708164196567875238",
         "total_locations": 106,
@@ -8167,7 +7162,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-01-12T18:45:00.093302",
+      "timestamp": "2026-01-13T02:41:10.515848",
       "explain_stats": {
         "game": "Bomb Rush Cyberfunk WorldGen_79645483297583998146",
         "total_locations": 230,
@@ -8198,7 +7193,7 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-01-12T18:45:07.666629",
+      "timestamp": "2026-01-13T02:41:18.857851",
       "explain_stats": {
         "game": "DLCQuest WorldGen_22708164196567875238",
         "total_locations": 38,
@@ -8307,7 +7302,7 @@
         "game_name": "Hollow Knight",
         "world_directory": "hk"
       },
-      "timestamp": "2026-01-12T18:46:24.738660",
+      "timestamp": "2026-01-13T02:42:42.807189",
       "explain_stats": {
         "game": "Hollow Knight WorldGen_22708164196567875238",
         "total_locations": 712,
@@ -8338,7 +7333,7 @@
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-01-12T18:46:32.157119",
+      "timestamp": "2026-01-13T02:42:50.902850",
       "explain_stats": {
         "game": "Lufia II Ancient Cave WorldGen_79645483297583998146",
         "total_locations": 66,
@@ -8369,7 +7364,7 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-01-12T18:46:42.848817",
+      "timestamp": "2026-01-13T02:43:02.216637",
       "explain_stats": {
         "game": "Old School Runescape WorldGen_79645483297583998146",
         "total_locations": 62,
@@ -8400,7 +7395,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-01-12T18:47:49.491212",
+      "timestamp": "2026-01-13T02:44:14.152175",
       "explain_stats": {
         "game": "Shivers WorldGen_79645483297583998146",
         "total_locations": 113,
@@ -8452,7 +7447,7 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-01-12T18:47:55.030644",
+      "timestamp": "2026-01-13T02:44:20.654516",
       "explain_stats": {
         "game": "TOEM original WorldGen_79645483297583998146",
         "total_locations": 191,
@@ -8483,7 +7478,7 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-01-12T18:48:00.638287",
+      "timestamp": "2026-01-13T02:44:27.011055",
       "explain_stats": {
         "game": "VVVVVV WorldGen_79645483297583998146",
         "total_locations": 20,
