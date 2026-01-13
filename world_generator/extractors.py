@@ -186,6 +186,7 @@ class ExtractedData:
     accumulator_rules: List[Dict[str, Any]] = field(default_factory=list)  # Rules for state counters (e.g., coins)
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
+    placement_classifications: Dict[str, bool] = field(default_factory=dict)  # location -> is_advancement (from item.advancement in regions)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
@@ -399,7 +400,7 @@ def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict
     return items, item_groups, item_name_groups
 
 
-def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str]]:
+def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str], Dict[str, bool]]:
     """
     Extract locations from JSON regions.
 
@@ -408,11 +409,12 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
         player_id: Player ID to extract data for (default: '1')
 
     Returns:
-        Tuple of (locations dict, original_placements dict, locked_placements dict)
+        Tuple of (locations dict, original_placements dict, locked_placements dict, placement_classifications dict)
     """
     locations: Dict[str, LocationData] = {}
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
+    placement_classifications: Dict[str, bool] = {}  # location -> is_advancement
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
 
@@ -455,11 +457,14 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
             if item_info:
                 item_name = item_info.get('name', '')
                 original_placements[loc_name] = item_name
+                # Track the item's classification (advancement = progression)
+                is_advancement = item_info.get('advancement', False)
+                placement_classifications[loc_name] = is_advancement
                 # If the location is locked, also track it as a locked placement
                 if is_locked and item_name:
                     locked_placements[loc_name] = item_name
 
-    return locations, original_placements, locked_placements
+    return locations, original_placements, locked_placements, placement_classifications
 
 
 def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
@@ -1108,7 +1113,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     """
     metadata = extract_game_metadata(json_data, player_id=player_id)
     items, item_groups, item_name_groups = extract_items(json_data, player_id=player_id)
-    locations, original_placements, locked_placements = extract_locations(json_data, player_id=player_id)
+    locations, original_placements, locked_placements, placement_classifications = extract_locations(json_data, player_id=player_id)
     regions, exits = extract_regions(json_data, player_id=player_id)
     start_region = extract_start_region(json_data, player_id=player_id)
     itempool_counts = extract_itempool_counts(json_data, player_id=player_id)
@@ -1201,6 +1206,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         accumulator_rules=accumulator_rules,
         prog_items_init=prog_items_init,
         canonical_placements=canonical_placements,
+        placement_classifications=placement_classifications,
         progression_mapping=progression_mapping,
         world_attributes=world_attributes,
         dungeons=dungeons,
