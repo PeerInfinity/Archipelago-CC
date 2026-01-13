@@ -1728,19 +1728,17 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 regions_data[region.name] = region_data
 
-                # Size check every 10 regions to catch runaway data growth
-                if region_count % 10 == 0:
+                # Size check every 50 regions to catch runaway data growth
+                # Using make_serializable for accurate measurement, so check less frequently for performance
+                if region_count % 50 == 0:
                     try:
-                        # Use a custom encoder that handles non-string dict keys
-                        # by converting them to string representations
-                        def stringify_keys(obj):
-                            if isinstance(obj, dict):
-                                return {str(k): stringify_keys(v) for k, v in obj.items()}
-                            elif isinstance(obj, list):
-                                return [stringify_keys(item) for item in obj]
-                            return obj
-                        serializable_data = stringify_keys(regions_data)
-                        current_size = len(json.dumps(serializable_data, default=str))
+                        # Use make_serializable to get an accurate size measurement
+                        # that matches what the final export will produce.
+                        # This is important because default=str can produce much larger
+                        # output for Python objects that will be converted to compact
+                        # representations by make_serializable in the final export.
+                        serializable_data = make_serializable(regions_data)
+                        current_size = len(json.dumps(serializable_data))
                         current_size_mb = current_size / (1024 * 1024)
                         # Dynamic limit: 10 MB base + 1 MB per additional game in multiworld
                         num_players = getattr(multiworld, 'players', 1)
