@@ -186,6 +186,7 @@ class ExtractedData:
     accumulator_rules: List[Dict[str, Any]] = field(default_factory=list)  # Rules for state counters (e.g., coins)
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
+    canonical_placement_advancements: Dict[str, bool] = field(default_factory=dict)  # location -> is_advancement (for mixed-class items)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
@@ -629,6 +630,38 @@ def extract_canonical_placements(json_data: Dict[str, Any], player_id: str = '1'
     """
     canonical_data = json_data.get('canonical_placements', {}).get(player_id, {})
     return dict(canonical_data)
+
+
+def extract_canonical_placement_advancements(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, bool]:
+    """
+    Extract canonical placement advancement status from JSON.
+
+    This extracts whether each placed item is marked as advancement (progression)
+    in the original rules.json. This is important for items with mixed classifications
+    (e.g., some copies are progression, some are useful) to preserve the correct
+    distribution during canonical placement.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
+    Returns:
+        Dict mapping location name to whether the item there is advancement
+    """
+    advancements: Dict[str, bool] = {}
+
+    regions_data = json_data.get('regions', {}).get(player_id, {})
+    for region_name, region_info in regions_data.items():
+        locations_list = region_info.get('locations', [])
+        for loc_info in locations_list:
+            loc_name = loc_info.get('name', '')
+            item_info = loc_info.get('item')
+            if item_info and loc_name:
+                # Get the advancement status from the placed item
+                advancement = item_info.get('advancement', False)
+                advancements[loc_name] = advancement
+
+    return advancements
 
 
 def extract_progression_mapping(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, List[str]]:
@@ -1120,6 +1153,9 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Get canonical placements from JSON (vanilla/original item locations)
     canonical_placements = extract_canonical_placements(json_data, player_id=player_id)
 
+    # Get canonical placement advancements (for mixed-classification items)
+    canonical_placement_advancements = extract_canonical_placement_advancements(json_data, player_id=player_id)
+
     # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
     progression_mapping = extract_progression_mapping(json_data, player_id=player_id)
 
@@ -1201,6 +1237,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         accumulator_rules=accumulator_rules,
         prog_items_init=prog_items_init,
         canonical_placements=canonical_placements,
+        canonical_placement_advancements=canonical_placement_advancements,
         progression_mapping=progression_mapping,
         world_attributes=world_attributes,
         dungeons=dungeons,
