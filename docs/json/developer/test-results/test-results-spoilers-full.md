@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-11 11:23:20
+**Generated:** 2026-01-12 22:13:27
 
-**Source Data Created:** 2026-01-08T20:22:03.148527
+**Source Data Created:** 2026-01-12T21:58:14.932147
 
-**Source Data Last Updated:** 2026-01-08T20:22:03.148536
+**Source Data Last Updated:** 2026-01-12T21:58:14.932152
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 43/72 (59.7% of passed)
-- **Passing with Generic Logic:** 66/72 (91.7% of passed)
-- **Passing with Both Generic:** 43/72 (59.7% of passed)
+- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 40/73 (54.8% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 7.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 11.8KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.0KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 45.6KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -61,7 +61,7 @@
 | Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | ✅ |
-| Landstalker - The Treasures of King Nole | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | 3.6KB | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 3.6KB | ✅ |
 | Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
@@ -74,7 +74,7 @@
 | Muse Dash | ✅ Passed | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.117 | 0.117 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 1.0KB | ✅ |
-| Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 25.9KB | ✅ |
+| Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
@@ -82,11 +82,11 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 28.7KB | 87.5KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 28.7KB | 87.4KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 21.4KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 92.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
@@ -101,17 +101,8 @@
 | Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 9.3KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 9.2KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| DOOM II | 1 | 2026-01-08 20:19 | Previously failed, now passing |
-
 
 ## Notes
 
