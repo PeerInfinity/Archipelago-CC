@@ -6,17 +6,17 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-12 22:13:27
+**Generated:** 2026-01-13 05:48:56
 
 **Source Data Created:** 2026-01-12T21:51:57.884936
 
-**Source Data Last Updated:** 2026-01-12T21:51:57.884941
+**Source Data Last Updated:** 2026-01-13T05:48:55.450251
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Total Games:** 74
+- **Passed:** 73 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 1
 - **Total Intermittent Failures:** 1
 
@@ -31,7 +31,8 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 45.6KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 58.3KB | ✅ |
+| A Link to the Past WorldGen | ❌ Failed | 0 | 0 | 22.1 | 🔴 0.0% | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -86,7 +87,7 @@
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 21.4KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 92.3KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 92.5KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |

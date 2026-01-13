@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-12 22:13:27
+**Generated:** 2026-01-13 05:48:56
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,17 +10,17 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 361.7s | 598.9s | 908.9s | 1590.2s |
-| Average | 5.0s | 8.2s | 12.5s | 21.8s |
+| Total | 373.2s | 601.9s | 908.9s | 1590.2s |
+| Average | 5.0s | 8.1s | 12.5s | 21.8s |
 | Max | 12.1s | 34.7s | 152.0s | 160.6s |
-| Min | 3.4s | 5.6s | 5.4s | 12.6s |
+| Min | 3.4s | 3.0s | 5.4s | 12.6s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
 | Slowest | Metamath (12.1s) | Kirby's Dream Land 3 (34.7s) | Dark Souls III (152.0s) | Dark Souls III (160.6s) |
-| Fastest | Math Adventure (3.4s) | Coding Adventure (5.6s) | Saving Princess (5.4s) | Saving Princess (12.6s) |
+| Fastest | Math Adventure (3.4s) | A Link to the Past WorldGen (3.0s) | Saving Princess (5.4s) | Saving Princess (12.6s) |
 
 ## Individual Game Processing Times
 
@@ -28,6 +28,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 |------|----------|--------------|-----------|-------------|
 | A Hat in Time | 5.6s | 8.5s | 11.2s | 21.9s |
 | A Link to the Past | 9.5s | 12.4s | 12.6s | 29.0s |
+| A Link to the Past WorldGen | 11.5s | 3.0s | - | - |
 | A Short Hike | 4.1s | 8.8s | 6.8s | 15.5s |
 | APQuest | 3.8s | 6.0s | 8.7s | 15.2s |
 | Adventure | 4.0s | 8.9s | 6.3s | 16.2s |

@@ -10664,52 +10664,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "Has",
                   "args": {
-                    "test": {
-                      "rule": "AST_placement_search",
-                      "args": {
-                        "item": "Big Key (Ice Palace)",
-                        "player": 1,
-                        "locations": [
-                          [
-                            "Ice Palace - Spike Room",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Hammer Block Key Drop",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Big Key Chest",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Map Chest",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "placement_search"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "if_true": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Ice Palace)",
-                        "count": 4
-                      }
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Ice Palace)",
-                        "count": 6
-                      }
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Ice Palace)",
+                    "count": 6
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11172,74 +11131,11 @@
             "name": "Misery Mire (West)",
             "connected_region": "Misery Mire (West)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Misery Mire - Big Key Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Misery Mire - Compass Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Misery Mire)",
-                    "count": 5
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Misery Mire)",
-                    "count": 6
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Misery Mire)",
+                "count": 6
+              }
             }
           },
           {
@@ -11528,90 +11424,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "Has",
                   "args": {
-                    "test": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Big Key Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Compass Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Conveyor Crystal Key Drop",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Misery Mire)",
-                        "count": 4
-                      }
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Misery Mire)",
-                        "count": 5
-                      }
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Misery Mire)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12015,48 +11832,11 @@
             "name": "Turtle Rock (Pokey Room) (South)",
             "connected_region": "Turtle Rock (First Section)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "AST_placement_search",
-                  "args": {
-                    "item": "Big Key (Turtle Rock)",
-                    "player": 1,
-                    "locations": [
-                      [
-                        "Turtle Rock - Compass Chest",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Left",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Right",
-                        1
-                      ]
-                    ],
-                    "_original_ast_type": "placement_search"
-                  },
-                  "_converted_from_ast": true
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 4
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 6
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 6
+              }
             }
           }
         ],
@@ -12125,35 +11905,11 @@
             "name": "Turtle Rock (Chain Chomp Room) (South)",
             "connected_region": "Turtle Rock (Pokey Room)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "AST_placement_search",
-                  "args": {
-                    "item": "Big Key (Turtle Rock)",
-                    "player": 1,
-                    "locations": [],
-                    "_original_ast_type": "placement_search"
-                  },
-                  "_converted_from_ast": true
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 3
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 5
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 5
+              }
             }
           }
         ],
@@ -17870,7 +17626,11 @@
         "event": false,
         "type": null,
         "max_count": 10,
-        "hint_text": "a heart"
+        "hint_text": "a heart",
+        "classification_counts": {
+          "useful": 9,
+          "progression": 1
+        }
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",
@@ -21370,7 +21130,89 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "bunny_rules": {
+        "bunny_impassable_caves": [
+          "Bumper Cave",
+          "Desert Palace Main (Inner)",
+          "Fairy Ascension Cave (Drop)",
+          "Hookshot Cave",
+          "Pyramid",
+          "Sewers",
+          "Skull Woods First Section (Left)",
+          "Skull Woods First Section (Right)",
+          "Skull Woods First Section (Top)",
+          "Skull Woods Second Section (Drop)",
+          "Spiral Cave (Top)",
+          "Turtle Rock (Big Chest)",
+          "Turtle Rock (Entrance)",
+          "Turtle Rock (Eye Bridge)",
+          "Turtle Rock (Second Section)",
+          "Two Brothers House"
+        ],
+        "bunny_accessible_locations": [
+          "Blacksmith",
+          "Bombos Tablet",
+          "Bottle Merchant",
+          "Bumper Cave Ledge",
+          "Checkerboard Cave",
+          "Dark Blacksmith Ruins",
+          "Desert Ledge",
+          "Ether Tablet",
+          "Hype Cave - Generous Guy",
+          "Link's Uncle",
+          "Lost Woods Hideout",
+          "Lumberjack Tree",
+          "Master Sword Pedestal",
+          "Missing Smith",
+          "Peg Cave",
+          "Potion Shop",
+          "Purple Chest",
+          "Pyramid",
+          "Sahasrahla",
+          "Sick Kid",
+          "Spectacle Rock",
+          "Spectacle Rock Cave",
+          "Sunken Treasure"
+        ],
+        "mandatory_superbunny_locations": [
+          "Kakariko Well - Bottom",
+          "Kakariko Well - Left",
+          "Kakariko Well - Middle",
+          "Kakariko Well - Right",
+          "Superbunny Cave - Bottom",
+          "Superbunny Cave - Top"
+        ],
+        "mirror_superbunny_locations": [
+          "Blind's Hideout - Far Left",
+          "Blind's Hideout - Far Right",
+          "Blind's Hideout - Left",
+          "Blind's Hideout - Right",
+          "Bonk Rock Cave",
+          "Brewery",
+          "C-Shaped House",
+          "Cave 45",
+          "Chest Game",
+          "Floodgate",
+          "Floodgate Chest",
+          "Ice Rod Cave",
+          "Kakariko Tavern",
+          "King's Tomb",
+          "Library",
+          "Mire Shed - Left",
+          "Mire Shed - Right",
+          "Pyramid Fairy - Left",
+          "Pyramid Fairy - Right",
+          "Sahasrahla's Hut - Left",
+          "Sahasrahla's Hut - Middle",
+          "Sahasrahla's Hut - Right",
+          "Secret Passage",
+          "Spiral Cave",
+          "Waterfall of Wishing - Left",
+          "Waterfall of Wishing - Right"
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {

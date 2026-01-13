@@ -394,7 +394,6 @@ Playthrough:
 3: {
   Castle Tower - Room 03: Small Key (Agahnims Tower)
   Eastern Palace - Big Key Chest: Big Key (Eastern Palace)
-  Paradox Cave Lower - Far Right: Boss Heart Container
   Paradox Cave Lower - Left: Bottle (Red Potion)
   Paradox Cave Lower - Right: Magic Mirror
   Paradox Cave Upper - Left: Book of Mudora
@@ -407,7 +406,6 @@ Playthrough:
   Desert Palace - Desert Tiles 1 Pot Key: Small Key (Desert Palace)
   Desert Palace - Map Chest: Big Key (Desert Palace)
   Eastern Palace - Dark Eyegore Key Drop: Small Key (Eastern Palace)
-  Sick Kid: Boss Heart Container
   Tower of Hera - Map Chest: Big Key (Tower of Hera)
 }
 5: {
@@ -425,7 +423,6 @@ Playthrough:
   Desert Palace - Desert Tiles 2 Pot Key: Small Key (Desert Palace)
 }
 8: {
-  Brewery: Boss Heart Container
   Bumper Cave Ledge: Progressive Sword
   C-Shaped House: Bottle (Blue Potion)
   Catfish: Progressive Glove
@@ -452,7 +449,6 @@ Playthrough:
   Thieves' Town - Blind's Cell: Small Key (Thieves Town)
   Thieves' Town - Spike Switch Pot Key: Small Key (Thieves Town)
   Waterfall Fairy - Left: Bottle (Blue Potion)
-  Zora's Ledge: Boss Heart Container
 }
 10: {
   Ice Palace - Compass Chest: Progressive Sword
@@ -497,7 +493,6 @@ Playthrough:
   Turtle Rock - Roller Room - Left: Big Key (Turtle Rock)
 }
 14: {
-  Bonk Rock Cave: Boss Heart Container
   Desert Palace - Torch: Bug Catching Net
   Misery Mire - Big Chest: Small Key (Misery Mire)
   Misery Mire - Prize: Crystal 6
@@ -516,8 +511,6 @@ Playthrough:
   Turtle Rock - Chain Chomps: Small Key (Turtle Rock)
 }
 16: {
-  Mimic Cave: Boss Heart Container
-  Sahasrahla: Boss Heart Container
   Turtle Rock - Big Chest: Small Key (Turtle Rock)
   Turtle Rock - Big Key Chest: Small Key (Turtle Rock)
   Turtle Rock - Crystaroller Room: Red Boomerang
@@ -538,8 +531,6 @@ Playthrough:
   Ganons Tower - Hope Room - Left: Small Key (Ganons Tower)
 }
 20: {
-  Ganons Tower - Bob's Chest: Boss Heart Container
-  Ganons Tower - Randomizer Room - Bottom Left: Boss Heart Container
   Ganons Tower - Randomizer Room - Bottom Right: Small Key (Ganons Tower)
   Ganons Tower - Randomizer Room - Top Left: Big Key (Ganons Tower)
 }

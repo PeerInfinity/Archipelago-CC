@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-12 22:13:27
+**Generated:** 2026-01-13 05:48:56
 
 ## Summary
 
@@ -31,7 +31,7 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 45.6KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 58.3KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -86,7 +86,7 @@
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 21.4KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 92.3KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 92.5KB | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |

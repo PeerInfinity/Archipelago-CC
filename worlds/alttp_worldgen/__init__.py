@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -400,274 +400,547 @@ class ALTTPWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
+        "Aginah's Cave": "Rupees (20)",
+        "Cave 45": "Rupees (20)",
+        "Floating Island": "Rupees (20)",
+        "Ganons Tower - Big Chest": "Rupees (20)",
+        "Ganons Tower - Big Key Room - Right": "Rupees (20)",
+        "Ganons Tower - Mini Helmasaur Room - Right": "Rupees (20)",
+        "Ganons Tower - Randomizer Room - Top Right": "Rupees (20)",
+        "Ganons Tower - Validation Chest": "Rupees (20)",
+        "Hookshot Cave - Bottom Left": "Rupees (20)",
+        "Hookshot Cave - Top Left": "Rupees (20)",
+        "Hookshot Cave - Top Right": "Rupees (20)",
+        "Hype Cave - Middle Left": "Rupees (20)",
+        "Kakariko Tavern": "Rupees (20)",
+        "Kakariko Well - Bottom": "Rupees (20)",
+        "Master Sword Pedestal": "Rupees (20)",
+        "Mini Moldorm Cave - Far Right": "Rupees (20)",
+        "Misery Mire - Spike Chest": "Rupees (20)",
         "Mushroom": "Rupees (20)",
+        "Palace of Darkness - Dark Basement - Left": "Rupees (20)",
+        "Paradox Cave Upper - Right": "Rupees (20)",
+        "Sahasrahla's Hut - Left": "Rupees (20)",
+        "Sewers - Secret Room - Right": "Rupees (20)",
+        "Spike Cave": "Rupees (20)",
+        "Stumpy": "Rupees (20)",
+        "Superbunny Cave - Top": "Rupees (20)",
+        "Thieves' Town - Attic": "Rupees (20)",
+        "Tower of Hera - Compass Chest": "Rupees (20)",
+        "Waterfall Fairy - Right": "Rupees (20)",
+        "Blacksmith": "Piece of Heart",
+        "Blind's Hideout - Far Left": "Piece of Heart",
         "Bottle Merchant": "Piece of Heart",
+        "Chest Game": "Piece of Heart",
+        "Chicken House": "Piece of Heart",
+        "Eastern Palace - Cannonball Chest": "Piece of Heart",
+        "Ganons Tower - DMs Room - Top Right": "Piece of Heart",
+        "Hobo": "Piece of Heart",
+        "Hype Cave - Bottom": "Piece of Heart",
+        "Hype Cave - Middle Right": "Piece of Heart",
+        "Kakariko Well - Right": "Piece of Heart",
+        "Link's Uncle": "Piece of Heart",
+        "Lost Woods Hideout": "Piece of Heart",
+        "Magic Bat": "Piece of Heart",
+        "Palace of Darkness - Harmless Hellway": "Piece of Heart",
+        "Sewers - Dark Cross": "Piece of Heart",
+        "Sewers - Secret Room - Left": "Piece of Heart",
+        "Sewers - Secret Room - Middle": "Piece of Heart",
+        "Swamp Palace - Flooded Room - Right": "Piece of Heart",
+        "Swamp Palace - Hookshot Pot Key": "Piece of Heart",
+        "Thieves' Town - Boss": "Piece of Heart",
+        "Thieves' Town - Hallway Pot Key": "Piece of Heart",
+        "Turtle Rock - Eye Bridge - Bottom Right": "Piece of Heart",
+        "Turtle Rock - Eye Bridge - Top Right": "Piece of Heart",
+        "Bumper Cave Ledge": "Progressive Sword",
         "Flute Spot": "Progressive Sword",
+        "Ice Palace - Compass Chest": "Progressive Sword",
+        "Kakariko Well - Left": "Progressive Sword",
+        "Desert Palace - Boss": "Rupees (50)",
+        "Ganons Tower - Compass Room - Top Right": "Rupees (50)",
+        "Ganons Tower - Mini Helmasaur Room - Left": "Rupees (50)",
+        "Ice Rod Cave": "Rupees (50)",
+        "Pyramid": "Rupees (50)",
+        "Sahasrahla's Hut - Right": "Rupees (50)",
         "Sunken Treasure": "Rupees (50)",
         "Purple Chest": "Cane of Somaria",
         "Flute Activation Spot": "Activated Flute",
         "Blind's Hideout - Top": "Rupees (5)",
+        "Ganons Tower - Firesnake Room": "Rupees (5)",
+        "Kakariko Well - Middle": "Rupees (5)",
+        "Paradox Cave Lower - Middle": "Rupees (5)",
         "Blind's Hideout - Left": "Flute",
         "Blind's Hideout - Right": "Quake",
-        "Blind's Hideout - Far Left": "Piece of Heart",
         "Blind's Hideout - Far Right": "Arrows (10)",
-        "Link's Uncle": "Piece of Heart",
+        "Checkerboard Cave": "Arrows (10)",
+        "Ether Tablet": "Arrows (10)",
+        "Floodgate Chest": "Arrows (10)",
+        "Ganons Tower - Big Key Chest": "Arrows (10)",
+        "Ganons Tower - Conveyor Cross Pot Key": "Arrows (10)",
+        "Ganons Tower - Hope Room - Right": "Arrows (10)",
+        "Lake Hylia Island": "Arrows (10)",
+        "Maze Race": "Arrows (10)",
+        "Old Man": "Arrows (10)",
+        "Skull Woods - Spike Corner Key Drop": "Arrows (10)",
+        "Turtle Rock - Roller Room - Right": "Arrows (10)",
         "Secret Passage": "Ice Rod",
         "King Zora": "Single Arrow",
+        "Palace of Darkness - Big Key Chest": "Boss Heart Container",
+        "Bonk Rock Cave": "Boss Heart Container",
+        "Brewery": "Boss Heart Container",
+        "Ganons Tower - Bob's Chest": "Boss Heart Container",
+        "Ganons Tower - Randomizer Room - Bottom Left": "Boss Heart Container",
+        "Mimic Cave": "Boss Heart Container",
+        "Paradox Cave Lower - Far Right": "Boss Heart Container",
+        "Sahasrahla": "Boss Heart Container",
+        "Sick Kid": "Boss Heart Container",
         "Zora's Ledge": "Boss Heart Container",
+        "C-Shaped House": "Bottle (Blue Potion)",
         "Waterfall Fairy - Left": "Bottle (Blue Potion)",
-        "Waterfall Fairy - Right": "Rupees (20)",
+        "Graveyard Cave": "Rupee (1)",
         "King's Tomb": "Rupee (1)",
         "Floodgate": "Open Floodgate",
-        "Floodgate Chest": "Arrows (10)",
+        "Ganons Tower - Pre-Moldorm Chest": "Bombs (3)",
+        "Hookshot Cave - Bottom Right": "Bombs (3)",
+        "Hype Cave - Top": "Bombs (3)",
+        "Ice Palace - Big Key Chest": "Bombs (3)",
         "Link's House": "Bombs (3)",
-        "Kakariko Tavern": "Rupees (20)",
-        "Chicken House": "Piece of Heart",
-        "Aginah's Cave": "Rupees (20)",
-        "Sahasrahla's Hut - Left": "Rupees (20)",
-        "Sahasrahla's Hut - Middle": "Hookshot",
-        "Sahasrahla's Hut - Right": "Rupees (50)",
-        "Sahasrahla": "Boss Heart Container",
-        "Kakariko Well - Top": "Rupees (300)",
-        "Kakariko Well - Left": "Progressive Sword",
-        "Kakariko Well - Middle": "Rupees (5)",
-        "Kakariko Well - Right": "Piece of Heart",
-        "Kakariko Well - Bottom": "Rupees (20)",
-        "Blacksmith": "Piece of Heart",
-        "Missing Smith": "Return Smith",
-        "Magic Bat": "Piece of Heart",
-        "Sick Kid": "Boss Heart Container",
-        "Hobo": "Piece of Heart",
-        "Lost Woods Hideout": "Piece of Heart",
-        "Lumberjack Tree": "Rupees (300)",
-        "Cave 45": "Rupees (20)",
-        "Graveyard Cave": "Rupee (1)",
-        "Checkerboard Cave": "Arrows (10)",
-        "Mini Moldorm Cave - Far Left": "Cape",
-        "Mini Moldorm Cave - Left": "Bombs (3)",
-        "Mini Moldorm Cave - Right": "Moon Pearl",
-        "Mini Moldorm Cave - Far Right": "Rupees (20)",
         "Mini Moldorm Cave - Generous Guy": "Bombs (3)",
-        "Ice Rod Cave": "Rupees (50)",
-        "Bonk Rock Cave": "Boss Heart Container",
+        "Mini Moldorm Cave - Left": "Bombs (3)",
+        "Mire Shed - Left": "Bombs (3)",
+        "Misery Mire - Big Key Chest": "Bombs (3)",
+        "Paradox Cave Lower - Far Left": "Bombs (3)",
+        "Peg Cave": "Bombs (3)",
+        "Pyramid Fairy - Left": "Bombs (3)",
+        "Skull Woods - Pinball Room": "Bombs (3)",
+        "Spiral Cave": "Bombs (3)",
+        "Swamp Palace - Boss": "Bombs (3)",
+        "Tower of Hera - Big Key Chest": "Bombs (3)",
+        "Sahasrahla's Hut - Middle": "Hookshot",
+        "Hype Cave - Generous Guy": "Rupees (300)",
+        "Kakariko Well - Top": "Rupees (300)",
         "Library": "Rupees (300)",
+        "Lumberjack Tree": "Rupees (300)",
+        "Palace of Darkness - Big Chest": "Rupees (300)",
+        "Missing Smith": "Return Smith",
+        "Mini Moldorm Cave - Far Left": "Cape",
+        "Mini Moldorm Cave - Right": "Moon Pearl",
+        "Hyrule Castle - Zelda's Chest": "Progressive Mail",
         "Potion Shop": "Progressive Mail",
-        "Lake Hylia Island": "Arrows (10)",
         "Capacity Upgrade Shop": "Capacity Upgrade Shop",
-        "Maze Race": "Arrows (10)",
         "Desert Ledge": "Bombos",
+        "Desert Palace - Beamos Hall Pot Key": "Small Key (Desert Palace)",
         "Desert Palace - Big Chest": "Small Key (Desert Palace)",
+        "Desert Palace - Desert Tiles 1 Pot Key": "Small Key (Desert Palace)",
+        "Desert Palace - Desert Tiles 2 Pot Key": "Small Key (Desert Palace)",
         "Desert Palace - Torch": "Bug Catching Net",
         "Desert Palace - Map Chest": "Big Key (Desert Palace)",
         "Desert Palace - Compass Chest": "Map (Desert Palace)",
         "Desert Palace - Big Key Chest": "Compass (Desert Palace)",
-        "Desert Palace - Desert Tiles 1 Pot Key": "Small Key (Desert Palace)",
-        "Desert Palace - Beamos Hall Pot Key": "Small Key (Desert Palace)",
-        "Desert Palace - Desert Tiles 2 Pot Key": "Small Key (Desert Palace)",
-        "Desert Palace - Boss": "Rupees (50)",
         "Desert Palace - Prize": "Red Pendant",
         "Eastern Palace - Compass Chest": "Mushroom",
         "Eastern Palace - Big Chest": "Map (Eastern Palace)",
-        "Eastern Palace - Cannonball Chest": "Piece of Heart",
-        "Eastern Palace - Dark Square Pot Key": "Small Key (Eastern Palace)",
         "Eastern Palace - Dark Eyegore Key Drop": "Small Key (Eastern Palace)",
+        "Eastern Palace - Dark Square Pot Key": "Small Key (Eastern Palace)",
         "Eastern Palace - Big Key Chest": "Big Key (Eastern Palace)",
         "Eastern Palace - Map Chest": "Lamp",
         "Eastern Palace - Boss": "Compass (Eastern Palace)",
         "Eastern Palace - Prize": "Crystal 2",
-        "Master Sword Pedestal": "Rupees (20)",
         "Hyrule Castle - Boomerang Chest": "Small Key (Hyrule Castle)",
-        "Hyrule Castle - Map Chest": "Big Key (Hyrule Castle)",
-        "Hyrule Castle - Zelda's Chest": "Progressive Mail",
         "Hyrule Castle - Map Guard Key Drop": "Small Key (Hyrule Castle)",
-        "Hyrule Castle - Boomerang Guard Key Drop": "Progressive Shield",
-        "Hyrule Castle - Big Key Drop": "Map (Hyrule Castle)",
-        "Sewers - Dark Cross": "Piece of Heart",
-        "Sewers - Key Rat Key Drop": "Small Key (Hyrule Castle)",
-        "Sewers - Secret Room - Left": "Piece of Heart",
-        "Sewers - Secret Room - Middle": "Piece of Heart",
-        "Sewers - Secret Room - Right": "Rupees (20)",
         "Sanctuary": "Small Key (Hyrule Castle)",
-        "Castle Tower - Room 03": "Small Key (Agahnims Tower)",
-        "Castle Tower - Dark Maze": "Small Key (Agahnims Tower)",
-        "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
+        "Sewers - Key Rat Key Drop": "Small Key (Hyrule Castle)",
+        "Hyrule Castle - Map Chest": "Big Key (Hyrule Castle)",
+        "Ganons Tower - Map Chest": "Progressive Shield",
+        "Hyrule Castle - Boomerang Guard Key Drop": "Progressive Shield",
+        "Mire Shed - Right": "Progressive Shield",
+        "Hyrule Castle - Big Key Drop": "Map (Hyrule Castle)",
         "Castle Tower - Circle of Pots Key Drop": "Small Key (Agahnims Tower)",
+        "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
+        "Castle Tower - Dark Maze": "Small Key (Agahnims Tower)",
+        "Castle Tower - Room 03": "Small Key (Agahnims Tower)",
         "Agahnim 1": "Beat Agahnim 1",
-        "Old Man": "Arrows (10)",
+        "Catfish": "Progressive Glove",
         "Spectacle Rock Cave": "Progressive Glove",
-        "Paradox Cave Lower - Far Left": "Bombs (3)",
         "Paradox Cave Lower - Left": "Bottle (Red Potion)",
         "Paradox Cave Lower - Right": "Magic Mirror",
-        "Paradox Cave Lower - Far Right": "Boss Heart Container",
-        "Paradox Cave Lower - Middle": "Rupees (5)",
         "Paradox Cave Upper - Left": "Book of Mudora",
-        "Paradox Cave Upper - Right": "Rupees (20)",
-        "Spiral Cave": "Bombs (3)",
-        "Ether Tablet": "Arrows (10)",
         "Spectacle Rock": "Rupees (100)",
         "Tower of Hera - Basement Cage": "Compass (Tower of Hera)",
         "Tower of Hera - Map Chest": "Big Key (Tower of Hera)",
-        "Tower of Hera - Big Key Chest": "Bombs (3)",
-        "Tower of Hera - Compass Chest": "Rupees (20)",
         "Tower of Hera - Big Chest": "Map (Tower of Hera)",
         "Tower of Hera - Boss": "Small Key (Tower of Hera)",
         "Tower of Hera - Prize": "Crystal 7",
-        "Pyramid": "Rupees (50)",
-        "Catfish": "Progressive Glove",
-        "Stumpy": "Rupees (20)",
         "Digging Game": "Bombs (10)",
         "Bombos Tablet": "Hammer",
-        "Hype Cave - Top": "Bombs (3)",
-        "Hype Cave - Middle Right": "Piece of Heart",
-        "Hype Cave - Middle Left": "Rupees (20)",
-        "Hype Cave - Bottom": "Piece of Heart",
-        "Hype Cave - Generous Guy": "Rupees (300)",
         "Frog": "Get Frog",
         "Dark Blacksmith Ruins": "Pick Up Purple Chest",
-        "Peg Cave": "Bombs (3)",
-        "Pyramid Fairy - Left": "Bombs (3)",
         "Pyramid Fairy - Right": "Progressive Bow",
-        "Brewery": "Boss Heart Container",
-        "C-Shaped House": "Bottle (Blue Potion)",
-        "Chest Game": "Piece of Heart",
-        "Bumper Cave Ledge": "Progressive Sword",
-        "Mire Shed - Left": "Bombs (3)",
-        "Mire Shed - Right": "Progressive Shield",
-        "Superbunny Cave - Top": "Rupees (20)",
-        "Superbunny Cave - Bottom": "Ether",
-        "Spike Cave": "Rupees (20)",
-        "Hookshot Cave - Top Right": "Rupees (20)",
-        "Hookshot Cave - Top Left": "Rupees (20)",
-        "Hookshot Cave - Bottom Right": "Bombs (3)",
-        "Hookshot Cave - Bottom Left": "Rupees (20)",
-        "Floating Island": "Rupees (20)",
-        "Mimic Cave": "Boss Heart Container",
-        "Swamp Palace - Entrance": "Small Key (Swamp Palace)",
-        "Swamp Palace - Map Chest": "Small Key (Swamp Palace)",
-        "Swamp Palace - Pot Row Pot Key": "Big Key (Swamp Palace)",
-        "Swamp Palace - Trench 1 Pot Key": "Small Key (Swamp Palace)",
         "Swamp Palace - Big Chest": "Progressive Bow",
+        "Superbunny Cave - Bottom": "Ether",
         "Swamp Palace - Compass Chest": "Small Key (Swamp Palace)",
-        "Swamp Palace - Hookshot Pot Key": "Piece of Heart",
+        "Swamp Palace - Entrance": "Small Key (Swamp Palace)",
+        "Swamp Palace - Flooded Room - Left": "Small Key (Swamp Palace)",
+        "Swamp Palace - Map Chest": "Small Key (Swamp Palace)",
+        "Swamp Palace - Trench 1 Pot Key": "Small Key (Swamp Palace)",
         "Swamp Palace - Trench 2 Pot Key": "Small Key (Swamp Palace)",
+        "Swamp Palace - Pot Row Pot Key": "Big Key (Swamp Palace)",
         "Swamp Palace - Big Key Chest": "Map (Swamp Palace)",
         "Swamp Palace - West Chest": "Compass (Swamp Palace)",
-        "Swamp Palace - Flooded Room - Left": "Small Key (Swamp Palace)",
-        "Swamp Palace - Flooded Room - Right": "Piece of Heart",
         "Swamp Palace - Waterway Pot Key": "Pegasus Boots",
         "Swamp Palace - Waterfall Room": "Cane of Byrna",
-        "Swamp Palace - Boss": "Bombs (3)",
         "Swamp Palace - Prize": "Crystal 5",
         "Thieves' Town - Big Key Chest": "Map (Thieves Town)",
+        "Thieves' Town - Blind's Cell": "Small Key (Thieves Town)",
         "Thieves' Town - Map Chest": "Small Key (Thieves Town)",
+        "Thieves' Town - Spike Switch Pot Key": "Small Key (Thieves Town)",
         "Thieves' Town - Compass Chest": "Flippers",
         "Thieves' Town - Ambush Chest": "Big Key (Thieves Town)",
-        "Thieves' Town - Attic": "Rupees (20)",
         "Thieves' Town - Big Chest": "Compass (Thieves Town)",
-        "Thieves' Town - Hallway Pot Key": "Piece of Heart",
-        "Thieves' Town - Spike Switch Pot Key": "Small Key (Thieves Town)",
-        "Thieves' Town - Blind's Cell": "Small Key (Thieves Town)",
-        "Thieves' Town - Boss": "Piece of Heart",
         "Thieves' Town - Prize": "Crystal 4",
-        "Skull Woods - Map Chest": "Small Key (Skull Woods)",
-        "Skull Woods - Pinball Room": "Bombs (3)",
-        "Skull Woods - Compass Chest": "Small Key (Skull Woods)",
-        "Skull Woods - Pot Prison": "Small Key (Skull Woods)",
         "Skull Woods - Big Chest": "Small Key (Skull Woods)",
-        "Skull Woods - Big Key Chest": "Map (Skull Woods)",
+        "Skull Woods - Compass Chest": "Small Key (Skull Woods)",
+        "Skull Woods - Map Chest": "Small Key (Skull Woods)",
+        "Skull Woods - Pot Prison": "Small Key (Skull Woods)",
         "Skull Woods - West Lobby Pot Key": "Small Key (Skull Woods)",
+        "Skull Woods - Big Key Chest": "Map (Skull Woods)",
         "Skull Woods - Bridge Room": "Big Key (Skull Woods)",
-        "Skull Woods - Spike Corner Key Drop": "Arrows (10)",
         "Skull Woods - Boss": "Compass (Skull Woods)",
         "Skull Woods - Prize": "Green Pendant",
-        "Ice Palace - Jelly Key Drop": "Small Key (Ice Palace)",
-        "Ice Palace - Compass Chest": "Progressive Sword",
+        "Ice Palace - Boss": "Small Key (Ice Palace)",
         "Ice Palace - Conveyor Key Drop": "Small Key (Ice Palace)",
         "Ice Palace - Freezor Chest": "Small Key (Ice Palace)",
+        "Ice Palace - Jelly Key Drop": "Small Key (Ice Palace)",
         "Ice Palace - Many Pots Pot Key": "Small Key (Ice Palace)",
+        "Ice Palace - Map Chest": "Small Key (Ice Palace)",
         "Ice Palace - Big Chest": "Fire Rod",
         "Ice Palace - Iced T Room": "Map (Ice Palace)",
         "Ice Palace - Spike Room": "Big Key (Ice Palace)",
-        "Ice Palace - Big Key Chest": "Bombs (3)",
-        "Ice Palace - Map Chest": "Small Key (Ice Palace)",
         "Ice Palace - Hammer Block Key Drop": "Compass (Ice Palace)",
-        "Ice Palace - Boss": "Small Key (Ice Palace)",
         "Ice Palace - Prize": "Crystal 1",
         "Misery Mire - Big Chest": "Small Key (Misery Mire)",
-        "Misery Mire - Map Chest": "Small Key (Misery Mire)",
-        "Misery Mire - Main Lobby": "Small Key (Misery Mire)",
         "Misery Mire - Bridge Chest": "Small Key (Misery Mire)",
-        "Misery Mire - Spike Chest": "Rupees (20)",
-        "Misery Mire - Spikes Pot Key": "Small Key (Misery Mire)",
         "Misery Mire - Fishbone Pot Key": "Small Key (Misery Mire)",
+        "Misery Mire - Main Lobby": "Small Key (Misery Mire)",
+        "Misery Mire - Map Chest": "Small Key (Misery Mire)",
+        "Misery Mire - Spikes Pot Key": "Small Key (Misery Mire)",
         "Misery Mire - Conveyor Crystal Key Drop": "Map (Misery Mire)",
         "Misery Mire - Compass Chest": "Big Key (Misery Mire)",
-        "Misery Mire - Big Key Chest": "Bombs (3)",
         "Misery Mire - Boss": "Compass (Misery Mire)",
         "Misery Mire - Prize": "Crystal 6",
-        "Turtle Rock - Compass Chest": "Small Key (Turtle Rock)",
-        "Turtle Rock - Roller Room - Left": "Big Key (Turtle Rock)",
-        "Turtle Rock - Roller Room - Right": "Arrows (10)",
-        "Turtle Rock - Pokey 1 Key Drop": "Small Key (Turtle Rock)",
-        "Turtle Rock - Chain Chomps": "Small Key (Turtle Rock)",
-        "Turtle Rock - Big Key Chest": "Small Key (Turtle Rock)",
-        "Turtle Rock - Pokey 2 Key Drop": "Magic Upgrade (1/2)",
         "Turtle Rock - Big Chest": "Small Key (Turtle Rock)",
-        "Turtle Rock - Crystaroller Room": "Red Boomerang",
+        "Turtle Rock - Big Key Chest": "Small Key (Turtle Rock)",
+        "Turtle Rock - Chain Chomps": "Small Key (Turtle Rock)",
+        "Turtle Rock - Compass Chest": "Small Key (Turtle Rock)",
         "Turtle Rock - Eye Bridge - Bottom Left": "Small Key (Turtle Rock)",
-        "Turtle Rock - Eye Bridge - Bottom Right": "Piece of Heart",
+        "Turtle Rock - Pokey 1 Key Drop": "Small Key (Turtle Rock)",
+        "Turtle Rock - Roller Room - Left": "Big Key (Turtle Rock)",
+        "Turtle Rock - Pokey 2 Key Drop": "Magic Upgrade (1/2)",
+        "Turtle Rock - Crystaroller Room": "Red Boomerang",
         "Turtle Rock - Eye Bridge - Top Left": "Map (Turtle Rock)",
-        "Turtle Rock - Eye Bridge - Top Right": "Piece of Heart",
         "Turtle Rock - Boss": "Compass (Turtle Rock)",
         "Turtle Rock - Prize": "Crystal 3",
         "Palace of Darkness - Shooter Room": "Big Key (Palace of Darkness)",
-        "Palace of Darkness - The Arena - Bridge": "Small Key (Palace of Darkness)",
-        "Palace of Darkness - Stalfos Basement": "Small Key (Palace of Darkness)",
-        "Palace of Darkness - Big Key Chest": "Boss Heart Container",
-        "Palace of Darkness - The Arena - Ledge": "Small Key (Palace of Darkness)",
-        "Palace of Darkness - Map Chest": "Small Key (Palace of Darkness)",
         "Palace of Darkness - Compass Chest": "Small Key (Palace of Darkness)",
-        "Palace of Darkness - Dark Basement - Left": "Rupees (20)",
         "Palace of Darkness - Dark Basement - Right": "Small Key (Palace of Darkness)",
+        "Palace of Darkness - Map Chest": "Small Key (Palace of Darkness)",
+        "Palace of Darkness - Stalfos Basement": "Small Key (Palace of Darkness)",
+        "Palace of Darkness - The Arena - Bridge": "Small Key (Palace of Darkness)",
+        "Palace of Darkness - The Arena - Ledge": "Small Key (Palace of Darkness)",
         "Palace of Darkness - Dark Maze - Top": "Compass (Palace of Darkness)",
         "Palace of Darkness - Dark Maze - Bottom": "Map (Palace of Darkness)",
-        "Palace of Darkness - Big Chest": "Rupees (300)",
-        "Palace of Darkness - Harmless Hellway": "Piece of Heart",
         "Palace of Darkness - Boss": "Blue Boomerang",
         "Palace of Darkness - Prize": "Blue Pendant",
         "Ganons Tower - Bob's Torch": "Small Key (Ganons Tower)",
-        "Ganons Tower - Hope Room - Left": "Small Key (Ganons Tower)",
-        "Ganons Tower - Hope Room - Right": "Arrows (10)",
-        "Ganons Tower - Conveyor Cross Pot Key": "Arrows (10)",
-        "Ganons Tower - Tile Room": "Sanctuary Heart Container",
         "Ganons Tower - Compass Room - Top Left": "Small Key (Ganons Tower)",
-        "Ganons Tower - Compass Room - Top Right": "Rupees (50)",
+        "Ganons Tower - DMs Room - Bottom Left": "Small Key (Ganons Tower)",
+        "Ganons Tower - DMs Room - Bottom Right": "Small Key (Ganons Tower)",
+        "Ganons Tower - DMs Room - Top Left": "Small Key (Ganons Tower)",
+        "Ganons Tower - Double Switch Pot Key": "Small Key (Ganons Tower)",
+        "Ganons Tower - Hope Room - Left": "Small Key (Ganons Tower)",
+        "Ganons Tower - Randomizer Room - Bottom Right": "Small Key (Ganons Tower)",
+        "Ganons Tower - Tile Room": "Sanctuary Heart Container",
         "Ganons Tower - Compass Room - Bottom Left": "Shovel",
         "Ganons Tower - Compass Room - Bottom Right": "Map (Ganons Tower)",
         "Ganons Tower - Conveyor Star Pits Pot Key": "Bottle (Bee)",
-        "Ganons Tower - DMs Room - Top Left": "Small Key (Ganons Tower)",
-        "Ganons Tower - DMs Room - Top Right": "Piece of Heart",
-        "Ganons Tower - DMs Room - Bottom Left": "Small Key (Ganons Tower)",
-        "Ganons Tower - DMs Room - Bottom Right": "Small Key (Ganons Tower)",
-        "Ganons Tower - Double Switch Pot Key": "Small Key (Ganons Tower)",
-        "Ganons Tower - Map Chest": "Progressive Shield",
-        "Ganons Tower - Firesnake Room": "Rupees (5)",
         "Ganons Tower - Randomizer Room - Top Left": "Big Key (Ganons Tower)",
-        "Ganons Tower - Randomizer Room - Top Right": "Rupees (20)",
-        "Ganons Tower - Randomizer Room - Bottom Left": "Boss Heart Container",
-        "Ganons Tower - Randomizer Room - Bottom Right": "Small Key (Ganons Tower)",
-        "Ganons Tower - Bob's Chest": "Boss Heart Container",
-        "Ganons Tower - Big Chest": "Rupees (20)",
         "Ganons Tower - Big Key Room - Left": "Compass (Ganons Tower)",
-        "Ganons Tower - Big Key Room - Right": "Rupees (20)",
-        "Ganons Tower - Big Key Chest": "Arrows (10)",
-        "Ganons Tower - Mini Helmasaur Room - Left": "Rupees (50)",
-        "Ganons Tower - Mini Helmasaur Room - Right": "Rupees (20)",
-        "Ganons Tower - Pre-Moldorm Chest": "Bombs (3)",
         "Ganons Tower - Mini Helmasaur Key Drop": "Magic Powder",
-        "Ganons Tower - Validation Chest": "Rupees (20)",
         "Agahnim 2": "Beat Agahnim 2",
         "Ganon": "Triforce",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Mushroom": False,
+        "Bottle Merchant": False,
+        "Flute Spot": True,
+        "Sunken Treasure": False,
+        "Purple Chest": True,
+        "Flute Activation Spot": True,
+        "Blind's Hideout - Top": False,
+        "Blind's Hideout - Left": True,
+        "Blind's Hideout - Right": True,
+        "Blind's Hideout - Far Left": False,
+        "Blind's Hideout - Far Right": False,
+        "Link's Uncle": False,
+        "Secret Passage": True,
+        "King Zora": False,
+        "Zora's Ledge": False,
+        "Waterfall Fairy - Left": True,
+        "Waterfall Fairy - Right": False,
+        "King's Tomb": False,
+        "Floodgate": True,
+        "Floodgate Chest": False,
+        "Link's House": False,
+        "Kakariko Tavern": False,
+        "Chicken House": False,
+        "Aginah's Cave": False,
+        "Sahasrahla's Hut - Left": False,
+        "Sahasrahla's Hut - Middle": True,
+        "Sahasrahla's Hut - Right": False,
+        "Sahasrahla": False,
+        "Kakariko Well - Top": False,
+        "Kakariko Well - Left": True,
+        "Kakariko Well - Middle": False,
+        "Kakariko Well - Right": False,
+        "Kakariko Well - Bottom": False,
+        "Blacksmith": False,
+        "Missing Smith": True,
+        "Magic Bat": False,
+        "Sick Kid": False,
+        "Hobo": False,
+        "Lost Woods Hideout": False,
+        "Lumberjack Tree": False,
+        "Cave 45": False,
+        "Graveyard Cave": False,
+        "Checkerboard Cave": False,
+        "Mini Moldorm Cave - Far Left": True,
+        "Mini Moldorm Cave - Left": False,
+        "Mini Moldorm Cave - Right": True,
+        "Mini Moldorm Cave - Far Right": False,
+        "Mini Moldorm Cave - Generous Guy": False,
+        "Ice Rod Cave": False,
+        "Bonk Rock Cave": False,
+        "Library": False,
+        "Potion Shop": False,
+        "Lake Hylia Island": False,
+        "Capacity Upgrade Shop": True,
+        "Maze Race": False,
+        "Desert Ledge": True,
+        "Desert Palace - Big Chest": True,
+        "Desert Palace - Torch": True,
+        "Desert Palace - Map Chest": True,
+        "Desert Palace - Compass Chest": False,
+        "Desert Palace - Big Key Chest": False,
+        "Desert Palace - Desert Tiles 1 Pot Key": True,
+        "Desert Palace - Beamos Hall Pot Key": True,
+        "Desert Palace - Desert Tiles 2 Pot Key": True,
+        "Desert Palace - Boss": False,
+        "Desert Palace - Prize": True,
+        "Eastern Palace - Compass Chest": True,
+        "Eastern Palace - Big Chest": False,
+        "Eastern Palace - Cannonball Chest": False,
+        "Eastern Palace - Dark Square Pot Key": True,
+        "Eastern Palace - Dark Eyegore Key Drop": True,
+        "Eastern Palace - Big Key Chest": True,
+        "Eastern Palace - Map Chest": True,
+        "Eastern Palace - Boss": False,
+        "Eastern Palace - Prize": True,
+        "Master Sword Pedestal": False,
+        "Hyrule Castle - Boomerang Chest": True,
+        "Hyrule Castle - Map Chest": True,
+        "Hyrule Castle - Zelda's Chest": False,
+        "Hyrule Castle - Map Guard Key Drop": True,
+        "Hyrule Castle - Boomerang Guard Key Drop": True,
+        "Hyrule Castle - Big Key Drop": False,
+        "Sewers - Dark Cross": False,
+        "Sewers - Key Rat Key Drop": True,
+        "Sewers - Secret Room - Left": False,
+        "Sewers - Secret Room - Middle": False,
+        "Sewers - Secret Room - Right": False,
+        "Sanctuary": True,
+        "Castle Tower - Room 03": True,
+        "Castle Tower - Dark Maze": True,
+        "Castle Tower - Dark Archer Key Drop": True,
+        "Castle Tower - Circle of Pots Key Drop": True,
+        "Agahnim 1": True,
+        "Old Man": False,
+        "Spectacle Rock Cave": True,
+        "Paradox Cave Lower - Far Left": False,
+        "Paradox Cave Lower - Left": True,
+        "Paradox Cave Lower - Right": True,
+        "Paradox Cave Lower - Far Right": False,
+        "Paradox Cave Lower - Middle": False,
+        "Paradox Cave Upper - Left": True,
+        "Paradox Cave Upper - Right": False,
+        "Spiral Cave": False,
+        "Ether Tablet": False,
+        "Spectacle Rock": False,
+        "Tower of Hera - Basement Cage": False,
+        "Tower of Hera - Map Chest": True,
+        "Tower of Hera - Big Key Chest": False,
+        "Tower of Hera - Compass Chest": False,
+        "Tower of Hera - Big Chest": False,
+        "Tower of Hera - Boss": True,
+        "Tower of Hera - Prize": True,
+        "Pyramid": False,
+        "Catfish": True,
+        "Stumpy": False,
+        "Digging Game": False,
+        "Bombos Tablet": True,
+        "Hype Cave - Top": False,
+        "Hype Cave - Middle Right": False,
+        "Hype Cave - Middle Left": False,
+        "Hype Cave - Bottom": False,
+        "Hype Cave - Generous Guy": False,
+        "Frog": True,
+        "Dark Blacksmith Ruins": True,
+        "Peg Cave": False,
+        "Pyramid Fairy - Left": False,
+        "Pyramid Fairy - Right": True,
+        "Brewery": False,
+        "C-Shaped House": True,
+        "Chest Game": False,
+        "Bumper Cave Ledge": True,
+        "Mire Shed - Left": False,
+        "Mire Shed - Right": True,
+        "Superbunny Cave - Top": False,
+        "Superbunny Cave - Bottom": True,
+        "Spike Cave": False,
+        "Hookshot Cave - Top Right": False,
+        "Hookshot Cave - Top Left": False,
+        "Hookshot Cave - Bottom Right": False,
+        "Hookshot Cave - Bottom Left": False,
+        "Floating Island": False,
+        "Mimic Cave": False,
+        "Swamp Palace - Entrance": True,
+        "Swamp Palace - Map Chest": True,
+        "Swamp Palace - Pot Row Pot Key": True,
+        "Swamp Palace - Trench 1 Pot Key": True,
+        "Swamp Palace - Big Chest": True,
+        "Swamp Palace - Compass Chest": True,
+        "Swamp Palace - Hookshot Pot Key": False,
+        "Swamp Palace - Trench 2 Pot Key": True,
+        "Swamp Palace - Big Key Chest": False,
+        "Swamp Palace - West Chest": False,
+        "Swamp Palace - Flooded Room - Left": True,
+        "Swamp Palace - Flooded Room - Right": False,
+        "Swamp Palace - Waterway Pot Key": True,
+        "Swamp Palace - Waterfall Room": True,
+        "Swamp Palace - Boss": False,
+        "Swamp Palace - Prize": True,
+        "Thieves' Town - Big Key Chest": False,
+        "Thieves' Town - Map Chest": True,
+        "Thieves' Town - Compass Chest": True,
+        "Thieves' Town - Ambush Chest": True,
+        "Thieves' Town - Attic": False,
+        "Thieves' Town - Big Chest": False,
+        "Thieves' Town - Hallway Pot Key": False,
+        "Thieves' Town - Spike Switch Pot Key": True,
+        "Thieves' Town - Blind's Cell": True,
+        "Thieves' Town - Boss": False,
+        "Thieves' Town - Prize": True,
+        "Skull Woods - Map Chest": True,
+        "Skull Woods - Pinball Room": False,
+        "Skull Woods - Compass Chest": True,
+        "Skull Woods - Pot Prison": True,
+        "Skull Woods - Big Chest": True,
+        "Skull Woods - Big Key Chest": False,
+        "Skull Woods - West Lobby Pot Key": True,
+        "Skull Woods - Bridge Room": True,
+        "Skull Woods - Spike Corner Key Drop": False,
+        "Skull Woods - Boss": False,
+        "Skull Woods - Prize": True,
+        "Ice Palace - Jelly Key Drop": True,
+        "Ice Palace - Compass Chest": True,
+        "Ice Palace - Conveyor Key Drop": True,
+        "Ice Palace - Freezor Chest": True,
+        "Ice Palace - Many Pots Pot Key": True,
+        "Ice Palace - Big Chest": True,
+        "Ice Palace - Iced T Room": False,
+        "Ice Palace - Spike Room": True,
+        "Ice Palace - Big Key Chest": False,
+        "Ice Palace - Map Chest": True,
+        "Ice Palace - Hammer Block Key Drop": False,
+        "Ice Palace - Boss": True,
+        "Ice Palace - Prize": True,
+        "Misery Mire - Big Chest": True,
+        "Misery Mire - Map Chest": True,
+        "Misery Mire - Main Lobby": True,
+        "Misery Mire - Bridge Chest": True,
+        "Misery Mire - Spike Chest": False,
+        "Misery Mire - Spikes Pot Key": True,
+        "Misery Mire - Fishbone Pot Key": True,
+        "Misery Mire - Conveyor Crystal Key Drop": False,
+        "Misery Mire - Compass Chest": True,
+        "Misery Mire - Big Key Chest": False,
+        "Misery Mire - Boss": False,
+        "Misery Mire - Prize": True,
+        "Turtle Rock - Compass Chest": True,
+        "Turtle Rock - Roller Room - Left": True,
+        "Turtle Rock - Roller Room - Right": False,
+        "Turtle Rock - Pokey 1 Key Drop": True,
+        "Turtle Rock - Chain Chomps": True,
+        "Turtle Rock - Big Key Chest": True,
+        "Turtle Rock - Pokey 2 Key Drop": True,
+        "Turtle Rock - Big Chest": True,
+        "Turtle Rock - Crystaroller Room": True,
+        "Turtle Rock - Eye Bridge - Bottom Left": True,
+        "Turtle Rock - Eye Bridge - Bottom Right": False,
+        "Turtle Rock - Eye Bridge - Top Left": False,
+        "Turtle Rock - Eye Bridge - Top Right": False,
+        "Turtle Rock - Boss": False,
+        "Turtle Rock - Prize": True,
+        "Palace of Darkness - Shooter Room": True,
+        "Palace of Darkness - The Arena - Bridge": True,
+        "Palace of Darkness - Stalfos Basement": True,
+        "Palace of Darkness - Big Key Chest": True,
+        "Palace of Darkness - The Arena - Ledge": True,
+        "Palace of Darkness - Map Chest": True,
+        "Palace of Darkness - Compass Chest": True,
+        "Palace of Darkness - Dark Basement - Left": False,
+        "Palace of Darkness - Dark Basement - Right": True,
+        "Palace of Darkness - Dark Maze - Top": False,
+        "Palace of Darkness - Dark Maze - Bottom": False,
+        "Palace of Darkness - Big Chest": False,
+        "Palace of Darkness - Harmless Hellway": False,
+        "Palace of Darkness - Boss": True,
+        "Palace of Darkness - Prize": True,
+        "Ganons Tower - Bob's Torch": True,
+        "Ganons Tower - Hope Room - Left": True,
+        "Ganons Tower - Hope Room - Right": False,
+        "Ganons Tower - Conveyor Cross Pot Key": False,
+        "Ganons Tower - Tile Room": False,
+        "Ganons Tower - Compass Room - Top Left": True,
+        "Ganons Tower - Compass Room - Top Right": False,
+        "Ganons Tower - Compass Room - Bottom Left": True,
+        "Ganons Tower - Compass Room - Bottom Right": False,
+        "Ganons Tower - Conveyor Star Pits Pot Key": True,
+        "Ganons Tower - DMs Room - Top Left": True,
+        "Ganons Tower - DMs Room - Top Right": False,
+        "Ganons Tower - DMs Room - Bottom Left": True,
+        "Ganons Tower - DMs Room - Bottom Right": True,
+        "Ganons Tower - Double Switch Pot Key": True,
+        "Ganons Tower - Map Chest": True,
+        "Ganons Tower - Firesnake Room": False,
+        "Ganons Tower - Randomizer Room - Top Left": True,
+        "Ganons Tower - Randomizer Room - Top Right": False,
+        "Ganons Tower - Randomizer Room - Bottom Left": False,
+        "Ganons Tower - Randomizer Room - Bottom Right": True,
+        "Ganons Tower - Bob's Chest": False,
+        "Ganons Tower - Big Chest": False,
+        "Ganons Tower - Big Key Room - Left": False,
+        "Ganons Tower - Big Key Room - Right": False,
+        "Ganons Tower - Big Key Chest": False,
+        "Ganons Tower - Mini Helmasaur Room - Left": False,
+        "Ganons Tower - Mini Helmasaur Room - Right": False,
+        "Ganons Tower - Pre-Moldorm Chest": False,
+        "Ganons Tower - Mini Helmasaur Key Drop": True,
+        "Ganons Tower - Validation Chest": False,
+        "Agahnim 2": True,
+        "Ganon": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -705,6 +978,7 @@ class ALTTPWorld(RuleWorldMixin, World):
         self.rupoor_cost = 10
         self.world_description = 'The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!'
         self.slot_data = types.SimpleNamespace(crystals_needed_for_gt=7, crystals_needed_for_ganon=7, open_pyramid=2, big_key_shuffle=0, small_key_shuffle=0, compass_shuffle=0, map_shuffle=0, progressive=2, swordless=0, retro_bow=0, retro_caves=0, shop_item_slots=0, boss_shuffle=0, pot_shuffle=0, enemy_shuffle=0, key_drop_shuffle=1, bombless_start=0, randomize_shop_inventories=0, shuffle_shop_inventories=0, shuffle_capacity_upgrades=0, entrance_shuffle=0, dark_room_logic=0, goal=0, mode=1, triforce_pieces_mode=2, triforce_pieces_percentage=150, triforce_pieces_required=20, triforce_pieces_available=30, triforce_pieces_extra=10, mm_medalion='Quake', tr_medalion='Ether')
+        self.crystals_needed_for_gt = 7
 
     def _create_shops(self, shops_data: list) -> list:
         """Convert shop data dicts to ShopWrapper objects."""
@@ -794,14 +1068,38 @@ class ALTTPWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = ALinktothePastWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = ALinktothePastWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = ALinktothePastWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -828,32 +1126,114 @@ class ALTTPWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = ALinktothePastWorldGenItem(name, data.classification, data.id, self.player)
+        # Handle items with mixed classifications (e.g., some progression, some filler)
+        classification_counts = getattr(data, 'classification_counts', None)
+        if classification_counts:
+            # Get or initialize the tracker for this item
+            if not hasattr(self, '_classification_trackers'):
+                self._classification_trackers = {}
+            if name not in self._classification_trackers:
+                self._classification_trackers[name] = {}
+            tracker = self._classification_trackers[name]
+
+            # Find the classification to use based on counts and what's been created
+            classification = data.classification  # Default
+            classification_map = {
+                'progression': ItemClassification.progression,
+                'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                'useful': ItemClassification.useful,
+                'trap': ItemClassification.trap,
+                'filler': ItemClassification.filler,
+            }
+            for class_name_str, quota in classification_counts.items():
+                created_count = tracker.get(class_name_str, 0)
+                if created_count < quota:
+                    classification = classification_map.get(class_name_str, ItemClassification.filler)
+                    tracker[class_name_str] = created_count + 1
+                    break
+
+            item = ALinktothePastWorldGenItem(name, classification, data.id, self.player)
+        else:
+            item = ALinktothePastWorldGenItem(name, data.classification, data.id, self.player)
         if data.hint_text:
             item._hint_text = data.hint_text
         return item

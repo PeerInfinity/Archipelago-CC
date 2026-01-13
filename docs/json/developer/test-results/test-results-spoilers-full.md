@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-12 22:13:27
+**Generated:** 2026-01-13 05:48:56
 
 **Source Data Created:** 2026-01-12T21:58:14.932147
 
@@ -31,7 +31,7 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 45.6KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 58.3KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -86,7 +86,7 @@
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 21.4KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 92.3KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 92.5KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |

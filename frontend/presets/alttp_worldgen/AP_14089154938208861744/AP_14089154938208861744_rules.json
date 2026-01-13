@@ -992,7 +992,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -1575,7 +1575,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -1860,7 +1860,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -2351,7 +2351,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -3305,41 +3305,16 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Eastern Palace - Big Key Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Eastern Palace)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Small Key (Eastern Palace)"
-                          }
-                        }
-                      ]
-                    },
-                    {
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Eastern Palace)",
                         "count": 2
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Eastern Palace)"
                       }
                     }
                   ]
@@ -5082,7 +5057,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -5579,35 +5554,10 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Tower of Hera - Big Key Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "==",
-                        "right": [
-                          "Small Key (Tower of Hera)",
-                          1
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Tower of Hera)"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Tower of Hera)"
+                  }
                 }
               ]
             }
@@ -7260,7 +7210,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -8487,7 +8437,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -8732,46 +8682,13 @@
             "name": "Swamp Palace - Big Chest",
             "id": 59785,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Swamp Palace - Big Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "==",
-                        "right": [
-                          "Big Key (Swamp Palace)",
-                          1
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Big Key (Swamp Palace)"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Big Key (Swamp Palace)",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Bow",
@@ -9321,48 +9238,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Thieves' Town - Big Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Small Key (Thieves Town)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Small Key (Thieves Town)",
-                            "count": 2
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Thieves Town)",
-                        "count": 3
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Thieves Town)",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "HasAll",
@@ -9836,50 +9716,17 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_use_bombs",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Big Key (Skull Woods)"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Skull Woods - Big Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "==",
-                        "right": [
-                          "Big Key (Skull Woods)",
-                          1
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Moon Pearl"
+                    "items": [
+                      "Big Key (Skull Woods)",
+                      "Moon Pearl"
+                    ]
                   }
                 }
               ]
@@ -10393,52 +10240,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "Has",
                   "args": {
-                    "test": {
-                      "rule": "AST_placement_search",
-                      "args": {
-                        "item": "Big Key (Ice Palace)",
-                        "player": 1,
-                        "locations": [
-                          [
-                            "Ice Palace - Spike Room",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Hammer Block Key Drop",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Big Key Chest",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Map Chest",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "placement_search"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "if_true": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Ice Palace)",
-                        "count": 4
-                      }
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Ice Palace)",
-                        "count": 6
-                      }
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Ice Palace)",
+                    "count": 6
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10931,74 +10737,11 @@
             "name": "Misery Mire (West)",
             "connected_region": "Misery Mire (West)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Misery Mire - Big Key Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Misery Mire - Compass Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Misery Mire)",
-                    "count": 5
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Misery Mire)",
-                    "count": 6
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Misery Mire)",
+                "count": 5
+              }
             }
           },
           {
@@ -11283,90 +11026,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "Has",
                   "args": {
-                    "test": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Big Key Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Compass Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Conveyor Crystal Key Drop",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Misery Mire)",
-                        "count": 4
-                      }
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Misery Mire)",
-                        "count": 5
-                      }
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Misery Mire)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11800,48 +11464,11 @@
             "name": "Turtle Rock (Pokey Room) (South)",
             "connected_region": "Turtle Rock (First Section)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "AST_placement_search",
-                  "args": {
-                    "item": "Big Key (Turtle Rock)",
-                    "player": 1,
-                    "locations": [
-                      [
-                        "Turtle Rock - Compass Chest",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Left",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Right",
-                        1
-                      ]
-                    ],
-                    "_original_ast_type": "placement_search"
-                  },
-                  "_converted_from_ast": true
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 4
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 6
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 6
+              }
             }
           }
         ],
@@ -11908,35 +11535,11 @@
             "name": "Turtle Rock (Chain Chomp Room) (South)",
             "connected_region": "Turtle Rock (Pokey Room)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "AST_placement_search",
-                  "args": {
-                    "item": "Big Key (Turtle Rock)",
-                    "player": 1,
-                    "locations": [],
-                    "_original_ast_type": "placement_search"
-                  },
-                  "_converted_from_ast": true
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 3
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 5
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 5
+              }
             }
           }
         ],
@@ -14972,7 +14575,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -15084,7 +14687,7 @@
             "item": {
               "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true,
@@ -17709,7 +17312,11 @@
         "event": false,
         "type": null,
         "max_count": 10,
-        "hint_text": "a heart"
+        "hint_text": "a heart",
+        "classification_counts": {
+          "useful": 9,
+          "progression": 1
+        }
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",
@@ -19379,272 +18986,272 @@
   },
   "canonical_placements": {
     "1": {
+      "Aginah's Cave": "Rupees (20)",
+      "Cave 45": "Rupees (20)",
+      "Floating Island": "Rupees (20)",
+      "Ganons Tower - Big Chest": "Rupees (20)",
+      "Ganons Tower - Big Key Room - Right": "Rupees (20)",
+      "Ganons Tower - Mini Helmasaur Room - Right": "Rupees (20)",
+      "Ganons Tower - Randomizer Room - Top Right": "Rupees (20)",
+      "Ganons Tower - Validation Chest": "Rupees (20)",
+      "Hookshot Cave - Bottom Left": "Rupees (20)",
+      "Hookshot Cave - Top Left": "Rupees (20)",
+      "Hookshot Cave - Top Right": "Rupees (20)",
+      "Hype Cave - Middle Left": "Rupees (20)",
+      "Kakariko Tavern": "Rupees (20)",
+      "Kakariko Well - Bottom": "Rupees (20)",
+      "Master Sword Pedestal": "Rupees (20)",
+      "Mini Moldorm Cave - Far Right": "Rupees (20)",
+      "Misery Mire - Spike Chest": "Rupees (20)",
       "Mushroom": "Rupees (20)",
+      "Palace of Darkness - Dark Basement - Left": "Rupees (20)",
+      "Paradox Cave Upper - Right": "Rupees (20)",
+      "Sahasrahla's Hut - Left": "Rupees (20)",
+      "Sewers - Secret Room - Right": "Rupees (20)",
+      "Spike Cave": "Rupees (20)",
+      "Stumpy": "Rupees (20)",
+      "Superbunny Cave - Top": "Rupees (20)",
+      "Thieves' Town - Attic": "Rupees (20)",
+      "Tower of Hera - Compass Chest": "Rupees (20)",
+      "Waterfall Fairy - Right": "Rupees (20)",
+      "Blacksmith": "Piece of Heart",
+      "Blind's Hideout - Far Left": "Piece of Heart",
       "Bottle Merchant": "Piece of Heart",
+      "Chest Game": "Piece of Heart",
+      "Chicken House": "Piece of Heart",
+      "Eastern Palace - Cannonball Chest": "Piece of Heart",
+      "Ganons Tower - DMs Room - Top Right": "Piece of Heart",
+      "Hobo": "Piece of Heart",
+      "Hype Cave - Bottom": "Piece of Heart",
+      "Hype Cave - Middle Right": "Piece of Heart",
+      "Kakariko Well - Right": "Piece of Heart",
+      "Link's Uncle": "Piece of Heart",
+      "Lost Woods Hideout": "Piece of Heart",
+      "Magic Bat": "Piece of Heart",
+      "Palace of Darkness - Harmless Hellway": "Piece of Heart",
+      "Sewers - Dark Cross": "Piece of Heart",
+      "Sewers - Secret Room - Left": "Piece of Heart",
+      "Sewers - Secret Room - Middle": "Piece of Heart",
+      "Swamp Palace - Flooded Room - Right": "Piece of Heart",
+      "Swamp Palace - Hookshot Pot Key": "Piece of Heart",
+      "Thieves' Town - Boss": "Piece of Heart",
+      "Thieves' Town - Hallway Pot Key": "Piece of Heart",
+      "Turtle Rock - Eye Bridge - Bottom Right": "Piece of Heart",
+      "Turtle Rock - Eye Bridge - Top Right": "Piece of Heart",
+      "Bumper Cave Ledge": "Progressive Sword",
       "Flute Spot": "Progressive Sword",
+      "Ice Palace - Compass Chest": "Progressive Sword",
+      "Kakariko Well - Left": "Progressive Sword",
+      "Desert Palace - Boss": "Rupees (50)",
+      "Ganons Tower - Compass Room - Top Right": "Rupees (50)",
+      "Ganons Tower - Mini Helmasaur Room - Left": "Rupees (50)",
+      "Ice Rod Cave": "Rupees (50)",
+      "Pyramid": "Rupees (50)",
+      "Sahasrahla's Hut - Right": "Rupees (50)",
       "Sunken Treasure": "Rupees (50)",
       "Purple Chest": "Cane of Somaria",
       "Flute Activation Spot": "Activated Flute",
       "Blind's Hideout - Top": "Rupees (5)",
+      "Ganons Tower - Firesnake Room": "Rupees (5)",
+      "Kakariko Well - Middle": "Rupees (5)",
+      "Paradox Cave Lower - Middle": "Rupees (5)",
       "Blind's Hideout - Left": "Flute",
       "Blind's Hideout - Right": "Quake",
-      "Blind's Hideout - Far Left": "Piece of Heart",
       "Blind's Hideout - Far Right": "Arrows (10)",
-      "Link's Uncle": "Piece of Heart",
+      "Checkerboard Cave": "Arrows (10)",
+      "Ether Tablet": "Arrows (10)",
+      "Floodgate Chest": "Arrows (10)",
+      "Ganons Tower - Big Key Chest": "Arrows (10)",
+      "Ganons Tower - Conveyor Cross Pot Key": "Arrows (10)",
+      "Ganons Tower - Hope Room - Right": "Arrows (10)",
+      "Lake Hylia Island": "Arrows (10)",
+      "Maze Race": "Arrows (10)",
+      "Old Man": "Arrows (10)",
+      "Skull Woods - Spike Corner Key Drop": "Arrows (10)",
+      "Turtle Rock - Roller Room - Right": "Arrows (10)",
       "Secret Passage": "Ice Rod",
       "King Zora": "Single Arrow",
+      "Palace of Darkness - Big Key Chest": "Boss Heart Container",
+      "Bonk Rock Cave": "Boss Heart Container",
+      "Brewery": "Boss Heart Container",
+      "Ganons Tower - Bob's Chest": "Boss Heart Container",
+      "Ganons Tower - Randomizer Room - Bottom Left": "Boss Heart Container",
+      "Mimic Cave": "Boss Heart Container",
+      "Paradox Cave Lower - Far Right": "Boss Heart Container",
+      "Sahasrahla": "Boss Heart Container",
+      "Sick Kid": "Boss Heart Container",
       "Zora's Ledge": "Boss Heart Container",
+      "C-Shaped House": "Bottle (Blue Potion)",
       "Waterfall Fairy - Left": "Bottle (Blue Potion)",
-      "Waterfall Fairy - Right": "Rupees (20)",
+      "Graveyard Cave": "Rupee (1)",
       "King's Tomb": "Rupee (1)",
       "Floodgate": "Open Floodgate",
-      "Floodgate Chest": "Arrows (10)",
+      "Ganons Tower - Pre-Moldorm Chest": "Bombs (3)",
+      "Hookshot Cave - Bottom Right": "Bombs (3)",
+      "Hype Cave - Top": "Bombs (3)",
+      "Ice Palace - Big Key Chest": "Bombs (3)",
       "Link's House": "Bombs (3)",
-      "Kakariko Tavern": "Rupees (20)",
-      "Chicken House": "Piece of Heart",
-      "Aginah's Cave": "Rupees (20)",
-      "Sahasrahla's Hut - Left": "Rupees (20)",
-      "Sahasrahla's Hut - Middle": "Hookshot",
-      "Sahasrahla's Hut - Right": "Rupees (50)",
-      "Sahasrahla": "Boss Heart Container",
-      "Kakariko Well - Top": "Rupees (300)",
-      "Kakariko Well - Left": "Progressive Sword",
-      "Kakariko Well - Middle": "Rupees (5)",
-      "Kakariko Well - Right": "Piece of Heart",
-      "Kakariko Well - Bottom": "Rupees (20)",
-      "Blacksmith": "Piece of Heart",
-      "Missing Smith": "Return Smith",
-      "Magic Bat": "Piece of Heart",
-      "Sick Kid": "Boss Heart Container",
-      "Hobo": "Piece of Heart",
-      "Lost Woods Hideout": "Piece of Heart",
-      "Lumberjack Tree": "Rupees (300)",
-      "Cave 45": "Rupees (20)",
-      "Graveyard Cave": "Rupee (1)",
-      "Checkerboard Cave": "Arrows (10)",
-      "Mini Moldorm Cave - Far Left": "Cape",
-      "Mini Moldorm Cave - Left": "Bombs (3)",
-      "Mini Moldorm Cave - Right": "Moon Pearl",
-      "Mini Moldorm Cave - Far Right": "Rupees (20)",
       "Mini Moldorm Cave - Generous Guy": "Bombs (3)",
-      "Ice Rod Cave": "Rupees (50)",
-      "Bonk Rock Cave": "Boss Heart Container",
+      "Mini Moldorm Cave - Left": "Bombs (3)",
+      "Mire Shed - Left": "Bombs (3)",
+      "Misery Mire - Big Key Chest": "Bombs (3)",
+      "Paradox Cave Lower - Far Left": "Bombs (3)",
+      "Peg Cave": "Bombs (3)",
+      "Pyramid Fairy - Left": "Bombs (3)",
+      "Skull Woods - Pinball Room": "Bombs (3)",
+      "Spiral Cave": "Bombs (3)",
+      "Swamp Palace - Boss": "Bombs (3)",
+      "Tower of Hera - Big Key Chest": "Bombs (3)",
+      "Sahasrahla's Hut - Middle": "Hookshot",
+      "Hype Cave - Generous Guy": "Rupees (300)",
+      "Kakariko Well - Top": "Rupees (300)",
       "Library": "Rupees (300)",
+      "Lumberjack Tree": "Rupees (300)",
+      "Palace of Darkness - Big Chest": "Rupees (300)",
+      "Missing Smith": "Return Smith",
+      "Mini Moldorm Cave - Far Left": "Cape",
+      "Mini Moldorm Cave - Right": "Moon Pearl",
+      "Hyrule Castle - Zelda's Chest": "Progressive Mail",
       "Potion Shop": "Progressive Mail",
-      "Lake Hylia Island": "Arrows (10)",
       "Capacity Upgrade Shop": "Capacity Upgrade Shop",
-      "Maze Race": "Arrows (10)",
       "Desert Ledge": "Bombos",
+      "Desert Palace - Beamos Hall Pot Key": "Small Key (Desert Palace)",
       "Desert Palace - Big Chest": "Small Key (Desert Palace)",
+      "Desert Palace - Desert Tiles 1 Pot Key": "Small Key (Desert Palace)",
+      "Desert Palace - Desert Tiles 2 Pot Key": "Small Key (Desert Palace)",
       "Desert Palace - Torch": "Bug Catching Net",
       "Desert Palace - Map Chest": "Big Key (Desert Palace)",
       "Desert Palace - Compass Chest": "Map (Desert Palace)",
       "Desert Palace - Big Key Chest": "Compass (Desert Palace)",
-      "Desert Palace - Desert Tiles 1 Pot Key": "Small Key (Desert Palace)",
-      "Desert Palace - Beamos Hall Pot Key": "Small Key (Desert Palace)",
-      "Desert Palace - Desert Tiles 2 Pot Key": "Small Key (Desert Palace)",
-      "Desert Palace - Boss": "Rupees (50)",
       "Desert Palace - Prize": "Red Pendant",
       "Eastern Palace - Compass Chest": "Mushroom",
       "Eastern Palace - Big Chest": "Map (Eastern Palace)",
-      "Eastern Palace - Cannonball Chest": "Piece of Heart",
-      "Eastern Palace - Dark Square Pot Key": "Small Key (Eastern Palace)",
       "Eastern Palace - Dark Eyegore Key Drop": "Small Key (Eastern Palace)",
+      "Eastern Palace - Dark Square Pot Key": "Small Key (Eastern Palace)",
       "Eastern Palace - Big Key Chest": "Big Key (Eastern Palace)",
       "Eastern Palace - Map Chest": "Lamp",
       "Eastern Palace - Boss": "Compass (Eastern Palace)",
       "Eastern Palace - Prize": "Crystal 2",
-      "Master Sword Pedestal": "Rupees (20)",
       "Hyrule Castle - Boomerang Chest": "Small Key (Hyrule Castle)",
-      "Hyrule Castle - Map Chest": "Big Key (Hyrule Castle)",
-      "Hyrule Castle - Zelda's Chest": "Progressive Mail",
       "Hyrule Castle - Map Guard Key Drop": "Small Key (Hyrule Castle)",
-      "Hyrule Castle - Boomerang Guard Key Drop": "Progressive Shield",
-      "Hyrule Castle - Big Key Drop": "Map (Hyrule Castle)",
-      "Sewers - Dark Cross": "Piece of Heart",
-      "Sewers - Key Rat Key Drop": "Small Key (Hyrule Castle)",
-      "Sewers - Secret Room - Left": "Piece of Heart",
-      "Sewers - Secret Room - Middle": "Piece of Heart",
-      "Sewers - Secret Room - Right": "Rupees (20)",
       "Sanctuary": "Small Key (Hyrule Castle)",
-      "Castle Tower - Room 03": "Small Key (Agahnims Tower)",
-      "Castle Tower - Dark Maze": "Small Key (Agahnims Tower)",
-      "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
+      "Sewers - Key Rat Key Drop": "Small Key (Hyrule Castle)",
+      "Hyrule Castle - Map Chest": "Big Key (Hyrule Castle)",
+      "Ganons Tower - Map Chest": "Progressive Shield",
+      "Hyrule Castle - Boomerang Guard Key Drop": "Progressive Shield",
+      "Mire Shed - Right": "Progressive Shield",
+      "Hyrule Castle - Big Key Drop": "Map (Hyrule Castle)",
       "Castle Tower - Circle of Pots Key Drop": "Small Key (Agahnims Tower)",
+      "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
+      "Castle Tower - Dark Maze": "Small Key (Agahnims Tower)",
+      "Castle Tower - Room 03": "Small Key (Agahnims Tower)",
       "Agahnim 1": "Beat Agahnim 1",
-      "Old Man": "Arrows (10)",
+      "Catfish": "Progressive Glove",
       "Spectacle Rock Cave": "Progressive Glove",
-      "Paradox Cave Lower - Far Left": "Bombs (3)",
       "Paradox Cave Lower - Left": "Bottle (Red Potion)",
       "Paradox Cave Lower - Right": "Magic Mirror",
-      "Paradox Cave Lower - Far Right": "Boss Heart Container",
-      "Paradox Cave Lower - Middle": "Rupees (5)",
       "Paradox Cave Upper - Left": "Book of Mudora",
-      "Paradox Cave Upper - Right": "Rupees (20)",
-      "Spiral Cave": "Bombs (3)",
-      "Ether Tablet": "Arrows (10)",
       "Spectacle Rock": "Rupees (100)",
       "Tower of Hera - Basement Cage": "Compass (Tower of Hera)",
       "Tower of Hera - Map Chest": "Big Key (Tower of Hera)",
-      "Tower of Hera - Big Key Chest": "Bombs (3)",
-      "Tower of Hera - Compass Chest": "Rupees (20)",
       "Tower of Hera - Big Chest": "Map (Tower of Hera)",
       "Tower of Hera - Boss": "Small Key (Tower of Hera)",
       "Tower of Hera - Prize": "Crystal 7",
-      "Pyramid": "Rupees (50)",
-      "Catfish": "Progressive Glove",
-      "Stumpy": "Rupees (20)",
       "Digging Game": "Bombs (10)",
       "Bombos Tablet": "Hammer",
-      "Hype Cave - Top": "Bombs (3)",
-      "Hype Cave - Middle Right": "Piece of Heart",
-      "Hype Cave - Middle Left": "Rupees (20)",
-      "Hype Cave - Bottom": "Piece of Heart",
-      "Hype Cave - Generous Guy": "Rupees (300)",
       "Frog": "Get Frog",
       "Dark Blacksmith Ruins": "Pick Up Purple Chest",
-      "Peg Cave": "Bombs (3)",
-      "Pyramid Fairy - Left": "Bombs (3)",
       "Pyramid Fairy - Right": "Progressive Bow",
-      "Brewery": "Boss Heart Container",
-      "C-Shaped House": "Bottle (Blue Potion)",
-      "Chest Game": "Piece of Heart",
-      "Bumper Cave Ledge": "Progressive Sword",
-      "Mire Shed - Left": "Bombs (3)",
-      "Mire Shed - Right": "Progressive Shield",
-      "Superbunny Cave - Top": "Rupees (20)",
-      "Superbunny Cave - Bottom": "Ether",
-      "Spike Cave": "Rupees (20)",
-      "Hookshot Cave - Top Right": "Rupees (20)",
-      "Hookshot Cave - Top Left": "Rupees (20)",
-      "Hookshot Cave - Bottom Right": "Bombs (3)",
-      "Hookshot Cave - Bottom Left": "Rupees (20)",
-      "Floating Island": "Rupees (20)",
-      "Mimic Cave": "Boss Heart Container",
-      "Swamp Palace - Entrance": "Small Key (Swamp Palace)",
-      "Swamp Palace - Map Chest": "Small Key (Swamp Palace)",
-      "Swamp Palace - Pot Row Pot Key": "Big Key (Swamp Palace)",
-      "Swamp Palace - Trench 1 Pot Key": "Small Key (Swamp Palace)",
       "Swamp Palace - Big Chest": "Progressive Bow",
+      "Superbunny Cave - Bottom": "Ether",
       "Swamp Palace - Compass Chest": "Small Key (Swamp Palace)",
-      "Swamp Palace - Hookshot Pot Key": "Piece of Heart",
+      "Swamp Palace - Entrance": "Small Key (Swamp Palace)",
+      "Swamp Palace - Flooded Room - Left": "Small Key (Swamp Palace)",
+      "Swamp Palace - Map Chest": "Small Key (Swamp Palace)",
+      "Swamp Palace - Trench 1 Pot Key": "Small Key (Swamp Palace)",
       "Swamp Palace - Trench 2 Pot Key": "Small Key (Swamp Palace)",
+      "Swamp Palace - Pot Row Pot Key": "Big Key (Swamp Palace)",
       "Swamp Palace - Big Key Chest": "Map (Swamp Palace)",
       "Swamp Palace - West Chest": "Compass (Swamp Palace)",
-      "Swamp Palace - Flooded Room - Left": "Small Key (Swamp Palace)",
-      "Swamp Palace - Flooded Room - Right": "Piece of Heart",
       "Swamp Palace - Waterway Pot Key": "Pegasus Boots",
       "Swamp Palace - Waterfall Room": "Cane of Byrna",
-      "Swamp Palace - Boss": "Bombs (3)",
       "Swamp Palace - Prize": "Crystal 5",
       "Thieves' Town - Big Key Chest": "Map (Thieves Town)",
+      "Thieves' Town - Blind's Cell": "Small Key (Thieves Town)",
       "Thieves' Town - Map Chest": "Small Key (Thieves Town)",
+      "Thieves' Town - Spike Switch Pot Key": "Small Key (Thieves Town)",
       "Thieves' Town - Compass Chest": "Flippers",
       "Thieves' Town - Ambush Chest": "Big Key (Thieves Town)",
-      "Thieves' Town - Attic": "Rupees (20)",
       "Thieves' Town - Big Chest": "Compass (Thieves Town)",
-      "Thieves' Town - Hallway Pot Key": "Piece of Heart",
-      "Thieves' Town - Spike Switch Pot Key": "Small Key (Thieves Town)",
-      "Thieves' Town - Blind's Cell": "Small Key (Thieves Town)",
-      "Thieves' Town - Boss": "Piece of Heart",
       "Thieves' Town - Prize": "Crystal 4",
-      "Skull Woods - Map Chest": "Small Key (Skull Woods)",
-      "Skull Woods - Pinball Room": "Bombs (3)",
-      "Skull Woods - Compass Chest": "Small Key (Skull Woods)",
-      "Skull Woods - Pot Prison": "Small Key (Skull Woods)",
       "Skull Woods - Big Chest": "Small Key (Skull Woods)",
-      "Skull Woods - Big Key Chest": "Map (Skull Woods)",
+      "Skull Woods - Compass Chest": "Small Key (Skull Woods)",
+      "Skull Woods - Map Chest": "Small Key (Skull Woods)",
+      "Skull Woods - Pot Prison": "Small Key (Skull Woods)",
       "Skull Woods - West Lobby Pot Key": "Small Key (Skull Woods)",
+      "Skull Woods - Big Key Chest": "Map (Skull Woods)",
       "Skull Woods - Bridge Room": "Big Key (Skull Woods)",
-      "Skull Woods - Spike Corner Key Drop": "Arrows (10)",
       "Skull Woods - Boss": "Compass (Skull Woods)",
       "Skull Woods - Prize": "Green Pendant",
-      "Ice Palace - Jelly Key Drop": "Small Key (Ice Palace)",
-      "Ice Palace - Compass Chest": "Progressive Sword",
+      "Ice Palace - Boss": "Small Key (Ice Palace)",
       "Ice Palace - Conveyor Key Drop": "Small Key (Ice Palace)",
       "Ice Palace - Freezor Chest": "Small Key (Ice Palace)",
+      "Ice Palace - Jelly Key Drop": "Small Key (Ice Palace)",
       "Ice Palace - Many Pots Pot Key": "Small Key (Ice Palace)",
+      "Ice Palace - Map Chest": "Small Key (Ice Palace)",
       "Ice Palace - Big Chest": "Fire Rod",
       "Ice Palace - Iced T Room": "Map (Ice Palace)",
       "Ice Palace - Spike Room": "Big Key (Ice Palace)",
-      "Ice Palace - Big Key Chest": "Bombs (3)",
-      "Ice Palace - Map Chest": "Small Key (Ice Palace)",
       "Ice Palace - Hammer Block Key Drop": "Compass (Ice Palace)",
-      "Ice Palace - Boss": "Small Key (Ice Palace)",
       "Ice Palace - Prize": "Crystal 1",
       "Misery Mire - Big Chest": "Small Key (Misery Mire)",
-      "Misery Mire - Map Chest": "Small Key (Misery Mire)",
-      "Misery Mire - Main Lobby": "Small Key (Misery Mire)",
       "Misery Mire - Bridge Chest": "Small Key (Misery Mire)",
-      "Misery Mire - Spike Chest": "Rupees (20)",
-      "Misery Mire - Spikes Pot Key": "Small Key (Misery Mire)",
       "Misery Mire - Fishbone Pot Key": "Small Key (Misery Mire)",
+      "Misery Mire - Main Lobby": "Small Key (Misery Mire)",
+      "Misery Mire - Map Chest": "Small Key (Misery Mire)",
+      "Misery Mire - Spikes Pot Key": "Small Key (Misery Mire)",
       "Misery Mire - Conveyor Crystal Key Drop": "Map (Misery Mire)",
       "Misery Mire - Compass Chest": "Big Key (Misery Mire)",
-      "Misery Mire - Big Key Chest": "Bombs (3)",
       "Misery Mire - Boss": "Compass (Misery Mire)",
       "Misery Mire - Prize": "Crystal 6",
-      "Turtle Rock - Compass Chest": "Small Key (Turtle Rock)",
-      "Turtle Rock - Roller Room - Left": "Big Key (Turtle Rock)",
-      "Turtle Rock - Roller Room - Right": "Arrows (10)",
-      "Turtle Rock - Pokey 1 Key Drop": "Small Key (Turtle Rock)",
-      "Turtle Rock - Chain Chomps": "Small Key (Turtle Rock)",
-      "Turtle Rock - Big Key Chest": "Small Key (Turtle Rock)",
-      "Turtle Rock - Pokey 2 Key Drop": "Magic Upgrade (1/2)",
       "Turtle Rock - Big Chest": "Small Key (Turtle Rock)",
-      "Turtle Rock - Crystaroller Room": "Red Boomerang",
+      "Turtle Rock - Big Key Chest": "Small Key (Turtle Rock)",
+      "Turtle Rock - Chain Chomps": "Small Key (Turtle Rock)",
+      "Turtle Rock - Compass Chest": "Small Key (Turtle Rock)",
       "Turtle Rock - Eye Bridge - Bottom Left": "Small Key (Turtle Rock)",
-      "Turtle Rock - Eye Bridge - Bottom Right": "Piece of Heart",
+      "Turtle Rock - Pokey 1 Key Drop": "Small Key (Turtle Rock)",
+      "Turtle Rock - Roller Room - Left": "Big Key (Turtle Rock)",
+      "Turtle Rock - Pokey 2 Key Drop": "Magic Upgrade (1/2)",
+      "Turtle Rock - Crystaroller Room": "Red Boomerang",
       "Turtle Rock - Eye Bridge - Top Left": "Map (Turtle Rock)",
-      "Turtle Rock - Eye Bridge - Top Right": "Piece of Heart",
       "Turtle Rock - Boss": "Compass (Turtle Rock)",
       "Turtle Rock - Prize": "Crystal 3",
       "Palace of Darkness - Shooter Room": "Big Key (Palace of Darkness)",
-      "Palace of Darkness - The Arena - Bridge": "Small Key (Palace of Darkness)",
-      "Palace of Darkness - Stalfos Basement": "Small Key (Palace of Darkness)",
-      "Palace of Darkness - Big Key Chest": "Boss Heart Container",
-      "Palace of Darkness - The Arena - Ledge": "Small Key (Palace of Darkness)",
-      "Palace of Darkness - Map Chest": "Small Key (Palace of Darkness)",
       "Palace of Darkness - Compass Chest": "Small Key (Palace of Darkness)",
-      "Palace of Darkness - Dark Basement - Left": "Rupees (20)",
       "Palace of Darkness - Dark Basement - Right": "Small Key (Palace of Darkness)",
+      "Palace of Darkness - Map Chest": "Small Key (Palace of Darkness)",
+      "Palace of Darkness - Stalfos Basement": "Small Key (Palace of Darkness)",
+      "Palace of Darkness - The Arena - Bridge": "Small Key (Palace of Darkness)",
+      "Palace of Darkness - The Arena - Ledge": "Small Key (Palace of Darkness)",
       "Palace of Darkness - Dark Maze - Top": "Compass (Palace of Darkness)",
       "Palace of Darkness - Dark Maze - Bottom": "Map (Palace of Darkness)",
-      "Palace of Darkness - Big Chest": "Rupees (300)",
-      "Palace of Darkness - Harmless Hellway": "Piece of Heart",
       "Palace of Darkness - Boss": "Blue Boomerang",
       "Palace of Darkness - Prize": "Blue Pendant",
       "Ganons Tower - Bob's Torch": "Small Key (Ganons Tower)",
-      "Ganons Tower - Hope Room - Left": "Small Key (Ganons Tower)",
-      "Ganons Tower - Hope Room - Right": "Arrows (10)",
-      "Ganons Tower - Conveyor Cross Pot Key": "Arrows (10)",
-      "Ganons Tower - Tile Room": "Sanctuary Heart Container",
       "Ganons Tower - Compass Room - Top Left": "Small Key (Ganons Tower)",
-      "Ganons Tower - Compass Room - Top Right": "Rupees (50)",
+      "Ganons Tower - DMs Room - Bottom Left": "Small Key (Ganons Tower)",
+      "Ganons Tower - DMs Room - Bottom Right": "Small Key (Ganons Tower)",
+      "Ganons Tower - DMs Room - Top Left": "Small Key (Ganons Tower)",
+      "Ganons Tower - Double Switch Pot Key": "Small Key (Ganons Tower)",
+      "Ganons Tower - Hope Room - Left": "Small Key (Ganons Tower)",
+      "Ganons Tower - Randomizer Room - Bottom Right": "Small Key (Ganons Tower)",
+      "Ganons Tower - Tile Room": "Sanctuary Heart Container",
       "Ganons Tower - Compass Room - Bottom Left": "Shovel",
       "Ganons Tower - Compass Room - Bottom Right": "Map (Ganons Tower)",
       "Ganons Tower - Conveyor Star Pits Pot Key": "Bottle (Bee)",
-      "Ganons Tower - DMs Room - Top Left": "Small Key (Ganons Tower)",
-      "Ganons Tower - DMs Room - Top Right": "Piece of Heart",
-      "Ganons Tower - DMs Room - Bottom Left": "Small Key (Ganons Tower)",
-      "Ganons Tower - DMs Room - Bottom Right": "Small Key (Ganons Tower)",
-      "Ganons Tower - Double Switch Pot Key": "Small Key (Ganons Tower)",
-      "Ganons Tower - Map Chest": "Progressive Shield",
-      "Ganons Tower - Firesnake Room": "Rupees (5)",
       "Ganons Tower - Randomizer Room - Top Left": "Big Key (Ganons Tower)",
-      "Ganons Tower - Randomizer Room - Top Right": "Rupees (20)",
-      "Ganons Tower - Randomizer Room - Bottom Left": "Boss Heart Container",
-      "Ganons Tower - Randomizer Room - Bottom Right": "Small Key (Ganons Tower)",
-      "Ganons Tower - Bob's Chest": "Boss Heart Container",
-      "Ganons Tower - Big Chest": "Rupees (20)",
       "Ganons Tower - Big Key Room - Left": "Compass (Ganons Tower)",
-      "Ganons Tower - Big Key Room - Right": "Rupees (20)",
-      "Ganons Tower - Big Key Chest": "Arrows (10)",
-      "Ganons Tower - Mini Helmasaur Room - Left": "Rupees (50)",
-      "Ganons Tower - Mini Helmasaur Room - Right": "Rupees (20)",
-      "Ganons Tower - Pre-Moldorm Chest": "Bombs (3)",
       "Ganons Tower - Mini Helmasaur Key Drop": "Magic Powder",
-      "Ganons Tower - Validation Chest": "Rupees (20)",
       "Agahnim 2": "Beat Agahnim 2",
       "Ganon": "Triforce"
     }
@@ -21284,6 +20891,7 @@
       "save_and_quit_from_boss": true,
       "rupoor_cost": 10,
       "world_description": "The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!",
+      "crystals_needed_for_gt": 7,
       "slot_data": {
         "crystals_needed_for_gt": 7,
         "crystals_needed_for_ganon": 7,
@@ -21418,7 +21026,89 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "bunny_rules": {
+        "bunny_impassable_caves": [
+          "Bumper Cave",
+          "Desert Palace Main (Inner)",
+          "Fairy Ascension Cave (Drop)",
+          "Hookshot Cave",
+          "Pyramid",
+          "Sewers",
+          "Skull Woods First Section (Left)",
+          "Skull Woods First Section (Right)",
+          "Skull Woods First Section (Top)",
+          "Skull Woods Second Section (Drop)",
+          "Spiral Cave (Top)",
+          "Turtle Rock (Big Chest)",
+          "Turtle Rock (Entrance)",
+          "Turtle Rock (Eye Bridge)",
+          "Turtle Rock (Second Section)",
+          "Two Brothers House"
+        ],
+        "bunny_accessible_locations": [
+          "Blacksmith",
+          "Bombos Tablet",
+          "Bottle Merchant",
+          "Bumper Cave Ledge",
+          "Checkerboard Cave",
+          "Dark Blacksmith Ruins",
+          "Desert Ledge",
+          "Ether Tablet",
+          "Hype Cave - Generous Guy",
+          "Link's Uncle",
+          "Lost Woods Hideout",
+          "Lumberjack Tree",
+          "Master Sword Pedestal",
+          "Missing Smith",
+          "Peg Cave",
+          "Potion Shop",
+          "Purple Chest",
+          "Pyramid",
+          "Sahasrahla",
+          "Sick Kid",
+          "Spectacle Rock",
+          "Spectacle Rock Cave",
+          "Sunken Treasure"
+        ],
+        "mandatory_superbunny_locations": [
+          "Kakariko Well - Bottom",
+          "Kakariko Well - Left",
+          "Kakariko Well - Middle",
+          "Kakariko Well - Right",
+          "Superbunny Cave - Bottom",
+          "Superbunny Cave - Top"
+        ],
+        "mirror_superbunny_locations": [
+          "Blind's Hideout - Far Left",
+          "Blind's Hideout - Far Right",
+          "Blind's Hideout - Left",
+          "Blind's Hideout - Right",
+          "Bonk Rock Cave",
+          "Brewery",
+          "C-Shaped House",
+          "Cave 45",
+          "Chest Game",
+          "Floodgate",
+          "Floodgate Chest",
+          "Ice Rod Cave",
+          "Kakariko Tavern",
+          "King's Tomb",
+          "Library",
+          "Mire Shed - Left",
+          "Mire Shed - Right",
+          "Pyramid Fairy - Left",
+          "Pyramid Fairy - Right",
+          "Sahasrahla's Hut - Left",
+          "Sahasrahla's Hut - Middle",
+          "Sahasrahla's Hut - Right",
+          "Secret Passage",
+          "Spiral Cave",
+          "Waterfall of Wishing - Left",
+          "Waterfall of Wishing - Right"
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {
@@ -21577,46 +21267,11 @@
         ]
       },
       "basement_key_rule": {
-        "type": "conditional",
-        "test": {
-          "type": "compare",
-          "left": {
-            "type": "placement_lookup",
-            "location": {
-              "type": "constant",
-              "value": "Sewers - Key Rat Key Drop"
-            }
-          },
-          "op": "==",
-          "right": {
-            "type": "tuple",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Small Key (Hyrule Castle)"
-              },
-              {
-                "type": "constant",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "if_true": {
-          "type": "item_check",
-          "item": "Small Key (Hyrule Castle)",
-          "count": {
-            "type": "constant",
-            "value": 2
-          }
-        },
-        "if_false": {
-          "type": "item_check",
-          "item": "Small Key (Hyrule Castle)",
-          "count": {
-            "type": "constant",
-            "value": 3
-          }
+        "type": "item_check",
+        "item": "Small Key (Hyrule Castle)",
+        "count": {
+          "type": "constant",
+          "value": 2
         }
       },
       "bottle_count": {
@@ -23058,53 +22713,6 @@
           }
         ]
       },
-      "is_not_bunny": {
-        "params": [
-          "region"
-        ],
-        "body": {
-          "type": "conditional",
-          "test": {
-            "type": "item_check",
-            "item": "Moon Pearl"
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "if_false": {
-            "type": "conditional",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "option_value",
-                "option": "mode"
-              },
-              "op": "!=",
-              "right": {
-                "type": "constant",
-                "value": 2
-              }
-            },
-            "if_true": {
-              "type": "region_attribute",
-              "region": {
-                "type": "name",
-                "name": "region"
-              },
-              "attr": "is_light_world"
-            },
-            "if_false": {
-              "type": "region_attribute",
-              "region": {
-                "type": "name",
-                "name": "region"
-              },
-              "attr": "is_dark_world"
-            }
-          }
-        }
-      },
       "tr_big_key_chest_keys_needed": {
         "type": "block",
         "statements": [
@@ -23129,8 +22737,8 @@
               },
               "op": "in",
               "right": {
-                "type": "tuple",
-                "elements": [
+                "type": "list",
+                "value": [
                   {
                     "type": "tuple",
                     "elements": [
@@ -23167,8 +22775,8 @@
               },
               "op": "in",
               "right": {
-                "type": "tuple",
-                "elements": [
+                "type": "list",
+                "value": [
                   {
                     "type": "tuple",
                     "elements": [
