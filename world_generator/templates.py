@@ -1661,6 +1661,15 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     placements_content = '\n'.join(placement_entries)
     canonical_class_attr_content = '\n'.join(canonical_class_attr_entries)
 
+    # Build canonical advancement dict (maps location -> original advancement value)
+    # This is used by the exporter to preserve original advancement values during cross-validation
+    canonical_advancement_entries = []
+    if canonical_seed is not None and data.original_advancement:
+        for loc_name, advancement in data.original_advancement.items():
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
+    canonical_advancement_content = '\n'.join(canonical_advancement_entries)
+
     # Find victory location and item
     victory_location = None
     victory_item = None
@@ -2004,6 +2013,19 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 '''
     else:
         canonical_placements_section = ''
+
+    # Generate canonical_advancement class attribute (for exporter to read)
+    # This preserves original advancement values for cross-validation
+    if canonical_seed is not None and canonical_advancement_content:
+        canonical_advancement_section = f'''
+    # Original advancement values for each location
+    # Used by exporter to ensure cross-validation works correctly
+    canonical_advancement: ClassVar[Dict[str, bool]] = {{
+{canonical_advancement_content}
+    }}
+'''
+    else:
+        canonical_advancement_section = ''
 
     # Generate __init__ method for world_attributes (game-specific instance attributes)
     init_section = ''
@@ -2396,7 +2418,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{canonical_advancement_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
