@@ -1869,12 +1869,14 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 '''
 
     # Build locked_placements dictionary
-    # When canonical_placements is available, LOCKED_PLACEMENTS should only contain
-    # items that are ALWAYS locked (like Victory events), not items that are
-    # canonical but should be randomizable.
+    # When canonical_placements is available OR canonical_seed is enabled,
+    # LOCKED_PLACEMENTS should only contain items that are ALWAYS locked
+    # (like Victory events), not items that are canonical but should be randomizable.
     # We determine this by checking if the item is an event (id=None).
+    # When canonical_seed is set, we build canonical_placements from original_placements,
+    # so non-event items will be placed via canonical_placements instead of LOCKED_PLACEMENTS.
     locked_entries = []
-    if data.canonical_placements:
+    if data.canonical_placements or canonical_seed is not None:
         # Only include truly locked items (events) - not canonical placements
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
