@@ -1659,7 +1659,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 placement_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
                 canonical_class_attr_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
                 # Track locations that should have advancement items
-                if loc_name in data.advancement_locations:
+                if data.canonical_placement_advancements.get(loc_name, False):
                     advancement_loc_entries.append(f'        "{loc_escaped}",')
 
     placements_content = '\n'.join(placement_entries)
@@ -1669,8 +1669,8 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # Build canonical advancement dict (maps location -> original advancement value)
     # This is used by the exporter to preserve original advancement values during cross-validation
     canonical_advancement_entries = []
-    if canonical_seed is not None and data.original_advancement:
-        for loc_name, advancement in data.original_advancement.items():
+    if canonical_seed is not None and data.canonical_placement_advancements:
+        for loc_name, advancement in data.canonical_placement_advancements.items():
             loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
             canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
     canonical_advancement_content = '\n'.join(canonical_advancement_entries)
