@@ -1648,6 +1648,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # Use canonical_placements if available, otherwise fall back to original_placements
     placement_entries = []
     canonical_class_attr_entries = []  # For the class attribute (exporter to read)
+    advancement_loc_entries = []  # Locations that should have advancement items
     if canonical_seed is not None:
         # Prefer canonical_placements (from world class attribute) over original_placements
         placements_source = data.canonical_placements if data.canonical_placements else data.original_placements
@@ -1657,9 +1658,13 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 placement_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
                 canonical_class_attr_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
+                # Track locations that should have advancement items
+                if loc_name in data.advancement_locations:
+                    advancement_loc_entries.append(f'        "{loc_escaped}",')
 
     placements_content = '\n'.join(placement_entries)
     canonical_class_attr_content = '\n'.join(canonical_class_attr_entries)
+    advancement_loc_content = '\n'.join(advancement_loc_entries)
 
     # Find victory location and item
     victory_location = None
@@ -1776,16 +1781,32 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
+            # Determine if this location should have an advancement item
+            needs_advancement = location_name in advancement_locs
+
             # Try to find and use an item from the pool (preserves correct classification)
-            # Prefer progression items first since they may be needed for accessibility
             # Note: Must use index-based removal because Item.__eq__ only compares name/player,
             # not classification, so list.remove() would remove the wrong item
             item = None
@@ -1805,8 +1826,15 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                     if progression_idx is not None and filler_idx is not None:
                         break
 
-            # Use progression item first if available, otherwise filler
-            chosen_idx = progression_idx if progression_idx is not None else filler_idx
+            # Use progression item if needed and available, otherwise use what's available
+            if needs_advancement and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif not needs_advancement and filler_idx is not None:
+                chosen_idx = filler_idx
+            else:
+                # Fall back: use whatever is available (progression first)
+                chosen_idx = progression_idx if progression_idx is not None else filler_idx
+
             if chosen_idx is not None:
                 item = self.multiworld.itempool.pop(chosen_idx)
             else:
@@ -2004,6 +2032,18 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 '''
     else:
         canonical_placements_section = ''
+
+    # Generate advancement_locations class attribute (locations that should have advancement items)
+    if canonical_seed is not None and advancement_loc_content:
+        advancement_locations_section = f'''
+    # Locations that should have advancement items (from original placements)
+    # Used by _place_original_items to ensure correct advancement flags for cross-validation
+    advancement_locations: ClassVar[Set[str]] = {{
+{advancement_loc_content}
+    }}
+'''
+    else:
+        advancement_locations_section = ''
 
     # Generate __init__ method for world_attributes (game-specific instance attributes)
     init_section = ''
@@ -2331,7 +2371,7 @@ class _ShopWrapper:
 Auto-generated by world_generator.
 """
 {canonical_imports}{types_import}
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -2396,7 +2436,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{advancement_locations_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
