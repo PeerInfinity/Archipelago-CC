@@ -244,6 +244,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Evaluate a Compare rule that uses AST_placement_lookup.
 
         Handles patterns like:
+        Rule Builder format:
         {
             "rule": "Compare",
             "args": {
@@ -253,21 +254,47 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             }
         }
 
+        AST format:
+        {
+            "type": "compare",
+            "left": {"type": "placement_lookup", "location": "Loc Name"},
+            "op": "==",
+            "right": {...}
+        }
+
         Returns True/False if the comparison can be evaluated, None otherwise.
         """
-        if not isinstance(rule, dict) or rule.get('rule') != 'Compare':
+        if not isinstance(rule, dict):
             return None
 
-        args = rule.get('args', {})
-        left = args.get('left', {})
-        op = args.get('op', '')
-        right = args.get('right', [])
-
-        # Check if left is an AST_placement_lookup
-        if not isinstance(left, dict) or left.get('rule') != 'AST_placement_lookup':
+        # Support both AST format ('type') and Rule Builder format ('rule')
+        rule_type = rule.get('rule') or rule.get('type')
+        if rule_type not in ('Compare', 'compare'):
             return None
 
-        location_name = left.get('args', {}).get('location', '')
+        # Rule Builder format has args nested, AST format has them at top level
+        if 'args' in rule:
+            args = rule.get('args', {})
+            left = args.get('left', {})
+            op = args.get('op', '')
+            right = args.get('right', [])
+        else:
+            left = rule.get('left', {})
+            op = rule.get('op', '')
+            right = rule.get('right', [])
+
+        # Check if left is an AST_placement_lookup (Rule Builder) or placement_lookup (AST)
+        if not isinstance(left, dict):
+            return None
+        left_type = left.get('rule') or left.get('type')
+        if left_type not in ('AST_placement_lookup', 'placement_lookup'):
+            return None
+
+        # Get location name - Rule Builder has args nested, AST has it at top level
+        if 'args' in left:
+            location_name = left.get('args', {}).get('location', '')
+        else:
+            location_name = left.get('location', '')
         if not location_name:
             return None
 
@@ -276,21 +303,47 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if actual_item is None:
             return None
 
+        # Helper to extract item name from various formats
+        def extract_item_name(item_spec):
+            """Extract item name from various AST/Rule Builder formats."""
+            if isinstance(item_spec, str):
+                return item_spec
+            if isinstance(item_spec, list) and len(item_spec) >= 1:
+                # Rule Builder format: [item_name, player]
+                return item_spec[0] if isinstance(item_spec[0], str) else None
+            if isinstance(item_spec, dict):
+                # AST format: could be tuple, constant, etc.
+                spec_type = item_spec.get('type')
+                if spec_type == 'constant':
+                    return item_spec.get('value')
+                if spec_type == 'tuple':
+                    elements = item_spec.get('elements', [])
+                    if elements:
+                        first_elem = elements[0]
+                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
+                            return first_elem.get('value')
+                        if isinstance(first_elem, str):
+                            return first_elem
+            return None
+
         # Handle 'in' operator - check if (item_name, player) tuple is in the right list
         if op == 'in':
-            for item_spec in right:
-                if isinstance(item_spec, list) and len(item_spec) >= 1:
-                    item_name = item_spec[0]
-                    if actual_item == item_name:
-                        logger.debug(f"ALttP: Compare '{location_name}' contains '{item_name}' -> True")
-                        return True
+            right_items = right
+            # AST format might have right as a list or another structure
+            if isinstance(right, dict) and right.get('type') == 'list':
+                right_items = right.get('elements', [])
+            for item_spec in right_items if isinstance(right_items, list) else [right_items]:
+                item_name = extract_item_name(item_spec)
+                if item_name and actual_item == item_name:
+                    logger.debug(f"ALttP: Compare '{location_name}' contains '{item_name}' -> True")
+                    return True
             logger.debug(f"ALttP: Compare '{location_name}' (has '{actual_item}') not in expected items -> False")
             return False
 
         # Handle '==' operator
         if op in ('==', 'Eq'):
-            if isinstance(right, list) and len(right) >= 1:
-                expected_item = right[0] if isinstance(right[0], str) else right[0][0] if isinstance(right[0], list) else None
+            expected_item = extract_item_name(right)
+            if expected_item is not None:
                 result = actual_item == expected_item
                 logger.debug(f"ALttP: Compare '{location_name}' ('{actual_item}') == '{expected_item}' -> {result}")
                 return result
@@ -301,29 +354,51 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Evaluate a test expression that may contain placement checks.
 
         Handles:
-        - AST_placement_search: Check if item is at any of the listed locations
+        - AST_placement_search / placement_search: Check if item is at any of the listed locations
         - Or/And of Compare rules with AST_placement_lookup
+
+        Supports both AST format (type: "placement_search") and Rule Builder format
+        (rule: "AST_placement_search").
         """
         if not isinstance(test, dict):
             return None
 
-        rule_type = test.get('rule')
+        # Support both AST format ('type') and Rule Builder format ('rule')
+        rule_type = test.get('rule') or test.get('type')
 
-        # Handle AST_placement_search directly
-        if rule_type == 'AST_placement_search':
-            test_args = test.get('args', {})
-            item_name = test_args.get('item', '')
-            player = test_args.get('player', 1)
-            locations = test_args.get('locations', [])
+        # Handle AST_placement_search (Rule Builder) or placement_search (AST)
+        if rule_type in ('AST_placement_search', 'placement_search'):
+            # Rule Builder format has args nested, AST format has them at top level
+            if 'args' in test:
+                test_args = test.get('args', {})
+                item_name = test_args.get('item', '')
+                player = test_args.get('player', 1)
+                locations = test_args.get('locations', [])
+            else:
+                # AST format - item/player/locations are at top level
+                item_arg = test.get('item', '')
+                # Extract item name - could be string or dict with 'value'
+                if isinstance(item_arg, dict):
+                    item_name = item_arg.get('value', '')
+                else:
+                    item_name = str(item_arg)
+                # Extract player - could be int or dict with 'value'
+                player_arg = test.get('player', {'type': 'constant', 'value': 1})
+                if isinstance(player_arg, dict):
+                    player = player_arg.get('value', 1)
+                else:
+                    player = player_arg
+                locations = test.get('locations', [])
             return self._evaluate_placement_search(item_name, player, locations)
 
-        # Handle Compare with AST_placement_lookup
-        if rule_type == 'Compare':
+        # Handle Compare with AST_placement_lookup (both Rule Builder and AST format)
+        if rule_type in ('Compare', 'compare'):
             return self._evaluate_placement_comparison(test)
 
-        # Handle Or of placement comparisons
-        if rule_type == 'Or':
-            children = test.get('children', [])
+        # Handle Or of placement comparisons (both Rule Builder and AST format)
+        if rule_type in ('Or', 'or', 'bool_or'):
+            # Rule Builder uses 'children', AST uses 'operands'
+            children = test.get('children', []) or test.get('operands', [])
             results = [self._evaluate_placement_comparison(c) for c in children]
             # If all results are known, return the OR of them
             if all(r is not None for r in results):
@@ -333,9 +408,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return True
             return None
 
-        # Handle And of placement comparisons
-        if rule_type == 'And':
-            children = test.get('children', [])
+        # Handle And of placement comparisons (both Rule Builder and AST format)
+        if rule_type in ('And', 'and', 'bool_and'):
+            # Rule Builder uses 'children', AST uses 'operands'
+            children = test.get('children', []) or test.get('operands', [])
             results = [self._evaluate_placement_comparison(c) for c in children]
             # If all results are known, return the AND of them
             if all(r is not None for r in results):
@@ -354,6 +430,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         or Compare with AST_placement_lookup), we can evaluate it at export time since we
         know the actual item placements. This resolves complex key logic rules in dungeons.
 
+        Supports both AST format (type: "conditional") and Rule Builder format
+        (rule: "Conditional").
+
         Args:
             rule: A rule dictionary that may contain conditionals
             depth: Recursion depth for debugging
@@ -366,35 +445,54 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('rule') or rule.get('type')
 
-        # Handle Conditional rules
-        if rule_type == 'Conditional':
-            args = rule.get('args', {})
-            test = args.get('test', {})
+        # Handle Conditional rules (both Rule Builder and AST format)
+        if rule_type in ('Conditional', 'conditional'):
+            # Rule Builder format has args nested, AST format has them at top level
+            if 'args' in rule:
+                args = rule.get('args', {})
+                test = args.get('test', {})
+                if_true_key = 'if_true'
+                if_false_key = 'if_false'
+                get_branch = lambda key: args.get(key, {'rule': 'True_'})
+            else:
+                # AST format - test/if_true/if_false are at top level
+                test = rule.get('test', {})
+                if_true_key = 'if_true'
+                if_false_key = 'if_false'
+                get_branch = lambda key: rule.get(key, {'type': 'constant', 'value': True})
 
             # Try to evaluate the test using placement information
             test_result = self._evaluate_placement_test(test)
             if test_result is not None:
                 # Return the appropriate branch
                 if test_result:
-                    if_true = args.get('if_true', {'rule': 'True_'})
+                    if_true = get_branch(if_true_key)
                     logger.debug(f"ALttP: Resolved Conditional to if_true (test evaluated to True)")
                     return self._resolve_placement_conditionals(if_true, depth + 1)
                 else:
-                    if_false = args.get('if_false', {'rule': 'True_'})
+                    if_false = get_branch(if_false_key)
                     logger.debug(f"ALttP: Resolved Conditional to if_false (test evaluated to False)")
                     return self._resolve_placement_conditionals(if_false, depth + 1)
 
-        # Recursively process children
+        # Recursively process children (Rule Builder format uses 'children')
         if 'children' in rule:
             rule['children'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('children', [])]
+        # AST format uses 'operands' for boolean operators
+        if 'operands' in rule:
+            rule['operands'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('operands', [])]
         if 'conditions' in rule:
             rule['conditions'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('conditions', [])]
+        # Rule Builder format nests args
         if 'args' in rule and isinstance(rule['args'], dict):
             for key, value in rule['args'].items():
                 if isinstance(value, dict):
                     rule['args'][key] = self._resolve_placement_conditionals(value, depth + 1)
                 elif isinstance(value, list):
                     rule['args'][key] = [self._resolve_placement_conditionals(v, depth + 1) if isinstance(v, dict) else v for v in value]
+        # AST format has top-level keys like 'test', 'if_true', 'if_false', 'left', 'right'
+        for key in ('test', 'if_true', 'if_false', 'left', 'right'):
+            if key in rule and isinstance(rule[key], dict):
+                rule[key] = self._resolve_placement_conditionals(rule[key], depth + 1)
 
         return rule
 
