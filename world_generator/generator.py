@@ -9,7 +9,7 @@ import json
 import os
 import logging
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from .extractors import extract_all, ExtractedData, sanitize_identifier
 from .templates import (
@@ -89,11 +89,130 @@ class WorldGenerator:
         if self.game_name_override:
             self._apply_game_name_override(self.game_name_override)
 
+        # Sort canonical_placements by sphere order to ensure items with
+        # classification_counts have their progression copies placed first
+        self._sort_canonical_placements_by_sphere()
+
         logger.info(f"Extracted: {len(self.data.items)} items, "
                    f"{len(self.data.locations)} locations, "
                    f"{len(self.data.regions)} regions")
 
         return self.data
+
+    def _load_sphere_log(self) -> Optional[Dict[str, float]]:
+        """
+        Load sphere log and return location -> sphere_index mapping.
+
+        Returns:
+            Dict mapping location name to sphere index (float for sub-spheres like "1.4"),
+            or None if sphere log not found.
+        """
+        # Look for sphere_log.jsonl in the same directory as rules.json
+        sphere_log_path = self.json_path.parent / (self.json_path.stem.replace('_rules', '_sphere_log') + '.jsonl')
+
+        if not sphere_log_path.exists():
+            logger.debug(f"No sphere log found at {sphere_log_path}")
+            return None
+
+        logger.info(f"Loading sphere log from {sphere_log_path}")
+        location_spheres: Dict[str, float] = {}
+
+        try:
+            with open(sphere_log_path, 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+
+                    entry = json.loads(line)
+
+                    if entry.get('type') == 'state_update':
+                        sphere_idx_str = entry.get('sphere_index', '0')
+                        # Convert sphere index like "1.4" to float
+                        try:
+                            sphere_idx = float(sphere_idx_str)
+                        except ValueError:
+                            sphere_idx = 0.0
+
+                        # Get locations that became accessible in this sphere
+                        player_data = entry.get('player_data', {}).get(self.player_id, {})
+                        new_locs = player_data.get('new_accessible_locations', [])
+
+                        for loc_name in new_locs:
+                            if loc_name not in location_spheres:
+                                location_spheres[loc_name] = sphere_idx
+
+            logger.info(f"Loaded sphere order for {len(location_spheres)} locations")
+            return location_spheres
+
+        except Exception as e:
+            logger.warning(f"Failed to parse sphere log: {e}")
+            return None
+
+    def _sort_canonical_placements_by_sphere(self) -> None:
+        """
+        Sort canonical_placements and original_placements so that items with
+        multiple copies have their locations ordered by sphere accessibility.
+
+        This ensures that for items with classification_counts (e.g., progression: 1, useful: 1),
+        the progression copy is placed at the earlier-accessible location.
+        """
+        if self.data is None:
+            return
+
+        # Determine which placements dict to sort
+        # (templates.py uses canonical_placements if available, otherwise original_placements)
+        placements_to_sort = self.data.canonical_placements if self.data.canonical_placements else self.data.original_placements
+        if not placements_to_sort:
+            return
+
+        # Load sphere order from sphere_log
+        sphere_order = self._load_sphere_log()
+        if not sphere_order:
+            # Fallback: try to infer order from starting items
+            # Locations for starting items should come first
+            starting_item_names = set(self.data.starting_items.keys())
+            sorted_placements = {}
+
+            # First, add locations whose rules require starting items
+            for loc_name, item_name in placements_to_sort.items():
+                # Check if location name starts with a starting item name
+                # (e.g., "Breaking Dawn-0" starts with "Breaking Dawn")
+                for starting_item in starting_item_names:
+                    if loc_name.startswith(starting_item):
+                        sorted_placements[loc_name] = item_name
+                        break
+
+            # Then add all other locations
+            for loc_name, item_name in placements_to_sort.items():
+                if loc_name not in sorted_placements:
+                    sorted_placements[loc_name] = item_name
+
+            # Update the appropriate dict
+            if self.data.canonical_placements:
+                self.data.canonical_placements = sorted_placements
+            else:
+                self.data.original_placements = sorted_placements
+            return
+
+        # Sort placements by sphere index
+        def get_sphere_index(loc_name: str) -> float:
+            return sphere_order.get(loc_name, float('inf'))
+
+        sorted_items = sorted(
+            placements_to_sort.items(),
+            key=lambda x: get_sphere_index(x[0])
+        )
+
+        sorted_placements = dict(sorted_items)
+
+        # Update the appropriate dict
+        if self.data.canonical_placements:
+            self.data.canonical_placements = sorted_placements
+        else:
+            self.data.original_placements = sorted_placements
+
+        logger.info("Sorted placements by sphere order")
 
     def _apply_game_name_override(self, new_name: str) -> None:
         """Apply a game name override to the extracted metadata."""
