@@ -6,7 +6,7 @@ and prepare it for code generation.
 """
 
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass, field
 
 from .constants import INTERNAL_SETTINGS
