@@ -409,12 +409,12 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
         player_id: Player ID to extract data for (default: '1')
 
     Returns:
-        Tuple of (locations dict, original_placements dict, locked_placements dict, original_advancement dict)
+        Tuple of (locations dict, original_placements dict, locked_placements dict, canonical_placement_advancements dict)
     """
     locations: Dict[str, LocationData] = {}
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
-    original_advancement: Dict[str, bool] = {}
+    canonical_placement_advancements: Dict[str, bool] = {}  # location -> is_advancement
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
 
@@ -457,15 +457,14 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
             if item_info:
                 item_name = item_info.get('name', '')
                 original_placements[loc_name] = item_name
-                # Track original advancement value (for cross-validation)
-                advancement = item_info.get('advancement')
-                if advancement is not None:
-                    original_advancement[loc_name] = advancement
+                # Track the item's classification (advancement = progression)
+                is_advancement = item_info.get('advancement', False)
+                canonical_placement_advancements[loc_name] = is_advancement
                 # If the location is locked, also track it as a locked placement
                 if is_locked and item_name:
                     locked_placements[loc_name] = item_name
 
-    return locations, original_placements, locked_placements, original_advancement
+    return locations, original_placements, locked_placements, canonical_placement_advancements
 
 
 def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
@@ -635,38 +634,6 @@ def extract_canonical_placements(json_data: Dict[str, Any], player_id: str = '1'
     """
     canonical_data = json_data.get('canonical_placements', {}).get(player_id, {})
     return dict(canonical_data)
-
-
-def extract_canonical_placement_advancements(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, bool]:
-    """
-    Extract canonical placement advancement status from JSON.
-
-    This extracts whether each placed item is marked as advancement (progression)
-    in the original rules.json. This is important for items with mixed classifications
-    (e.g., some copies are progression, some are useful) to preserve the correct
-    distribution during canonical placement.
-
-    Args:
-        json_data: Parsed JSON rules file
-        player_id: Player ID to extract data for (default: '1')
-
-    Returns:
-        Dict mapping location name to whether the item there is advancement
-    """
-    advancements: Dict[str, bool] = {}
-
-    regions_data = json_data.get('regions', {}).get(player_id, {})
-    for region_name, region_info in regions_data.items():
-        locations_list = region_info.get('locations', [])
-        for loc_info in locations_list:
-            loc_name = loc_info.get('name', '')
-            item_info = loc_info.get('item')
-            if item_info and loc_name:
-                # Get the advancement status from the placed item
-                advancement = item_info.get('advancement', False)
-                advancements[loc_name] = advancement
-
-    return advancements
 
 
 def extract_progression_mapping(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, List[str]]:
@@ -1146,7 +1113,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     """
     metadata = extract_game_metadata(json_data, player_id=player_id)
     items, item_groups, item_name_groups = extract_items(json_data, player_id=player_id)
-    locations, original_placements, locked_placements, original_advancement = extract_locations(json_data, player_id=player_id)
+    locations, original_placements, locked_placements, canonical_placement_advancements = extract_locations(json_data, player_id=player_id)
     regions, exits = extract_regions(json_data, player_id=player_id)
     start_region = extract_start_region(json_data, player_id=player_id)
     itempool_counts = extract_itempool_counts(json_data, player_id=player_id)
@@ -1157,9 +1124,6 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
 
     # Get canonical placements from JSON (vanilla/original item locations)
     canonical_placements = extract_canonical_placements(json_data, player_id=player_id)
-
-    # Get canonical placement advancements (for mixed-classification items)
-    canonical_placement_advancements = extract_canonical_placement_advancements(json_data, player_id=player_id)
 
     # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
     progression_mapping = extract_progression_mapping(json_data, player_id=player_id)
