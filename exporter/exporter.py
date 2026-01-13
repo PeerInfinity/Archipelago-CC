@@ -1704,10 +1704,17 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     original_type = extract_type_value(getattr(location.item, 'type', None))
                                     effective_type = game_handler.get_effective_item_type(item_name, original_type) if game_handler and item_name else original_type
 
+                                    # Check for canonical_placement_advancements to preserve original advancement values
+                                    # This ensures cross-validation works correctly for worldgen worlds
+                                    advancement = getattr(location.item, 'advancement', False)
+                                    canonical_advancements = getattr(world.__class__, 'canonical_placement_advancements', None)
+                                    if canonical_advancements and location_name in canonical_advancements:
+                                        advancement = canonical_advancements[location_name]
+
                                     location_data['item'] = {
                                         'name': item_name,
                                         'player': getattr(location.item, 'player', None),
-                                        'advancement': getattr(location.item, 'advancement', False),
+                                        'advancement': advancement,
                                         'type': effective_type
                                     }
 

@@ -400,7 +400,7 @@ def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict
     return items, item_groups, item_name_groups
 
 
-def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str]]:
+def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str], Dict[str, bool]]:
     """
     Extract locations from JSON regions.
 
@@ -409,11 +409,12 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
         player_id: Player ID to extract data for (default: '1')
 
     Returns:
-        Tuple of (locations dict, original_placements dict, locked_placements dict)
+        Tuple of (locations dict, original_placements dict, locked_placements dict, original_advancement dict)
     """
     locations: Dict[str, LocationData] = {}
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
+    original_advancement: Dict[str, bool] = {}
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
 
@@ -456,11 +457,15 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
             if item_info:
                 item_name = item_info.get('name', '')
                 original_placements[loc_name] = item_name
+                # Track original advancement value (for cross-validation)
+                advancement = item_info.get('advancement')
+                if advancement is not None:
+                    original_advancement[loc_name] = advancement
                 # If the location is locked, also track it as a locked placement
                 if is_locked and item_name:
                     locked_placements[loc_name] = item_name
 
-    return locations, original_placements, locked_placements
+    return locations, original_placements, locked_placements, original_advancement
 
 
 def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
@@ -1141,7 +1146,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     """
     metadata = extract_game_metadata(json_data, player_id=player_id)
     items, item_groups, item_name_groups = extract_items(json_data, player_id=player_id)
-    locations, original_placements, locked_placements = extract_locations(json_data, player_id=player_id)
+    locations, original_placements, locked_placements, original_advancement = extract_locations(json_data, player_id=player_id)
     regions, exits = extract_regions(json_data, player_id=player_id)
     start_region = extract_start_region(json_data, player_id=player_id)
     itempool_counts = extract_itempool_counts(json_data, player_id=player_id)
