@@ -116,6 +116,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._current_location_context = None
         self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
         self._is_glitch_mode = self._check_glitch_mode(world)
+        self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
         self._item_placements: Dict[str, str] = {}
 
@@ -127,6 +128,24 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             return False
         glitches_required = world.options.glitches_required.current_key
         return glitches_required in GLITCH_MODES_WITH_SUPERBUNNY
+
+    def _check_inverted_mode(self, world) -> bool:
+        """Check if the world is in inverted mode.
+
+        In inverted mode, the player starts in the Dark World instead of
+        the Light World. This affects which rules require Moon Pearl:
+        - Light World access requires Moon Pearl (instead of Dark World)
+        - Boot clip rules differ between LW and DW
+        """
+        if world is None or not hasattr(world, 'options'):
+            return False
+        if not hasattr(world.options, 'mode'):
+            return False
+        mode = world.options.mode.current_key
+        is_inverted = mode == 'inverted'
+        if is_inverted:
+            logger.debug(f"ALttP: Inverted mode detected (mode={mode})")
+        return is_inverted
 
     def _check_universal_keys(self, world) -> bool:
         """Check if the world uses universal small keys.
@@ -550,6 +569,137 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             return self._get_bunny_replacement_rule(location_name)
 
         # Not a bunny rule - let standard analysis handle it
+        return None
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """Get helper definitions with mode-dependent helpers resolved.
+
+        For glitch helpers that check the mode option at runtime, we resolve
+        them to simpler rules based on the actual mode. This ensures the
+        worldgen world has the correct rules without needing the mode option.
+        """
+        # Get base helper definitions
+        helpers = super().get_helper_definitions(world)
+
+        # Helper for creating item check rules (simple format for helper definitions)
+        def _item(name: str) -> Dict[str, Any]:
+            return {'type': 'item_check', 'item': name}
+
+        def _and(*conditions) -> Dict[str, Any]:
+            return {'type': 'and', 'conditions': list(conditions)}
+
+        def _or(*conditions) -> Dict[str, Any]:
+            return {'type': 'or', 'conditions': list(conditions)}
+
+        # Resolve mode-dependent glitch helpers
+        # can_boots_clip_lw: In inverted mode, requires Boots + Pearl; otherwise just Boots
+        if 'can_boots_clip_lw' in helpers:
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Resolving can_boots_clip_lw helper for inverted mode (Boots + Pearl)")
+                helpers['can_boots_clip_lw'] = _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+            else:
+                logger.debug("ALttP: Resolving can_boots_clip_lw helper for normal mode (Boots only)")
+                helpers['can_boots_clip_lw'] = _item('Pegasus Boots')
+
+        # can_boots_clip_dw: In normal mode, requires Boots + Pearl; otherwise just Boots
+        if 'can_boots_clip_dw' in helpers:
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Resolving can_boots_clip_dw helper for inverted mode (Boots only)")
+                helpers['can_boots_clip_dw'] = _item('Pegasus Boots')
+            else:
+                logger.debug("ALttP: Resolving can_boots_clip_dw helper for normal mode (Boots + Pearl)")
+                helpers['can_boots_clip_dw'] = _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+
+        # can_get_glitched_speed_dw: Boots + (Hookshot OR Sword); normal mode also needs Pearl
+        if 'can_get_glitched_speed_dw' in helpers:
+            sword_check = {'type': 'group_check', 'group': 'Swords'}
+            base = _and(_item('Pegasus Boots'), _or(_item('Hookshot'), sword_check))
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Resolving can_get_glitched_speed_dw helper for inverted mode (no Pearl)")
+                helpers['can_get_glitched_speed_dw'] = base
+            else:
+                logger.debug("ALttP: Resolving can_get_glitched_speed_dw helper for normal mode (needs Pearl)")
+                helpers['can_get_glitched_speed_dw'] = _and(base, _item('Moon Pearl'))
+
+        return helpers
+
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+        """Expand ALttP-specific helper functions to their resolved rules.
+
+        Handles mode-dependent glitch helpers like can_boots_clip_lw/dw which have
+        different requirements in inverted vs normal mode. We evaluate these at
+        export time based on the current mode option.
+
+        In StateHelpers.py:
+        - can_boots_clip_lw: In inverted mode, requires Pegasus Boots + Moon Pearl;
+                            otherwise just Pegasus Boots
+        - can_boots_clip_dw: In normal mode, requires Pegasus Boots + Moon Pearl;
+                            otherwise just Pegasus Boots
+        - can_get_glitched_speed_dw: Requires Pegasus Boots + (Hookshot OR Sword);
+                                    in normal mode also requires Moon Pearl
+        """
+        # Check base class expansions first
+        base_result = super().expand_helper(helper_name, args)
+        if base_result is not None:
+            return base_result
+
+        # Handle can_buy_unlimited for universal keys
+        # When small_key_shuffle is 'universal', shops with unlimited universal keys
+        # are accessible in normal gameplay. We expand this to True for simplicity.
+        if helper_name == 'can_buy_unlimited' and self._is_universal_keys:
+            logger.debug("ALttP: Expanding can_buy_unlimited to True (universal keys enabled)")
+            return {'type': 'constant', 'value': True}
+
+        # Helper for creating item check rules
+        def _item(name: str) -> Dict[str, Any]:
+            return {'type': 'item_check', 'item': {'type': 'constant', 'value': name}}
+
+        def _and(*conditions) -> Dict[str, Any]:
+            return {'type': 'and', 'conditions': list(conditions)}
+
+        def _or(*conditions) -> Dict[str, Any]:
+            return {'type': 'or', 'conditions': list(conditions)}
+
+        # Handle can_boots_clip_lw
+        # In inverted mode: Pegasus Boots + Moon Pearl
+        # In normal mode: just Pegasus Boots
+        if helper_name == 'can_boots_clip_lw':
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Expanding can_boots_clip_lw for inverted mode (Boots + Pearl)")
+                return _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+            else:
+                logger.debug("ALttP: Expanding can_boots_clip_lw for normal mode (Boots only)")
+                return _item('Pegasus Boots')
+
+        # Handle can_boots_clip_dw
+        # In normal mode: Pegasus Boots + Moon Pearl
+        # In inverted mode: just Pegasus Boots
+        if helper_name == 'can_boots_clip_dw':
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Expanding can_boots_clip_dw for inverted mode (Boots only)")
+                return _item('Pegasus Boots')
+            else:
+                logger.debug("ALttP: Expanding can_boots_clip_dw for normal mode (Boots + Pearl)")
+                return _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+
+        # Handle can_get_glitched_speed_dw
+        # Requires Pegasus Boots + (Hookshot OR Sword)
+        # In normal mode, also requires Moon Pearl
+        if helper_name == 'can_get_glitched_speed_dw':
+            # Base requirement: Boots + (Hookshot OR Sword)
+            # has_sword expands to any sword
+            sword_check = {'type': 'group_check', 'group': 'Swords'}
+            base_requirements = _and(
+                _item('Pegasus Boots'),
+                _or(_item('Hookshot'), sword_check)
+            )
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Expanding can_get_glitched_speed_dw for inverted mode (no Pearl)")
+                return base_requirements
+            else:
+                logger.debug("ALttP: Expanding can_get_glitched_speed_dw for normal mode (needs Pearl)")
+                return _and(base_requirements, _item('Moon Pearl'))
+
         return None
 
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
