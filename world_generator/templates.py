@@ -1786,7 +1786,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         During tracking (generation_is_fake=True), we always place canonical items
         so that location_item_name() checks work correctly for self-locking rules.
         """
-        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:

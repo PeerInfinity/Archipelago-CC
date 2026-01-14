@@ -110,6 +110,13 @@ class OperatorVisitorMixin:
             }
             op_symbol = op_map.get(op_name, op_name) # Use original name if not in map
 
+            # Try to resolve NamedTuple closure variables for comparison folding
+            # This handles patterns like: if planet == Planets.TABORA:
+            # where planet is a closure variable containing a NamedTuple
+            left_result, right_result = self._try_resolve_namedtuple_for_comparison(
+                left_result, right_result, node.left, node.comparators[0]
+            )
+
             # Try constant folding - if both sides are constants, evaluate at export time
             folded_result = self._try_fold_comparison(left_result, op_symbol, right_result)
             if folded_result is not None:
@@ -189,6 +196,77 @@ class OperatorVisitorMixin:
         except Exception as e:
             logging.warning(f"Error during comparison folding: {e}")
             return None
+
+    def _try_resolve_namedtuple_for_comparison(self, left_result, right_result, left_node, right_node):
+        """
+        Try to resolve NamedTuple closure variables to constants for comparison folding.
+
+        This handles patterns like `if planet == Planets.TABORA:` where:
+        - planet is a closure variable containing a NamedTuple (PlanetData)
+        - Planets.TABORA is an attribute access to another NamedTuple
+
+        NamedTuples are normally kept as name references in visit_Name to allow
+        attribute access (e.g., planet.name). But for equality comparisons, we need
+        to resolve them to comparable values.
+
+        Args:
+            left_result: The analyzed left operand
+            right_result: The analyzed right operand
+            left_node: The AST node for the left operand
+            right_node: The AST node for the right operand
+
+        Returns:
+            Tuple of (resolved_left, resolved_right) where NamedTuples have been
+            converted to constant values for comparison.
+        """
+        try:
+            # Check if left side is a name reference to a NamedTuple closure variable
+            if (left_result and left_result.get('type') == 'name' and
+                    hasattr(self, 'closure_vars')):
+                name = left_result.get('name')
+                if name and name in self.closure_vars:
+                    value = self.closure_vars[name]
+                    if hasattr(value, '_fields'):
+                        # It's a NamedTuple - convert to tuple for comparison
+                        tuple_value = tuple(value)
+                        logging.debug(f"Resolved NamedTuple '{name}' to tuple for comparison: {tuple_value[:2]}...")
+                        left_result = {'type': 'constant', 'value': tuple_value}
+
+            # Check if right side is a name reference to a NamedTuple closure variable
+            if (right_result and right_result.get('type') == 'name' and
+                    hasattr(self, 'closure_vars')):
+                name = right_result.get('name')
+                if name and name in self.closure_vars:
+                    value = self.closure_vars[name]
+                    if hasattr(value, '_fields'):
+                        tuple_value = tuple(value)
+                        logging.debug(f"Resolved NamedTuple '{name}' to tuple for comparison: {tuple_value[:2]}...")
+                        right_result = {'type': 'constant', 'value': tuple_value}
+
+            # Check if right side is an attribute access that resolves to a NamedTuple
+            # This handles Planets.TABORA where Planets is a module and TABORA is a NamedTuple
+            if (right_result and right_result.get('type') == 'attribute' and
+                    hasattr(self, 'expression_resolver')):
+                resolved = self.expression_resolver.resolve_expression(right_result)
+                if resolved is not None and hasattr(resolved, '_fields'):
+                    tuple_value = tuple(resolved)
+                    logging.debug(f"Resolved attribute to NamedTuple for comparison: {tuple_value[:2]}...")
+                    right_result = {'type': 'constant', 'value': tuple_value}
+
+            # Also check left side for attribute access (less common but possible)
+            if (left_result and left_result.get('type') == 'attribute' and
+                    hasattr(self, 'expression_resolver')):
+                resolved = self.expression_resolver.resolve_expression(left_result)
+                if resolved is not None and hasattr(resolved, '_fields'):
+                    tuple_value = tuple(resolved)
+                    logging.debug(f"Resolved attribute to NamedTuple for comparison: {tuple_value[:2]}...")
+                    left_result = {'type': 'constant', 'value': tuple_value}
+
+            return left_result, right_result
+
+        except Exception as e:
+            logging.debug(f"Could not resolve NamedTuple for comparison: {e}")
+            return left_result, right_result
 
     def visit_BinOp(self, node: ast.BinOp):
         """ Handle binary operations (e.g., +, -, *, /). """
