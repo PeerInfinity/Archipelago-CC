@@ -3,24 +3,62 @@
 **Date**: 2026-01-14
 **APWorld**: khbbs v0.1.7
 **Game Name**: Kingdom Hearts Birth by Sleep
-**Test Status**: 10/10 failures (0% pass rate)
-**Error Type**: None (logic mismatch)
+**Test Status**: FIXED - 10/10 pass rate (was 0/10)
+**Error Type**: Was None (logic mismatch), now resolved
 
 ## Executive Summary
 
-The KHBBS apworld fails the Universal Tracker (UT) fuzzer test due to logic mismatches between the server and UT. The specific root cause could not be confirmed due to network restrictions preventing apworld download, but code analysis revealed several likely causes.
+The KHBBS apworld was failing the Universal Tracker (UT) fuzzer test due to a bug in the world generator's code generation for `has_from_list_unique` state method calls. The fix was applied to `world_generator/rule_codegen.py`.
 
-## Network Restrictions
+## Root Cause
 
-**IMPORTANT**: This cloud environment blocks external downloads from GitHub. The apworld could not be downloaded via:
-- `curl` (403 Forbidden)
-- Python `urllib` (403 Forbidden via proxy)
-- Direct WebFetch (403 Forbidden)
+The bug was in `world_generator/rule_codegen.py` in the `_expr_state_method` function. The generic fallback handler was placing `player` at the END of the argument list:
 
-To continue this investigation, the apworld must be:
-1. Downloaded locally and uploaded manually
-2. Made available through an unblocked source
-3. Pre-cached in the environment
+```python
+# Generic fallback - methods that take player as an argument
+arg_exprs = [self._generate_expression(a) for a in args]
+if arg_exprs:
+    return f'state.{method}({", ".join(arg_exprs)}, player)'  # WRONG!
+```
+
+But `has_from_list_unique(items, player, count)` requires `player` in the MIDDLE position.
+
+### Generated Code (Before Fix)
+```python
+def has_x_worlds(state, player, num_of_worlds):
+    return state.has_from_list_unique([...], num_of_worlds, player)  # WRONG ORDER
+```
+
+### Expected Code (After Fix)
+```python
+def has_x_worlds(state, player, num_of_worlds):
+    return state.has_from_list_unique([...], player, num_of_worlds)  # CORRECT
+```
+
+This caused `KeyError: 8` when `num_of_worlds=8` was passed as the player ID.
+
+## The Fix
+
+Added specific handlers for `has_from_list` and `has_from_list_unique` in `_expr_state_method`:
+
+```python
+elif method == 'has_from_list_unique':
+    # has_from_list_unique(items, player, count) - player in middle position
+    if len(args) >= 1:
+        items = self._extract_constant(args[0], None)
+        if items is not None:
+            items_repr = repr(list(items)) if items else '[]'
+        else:
+            items_repr = self._generate_expression(args[0])
+        count_expr = self._generate_expression(args[1]) if len(args) > 1 else '1'
+        return f'state.has_from_list_unique({items_repr}, player, {count_expr})'
+```
+
+## APWorld Acquisition
+
+Note: This cloud environment blocks external downloads from GitHub. The apworld was obtained by:
+1. Cloning the repository: `git clone https://github.com/gaithernOrg/ArchipelagoKHBBS.git`
+2. Creating the apworld: `zip -r custom_worlds/khbbs.apworld worlds/khbbs/`
 
 ## Code Analysis
 
