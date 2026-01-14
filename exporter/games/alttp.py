@@ -874,6 +874,20 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     processed_args[key] = value
             return {**rule, 'args': processed_args}
 
+        # Handle basement_key_rule helper - this internally checks for Hyrule Castle keys
+        # With universal keys, replace with can_buy_unlimited helper
+        if rule.get('rule') == 'basement_key_rule' or (
+            rule.get('_original_ast_type') == 'helper' and
+            rule.get('rule') == 'basement_key_rule'
+        ):
+            return {
+                'type': 'helper',
+                'name': 'can_buy_unlimited',
+                'args': [
+                    {'type': 'constant', 'value': 'Small Key (Universal)'}
+                ]
+            }
+
         return rule
 
     def _compute_bunny_accessible_locations(self, world) -> Set[str]:
@@ -1477,13 +1491,18 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             logger.debug(f"ALttP: Removed Moon Pearl from mixed region exit '{rule_name}'")
             return {'rule': 'True_'}
 
-        # Handle Rule Builder And - filter out Moon Pearl children
+        # Handle Rule Builder And - recursively process children and filter out Moon Pearl
         if rule.get('rule') == 'And':
             children = rule.get('children', [])
-            # Remove children that are pure Moon Pearl rules
+            # First, recursively process each child to remove Moon Pearl from nested rules
+            processed_children = [
+                self._remove_moon_pearl_from_rule(child, rule_name)
+                for child in children
+            ]
+            # Then filter out children that became True_ (pure Moon Pearl rules)
             filtered_children = [
-                child for child in children
-                if not self._is_pure_moon_pearl_rule(child)
+                child for child in processed_children
+                if child != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(child)
             ]
             if len(filtered_children) != len(children):
                 logger.debug(f"ALttP: Removed Moon Pearl from AND rule for exit '{rule_name}'")
@@ -1498,10 +1517,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Handle AST-style 'and' rules
         if rule.get('type') == 'and':
             conditions = rule.get('conditions', [])
-            # Remove conditions that are pure Moon Pearl rules
+            # First, recursively process each condition to remove Moon Pearl from nested rules
+            processed_conditions = [
+                self._remove_moon_pearl_from_rule(cond, rule_name)
+                for cond in conditions
+            ]
+            # Then filter out conditions that became True_ (pure Moon Pearl rules)
             filtered_conditions = [
-                cond for cond in conditions
-                if not self._is_pure_moon_pearl_rule(cond)
+                cond for cond in processed_conditions
+                if cond != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(cond)
             ]
             if len(filtered_conditions) != len(conditions):
                 logger.debug(f"ALttP: Removed Moon Pearl from AND rule for exit '{rule_name}'")
