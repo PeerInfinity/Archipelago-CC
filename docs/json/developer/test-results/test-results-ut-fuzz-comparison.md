@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison
 
-**Generated:** 2026-01-13 02:44:44
+**Generated:** 2026-01-14 05:37:12
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -16,10 +16,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 85
 - **Passing Both:** 33 (38.8%)
 - **Passing Original Only:** 7 (8.2%)
-- **Passing Modified Only:** 28 (32.9%)
-- **Passing Neither:** 17 (20.0%)
-- **Passing Modified with no custom code:** 40 (47.1%)
-- **Passing Modified Only with no custom code:** 13 (15.3%)
+- **Passing Modified Only:** 29 (34.1%)
+- **Passing Neither:** 16 (18.8%)
+- **Passing Modified with no custom code:** 41 (48.2%)
+- **Passing Modified Only with no custom code:** 14 (16.5%)
 
 ## Full Comparison
 
@@ -51,7 +51,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Factorio | ❌ 0.0% | ✅ 100.0% | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ❌ 10.0% | ✅ 100.0% | ✅ | ✅ | 68.6KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | 1302.5KB |
+| Final Fantasy Mystic Quest | ❌ 0.0% | ✅ 80.0% | ✅ | ✅ | 1302.5KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.2KB |
@@ -165,7 +165,7 @@ These games pass in the Original UT but fail in the Modified UT.
 | TUNIC | 3.1KB | ✅ | 711.6KB |
 | The Witness | 14.1KB | ✅ | 401.3KB |
 
-## Games Passing Modified Only (28)
+## Games Passing Modified Only (29)
 
 These games pass in the Modified UT but fail in the Original UT.
 
@@ -178,6 +178,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
 | Factorio | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ | ✅ | 68.6KB |
+| Final Fantasy Mystic Quest | ✅ | ✅ | 1302.5KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 688.9KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.3KB |
 | Links Awakening DX | 7.4KB | ✅ | 714.5KB |
@@ -200,7 +201,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | Yoshi's Island | 9.3KB | ✅ | 283.2KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Neither (17)
+## Games Passing Neither (16)
 
 These games fail in both Universal Tracker versions.
 
@@ -208,7 +209,6 @@ These games fail in both Universal Tracker versions.
 |-----------|:--------:|:---------:|:----------:|
 | A Link to the Past | 11.8KB | ✅ | 654.1KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.3KB |
-| Final Fantasy Mystic Quest | ✅ | ✅ | 1302.5KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ✅ | ✅ | 754.0KB |

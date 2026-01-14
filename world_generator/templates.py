@@ -1786,7 +1786,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         During tracking (generation_is_fake=True), we always place canonical items
         so that location_item_name() checks work correctly for self-locking rules.
         """
-        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
@@ -2183,11 +2183,12 @@ class _ShopWrapper:
 {create_shops_method}'''
 
     # Build itempool_counts dictionary
-    # When canonical_placements is available, we use the full itempool_counts
-    # (items are either in the pool for randomization, or placed canonically for seed=1).
-    # Subtract event items and starting items from the pool.
+    # When canonical_placements is available OR canonical_seed is enabled,
+    # we use the full itempool_counts (items are either in the pool for randomization,
+    # or placed canonically for seed=1). Only subtract event items and starting items.
+    # Non-event locked items are placed via canonical_placements in _place_original_items().
     itempool_entries = []
-    if data.canonical_placements:
+    if data.canonical_placements or canonical_seed is not None:
         # Count only event items that are locked (these are subtracted from pool)
         event_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
@@ -2208,7 +2209,8 @@ class _ShopWrapper:
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
     else:
-        # No canonical_placements - subtract all locked items and starting items
+        # No canonical_placements and no canonical_seed - subtract all locked items and starting items
+        # (locked items are truly locked and won't go into the random pool)
         locked_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
