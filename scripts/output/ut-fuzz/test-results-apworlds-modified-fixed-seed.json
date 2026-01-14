@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-14T05:37:12.180004",
-    "last_updated": "2026-01-14T05:37:12.180011",
+    "created": "2026-01-14T21:00:20.551123",
+    "last_updated": "2026-01-14T21:00:20.551129",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "modified",
@@ -29,7 +29,7 @@
         "world_directory": "adofai",
         "apworld_download_url": "https://github.com/ClaudeChibout/Archipelago-ADOFAI/releases/download/v2.0.0-beta/adofai.apworld"
       },
-      "timestamp": "2026-01-14T05:24:21.617501",
+      "timestamp": "2026-01-14T20:47:17.741038",
       "explain_stats": {
         "game": "A Dance of Fire and Ice WorldGen_79645483297583998146",
         "total_locations": 142,
@@ -76,7 +76,7 @@
         "world_directory": "ape_escape_3",
         "apworld_download_url": "https://github.com/aidanii24/ae3-archipelago/releases/download/v2.0.00beta-1/ape_escape_3.apworld"
       },
-      "timestamp": "2026-01-14T05:24:49.272013",
+      "timestamp": "2026-01-14T20:47:47.470296",
       "explain_stats": {
         "game": "Ape Escape 3 WorldGen_79645483297583998146",
         "total_locations": 320,
@@ -121,7 +121,7 @@
         "world_directory": "ctjot",
         "apworld_download_url": "https://github.com/Anguirel86/Archipelago/releases/download/v0.0.3/ctjot.apworld"
       },
-      "timestamp": "2026-01-14T05:25:08.717603"
+      "timestamp": "2026-01-14T20:48:08.309270"
     },
     "Digimon World.yaml": {
       "ut_fuzz": {
@@ -135,8 +135,8 @@
           "None": [
             0,
             1,
-            3,
             4,
+            3,
             8,
             7
           ]
@@ -147,7 +147,7 @@
         "world_directory": "dw1",
         "apworld_download_url": "https://github.com/ArsonAssassin/DWAP/releases/download/0.3.9/dw1.apworld"
       },
-      "timestamp": "2026-01-14T05:25:34.419397",
+      "timestamp": "2026-01-14T20:48:35.878869",
       "explain_stats": {
         "game": "Digimon World WorldGen_79645483297583998146",
         "total_locations": 217,
@@ -187,7 +187,7 @@
         "world_directory": "grim_dawn",
         "apworld_download_url": "https://github.com/routhken/Archipelago/releases/download/v0.3.1/grim_dawn.apworld"
       },
-      "timestamp": "2026-01-14T05:25:58.318391",
+      "timestamp": "2026-01-14T20:49:02.029853",
       "explain_stats": {
         "game": "Grim Dawn WorldGen_79645483297583998146",
         "total_locations": 46,
@@ -214,8 +214,8 @@
         "ignored": 3,
         "errors": {
           "None": [
-            4,
             1,
+            4,
             5,
             6,
             7,
@@ -229,9 +229,9 @@
         "world_directory": "ktane",
         "apworld_download_url": "https://github.com/GreenPower713/Archipelago/releases/download/v0.2.0/ktane.apworld"
       },
-      "timestamp": "2026-01-14T05:26:20.512580",
+      "timestamp": "2026-01-14T20:49:25.836144",
       "explain_stats": {
-        "game": "Keep Talking and Nobody Explodes WorldGen_79645483297583998146",
+        "game": "Keep Talking and Nobody Explodes WorldGen_86998726363870010506",
         "total_locations": 116,
         "locations_with_explain": 72,
         "locations_default_rule": 44,
@@ -261,11 +261,11 @@
         "world_directory": "luigismansion",
         "apworld_download_url": "https://github.com/BootsinSoots/Archipelago/releases/download/V0.5.20/luigismansion.apworld"
       },
-      "timestamp": "2026-01-14T05:26:51.055000",
+      "timestamp": "2026-01-14T20:49:57.564667",
       "explain_stats": {
         "game": "Luigi's Mansion WorldGen_79645483297583998146",
-        "total_locations": 524,
-        "locations_with_explain": 225,
+        "total_locations": 538,
+        "locations_with_explain": 239,
         "locations_default_rule": 299,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -309,14 +309,14 @@
         "ignored": 2,
         "errors": {
           "None": [
-            2,
             1,
-            4,
+            2,
             5,
+            4,
             6,
             7,
-            9,
-            8
+            8,
+            9
           ]
         }
       },
@@ -325,9 +325,9 @@
         "world_directory": "nine_sols",
         "apworld_download_url": "https://github.com/Ixrec/NineSolsArchipelagoRandomizer/releases/download/0.4.3/nine_sols.apworld"
       },
-      "timestamp": "2026-01-14T05:29:13.503758",
+      "timestamp": "2026-01-14T20:52:36.307249",
       "explain_stats": {
-        "game": "Nine Sols WorldGen_79645483297583998146",
+        "game": "Nine Sols WorldGen_11408892729106005028",
         "total_locations": 318,
         "locations_with_explain": 1,
         "locations_default_rule": 317,
@@ -344,33 +344,20 @@
     },
     "Ratchet & Clank 2.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Ratchet & Clank 2",
         "world_directory": "rac2",
         "apworld_download_url": "https://github.com/evilwb/APRac2/releases/download/v0.6.4/rac2.apworld"
       },
-      "timestamp": "2026-01-14T05:29:40.772805",
+      "timestamp": "2026-01-14T20:53:05.473032",
       "explain_stats": {
         "game": "Ratchet & Clank 2 WorldGen_79645483297583998146",
         "total_locations": 123,
@@ -391,13 +378,14 @@
       "ut_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 7,
-        "failure": 3,
+        "success": 6,
+        "failure": 4,
         "timeout": 0,
         "ignored": 0,
         "errors": {
           "FillError": [
-            2
+            2,
+            7
           ],
           "None": [
             1,
@@ -410,12 +398,12 @@
         "world_directory": "sly1",
         "apworld_download_url": "https://github.com/hoppel16/ArchipelagoBranchSly1/releases/download/v0.3.3-alpha/sly1.apworld"
       },
-      "timestamp": "2026-01-14T05:30:06.642357",
+      "timestamp": "2026-01-14T20:53:31.986354",
       "explain_stats": {
         "game": "Sly Cooper and the Thievius Raccoonus WorldGen_79645483297583998146",
-        "total_locations": 203,
+        "total_locations": 210,
         "locations_with_explain": 45,
-        "locations_default_rule": 158,
+        "locations_default_rule": 165,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -447,7 +435,7 @@
         "world_directory": "swr",
         "apworld_download_url": "https://github.com/wcolding/SWR_apworld/releases/download/v0.7.0-preview/swr.apworld"
       },
-      "timestamp": "2026-01-14T05:30:31.051186",
+      "timestamp": "2026-01-14T20:53:57.942192",
       "explain_stats": {
         "game": "Star Wars Episode I Racer WorldGen_11408892729106005028",
         "total_locations": 101,
@@ -474,8 +462,8 @@
         "ignored": 0,
         "errors": {
           "None": [
-            0,
             1,
+            0,
             2,
             3,
             4,
@@ -492,12 +480,12 @@
         "world_directory": "sims4",
         "apworld_download_url": "https://github.com/Simsipelago/Archipelago/releases/download/2.0.0-beta.1/sims4.apworld"
       },
-      "timestamp": "2026-01-14T05:30:57.917975",
+      "timestamp": "2026-01-14T20:54:26.882990",
       "explain_stats": {
-        "game": "The Sims 4 WorldGen_79645483297583998146",
-        "total_locations": 306,
-        "locations_with_explain": 266,
-        "locations_default_rule": 40,
+        "game": "Archipelago",
+        "total_locations": 0,
+        "locations_with_explain": 0,
+        "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -537,7 +525,7 @@
         "world_directory": "fm",
         "apworld_download_url": "https://github.com/sg4e/Archipelago/releases/download/v2.1.2/fm.apworld"
       },
-      "timestamp": "2026-01-14T05:31:24.947301",
+      "timestamp": "2026-01-14T20:54:55.196700",
       "explain_stats": {
         "game": "Yu-Gi-Oh! Forbidden Memories WorldGen_79645483297583998146",
         "total_locations": 678,
@@ -577,7 +565,7 @@
         "world_directory": "another_crab",
         "apworld_download_url": "https://github.com/Automagic00/ACT-AP-Client-Plugin/releases/download/0.4.4/another_crab.apworld"
       },
-      "timestamp": "2026-01-14T05:24:27.799066",
+      "timestamp": "2026-01-14T20:47:25.551989",
       "explain_stats": {
         "game": "Another Crabs Treasure WorldGen_79645483297583998146",
         "total_locations": 614,
@@ -596,24 +584,20 @@
     },
     "ChecksMate.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 9,
-        "failure": 1,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            5
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "ChecksMate",
         "world_directory": "checksmate",
         "apworld_download_url": "https://github.com/chesslogic/chessv/releases/download/v0.3.1/checksmate.apworld"
       },
-      "timestamp": "2026-01-14T05:24:54.771702",
+      "timestamp": "2026-01-14T20:47:53.520104",
       "explain_stats": {
         "game": "ChecksMate",
         "total_locations": 71,
@@ -922,7 +906,7 @@
         "world_directory": "diddy_kong_racing",
         "apworld_download_url": "https://github.com/zakwiz/DiddyKongRacingAP/releases/download/v1.1.2/diddy_kong_racing.apworld"
       },
-      "timestamp": "2026-01-14T05:25:18.741696",
+      "timestamp": "2026-01-14T20:48:18.170958",
       "explain_stats": {
         "game": "Diddy Kong Racing WorldGen_55977854110148887761",
         "total_locations": 59,
@@ -1079,7 +1063,7 @@
         "world_directory": "gstla",
         "apworld_download_url": "https://github.com/cjmang/Archipelago/releases/download/0.2.2-beta/gstla.apworld"
       },
-      "timestamp": "2026-01-14T05:25:55.239389",
+      "timestamp": "2026-01-14T20:48:56.207294",
       "explain_stats": {
         "game": "Golden Sun The Lost Age WorldGen_79645483297583998146",
         "total_locations": 319,
@@ -1111,7 +1095,7 @@
         "world_directory": "kon",
         "apworld_download_url": "https://github.com/dannybonz/k-on_archipelago/releases/download/v1.1.3/kon.apworld"
       },
-      "timestamp": "2026-01-14T05:26:25.788940",
+      "timestamp": "2026-01-14T20:49:27.224635",
       "explain_stats": {
         "game": "K-On! After School Live!! WorldGen_79645483297583998146",
         "total_locations": 589,
@@ -1156,7 +1140,7 @@
         "world_directory": "little_witch_nobeta",
         "apworld_download_url": "https://github.com/danielgruethling/Archipelago/releases/download/0.2.1/little_witch_nobeta.apworld"
       },
-      "timestamp": "2026-01-14T05:26:52.877973",
+      "timestamp": "2026-01-14T20:49:55.046522",
       "explain_stats": {
         "game": "Little Witch Nobeta WorldGen_79645483297583998146",
         "total_locations": 55,
@@ -1191,8 +1175,8 @@
             5,
             6,
             7,
-            9,
-            8
+            8,
+            9
           ]
         }
       },
@@ -1201,7 +1185,7 @@
         "world_directory": "monster_sanctuary",
         "apworld_download_url": "https://github.com/Gtaray/archipelago-monstersanctuary/releases/download/v1.3.7-hotfix1/monster_sanctuary.apworld"
       },
-      "timestamp": "2026-01-14T05:27:54.052596",
+      "timestamp": "2026-01-14T20:50:58.753283",
       "explain_stats": {
         "game": "Monster Sanctuary WorldGen_79645483297583998146",
         "total_locations": 572,
@@ -9919,7 +9903,7 @@
         "world_directory": "rain_world",
         "apworld_download_url": "https://github.com/alphappy/ArchipelagoRW/releases/download/v1.3.2/rain_world.apworld"
       },
-      "timestamp": "2026-01-14T05:28:23.353064",
+      "timestamp": "2026-01-14T20:51:28.978108",
       "explain_stats": {
         "game": "Rain World WorldGen_86998726363870010506",
         "total_locations": 192,
@@ -9962,7 +9946,7 @@
         "world_directory": "sly2",
         "apworld_download_url": "https://github.com/NikolajDanger/APSly2/releases/download/v0.8.5/sly2.apworld"
       },
-      "timestamp": "2026-01-14T05:28:51.691051",
+      "timestamp": "2026-01-14T20:51:58.514528",
       "explain_stats": {
         "game": "Sly 2: Band of Thieves WorldGen_79645483297583998146",
         "total_locations": 170,
@@ -10007,7 +9991,7 @@
         "world_directory": "star_fox_64",
         "apworld_download_url": "https://github.com/Auztin/AP-Star-Fox-64/releases/download/v0.4.1/star_fox_64.apworld"
       },
-      "timestamp": "2026-01-14T05:29:20.442508",
+      "timestamp": "2026-01-14T20:52:28.813711",
       "explain_stats": {
         "game": "Star Fox 64 WorldGen_79645483297583998146",
         "total_locations": 107,
@@ -10029,15 +10013,16 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 8,
+        "failure": 9,
         "timeout": 0,
-        "ignored": 2,
+        "ignored": 1,
         "errors": {
           "None": [
             1,
             2,
             3,
             4,
+            6,
             7,
             9
           ],
@@ -10052,7 +10037,7 @@
         "world_directory": "tloz_ph",
         "apworld_download_url": "https://github.com/carrotinator/Archipelago/releases/download/v0.7.6-alpha/tloz_ph.apworld"
       },
-      "timestamp": "2026-01-14T05:30:25.376454",
+      "timestamp": "2026-01-14T20:53:48.344552",
       "explain_stats": {
         "game": "The Legend of Zelda - Phantom Hourglass WorldGen_11408892729106005028",
         "total_locations": 298,
@@ -10091,7 +10076,7 @@
         "world_directory": "yugiohddm",
         "apworld_download_url": "https://github.com/JustinMarshall98/Archipelago---YuGiOh-Dungeon-Dice-Monsters-GBA-/releases/download/v0.3.1/yugiohddm.apworld"
       },
-      "timestamp": "2026-01-14T05:30:51.939892",
+      "timestamp": "2026-01-14T20:54:16.666107",
       "explain_stats": {
         "game": "Yu-Gi-Oh! Dungeon Dice Monsters WorldGen_79645483297583998146",
         "total_locations": 92,
@@ -10122,10 +10107,10 @@
             1,
             2,
             3,
-            5,
             6,
-            7,
+            5,
             8,
+            7,
             9
           ]
         }
@@ -10135,7 +10120,7 @@
         "world_directory": "difficult_climbing",
         "apworld_download_url": "https://github.com/BlastSlimey/GrabbingChecks/releases/download/0.1.2/difficult_climbing.apworld"
       },
-      "timestamp": "2026-01-14T05:24:04.396117",
+      "timestamp": "2026-01-14T20:47:34.874583",
       "explain_stats": {
         "game": "A Difficult Game About Climbing WorldGen_79645483297583998146",
         "total_locations": 16,
@@ -10180,7 +10165,7 @@
         "world_directory": "apeescape",
         "apworld_download_url": "https://github.com/CDRomatron/Archipelago/releases/download/v0.10/apeescape.apworld"
       },
-      "timestamp": "2026-01-14T05:24:25.468136"
+      "timestamp": "2026-01-14T20:47:55.273149"
     },
     "ClusterTruck.yaml": {
       "ut_fuzz": {
@@ -10207,11 +10192,11 @@
         "world_directory": "cluster_truck",
         "apworld_download_url": "https://github.com/Nullctipus/ArchipelagoClusterTruck/releases/download/1.3.1/cluster_truck.apworld"
       },
-      "timestamp": "2026-01-14T05:24:47.512719",
+      "timestamp": "2026-01-14T20:48:16.832942",
       "explain_stats": {
         "game": "ClusterTruck WorldGen_68350589630253845453",
-        "total_locations": 109,
-        "locations_with_explain": 94,
+        "total_locations": 110,
+        "locations_with_explain": 95,
         "locations_default_rule": 15,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -10239,7 +10224,7 @@
         "world_directory": "dome_keeper",
         "apworld_download_url": "https://github.com/Arrcival/ArchipelagoDK/releases/download/v1.3.0/dome_keeper.apworld"
       },
-      "timestamp": "2026-01-14T05:25:13.497105",
+      "timestamp": "2026-01-14T20:48:42.053954",
       "explain_stats": {
         "game": "Dome Keeper WorldGen_79645483297583998146",
         "total_locations": 94,
@@ -10278,7 +10263,7 @@
         "world_directory": "hammerwatch",
         "apworld_download_url": "https://github.com/Parcosmic/Hammerwatch-Archipelago/releases/download/v1.2.3/hammerwatch.apworld"
       },
-      "timestamp": "2026-01-14T05:25:46.359376",
+      "timestamp": "2026-01-14T20:49:14.487210",
       "explain_stats": {
         "game": "Hammerwatch WorldGen_11408892729106005028",
         "total_locations": 1020,
@@ -10308,10 +10293,10 @@
             0,
             1,
             2,
-            3,
             4,
-            5,
+            3,
             6,
+            5,
             8,
             7,
             9
@@ -10323,7 +10308,7 @@
         "world_directory": "khbbs",
         "apworld_download_url": "https://github.com/gaithernOrg/ArchipelagoKHBBS/releases/download/0.1.7/khbbs.apworld"
       },
-      "timestamp": "2026-01-14T05:26:14.101756",
+      "timestamp": "2026-01-14T20:49:41.417066",
       "explain_stats": {
         "game": "Kingdom Hearts Birth by Sleep WorldGen_79645483297583998146",
         "total_locations": 223,
@@ -10367,7 +10352,7 @@
         "world_directory": "lunacid",
         "apworld_download_url": "https://github.com/Witchybun/LunacidAPClient/releases/download/1.0.0-pre1/lunacid.apworld"
       },
-      "timestamp": "2026-01-14T05:26:45.710485",
+      "timestamp": "2026-01-14T20:50:12.136787",
       "explain_stats": {
         "game": "Lunacid WorldGen_79645483297583998146",
         "total_locations": 1238,
@@ -11407,7 +11392,7 @@
         "world_directory": "oribf",
         "apworld_download_url": "https://github.com/c-ostic/Archipelago/releases/download/v0.3.3-alpha/oribf.apworld"
       },
-      "timestamp": "2026-01-14T05:29:39.001431",
+      "timestamp": "2026-01-14T20:53:07.125193",
       "explain_stats": {
         "game": "Ori and the Blind Forest WorldGen_22708164196567875238",
         "total_locations": 254,
@@ -11452,7 +11437,7 @@
         "world_directory": "reventure",
         "apworld_download_url": "https://github.com/Droppel/ReventureEndingRando/releases/download/0.19.1/reventure.apworld"
       },
-      "timestamp": "2026-01-14T05:30:06.715565",
+      "timestamp": "2026-01-14T20:53:33.488632",
       "explain_stats": {
         "game": "Reventure WorldGen_79645483297583998146",
         "total_locations": 99,
@@ -11492,7 +11477,7 @@
         "world_directory": "sadx",
         "apworld_download_url": "https://github.com/ClassicSpeed/sadx-classic-randomizer/releases/download/v1.1.3/sadx.apworld"
       },
-      "timestamp": "2026-01-14T05:30:36.845800",
+      "timestamp": "2026-01-14T20:54:02.779266",
       "explain_stats": {
         "game": "Sonic Adventure DX WorldGen_55977854110148887761",
         "total_locations": 685,
@@ -11531,7 +11516,7 @@
         "world_directory": "scp",
         "apworld_download_url": "https://github.com/lone01/scp/releases/download/v0.1.4b/scp.apworld"
       },
-      "timestamp": "2026-01-14T05:31:06.899661",
+      "timestamp": "2026-01-14T20:54:31.831739",
       "explain_stats": {
         "game": "Super Cat Planet WorldGen_79645483297583998146",
         "total_locations": 81,
@@ -11571,7 +11556,7 @@
         "world_directory": "tje",
         "apworld_download_url": "https://github.com/IgnisUmbrae/TJE-Archipelago/releases/download/v0.3.2/tje.apworld"
       },
-      "timestamp": "2026-01-14T05:31:33.189835",
+      "timestamp": "2026-01-14T20:54:56.916704",
       "explain_stats": {
         "game": "ToeJam and Earl WorldGen_79645483297583998146",
         "total_locations": 605,
@@ -11603,7 +11588,7 @@
         "world_directory": "zelda2",
         "apworld_download_url": "https://github.com/PinkSwitch/Archipelago/releases/download/Zelda2ap1.1/zelda2.apworld"
       },
-      "timestamp": "2026-01-14T05:32:01.201523",
+      "timestamp": "2026-01-14T20:55:24.287033",
       "explain_stats": {
         "game": "Zelda II: The Adventure of Link WorldGen_79645483297583998146",
         "total_locations": 106,
@@ -11654,7 +11639,7 @@
         "world_directory": "albw",
         "apworld_download_url": "https://github.com/randomsalience/albw-archipelago/releases/download/v0.1.5/albw.apworld"
       },
-      "timestamp": "2026-01-14T05:24:14.266011",
+      "timestamp": "2026-01-14T20:47:33.555237",
       "explain_stats": {
         "game": "A Link Between Worlds WorldGen_22708164196567875238",
         "total_locations": 257,
@@ -16067,7 +16052,7 @@
         "world_directory": "astalon",
         "apworld_download_url": "https://github.com/drtchops/Archipelago-Astalon/releases/download/v0.27.0/astalon.apworld"
       },
-      "timestamp": "2026-01-14T05:24:43.024977",
+      "timestamp": "2026-01-14T20:48:03.551638",
       "explain_stats": {
         "game": "Astalon WorldGen_79645483297583998146",
         "total_locations": 290,
@@ -16112,7 +16097,7 @@
         "world_directory": "cornkidz64",
         "apworld_download_url": "https://github.com/Cyb3RGER/cornkidz64_apworld/releases/download/v0.0.5/cornkidz64.apworld"
       },
-      "timestamp": "2026-01-14T05:25:15.105108",
+      "timestamp": "2026-01-14T20:48:36.481352",
       "explain_stats": {
         "game": "Corn Kidz 64 WorldGen_79645483297583998146",
         "total_locations": 187,
@@ -16141,7 +16126,7 @@
           "None": [
             0,
             1,
-            2,
+            3,
             4,
             5,
             6,
@@ -16155,135 +16140,101 @@
         "world_directory": "duke3d",
         "apworld_download_url": "https://github.com/LLCoolDave/Duke3DAP/releases/download/0.0.8/duke3d.apworld"
       },
-      "timestamp": "2026-01-14T05:25:40.548573",
+      "timestamp": "2026-01-14T20:49:02.734563",
       "explain_stats": {
         "game": "Duke Nukem 3D",
-        "total_locations": 90,
+        "total_locations": 167,
         "locations_with_explain": 0,
-        "locations_default_rule": 69,
-        "locations_without_explain": 21,
+        "locations_default_rule": 152,
+        "locations_without_explain": 15,
         "explain_coverage_percent": 0.0,
         "locations_without_explain_list": [
           {
-            "name": "E1L6 Start Protective Boots",
-            "region": "E1L6 Launch Facility"
+            "name": "E4L1 Exit",
+            "region": "E4L1 Exit Region"
           },
           {
-            "name": "E1L6 Dark Room Atomic Health",
-            "region": "E1L6 Past Forcefield"
+            "name": "E4L9 Crate Freezethrower",
+            "region": "E4L9 Upper Deck Inside"
           },
           {
-            "name": "E1L6 Exit",
-            "region": "E1L6 Rocket Pit"
+            "name": "E4L9 Low Deck Atomic Health",
+            "region": "E4L9 Upper Deck Inside"
           },
           {
-            "name": "E3L7 Exit",
-            "region": "E3L7 Exit Area"
+            "name": "E4L9 Captains Night Vision Goggles",
+            "region": "E4L9 Blue Key Area"
           },
           {
-            "name": "E3L7 Fire Truck Holo Duke",
-            "region": "E3L7 Fire Truck"
+            "name": "E4L9 Yellow Upper Atomic Health",
+            "region": "E4L9 Yellow Upper Area"
           },
           {
-            "name": "E3L7 Yellow Key Card",
-            "region": "E3L7 Fire Station"
+            "name": "E4L9 Yellow Upper Pipebombs",
+            "region": "E4L9 Yellow Upper Area"
           },
           {
-            "name": "E1L2 Secret Pornography Store Dark Area",
-            "region": "E1L2 Pornography Store"
+            "name": "E4L9 Exit",
+            "region": "E4L9 Yellow Final Area"
           },
           {
-            "name": "E1L2 Video Booth Steroids",
-            "region": "E1L2 Pornography Store"
+            "name": "E1L1 Vent Holo Duke",
+            "region": "E1L1 Toilet Vent"
           },
           {
-            "name": "E1L2 Toilets Night Vision Goggles",
-            "region": "E1L2 Pornography Store"
+            "name": "E1L1 Arcade Holo Duke",
+            "region": "E1L1 Arcade"
           },
           {
-            "name": "E1L2 Blue Key Card",
-            "region": "E1L2 Apartment"
+            "name": "E1L1 Poster Steroids",
+            "region": "E1L1 Apartments"
           },
           {
-            "name": "E1L2 Red Key Card",
-            "region": "E1L2 Strip Club"
+            "name": "E1L1 Secret Behind Poster",
+            "region": "E1L1 Apartments"
           },
           {
-            "name": "E3L3 Start Scuba Gear",
-            "region": "E3L3 Flood Zone"
+            "name": "E1L1 Exit",
+            "region": "E1L1 Exit Ledge"
           },
           {
-            "name": "E3L3 Secret Canyon Alcove Window",
-            "region": "E3L3 Red Door Building Top"
+            "name": "E4L2 Outside Sign Shrinker",
+            "region": "E4L2 Outside Sign"
           },
           {
-            "name": "E3L3 Secret Hard Hat Area",
-            "region": "E3L3 Beyond Red Door"
+            "name": "E4L2 Blue Key Card",
+            "region": "E4L2 Outside Sign"
           },
           {
-            "name": "E3L3 Exit Atomic Health",
-            "region": "E3L3 Beyond Red Door"
-          },
-          {
-            "name": "E3L3 Exit",
-            "region": "E3L3 Beyond Red Door"
-          },
-          {
-            "name": "E3L4 Abortion Clinic Steroids",
-            "region": "E3L4 L.A. Rumble"
-          },
-          {
-            "name": "E3L4 Secret Office Painting",
-            "region": "E3L4 Office Building"
-          },
-          {
-            "name": "E3L4 Red Key Card",
-            "region": "E3L4 Office Building"
-          },
-          {
-            "name": "E3L4 Exit",
-            "region": "E3L4 Office Building"
-          },
-          {
-            "name": "E3L9 Exit",
-            "region": "E3L9 Stadium"
+            "name": "E4L2 Counter Burger Box Atomic Health",
+            "region": "E4L2 Inside DB Front"
           }
         ],
-        "total_entrances": 6,
+        "total_entrances": 4,
         "entrances_with_explain": 0,
         "entrances_default_rule": 0,
-        "entrances_without_explain": 6,
+        "entrances_without_explain": 4,
         "entrance_explain_coverage_percent": 0.0,
         "entrances_without_explain_list": [
           {
-            "name": "Menu -> E1L6 Launch Facility",
+            "name": "Menu -> E4L1 It's Impossible",
             "from_region": "Menu",
-            "to_region": "E1L6 Launch Facility"
+            "to_region": "E4L1 It's Impossible"
           },
           {
-            "name": "Menu -> E3L7 Fahrenheit",
+            "name": "Menu -> E4L9 Derelict",
             "from_region": "Menu",
-            "to_region": "E3L7 Fahrenheit"
+            "to_region": "E4L9 Derelict"
           },
           {
-            "name": "Menu -> E1L2 Red Light District",
+            "name": "Menu -> E1L1 Hollywood Holocaust",
             "from_region": "Menu",
-            "to_region": "E1L2 Red Light District"
+            "to_region": "E1L1 Hollywood Holocaust"
           },
           {
-            "name": "Menu -> E3L3 Flood Zone",
+            "name": "Menu -> E4L2 Duke-Burger",
             "from_region": "Menu",
-            "to_region": "E3L3 Flood Zone"
-          },
-          {
-            "name": "Menu -> E3L4 L.A. Rumble",
-            "from_region": "Menu",
-            "to_region": "E3L4 L.A. Rumble"
-          },
-          {
-            "name": "Menu -> E3L9 Stadium",
-            "from_region": "Menu",
-            "to_region": "E3L9 Stadium"
+            "to_region": "E4L2 Duke-Burger"
           }
         ]
       }
@@ -16303,7 +16254,7 @@
         "world_directory": "megamix",
         "apworld_download_url": "https://github.com/Cynichill/DivaAPworld/releases/download/1.4.3B/megamix.apworld"
       },
-      "timestamp": "2026-01-14T05:26:08.967988",
+      "timestamp": "2026-01-14T20:49:32.603529",
       "explain_stats": {
         "game": "Hatsune Miku Project Diva Mega Mix+ WorldGen_79645483297583998146",
         "total_locations": 500,
@@ -16335,7 +16286,7 @@
         "world_directory": "khcom",
         "apworld_download_url": "https://github.com/gaithernOrg/ArchipelagoKHCOM/releases/download/1.0.1/khcom.apworld"
       },
-      "timestamp": "2026-01-14T05:26:34.041538",
+      "timestamp": "2026-01-14T20:49:58.528729",
       "explain_stats": {
         "game": "Kingdom Hearts Chain of Memories WorldGen_79645483297583998146",
         "total_locations": 151,
@@ -16380,7 +16331,7 @@
         "world_directory": "mm_recomp",
         "apworld_download_url": "https://github.com/RecompRando/MMRecompRando/releases/download/v0.9.5a/mm_recomp.apworld"
       },
-      "timestamp": "2026-01-14T05:26:55.621189"
+      "timestamp": "2026-01-14T20:50:20.638919"
     },
     "Ori and the Will of the Wisps.yaml": {
       "ut_fuzz": {
@@ -16409,7 +16360,7 @@
         "world_directory": "ori_wotw",
         "apworld_download_url": "https://github.com/Satisha10/APwotw_release/releases/download/v0.4.2/ori_wotw.apworld"
       },
-      "timestamp": "2026-01-14T05:30:23.270266"
+      "timestamp": "2026-01-14T20:53:49.419244"
     },
     "Rift Wizard.yaml": {
       "ut_fuzz": {
@@ -16429,8 +16380,8 @@
             5,
             6,
             7,
-            8,
-            9
+            9,
+            8
           ]
         }
       },
@@ -16439,7 +16390,7 @@
         "world_directory": "riftwizard",
         "apworld_download_url": "https://github.com/TheBigSalarius/Archipelago/releases/download/v1.3.1/riftwizard.apworld"
       },
-      "timestamp": "2026-01-14T05:30:48.001189",
+      "timestamp": "2026-01-14T20:54:15.056476",
       "explain_stats": {
         "game": "Rift Wizard WorldGen_79645483297583998146",
         "total_locations": 83,
@@ -16480,7 +16431,7 @@
         "world_directory": "sonic_heroes",
         "apworld_download_url": "https://github.com/EthicalLogic-Archipelago-Org/SonicHeroesArchipelago/releases/download/2.0.1/sonic_heroes.apworld"
       },
-      "timestamp": "2026-01-14T05:32:41.121582",
+      "timestamp": "2026-01-14T20:56:10.754716",
       "explain_stats": {
         "game": "Sonic Heroes WorldGen_79645483297583998146",
         "total_locations": 134,
@@ -16512,7 +16463,7 @@
         "world_directory": "sotn",
         "apworld_download_url": "https://github.com/fdelduque/Archipelago/releases/download/a08141/sotn.apworld"
       },
-      "timestamp": "2026-01-14T05:33:09.032784",
+      "timestamp": "2026-01-14T20:56:41.351350",
       "explain_stats": {
         "game": "Symphony of the Night WorldGen_79645483297583998146",
         "total_locations": 187,
@@ -16542,10 +16493,10 @@
             0,
             1,
             2,
-            3,
             4,
-            5,
+            3,
             6,
+            5,
             7,
             8,
             9
@@ -16557,7 +16508,7 @@
         "world_directory": "turnipboy",
         "apworld_download_url": "https://github.com/pointfivetee/TurnipBoyRandomizer/releases/download/v0.1.3/turnipboy.apworld"
       },
-      "timestamp": "2026-01-14T05:33:33.163074",
+      "timestamp": "2026-01-14T20:57:07.501296",
       "explain_stats": {
         "game": "TurnipBoy WorldGen_79645483297583998146",
         "total_locations": 45,
@@ -16589,7 +16540,7 @@
         "world_directory": "osu",
         "apworld_download_url": "https://github.com/lilymnky-F/Archipelago-Osu/releases/download/v1.3/osu.apworld"
       },
-      "timestamp": "2026-01-14T05:34:25.867619",
+      "timestamp": "2026-01-14T20:58:02.728887",
       "explain_stats": {
         "game": "osu! WorldGen_22708164196567875238",
         "total_locations": 148,
@@ -16633,7 +16584,7 @@
         "world_directory": "animal_well",
         "apworld_download_url": "https://github.com/ScipioWright/Archipelago-SW/releases/download/0.5.3/animal_well.apworld"
       },
-      "timestamp": "2026-01-14T05:24:02.407515",
+      "timestamp": "2026-01-14T20:47:31.908774",
       "explain_stats": {
         "game": "ANIMAL WELL WorldGen_79645483297583998146",
         "total_locations": 120,
@@ -16678,7 +16629,7 @@
         "world_directory": "autopelago",
         "apworld_download_url": "https://github.com/airbreather/Autopelago/releases/download/v0.11.7/autopelago.apworld"
       },
-      "timestamp": "2026-01-14T05:25:27.781044",
+      "timestamp": "2026-01-14T20:48:57.142086",
       "explain_stats": {
         "game": "Autopelago WorldGen_79645483297583998146",
         "total_locations": 246,
@@ -16723,7 +16674,7 @@
         "world_directory": "crosscode",
         "apworld_download_url": "https://github.com/CodeTriangle/CCMultiworldRandomizer/releases/download/0.8.0-pre.1/crosscode.apworld"
       },
-      "timestamp": "2026-01-14T05:26:51.400086",
+      "timestamp": "2026-01-14T20:50:19.168348",
       "explain_stats": {
         "game": "CrossCode WorldGen_22708164196567875238",
         "total_locations": 432,
@@ -16755,10 +16706,8 @@
             5,
             6,
             7,
+            8,
             9
-          ],
-          "'' is not in list": [
-            8
           ]
         }
       },
@@ -16767,7 +16716,7 @@
         "world_directory": "ffta2",
         "apworld_download_url": "https://github.com/Rurusachi/Archipelago/releases/download/FFTA2_0.0.9/ffta2.apworld"
       },
-      "timestamp": "2026-01-14T05:27:15.052415"
+      "timestamp": "2026-01-14T20:50:42.206908"
     },
     "Here Comes Niko!.yaml": {
       "ut_fuzz": {
@@ -16793,7 +16742,7 @@
         "world_directory": "hcniko",
         "apworld_download_url": "https://github.com/niieli/Niko-Archipelago/releases/download/0.8.0/hcniko.apworld"
       },
-      "timestamp": "2026-01-14T05:27:51.993325",
+      "timestamp": "2026-01-14T20:51:16.849572",
       "explain_stats": {
         "game": "Here Comes Niko! WorldGen_79645483297583998146",
         "total_locations": 944,
@@ -16825,7 +16774,7 @@
         "world_directory": "khrecom",
         "apworld_download_url": "https://github.com/gaithernOrg/ArchipelagoKHRECOM/releases/download/1.4.3/khrecom.apworld"
       },
-      "timestamp": "2026-01-14T05:28:20.924688",
+      "timestamp": "2026-01-14T20:51:43.701551",
       "explain_stats": {
         "game": "Kingdom Hearts RE Chain of Memories",
         "total_locations": 247,
@@ -17313,23 +17262,21 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 9,
-        "timeout": 1,
+        "failure": 10,
+        "timeout": 0,
         "ignored": 0,
         "errors": {
           "None": [
             0,
+            1,
             2,
             3,
             4,
             5,
             6,
             7,
-            8,
-            9
-          ],
-          "<class 'TimeoutError'>": [
-            1
+            9,
+            8
           ]
         }
       },
@@ -17338,12 +17285,12 @@
         "world_directory": "mario_kart_double_dash",
         "apworld_download_url": "https://github.com/aXu-AP/archipelago-double-dash/releases/download/v0.2.3/mario_kart_double_dash.apworld"
       },
-      "timestamp": "2026-01-14T05:33:39.574561",
+      "timestamp": "2026-01-14T20:56:49.196732",
       "explain_stats": {
-        "game": "Mario Kart Double Dash WorldGen_55977854110148887761",
-        "total_locations": 166,
+        "game": "Mario Kart Double Dash WorldGen_79645483297583998146",
+        "total_locations": 182,
         "locations_with_explain": 0,
-        "locations_default_rule": 165,
+        "locations_default_rule": 181,
         "locations_without_explain": 1,
         "explain_coverage_percent": 0.0,
         "locations_without_explain_list": [
@@ -17352,9 +17299,9 @@
             "region": "Menu"
           }
         ],
-        "total_entrances": 37,
-        "entrances_with_explain": 5,
-        "entrances_default_rule": 32,
+        "total_entrances": 69,
+        "entrances_with_explain": 21,
+        "entrances_default_rule": 48,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -17379,7 +17326,7 @@
         "world_directory": "oni",
         "apworld_download_url": "https://github.com/ShadowKitty42/ONI-Archipelago/releases/download/v0.99/oni.apworld"
       },
-      "timestamp": "2026-01-14T05:34:04.452914",
+      "timestamp": "2026-01-14T20:57:13.355441",
       "explain_stats": {
         "game": "Oxygen Not Included WorldGen_11408892729106005028",
         "total_locations": 367,
@@ -17417,7 +17364,7 @@
         "world_directory": "rotn",
         "apworld_download_url": "https://github.com/studkid/RiftArchipelago/releases/download/v0.8.1/rotn.apworld"
       },
-      "timestamp": "2026-01-14T05:34:27.892243",
+      "timestamp": "2026-01-14T20:57:35.893917",
       "explain_stats": {
         "game": "Rift of the Necrodancer WorldGen_79645483297583998146",
         "total_locations": 294,
@@ -17460,7 +17407,7 @@
         "world_directory": "sonic_rush",
         "apworld_download_url": "https://github.com/BlastSlimey/SonicRushAP/releases/download/0.2.3/sonic_rush.apworld"
       },
-      "timestamp": "2026-01-14T05:34:50.882583",
+      "timestamp": "2026-01-14T20:57:58.391741",
       "explain_stats": {
         "game": "Sonic Rush WorldGen_79645483297583998146",
         "total_locations": 67,
@@ -17491,8 +17438,8 @@
             5,
             6,
             7,
-            9,
-            8
+            8,
+            9
           ],
           "None": [
             1,
@@ -17506,7 +17453,7 @@
         "world_directory": "ss2",
         "apworld_download_url": "https://codeberg.org/Partatio/SS2-Apworld/releases/download/0.4.1/ss2.apworld"
       },
-      "timestamp": "2026-01-14T05:35:14.026667",
+      "timestamp": "2026-01-14T20:58:21.494617",
       "explain_stats": {
         "game": "System Shock 2 WorldGen_55977854110148887761",
         "total_locations": 708,
@@ -17544,7 +17491,7 @@
         "world_directory": "tyrian",
         "apworld_download_url": "https://github.com/KScl/TyrianArchipelago/releases/download/v1.0.3/tyrian.apworld"
       },
-      "timestamp": "2026-01-14T05:35:44.250685",
+      "timestamp": "2026-01-14T20:58:51.363210",
       "explain_stats": {
         "game": "Tyrian WorldGen_55977854110148887761",
         "total_locations": 135,
@@ -17580,7 +17527,7 @@
         "world_directory": "plateup",
         "apworld_download_url": "https://github.com/CazIsABoi/Archipelago/releases/download/0.2.3.1/plateup.apworld"
       },
-      "timestamp": "2026-01-14T05:36:52.441368",
+      "timestamp": "2026-01-14T20:59:58.997899",
       "explain_stats": {
         "game": "plateup WorldGen_22708164196567875238",
         "total_locations": 900,
@@ -17612,7 +17559,7 @@
         "world_directory": "actraiser",
         "apworld_download_url": "https://github.com/Happyhappyism/Archipelago/releases/download/apraiser_v133/actraiser.apworld"
       },
-      "timestamp": "2026-01-14T05:24:07.490947",
+      "timestamp": "2026-01-14T20:47:34.374649",
       "explain_stats": {
         "game": "Actraiser WorldGen_79645483297583998146",
         "total_locations": 175,
@@ -17643,8 +17590,8 @@
             1,
             2,
             3,
-            4,
             5,
+            4,
             6,
             7,
             8,
@@ -17657,7 +17604,7 @@
         "world_directory": "axiomverge",
         "apworld_download_url": "https://github.com/mail-liam/Archipelago/releases/download/beta3.2/axiomverge.apworld"
       },
-      "timestamp": "2026-01-14T05:24:39.775741",
+      "timestamp": "2026-01-14T20:48:05.008662",
       "explain_stats": {
         "game": "Axiom Verge WorldGen_79645483297583998146",
         "total_locations": 125,
@@ -18207,7 +18154,7 @@
         "world_directory": "crystal_project",
         "apworld_download_url": "https://github.com/Emerassi/CrystalProjectAPWorld/releases/download/CrystalProject-v0.13.0/crystal_project.apworld"
       },
-      "timestamp": "2026-01-14T05:25:42.098171",
+      "timestamp": "2026-01-14T20:49:04.304842",
       "explain_stats": {
         "game": "Crystal Project WorldGen_79645483297583998146",
         "total_locations": 1264,
@@ -19744,7 +19691,7 @@
         "world_directory": "ffta",
         "apworld_download_url": "https://github.com/spicynun/Archipelago/releases/download/0.6.5/ffta.apworld"
       },
-      "timestamp": "2026-01-14T05:26:12.018916",
+      "timestamp": "2026-01-14T20:49:32.183988",
       "explain_stats": {
         "game": "Final Fantasy Tactics Advance WorldGen_79645483297583998146",
         "total_locations": 552,
@@ -19789,7 +19736,7 @@
         "world_directory": "iji",
         "apworld_download_url": "https://github.com/Minish-Link/Iji-Archipelago/releases/download/v1.2.5/iji.apworld"
       },
-      "timestamp": "2026-01-14T05:27:56.587160",
+      "timestamp": "2026-01-14T20:51:12.635943",
       "explain_stats": {
         "game": "Iji WorldGen_22708164196567875238",
         "total_locations": 177,
@@ -19821,7 +19768,7 @@
         "world_directory": "kss",
         "apworld_download_url": "https://github.com/Silvris/Archipelago/releases/download/kss_0.1.7/kss.apworld"
       },
-      "timestamp": "2026-01-14T05:28:18.858487"
+      "timestamp": "2026-01-14T20:51:33.566222"
     },
     "MetroCUBEvania.yaml": {
       "ut_fuzz": {
@@ -19838,7 +19785,7 @@
         "world_directory": "metrocubevania",
         "apworld_download_url": "https://github.com/ap-metrocubevania/ap-metrocubevania/releases/download/v_0.2.0_beta/metrocubevania.apworld"
       },
-      "timestamp": "2026-01-14T05:28:43.476713",
+      "timestamp": "2026-01-14T20:51:56.633460",
       "explain_stats": {
         "game": "MetroCUBEvania WorldGen_79645483297583998146",
         "total_locations": 9,
@@ -19882,7 +19829,7 @@
         "world_directory": "pizza_tower",
         "apworld_download_url": "https://github.com/unsafetyskizzers/Archipelago/releases/download/1.2.5/pizza_tower.apworld"
       },
-      "timestamp": "2026-01-14T05:29:15.824474",
+      "timestamp": "2026-01-14T20:52:27.428459",
       "explain_stats": {
         "game": "Pizza Tower WorldGen_79645483297583998146",
         "total_locations": 224,
@@ -19929,9 +19876,9 @@
       "world_info": {
         "game_name": "Rusted Moss",
         "world_directory": "rusted_moss",
-        "apworld_download_url": "https://github.com/Harlem512/Archipelago/releases/download/v0.1.7-alpha-gimmick/rusted_moss.apworld"
+        "apworld_download_url": "https://github.com/dgrossmann144/Archipelago/releases/download/v0.1.6-alpha/rusted_moss.apworld"
       },
-      "timestamp": "2026-01-14T05:29:48.872832",
+      "timestamp": "2026-01-14T20:52:59.239172",
       "explain_stats": {
         "game": "Rusted Moss WorldGen_11408892729106005028",
         "total_locations": 100,
@@ -19973,7 +19920,7 @@
         "world_directory": "sonic1",
         "apworld_download_url": "https://github.com/kaithar/Archipelago/releases/download/sonic_1-v0.1.1/sonic1.apworld"
       },
-      "timestamp": "2026-01-14T05:30:34.010815",
+      "timestamp": "2026-01-14T20:53:41.603160",
       "explain_stats": {
         "game": "Sonic the Hedgehog 1 WorldGen_79645483297583998146",
         "total_locations": 208,
@@ -20018,7 +19965,7 @@
         "world_directory": "tcg_card_shop_simulator",
         "apworld_download_url": "https://github.com/FyreDay/Archipelago-TCGCardShopSimulator/releases/download/v0.5.13/tcg_card_shop_simulator.apworld"
       },
-      "timestamp": "2026-01-14T05:31:13.283692",
+      "timestamp": "2026-01-14T20:54:17.696988",
       "explain_stats": {
         "game": "TCG Card Shop Simulator WorldGen_79645483297583998146",
         "total_locations": 794,
@@ -20054,17 +20001,17 @@
         "world_directory": "vampire_survivors",
         "apworld_download_url": "https://github.com/SWCreeperKing/ArchipelagoSurvivors/releases/download/v0.2/vampire_survivors.apworld"
       },
-      "timestamp": "2026-01-14T05:31:39.778154",
+      "timestamp": "2026-01-14T20:54:42.310644",
       "explain_stats": {
         "game": "Vampire Survivors WorldGen_68350589630253845453",
-        "total_locations": 256,
-        "locations_with_explain": 90,
-        "locations_default_rule": 166,
+        "total_locations": 275,
+        "locations_with_explain": 98,
+        "locations_default_rule": 177,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 17,
-        "entrances_with_explain": 16,
+        "total_entrances": 18,
+        "entrances_with_explain": 17,
         "entrances_default_rule": 1,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
@@ -20101,7 +20048,7 @@
         "world_directory": "against_the_storm",
         "apworld_download_url": "https://github.com/Ryguy-9999/ArchipelagoATS/releases/download/v1.1.0/against_the_storm.apworld"
       },
-      "timestamp": "2026-01-14T05:25:53.284881",
+      "timestamp": "2026-01-14T20:48:56.924548",
       "explain_stats": {
         "game": "Against the Storm WorldGen_55977854110148887761",
         "total_locations": 176,
@@ -20144,7 +20091,7 @@
         "world_directory": "balatro",
         "apworld_download_url": "https://github.com/BurndiL/BalatroAP/releases/download/v0.1.9/balatro.apworld"
       },
-      "timestamp": "2026-01-14T05:26:30.033977",
+      "timestamp": "2026-01-14T20:49:37.182623",
       "explain_stats": {
         "game": "Balatro WorldGen_68350589630253845453",
         "total_locations": 966,
@@ -20186,7 +20133,7 @@
         "world_directory": "crystalis",
         "apworld_download_url": "https://github.com/Ars-Ignis/Archipelago/releases/download/v2.0.4/crystalis.apworld"
       },
-      "timestamp": "2026-01-14T05:26:56.706504",
+      "timestamp": "2026-01-14T20:50:06.018246",
       "explain_stats": {
         "game": "Crystalis WorldGen_79645483297583998146",
         "total_locations": 101,
@@ -20231,7 +20178,7 @@
         "world_directory": "fe8",
         "apworld_download_url": "https://github.com/CT075/Archipelago/releases/download/fe8-0.4.2/fe8.apworld"
       },
-      "timestamp": "2026-01-14T05:27:19.184388",
+      "timestamp": "2026-01-14T20:50:30.257994",
       "explain_stats": {
         "game": "Fire Emblem Sacred Stones WorldGen_79645483297583998146",
         "total_locations": 52,
@@ -20278,7 +20225,7 @@
         "world_directory": "into_the_breach",
         "apworld_download_url": "https://github.com/Ishigh1/ITB-randomizer-for-AP/releases/download/v0.15.18/into_the_breach.apworld"
       },
-      "timestamp": "2026-01-14T05:27:38.485953",
+      "timestamp": "2026-01-14T20:50:50.887081",
       "explain_stats": {
         "game": "Into the Breach WorldGen_79645483297583998146",
         "total_locations": 21,
@@ -20395,7 +20342,7 @@
         "world_directory": "lol",
         "apworld_download_url": "https://github.com/gaithernOrg/LoLAP/releases/download/0.1.5/lol.apworld"
       },
-      "timestamp": "2026-01-14T05:28:10.229327",
+      "timestamp": "2026-01-14T20:51:24.957014",
       "explain_stats": {
         "game": "League of Legends WorldGen_22708164196567875238",
         "total_locations": 510,
@@ -20427,7 +20374,7 @@
         "world_directory": "metroidfusion",
         "apworld_download_url": "https://github.com/Rosalie-A/Archipelago/releases/download/MF-v17/metroidfusion.apworld"
       },
-      "timestamp": "2026-01-14T05:28:40.773785",
+      "timestamp": "2026-01-14T20:51:57.909501",
       "explain_stats": {
         "game": "Metroid Fusion",
         "total_locations": 126,
@@ -22303,7 +22250,7 @@
         "world_directory": "pokemon_frlg",
         "apworld_download_url": "https://github.com/vyneras/Archipelago/releases/download/1.0.2/pokemon_frlg.apworld"
       },
-      "timestamp": "2026-01-14T05:31:11.130030",
+      "timestamp": "2026-01-14T20:54:38.520684",
       "explain_stats": {
         "game": "Pokemon FireRed and LeafGreen WorldGen_22708164196567875238",
         "total_locations": 1026,
@@ -23032,7 +22979,7 @@
         "world_directory": "sotm",
         "apworld_download_url": "https://github.com/Totox00/Archipelago-sotm/releases/download/v0.4.4/sotm.apworld"
       },
-      "timestamp": "2026-01-14T05:32:38.316979"
+      "timestamp": "2026-01-14T20:56:07.775651"
     },
     "Soul Blazer.yaml": {
       "ut_fuzz": {
@@ -23062,7 +23009,7 @@
         "world_directory": "soulblazer",
         "apworld_download_url": "https://github.com/Tranquilite0/Archipelago-SoulBlazer/releases/download/v0.6.1/soulblazer.apworld"
       },
-      "timestamp": "2026-01-14T05:33:04.616991",
+      "timestamp": "2026-01-14T20:56:35.940757",
       "explain_stats": {
         "game": "Soul Blazer WorldGen_79645483297583998146",
         "total_locations": 300,
@@ -23747,7 +23694,7 @@
         "world_directory": "toem",
         "apworld_download_url": "https://github.com/bbernardoni/Archipelago.TOEM/releases/download/1.1.1/toem.apworld"
       },
-      "timestamp": "2026-01-14T05:33:27.415884",
+      "timestamp": "2026-01-14T20:57:00.108203",
       "explain_stats": {
         "game": "TOEM original WorldGen_79645483297583998146",
         "total_locations": 191,
@@ -23792,7 +23739,7 @@
         "world_directory": "wl",
         "apworld_download_url": "https://github.com/randomcodegen/Archipelago/releases/download/1.2.6/wl.apworld"
       },
-      "timestamp": "2026-01-14T05:33:48.148462"
+      "timestamp": "2026-01-14T20:57:21.835391"
     },
     "Air Delivery.yaml": {
       "ut_fuzz": {
@@ -23822,7 +23769,7 @@
         "world_directory": "air_delivery",
         "apworld_download_url": "https://github.com/qwint/ap-air-delivery/releases/download/0.1.6/air_delivery.apworld"
       },
-      "timestamp": "2026-01-14T05:24:14.206187",
+      "timestamp": "2026-01-14T20:47:12.940331",
       "explain_stats": {
         "game": "Air Delivery WorldGen_79645483297583998146",
         "total_locations": 27,
@@ -23854,7 +23801,7 @@
         "world_directory": "brotato",
         "apworld_download_url": "https://github.com/SpenserHaddad/Brotato-ArchipelagoClient/releases/download/v0.12.1/brotato.apworld"
       },
-      "timestamp": "2026-01-14T05:24:39.094424",
+      "timestamp": "2026-01-14T20:47:38.306437",
       "explain_stats": {
         "game": "Brotato WorldGen_79645483297583998146",
         "total_locations": 153,
@@ -23886,7 +23833,7 @@
         "world_directory": "cuphead",
         "apworld_download_url": "https://github.com/JKLeckr/Archipelago-cuphead/releases/download/alpha02a/cuphead.apworld"
       },
-      "timestamp": "2026-01-14T05:25:00.262939"
+      "timestamp": "2026-01-14T20:47:59.591306"
     },
     "Frogmonster.yaml": {
       "ut_fuzz": {
@@ -23916,7 +23863,7 @@
         "world_directory": "frogmonster",
         "apworld_download_url": "https://github.com/Rooby-Roo/FrogmonsterAPWorld/releases/download/v0.2.2/frogmonster.apworld"
       },
-      "timestamp": "2026-01-14T05:25:24.973181",
+      "timestamp": "2026-01-14T20:48:24.637974",
       "explain_stats": {
         "game": "Frogmonster WorldGen_79645483297583998146",
         "total_locations": 120,
@@ -23948,7 +23895,7 @@
         "world_directory": "isles_of_sea_and_sky",
         "apworld_download_url": "https://github.com/Kim-Delicious/Archipelago_IslesOfSeaAndSky/releases/download/v0_0_14/isles_of_sea_and_sky.apworld"
       },
-      "timestamp": "2026-01-14T05:25:56.914491",
+      "timestamp": "2026-01-14T20:48:56.962271",
       "explain_stats": {
         "game": "Isles Of Sea And Sky WorldGen_79645483297583998146",
         "total_locations": 586,
@@ -23984,7 +23931,7 @@
         "world_directory": "lego_star_wars_tcs",
         "apworld_download_url": "https://github.com/Mysteryem/Archipelago-TCS/releases/download/v1.3.0/lego_star_wars_tcs.apworld"
       },
-      "timestamp": "2026-01-14T05:26:26.637223",
+      "timestamp": "2026-01-14T20:49:27.333828",
       "explain_stats": {
         "game": "Lego Star Wars: The Complete Saga",
         "total_locations": 74,
@@ -24098,7 +24045,7 @@
         "world_directory": "mzm",
         "apworld_download_url": "https://github.com/lilDavid/Archipelago-Metroid-Zero-Mission/releases/download/0.4.2/mzm.apworld"
       },
-      "timestamp": "2026-01-14T05:26:54.383514",
+      "timestamp": "2026-01-14T20:49:55.848797",
       "explain_stats": {
         "game": "Metroid Zero Mission WorldGen_79645483297583998146",
         "total_locations": 100,
@@ -24145,7 +24092,7 @@
         "world_directory": "pmd_eos",
         "apworld_download_url": "https://github.com/CrypticMonkey33/ArchipelagoExplorersOfSky/releases/download/v0.3.2rc1/pmd_eos.apworld"
       },
-      "timestamp": "2026-01-14T05:27:33.570280",
+      "timestamp": "2026-01-14T20:50:35.698387",
       "explain_stats": {
         "game": "Pokemon Mystery Dungeon Explorers of Sky WorldGen_22708164196567875238",
         "total_locations": 2523,
@@ -24183,7 +24130,7 @@
         "world_directory": "shadow_the_hedgehog",
         "apworld_download_url": "https://github.com/choatix/Archipelago/releases/download/shadow-0.3.3/shadow_the_hedgehog.apworld"
       },
-      "timestamp": "2026-01-14T05:28:11.889296",
+      "timestamp": "2026-01-14T20:51:14.191244",
       "explain_stats": {
         "game": "Shadow The Hedgehog WorldGen_86998726363870010506",
         "total_locations": 935,
@@ -24215,7 +24162,7 @@
         "world_directory": "spinball",
         "apworld_download_url": "https://github.com/spineraks-org/ArchipelagoSpinball/releases/download/v0.0.1/spinball.apworld"
       },
-      "timestamp": "2026-01-14T05:28:35.203222",
+      "timestamp": "2026-01-14T20:51:38.121962",
       "explain_stats": {
         "game": "Spinball WorldGen_79645483297583998146",
         "total_locations": 2,
@@ -24258,7 +24205,7 @@
         "world_directory": "tetrisattack",
         "apworld_download_url": "https://github.com/AgStarRay/TetrisAttackAP/releases/download/0.4.2_01/tetrisattack.apworld"
       },
-      "timestamp": "2026-01-14T05:29:09.496964",
+      "timestamp": "2026-01-14T20:52:12.482911",
       "explain_stats": {
         "game": "Tetris Attack WorldGen_22708164196567875238",
         "total_locations": 300,
@@ -24286,8 +24233,8 @@
         "errors": {
           "None": [
             0,
-            1,
             2,
+            1,
             3,
             4,
             6,
@@ -24303,7 +24250,7 @@
         "world_directory": "waterywords",
         "apworld_download_url": "https://github.com/spineraks-org/ArchipelagoWateryWords/releases/download/v0.1.0/waterywords.apworld"
       },
-      "timestamp": "2026-01-14T05:30:03.290126",
+      "timestamp": "2026-01-14T20:53:08.852338",
       "explain_stats": {
         "game": "Watery Words WorldGen_79645483297583998146",
         "total_locations": 150,
@@ -24348,7 +24295,7 @@
         "world_directory": "aus",
         "apworld_download_url": "https://github.com/ThatOneGuy27/Archipelago-aus/releases/download/v1.1-beta/aus.apworld"
       },
-      "timestamp": "2026-01-14T05:24:23.218626",
+      "timestamp": "2026-01-14T20:47:37.657553",
       "explain_stats": {
         "game": "An Untitled Story WorldGen_79645483297583998146",
         "total_locations": 166,
@@ -24565,14 +24512,13 @@
       "ut_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 2,
-        "failure": 8,
+        "success": 3,
+        "failure": 7,
         "timeout": 0,
         "ignored": 0,
         "errors": {
           "None": [
             0,
-            3,
             4,
             5,
             6,
@@ -24587,7 +24533,7 @@
         "world_directory": "cv_dos",
         "apworld_download_url": "https://github.com/PinkSwitch/Archipelago/releases/download/cvdos1.3/cv_dos.apworld"
       },
-      "timestamp": "2026-01-14T05:24:50.370401",
+      "timestamp": "2026-01-14T20:48:04.205459",
       "explain_stats": {
         "game": "Castlevania: Dawn of Sorrow WorldGen_79645483297583998146",
         "total_locations": 226,
@@ -24625,7 +24571,7 @@
         "world_directory": "doronko_wanko",
         "apworld_download_url": "https://github.com/Vendily/DoronkoWankoArchipelago/releases/download/0.3.2/doronko_wanko.apworld"
       },
-      "timestamp": "2026-01-14T05:25:13.704227",
+      "timestamp": "2026-01-14T20:48:26.933928",
       "explain_stats": {
         "game": "DORONKO WANKO WorldGen_79645483297583998146",
         "total_locations": 95,
@@ -24657,7 +24603,7 @@
         "world_directory": "gzdoom",
         "apworld_download_url": "https://github.com/ToxicFrog/doom-mods/releases/download/gzap-0.7.0/gzdoom.apworld"
       },
-      "timestamp": "2026-01-14T05:25:35.107727"
+      "timestamp": "2026-01-14T20:48:47.914381"
     },
     "Ittle Dew 2.yaml": {
       "ut_fuzz": {
@@ -24669,10 +24615,10 @@
         "ignored": 1,
         "errors": {
           "None": [
-            1,
             0,
-            3,
+            1,
             2,
+            3,
             4,
             5,
             6,
@@ -24686,11 +24632,11 @@
         "world_directory": "ittle_dew_2",
         "apworld_download_url": "https://github.com/Extra-2-Dew/ArchipelagoRandomizer/releases/download/0.3.0/ittle_dew_2.apworld"
       },
-      "timestamp": "2026-01-14T05:26:13.140597",
+      "timestamp": "2026-01-14T20:49:25.057067",
       "explain_stats": {
-        "game": "Ittle Dew 2 WorldGen_22708164196567875238",
-        "total_locations": 241,
-        "locations_with_explain": 241,
+        "game": "Ittle Dew 2 WorldGen_79645483297583998146",
+        "total_locations": 143,
+        "locations_with_explain": 143,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -24731,7 +24677,7 @@
         "world_directory": "lil_gator_game",
         "apworld_download_url": "https://github.com/natronium/GatorArchipelago/releases/download/v1.2.1/lil_gator_game.apworld"
       },
-      "timestamp": "2026-01-14T05:26:34.268495"
+      "timestamp": "2026-01-14T20:49:45.685281"
     },
     "Minishoot Adventures.yaml": {
       "ut_fuzz": {
@@ -24761,7 +24707,7 @@
         "world_directory": "minishoot",
         "apworld_download_url": "https://github.com/TheNooodle/MinishootRandomizer/releases/download/v0.5.2/minishoot.apworld"
       },
-      "timestamp": "2026-01-14T05:27:29.132376",
+      "timestamp": "2026-01-14T20:50:39.593202",
       "explain_stats": {
         "game": "Minishoot Adventures WorldGen_79645483297583998146",
         "total_locations": 194,
@@ -24806,7 +24752,7 @@
         "world_directory": "pseudoregalia",
         "apworld_download_url": "https://github.com/qwint/pseudoregalia-archipelago/releases/download/0.10.1/pseudoregalia.apworld"
       },
-      "timestamp": "2026-01-14T05:27:56.200474",
+      "timestamp": "2026-01-14T20:51:06.109116",
       "explain_stats": {
         "game": "Pseudoregalia WorldGen_79645483297583998146",
         "total_locations": 93,
@@ -25224,7 +25170,7 @@
         "world_directory": "oot_soh",
         "apworld_download_url": "https://github.com/HarbourMasters/Archipelago-SoH/releases/download/SoH_1.0.0/oot_soh.apworld"
       },
-      "timestamp": "2026-01-14T05:28:52.081357",
+      "timestamp": "2026-01-14T20:52:00.759582",
       "explain_stats": {
         "game": "Ship of Harkinian WorldGen_79645483297583998146",
         "total_locations": 801,
@@ -25267,7 +25213,7 @@
         "world_directory": "spyro3",
         "apworld_download_url": "https://github.com/Uroogla/S3AP/releases/download/1.2.2/spyro3.apworld"
       },
-      "timestamp": "2026-01-14T05:30:16.967670",
+      "timestamp": "2026-01-14T20:53:25.100703",
       "explain_stats": {
         "game": "Spyro 3 WorldGen_11408892729106005028",
         "total_locations": 308,
@@ -25299,7 +25245,7 @@
         "world_directory": "tevi",
         "apworld_download_url": "https://github.com/BlackSoulKnight/Tevi_Randomizer/releases/download/v1.4.6/tevi.apworld"
       },
-      "timestamp": "2026-01-14T05:31:15.595500",
+      "timestamp": "2026-01-14T20:54:23.284989",
       "explain_stats": {
         "game": "Tevi",
         "total_locations": 1339,
@@ -33296,7 +33242,7 @@
         "world_directory": "wordipelago",
         "apworld_download_url": "https://github.com/ProfDeCube/Archipelago/releases/download/1.0.0/wordipelago.apworld"
       },
-      "timestamp": "2026-01-14T05:31:46.231670",
+      "timestamp": "2026-01-14T20:54:53.506909",
       "explain_stats": {
         "game": "Wordipelago WorldGen_79645483297583998146",
         "total_locations": 163,
@@ -33382,7 +33328,7 @@
         "world_directory": "anodyne",
         "apworld_download_url": "https://github.com/PixieCatSupreme/ArchipelagoAno/releases/download/v0.5.0/anodyne.apworld"
       },
-      "timestamp": "2026-01-14T05:24:24.382494",
+      "timestamp": "2026-01-14T20:47:43.938168",
       "explain_stats": {
         "game": "Anodyne WorldGen_79645483297583998146",
         "total_locations": 364,
@@ -33425,7 +33371,7 @@
         "world_directory": "cavern_of_dreams",
         "apworld_download_url": "https://github.com/wu4/Archipelago/releases/download/v0-beta.10.3/cavern_of_dreams.apworld"
       },
-      "timestamp": "2026-01-14T05:25:14.884568",
+      "timestamp": "2026-01-14T20:48:39.892336",
       "explain_stats": {
         "game": "Cavern of Dreams WorldGen_22708164196567875238",
         "total_locations": 478,
@@ -33472,7 +33418,7 @@
         "world_directory": "deep_rock_galactic",
         "apworld_download_url": "https://github.com/Cousinit117/Deep-Rock-Galactic-AP/releases/download/0.15.2/deep_rock_galactic.apworld"
       },
-      "timestamp": "2026-01-14T05:25:37.294626",
+      "timestamp": "2026-01-14T20:49:04.439260",
       "explain_stats": {
         "game": "Deep Rock Galactic WorldGen_79645483297583998146",
         "total_locations": 441,
@@ -33519,7 +33465,7 @@
         "world_directory": "garfkart",
         "apworld_download_url": "https://github.com/FeluciaPS/Archipelago/releases/download/v0.4.3-beta/garfkart.apworld"
       },
-      "timestamp": "2026-01-14T05:25:55.997024"
+      "timestamp": "2026-01-14T20:49:25.056198"
     },
     "Jigsaw.yaml": {
       "ut_fuzz": {
@@ -33549,7 +33495,7 @@
         "world_directory": "jigsaw",
         "apworld_download_url": "https://github.com/spineraks-org/ArchipelagoJigsaw/releases/download/v0.9.1/jigsaw.apworld"
       },
-      "timestamp": "2026-01-14T05:26:23.904968",
+      "timestamp": "2026-01-14T20:49:56.181933",
       "explain_stats": {
         "game": "Jigsaw WorldGen_79645483297583998146",
         "total_locations": 93,
@@ -33596,7 +33542,7 @@
         "world_directory": "lingo2",
         "apworld_download_url": "https://files.fourisland.com/releases/lingo2-archipelago/apworld/v8.0.5/lingo2.apworld"
       },
-      "timestamp": "2026-01-14T05:28:05.098073",
+      "timestamp": "2026-01-14T20:51:43.093404",
       "explain_stats": {
         "game": "Lingo 2 WorldGen_22708164196567875238",
         "total_locations": 501,
@@ -33641,7 +33587,7 @@
         "world_directory": "minit",
         "apworld_download_url": "https://github.com/qwint/APMinit/releases/download/v0.6.10/minit.apworld"
       },
-      "timestamp": "2026-01-14T05:28:28.581941",
+      "timestamp": "2026-01-14T20:52:09.176188",
       "explain_stats": {
         "game": "Minit WorldGen_79645483297583998146",
         "total_locations": 50,
@@ -33791,7 +33737,7 @@
         "world_directory": "rabi_ribi",
         "apworld_download_url": "https://github.com/tdkollins/Archipelago-Rabi-Ribi/releases/download/1.4.2/rabi_ribi.apworld"
       },
-      "timestamp": "2026-01-14T05:28:55.053716",
+      "timestamp": "2026-01-14T20:52:39.011275",
       "explain_stats": {
         "game": "Rabi-Ribi WorldGen_86998726363870010506",
         "total_locations": 207,
@@ -33823,7 +33769,7 @@
         "world_directory": "sgtpuzzles",
         "apworld_download_url": "https://github.com/ishanpm/ap-sgtpuzzles-web/releases/download/v0.1.15-prealpha/sgtpuzzles.apworld"
       },
-      "timestamp": "2026-01-14T05:29:56.187152",
+      "timestamp": "2026-01-14T20:53:46.370977",
       "explain_stats": {
         "game": "Simon Tatham's Portable Puzzle Collection WorldGen_22708164196567875238",
         "total_locations": 523,
@@ -33868,7 +33814,7 @@
         "world_directory": "stacklands",
         "apworld_download_url": "https://github.com/JammyGeeza/Stacklands-Randomizer/releases/download/v0.2.3-alpha/stacklands.apworld"
       },
-      "timestamp": "2026-01-14T05:30:23.654893",
+      "timestamp": "2026-01-14T20:54:16.463568",
       "explain_stats": {
         "game": "Stacklands WorldGen_22708164196567875238",
         "total_locations": 174,
@@ -33913,7 +33859,7 @@
         "world_directory": "tloz_oos",
         "apworld_download_url": "https://github.com/Dinopony/ArchipelagoOoS/releases/download/oos-13.7.4/tloz_oos.apworld"
       },
-      "timestamp": "2026-01-14T05:31:34.508844",
+      "timestamp": "2026-01-14T20:55:38.408388",
       "explain_stats": {
         "game": "The Legend of Zelda - Oracle of Seasons WorldGen_79645483297583998146",
         "total_locations": 233,
@@ -33946,9 +33892,9 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 9,
+        "failure": 10,
         "timeout": 0,
-        "ignored": 1,
+        "ignored": 0,
         "errors": {
           "None": [
             0,
@@ -33956,6 +33902,7 @@
             2,
             3,
             4,
+            5,
             6,
             7,
             8,
@@ -33968,7 +33915,7 @@
         "world_directory": "x2wotc",
         "apworld_download_url": "https://github.com/MaxReinstadler/X2WOTCArchipelago/releases/download/0.10.8-beta/x2wotc.apworld"
       },
-      "timestamp": "2026-01-14T05:32:02.147456",
+      "timestamp": "2026-01-14T20:56:08.874329",
       "explain_stats": {
         "game": "XCOM 2 War of the Chosen WorldGen_79645483297583998146",
         "total_locations": 147,
