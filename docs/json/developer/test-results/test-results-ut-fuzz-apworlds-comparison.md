@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison (APWorlds)
 
-**Generated:** 2026-01-14 05:37:12
+**Generated:** 2026-01-14 21:00:20
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -14,8 +14,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 13 (10.5%)
-- **Passing Original Only:** 29 (23.4%)
+- **Passing Both:** 15 (12.1%)
+- **Passing Original Only:** 27 (21.8%)
 - **Passing Modified Only:** 10 (8.1%)
 - **Passing Neither:** 72 (58.1%)
 
@@ -40,9 +40,9 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Axiom Verge | ⚠️ 50.0% | ❌ 0.0% |
 | Balatro | ❌ 0.0% | ❌ 0.0% |
 | Brotato | ❌ 30.0% | ✅ 70.0% |
-| Castlevania: Dawn of Sorrow | ✅ 100.0% | ❌ 20.0% |
+| Castlevania: Dawn of Sorrow | ✅ 100.0% | ❌ 30.0% |
 | Cavern of Dreams | ❌ 20.0% | ❌ 0.0% |
-| ChecksMate | ✅ 100.0% | ⚠️ 90.0% |
+| ChecksMate | ✅ 100.0% | ✅ 100.0% |
 | Chrono Trigger Jets of Time | ❌ 0.0% | ❌ 0.0% |
 | ClusterTruck | ❌ 30.0% | ❌ 30.0% |
 | Corn Kidz 64 | ✅ 100.0% | ❌ 0.0% |
@@ -103,7 +103,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Pseudoregalia | ✅ 100.0% | ❌ 0.0% |
 | Rabi-Ribi | ✅ 10.0% | ❌ 0.0% |
 | Rain World | ✅ 30.0% | ❌ 0.0% |
-| Ratchet & Clank 2 | ✅ 100.0% | ❌ 0.0% |
+| Ratchet & Clank 2 | ✅ 100.0% | ✅ 100.0% |
 | Reventure | ✅ 100.0% | ❌ 0.0% |
 | Rift Wizard | ✅ 100.0% | ❌ 0.0% |
 | Rift of the Necrodancer | ❌ 30.0% | ❌ 30.0% |
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% |
 | Sonic Heroes | ❌ 0.0% | ❌ 0.0% |
 | Sonic Rush | ✅ 100.0% | ❌ 20.0% |
@@ -148,12 +148,13 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | osu! | ❌ 0.0% | ✅ 100.0% |
 | plateup | ❌ 0.0% | ⚠️ 90.0% |
 
-## Games Passing Both (13)
+## Games Passing Both (15)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name |
 |-----------|
+| ChecksMate |
 | Cuphead |
 | Dome Keeper |
 | GZDoom |
@@ -163,12 +164,13 @@ These games have 100% success rate in both Universal Tracker versions.
 | Kingdom Hearts RE Chain of Memories |
 | Kirby Super Star |
 | MetroCUBEvania |
+| Ratchet & Clank 2 |
 | Spinball |
 | Symphony of the Night |
 | TOEM: A Photo Adventure |
 | Tevi |
 
-## Games Passing Original Only (29)
+## Games Passing Original Only (27)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -179,7 +181,6 @@ These games pass in the Original UT but fail in the Modified UT.
 | Anodyne |
 | Astalon |
 | Castlevania: Dawn of Sorrow |
-| ChecksMate |
 | Corn Kidz 64 |
 | DORONKO WANKO |
 | Frogmonster |
@@ -191,7 +192,6 @@ These games pass in the Original UT but fail in the Modified UT.
 | Pseudoregalia |
 | Rabi-Ribi |
 | Rain World |
-| Ratchet & Clank 2 |
 | Reventure |
 | Rift Wizard |
 | Sonic Rush |
