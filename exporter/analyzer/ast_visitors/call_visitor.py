@@ -60,6 +60,13 @@ class CallVisitorMixin:
             logging.debug(f"Detected state.multiworld.get_region pattern, region: {region_name}")
             return {'type': 'region_reference', 'region': region_name}
 
+        # *** Special handling for callable attributes on NamedTuple closure variables ***
+        # Pattern: loc.access_rule(state, player) where loc is a NamedTuple with a callable access_rule field
+        # Check this early before visiting function node to inline the actual callable
+        namedtuple_callable = self._try_inline_namedtuple_callable(node)
+        if namedtuple_callable is not None:
+            return namedtuple_callable
+
         # Visit the function node to obtain its details.
         func_info = self.visit(node.func) # Get returned result
         logging.debug(f"Function info after visit: {func_info}")

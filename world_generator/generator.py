@@ -9,7 +9,7 @@ import json
 import os
 import logging
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from .extractors import extract_all, ExtractedData, sanitize_identifier
 from .templates import (
@@ -89,11 +89,65 @@ class WorldGenerator:
         if self.game_name_override:
             self._apply_game_name_override(self.game_name_override)
 
+        # Sort placements by classification to ensure items with
+        # classification_counts have their progression copies placed first
+        self._sort_placements_by_classification()
+
         logger.info(f"Extracted: {len(self.data.items)} items, "
                    f"{len(self.data.locations)} locations, "
                    f"{len(self.data.regions)} regions")
 
         return self.data
+
+    def _sort_placements_by_classification(self) -> None:
+        """
+        Sort canonical_placements and original_placements so that items with
+        multiple copies have their progression copies listed first.
+
+        This ensures that for items with classification_counts (e.g., progression: 1, useful: 1),
+        the progression copy is created first when iterating through placements.
+
+        Uses canonical_placement_advancements extracted from regions data (item.advancement field).
+        """
+        if self.data is None:
+            return
+
+        # Determine which placements dict to sort
+        # (templates.py uses canonical_placements if available, otherwise original_placements)
+        placements_to_sort = self.data.canonical_placements if self.data.canonical_placements else self.data.original_placements
+        if not placements_to_sort:
+            return
+
+        classifications = self.data.canonical_placement_advancements
+        if not classifications:
+            logger.debug("No placement classifications available, skipping sort")
+            return
+
+        # Group placements by item name
+        from collections import defaultdict
+        item_locations: Dict[str, List[str]] = defaultdict(list)
+        for loc_name, item_name in placements_to_sort.items():
+            item_locations[item_name].append(loc_name)
+
+        # Sort each item's locations so advancement=True comes first
+        # This ensures progression copies are created before useful copies
+        sorted_placements: Dict[str, str] = {}
+        for item_name, locations in item_locations.items():
+            # Sort by (not is_advancement) so True (0) comes before False (1)
+            sorted_locs = sorted(
+                locations,
+                key=lambda loc: (0 if classifications.get(loc, False) else 1, loc)
+            )
+            for loc in sorted_locs:
+                sorted_placements[loc] = item_name
+
+        # Update the appropriate dict
+        if self.data.canonical_placements:
+            self.data.canonical_placements = sorted_placements
+        else:
+            self.data.original_placements = sorted_placements
+
+        logger.info("Sorted placements by classification (progression first)")
 
     def _apply_game_name_override(self, new_name: str) -> None:
         """Apply a game name override to the extracted metadata."""

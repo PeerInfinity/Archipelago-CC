@@ -116,6 +116,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._current_location_context = None
         self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
         self._is_glitch_mode = self._check_glitch_mode(world)
+        self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
         self._item_placements: Dict[str, str] = {}
 
@@ -127,6 +128,24 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             return False
         glitches_required = world.options.glitches_required.current_key
         return glitches_required in GLITCH_MODES_WITH_SUPERBUNNY
+
+    def _check_inverted_mode(self, world) -> bool:
+        """Check if the world is in inverted mode.
+
+        In inverted mode, the player starts in the Dark World instead of
+        the Light World. This affects which rules require Moon Pearl:
+        - Light World access requires Moon Pearl (instead of Dark World)
+        - Boot clip rules differ between LW and DW
+        """
+        if world is None or not hasattr(world, 'options'):
+            return False
+        if not hasattr(world.options, 'mode'):
+            return False
+        mode = world.options.mode.current_key
+        is_inverted = mode == 'inverted'
+        if is_inverted:
+            logger.debug(f"ALttP: Inverted mode detected (mode={mode})")
+        return is_inverted
 
     def _check_universal_keys(self, world) -> bool:
         """Check if the world uses universal small keys.
@@ -148,6 +167,244 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if is_universal:
             logger.info(f"ALttP: Universal small keys detected (small_key_shuffle={small_key_value})")
         return is_universal
+
+    def _get_option_value(self, option_name: str) -> Any:
+        """Get the value of an option from the world.
+
+        Returns the numeric value for Choice options (for comparison with int values).
+        Returns None if the option doesn't exist.
+        """
+        if self.world is None or not hasattr(self.world, 'options'):
+            return None
+        if not hasattr(self.world.options, option_name):
+            return None
+        option = getattr(self.world.options, option_name)
+        # Return the numeric value for proper comparison
+        return getattr(option, 'value', option)
+
+    def _resolve_option_comparison(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Resolve a Compare rule that uses OptionValue to True/False.
+
+        Evaluates comparisons like:
+            Compare(OptionValue(mode), ==, 0)
+            Compare(OptionValue(small_key_shuffle), ==, 5)
+
+        Uses the actual option values from self.world.options to evaluate
+        the comparison at export time.
+
+        Args:
+            rule: A rule dict that may be a Compare with OptionValue
+
+        Returns:
+            {'rule': 'True_'} or {'rule': 'False_'} if resolved,
+            None if not an OptionValue comparison
+        """
+        if not isinstance(rule, dict):
+            return None
+
+        rule_type = rule.get('rule') or rule.get('type')
+        if rule_type not in ('Compare', 'compare'):
+            return None
+
+        # Get args - Rule Builder format has args nested
+        if 'args' in rule:
+            args = rule.get('args', {})
+            left = args.get('left', {})
+            op = args.get('op', '')
+            right = args.get('right')
+        else:
+            left = rule.get('left', {})
+            op = rule.get('op', '')
+            right = rule.get('right')
+
+        # Check if left is an OptionValue
+        left_option = None
+        if isinstance(left, dict):
+            left_rule = left.get('rule') or left.get('type')
+            if left_rule in ('OptionValue', 'option_value'):
+                left_args = left.get('args', {}) if 'args' in left else left
+                left_option = left_args.get('option', '')
+
+        # Check if right is an OptionValue
+        right_option = None
+        if isinstance(right, dict):
+            right_rule = right.get('rule') or right.get('type')
+            if right_rule in ('OptionValue', 'option_value'):
+                right_args = right.get('args', {}) if 'args' in right else right
+                right_option = right_args.get('option', '')
+
+        # Need at least one OptionValue to resolve
+        if not left_option and not right_option:
+            return None
+
+        # Get values
+        if left_option:
+            left_value = self._get_option_value(left_option)
+            if left_value is None:
+                return None
+        else:
+            left_value = right if not isinstance(right, dict) else None
+            if left_value is None:
+                return None
+
+        if right_option:
+            right_value = self._get_option_value(right_option)
+            if right_value is None:
+                return None
+        else:
+            right_value = right if not isinstance(right, dict) else None
+            if right_value is None:
+                return None
+
+        # Swap if right was the option
+        if right_option and not left_option:
+            left_value, right_value = right_value, left_value
+            # Swap the operator for non-symmetric comparisons
+            if op in ('<', '<=', '>', '>='):
+                op = {'<': '>', '>': '<', '<=': '>=', '>=': '<='}[op]
+
+        # Evaluate the comparison
+        try:
+            if op == '==' or op == 'Eq':
+                result = left_value == right_value
+            elif op == '!=' or op == 'NotEq':
+                result = left_value != right_value
+            elif op == '<' or op == 'Lt':
+                result = left_value < right_value
+            elif op == '<=' or op == 'LtE':
+                result = left_value <= right_value
+            elif op == '>' or op == 'Gt':
+                result = left_value > right_value
+            elif op == '>=' or op == 'GtE':
+                result = left_value >= right_value
+            elif op == 'in' or op == 'In':
+                result = left_value in right_value if hasattr(right_value, '__contains__') else False
+            elif op == 'not in' or op == 'NotIn':
+                result = left_value not in right_value if hasattr(right_value, '__contains__') else True
+            else:
+                logger.debug(f"ALttP: Unknown comparison operator '{op}' in OptionValue comparison")
+                return None
+
+            logger.debug(f"ALttP: Resolved OptionValue comparison: {left_option or right_option} ({left_value}) {op} {right_value} = {result}")
+            return {'rule': 'True_'} if result else {'rule': 'False_'}
+        except Exception as e:
+            logger.debug(f"ALttP: Failed to evaluate OptionValue comparison: {e}")
+            return None
+
+    def _resolve_option_comparisons_in_rule(self, rule: Dict[str, Any], depth: int = 0) -> Dict[str, Any]:
+        """Recursively resolve OptionValue comparisons in a rule tree.
+
+        Walks through the rule tree and resolves any Compare rules that
+        use OptionValue to True_/False_ based on actual option values.
+
+        Args:
+            rule: A rule dict to process
+            depth: Recursion depth (for debugging)
+
+        Returns:
+            The rule with OptionValue comparisons resolved
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Try to resolve this rule if it's an OptionValue comparison
+        resolved = self._resolve_option_comparison(rule)
+        if resolved is not None:
+            return resolved
+
+        rule_type = rule.get('rule') or rule.get('type')
+
+        # Handle And/Or - recursively process children and simplify
+        if rule_type in ('And', 'and', 'bool_and'):
+            children = rule.get('children', []) or rule.get('operands', []) or rule.get('conditions', [])
+            processed = [self._resolve_option_comparisons_in_rule(c, depth + 1) for c in children]
+
+            # Filter out True_ from And (True AND X = X)
+            filtered = [c for c in processed if not (isinstance(c, dict) and c.get('rule') == 'True_')]
+            # If any is False_, the whole And is False_
+            if any(isinstance(c, dict) and c.get('rule') == 'False_' for c in processed):
+                return {'rule': 'False_'}
+
+            if not filtered:
+                return {'rule': 'True_'}
+            if len(filtered) == 1:
+                return filtered[0]
+
+            # Update the appropriate key
+            if 'children' in rule:
+                return {**rule, 'children': filtered}
+            elif 'operands' in rule:
+                return {**rule, 'operands': filtered}
+            elif 'conditions' in rule:
+                return {**rule, 'conditions': filtered}
+            return {**rule, 'children': filtered}
+
+        if rule_type in ('Or', 'or', 'bool_or'):
+            children = rule.get('children', []) or rule.get('operands', []) or rule.get('conditions', [])
+            processed = [self._resolve_option_comparisons_in_rule(c, depth + 1) for c in children]
+
+            # If any is True_, the whole Or is True_
+            if any(isinstance(c, dict) and c.get('rule') == 'True_' for c in processed):
+                return {'rule': 'True_'}
+            # Filter out False_ from Or (False OR X = X)
+            filtered = [c for c in processed if not (isinstance(c, dict) and c.get('rule') == 'False_')]
+
+            if not filtered:
+                return {'rule': 'False_'}
+            if len(filtered) == 1:
+                return filtered[0]
+
+            if 'children' in rule:
+                return {**rule, 'children': filtered}
+            elif 'operands' in rule:
+                return {**rule, 'operands': filtered}
+            elif 'conditions' in rule:
+                return {**rule, 'conditions': filtered}
+            return {**rule, 'children': filtered}
+
+        # Handle Conditional - process test and branches
+        if rule_type in ('Conditional', 'conditional'):
+            if 'args' in rule:
+                args = rule.get('args', {})
+                test = self._resolve_option_comparisons_in_rule(args.get('test', {}), depth + 1)
+                if_true = self._resolve_option_comparisons_in_rule(args.get('if_true', {}), depth + 1)
+                if_false = self._resolve_option_comparisons_in_rule(args.get('if_false', {}), depth + 1)
+
+                # If test resolved to a constant, return the appropriate branch
+                if isinstance(test, dict) and test.get('rule') == 'True_':
+                    return if_true
+                if isinstance(test, dict) and test.get('rule') == 'False_':
+                    return if_false
+
+                return {**rule, 'args': {**args, 'test': test, 'if_true': if_true, 'if_false': if_false}}
+            else:
+                test = self._resolve_option_comparisons_in_rule(rule.get('test', {}), depth + 1)
+                if_true = self._resolve_option_comparisons_in_rule(rule.get('if_true', {}), depth + 1)
+                if_false = self._resolve_option_comparisons_in_rule(rule.get('if_false', {}), depth + 1)
+
+                if isinstance(test, dict) and test.get('rule') == 'True_':
+                    return if_true
+                if isinstance(test, dict) and test.get('rule') == 'False_':
+                    return if_false
+
+                return {**rule, 'test': test, 'if_true': if_true, 'if_false': if_false}
+
+        # Recursively process nested rules in args
+        if 'args' in rule and isinstance(rule['args'], dict):
+            processed_args = {}
+            for key, value in rule['args'].items():
+                if isinstance(value, dict):
+                    processed_args[key] = self._resolve_option_comparisons_in_rule(value, depth + 1)
+                elif isinstance(value, list):
+                    processed_args[key] = [
+                        self._resolve_option_comparisons_in_rule(v, depth + 1) if isinstance(v, dict) else v
+                        for v in value
+                    ]
+                else:
+                    processed_args[key] = value
+            return {**rule, 'args': processed_args}
+
+        return rule
 
     def _extract_item_placements_from_data(self, data: Dict[str, Any]) -> Dict[str, str]:
         """Extract item placements from the exported data structure.
@@ -225,6 +482,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Evaluate a Compare rule that uses AST_placement_lookup.
 
         Handles patterns like:
+        Rule Builder format:
         {
             "rule": "Compare",
             "args": {
@@ -234,21 +492,71 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             }
         }
 
+        AST format:
+        {
+            "type": "compare",
+            "left": {"type": "placement_lookup", "location": "Loc Name"},
+            "op": "==",
+            "right": {...}
+        }
+
         Returns True/False if the comparison can be evaluated, None otherwise.
         """
-        if not isinstance(rule, dict) or rule.get('rule') != 'Compare':
+        if not isinstance(rule, dict):
             return None
 
-        args = rule.get('args', {})
-        left = args.get('left', {})
-        op = args.get('op', '')
-        right = args.get('right', [])
-
-        # Check if left is an AST_placement_lookup
-        if not isinstance(left, dict) or left.get('rule') != 'AST_placement_lookup':
+        # Support both AST format ('type') and Rule Builder format ('rule')
+        rule_type = rule.get('rule') or rule.get('type')
+        if rule_type not in ('Compare', 'compare'):
             return None
 
-        location_name = left.get('args', {}).get('location', '')
+        # Rule Builder format has args nested, AST format has them at top level
+        if 'args' in rule:
+            args = rule.get('args', {})
+            left = args.get('left', {})
+            op = args.get('op', '')
+            right = args.get('right', [])
+        else:
+            left = rule.get('left', {})
+            op = rule.get('op', '')
+            right = rule.get('right', [])
+
+        # Check if left is an AST_placement_lookup (Rule Builder), placement_lookup (AST),
+        # or a function_call to location_item_name (unconverted AST)
+        if not isinstance(left, dict):
+            return None
+        left_type = left.get('rule') or left.get('type')
+
+        location_name = None
+
+        # Handle function_call to location_item_name (when conversion didn't happen)
+        if left_type == 'function_call':
+            func = left.get('function', {})
+            if func.get('type') == 'name' and func.get('name') == 'location_item_name':
+                # location_item_name(state, location_name, player) - extract location_name from args
+                func_args = left.get('args', [])
+                # Filter out 'state' and 'player' arguments - location is typically the second arg
+                for arg in func_args:
+                    if isinstance(arg, dict) and arg.get('type') == 'constant':
+                        loc = arg.get('value', '')
+                        if loc and isinstance(loc, str):
+                            location_name = loc
+                            break
+            if not location_name:
+                return None
+        elif left_type not in ('AST_placement_lookup', 'placement_lookup'):
+            return None
+        else:
+            # Get location name - Rule Builder has args nested, AST has it at top level
+            if 'args' in left:
+                location_name = left.get('args', {}).get('location', '')
+            else:
+                location_name = left.get('location', '')
+
+        # Handle case where location_name is a constant dict
+        if isinstance(location_name, dict) and location_name.get('type') == 'constant':
+            location_name = location_name.get('value', '')
+
         if not location_name:
             return None
 
@@ -257,21 +565,49 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if actual_item is None:
             return None
 
+        # Helper to extract item name from various formats
+        def extract_item_name(item_spec):
+            """Extract item name from various AST/Rule Builder formats."""
+            if isinstance(item_spec, str):
+                return item_spec
+            if isinstance(item_spec, list) and len(item_spec) >= 1:
+                # Rule Builder format: [item_name, player]
+                return item_spec[0] if isinstance(item_spec[0], str) else None
+            if isinstance(item_spec, dict):
+                # AST format: could be tuple, constant, etc.
+                spec_type = item_spec.get('type')
+                if spec_type == 'constant':
+                    return item_spec.get('value')
+                if spec_type == 'tuple':
+                    # Handle both 'elements' (some formats) and 'value' (python_to_json converter)
+                    elements = item_spec.get('elements', []) or item_spec.get('value', [])
+                    if elements:
+                        first_elem = elements[0]
+                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
+                            return first_elem.get('value')
+                        if isinstance(first_elem, str):
+                            return first_elem
+            return None
+
         # Handle 'in' operator - check if (item_name, player) tuple is in the right list
         if op == 'in':
-            for item_spec in right:
-                if isinstance(item_spec, list) and len(item_spec) >= 1:
-                    item_name = item_spec[0]
-                    if actual_item == item_name:
-                        logger.debug(f"ALttP: Compare '{location_name}' contains '{item_name}' -> True")
-                        return True
+            right_items = right
+            # AST format might have right as a list or another structure
+            if isinstance(right, dict) and right.get('type') == 'list':
+                # Handle both 'elements' (some formats) and 'value' (python_to_json converter)
+                right_items = right.get('elements', []) or right.get('value', [])
+            for item_spec in right_items if isinstance(right_items, list) else [right_items]:
+                item_name = extract_item_name(item_spec)
+                if item_name and actual_item == item_name:
+                    logger.debug(f"ALttP: Compare '{location_name}' contains '{item_name}' -> True")
+                    return True
             logger.debug(f"ALttP: Compare '{location_name}' (has '{actual_item}') not in expected items -> False")
             return False
 
         # Handle '==' operator
         if op in ('==', 'Eq'):
-            if isinstance(right, list) and len(right) >= 1:
-                expected_item = right[0] if isinstance(right[0], str) else right[0][0] if isinstance(right[0], list) else None
+            expected_item = extract_item_name(right)
+            if expected_item is not None:
                 result = actual_item == expected_item
                 logger.debug(f"ALttP: Compare '{location_name}' ('{actual_item}') == '{expected_item}' -> {result}")
                 return result
@@ -282,29 +618,51 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Evaluate a test expression that may contain placement checks.
 
         Handles:
-        - AST_placement_search: Check if item is at any of the listed locations
+        - AST_placement_search / placement_search: Check if item is at any of the listed locations
         - Or/And of Compare rules with AST_placement_lookup
+
+        Supports both AST format (type: "placement_search") and Rule Builder format
+        (rule: "AST_placement_search").
         """
         if not isinstance(test, dict):
             return None
 
-        rule_type = test.get('rule')
+        # Support both AST format ('type') and Rule Builder format ('rule')
+        rule_type = test.get('rule') or test.get('type')
 
-        # Handle AST_placement_search directly
-        if rule_type == 'AST_placement_search':
-            test_args = test.get('args', {})
-            item_name = test_args.get('item', '')
-            player = test_args.get('player', 1)
-            locations = test_args.get('locations', [])
+        # Handle AST_placement_search (Rule Builder) or placement_search (AST)
+        if rule_type in ('AST_placement_search', 'placement_search'):
+            # Rule Builder format has args nested, AST format has them at top level
+            if 'args' in test:
+                test_args = test.get('args', {})
+                item_name = test_args.get('item', '')
+                player = test_args.get('player', 1)
+                locations = test_args.get('locations', [])
+            else:
+                # AST format - item/player/locations are at top level
+                item_arg = test.get('item', '')
+                # Extract item name - could be string or dict with 'value'
+                if isinstance(item_arg, dict):
+                    item_name = item_arg.get('value', '')
+                else:
+                    item_name = str(item_arg)
+                # Extract player - could be int or dict with 'value'
+                player_arg = test.get('player', {'type': 'constant', 'value': 1})
+                if isinstance(player_arg, dict):
+                    player = player_arg.get('value', 1)
+                else:
+                    player = player_arg
+                locations = test.get('locations', [])
             return self._evaluate_placement_search(item_name, player, locations)
 
-        # Handle Compare with AST_placement_lookup
-        if rule_type == 'Compare':
+        # Handle Compare with AST_placement_lookup (both Rule Builder and AST format)
+        if rule_type in ('Compare', 'compare'):
             return self._evaluate_placement_comparison(test)
 
-        # Handle Or of placement comparisons
-        if rule_type == 'Or':
-            children = test.get('children', [])
+        # Handle Or of placement comparisons (both Rule Builder and AST format)
+        if rule_type in ('Or', 'or', 'bool_or'):
+            # Rule Builder uses 'children', AST uses 'operands' or 'conditions'
+            children = test.get('children', []) or test.get('operands', []) or test.get('conditions', [])
             results = [self._evaluate_placement_comparison(c) for c in children]
             # If all results are known, return the OR of them
             if all(r is not None for r in results):
@@ -314,9 +672,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return True
             return None
 
-        # Handle And of placement comparisons
-        if rule_type == 'And':
-            children = test.get('children', [])
+        # Handle And of placement comparisons (both Rule Builder and AST format)
+        if rule_type in ('And', 'and', 'bool_and'):
+            # Rule Builder uses 'children', AST uses 'operands' or 'conditions'
+            children = test.get('children', []) or test.get('operands', []) or test.get('conditions', [])
             results = [self._evaluate_placement_comparison(c) for c in children]
             # If all results are known, return the AND of them
             if all(r is not None for r in results):
@@ -335,6 +694,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         or Compare with AST_placement_lookup), we can evaluate it at export time since we
         know the actual item placements. This resolves complex key logic rules in dungeons.
 
+        Supports both AST format (type: "conditional") and Rule Builder format
+        (rule: "Conditional").
+
         Args:
             rule: A rule dictionary that may contain conditionals
             depth: Recursion depth for debugging
@@ -347,35 +709,54 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('rule') or rule.get('type')
 
-        # Handle Conditional rules
-        if rule_type == 'Conditional':
-            args = rule.get('args', {})
-            test = args.get('test', {})
+        # Handle Conditional rules (both Rule Builder and AST format)
+        if rule_type in ('Conditional', 'conditional'):
+            # Rule Builder format has args nested, AST format has them at top level
+            if 'args' in rule:
+                args = rule.get('args', {})
+                test = args.get('test', {})
+                if_true_key = 'if_true'
+                if_false_key = 'if_false'
+                get_branch = lambda key: args.get(key, {'rule': 'True_'})
+            else:
+                # AST format - test/if_true/if_false are at top level
+                test = rule.get('test', {})
+                if_true_key = 'if_true'
+                if_false_key = 'if_false'
+                get_branch = lambda key: rule.get(key, {'type': 'constant', 'value': True})
 
             # Try to evaluate the test using placement information
             test_result = self._evaluate_placement_test(test)
             if test_result is not None:
                 # Return the appropriate branch
                 if test_result:
-                    if_true = args.get('if_true', {'rule': 'True_'})
+                    if_true = get_branch(if_true_key)
                     logger.debug(f"ALttP: Resolved Conditional to if_true (test evaluated to True)")
                     return self._resolve_placement_conditionals(if_true, depth + 1)
                 else:
-                    if_false = args.get('if_false', {'rule': 'True_'})
+                    if_false = get_branch(if_false_key)
                     logger.debug(f"ALttP: Resolved Conditional to if_false (test evaluated to False)")
                     return self._resolve_placement_conditionals(if_false, depth + 1)
 
-        # Recursively process children
+        # Recursively process children (Rule Builder format uses 'children')
         if 'children' in rule:
             rule['children'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('children', [])]
+        # AST format uses 'operands' for boolean operators
+        if 'operands' in rule:
+            rule['operands'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('operands', [])]
         if 'conditions' in rule:
             rule['conditions'] = [self._resolve_placement_conditionals(c, depth + 1) for c in rule.get('conditions', [])]
+        # Rule Builder format nests args
         if 'args' in rule and isinstance(rule['args'], dict):
             for key, value in rule['args'].items():
                 if isinstance(value, dict):
                     rule['args'][key] = self._resolve_placement_conditionals(value, depth + 1)
                 elif isinstance(value, list):
                     rule['args'][key] = [self._resolve_placement_conditionals(v, depth + 1) if isinstance(v, dict) else v for v in value]
+        # AST format has top-level keys like 'test', 'if_true', 'if_false', 'left', 'right'
+        for key in ('test', 'if_true', 'if_false', 'left', 'right'):
+            if key in rule and isinstance(rule[key], dict):
+                rule[key] = self._resolve_placement_conditionals(rule[key], depth + 1)
 
         return rule
 
@@ -552,6 +933,137 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Not a bunny rule - let standard analysis handle it
         return None
 
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """Get helper definitions with mode-dependent helpers resolved.
+
+        For glitch helpers that check the mode option at runtime, we resolve
+        them to simpler rules based on the actual mode. This ensures the
+        worldgen world has the correct rules without needing the mode option.
+        """
+        # Get base helper definitions
+        helpers = super().get_helper_definitions(world)
+
+        # Helper for creating item check rules (simple format for helper definitions)
+        def _item(name: str) -> Dict[str, Any]:
+            return {'type': 'item_check', 'item': name}
+
+        def _and(*conditions) -> Dict[str, Any]:
+            return {'type': 'and', 'conditions': list(conditions)}
+
+        def _or(*conditions) -> Dict[str, Any]:
+            return {'type': 'or', 'conditions': list(conditions)}
+
+        # Resolve mode-dependent glitch helpers
+        # can_boots_clip_lw: In inverted mode, requires Boots + Pearl; otherwise just Boots
+        if 'can_boots_clip_lw' in helpers:
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Resolving can_boots_clip_lw helper for inverted mode (Boots + Pearl)")
+                helpers['can_boots_clip_lw'] = _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+            else:
+                logger.debug("ALttP: Resolving can_boots_clip_lw helper for normal mode (Boots only)")
+                helpers['can_boots_clip_lw'] = _item('Pegasus Boots')
+
+        # can_boots_clip_dw: In normal mode, requires Boots + Pearl; otherwise just Boots
+        if 'can_boots_clip_dw' in helpers:
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Resolving can_boots_clip_dw helper for inverted mode (Boots only)")
+                helpers['can_boots_clip_dw'] = _item('Pegasus Boots')
+            else:
+                logger.debug("ALttP: Resolving can_boots_clip_dw helper for normal mode (Boots + Pearl)")
+                helpers['can_boots_clip_dw'] = _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+
+        # can_get_glitched_speed_dw: Boots + (Hookshot OR Sword); normal mode also needs Pearl
+        if 'can_get_glitched_speed_dw' in helpers:
+            sword_check = {'type': 'group_check', 'group': 'Swords'}
+            base = _and(_item('Pegasus Boots'), _or(_item('Hookshot'), sword_check))
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Resolving can_get_glitched_speed_dw helper for inverted mode (no Pearl)")
+                helpers['can_get_glitched_speed_dw'] = base
+            else:
+                logger.debug("ALttP: Resolving can_get_glitched_speed_dw helper for normal mode (needs Pearl)")
+                helpers['can_get_glitched_speed_dw'] = _and(base, _item('Moon Pearl'))
+
+        return helpers
+
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+        """Expand ALttP-specific helper functions to their resolved rules.
+
+        Handles mode-dependent glitch helpers like can_boots_clip_lw/dw which have
+        different requirements in inverted vs normal mode. We evaluate these at
+        export time based on the current mode option.
+
+        In StateHelpers.py:
+        - can_boots_clip_lw: In inverted mode, requires Pegasus Boots + Moon Pearl;
+                            otherwise just Pegasus Boots
+        - can_boots_clip_dw: In normal mode, requires Pegasus Boots + Moon Pearl;
+                            otherwise just Pegasus Boots
+        - can_get_glitched_speed_dw: Requires Pegasus Boots + (Hookshot OR Sword);
+                                    in normal mode also requires Moon Pearl
+        """
+        # Check base class expansions first
+        base_result = super().expand_helper(helper_name, args)
+        if base_result is not None:
+            return base_result
+
+        # Handle can_buy_unlimited for universal keys
+        # When small_key_shuffle is 'universal', shops with unlimited universal keys
+        # are accessible in normal gameplay. We expand this to True for simplicity.
+        if helper_name == 'can_buy_unlimited' and self._is_universal_keys:
+            logger.debug("ALttP: Expanding can_buy_unlimited to True (universal keys enabled)")
+            return {'type': 'constant', 'value': True}
+
+        # Helper for creating item check rules
+        def _item(name: str) -> Dict[str, Any]:
+            return {'type': 'item_check', 'item': {'type': 'constant', 'value': name}}
+
+        def _and(*conditions) -> Dict[str, Any]:
+            return {'type': 'and', 'conditions': list(conditions)}
+
+        def _or(*conditions) -> Dict[str, Any]:
+            return {'type': 'or', 'conditions': list(conditions)}
+
+        # Handle can_boots_clip_lw
+        # In inverted mode: Pegasus Boots + Moon Pearl
+        # In normal mode: just Pegasus Boots
+        if helper_name == 'can_boots_clip_lw':
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Expanding can_boots_clip_lw for inverted mode (Boots + Pearl)")
+                return _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+            else:
+                logger.debug("ALttP: Expanding can_boots_clip_lw for normal mode (Boots only)")
+                return _item('Pegasus Boots')
+
+        # Handle can_boots_clip_dw
+        # In normal mode: Pegasus Boots + Moon Pearl
+        # In inverted mode: just Pegasus Boots
+        if helper_name == 'can_boots_clip_dw':
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Expanding can_boots_clip_dw for inverted mode (Boots only)")
+                return _item('Pegasus Boots')
+            else:
+                logger.debug("ALttP: Expanding can_boots_clip_dw for normal mode (Boots + Pearl)")
+                return _and(_item('Pegasus Boots'), _item('Moon Pearl'))
+
+        # Handle can_get_glitched_speed_dw
+        # Requires Pegasus Boots + (Hookshot OR Sword)
+        # In normal mode, also requires Moon Pearl
+        if helper_name == 'can_get_glitched_speed_dw':
+            # Base requirement: Boots + (Hookshot OR Sword)
+            # has_sword expands to any sword
+            sword_check = {'type': 'group_check', 'group': 'Swords'}
+            base_requirements = _and(
+                _item('Pegasus Boots'),
+                _or(_item('Hookshot'), sword_check)
+            )
+            if self._is_inverted_mode:
+                logger.debug("ALttP: Expanding can_get_glitched_speed_dw for inverted mode (no Pearl)")
+                return base_requirements
+            else:
+                logger.debug("ALttP: Expanding can_get_glitched_speed_dw for normal mode (needs Pearl)")
+                return _and(base_requirements, _item('Moon Pearl'))
+
+        return None
+
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
         """Post-process location data to handle bunny rule lambdas.
 
@@ -721,6 +1233,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         2. Location rules in mixed regions (both Light World and Dark World)
         3. Universal small key conversion when small_key_shuffle is 'universal'
         4. Placement-dependent conditional resolution (item_name_in_location_names)
+        5. OptionValue comparison resolution for option-dependent rules
 
         For mixed regions, the Moon Pearl requirement added by _get_bunny_replacement_rule
         is removed since there are Light World paths available. Only pure Dark World
@@ -732,6 +1245,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         For placement conditionals, rules that check where items are placed are
         resolved using the actual item placements from the export data.
         """
+        logger.debug("ALttP: Starting post_process_data")
         # Extract item placements from the export data for resolving placement conditionals
         self._item_placements = self._extract_item_placements_from_data(data)
 
@@ -748,7 +1262,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     location_name = location_data.get('name', '')
                     access_rule = location_data.get('access_rule', {})
 
-                    # Resolve placement search conditionals first
+                    # Resolve OptionValue comparisons first (e.g., mode checks, small_key_shuffle checks)
+                    if access_rule:
+                        location_data['access_rule'] = self._resolve_option_comparisons_in_rule(access_rule)
+                        access_rule = location_data.get('access_rule', {})
+
+                    # Resolve placement search conditionals
                     if access_rule and self._item_placements:
                         location_data['access_rule'] = self._resolve_placement_conditionals(access_rule)
                         access_rule = location_data.get('access_rule', {})
@@ -773,7 +1292,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
                     if 'access_rule' in exit_data and exit_data['access_rule']:
-                        # Resolve placement search conditionals first
+                        # Resolve OptionValue comparisons first
+                        exit_data['access_rule'] = self._resolve_option_comparisons_in_rule(
+                            exit_data['access_rule']
+                        )
+                        # Resolve placement search conditionals
                         if self._item_placements:
                             exit_data['access_rule'] = self._resolve_placement_conditionals(
                                 exit_data['access_rule']
@@ -799,7 +1322,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
                     if 'access_rule' in entrance_data and entrance_data['access_rule']:
-                        # Resolve placement search conditionals first
+                        # Resolve OptionValue comparisons first
+                        entrance_data['access_rule'] = self._resolve_option_comparisons_in_rule(
+                            entrance_data['access_rule']
+                        )
+                        # Resolve placement search conditionals
                         if self._item_placements:
                             entrance_data['access_rule'] = self._resolve_placement_conditionals(
                                 entrance_data['access_rule']
@@ -812,6 +1339,31 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             entrance_data['access_rule'] = self._replace_small_key_checks(
                                 entrance_data['access_rule']
                             )
+
+        # Process dungeons to resolve OptionValue comparisons in boss rules
+        dungeons = data.get('dungeons', {})
+        for player_id, player_dungeons in dungeons.items():
+            for dungeon_name, dungeon_data in player_dungeons.items():
+                # Process boss defeat rules
+                bosses = dungeon_data.get('bosses', {})
+                for boss_name, boss_data in bosses.items():
+                    if 'defeat_rule' in boss_data and boss_data['defeat_rule']:
+                        boss_data['defeat_rule'] = self._resolve_option_comparisons_in_rule(
+                            boss_data['defeat_rule']
+                        )
+
+        # Process helpers to resolve placement conditionals and OptionValue comparisons
+        helpers = data.get('helpers', {})
+        for player_id, player_helpers in helpers.items():
+            for helper_name, helper_def in list(player_helpers.items()):
+                if helper_def and isinstance(helper_def, dict):
+                    # Resolve OptionValue comparisons
+                    player_helpers[helper_name] = self._resolve_option_comparisons_in_rule(helper_def)
+                    # Resolve placement conditionals
+                    if self._item_placements:
+                        player_helpers[helper_name] = self._resolve_placement_conditionals(
+                            player_helpers[helper_name]
+                        )
 
         return data
 

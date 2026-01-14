@@ -143,6 +143,13 @@ class ExpressionVisitorMixin:
                             list_value = list(resolved_attr)
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
+                        elif callable(resolved_attr) and hasattr(obj_value, '_fields'):
+                            # Handle callable attributes on NamedTuples (e.g., LocationData.access_rule)
+                            # When used in boolean context (if loc.access_rule:), this should be True
+                            # This enables the conditional optimization to inline the callable
+                            # The actual call will be handled by call_visitor's early NamedTuple callable detection
+                            logging.debug(f"visit_Attribute: {var_name}.{attr_name} is a callable on NamedTuple, returning True for boolean context")
+                            return {'type': 'constant', 'value': True}
                     except AttributeError:
                         # If attribute doesn't exist, fall through to normal processing
                         logging.debug(f"visit_Attribute: Could not directly resolve {var_name}.{attr_name}")

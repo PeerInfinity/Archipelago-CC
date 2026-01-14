@@ -1648,6 +1648,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # Use canonical_placements if available, otherwise fall back to original_placements
     placement_entries = []
     canonical_class_attr_entries = []  # For the class attribute (exporter to read)
+    advancement_loc_entries = []  # Locations that should have advancement items
     if canonical_seed is not None:
         # Prefer canonical_placements (from world class attribute) over original_placements
         placements_source = data.canonical_placements if data.canonical_placements else data.original_placements
@@ -1657,9 +1658,22 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 placement_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
                 canonical_class_attr_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
+                # Track locations that should have advancement items
+                if data.canonical_placement_advancements.get(loc_name, False):
+                    advancement_loc_entries.append(f'        "{loc_escaped}",')
 
     placements_content = '\n'.join(placement_entries)
     canonical_class_attr_content = '\n'.join(canonical_class_attr_entries)
+    advancement_loc_content = '\n'.join(advancement_loc_entries)
+
+    # Build canonical advancement dict (maps location -> original advancement value)
+    # This is used by the exporter to preserve original advancement values during cross-validation
+    canonical_advancement_entries = []
+    if canonical_seed is not None and data.canonical_placement_advancements:
+        for loc_name, advancement in data.canonical_placement_advancements.items():
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
+    canonical_advancement_content = '\n'.join(canonical_advancement_entries)
 
     # Find victory location and item
     victory_location = None
@@ -1772,20 +1786,39 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         During tracking (generation_is_fake=True), we always place canonical items
         so that location_item_name() checks work correctly for self-locking rules.
         """
-        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
+
             # Try to find and use an item from the pool (preserves correct classification)
-            # Prefer progression items first since they may be needed for accessibility
             # Note: Must use index-based removal because Item.__eq__ only compares name/player,
             # not classification, so list.remove() would remove the wrong item
             item = None
@@ -1805,8 +1838,17 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                     if progression_idx is not None and filler_idx is not None:
                         break
 
-            # Use progression item first if available, otherwise filler
-            chosen_idx = progression_idx if progression_idx is not None else filler_idx
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
             if chosen_idx is not None:
                 item = self.multiworld.itempool.pop(chosen_idx)
             else:
@@ -1827,12 +1869,14 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 '''
 
     # Build locked_placements dictionary
-    # When canonical_placements is available, LOCKED_PLACEMENTS should only contain
-    # items that are ALWAYS locked (like Victory events), not items that are
-    # canonical but should be randomizable.
+    # When canonical_placements is available OR canonical_seed is enabled,
+    # LOCKED_PLACEMENTS should only contain items that are ALWAYS locked
+    # (like Victory events), not items that are canonical but should be randomizable.
     # We determine this by checking if the item is an event (id=None).
+    # When canonical_seed is set, we build canonical_placements from original_placements,
+    # so non-event items will be placed via canonical_placements instead of LOCKED_PLACEMENTS.
     locked_entries = []
-    if data.canonical_placements:
+    if data.canonical_placements or canonical_seed is not None:
         # Only include truly locked items (events) - not canonical placements
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
@@ -2005,6 +2049,22 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     else:
         canonical_placements_section = ''
 
+    # Generate canonical_placement_advancements class attribute (for items with mixed classification)
+    canonical_placement_advancements_section = ''
+    if canonical_seed is not None and data.canonical_placement_advancements:
+        adv_entries = []
+        for loc_name, is_advancement in data.canonical_placement_advancements.items():
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            adv_entries.append(f'        "{loc_escaped}": {is_advancement},')
+        adv_content = '\n'.join(adv_entries)
+        canonical_placement_advancements_section = f'''
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {{
+{adv_content}
+    }}
+'''
+
     # Generate __init__ method for world_attributes (game-specific instance attributes)
     init_section = ''
     needs_types_import = False
@@ -2123,11 +2183,12 @@ class _ShopWrapper:
 {create_shops_method}'''
 
     # Build itempool_counts dictionary
-    # When canonical_placements is available, we use the full itempool_counts
-    # (items are either in the pool for randomization, or placed canonically for seed=1).
-    # Subtract event items and starting items from the pool.
+    # When canonical_placements is available OR canonical_seed is enabled,
+    # we use the full itempool_counts (items are either in the pool for randomization,
+    # or placed canonically for seed=1). Only subtract event items and starting items.
+    # Non-event locked items are placed via canonical_placements in _place_original_items().
     itempool_entries = []
-    if data.canonical_placements:
+    if data.canonical_placements or canonical_seed is not None:
         # Count only event items that are locked (these are subtracted from pool)
         event_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
@@ -2148,7 +2209,8 @@ class _ShopWrapper:
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
     else:
-        # No canonical_placements - subtract all locked items and starting items
+        # No canonical_placements and no canonical_seed - subtract all locked items and starting items
+        # (locked items are truly locked and won't go into the random pool)
         locked_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
@@ -2331,7 +2393,7 @@ class _ShopWrapper:
 Auto-generated by world_generator.
 """
 {canonical_imports}{types_import}
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -2396,7 +2458,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
