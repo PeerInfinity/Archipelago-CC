@@ -176,13 +176,14 @@ yaml.SafeDumper.ignore_aliases = lambda *args: True
 
 # Adapted from archipelago'd generate_yaml_templates
 # https://github.com/ArchipelagoMW/Archipelago/blob/f75a1ae1174fb467e5c5bd5568d7de3c806d5b1c/Options.py#L1504
-def generate_random_yaml(world_name, meta, default_options=None):
+def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None):
     """Generate a random YAML for the given world.
 
     Args:
         world_name: The apworld name to generate for
         meta: Dictionary of option overrides
         default_options: Set of option names to leave at their defaults instead of randomizing
+        disallow_options: Dict mapping option names to sets of values to disallow
     """
     def dictify_range(option):
         data = {option.default: 50}
@@ -208,6 +209,8 @@ def generate_random_yaml(world_name, meta, default_options=None):
 
     if default_options is None:
         default_options = set()
+    if disallow_options is None:
+        disallow_options = {}
 
     game_name, world = world_from_apworld_name(world_name)
     if world is None:
@@ -233,8 +236,10 @@ def generate_random_yaml(world_name, meta, default_options=None):
                 game_options[option_name] = override
                 continue
 
+            # Get disallowed values for this option (if any)
+            disallowed = disallow_options.get(option_name, set())
             game_options[option_name] = sanitize(
-                get_random_value(option_name, option_value)
+                get_random_value(option_name, option_value, disallowed)
             )
 
     if "triggers" in game_meta:
@@ -257,7 +262,17 @@ def generate_random_yaml(world_name, meta, default_options=None):
     return res
 
 
-def get_random_value(name, option):
+def get_random_value(name, option, disallowed=None):
+    """Get a random value for the given option.
+
+    Args:
+        name: The option name
+        option: The option class
+        disallowed: Set of values to exclude from randomization
+    """
+    if disallowed is None:
+        disallowed = set()
+
     if name == "item_links":
         # Let's not fuck with item links right now, I'm scared
         return option.default
@@ -299,7 +314,12 @@ def get_random_value(name, option):
         if not valid_choices:
             valid_choices = list(option.options.keys())
 
+        # Filter out disallowed values
+        if disallowed:
+            valid_choices = [c for c in valid_choices if c not in disallowed]
+
         # Handle TextChoice and other Choice subclasses with no predefined options
+        # or when all choices have been disallowed
         if not valid_choices:
             return option.default
 
@@ -687,6 +707,24 @@ if __name__ == "__main__":
         else:
             default_options = set()
 
+        # Parse disallow_options into a dict mapping option names to sets of disallowed values
+        # Format: option=value1,value2;option2=value
+        disallow_options = {}
+        if args.disallow_options:
+            for option_spec in args.disallow_options.split(";"):
+                option_spec = option_spec.strip()
+                if not option_spec:
+                    continue
+                if "=" not in option_spec:
+                    raise ValueError(f"Invalid disallow-options format: '{option_spec}'. Expected 'option=value1,value2'")
+                option_name, values_str = option_spec.split("=", 1)
+                option_name = option_name.strip()
+                values = set(v.strip() for v in values_str.split(",") if v.strip())
+                if option_name in disallow_options:
+                    disallow_options[option_name].update(values)
+                else:
+                    disallow_options[option_name] = values
+
         if apworld_name is not None:
             world = world_from_apworld_name(apworld_name)
             if world is None:
@@ -785,7 +823,7 @@ if __name__ == "__main__":
                 )
 
             random_yamls = [
-                generate_random_yaml(actual_apworld, meta, default_options) for _ in range(yamls_this_run)
+                generate_random_yaml(actual_apworld, meta, default_options, disallow_options) for _ in range(yamls_this_run)
             ]
 
             if i % 100 == 0:
@@ -835,6 +873,9 @@ if __name__ == "__main__":
     parser.add_argument("--default-options", default=None, type=str,
                         help="Comma-separated list of option names to leave at their defaults instead of randomizing. "
                              "Example: --default-options mode,entrance_shuffle,glitches_required")
+    parser.add_argument("--disallow-options", default=None, type=str,
+                        help="Disallow specific values for options. Format: option=value1,value2;option2=value. "
+                             "Example: --disallow-options glitches_required=minor_glitches,overworld_glitches;mode=inverted")
 
     args = parser.parse_args()
 
