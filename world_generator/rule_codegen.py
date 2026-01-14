@@ -3181,9 +3181,11 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_' if result else 'False_')
                 return 'True_()' if result else 'False_()'
 
-        # Can't evaluate - default to False (conservative for accessibility)
-        self.required_imports.add('False_')
-        return 'False_()'
+        # Can't evaluate - default to True (accessible) to avoid blocking locations
+        # Note: This may allow access to locations that should have stricter rules,
+        # but it's better than permanently blocking locations the player should reach.
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _try_evaluate_expr(self, expr: Dict[str, Any], local_vars: Dict[str, Any]) -> Any:
         """Try to evaluate an expression to a constant value."""
@@ -3219,7 +3221,7 @@ class RuleCodeGenerator:
     def _contains_state_method(self, statements: List[Dict[str, Any]]) -> bool:
         """Check if any statement contains runtime-dependent checks like item_check or state_method."""
         # Types that require runtime evaluation (player state)
-        runtime_types = {'state_method', 'item_check', 'count_check', 'group_check'}
+        runtime_types = {'state_method', 'item_check', 'count_check', 'group_check', 'helper'}
 
         def check_value(value: Any) -> bool:
             if not isinstance(value, dict):
