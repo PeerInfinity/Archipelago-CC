@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-13 02:44:44
+**Generated:** 2026-01-14 05:16:46
 
-**Source Data Created:** 2026-01-13T02:44:44.682438
+**Source Data Created:** 2026-01-14T05:16:46.888599
 
-**Source Data Last Updated:** 2026-01-13T02:44:44.682447
+**Source Data Last Updated:** 2026-01-14T05:16:46.888605
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,23 +23,23 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 61 (71.8%)
-- **Games with Failures:** 24 (28.2%)
+- **Games with 100% Pass Rate:** 62 (72.9%)
+- **Games with Failures:** 23 (27.1%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 617 (72.6%)
-- **Failed Runs:** 191
-- **Timed Out Runs:** 1
-- **Ignored Runs:** 41
+- **Successful Runs:** 618 (72.7%)
+- **Failed Runs:** 188
+- **Timed Out Runs:** 0
+- **Ignored Runs:** 44
 
 ### Explain Support Summary
 
 - **Games with Explain Stats:** 83
-- **Games with 100% Explain Coverage:** 72
+- **Games with 100% Explain Coverage:** 73
 - **Games with No Explain Support:** 2
-- **Locations with Explain Support:** 11,167
-- **Locations without Explain Support:** 856
-- **Locations with Default Rule:** 20,827
-- **Overall Explain Coverage:** 92.9%
+- **Locations with Explain Support:** 11,121
+- **Locations without Explain Support:** 837
+- **Locations with Default Rule:** 21,209
+- **Overall Explain Coverage:** 93.0%
 
 ## Test Results
 
@@ -71,7 +71,7 @@
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.6KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% | ✅ | ✅ | 1302.5KB |
+| Final Fantasy Mystic Quest | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | ✅ | ✅ | 1302.5KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
@@ -112,7 +112,7 @@
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
 | Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 875.0KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TUNIC | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 3.1KB | ✅ | 711.6KB |
@@ -148,10 +148,6 @@
 ### Celeste (Open World)
 
 - **None**: 10 occurrence(s)
-
-### Final Fantasy Mystic Quest
-
-- **<class 'TimeoutError'>**: 1 occurrence(s)
 
 ### Hollow Knight
 
@@ -218,7 +214,7 @@
 ### Super Metroid
 
 - **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **None**: 6 occurrence(s)
+- **None**: 3 occurrence(s)
 
 ### TUNIC
 
@@ -249,10 +245,9 @@ This section shows which games have rules that support the `explain_json()` meth
 | Game Name | Total Locs | With Explain | Without Explain | Default Rule | Coverage |
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Jak and Daxter: The Precursor Legacy | 289 | 0 | 159 | 130 | ❌ 0% |
-| Yacht Dice | 62 | 0 | 62 | 0 | ❌ 0% |
+| Yacht Dice | 59 | 0 | 59 | 0 | ❌ 0% |
 | Pokemon Red and Blue | 578 | 35 | 104 | 439 | 🔶 25% |
 | Timespinner | 684 | 162 | 432 | 90 | 🔶 27% |
-| DLCQuest | 38 | 9 | 16 | 13 | 🔶 36% |
 | Kingdom Hearts 2 | 643 | 46 | 30 | 567 | ⚠️ 61% |
 | Mega Man 2 | 51 | 4 | 1 | 46 | ⚠️ 80% |
 | A Link to the Past | 242 | 148 | 28 | 66 | ⚠️ 84% |
@@ -275,17 +270,18 @@ This section shows which games have rules that support the `explain_json()` meth
 | Choo-Choo Charles | 691 | 64 | 0 | 627 | ✅ 100% |
 | Civilization VI | 268 | 91 | 0 | 177 | ✅ 100% |
 | Coding Adventure | 61 | 43 | 0 | 18 | ✅ 100% |
+| DLCQuest | 38 | 25 | 0 | 13 | ✅ 100% |
 | DOOM 1993 | 474 | 0 | 0 | 474 | ✅ 100% |
 | DOOM II | 479 | 0 | 0 | 479 | ✅ 100% |
 | Dark Souls III | 1469 | 228 | 0 | 1241 | ✅ 100% |
 | Donkey Kong Country 3 | 220 | 1 | 0 | 219 | ✅ 100% |
-| Factorio | 251 | 251 | 0 | 0 | ✅ 100% |
+| Factorio | 264 | 264 | 0 | 0 | ✅ 100% |
 | Faxanadu | 110 | 24 | 0 | 86 | ✅ 100% |
 | Final Fantasy | 0 | 0 | 0 | 0 | ✅ 100% |
 | Final Fantasy Mystic Quest | 251 | 60 | 0 | 191 | ✅ 100% |
 | Heretic | 691 | 0 | 0 | 691 | ✅ 100% |
 | Hollow Knight | 712 | 712 | 0 | 0 | ✅ 100% |
-| Hylics 2 | 166 | 88 | 0 | 78 | ✅ 100% |
+| Hylics 2 | 133 | 70 | 0 | 63 | ✅ 100% |
 | Inscryption | 100 | 65 | 0 | 35 | ✅ 100% |
 | Kingdom Hearts | 523 | 464 | 0 | 59 | ✅ 100% |
 | Landstalker - The Treasures of King Nole | 291 | 1 | 0 | 290 | ✅ 100% |
@@ -309,14 +305,14 @@ This section shows which games have rules that support the `explain_json()` meth
 | Saving Princess | 24 | 9 | 0 | 15 | ✅ 100% |
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 113 | 11 | 0 | 102 | ✅ 100% |
-| Sonic Adventure 2 Battle | 708 | 277 | 0 | 431 | ✅ 100% |
-| Stardew Valley | 1069 | 927 | 0 | 142 | ✅ 100% |
+| Sonic Adventure 2 Battle | 1036 | 206 | 0 | 830 | ✅ 100% |
+| Stardew Valley | 1068 | 928 | 0 | 140 | ✅ 100% |
 | Subnautica | 147 | 147 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
 | Super Mario Land 2 | 2018 | 1889 | 0 | 129 | ✅ 100% |
 | Super Mario World | 708 | 365 | 0 | 343 | ✅ 100% |
-| Super Metroid | 30 | 30 | 0 | 0 | ✅ 100% |
+| Super Metroid | 43 | 43 | 0 | 0 | ✅ 100% |
 | TOEM original | 191 | 4 | 0 | 187 | ✅ 100% |
 | TOEM rule builder | 191 | 4 | 0 | 187 | ✅ 100% |
 | TUNIC | 6804 | 362 | 0 | 6442 | ✅ 100% |
