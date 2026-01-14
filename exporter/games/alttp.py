@@ -460,10 +460,26 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             logger.debug(f"ALttP: No item placements available for placement_search evaluation")
             return True
 
-        # Flatten locations list
+        # Flatten locations list - handle multiple formats:
+        # 1. Simple list: ["Location Name", player] or just "Location Name"
+        # 2. Tuple format: {"type": "tuple", "elements": [{"type": "constant", "value": "Location Name"}, ...]}
+        # 3. Direct dict: {"type": "constant", "value": "Location Name"}
         location_names = []
         for loc in locations:
-            if isinstance(loc, list) and len(loc) >= 1:
+            if isinstance(loc, dict):
+                # Handle tuple format: {"type": "tuple", "elements": [...]}
+                if loc.get('type') == 'tuple':
+                    elements = loc.get('elements', [])
+                    if elements:
+                        first_elem = elements[0]
+                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
+                            location_names.append(first_elem.get('value', ''))
+                        elif isinstance(first_elem, str):
+                            location_names.append(first_elem)
+                # Handle constant format: {"type": "constant", "value": "Location Name"}
+                elif loc.get('type') == 'constant':
+                    location_names.append(loc.get('value', ''))
+            elif isinstance(loc, list) and len(loc) >= 1:
                 location_names.append(loc[0])  # First element is the location name
             elif isinstance(loc, str):
                 location_names.append(loc)
@@ -652,7 +668,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     player = player_arg.get('value', 1)
                 else:
                     player = player_arg
-                locations = test.get('locations', [])
+                # Extract locations - could be a list or a dict with 'type': 'list' and 'value'
+                locations_arg = test.get('locations', [])
+                if isinstance(locations_arg, dict) and locations_arg.get('type') == 'list':
+                    locations = locations_arg.get('value', [])
+                else:
+                    locations = locations_arg
             return self._evaluate_placement_search(item_name, player, locations)
 
         # Handle Compare with AST_placement_lookup (both Rule Builder and AST format)
