@@ -940,6 +940,8 @@ class RuleCodeGenerator:
             'binary_op': self._convert_binary_op,
             'sum': self._convert_sum,
             'setting_value': self._convert_setting_value,
+            'world_attribute': self._expr_world_attribute,
+            'option_value': self._expr_option_value,
             'ast_all_of': self._convert_ast_all_of,
             'ast_any_of': self._convert_ast_any_of,
             'count_true': self._convert_count_true,
@@ -3623,6 +3625,26 @@ class RuleCodeGenerator:
                 return self.settings[setting_name]
             return 0
 
+        if expr_type == 'attribute':
+            # Handle attribute access like options.first_person_mode_glitch_in_logic
+            obj = expr.get('object', {})
+            attr = expr.get('attr', '')
+
+            # Check if object is a name referencing 'options' (from get_options helper)
+            if obj.get('type') == 'name':
+                obj_name = obj.get('name', '')
+                if obj_name in var_expressions:
+                    var_val = var_expressions[obj_name]
+                    # If var_val is the options path, look up the attribute in settings
+                    if 'options' in var_val and attr in self.settings:
+                        return self.settings[attr]
+
+            # Try to evaluate the object and access the attribute
+            obj_val = self._try_eval_constant(obj, var_expressions)
+            if obj_val is not None and hasattr(obj_val, attr):
+                return getattr(obj_val, attr)
+            return None
+
         # For item_check, state_method, etc. - these are runtime dependent
         return None
 
@@ -3656,6 +3678,25 @@ class RuleCodeGenerator:
                     item_name = item_arg.get('value', '')
                     self.required_imports.add('CountItem')
                     return f'CountItem("{item_name}")'
+
+            if method == 'has_any' and len(args) == 1:
+                items_arg = args[0]
+                if items_arg.get('type') == 'constant':
+                    items = items_arg.get('value', [])
+                    if isinstance(items, list):
+                        self.required_imports.add('HasAny')
+                        items_str = ', '.join(f'"{self._escape_string(item, chr(34))}"' for item in items)
+                        return f'HasAny({items_str})'
+
+            if method == 'has_all' and len(args) == 1:
+                items_arg = args[0]
+                if items_arg.get('type') == 'constant':
+                    items = items_arg.get('value', [])
+                    if isinstance(items, list):
+                        self.required_imports.add('HasAll')
+                        items_str = ', '.join(f'"{self._escape_string(item, chr(34))}"' for item in items)
+                        return f'HasAll({items_str})'
+
             # Unsupported state_method
             return None
 
@@ -3692,12 +3733,22 @@ class RuleCodeGenerator:
             else:
                 return f'Has("{item_escaped}")'
 
-        # Handle conditional - convert to Conditional()
+        # Handle conditional - convert to Conditional() or short-circuit if test is known
         if expr_type == 'conditional':
             test = expr.get('test', {})
             if_true = expr.get('if_true', {})
             if_false = expr.get('if_false', {})
 
+            # Try to evaluate the test to a constant boolean
+            test_result = self._try_evaluate_conditional_test_expr(test, var_expressions)
+            if test_result is True:
+                # Short-circuit to true branch
+                return self._expr_to_rule_builder(if_true, var_expressions)
+            elif test_result is False:
+                # Short-circuit to false branch
+                return self._expr_to_rule_builder(if_false, var_expressions)
+
+            # Fall back to generating a Conditional
             test_expr = self._expr_to_rule_builder(test, var_expressions)
             true_expr = self._expr_to_rule_builder(if_true, var_expressions)
             false_expr = self._expr_to_rule_builder(if_false, var_expressions)
@@ -3935,6 +3986,20 @@ class RuleCodeGenerator:
             # Default to 0 if setting not found
             return '0'
 
+        # Handle world_attribute - access world properties at runtime
+        if expr_type == 'world_attribute':
+            attribute = expr.get('attribute', '')
+            # For 'options' attribute, we can't directly convert to Rule Builder
+            # Return the path string which may be used in var_expressions
+            base_path = f'state.multiworld.worlds[player].{attribute}'
+            if 'index' in expr:
+                index = expr['index']
+                if isinstance(index, int):
+                    base_path = f'{base_path}[{index}]'
+                elif isinstance(index, str):
+                    base_path = f'{base_path}[{repr(index)}]'
+            return base_path
+
         # Handle helper - helper function calls
         if expr_type == 'helper':
             name = expr.get('name', '')
@@ -3966,17 +4031,44 @@ class RuleCodeGenerator:
                     pass
 
             # For other helpers or non-constant args, generate a HelperCall
-            arg_exprs = []
-            for arg in args:
-                arg_expr = self._expr_to_rule_builder(arg, var_expressions)
-                if arg_expr is None:
-                    return None
-                arg_exprs.append(arg_expr)
+            # Use the same logic as _convert_helper for proper Rule Builder format
+            if name in self.known_helpers:
+                self.required_imports.add('HelperCall')
+                func_name = self.get_function_name(name)
 
-            self.required_imports.add('HelperCall')
-            helper_func_name = self.get_function_name(name)
-            args_str = ', '.join(arg_exprs)
-            return f'HelperCall("{helper_func_name}", [{args_str}])'
+                # Convert arguments to Python code (simplified for AST context)
+                arg_strs = []
+                for arg in args:
+                    if isinstance(arg, dict) and arg.get('type') == 'constant':
+                        arg_strs.append(repr(arg.get('value')))
+                    elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
+                        setting = arg.get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    else:
+                        arg_expr = self._expr_to_rule_builder(arg, var_expressions)
+                        if arg_expr is None:
+                            arg_strs.append('None')
+                        else:
+                            arg_strs.append(arg_expr)
+
+                # Build HelperCall with helper_func reference
+                body_rule_code = self._try_convert_helper_body_to_rule(name, args)
+
+                parts = [f'helper_func={func_name}', f'helper_name="{name}"']
+
+                if arg_strs:
+                    parts.append(f'args=({", ".join(arg_strs)},)')
+
+                if body_rule_code:
+                    parts.append(f'body_rule={body_rule_code}')
+
+                return f'HelperCall({", ".join(parts)})'
+            else:
+                # Unknown helper - return None to signal we can't convert
+                return None
 
         # Unsupported expression type
         return None
@@ -4792,6 +4884,13 @@ class RuleCodeGenerator:
             # Option-filtered rule - just return the if_true branch
             return self._convert_rule(if_true)
 
+        # Try to evaluate the test to a constant if we have settings
+        test_result = self._try_evaluate_conditional_test(test)
+        if test_result is True:
+            return self._convert_rule(if_true)
+        elif test_result is False:
+            return self._convert_rule(if_false)
+
         # Check if test is an OptionValue - generate OptionValue rule for runtime evaluation
         test_rb_rule = test.get('rule', '') if isinstance(test, dict) else ''
         test_type = test.get('type', '') if isinstance(test, dict) else ''
@@ -4807,6 +4906,148 @@ class RuleCodeGenerator:
         if_false_code = self._convert_rule(if_false)
 
         return f'Conditional(test={test_code}, if_true={if_true_code}, if_false={if_false_code})'
+
+    def _try_evaluate_conditional_test(self, test: Dict[str, Any]) -> Optional[bool]:
+        """Try to evaluate a conditional test to a constant boolean.
+
+        Returns True, False, or None if the test can't be evaluated.
+        """
+        if not isinstance(test, dict):
+            return None
+
+        test_type = test.get('type', '')
+        test_rb_rule = test.get('rule', '')
+
+        # Handle option_value - look up in settings
+        if test_type == 'option_value' or test_rb_rule == 'OptionValue':
+            option_name = test.get('option', '') or test.get('args', {}).get('option', '')
+            if option_name in self.settings:
+                value = self.settings[option_name]
+                return bool(value)
+            return None
+
+        # Handle not - negate inner result
+        if test_type == 'not':
+            inner = test.get('condition') or test.get('operand', {})
+            inner_result = self._try_evaluate_conditional_test(inner)
+            if inner_result is not None:
+                return not inner_result
+            return None
+
+        # Handle constant
+        if test_type == 'constant':
+            return bool(test.get('value'))
+
+        # Handle compare with option_value operands
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            op = test.get('op', '')
+
+            left_val = self._try_evaluate_conditional_operand(left)
+            right_val = self._try_evaluate_conditional_operand(right)
+
+            if left_val is not None and right_val is not None:
+                try:
+                    if op == '==':
+                        return left_val == right_val
+                    elif op == '!=':
+                        return left_val != right_val
+                    elif op == '<':
+                        return left_val < right_val
+                    elif op == '<=':
+                        return left_val <= right_val
+                    elif op == '>':
+                        return left_val > right_val
+                    elif op == '>=':
+                        return left_val >= right_val
+                except:
+                    pass
+            return None
+
+        return None
+
+    def _try_evaluate_conditional_test_expr(self, test: Dict[str, Any], var_expressions: Dict[str, str]) -> Optional[bool]:
+        """Try to evaluate a conditional test expression to a constant boolean.
+
+        This is similar to _try_evaluate_conditional_test but works in the context
+        of _expr_to_rule_builder where we also have var_expressions.
+
+        Returns True, False, or None if the test can't be evaluated.
+        """
+        if not isinstance(test, dict):
+            return None
+
+        test_type = test.get('type', '')
+
+        # Handle option_value - look up in settings
+        if test_type == 'option_value':
+            option_name = test.get('option', '')
+            if option_name in self.settings:
+                value = self.settings[option_name]
+                return bool(value)
+            return None
+
+        # Handle not - negate inner result
+        if test_type == 'not':
+            inner = test.get('condition') or test.get('operand', {})
+            inner_result = self._try_evaluate_conditional_test_expr(inner, var_expressions)
+            if inner_result is not None:
+                return not inner_result
+            return None
+
+        # Handle constant
+        if test_type == 'constant':
+            value = test.get('value')
+            return bool(value) if value is not None else None
+
+        # Handle compare
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            op = test.get('op', '')
+
+            left_val = self._try_evaluate_conditional_operand(left)
+            right_val = self._try_evaluate_conditional_operand(right)
+
+            if left_val is not None and right_val is not None:
+                try:
+                    if op == '==':
+                        return left_val == right_val
+                    elif op == '!=':
+                        return left_val != right_val
+                    elif op == '<':
+                        return left_val < right_val
+                    elif op == '<=':
+                        return left_val <= right_val
+                    elif op == '>':
+                        return left_val > right_val
+                    elif op == '>=':
+                        return left_val >= right_val
+                except:
+                    pass
+            return None
+
+        return None
+
+    def _try_evaluate_conditional_operand(self, operand: Dict[str, Any]) -> Optional[Any]:
+        """Try to evaluate a conditional operand to a constant value."""
+        if not isinstance(operand, dict):
+            return operand
+
+        operand_type = operand.get('type', '')
+        operand_rb_rule = operand.get('rule', '')
+
+        if operand_type == 'constant':
+            return operand.get('value')
+
+        if operand_type == 'option_value' or operand_rb_rule == 'OptionValue':
+            option_name = operand.get('option', '') or operand.get('args', {}).get('option', '')
+            if option_name in self.settings:
+                return self.settings[option_name]
+            return None
+
+        return None
 
 
 def ast_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:
