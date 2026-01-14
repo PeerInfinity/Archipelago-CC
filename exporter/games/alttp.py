@@ -521,18 +521,37 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             op = rule.get('op', '')
             right = rule.get('right', [])
 
-        # Check if left is an AST_placement_lookup (Rule Builder) or placement_lookup (AST)
+        # Check if left is an AST_placement_lookup (Rule Builder), placement_lookup (AST),
+        # or a function_call to location_item_name (unconverted AST)
         if not isinstance(left, dict):
             return None
         left_type = left.get('rule') or left.get('type')
-        if left_type not in ('AST_placement_lookup', 'placement_lookup'):
-            return None
 
-        # Get location name - Rule Builder has args nested, AST has it at top level
-        if 'args' in left:
-            location_name = left.get('args', {}).get('location', '')
+        location_name = None
+
+        # Handle function_call to location_item_name (when conversion didn't happen)
+        if left_type == 'function_call':
+            func = left.get('function', {})
+            if func.get('type') == 'name' and func.get('name') == 'location_item_name':
+                # location_item_name(state, location_name, player) - extract location_name from args
+                func_args = left.get('args', [])
+                # Filter out 'state' and 'player' arguments - location is typically the second arg
+                for arg in func_args:
+                    if isinstance(arg, dict) and arg.get('type') == 'constant':
+                        loc = arg.get('value', '')
+                        if loc and isinstance(loc, str):
+                            location_name = loc
+                            break
+            if not location_name:
+                return None
+        elif left_type not in ('AST_placement_lookup', 'placement_lookup'):
+            return None
         else:
-            location_name = left.get('location', '')
+            # Get location name - Rule Builder has args nested, AST has it at top level
+            if 'args' in left:
+                location_name = left.get('args', {}).get('location', '')
+            else:
+                location_name = left.get('location', '')
 
         # Handle case where location_name is a constant dict
         if isinstance(location_name, dict) and location_name.get('type') == 'constant':
@@ -560,7 +579,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 if spec_type == 'constant':
                     return item_spec.get('value')
                 if spec_type == 'tuple':
-                    elements = item_spec.get('elements', [])
+                    # Handle both 'elements' (some formats) and 'value' (python_to_json converter)
+                    elements = item_spec.get('elements', []) or item_spec.get('value', [])
                     if elements:
                         first_elem = elements[0]
                         if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
@@ -574,7 +594,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             right_items = right
             # AST format might have right as a list or another structure
             if isinstance(right, dict) and right.get('type') == 'list':
-                right_items = right.get('elements', [])
+                # Handle both 'elements' (some formats) and 'value' (python_to_json converter)
+                right_items = right.get('elements', []) or right.get('value', [])
             for item_spec in right_items if isinstance(right_items, list) else [right_items]:
                 item_name = extract_item_name(item_spec)
                 if item_name and actual_item == item_name:
