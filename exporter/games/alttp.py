@@ -1286,7 +1286,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
                 # Process exits
                 # Check if this is a bunny-impassable cave - these need Moon Pearl
-                # to exit even in mixed regions (inverted mode specific)
+                # to exit, but ONLY in inverted mode where the player starts as a bunny.
+                # In standard mode, the player is always Link in Light World regions,
+                # so Moon Pearl is not needed for bunny-impassable caves.
                 is_bunny_impassable = region_name in BUNNY_IMPASSABLE_CAVES
 
                 for exit_data in region_data.get('exits', []):
@@ -1306,9 +1308,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         )
                         # For exits from mixed regions, remove Moon Pearl requirement
                         # since there are Light World paths available.
-                        # BUT: Don't remove Moon Pearl from bunny-impassable caves -
-                        # these require Moon Pearl to exit even in mixed regions.
-                        if is_mixed_region and not is_bunny_impassable:
+                        # Exception: In inverted mode, bunny-impassable caves still need
+                        # Moon Pearl since the player might enter as a bunny.
+                        # In standard mode, the player is never a bunny in Light World
+                        # regions, so bunny-impassable doesn't apply.
+                        should_keep_moon_pearl = is_bunny_impassable and self._is_inverted_mode
+                        if is_mixed_region and not should_keep_moon_pearl:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )

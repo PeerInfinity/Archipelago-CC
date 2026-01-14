@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-12 22:13:27
+**Generated:** 2026-01-14 07:04:17
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,46 +18,46 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 73/73 passed (100.0%)
-- **Full Test:** 73/73 passed (100.0%)
+- **Minimal Test:** 72/73 passed (98.6%)
+- **Full Test:** 72/73 passed (98.6%)
 - **Multiclient Test:** 73/73 passed (100.0%)
 - **Multiworld Test:** 73/73 passed (100.0%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
-- **Full Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 2 game(s), 2 total failure(s)
+- **Full Spoilers Test:** 8 game(s), 8 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
 - **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 73/73 (100.0%)
+- **Templates passing all 4 tests:** 72/73 (98.6%)
 - **Templates passing 3 tests:** 0/73 (0.0%)
-- **Templates passing 2 tests:** 0/73 (0.0%)
+- **Templates passing 2 tests:** 1/73 (1.4%)
 - **Templates passing 1 test:** 0/73 (0.0%)
 - **Templates passing 0 tests:** 0/73 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 73 templates passing all 4 tests:
+Of the 72 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 40/73 (54.8%)
-- **Passing with Generic Logic:** 67/73 (91.8%)
-- **Passing with Both Generic:** 40/73 (54.8%)
+- **Passing with Generic Exporter:** 40/72 (55.6%)
+- **Passing with Generic Logic:** 67/72 (93.1%)
+- **Passing with Both Generic:** 40/72 (55.6%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 505.6KB
+- **Total Exporter Code:** 532.1KB
 - **Total Game Logic Code:** 267.8KB
-- **Combined Total:** 773.4KB
+- **Combined Total:** 800.0KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 45.6KB | ✅ | 654.1KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 72.0KB | ✅ | 654.1KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
@@ -108,11 +108,11 @@ Of the 73 templates passing all 4 tests:
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 266.1KB |
-| Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.7KB | 87.4KB | 1136.1KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.8KB | 8.0KB | 2430.1KB |
+| Starcraft 2 | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.7KB | 87.4KB | 1136.1KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 18.8KB | 8.0KB | 2430.1KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 207.8KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 92.3KB | ✅ | 875.0KB |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 92.5KB | ✅ | 875.0KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 178.2KB |
 | Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 102.8KB |
@@ -149,9 +149,9 @@ Of the 73 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | Super Mario Land 2 | 92.3KB |
-| 2 | Super Metroid | 60.9KB |
-| 3 | A Link to the Past | 45.6KB |
+| 1 | Super Mario Land 2 | 92.5KB |
+| 2 | A Link to the Past | 72.0KB |
+| 3 | Super Metroid | 60.9KB |
 | 4 | Lingo | 38.0KB |
 | 5 | Starcraft 2 | 28.7KB |
 | 6 | Overcooked! 2 | 28.5KB |
