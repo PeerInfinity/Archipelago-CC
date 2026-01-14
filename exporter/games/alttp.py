@@ -876,10 +876,16 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Handle basement_key_rule helper - this internally checks for Hyrule Castle keys
         # With universal keys, replace with can_buy_unlimited helper
-        if rule.get('rule') == 'basement_key_rule' or (
-            rule.get('_original_ast_type') == 'helper' and
-            rule.get('rule') == 'basement_key_rule'
-        ):
+        # Check multiple formats:
+        # 1. Rule Builder format: {'rule': 'basement_key_rule'}
+        # 2. AST converted format: {'_original_ast_type': 'helper', 'rule': 'basement_key_rule'}
+        # 3. Helper format: {'type': 'helper', 'name': 'basement_key_rule'}
+        is_basement_key_rule = (
+            rule.get('rule') == 'basement_key_rule' or
+            (rule.get('_original_ast_type') == 'helper' and rule.get('rule') == 'basement_key_rule') or
+            (rule.get('type') == 'helper' and rule.get('name') == 'basement_key_rule')
+        )
+        if is_basement_key_rule:
             return {
                 'type': 'helper',
                 'name': 'can_buy_unlimited',
@@ -1294,7 +1300,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         )
                         access_rule = location_data.get('access_rule', {})
 
-                                # Replace dungeon small key checks when universal keys are enabled
+                    # Replace dungeon small key checks when universal keys are enabled
                     if self._is_universal_keys and access_rule:
                         location_data['access_rule'] = self._replace_small_key_checks(access_rule)
 
