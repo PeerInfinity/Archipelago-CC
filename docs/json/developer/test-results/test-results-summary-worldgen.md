@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-12 22:13:27
+**Generated:** 2026-01-14 07:04:17
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,9 +44,9 @@ Of the 53 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 300.3KB
+- **Total Exporter Code:** 326.8KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 300.3KB
+- **Combined Total:** 326.8KB
 
 ## Test Results
 
@@ -54,7 +54,7 @@ Of the 53 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 237.9KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 45.6KB | ✅ | 666.4KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 72.0KB | ✅ | 666.4KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.4KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -102,7 +102,7 @@ Of the 53 templates passing all 4 tests:
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 275.3KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 183.1KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 21.4KB | ✅ | 100.6KB |
-| Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 92.3KB | ✅ | 876.3KB |
+| Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 92.5KB | ✅ | 977.4KB |
 | Super Mario World WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 184.0KB |
 | TOEM original WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.9KB |
 | TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.9KB |
@@ -122,7 +122,7 @@ Of the 53 templates passing all 4 tests:
 | Rank | Game Name | Rules Size |
 |------|-----------|------------|
 | 1 | Dark Souls III WorldGen | 1090.0KB |
-| 2 | Super Mario Land 2 WorldGen | 876.3KB |
+| 2 | Super Mario Land 2 WorldGen | 977.4KB |
 | 3 | Links Awakening DX WorldGen | 714.1KB |
 | 4 | A Link to the Past WorldGen2 | 666.4KB |
 | 5 | A Link to the Past WorldGen | 666.4KB |
@@ -136,8 +136,8 @@ Of the 53 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | Super Mario Land 2 WorldGen | 92.3KB |
-| 2 | A Link to the Past WorldGen | 45.6KB |
+| 1 | Super Mario Land 2 WorldGen | 92.5KB |
+| 2 | A Link to the Past WorldGen | 72.0KB |
 | 3 | Overcooked! 2 WorldGen | 28.5KB |
 | 4 | Super Mario 64 WorldGen | 21.4KB |
 | 5 | A Hat in Time WorldGen | 18.0KB |
