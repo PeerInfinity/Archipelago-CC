@@ -2233,8 +2233,71 @@ class RuleCodeGenerator:
             if actual_item is None:
                 return True  # No item placed means inequality succeeds
             return actual_item != expected_item
+        elif op in ('in', 'In'):
+            # For 'in' operator, expected_operand is a list of tuples like [('Item', player), ...]
+            # We need to extract all item names and check if actual_item is in that set
+            expected_items = self._extract_items_from_list(expected_operand)
+            if expected_items is None:
+                return None
+            if actual_item is None:
+                return False  # No item placed means not in the list
+            return actual_item in expected_items
+        elif op in ('not in', 'NotIn'):
+            # For 'not in' operator, check if actual_item is NOT in the expected list
+            expected_items = self._extract_items_from_list(expected_operand)
+            if expected_items is None:
+                return None
+            if actual_item is None:
+                return True  # No item placed means not in the list
+            return actual_item not in expected_items
 
         return None
+
+    def _extract_items_from_list(self, operand: Any) -> Optional[set]:
+        """
+        Extract item names from a list of tuples for 'in' operator comparisons.
+
+        Expected formats:
+        - [('Item1', player), ('Item2', player), ...]
+        - {"type": "list", "value": [{"type": "tuple", "elements": [...]}, ...]}
+
+        Returns a set of item names, or None if the format is unrecognized.
+        """
+        if not isinstance(operand, dict):
+            return None
+
+        if operand.get('type') != 'list':
+            return None
+
+        values = operand.get('value', [])
+        items = set()
+
+        for item in values:
+            if isinstance(item, dict):
+                item_type = item.get('type', '')
+                if item_type == 'tuple':
+                    # {"type": "tuple", "elements": [{"type": "constant", "value": "ItemName"}, ...]}
+                    elements = item.get('elements', [])
+                    if elements and len(elements) >= 1:
+                        first_elem = elements[0]
+                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
+                            items.add(first_elem.get('value'))
+                        elif isinstance(first_elem, str):
+                            items.add(first_elem)
+                elif item_type == 'list':
+                    # Nested list format
+                    nested_values = item.get('value', [])
+                    if nested_values and len(nested_values) >= 1:
+                        first_val = nested_values[0]
+                        if isinstance(first_val, dict) and first_val.get('type') == 'constant':
+                            items.add(first_val.get('value'))
+                        elif isinstance(first_val, str):
+                            items.add(first_val)
+            elif isinstance(item, (list, tuple)) and len(item) >= 1:
+                # Direct tuple/list: ('ItemName', player)
+                items.add(item[0])
+
+        return items if items else None
 
     def _get_list_constant_value(self, operand: Any) -> Optional[tuple]:
         """
@@ -6281,8 +6344,71 @@ class HelperCodeGenerator:
             if actual_item is None:
                 return True  # No item placed means inequality succeeds
             return actual_item != expected_item
+        elif op in ('in', 'In'):
+            # For 'in' operator, expected_operand is a list of tuples like [('Item', player), ...]
+            # We need to extract all item names and check if actual_item is in that set
+            expected_items = self._extract_items_from_list(expected_operand)
+            if expected_items is None:
+                return None
+            if actual_item is None:
+                return False  # No item placed means not in the list
+            return actual_item in expected_items
+        elif op in ('not in', 'NotIn'):
+            # For 'not in' operator, check if actual_item is NOT in the expected list
+            expected_items = self._extract_items_from_list(expected_operand)
+            if expected_items is None:
+                return None
+            if actual_item is None:
+                return True  # No item placed means not in the list
+            return actual_item not in expected_items
 
         return None
+
+    def _extract_items_from_list(self, operand: Any) -> Optional[set]:
+        """
+        Extract item names from a list of tuples for 'in' operator comparisons.
+
+        Expected formats:
+        - [('Item1', player), ('Item2', player), ...]
+        - {"type": "list", "value": [{"type": "tuple", "elements": [...]}, ...]}
+
+        Returns a set of item names, or None if the format is unrecognized.
+        """
+        if not isinstance(operand, dict):
+            return None
+
+        if operand.get('type') != 'list':
+            return None
+
+        values = operand.get('value', [])
+        items = set()
+
+        for item in values:
+            if isinstance(item, dict):
+                item_type = item.get('type', '')
+                if item_type == 'tuple':
+                    # {"type": "tuple", "elements": [{"type": "constant", "value": "ItemName"}, ...]}
+                    elements = item.get('elements', [])
+                    if elements and len(elements) >= 1:
+                        first_elem = elements[0]
+                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
+                            items.add(first_elem.get('value'))
+                        elif isinstance(first_elem, str):
+                            items.add(first_elem)
+                elif item_type == 'list':
+                    # Nested list format
+                    nested_values = item.get('value', [])
+                    if nested_values and len(nested_values) >= 1:
+                        first_val = nested_values[0]
+                        if isinstance(first_val, dict) and first_val.get('type') == 'constant':
+                            items.add(first_val.get('value'))
+                        elif isinstance(first_val, str):
+                            items.add(first_val)
+            elif isinstance(item, (list, tuple)) and len(item) >= 1:
+                # Direct tuple/list: ('ItemName', player)
+                items.add(item[0])
+
+        return items if items else None
 
     def _expr_binary_op(self, expr: Dict[str, Any]) -> str:
         """Generate binary operation expression."""
