@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-14 07:04:17
+**Generated:** 2026-01-14 21:37:25
 
-**Source Data Created:** 2026-01-14T06:18:39.161349
+**Source Data Created:** 2026-01-14T21:37:24.211068
 
-**Source Data Last Updated:** 2026-01-14T06:18:39.161357
+**Source Data Last Updated:** 2026-01-14T21:37:24.211073
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
-- **Games with Intermittent Failures:** 2
-- **Total Intermittent Failures:** 2
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
+- **Games with Intermittent Failures:** 7
+- **Total Intermittent Failures:** 7
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/72 (55.6% of passed)
-- **Passing with Generic Logic:** 67/72 (93.1% of passed)
-- **Passing with Both Generic:** 40/72 (55.6% of passed)
+- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 40/73 (54.8% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.11 | 5.11 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 72.0KB | ✅ |
+| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 72.4KB | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -82,7 +82,7 @@
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed seed 8 | 0 | 17.3 | 19.9 | 🟡 86.9% | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 87.4KB |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | 21.4KB | ✅ |
@@ -110,8 +110,13 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Adventure | 6 | 2026-01-14 06:10 | Previously failed, now passing |
-| Kirby's Dream Land 3 | 1 | 2026-01-14 06:11 | Previously failed, now passing |
+| A Short Hike | 10 | 2026-01-14 21:30 | Previously failed, now passing |
+| Bumper Stickers | 8 | 2026-01-14 21:30 | Previously failed, now passing |
+| Civilization VI | 9 | 2026-01-14 21:30 | Previously failed, now passing |
+| Mega Man 2 | 2 | 2026-01-14 21:30 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 10 | 2026-01-14 21:31 | Previously failed, now passing |
+| Shivers | 7 | 2026-01-14 21:30 | Previously failed, now passing |
+| TOEM original | 7 | 2026-01-14 21:30 | Previously failed, now passing |
 
 
 ## Notes
