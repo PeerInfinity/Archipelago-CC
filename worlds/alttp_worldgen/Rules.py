@@ -985,8 +985,6 @@ def set_rules(world: "World") -> None:
         And(Or(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Cane of Somaria', 'Fire Rod', 'Hammer', 'Ice Rod')), HasAny('Hookshot', 'Pegasus Boots'))
     )
 
-    # Note: Original rule is conditional - needs 5 keys if Big Key is at Compass/Big Key Chest, else 6.
-    # Since canonical placement has Big Key at Compass Chest, we use 5 keys.
     world.set_rule(
         multiworld.get_entrance("Misery Mire (West)", player),
         Has('Small Key (Misery Mire)', 5)
