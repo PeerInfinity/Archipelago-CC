@@ -279,3 +279,6 @@ frontend/modules/mazeGame-iframe/
 worlds/apworld_manager/
 worlds_disabled/
 custom_worlds_disabled/
+
+# External game repositories for research
+journey-to-ascension/
