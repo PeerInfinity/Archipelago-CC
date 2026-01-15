@@ -29,6 +29,47 @@ Journey to Ascension is a TypeScript incremental game with clean, deterministic 
 | **Regions** | Zones (20) |
 | **Victory** | Complete final zone or reach prestige |
 
+## Architecture
+
+### Frontend-Based Design
+
+Unlike traditional Archipelago integrations that run logic in Python during seed generation, this implementation runs entirely in JavaScript within the Archipelago-CC frontend:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Archipelago-CC Frontend                       │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │                  Cost Adjustment Module                   │   │
+│  │  - Time simulation (JavaScript)                          │   │
+│  │  - Cost adjustment algorithm                             │   │
+│  │  - Game data definitions                                 │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                    postMessage / IframeClient                    │
+│                              │                                   │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │              Journey to Ascension (iframe)                │   │
+│  │  - Modified game with randomizer hooks                   │   │
+│  │  - Receives cost adjustments from parent                 │   │
+│  │  - Reports task completions to parent                    │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Communication Protocol
+
+The game runs in an iframe and communicates with the main frontend via the existing `IframeClient` infrastructure:
+
+**Parent → Game (iframe):**
+- `RANDOMIZER_INIT`: Send seed data, placement, cost adjustments
+- `ITEM_RECEIVED`: Grant a perk the player received from another world
+- `STATE_REQUEST`: Request current game state
+
+**Game → Parent:**
+- `TASK_COMPLETED`: Player completed a task (check for location)
+- `PERK_GRANTED`: Perk was granted (for tracking)
+- `STATE_UPDATE`: Current game state (for save/load)
+
 ## Core Algorithm
 
 ### Traditional Approach (Not Used)
@@ -40,433 +81,839 @@ Journey to Ascension is a TypeScript incremental game with clean, deterministic 
 
 ### Post-Hoc Cost Adjustment Approach
 ```
-1. Archipelago places perks randomly (no logic)
+1. Place perks randomly (no logic constraints)
 2. Analyze resulting progression path
 3. Calculate time-to-complete for each zone
 4. Adjust cost_multiplier values to hit target times
-5. Export adjusted parameters with seed
+5. Send adjustments to game iframe
 ```
 
 ## Implementation Plan
 
-### Phase 1: Data Extraction
+### Phase 1: Game Data Module
 
-**Goal:** Extract game data into JSON format for analysis.
+**Goal:** Create JavaScript module with game data and constants.
 
-**Tasks:**
-1. Parse `zones.ts` to extract all tasks with:
-   - Task ID, name, zone
-   - `cost_multiplier`
-   - Required skills
-   - Granted perk (if any)
-   - Granted item (if any)
-   - Task type (Normal, Mandatory, Travel, Boss)
+**Location:** `frontend/modules/jta-randomizer/gameData.js`
 
-2. Parse `perks.ts` to extract all perks with:
-   - Perk ID, name
-   - Skill modifiers (skill → bonus multiplier)
-   - Special effects (time compression, energy reduction, etc.)
+```javascript
+// Game constants extracted from Journey to Ascension source
+export const SKILLS = {
+    Charisma: { id: 0, name: 'Charisma', xpMult: 1.0 },
+    Study: { id: 1, name: 'Study', xpMult: 1.0 },
+    Combat: { id: 2, name: 'Combat', xpMult: 5.0 },
+    Search: { id: 3, name: 'Search', xpMult: 1.0 },
+    Subterfuge: { id: 4, name: 'Subterfuge', xpMult: 1.0 },
+    Crafting: { id: 5, name: 'Crafting', xpMult: 1.0 },
+    Survival: { id: 6, name: 'Survival', xpMult: 1.0 },
+    Travel: { id: 7, name: 'Travel', xpMult: 1.0 },
+    Magic: { id: 8, name: 'Magic', xpMult: 3.0 },
+    Fortitude: { id: 9, name: 'Fortitude', xpMult: 10.0 },
+    Druid: { id: 10, name: 'Druid', xpMult: 20.0 },
+    Ascension: { id: 11, name: 'Ascension', xpMult: 1000.0 },
+};
 
-3. Parse `skills.ts` to extract skill definitions:
-   - Skill ID, name
-   - XP multiplier
+export const PERKS = {
+    Reading: {
+        id: 'Reading',
+        name: 'How to Read',
+        skillModifiers: { Study: 0.5 },
+        specialEffects: [],
+    },
+    // ... all 28 perks
+};
 
-**Output:** `journey_to_ascension_data.json`
-
-```json
-{
-  "zones": [
+export const ZONES = [
     {
-      "id": 0,
-      "name": "The Village",
-      "tasks": [
-        {
-          "id": 10,
-          "name": "Join the Watch",
-          "type": "Travel",
-          "cost_multiplier": 4,
-          "skills": ["Charisma"],
-          "perk": null,
-          "item": null
-        },
-        {
-          "id": 13,
-          "name": "Learn How to Read",
-          "cost_multiplier": 8,
-          "skills": ["Study"],
-          "perk": "Reading",
-          "item": null
-        }
-      ]
-    }
-  ],
-  "perks": [
-    {
-      "id": "Reading",
-      "name": "How to Read",
-      "skill_modifiers": {"Study": 0.5},
-      "special_effects": []
-    }
-  ],
-  "skills": [
-    {"id": "Study", "name": "Study", "xp_mult": 1.0}
-  ]
-}
+        id: 0,
+        name: 'The Village',
+        tasks: [
+            {
+                id: 10,
+                name: 'Join the Watch',
+                type: 'Travel',
+                costMultiplier: 4,
+                skills: ['Charisma'],
+                perk: null,
+                item: null,
+            },
+            // ... other tasks
+        ],
+    },
+    // ... all 20 zones
+];
+
+// Tasks that grant perks (these become Archipelago locations)
+export const PERK_TASKS = ZONES.flatMap(zone =>
+    zone.tasks.filter(task => task.perk !== null)
+);
 ```
 
-### Phase 2: Time Simulation
+### Phase 2: Time Simulation Module
 
-**Goal:** Build a simulator that calculates time to complete any zone given a set of perks.
+**Goal:** JavaScript implementation of game time calculations.
 
-**Core Formula (from `simulation.ts`):**
+**Location:** `frontend/modules/jta-randomizer/simulator.js`
 
-```python
-def calc_task_cost(task, zone_id):
-    BASE_COST = 10
-    ZONE_EXPONENT = 2.2
-    return BASE_COST * task.cost_multiplier * (ZONE_EXPONENT ** zone_id)
+```javascript
+import { SKILLS, PERKS, ZONES } from './gameData.js';
 
-def calc_progress_per_tick(task, zone_id, skill_levels, perks, items_used):
-    mult = 1.0
+// Constants from simulation.ts
+const BASE_COST = 10;
+const ZONE_COST_EXPONENT = 2.2;
+const ZONE_SPEEDUP_BASE = 1.05;
+const SKILL_LEVEL_EXPONENT = 1.01;
+const TICK_RATE_MS = 66.6;
+const MAJOR_TIME_COMPRESSION_EFFECT = 2.0;
 
-    # Skill level bonus (geometric mean for multi-skill tasks)
-    skill_mult = 1.0
-    for skill in task.skills:
-        skill_mult *= (1.01 ** skill_levels[skill])
-    mult *= skill_mult ** (1 / len(task.skills))
-
-    # Perk bonuses
-    for skill in task.skills:
-        for perk in perks:
-            mult *= (1 + perk.skill_modifiers.get(skill, 0))
-
-    # Zone speedup
-    ZONE_SPEEDUP = 1.05
-    mult *= ZONE_SPEEDUP ** zone_id
-
-    # Special perk effects
-    if "MajorTimeCompression" in perks:
-        mult *= 2.0  # MAJOR_TIME_COMPRESSION_EFFECT
-
-    # Item bonuses (temporary)
-    for skill in task.skills:
-        for item, count in items_used.items():
-            mult *= (1 + item.skill_modifiers.get(skill, 0) * count)
-
-    return mult
-
-def calc_task_ticks(task, zone_id, skill_levels, perks, items_used):
-    cost = calc_task_cost(task, zone_id)
-    progress = calc_progress_per_tick(task, zone_id, skill_levels, perks, items_used)
-    return math.ceil(cost / progress)
-
-def calc_task_time_seconds(task, zone_id, skill_levels, perks, items_used):
-    TICK_RATE_MS = 66.6
-    ticks = calc_task_ticks(task, zone_id, skill_levels, perks, items_used)
-    return ticks * TICK_RATE_MS / 1000
-```
-
-**Simulator Features:**
-- Calculate time for a single task
-- Calculate time for an entire zone (all mandatory + travel tasks)
-- Simulate skill XP gain and leveling during zone completion
-- Track cumulative time across zones
-
-**Output:** Python module `jta_simulator.py`
-
-### Phase 3: Cost Adjustment Algorithm
-
-**Goal:** Given a random perk placement, compute adjusted `cost_multiplier` values.
-
-**Algorithm:**
-
-```python
-def adjust_costs(seed_placement, target_zone_time=300):
-    """
-    seed_placement: dict mapping task_id -> perk_id (which perk is at which location)
-    target_zone_time: target seconds per zone (tunable difficulty)
-
-    Returns: dict mapping task_id -> adjusted_cost_multiplier
-    """
-    adjustments = {}
-    current_perks = set()
-    skill_levels = {skill: 0 for skill in SKILLS}
-
-    for zone in ZONES:
-        # Determine which perks player will have after this zone
-        zone_perks = [seed_placement[t.id] for t in zone.perk_tasks]
-
-        # Calculate time to complete zone with current perks
-        zone_time = simulate_zone_time(zone, skill_levels, current_perks)
-
-        # Calculate adjustment ratio
-        if zone_time > target_zone_time:
-            ratio = target_zone_time / zone_time
-        else:
-            ratio = 1.0  # Don't make it harder (optional: could increase)
-
-        # Apply ratio to all tasks in zone
-        for task in zone.tasks:
-            original = task.cost_multiplier
-            adjusted = original * ratio
-
-            # Clamp to reasonable bounds
-            adjusted = max(adjusted, original * 0.01)  # No more than 100x easier
-            adjusted = min(adjusted, original * 10)    # No more than 10x harder
-
-            adjustments[task.id] = adjusted
-
-        # Update state for next zone
-        current_perks.update(zone_perks)
-        skill_levels = simulate_skill_gains(zone, skill_levels, current_perks)
-
-    return adjustments
-```
-
-**Tunable Parameters:**
-- `target_zone_time`: How long each zone should take (default: 300 seconds)
-- `min_adjustment`: Minimum multiplier (prevent trivializing, default: 0.01)
-- `max_adjustment`: Maximum multiplier (prevent impossibility, default: 10)
-- `boss_adjustment_cap`: Special cap for boss tasks (default: 0.1)
-
-### Phase 4: Archipelago World Integration
-
-**Goal:** Create an Archipelago world that generates seeds and exports adjusted parameters.
-
-**File Structure:**
-```
-worlds/journey_to_ascension/
-├── __init__.py          # Main world class
-├── Items.py             # Perk definitions as AP items
-├── Locations.py         # Perk-granting tasks as AP locations
-├── Regions.py           # Zones as AP regions
-├── Options.py           # Player options (difficulty, etc.)
-├── Rules.py             # Empty (no logic restrictions)
-├── Simulator.py         # Time simulation module
-├── CostAdjuster.py      # Cost adjustment algorithm
-└── data/
-    └── game_data.json   # Extracted game data
-```
-
-**World Class:**
-
-```python
-class JourneyToAscensionWorld(World):
-    game = "Journey to Ascension"
-
-    option_definitions = {
-        "target_zone_time": Range(60, 600, 300),
-        "difficulty_variance": Range(0, 100, 20),  # % variance allowed
-    }
-
-    def create_regions(self):
-        # Create Menu -> Zone 0 -> Zone 1 -> ... -> Zone 19 -> Victory
-        for i, zone in enumerate(ZONES):
-            region = Region(zone.name, self.player, self.multiworld)
-            for task in zone.perk_tasks:
-                region.locations.append(
-                    JTALocation(self.player, task.name, task.id, region)
-                )
-            self.multiworld.regions.append(region)
-
-    def create_items(self):
-        for perk in PERKS:
-            item = JTAItem(perk.name, ItemClassification.progression, perk.id, self.player)
-            self.multiworld.itempool.append(item)
-
-    def set_rules(self):
-        # No rules! All locations accessible from start
-        pass
-
-    def generate_output(self, output_directory):
-        # After fill, compute cost adjustments
-        placement = {loc.address: loc.item.code for loc in self.multiworld.get_locations(self.player)}
-        adjustments = adjust_costs(placement, self.options.target_zone_time.value)
-
-        # Export to JSON
-        output = {
-            "seed": self.multiworld.seed,
-            "placement": placement,
-            "cost_adjustments": adjustments,
-        }
-
-        filename = f"AP_{self.multiworld.seed}_jta.json"
-        with open(os.path.join(output_directory, filename), 'w') as f:
-            json.dump(output, f, indent=2)
-```
-
-### Phase 5: Game Client/Mod
-
-**Goal:** Modify the game to load randomizer data and apply adjustments.
-
-**Approach Options:**
-
-**Option A: Game Mod (Preferred)**
-- Create a mod/patch that loads `AP_SEED_jta.json` at game start
-- Override `cost_multiplier` values from the JSON
-- Display "which perk is at which task" in the UI
-- Send/receive items via Archipelago connection
-
-**Option B: Standalone Tracker**
-- Don't modify the game at all
-- Create external tracker showing "go do Task X to get Perk Y"
-- Player manually marks items as collected
-- Less integrated but simpler to implement
-
-**Mod Implementation (TypeScript):**
-
-```typescript
-// randomizer.ts - loaded before game start
-
-interface RandomizerData {
-    seed: number;
-    placement: Record<number, string>;  // task_id -> perk_name
-    cost_adjustments: Record<number, number>;  // task_id -> new_cost_mult
+/**
+ * Calculate task cost
+ * @param {Object} task - Task definition
+ * @param {number} zoneId - Zone index
+ * @returns {number} Task cost
+ */
+export function calcTaskCost(task, zoneId) {
+    return BASE_COST * task.costMultiplier * Math.pow(ZONE_COST_EXPONENT, zoneId);
 }
 
-let randomizerData: RandomizerData | null = null;
+/**
+ * Calculate progress per tick for a task
+ * @param {Object} task - Task definition
+ * @param {number} zoneId - Zone index
+ * @param {Object} skillLevels - Map of skill name to level
+ * @param {Set} perks - Set of owned perk IDs
+ * @returns {number} Progress per tick
+ */
+export function calcProgressPerTick(task, zoneId, skillLevels, perks) {
+    let mult = 1.0;
 
-export function loadRandomizerData(data: RandomizerData) {
-    randomizerData = data;
-    applyAdjustments();
-}
+    // Skill level bonus (geometric mean for multi-skill tasks)
+    let skillMult = 1.0;
+    for (const skill of task.skills) {
+        const level = skillLevels[skill] || 0;
+        skillMult *= Math.pow(SKILL_LEVEL_EXPONENT, level);
+    }
+    mult *= Math.pow(skillMult, 1 / task.skills.length);
 
-function applyAdjustments() {
-    if (!randomizerData) return;
-
-    for (const zone of ZONES) {
-        for (const task of zone.tasks) {
-            if (randomizerData.cost_adjustments[task.id]) {
-                task.cost_multiplier = randomizerData.cost_adjustments[task.id];
+    // Perk bonuses
+    for (const skill of task.skills) {
+        for (const perkId of perks) {
+            const perk = PERKS[perkId];
+            if (perk && perk.skillModifiers[skill]) {
+                mult *= (1 + perk.skillModifiers[skill]);
             }
         }
     }
+
+    // Zone speedup
+    mult *= Math.pow(ZONE_SPEEDUP_BASE, zoneId);
+
+    // Special perk effects
+    if (perks.has('MajorTimeCompression')) {
+        mult *= MAJOR_TIME_COMPRESSION_EFFECT;
+    }
+
+    return mult;
 }
 
-// Hook into task completion to grant randomized perk
-export function onTaskComplete(task: TaskDefinition) {
-    if (!randomizerData) return;
+/**
+ * Calculate time to complete a task in seconds
+ * @param {Object} task - Task definition
+ * @param {number} zoneId - Zone index
+ * @param {Object} skillLevels - Map of skill name to level
+ * @param {Set} perks - Set of owned perk IDs
+ * @returns {number} Time in seconds
+ */
+export function calcTaskTimeSeconds(task, zoneId, skillLevels, perks) {
+    const cost = calcTaskCost(task, zoneId);
+    const progress = calcProgressPerTick(task, zoneId, skillLevels, perks);
+    const ticks = Math.ceil(cost / progress);
+    return ticks * TICK_RATE_MS / 1000;
+}
 
-    const assignedPerk = randomizerData.placement[task.id];
-    if (assignedPerk) {
-        // Grant the randomized perk instead of the original
-        const perkType = PerkType[assignedPerk as keyof typeof PerkType];
-        tryAddPerk(perkType);
+/**
+ * Simulate completing a zone and return time + updated skill levels
+ * @param {Object} zone - Zone definition
+ * @param {Object} skillLevels - Current skill levels
+ * @param {Set} perks - Set of owned perk IDs
+ * @returns {Object} { timeSeconds, newSkillLevels }
+ */
+export function simulateZone(zone, skillLevels, perks) {
+    let totalTime = 0;
+    const newSkillLevels = { ...skillLevels };
 
-        // Send to Archipelago server
-        sendItemToServer(assignedPerk);
+    // Complete all mandatory tasks + travel
+    const tasksToComplete = zone.tasks.filter(t =>
+        t.type === 'Mandatory' || t.type === 'Travel'
+    );
+
+    for (const task of tasksToComplete) {
+        const time = calcTaskTimeSeconds(task, zone.id, newSkillLevels, perks);
+        totalTime += time;
+
+        // Simulate skill XP gain (simplified)
+        for (const skill of task.skills) {
+            newSkillLevels[skill] = (newSkillLevels[skill] || 0) + 1;
+        }
+    }
+
+    return { timeSeconds: totalTime, newSkillLevels };
+}
+
+/**
+ * Simulate full game progression and return per-zone times
+ * @param {Object} placement - Map of task ID to perk ID
+ * @returns {Array} Array of { zoneId, timeSeconds, perksGained }
+ */
+export function simulateFullGame(placement) {
+    const results = [];
+    let skillLevels = {};
+    let perks = new Set();
+
+    for (const zone of ZONES) {
+        const { timeSeconds, newSkillLevels } = simulateZone(zone, skillLevels, perks);
+
+        // Collect perks gained in this zone
+        const perksGained = [];
+        for (const task of zone.tasks) {
+            if (placement[task.id]) {
+                perksGained.push(placement[task.id]);
+                perks.add(placement[task.id]);
+            }
+        }
+
+        results.push({
+            zoneId: zone.id,
+            zoneName: zone.name,
+            timeSeconds,
+            perksGained,
+        });
+
+        skillLevels = newSkillLevels;
+    }
+
+    return results;
+}
+```
+
+### Phase 3: Cost Adjustment Module
+
+**Goal:** Algorithm to compute adjusted cost multipliers.
+
+**Location:** `frontend/modules/jta-randomizer/costAdjuster.js`
+
+```javascript
+import { ZONES } from './gameData.js';
+import { simulateZone, calcTaskTimeSeconds } from './simulator.js';
+
+/**
+ * Compute cost adjustments for a given perk placement
+ * @param {Object} placement - Map of task ID to perk ID
+ * @param {Object} options - Adjustment options
+ * @returns {Object} Map of task ID to adjusted cost multiplier
+ */
+export function computeCostAdjustments(placement, options = {}) {
+    const {
+        targetZoneTime = 300,      // 5 minutes per zone
+        minAdjustment = 0.01,      // Don't make more than 100x easier
+        maxAdjustment = 10,        // Don't make more than 10x harder
+        bossAdjustmentCap = 0.1,   // Bosses can be at most 10x easier
+    } = options;
+
+    const adjustments = {};
+    let skillLevels = {};
+    let perks = new Set();
+
+    for (const zone of ZONES) {
+        // Calculate time to complete zone with current perks
+        const { timeSeconds } = simulateZone(zone, skillLevels, perks);
+
+        // Calculate adjustment ratio
+        let ratio = 1.0;
+        if (timeSeconds > targetZoneTime) {
+            ratio = targetZoneTime / timeSeconds;
+        }
+        // Optionally increase difficulty if zone is too easy:
+        // else if (timeSeconds < targetZoneTime * 0.5) {
+        //     ratio = targetZoneTime / timeSeconds;
+        // }
+
+        // Apply ratio to all tasks in zone
+        for (const task of zone.tasks) {
+            const original = task.costMultiplier;
+            let adjusted = original * ratio;
+
+            // Apply bounds
+            const effectiveMin = task.type === 'Boss'
+                ? Math.max(minAdjustment, bossAdjustmentCap)
+                : minAdjustment;
+
+            adjusted = Math.max(adjusted, original * effectiveMin);
+            adjusted = Math.min(adjusted, original * maxAdjustment);
+
+            adjustments[task.id] = adjusted;
+        }
+
+        // Update state for next zone
+        for (const task of zone.tasks) {
+            if (placement[task.id]) {
+                perks.add(placement[task.id]);
+            }
+        }
+        const result = simulateZone(zone, skillLevels, perks);
+        skillLevels = result.newSkillLevels;
+    }
+
+    return adjustments;
+}
+
+/**
+ * Validate that a seed with adjustments is completable
+ * @param {Object} placement - Map of task ID to perk ID
+ * @param {Object} adjustments - Map of task ID to adjusted cost multiplier
+ * @param {Object} options - Validation options
+ * @returns {Object} Validation results
+ */
+export function validateSeed(placement, adjustments, options = {}) {
+    const {
+        maxZoneTime = 600,       // 10 minutes max per zone
+        maxTotalTime = 7200,     // 2 hours max total
+    } = options;
+
+    const results = {
+        valid: true,
+        totalTime: 0,
+        zoneResults: [],
+        warnings: [],
+    };
+
+    let skillLevels = {};
+    let perks = new Set();
+
+    for (const zone of ZONES) {
+        // Create adjusted zone for simulation
+        const adjustedZone = {
+            ...zone,
+            tasks: zone.tasks.map(task => ({
+                ...task,
+                costMultiplier: adjustments[task.id] || task.costMultiplier,
+            })),
+        };
+
+        const { timeSeconds, newSkillLevels } = simulateZone(
+            adjustedZone, skillLevels, perks
+        );
+
+        results.zoneResults.push({
+            zoneId: zone.id,
+            zoneName: zone.name,
+            timeSeconds,
+        });
+        results.totalTime += timeSeconds;
+
+        if (timeSeconds > maxZoneTime) {
+            results.warnings.push(
+                `Zone ${zone.name} takes ${timeSeconds.toFixed(0)}s (max: ${maxZoneTime})`
+            );
+        }
+
+        // Update perks for next zone
+        for (const task of zone.tasks) {
+            if (placement[task.id]) {
+                perks.add(placement[task.id]);
+            }
+        }
+        skillLevels = newSkillLevels;
+    }
+
+    if (results.totalTime > maxTotalTime) {
+        results.valid = false;
+        results.warnings.push(
+            `Total time ${results.totalTime.toFixed(0)}s exceeds max ${maxTotalTime}`
+        );
+    }
+
+    return results;
+}
+```
+
+### Phase 4: Iframe Game Module
+
+**Goal:** Create iframe module that hosts the game and handles communication.
+
+**File Structure:**
+```
+frontend/modules/jta-iframe/
+├── index.html           # Hosts the game
+├── gameClient.js        # Communication with parent
+├── gamePatches.js       # Patches to game code
+└── shared/
+    └── sharedLogger.js  # Logging utilities
+```
+
+**Game Client (`gameClient.js`):**
+
+```javascript
+import { IframeClient } from '../iframe-base/iframeClient.js';
+
+/**
+ * Journey to Ascension game client
+ * Handles communication between game and Archipelago frontend
+ */
+export class JTAGameClient extends IframeClient {
+    constructor() {
+        super();
+        this.randomizerData = null;
+        this.onTaskComplete = null;
+        this.onPerkGrant = null;
+    }
+
+    /**
+     * Initialize randomizer with seed data
+     * @param {Object} data - Randomizer data from parent
+     */
+    initializeRandomizer(data) {
+        this.randomizerData = data;
+
+        // Apply cost adjustments to game
+        if (window.ZONES && data.costAdjustments) {
+            for (const zone of window.ZONES) {
+                for (const task of zone.tasks) {
+                    if (data.costAdjustments[task.id] !== undefined) {
+                        task.cost_multiplier = data.costAdjustments[task.id];
+                    }
+                }
+            }
+        }
+
+        // Store placement for perk lookups
+        this.placement = data.placement;
+    }
+
+    /**
+     * Handle task completion - check if it's a randomized location
+     * @param {Object} task - Completed task
+     */
+    handleTaskComplete(task) {
+        if (!this.randomizerData) return;
+
+        const assignedPerk = this.placement[task.id];
+        if (assignedPerk) {
+            // Notify parent that a location was checked
+            this.publishEventBus('jta:locationChecked', {
+                taskId: task.id,
+                taskName: task.name,
+                perkId: assignedPerk,
+            });
+        }
+    }
+
+    /**
+     * Receive a perk from another player's world
+     * @param {string} perkId - Perk to grant
+     */
+    receivePerk(perkId) {
+        if (window.tryAddPerk && window.PerkType) {
+            const perkType = window.PerkType[perkId];
+            if (perkType !== undefined) {
+                window.tryAddPerk(perkType);
+            }
+        }
+    }
+
+    /**
+     * Setup message handlers for randomizer events
+     */
+    setupRandomizerHandlers() {
+        // Listen for randomizer initialization
+        this.subscribeEventBus('jta:initRandomizer', (data) => {
+            this.initializeRandomizer(data);
+        });
+
+        // Listen for incoming perks from other worlds
+        this.subscribeEventBus('jta:receivePerk', (data) => {
+            this.receivePerk(data.perkId);
+        });
     }
 }
 ```
 
-### Phase 6: Testing & Validation
+**Game Patches (`gamePatches.js`):**
 
-**Goal:** Verify seeds are completable and balanced.
+```javascript
+/**
+ * Patches to Journey to Ascension game code for randomizer support
+ */
 
-**Test Suite:**
+let gameClient = null;
 
-1. **Simulation Accuracy Tests**
-   - Compare simulator predictions against actual game runs
-   - Acceptable error margin: ±20%
+/**
+ * Initialize patches with game client reference
+ * @param {JTAGameClient} client - Game client instance
+ */
+export function initializePatches(client) {
+    gameClient = client;
+    patchTaskCompletion();
+    patchPerkGrant();
+}
 
-2. **Seed Completability Tests**
-   - Generate 100 random seeds
-   - Simulate each to verify completion time < threshold
-   - Target: 100% completable
+/**
+ * Patch task completion to notify randomizer
+ */
+function patchTaskCompletion() {
+    // Store original function
+    const originalFullyFinishTask = window.fullyFinishTask;
 
-3. **Balance Tests**
-   - Verify no zone takes >2x target time
-   - Verify no zone takes <0.5x target time (too easy)
-   - Check that boss tasks remain challenging
+    if (originalFullyFinishTask) {
+        window.fullyFinishTask = function(task) {
+            // Call original
+            originalFullyFinishTask(task);
 
-4. **Edge Case Tests**
-   - All perks in last zone (worst case)
-   - All perks in first zone (best case)
-   - Specific perk combinations that could break balance
-
-**Validation Script:**
-
-```python
-def validate_seed(seed_data):
-    results = {
-        "completable": True,
-        "total_time": 0,
-        "zone_times": [],
-        "warnings": [],
+            // Notify randomizer
+            if (gameClient) {
+                gameClient.handleTaskComplete(task.task_definition);
+            }
+        };
     }
+}
 
-    for zone in ZONES:
-        zone_time = simulate_zone(zone, seed_data)
-        results["zone_times"].append(zone_time)
-        results["total_time"] += zone_time
+/**
+ * Patch perk granting to handle randomized perks
+ */
+function patchPerkGrant() {
+    const originalTryAddPerk = window.tryAddPerk;
 
-        if zone_time > MAX_ZONE_TIME:
-            results["warnings"].append(f"Zone {zone.name} takes {zone_time}s (max: {MAX_ZONE_TIME})")
+    if (originalTryAddPerk) {
+        window.tryAddPerk = function(perk, showNotification = true) {
+            // In randomizer mode, perks come from the randomizer, not tasks
+            if (gameClient && gameClient.randomizerData) {
+                // Only allow perks granted through randomizer
+                // The original perk grant from task completion is blocked
+                return;
+            }
 
-        if zone_time < MIN_ZONE_TIME:
-            results["warnings"].append(f"Zone {zone.name} too easy: {zone_time}s")
+            // Normal mode - call original
+            originalTryAddPerk(perk, showNotification);
+        };
+    }
+}
 
-    if results["total_time"] > MAX_TOTAL_TIME:
-        results["completable"] = False
-
-    return results
+/**
+ * Grant a perk bypassing randomizer checks (for received items)
+ * @param {number} perkType - Perk type enum value
+ */
+export function forceGrantPerk(perkType) {
+    // Directly modify gamestate
+    if (window.GAMESTATE && window.GAMESTATE.perks) {
+        window.GAMESTATE.perks.set(perkType, true);
+    }
+}
 ```
 
-## Timeline and Milestones
+### Phase 5: Frontend Integration
 
-| Phase | Description | Deliverables |
-|-------|-------------|--------------|
-| 1 | Data Extraction | `game_data.json` |
-| 2 | Time Simulation | `jta_simulator.py` with tests |
-| 3 | Cost Adjustment | `adjust_costs()` function |
-| 4 | AP World | Working world generating seeds |
-| 5 | Game Client | Mod loading randomizer data |
-| 6 | Testing | Validation suite, 100 tested seeds |
+**Goal:** Integrate randomizer into main Archipelago-CC frontend.
+
+**Location:** `frontend/modules/jta-randomizer/index.js`
+
+```javascript
+import { PERK_TASKS, PERKS } from './gameData.js';
+import { computeCostAdjustments, validateSeed } from './costAdjuster.js';
+import { simulateFullGame } from './simulator.js';
+
+/**
+ * Journey to Ascension Randomizer Module
+ */
+export class JTARandomizer {
+    constructor(eventBus) {
+        this.eventBus = eventBus;
+        this.currentSeed = null;
+        this.placement = null;
+        this.adjustments = null;
+        this.gameIframe = null;
+    }
+
+    /**
+     * Generate a random placement of perks to tasks
+     * @param {number} seed - Random seed
+     * @returns {Object} Placement map (taskId -> perkId)
+     */
+    generatePlacement(seed) {
+        // Simple Fisher-Yates shuffle with seeded RNG
+        const rng = this.createSeededRNG(seed);
+
+        const perkIds = Object.keys(PERKS);
+        const taskIds = PERK_TASKS.map(t => t.id);
+
+        // Shuffle perk IDs
+        for (let i = perkIds.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            [perkIds[i], perkIds[j]] = [perkIds[j], perkIds[i]];
+        }
+
+        // Create placement
+        const placement = {};
+        for (let i = 0; i < taskIds.length && i < perkIds.length; i++) {
+            placement[taskIds[i]] = perkIds[i];
+        }
+
+        return placement;
+    }
+
+    /**
+     * Create seeded random number generator
+     * @param {number} seed - Seed value
+     * @returns {Function} RNG function returning 0-1
+     */
+    createSeededRNG(seed) {
+        let state = seed;
+        return function() {
+            state = (state * 1103515245 + 12345) & 0x7fffffff;
+            return state / 0x7fffffff;
+        };
+    }
+
+    /**
+     * Initialize randomizer with a seed
+     * @param {number} seed - Random seed
+     * @param {Object} options - Randomizer options
+     */
+    initialize(seed, options = {}) {
+        this.currentSeed = seed;
+        this.placement = this.generatePlacement(seed);
+        this.adjustments = computeCostAdjustments(this.placement, options);
+
+        // Validate the seed
+        const validation = validateSeed(this.placement, this.adjustments, options);
+        if (!validation.valid) {
+            console.warn('Seed validation warnings:', validation.warnings);
+        }
+
+        // Simulate to show expected progression
+        const simulation = simulateFullGame(this.placement);
+        console.log('Simulated progression:', simulation);
+
+        return {
+            seed,
+            placement: this.placement,
+            adjustments: this.adjustments,
+            validation,
+            simulation,
+        };
+    }
+
+    /**
+     * Connect to game iframe and send randomizer data
+     * @param {HTMLIFrameElement} iframe - Game iframe element
+     */
+    connectToGame(iframe) {
+        this.gameIframe = iframe;
+
+        // Wait for iframe to be ready, then send data
+        this.eventBus.on('jta:iframeReady', () => {
+            this.eventBus.emit('jta:initRandomizer', {
+                seed: this.currentSeed,
+                placement: this.placement,
+                costAdjustments: this.adjustments,
+            });
+        });
+
+        // Listen for location checks from game
+        this.eventBus.on('jta:locationChecked', (data) => {
+            this.handleLocationChecked(data);
+        });
+    }
+
+    /**
+     * Handle when player checks a location in the game
+     * @param {Object} data - Location check data
+     */
+    handleLocationChecked(data) {
+        console.log(`Location checked: ${data.taskName} -> ${data.perkId}`);
+
+        // In multiworld, this would send to AP server
+        // For single player, just grant the perk
+        this.eventBus.emit('jta:receivePerk', {
+            perkId: data.perkId,
+        });
+    }
+
+    /**
+     * Export randomizer data for save/share
+     * @returns {Object} Serializable randomizer state
+     */
+    exportData() {
+        return {
+            version: '1.0.0',
+            seed: this.currentSeed,
+            placement: this.placement,
+            costAdjustments: this.adjustments,
+        };
+    }
+
+    /**
+     * Import randomizer data
+     * @param {Object} data - Previously exported data
+     */
+    importData(data) {
+        if (data.version !== '1.0.0') {
+            throw new Error(`Unsupported version: ${data.version}`);
+        }
+
+        this.currentSeed = data.seed;
+        this.placement = data.placement;
+        this.adjustments = data.costAdjustments;
+    }
+}
+```
+
+### Phase 6: Testing Module
+
+**Goal:** Automated testing for randomizer logic.
+
+**Location:** `frontend/modules/jta-randomizer/tests/`
+
+```javascript
+// tests/simulator.test.js
+import { calcTaskCost, calcProgressPerTick, simulateZone } from '../simulator.js';
+import { ZONES, PERKS } from '../gameData.js';
+
+describe('JTA Simulator', () => {
+    describe('calcTaskCost', () => {
+        it('should scale with zone ID', () => {
+            const task = { costMultiplier: 1.0 };
+            const cost0 = calcTaskCost(task, 0);
+            const cost1 = calcTaskCost(task, 1);
+
+            expect(cost1 / cost0).toBeCloseTo(2.2, 1);
+        });
+
+        it('should scale with cost multiplier', () => {
+            const task1 = { costMultiplier: 1.0 };
+            const task2 = { costMultiplier: 2.0 };
+
+            expect(calcTaskCost(task2, 0) / calcTaskCost(task1, 0)).toBe(2);
+        });
+    });
+
+    describe('calcProgressPerTick', () => {
+        it('should increase with perk bonuses', () => {
+            const task = { skills: ['Study'], costMultiplier: 1.0 };
+            const skillLevels = { Study: 0 };
+
+            const progressWithout = calcProgressPerTick(task, 0, skillLevels, new Set());
+            const progressWith = calcProgressPerTick(task, 0, skillLevels, new Set(['Reading']));
+
+            expect(progressWith).toBeGreaterThan(progressWithout);
+        });
+    });
+
+    describe('simulateZone', () => {
+        it('should complete zone 0 in reasonable time', () => {
+            const result = simulateZone(ZONES[0], {}, new Set());
+
+            // Zone 0 should take less than 10 minutes with no perks
+            expect(result.timeSeconds).toBeLessThan(600);
+        });
+    });
+});
+
+// tests/costAdjuster.test.js
+import { computeCostAdjustments, validateSeed } from '../costAdjuster.js';
+import { PERK_TASKS, PERKS } from '../gameData.js';
+
+describe('Cost Adjuster', () => {
+    const createTestPlacement = () => {
+        const placement = {};
+        const perkIds = Object.keys(PERKS);
+        PERK_TASKS.forEach((task, i) => {
+            placement[task.id] = perkIds[i % perkIds.length];
+        });
+        return placement;
+    };
+
+    describe('computeCostAdjustments', () => {
+        it('should return adjustments for all tasks', () => {
+            const placement = createTestPlacement();
+            const adjustments = computeCostAdjustments(placement);
+
+            // Should have adjustment for every task in every zone
+            expect(Object.keys(adjustments).length).toBeGreaterThan(0);
+        });
+
+        it('should respect min/max bounds', () => {
+            const placement = createTestPlacement();
+            const adjustments = computeCostAdjustments(placement, {
+                minAdjustment: 0.5,
+                maxAdjustment: 2.0,
+            });
+
+            for (const [taskId, adjusted] of Object.entries(adjustments)) {
+                // Find original cost multiplier
+                // Verify it's within bounds
+            }
+        });
+    });
+
+    describe('validateSeed', () => {
+        it('should validate a reasonable seed', () => {
+            const placement = createTestPlacement();
+            const adjustments = computeCostAdjustments(placement);
+            const result = validateSeed(placement, adjustments);
+
+            expect(result.valid).toBe(true);
+        });
+    });
+});
+```
 
 ## Configuration Options
 
-**Player-Facing Options (in YAML):**
+**Randomizer Options (passed to `initialize()`):**
 
-```yaml
-Journey to Ascension:
-  # Target time per zone in seconds
-  target_zone_time:
-    300  # 5 minutes per zone
+```javascript
+const options = {
+    // Target time per zone in seconds (default: 300 = 5 minutes)
+    targetZoneTime: 300,
 
-  # Allow variance in zone times (%)
-  difficulty_variance:
-    20  # Zones can be 80%-120% of target
+    // Minimum cost adjustment multiplier (default: 0.01 = 100x easier max)
+    minAdjustment: 0.01,
 
-  # Special handling for boss tasks
-  boss_difficulty:
-    normal  # normal, easier, harder
+    // Maximum cost adjustment multiplier (default: 10 = 10x harder max)
+    maxAdjustment: 10,
 
-  # Include prestige perks in randomization
-  include_prestige:
-    false  # Start without prestige perks randomized
+    // Special cap for boss tasks (default: 0.1 = 10x easier max for bosses)
+    bossAdjustmentCap: 0.1,
+
+    // Maximum time for any single zone (default: 600 = 10 minutes)
+    maxZoneTime: 600,
+
+    // Maximum total game time (default: 7200 = 2 hours)
+    maxTotalTime: 7200,
+};
 ```
 
 ## Known Limitations
 
-1. **Prestige System**: Initial implementation excludes prestige mechanics. Future work could randomize prestige unlocks.
+1. **Prestige System**: Initial implementation excludes prestige mechanics.
 
-2. **Consumable Items**: Items that provide temporary boosts are not randomized. Could add as future enhancement.
+2. **Consumable Items**: Items providing temporary boosts are not randomized.
 
-3. **Energy System**: Cost adjustment affects energy efficiency. May need additional energy tuning for edge cases.
+3. **Energy System**: Cost adjustment affects energy efficiency.
 
-4. **Multiplayer**: Initial implementation is single-player only. Multiworld would require additional synchronization.
+4. **Multiplayer**: Initial implementation is single-player only.
 
 ## Future Enhancements
 
-1. **Logic Mode**: Add optional "logic mode" that restricts placement based on simulated progression (hybrid approach).
+1. **Logic Mode**: Optional placement restrictions based on simulation.
 
-2. **Dynamic Difficulty**: Adjust costs in real-time based on player performance.
+2. **Dynamic Difficulty**: Real-time cost adjustment based on player progress.
 
-3. **Item Randomization**: Randomize which tasks grant which consumable items.
+3. **Item Randomization**: Randomize consumable item drops.
 
-4. **Prestige Randomization**: Include prestige upgrades in the item pool.
+4. **Prestige Randomization**: Include prestige upgrades in item pool.
 
-5. **Race Mode**: Optimized settings for competitive play.
+5. **Multiworld Support**: Connect to Archipelago server for multiplayer.
 
 ## Appendix: Key Game Formulas
 
