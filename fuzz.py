@@ -876,6 +876,10 @@ if __name__ == "__main__":
     parser.add_argument("--disallow-options", default=None, type=str,
                         help="Disallow specific values for options. Format: option=value1,value2;option2=value. "
                              "Example: --disallow-options glitches_required=minor_glitches,overworld_glitches;mode=inverted")
+    parser.add_argument("--fractional-spheres", default=False, action="store_true",
+                        help="Enable fractional sphere logic for UT comparison. "
+                             "This iterates within each integer sphere to handle cascading item dependencies, "
+                             "where collecting items from one location enables access to other locations in the same sphere.")
 
     args = parser.parse_args()
 
