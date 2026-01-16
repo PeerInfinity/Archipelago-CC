@@ -261,14 +261,35 @@ function getGrindableTasks(zoneId, state) {
 }
 
 /**
+ * Calculate total energy value of held items
+ */
+function calcItemEnergy(state) {
+    let total = 0;
+    for (const [itemType, count] of state.items) {
+        const energyPerItem = ENERGY_ITEMS[itemType];
+        if (energyPerItem !== undefined) {
+            total += energyPerItem * count;
+        }
+    }
+    return total;
+}
+
+/**
  * Simulate a single run (until energy runs out or game complete)
  * Strategy: Farm XP and unlock perks first, only push zones when efficient
+ *
+ * Run types:
+ * - "collect": Gather items but don't consume them (save for push run)
+ * - "push": Consume all items at start for maximum energy
+ * - "auto": Decide based on whether items would help reach a new zone
+ *
  * Returns the highest zone reached and updated state
  */
 export function simulateRun(state, options = {}) {
     const {
         maxZone = ZONES.length - 1,
-        verbose = false
+        verbose = false,
+        runType = "auto" // "collect", "push", or "auto"
     } = options;
 
     let energy = state.maxEnergy;
@@ -277,13 +298,30 @@ export function simulateRun(state, options = {}) {
     // Start from zone 0 (we always start each run from the beginning)
     let currentZone = 0;
 
-    // Consume any held items for bonus energy at start
-    const itemEnergy = consumeItemsForEnergy(state);
-    if (itemEnergy > 0) {
-        energy += itemEnergy;
+    // Determine if this should be a push run
+    const itemEnergy = calcItemEnergy(state);
+    const nextZoneCost = state.highestZone >= 0
+        ? calcZoneMandatoryEnergyCost(state.highestZone + 1, state)
+        : calcZoneMandatoryEnergyCost(0, state);
+
+    // For "auto" mode, decide based on item accumulation:
+    // - If items could help reach a new zone, push
+    // - Otherwise, alternate: collect until items are "ripe" (accumulated enough to be worth using)
+    // Items decay 50% per reset, so optimal is to push when items would give significant boost
+    const itemsCouldReachNewZone = energy + itemEnergy >= nextZoneCost * 0.9;
+    // Push when items have accumulated to give at least 40% extra energy
+    const itemsAreRipe = itemEnergy >= energy * 0.4;
+    const shouldPush = runType === "push" ||
+        (runType === "auto" && itemEnergy > 0 && (itemsCouldReachNewZone || itemsAreRipe));
+
+    if (shouldPush && itemEnergy > 0) {
+        const consumed = consumeItemsForEnergy(state);
+        energy += consumed;
         if (verbose) {
-            runLog.push(`Consumed items for +${itemEnergy.toFixed(1)} energy, total: ${energy.toFixed(1)}`);
+            runLog.push(`PUSH RUN: Consumed items for +${consumed.toFixed(1)} energy, total: ${energy.toFixed(1)}`);
         }
+    } else if (verbose && itemEnergy > 0) {
+        runLog.push(`COLLECT RUN: Saving ${itemEnergy.toFixed(0)} energy worth of items`);
     }
 
     // Main loop: make decisions about what to do with our energy
@@ -335,12 +373,15 @@ export function simulateRun(state, options = {}) {
                 }
             }
 
-            // Consume all items for energy
-            const newItemEnergy = consumeItemsForEnergy(state);
-            if (newItemEnergy > 0) {
-                energy += newItemEnergy;
-                if (verbose) {
-                    runLog.push(`  +${newItemEnergy.toFixed(0)} energy from items`);
+            // On push runs, consume items immediately for more energy
+            // On collect runs, save items for later
+            if (shouldPush) {
+                const newItemEnergy = consumeItemsForEnergy(state);
+                if (newItemEnergy > 0) {
+                    energy += newItemEnergy;
+                    if (verbose) {
+                        runLog.push(`  +${newItemEnergy.toFixed(0)} energy from items`);
+                    }
                 }
             }
 
@@ -382,10 +423,17 @@ export function simulateRun(state, options = {}) {
                     energy -= gt.fullCost;
                     applyTaskXp(gt.task, currentZone, state);
                     addItems(state, gt.task.item, gt.task.maxReps);
-                    const gained = consumeItemsForEnergy(state);
-                    energy += gained;
-                    if (verbose) {
-                        runLog.push(`  ${gt.task.name}: -${gt.fullCost.toFixed(1)} +${gained.toFixed(1)} energy`);
+                    // On push runs, consume immediately; on collect runs, save items
+                    if (shouldPush) {
+                        const gained = consumeItemsForEnergy(state);
+                        energy += gained;
+                        if (verbose) {
+                            runLog.push(`  ${gt.task.name}: -${gt.fullCost.toFixed(1)} +${gained.toFixed(1)} energy`);
+                        }
+                    } else {
+                        if (verbose) {
+                            runLog.push(`  ${gt.task.name}: collected (saving items)`);
+                        }
                     }
                     didSomething = true;
                     break;
@@ -453,6 +501,8 @@ export function simulateRun(state, options = {}) {
         remainingEnergy: energy,
         state,
         runLog,
+        isPushRun: shouldPush,
+        itemsHeld: calcItemEnergy(state),
     };
 }
 
