@@ -549,6 +549,7 @@ export function simulateRun(state, options = {}) {
 
     let energy = state.maxEnergy;
     const runLog = [];
+    const tasksCompletedThisRun = new Set(); // Track task IDs completed this run
 
     // Determine if this should be a push run
     const itemEnergy = calcItemEnergy(state);
@@ -619,6 +620,7 @@ export function simulateRun(state, options = {}) {
                                 applyTaskXp(task, z, state);
                                 if (task.item !== null) addItems(state, task.item, task.maxReps);
                                 if (task.perk !== null) state.perks.add(task.perk);
+                                tasksCompletedThisRun.add(task.id);
                             }
                             zonesCompleted.add(z);
                             if (z > state.highestZone) state.highestZone = z;
@@ -630,6 +632,7 @@ export function simulateRun(state, options = {}) {
                     applyTaskXp(pt.task, pt.zoneId, state);
                     state.perks.add(pt.task.perk);
                     if (pt.task.item !== null) addItems(state, pt.task.item, pt.task.maxReps);
+                    tasksCompletedThisRun.add(pt.task.id);
                     if (verbose) {
                         runLog.push(`Zone ${pt.zoneId} ${pt.task.name}: unlocked perk (cost=${pt.totalEnergyNeeded.toFixed(1)})`);
                     }
@@ -656,6 +659,7 @@ export function simulateRun(state, options = {}) {
                                 applyTaskXp(task, z, state);
                                 if (task.item !== null) addItems(state, task.item, task.maxReps);
                                 if (task.perk !== null) state.perks.add(task.perk);
+                                tasksCompletedThisRun.add(task.id);
                             }
                             zonesCompleted.add(z);
                             if (z > state.highestZone) state.highestZone = z;
@@ -666,6 +670,7 @@ export function simulateRun(state, options = {}) {
                     energy -= it.fullCost;
                     applyTaskXp(it.task, it.zoneId, state);
                     addItems(state, it.task.item, it.task.maxReps);
+                    tasksCompletedThisRun.add(it.task.id);
                     if (verbose) {
                         runLog.push(`Zone ${it.zoneId} ${it.task.name}: collected (value=${it.itemValue.toFixed(0)})`);
                     }
@@ -690,6 +695,7 @@ export function simulateRun(state, options = {}) {
                             applyTaskXp(task, z, state);
                             if (task.item !== null) addItems(state, task.item, task.maxReps);
                             if (task.perk !== null) state.perks.add(task.perk);
+                            tasksCompletedThisRun.add(task.id);
                         }
                         zonesCompleted.add(z);
                         if (z > state.highestZone) {
@@ -756,6 +762,7 @@ export function simulateRun(state, options = {}) {
                                 applyTaskXp(task, z, state);
                                 if (task.item !== null) addItems(state, task.item, task.maxReps);
                                 if (task.perk !== null) state.perks.add(task.perk);
+                                tasksCompletedThisRun.add(task.id);
                             }
                             zonesCompleted.add(z);
                             if (z > state.highestZone) state.highestZone = z;
@@ -770,6 +777,7 @@ export function simulateRun(state, options = {}) {
                     if (reps > 0) {
                         energy -= reps * gt.singleRepCost;
                         applyTaskXp(gt.task, gt.zoneId, state, 1, reps);
+                        tasksCompletedThisRun.add(gt.task.id);
                         if (verbose) {
                             const skillNames = gt.task.skills.map(s => SKILL_NAMES[s]).join('/');
                             runLog.push(`Zone ${gt.zoneId} ${gt.task.name} x${reps} [${skillNames}]: -${(reps * gt.singleRepCost).toFixed(1)}`);
@@ -800,6 +808,7 @@ export function simulateRun(state, options = {}) {
                         const partialReps = energy / gt.singleRepCost;
                         if (partialReps > 0.01) {
                             applyTaskXp(gt.task, gt.zoneId, state, 1, partialReps);
+                            tasksCompletedThisRun.add(gt.task.id);
                             if (verbose) {
                                 runLog.push(`Zone ${gt.zoneId} ${gt.task.name} (partial): -${energy.toFixed(1)}`);
                             }
@@ -828,6 +837,7 @@ export function simulateRun(state, options = {}) {
         runLog,
         isPushRun: shouldPush,
         itemsHeld: calcItemEnergy(state),
+        tasksCompleted: tasksCompletedThisRun,
     };
 }
 
@@ -912,14 +922,36 @@ function halveItems(state) {
 }
 
 /**
+ * Build a lookup of task ID -> { zoneId, zoneName, taskName }
+ */
+function buildTaskLookup() {
+    const lookup = new Map();
+    for (const zone of ZONES) {
+        for (const task of zone.tasks) {
+            lookup.set(task.id, {
+                taskId: task.id,
+                zoneId: zone.id,
+                zoneName: zone.name,
+                taskName: task.name,
+                taskType: task.type,
+            });
+        }
+    }
+    return lookup;
+}
+
+/**
  * Simulate full game until target zone is reached
  * Returns number of resets needed and final state
+ * Now also tracks task milestones (first time each task is completed)
  */
 export function simulateUntilZone(targetZone, options = {}) {
     const { maxResets = 500, verbose = false } = options;
 
     let state = createInitialState();
-    const milestones = new Map(); // zone -> { reset, firstReached }
+    const zoneMilestones = new Map(); // zoneId -> { reset, zoneId }
+    const taskMilestones = new Map(); // taskId -> { reset, taskId, zoneId, taskName }
+    const taskLookup = buildTaskLookup();
     let totalResets = 0;
 
     for (let reset = 0; reset < maxResets; reset++) {
@@ -927,8 +959,21 @@ export function simulateUntilZone(targetZone, options = {}) {
 
         // Record first time reaching each zone
         for (let z = 0; z <= runResult.highestZoneReached; z++) {
-            if (!milestones.has(z)) {
-                milestones.set(z, { reset, zoneId: z });
+            if (!zoneMilestones.has(z)) {
+                zoneMilestones.set(z, { reset, zoneId: z });
+            }
+        }
+
+        // Record first time completing each task
+        for (const taskId of runResult.tasksCompleted) {
+            if (!taskMilestones.has(taskId)) {
+                const taskInfo = taskLookup.get(taskId);
+                if (taskInfo) {
+                    taskMilestones.set(taskId, {
+                        reset,
+                        ...taskInfo,
+                    });
+                }
             }
         }
 
@@ -947,10 +992,15 @@ export function simulateUntilZone(targetZone, options = {}) {
         }
     }
 
+    // Sort task milestones by reset number
+    const sortedTaskMilestones = Array.from(taskMilestones.values())
+        .sort((a, b) => a.reset - b.reset || a.zoneId - b.zoneId || a.taskId - b.taskId);
+
     return {
         totalResets,
-        reachedTarget: milestones.has(targetZone),
-        milestones: Array.from(milestones.values()).sort((a, b) => a.zoneId - b.zoneId),
+        reachedTarget: zoneMilestones.has(targetZone),
+        zoneMilestones: Array.from(zoneMilestones.values()).sort((a, b) => a.zoneId - b.zoneId),
+        taskMilestones: sortedTaskMilestones,
         finalState: state,
     };
 }
@@ -965,18 +1015,40 @@ export function runBaselineSimulation(maxZone = 15) {
     const result = simulateUntilZone(maxZone, { verbose: false });
 
     console.log(`Total resets to reach zone ${maxZone}: ${result.totalResets}`);
-    console.log(`\nMilestones (first reset to reach each zone):`);
-    console.log(`${'Zone'.padEnd(6)} ${'Name'.padEnd(25)} ${'Reset'.padEnd(8)} ${'Cumulative'}`);
+
+    // Zone milestones
+    console.log(`\nZone Milestones (first reset to reach each zone):`);
+    console.log(`${'Zone'.padEnd(6)} ${'Name'.padEnd(25)} ${'Reset'.padEnd(8)} ${'Delta'}`);
     console.log('-'.repeat(55));
 
-    for (const milestone of result.milestones) {
+    let prevZoneReset = 0;
+    for (const milestone of result.zoneMilestones) {
         const zone = ZONES[milestone.zoneId];
+        const delta = milestone.reset - prevZoneReset;
         console.log(
             `${milestone.zoneId.toString().padEnd(6)} ` +
             `${zone.name.padEnd(25)} ` +
             `${milestone.reset.toString().padEnd(8)} ` +
-            `${milestone.reset + 1}`
+            `+${delta}`
         );
+        prevZoneReset = milestone.reset;
+    }
+
+    // Task milestones
+    console.log(`\nTask Milestones (first reset to complete each task):`);
+    console.log(`${'Reset'.padEnd(8)} ${'Delta'.padEnd(8)} ${'Zone'.padEnd(22)} ${'Task'}`);
+    console.log('-'.repeat(80));
+
+    let prevTaskReset = 0;
+    for (const milestone of result.taskMilestones) {
+        const delta = milestone.reset - prevTaskReset;
+        console.log(
+            `${milestone.reset.toString().padEnd(8)} ` +
+            `+${delta.toString().padEnd(7)} ` +
+            `${milestone.zoneName.substring(0, 20).padEnd(22)} ` +
+            `${milestone.taskName}`
+        );
+        prevTaskReset = milestone.reset;
     }
 
     console.log(`\nFinal state:`);
