@@ -208,21 +208,90 @@ export function calcZoneMandatoryEnergyCost(zoneId, state) {
 }
 
 /**
+ * Calculate which zones are reachable with current energy and stats
+ * Returns array of { zoneId, energyAtStart, energyAfterMandatory, mandatoryCost }
+ * where energyAtStart is how much energy we'd have BEFORE doing that zone's mandatory tasks
+ */
+export function getReachableZones(startingEnergy, state, maxZone = ZONES.length - 1) {
+    const reachable = [];
+    let remainingEnergy = startingEnergy;
+
+    for (let z = 0; z <= maxZone && z < ZONES.length; z++) {
+        const mandatoryCost = calcZoneMandatoryEnergyCost(z, state);
+
+        if (mandatoryCost > remainingEnergy) {
+            // Can't afford this zone - stop here
+            // But still add it as a "border" zone we can partially access
+            reachable.push({
+                zoneId: z,
+                energyAtStart: remainingEnergy,
+                energyAfterMandatory: 0,
+                mandatoryCost,
+                canComplete: false,
+            });
+            break;
+        }
+
+        reachable.push({
+            zoneId: z,
+            energyAtStart: remainingEnergy,
+            energyAfterMandatory: remainingEnergy - mandatoryCost,
+            mandatoryCost,
+            canComplete: true,
+        });
+
+        remainingEnergy -= mandatoryCost;
+    }
+
+    return reachable;
+}
+
+/**
  * Apply XP gain from completing a task
+ * Properly tracks partial XP and levels up only when enough XP is accumulated.
+ * Matches the original game's leveling system.
+ *
  * @param reps - number of full task completions (each completion = maxReps of the task)
  * @param actualReps - if set, use this for XP calculation instead of task.maxReps
  */
 function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null) {
     const xpPerRep = calcTaskXp(task, zoneId, state);
     const repsPerCompletion = actualReps !== null ? actualReps : task.maxReps;
+    const totalXp = xpPerRep * repsPerCompletion * reps;
+
     for (const skill of task.skills) {
-        state.skillLevels[skill] = (state.skillLevels[skill] || 0);
-        const currentLevel = state.skillLevels[skill];
-        const xpGained = xpPerRep * repsPerCompletion * reps;
-        const xpNeeded = calcXpNeeded(currentLevel, skill);
-        const levelsGained = Math.floor(xpGained / xpNeeded);
-        state.skillLevels[skill] += Math.max(1, levelsGained);
+        // Initialize skill if needed
+        if (state.skillLevels[skill] === undefined) {
+            state.skillLevels[skill] = 0;
+            state.skillXp[skill] = 0;
+        }
+
+        // Add XP to the skill
+        state.skillXp[skill] += totalXp;
+
+        // Level up while we have enough XP (matching original game logic)
+        let xpNeeded = calcXpNeeded(state.skillLevels[skill], skill);
+        while (state.skillXp[skill] >= xpNeeded) {
+            state.skillXp[skill] -= xpNeeded;
+            state.skillLevels[skill] += 1;
+            xpNeeded = calcXpNeeded(state.skillLevels[skill], skill);
+        }
     }
+}
+
+/**
+ * Calculate total XP value of a task (sum across all skills it trains)
+ * Weighted by skill XP multipliers so harder-to-level skills count more
+ */
+function calcTotalXpValue(task, zoneId, state) {
+    const xpPerRep = calcTaskXp(task, zoneId, state);
+    let totalValue = 0;
+    for (const skill of task.skills) {
+        // Weight by inverse of skill XP multiplier (harder skills = more valuable)
+        const skillMult = SKILL_XP_MULT[skill] || 1;
+        totalValue += xpPerRep / skillMult;
+    }
+    return totalValue;
 }
 
 /**
@@ -242,6 +311,7 @@ function getGrindableTasks(zoneId, state) {
 
         const singleRepCost = calcTaskEnergyCostSingleRep(task, zoneId, state);
         const xpPerRep = calcTaskXp(task, zoneId, state);
+        const totalXpValue = calcTotalXpValue(task, zoneId, state);
         const hasPerk = task.perk !== null && !state.perks.has(task.perk);
         const hasEnergyItem = task.item !== null && ENERGY_ITEMS[task.item] !== undefined;
 
@@ -251,13 +321,195 @@ function getGrindableTasks(zoneId, state) {
             singleRepCost,
             fullCost: calcTaskEnergyCost(task, zoneId, state),
             xpPerRep,
+            totalXpValue,
             xpPerEnergy: xpPerRep / singleRepCost,
+            totalXpPerEnergy: totalXpValue / singleRepCost,
             hasPerk,
             hasEnergyItem,
             energyPerItem: hasEnergyItem ? ENERGY_ITEMS[task.item] : 0,
         });
     }
     return tasks;
+}
+
+/**
+ * Get all grindable tasks from all reachable zones (0 through maxZone)
+ */
+function getAllReachableGrindableTasks(maxZone, state) {
+    const allTasks = [];
+    for (let z = 0; z <= maxZone && z < ZONES.length; z++) {
+        const zoneTasks = getGrindableTasks(z, state);
+        allTasks.push(...zoneTasks);
+    }
+    return allTasks;
+}
+
+/**
+ * Identify skills that are bottlenecks for reaching future zones.
+ * Returns a Map of skill -> priority (lower = more urgent).
+ * Priority is based on how soon we need the skill.
+ *
+ * @param maxReachableZone - highest zone we can currently complete
+ * @returns Map of skill ID -> priority weight (higher weight = more important)
+ */
+function getBottleneckSkills(state, maxEnergy, maxReachableZone) {
+    const skillWeights = new Map();
+
+    // Look ahead several zones
+    const lookAhead = 5;
+    const startZone = maxReachableZone + 1;
+    const endZone = Math.min(startZone + lookAhead - 1, ZONES.length - 1);
+
+    for (let z = startZone; z <= endZone && z < ZONES.length; z++) {
+        const zone = ZONES[z];
+        const mandatory = getMandatoryTasks(zone);
+        // Weight by inverse of zone distance (closer zones = higher weight)
+        const zoneDistance = z - maxReachableZone;
+        const weight = lookAhead - zoneDistance + 1; // e.g., next zone = 5, zone after = 4, etc.
+
+        for (const task of mandatory) {
+            for (const skill of task.skills) {
+                const currentWeight = skillWeights.get(skill) || 0;
+                skillWeights.set(skill, currentWeight + weight);
+            }
+        }
+    }
+
+    // Convert to Set for backward compatibility, but return the weights too
+    const bottlenecks = new Set(skillWeights.keys());
+    bottlenecks._weights = skillWeights;
+    return bottlenecks;
+}
+
+/**
+ * Get skills that can actually be trained from available (non-hidden) tasks
+ */
+function getTrainableSkills(maxZone, state) {
+    const trainable = new Set();
+    const allTasks = getAllReachableGrindableTasks(maxZone, state);
+    for (const gt of allTasks) {
+        for (const skill of gt.task.skills) {
+            trainable.add(skill);
+        }
+    }
+    return trainable;
+}
+
+/**
+ * Get tasks that train bottleneck skills, sorted by how much they help with progression.
+ * Factors in:
+ * 1. Skill weights (skills needed sooner = higher weight)
+ * 2. Current skill level (lower level skills = higher priority)
+ * 3. Energy efficiency
+ */
+function getBottleneckTrainingTasks(maxZone, state, bottleneckSkills) {
+    if (bottleneckSkills.size === 0) return [];
+
+    const skillWeights = bottleneckSkills._weights || new Map();
+    const allTasks = getAllReachableGrindableTasks(maxZone, state);
+    const relevantTasks = [];
+
+    // Calculate average skill level for comparison
+    const allSkillLevels = Object.values(state.skillLevels);
+    const avgSkillLevel = allSkillLevels.length > 0
+        ? allSkillLevels.reduce((a, b) => a + b, 0) / allSkillLevels.length
+        : 0;
+
+    for (const gt of allTasks) {
+        // Count how many bottleneck skills this task trains
+        const bottleneckSkillsTrained = gt.task.skills.filter(s => bottleneckSkills.has(s));
+        const numBottlenecks = bottleneckSkillsTrained.length;
+
+        if (numBottlenecks > 0) {
+            // Calculate value considering:
+            // - Skill weight (how soon we need it)
+            // - Skill deficit (how far below average we are)
+            let priorityScore = 0;
+            for (const skill of bottleneckSkillsTrained) {
+                const weight = skillWeights.get(skill) || 1;
+                const level = state.skillLevels[skill] || 0;
+                // Deficit bonus: extra priority for skills below average
+                // Using sqrt to dampen the effect but still prioritize low skills
+                const deficit = Math.max(0, avgSkillLevel - level);
+                const deficitBonus = Math.sqrt(deficit + 1);
+                // Combined score: base weight * deficit bonus
+                priorityScore += weight * deficitBonus;
+            }
+
+            relevantTasks.push({
+                ...gt,
+                numBottlenecks,
+                bottleneckSkillsTrained,
+                priorityScore,
+                priorityPerEnergy: priorityScore / gt.singleRepCost,
+            });
+        }
+    }
+
+    // Sort by priority per energy
+    return relevantTasks.sort((a, b) => b.priorityPerEnergy - a.priorityPerEnergy);
+}
+
+/**
+ * Get all perk-granting tasks from reachable zones that we don't already have
+ * Returns tasks sorted by total energy needed to reach and complete them
+ */
+function getReachablePerkTasks(reachableZones, state) {
+    const perkTasks = [];
+
+    for (const zoneInfo of reachableZones) {
+        const zoneTasks = getGrindableTasks(zoneInfo.zoneId, state);
+        for (const gt of zoneTasks) {
+            if (gt.hasPerk) {
+                // Calculate total energy needed: energy to reach this zone + task cost
+                // We need to reserve energy to get here first
+                const energyToReachZone = state.maxEnergy - zoneInfo.energyAtStart;
+                const totalEnergyNeeded = energyToReachZone + gt.fullCost;
+
+                perkTasks.push({
+                    ...gt,
+                    energyAtZone: zoneInfo.energyAtStart,
+                    totalEnergyNeeded,
+                    canAfford: gt.fullCost <= zoneInfo.energyAtStart,
+                });
+            }
+        }
+    }
+
+    // Sort by total energy needed (cheapest perks first)
+    return perkTasks.sort((a, b) => a.totalEnergyNeeded - b.totalEnergyNeeded);
+}
+
+/**
+ * Get all energy item tasks from reachable zones
+ * Returns tasks sorted by net energy gain (items gained - cost to get them)
+ */
+function getReachableItemTasks(reachableZones, state) {
+    const itemTasks = [];
+
+    for (const zoneInfo of reachableZones) {
+        const zoneTasks = getGrindableTasks(zoneInfo.zoneId, state);
+        for (const gt of zoneTasks) {
+            if (gt.hasEnergyItem) {
+                const energyToReachZone = state.maxEnergy - zoneInfo.energyAtStart;
+                const totalCost = energyToReachZone + gt.fullCost;
+                const itemValue = gt.energyPerItem * gt.task.maxReps;
+                const netGain = itemValue - gt.fullCost; // Net gain IN the zone
+
+                itemTasks.push({
+                    ...gt,
+                    energyAtZone: zoneInfo.energyAtStart,
+                    totalCost,
+                    itemValue,
+                    netGain,
+                    canAfford: gt.fullCost <= zoneInfo.energyAtStart,
+                });
+            }
+        }
+    }
+
+    // Sort by net gain (best items first)
+    return itemTasks.sort((a, b) => b.netGain - a.netGain);
 }
 
 /**
@@ -276,41 +528,45 @@ function calcItemEnergy(state) {
 
 /**
  * Simulate a single run (until energy runs out or game complete)
- * Strategy: Farm XP and unlock perks first, only push zones when efficient
+ *
+ * New strategy based on reachability:
+ * 1. Calculate which zones are reachable with current energy
+ * 2. Unlock perks from ANY reachable zone (cheapest first)
+ * 3. Collect items from any reachable zone (best value first)
+ * 4. Farm best XP tasks from all reachable zones
  *
  * Run types:
  * - "collect": Gather items but don't consume them (save for push run)
  * - "push": Consume all items at start for maximum energy
  * - "auto": Decide based on whether items would help reach a new zone
- *
- * Returns the highest zone reached and updated state
  */
 export function simulateRun(state, options = {}) {
     const {
         maxZone = ZONES.length - 1,
         verbose = false,
-        runType = "auto" // "collect", "push", or "auto"
+        runType = "auto"
     } = options;
 
     let energy = state.maxEnergy;
     const runLog = [];
 
-    // Start from zone 0 (we always start each run from the beginning)
-    let currentZone = 0;
-
     // Determine if this should be a push run
     const itemEnergy = calcItemEnergy(state);
-    const nextZoneCost = state.highestZone >= 0
-        ? calcZoneMandatoryEnergyCost(state.highestZone + 1, state)
-        : calcZoneMandatoryEnergyCost(0, state);
+    const nextNewZone = state.highestZone + 1;
+    const nextZoneCost = nextNewZone < ZONES.length
+        ? calcZoneMandatoryEnergyCost(nextNewZone, state)
+        : Infinity;
 
-    // For "auto" mode, decide based on item accumulation:
-    // - If items could help reach a new zone, push
-    // - Otherwise, alternate: collect until items are "ripe" (accumulated enough to be worth using)
-    // Items decay 50% per reset, so optimal is to push when items would give significant boost
-    const itemsCouldReachNewZone = energy + itemEnergy >= nextZoneCost * 0.9;
-    // Push when items have accumulated to give at least 40% extra energy
-    const itemsAreRipe = itemEnergy >= energy * 0.4;
+    // Calculate total cost to reach next new zone
+    let totalCostToNextNewZone = 0;
+    for (let z = 0; z <= nextNewZone && z < ZONES.length; z++) {
+        totalCostToNextNewZone += calcZoneMandatoryEnergyCost(z, state);
+    }
+
+    // Push when items could help us reach a new zone OR items are decaying
+    const itemsCouldReachNewZone = energy + itemEnergy >= totalCostToNextNewZone * 0.9;
+    // Push when items are at least 20% of max energy (lower threshold to use items sooner)
+    const itemsAreRipe = itemEnergy >= energy * 0.2;
     const shouldPush = runType === "push" ||
         (runType === "auto" && itemEnergy > 0 && (itemsCouldReachNewZone || itemsAreRipe));
 
@@ -318,122 +574,64 @@ export function simulateRun(state, options = {}) {
         const consumed = consumeItemsForEnergy(state);
         energy += consumed;
         if (verbose) {
-            runLog.push(`PUSH RUN: Consumed items for +${consumed.toFixed(1)} energy, total: ${energy.toFixed(1)}`);
+            runLog.push(`PUSH RUN: +${consumed.toFixed(1)} energy from items, total: ${energy.toFixed(1)}`);
         }
     } else if (verbose && itemEnergy > 0) {
         runLog.push(`COLLECT RUN: Saving ${itemEnergy.toFixed(0)} energy worth of items`);
     }
 
+    // Track zones we've processed this run
+    const zonesCompleted = new Set();
+    let iterations = 0;
+    const MAX_ITERATIONS = 1000;
+
     // Main loop: make decisions about what to do with our energy
-    while (energy > 0 && currentZone <= maxZone) {
-        const zone = ZONES[currentZone];
-        const grindableTasks = getGrindableTasks(currentZone, state);
+    while (energy > 0.1 && iterations < MAX_ITERATIONS) {
+        iterations++;
 
-        // Calculate cost to complete this zone and advance
-        const mandatoryCost = calcZoneMandatoryEnergyCost(currentZone, state);
-        const canAdvance = mandatoryCost <= energy;
+        // Calculate reachable zones with current energy
+        const reachableZones = getReachableZones(energy, state, maxZone);
+        const highestReachable = reachableZones.length > 0
+            ? Math.max(...reachableZones.filter(z => z.canComplete).map(z => z.zoneId), -1)
+            : -1;
 
-        // Check if we should advance to next zone
-        // Advance if: we can afford it AND have at least 20% spare energy for farming
-        const shouldAdvance = canAdvance && (
-            currentZone <= state.highestZone || // Already cleared this zone before
-            energy >= mandatoryCost * 1.2 // Have some energy to spare for next zone
-        );
-
-        if (shouldAdvance) {
-            if (verbose) {
-                runLog.push(`Zone ${currentZone} (${zone.name}): advancing (cost=${mandatoryCost.toFixed(1)}, energy=${energy.toFixed(1)})`);
-            }
-
-            // Complete mandatory tasks
-            energy -= mandatoryCost;
-            const mandatoryTasks = getMandatoryTasks(zone);
-            for (const task of mandatoryTasks) {
-                applyTaskXp(task, currentZone, state);
-                if (task.item !== null) {
-                    addItems(state, task.item, task.maxReps);
-                }
-                if (task.perk !== null) {
-                    state.perks.add(task.perk);
-                    if (verbose) {
-                        runLog.push(`  Unlocked perk: ${task.perk}`);
-                    }
-                }
-            }
-
-            // Also collect energy items while passing through (they're worth it)
-            for (const gt of grindableTasks) {
-                if (gt.hasEnergyItem && gt.fullCost <= energy) {
-                    energy -= gt.fullCost;
-                    applyTaskXp(gt.task, currentZone, state);
-                    addItems(state, gt.task.item, gt.task.maxReps);
-                    if (verbose) {
-                        runLog.push(`  Collecting ${gt.task.name}`);
-                    }
-                }
-            }
-
-            // On push runs, consume items immediately for more energy
-            // On collect runs, save items for later
-            if (shouldPush) {
-                const newItemEnergy = consumeItemsForEnergy(state);
-                if (newItemEnergy > 0) {
-                    energy += newItemEnergy;
-                    if (verbose) {
-                        runLog.push(`  +${newItemEnergy.toFixed(0)} energy from items`);
-                    }
-                }
-            }
-
-            // Track highest zone
-            if (currentZone > state.highestZone) {
-                state.highestZone = currentZone;
-            }
-
-            currentZone++;
-            continue;
+        if (verbose && iterations === 1) {
+            runLog.push(`Reachable zones: ${reachableZones.filter(z => z.canComplete).map(z => z.zoneId).join(', ') || 'none'}`);
         }
-
-        // Otherwise, farm in current zone
-        // Priority: 1) Perks we don't have, 2) Energy items, 3) Best XP/energy
 
         let didSomething = false;
 
-        // First, try to unlock perks
-        for (const gt of grindableTasks) {
-            if (gt.hasPerk && gt.fullCost <= energy) {
-                energy -= gt.fullCost;
-                applyTaskXp(gt.task, currentZone, state);
-                state.perks.add(gt.task.perk);
-                if (gt.task.item !== null) {
-                    addItems(state, gt.task.item, gt.task.maxReps);
-                }
-                if (verbose) {
-                    runLog.push(`  ${gt.task.name}: unlocked perk (cost=${gt.fullCost.toFixed(1)})`);
-                }
-                didSomething = true;
-                break;
-            }
-        }
+        // Priority 1: Unlock any affordable perk from reachable zones
+        const perkTasks = getReachablePerkTasks(reachableZones, state);
+        for (const pt of perkTasks) {
+            if (pt.totalEnergyNeeded <= energy) {
+                // Navigate to the zone and complete the perk task
+                const zoneInfo = reachableZones.find(z => z.zoneId === pt.zoneId);
+                if (zoneInfo) {
+                    // Pay cost to reach this zone (complete mandatory tasks in earlier zones)
+                    for (let z = 0; z < pt.zoneId; z++) {
+                        if (!zonesCompleted.has(z)) {
+                            const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                            energy -= zoneCost;
+                            const zone = ZONES[z];
+                            const mandatoryTasks = getMandatoryTasks(zone);
+                            for (const task of mandatoryTasks) {
+                                applyTaskXp(task, z, state);
+                                if (task.item !== null) addItems(state, task.item, task.maxReps);
+                                if (task.perk !== null) state.perks.add(task.perk);
+                            }
+                            zonesCompleted.add(z);
+                            if (z > state.highestZone) state.highestZone = z;
+                        }
+                    }
 
-        if (!didSomething) {
-            // Second, do energy item tasks
-            for (const gt of grindableTasks) {
-                if (gt.hasEnergyItem && gt.fullCost <= energy) {
-                    energy -= gt.fullCost;
-                    applyTaskXp(gt.task, currentZone, state);
-                    addItems(state, gt.task.item, gt.task.maxReps);
-                    // On push runs, consume immediately; on collect runs, save items
-                    if (shouldPush) {
-                        const gained = consumeItemsForEnergy(state);
-                        energy += gained;
-                        if (verbose) {
-                            runLog.push(`  ${gt.task.name}: -${gt.fullCost.toFixed(1)} +${gained.toFixed(1)} energy`);
-                        }
-                    } else {
-                        if (verbose) {
-                            runLog.push(`  ${gt.task.name}: collected (saving items)`);
-                        }
+                    // Now complete the perk task
+                    energy -= pt.fullCost;
+                    applyTaskXp(pt.task, pt.zoneId, state);
+                    state.perks.add(pt.task.perk);
+                    if (pt.task.item !== null) addItems(state, pt.task.item, pt.task.maxReps);
+                    if (verbose) {
+                        runLog.push(`Zone ${pt.zoneId} ${pt.task.name}: unlocked perk (cost=${pt.totalEnergyNeeded.toFixed(1)})`);
                     }
                     didSomething = true;
                     break;
@@ -441,58 +639,185 @@ export function simulateRun(state, options = {}) {
             }
         }
 
+        // Priority 2: Collect items (only on collect runs or if items have positive net value in-zone)
+        if (!didSomething && !shouldPush) {
+            const itemTasks = getReachableItemTasks(reachableZones, state);
+            for (const it of itemTasks) {
+                // Only collect if we can afford the task in the zone
+                if (it.canAfford && it.totalCost <= energy) {
+                    // Navigate to the zone
+                    for (let z = 0; z < it.zoneId; z++) {
+                        if (!zonesCompleted.has(z)) {
+                            const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                            energy -= zoneCost;
+                            const zone = ZONES[z];
+                            const mandatoryTasks = getMandatoryTasks(zone);
+                            for (const task of mandatoryTasks) {
+                                applyTaskXp(task, z, state);
+                                if (task.item !== null) addItems(state, task.item, task.maxReps);
+                                if (task.perk !== null) state.perks.add(task.perk);
+                            }
+                            zonesCompleted.add(z);
+                            if (z > state.highestZone) state.highestZone = z;
+                        }
+                    }
+
+                    // Collect the items
+                    energy -= it.fullCost;
+                    applyTaskXp(it.task, it.zoneId, state);
+                    addItems(state, it.task.item, it.task.maxReps);
+                    if (verbose) {
+                        runLog.push(`Zone ${it.zoneId} ${it.task.name}: collected (value=${it.itemValue.toFixed(0)})`);
+                    }
+                    didSomething = true;
+                    break;
+                }
+            }
+        }
+
+        // Priority 3: Advance through any zones we haven't completed this run
+        // This includes zones we may have visited before but not finished mandatory tasks
+        if (!didSomething && highestReachable >= 0) {
+            // Complete zones up to the highest we can reach
+            for (let z = 0; z <= highestReachable; z++) {
+                if (!zonesCompleted.has(z)) {
+                    const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                    if (zoneCost <= energy) {
+                        energy -= zoneCost;
+                        const zone = ZONES[z];
+                        const mandatoryTasks = getMandatoryTasks(zone);
+                        for (const task of mandatoryTasks) {
+                            applyTaskXp(task, z, state);
+                            if (task.item !== null) addItems(state, task.item, task.maxReps);
+                            if (task.perk !== null) state.perks.add(task.perk);
+                        }
+                        zonesCompleted.add(z);
+                        if (z > state.highestZone) {
+                            state.highestZone = z;
+                            if (verbose) {
+                                runLog.push(`Zone ${z} (${zone.name}): reached (cost=${zoneCost.toFixed(1)})`);
+                            }
+                        }
+
+                        // On push runs, consume items as we go
+                        if (shouldPush) {
+                            const gained = consumeItemsForEnergy(state);
+                            if (gained > 0) {
+                                energy += gained;
+                                if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
+                            }
+                        }
+                        didSomething = true;
+                    }
+                }
+            }
+        }
+
+        // Priority 4: Farm tasks - prioritize bottleneck skills, then best XP
         if (!didSomething) {
-            // Third, farm best XP task (single reps)
-            const sortedByXp = [...grindableTasks].sort((a, b) => b.xpPerEnergy - a.xpPerEnergy);
-            for (const gt of sortedByXp) {
-                if (gt.singleRepCost <= energy) {
+            // First, identify bottleneck skills for future zones
+            const maxReachable = highestReachable >= 0 ? highestReachable : 0;
+            const bottleneckSkills = getBottleneckSkills(state, energy, maxReachable);
+            let tasksToFarm = [];
+
+            // If we have bottleneck skills, prioritize tasks that train them
+            if (bottleneckSkills.size > 0) {
+                tasksToFarm = getBottleneckTrainingTasks(maxReachable, state, bottleneckSkills);
+            }
+
+            // If no bottleneck tasks available, fall back to best XP tasks
+            if (tasksToFarm.length === 0) {
+                const allReachableTasks = getAllReachableGrindableTasks(maxReachable, state);
+                tasksToFarm = [...allReachableTasks].sort((a, b) => b.totalXpPerEnergy - a.totalXpPerEnergy);
+            }
+
+            for (const gt of tasksToFarm) {
+                // Check if we can afford to reach this zone
+                const zoneInfo = reachableZones.find(z => z.zoneId === gt.zoneId);
+                if (!zoneInfo) continue;
+
+                // Calculate energy we'd have after reaching this zone
+                let energyAtZone = energy;
+                for (let z = 0; z < gt.zoneId; z++) {
+                    if (!zonesCompleted.has(z)) {
+                        energyAtZone -= calcZoneMandatoryEnergyCost(z, state);
+                    }
+                }
+
+                // Can we afford at least one rep?
+                if (gt.singleRepCost <= energyAtZone) {
+                    // Navigate to the zone first
+                    for (let z = 0; z < gt.zoneId; z++) {
+                        if (!zonesCompleted.has(z)) {
+                            const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                            energy -= zoneCost;
+                            const zone = ZONES[z];
+                            for (const task of getMandatoryTasks(zone)) {
+                                applyTaskXp(task, z, state);
+                                if (task.item !== null) addItems(state, task.item, task.maxReps);
+                                if (task.perk !== null) state.perks.add(task.perk);
+                            }
+                            zonesCompleted.add(z);
+                            if (z > state.highestZone) state.highestZone = z;
+                        }
+                    }
+
+                    // Farm as many reps as we can afford
                     const reps = Math.min(
                         Math.floor(energy / gt.singleRepCost),
-                        gt.task.maxReps * 3 // Cap farming to avoid infinite loops
+                        gt.task.maxReps * 3
                     );
                     if (reps > 0) {
                         energy -= reps * gt.singleRepCost;
-                        applyTaskXp(gt.task, currentZone, state, 1, reps);
+                        applyTaskXp(gt.task, gt.zoneId, state, 1, reps);
                         if (verbose) {
-                            runLog.push(`  ${gt.task.name} x${reps}: -${(reps * gt.singleRepCost).toFixed(1)} energy`);
+                            const skillNames = gt.task.skills.map(s => SKILL_NAMES[s]).join('/');
+                            runLog.push(`Zone ${gt.zoneId} ${gt.task.name} x${reps} [${skillNames}]: -${(reps * gt.singleRepCost).toFixed(1)}`);
                         }
                         didSomething = true;
                         break;
                     }
                 }
             }
+
+            // If we still have energy but can't afford any full reps,
+            // spend remaining energy on partial progress for XP
+            if (!didSomething && energy > 0.5) {
+                const allTasks = getAllReachableGrindableTasks(maxReachable, state);
+                // Sort by XP per energy, prefer bottleneck skills
+                const sorted = allTasks.sort((a, b) => {
+                    const aTrainsBottleneck = a.task.skills.some(s => bottleneckSkills.has(s));
+                    const bTrainsBottleneck = b.task.skills.some(s => bottleneckSkills.has(s));
+                    if (aTrainsBottleneck && !bTrainsBottleneck) return -1;
+                    if (!aTrainsBottleneck && bTrainsBottleneck) return 1;
+                    return b.xpPerEnergy - a.xpPerEnergy;
+                });
+
+                for (const gt of sorted) {
+                    if (gt.zoneId === 0 || zonesCompleted.has(gt.zoneId - 1) || gt.zoneId <= highestReachable) {
+                        // Spend remaining energy on this task for partial XP
+                        // Calculate XP proportional to energy spent (partial rep)
+                        const partialReps = energy / gt.singleRepCost;
+                        if (partialReps > 0.01) {
+                            applyTaskXp(gt.task, gt.zoneId, state, 1, partialReps);
+                            if (verbose) {
+                                runLog.push(`Zone ${gt.zoneId} ${gt.task.name} (partial): -${energy.toFixed(1)}`);
+                            }
+                            energy = 0;
+                            didSomething = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         if (!didSomething) {
-            // Can't do anything useful in this zone, try to advance anyway if possible
-            if (canAdvance) {
-                if (verbose) {
-                    runLog.push(`Zone ${currentZone}: nothing to farm, advancing`);
-                }
-                energy -= mandatoryCost;
-                const mandatoryTasks = getMandatoryTasks(zone);
-                for (const task of mandatoryTasks) {
-                    applyTaskXp(task, currentZone, state);
-                    if (task.item !== null) {
-                        addItems(state, task.item, task.maxReps);
-                    }
-                    if (task.perk !== null) {
-                        state.perks.add(task.perk);
-                    }
-                }
-                const newItemEnergy = consumeItemsForEnergy(state);
-                energy += newItemEnergy;
-                if (currentZone > state.highestZone) {
-                    state.highestZone = currentZone;
-                }
-                currentZone++;
-            } else {
-                // Can't afford to advance and nothing to do - end run
-                if (verbose) {
-                    runLog.push(`Zone ${currentZone}: stuck (need ${mandatoryCost.toFixed(1)}, have ${energy.toFixed(1)})`);
-                }
-                break;
+            // Nothing left to do
+            if (verbose) {
+                runLog.push(`Stuck with ${energy.toFixed(1)} energy remaining`);
             }
+            break;
         }
     }
 
@@ -541,7 +866,8 @@ export function doEnergyReset(state) {
 export function createInitialState() {
     return {
         maxEnergy: STARTING_ENERGY,
-        skillLevels: {},
+        skillLevels: {},      // skill -> level (integer)
+        skillXp: {},          // skill -> partial XP progress (decimal)
         perks: new Set(),
         power: 0,
         attunement: 0,
