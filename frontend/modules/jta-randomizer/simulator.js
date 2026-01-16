@@ -6,7 +6,8 @@
 import {
     ZONES, PERKS, PerkType, SkillType, TaskType,
     SKILL_XP_MULT, SKILL_NAMES, getMandatoryTasks,
-    ENERGY_ITEMS, ItemType
+    ENERGY_ITEMS, ItemType, ARTIFACTS, HASTE_MULT, MAGIC_RING_MULT,
+    ITEM_SKILL_MODIFIERS, BOSS_UNLOCKS
 } from './gameData.js';
 
 // Game constants from simulation.ts
@@ -298,7 +299,7 @@ function calcTotalXpValue(task, zoneId, state) {
  * Get all tasks available for farming/grinding in a zone
  * Excludes Travel tasks (only done when ready to advance)
  */
-function getGrindableTasks(zoneId, state) {
+function getGrindableTasks(zoneId, state, includeBosses = false) {
     const zone = ZONES[zoneId];
     if (!zone) return [];
 
@@ -306,14 +307,27 @@ function getGrindableTasks(zoneId, state) {
     for (const task of zone.tasks) {
         // Skip Travel tasks (only do these when advancing to next zone)
         if (task.type === TaskType.Travel) continue;
-        // Skip hidden tasks
-        if (task.hidden) continue;
+
+        // Handle hidden tasks - only include if unlocked
+        if (task.hidden) {
+            if (!state.unlockedHiddenTasks.has(task.id)) continue;
+        }
+
+        // Handle boss tasks
+        if (task.type === TaskType.Boss) {
+            // Skip if already defeated
+            if (state.bossesDefeated.has(task.id)) continue;
+            // Only include bosses if specifically requested
+            if (!includeBosses) continue;
+        }
 
         const singleRepCost = calcTaskEnergyCostSingleRep(task, zoneId, state);
         const xpPerRep = calcTaskXp(task, zoneId, state);
         const totalXpValue = calcTotalXpValue(task, zoneId, state);
         const hasPerk = task.perk !== null && !state.perks.has(task.perk);
-        const hasEnergyItem = task.item !== null && ENERGY_ITEMS[task.item] !== undefined;
+        const itemType = task.item !== null ? getItemType(task.item) : null;
+        const hasEnergyItem = itemType !== null && ENERGY_ITEMS[itemType] !== undefined;
+        const hasArtifact = itemType !== null && ARTIFACTS.includes(itemType);
 
         tasks.push({
             task,
@@ -326,10 +340,42 @@ function getGrindableTasks(zoneId, state) {
             totalXpPerEnergy: totalXpValue / singleRepCost,
             hasPerk,
             hasEnergyItem,
-            energyPerItem: hasEnergyItem ? ENERGY_ITEMS[task.item] : 0,
+            hasArtifact,
+            isBoss: task.type === TaskType.Boss,
+            energyPerItem: hasEnergyItem ? ENERGY_ITEMS[itemType] : 0,
         });
     }
     return tasks;
+}
+
+/**
+ * Get all boss tasks from reachable zones that haven't been defeated
+ */
+function getReachableBossTasks(maxZone, state) {
+    const bossTasks = [];
+    for (let z = 0; z <= maxZone && z < ZONES.length; z++) {
+        const zone = ZONES[z];
+        for (const task of zone.tasks) {
+            if (task.type === TaskType.Boss && !state.bossesDefeated.has(task.id)) {
+                const singleRepCost = calcTaskEnergyCostSingleRep(task, z, state);
+                const fullCost = calcTaskEnergyCost(task, z, state);
+                const itemType = task.item !== null ? getItemType(task.item) : null;
+                const unlocksTask = BOSS_UNLOCKS[task.id];
+
+                bossTasks.push({
+                    task,
+                    zoneId: z,
+                    singleRepCost,
+                    fullCost,
+                    itemType,
+                    hasArtifact: itemType !== null && ARTIFACTS.includes(itemType),
+                    unlocksTaskId: unlocksTask,
+                });
+            }
+        }
+    }
+    // Sort by cost (cheapest first - these are most affordable)
+    return bossTasks.sort((a, b) => a.fullCost - b.fullCost);
 }
 
 /**
@@ -355,17 +401,17 @@ function getAllReachableGrindableTasks(maxZone, state) {
 function getBottleneckSkills(state, maxEnergy, maxReachableZone) {
     const skillWeights = new Map();
 
-    // Look ahead several zones
-    const lookAhead = 5;
+    // Look at ALL remaining zones, with weight decreasing by distance
+    // Closer zones get much higher weight (exponential decay)
     const startZone = maxReachableZone + 1;
-    const endZone = Math.min(startZone + lookAhead - 1, ZONES.length - 1);
 
-    for (let z = startZone; z <= endZone && z < ZONES.length; z++) {
+    for (let z = startZone; z < ZONES.length; z++) {
         const zone = ZONES[z];
         const mandatory = getMandatoryTasks(zone);
-        // Weight by inverse of zone distance (closer zones = higher weight)
+        // Weight by inverse of zone distance (exponential decay)
         const zoneDistance = z - maxReachableZone;
-        const weight = lookAhead - zoneDistance + 1; // e.g., next zone = 5, zone after = 4, etc.
+        // Weight formula: 100 / (distance^1.5) - gives high priority to nearby zones
+        const weight = 100 / Math.pow(zoneDistance, 1.5);
 
         for (const task of mandatory) {
             for (const skill of task.skills) {
@@ -603,9 +649,20 @@ export function simulateRun(state, options = {}) {
         let didSomething = false;
 
         // Priority 1: Unlock any affordable perk from reachable zones
+        // Use ScrollOfHaste for expensive perks
         const perkTasks = getReachablePerkTasks(reachableZones, state);
         for (const pt of perkTasks) {
-            if (pt.totalEnergyNeeded <= energy) {
+            // Calculate cost with potential haste scroll
+            const hastedPerkCost = pt.fullCost / HASTE_MULT;
+            const hastedTotalCost = pt.totalEnergyNeeded - pt.fullCost + hastedPerkCost;
+            const canAffordWithHaste = state.scrollsOfHaste > 0 && hastedTotalCost <= energy;
+            const canAffordNormal = pt.totalEnergyNeeded <= energy;
+
+            if (canAffordWithHaste || canAffordNormal) {
+                // Use haste for expensive perk tasks (>50% of energy)
+                const useHaste = canAffordWithHaste && pt.fullCost > energy * 0.3;
+                const actualPerkCost = useHaste ? hastedPerkCost : pt.fullCost;
+
                 // Navigate to the zone and complete the perk task
                 const zoneInfo = reachableZones.find(z => z.zoneId === pt.zoneId);
                 if (zoneInfo) {
@@ -624,17 +681,42 @@ export function simulateRun(state, options = {}) {
                             }
                             zonesCompleted.add(z);
                             if (z > state.highestZone) state.highestZone = z;
+
+                            // On push runs, consume items immediately
+                            if (shouldPush) {
+                                const gained = consumeItemsForEnergy(state);
+                                if (gained > 0) {
+                                    energy += gained;
+                                    if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
+                                }
+                            }
                         }
                     }
 
+                    // Use haste scroll if decided
+                    if (useHaste) {
+                        state.scrollsOfHaste--;
+                        if (verbose) runLog.push(`  Used Scroll of Haste for perk`);
+                    }
+
                     // Now complete the perk task
-                    energy -= pt.fullCost;
+                    energy -= actualPerkCost;
                     applyTaskXp(pt.task, pt.zoneId, state);
                     state.perks.add(pt.task.perk);
                     if (pt.task.item !== null) addItems(state, pt.task.item, pt.task.maxReps);
                     tasksCompletedThisRun.add(pt.task.id);
+
+                    // On push runs, consume items immediately
+                    if (shouldPush) {
+                        const gained = consumeItemsForEnergy(state);
+                        if (gained > 0) {
+                            energy += gained;
+                            if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
+                        }
+                    }
+
                     if (verbose) {
-                        runLog.push(`Zone ${pt.zoneId} ${pt.task.name}: unlocked perk (cost=${pt.totalEnergyNeeded.toFixed(1)})`);
+                        runLog.push(`Zone ${pt.zoneId} ${pt.task.name}: unlocked perk (cost=${(pt.totalEnergyNeeded - pt.fullCost + actualPerkCost).toFixed(1)}${useHaste ? ' with haste' : ''})`);
                     }
                     didSomething = true;
                     break;
@@ -671,9 +753,70 @@ export function simulateRun(state, options = {}) {
                     applyTaskXp(it.task, it.zoneId, state);
                     addItems(state, it.task.item, it.task.maxReps);
                     tasksCompletedThisRun.add(it.task.id);
+
+                    // On push runs, consume energy items immediately
+                    if (shouldPush) {
+                        const gained = consumeItemsForEnergy(state);
+                        if (gained > 0) {
+                            energy += gained;
+                            if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
+                        }
+                    }
+
                     if (verbose) {
                         runLog.push(`Zone ${it.zoneId} ${it.task.name}: collected (value=${it.itemValue.toFixed(0)})`);
                     }
+                    didSomething = true;
+                    break;
+                }
+            }
+        }
+
+        // Priority 2.5: Defeat affordable bosses (use ScrollOfHaste if available)
+        // Bosses unlock hidden tasks and give valuable items (often artifacts)
+        if (!didSomething && highestReachable >= 0) {
+            const bossTasks = getReachableBossTasks(highestReachable, state);
+            for (const bt of bossTasks) {
+                // Calculate cost with potential haste scroll
+                const baseFullCost = bt.fullCost;
+                const hastedCost = baseFullCost / HASTE_MULT;
+                const canAffordWithHaste = state.scrollsOfHaste > 0 && hastedCost <= energy;
+                const canAffordNormal = baseFullCost <= energy;
+
+                if (canAffordWithHaste || canAffordNormal) {
+                    // Use haste scroll for expensive bosses
+                    const useHaste = canAffordWithHaste && baseFullCost > energy * 0.5;
+                    const actualCost = useHaste ? hastedCost : baseFullCost;
+
+                    if (useHaste) {
+                        state.scrollsOfHaste--;
+                        if (verbose) runLog.push(`  Used Scroll of Haste for boss`);
+                    }
+
+                    energy -= actualCost;
+                    applyTaskXp(bt.task, bt.zoneId, state);
+                    if (bt.task.item !== null) addItems(state, bt.task.item, bt.task.maxReps);
+                    state.bossesDefeated.add(bt.task.id);
+                    tasksCompletedThisRun.add(bt.task.id);
+
+                    // Unlock the hidden task
+                    if (bt.unlocksTaskId) {
+                        state.unlockedHiddenTasks.add(bt.unlocksTaskId);
+                    }
+
+                    if (verbose) {
+                        runLog.push(`Zone ${bt.zoneId} ${bt.task.name}: BOSS DEFEATED (cost=${actualCost.toFixed(1)}${useHaste ? ' with haste' : ''})`);
+                    }
+
+                    // On push runs, consume items immediately
+                    if (shouldPush) {
+                        const gained = consumeItemsForEnergy(state);
+                        if (gained > 0) {
+                            energy += gained;
+                            if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
+                        }
+                    }
+
                     didSomething = true;
                     break;
                 }
@@ -860,6 +1003,13 @@ export function doEnergyReset(state) {
     // Items persist at 50% across resets
     halveItems(state);
 
+    // Artifacts also persist at 50%
+    state.scrollsOfHaste = Math.ceil(state.scrollsOfHaste / 2);
+    state.magicRings = Math.ceil(state.magicRings / 2);
+
+    // Reset items found this reset (for Dreamcatcher)
+    state.itemsFoundThisReset = [];
+
     // Update highest zone fully completed if applicable
     // (simplified - assume we completed all zones we reached)
     state.highestZoneFullyCompleted = Math.max(
@@ -884,14 +1034,74 @@ export function createInitialState() {
         highestZone: -1,
         highestZoneFullyCompleted: -1,
         energySpellApplied: false,
-        items: new Map(), // ItemType -> count
+        items: new Map(),           // ItemType -> count (all items)
+        scrollsOfHaste: 0,          // Artifact: 5x speed on next task
+        magicRings: 0,              // Artifact: 3x XP on next task
+        bossesDefeated: new Set(),  // Set of boss task IDs that have been defeated
+        unlockedHiddenTasks: new Set(), // Hidden tasks unlocked by defeating bosses
+        itemsFoundThisReset: [],    // For Dreamcatcher artifact
     };
 }
 
 /**
- * Add items to state
+ * Convert item string name to ItemType enum
  */
-function addItems(state, itemType, count) {
+function getItemType(itemNameOrType) {
+    if (typeof itemNameOrType === 'number') return itemNameOrType;
+    // Map string names to ItemType enum
+    const nameMap = {
+        'Food': ItemType.Food, 'Arrow': ItemType.Arrow, 'Coin': ItemType.Coin,
+        'Mushroom': ItemType.Mushroom, 'GoblinSupplies': ItemType.GoblinSupplies,
+        'TravelEquipment': ItemType.TravelEquipment, 'Book': ItemType.Book,
+        'ScrollOfHaste': ItemType.ScrollOfHaste, 'GoblinWaraxe': ItemType.GoblinWaraxe,
+        'FiremakingKit': ItemType.FiremakingKit, 'Reagents': ItemType.Reagents,
+        'MagicalRoots': ItemType.MagicalRoots, 'GoblinTreasure': ItemType.GoblinTreasure,
+        'Fish': ItemType.Fish, 'BanditWeapons': ItemType.BanditWeapons,
+        'Cactus': ItemType.Cactus, 'CityChain': ItemType.CityChain,
+        'WerewolfFur': ItemType.WerewolfFur, 'OasisWater': ItemType.OasisWater,
+        'Calamari': ItemType.Calamari, 'MysticIncense': ItemType.MysticIncense,
+        'OracleBones': ItemType.OracleBones, 'WormHideCoat': ItemType.WormHideCoat,
+        'DjinnLamp': ItemType.DjinnLamp, 'Dreamcatcher': ItemType.Dreamcatcher,
+        'MagicEssence': ItemType.MagicEssence, 'CraftingRecipe': ItemType.CraftingRecipe,
+        'KnightlyBoots': ItemType.KnightlyBoots, 'DragonScale': ItemType.DragonScale,
+        'CaveInsects': ItemType.CaveInsects, 'MagicalVessel': ItemType.MagicalVessel,
+        'MagicRing': ItemType.MagicRing,
+    };
+    return nameMap[itemNameOrType] ?? null;
+}
+
+/**
+ * Add items to state, handling artifacts specially
+ */
+function addItems(state, itemNameOrType, count) {
+    const itemType = getItemType(itemNameOrType);
+    if (itemType === null) return;
+
+    // Track items found this reset (for Dreamcatcher)
+    if (!state.itemsFoundThisReset.includes(itemType)) {
+        state.itemsFoundThisReset.push(itemType);
+    }
+
+    // Handle artifacts specially
+    if (itemType === ItemType.ScrollOfHaste) {
+        state.scrollsOfHaste += count;
+        return;
+    }
+    if (itemType === ItemType.MagicRing) {
+        state.magicRings += count;
+        return;
+    }
+    if (itemType === ItemType.Dreamcatcher) {
+        // Dreamcatcher: duplicate all items found this reset (except Dreamcatcher)
+        for (const foundItem of state.itemsFoundThisReset) {
+            if (foundItem !== ItemType.Dreamcatcher) {
+                addItems(state, foundItem, count);
+            }
+        }
+        return;
+    }
+
+    // Regular items
     const current = state.items.get(itemType) || 0;
     state.items.set(itemType, current + count);
 }
@@ -910,6 +1120,26 @@ function consumeItemsForEnergy(state) {
         }
     }
     return energyGained;
+}
+
+/**
+ * Use a scroll of haste if available (returns true if used)
+ * Scroll of Haste makes next task 5x faster
+ */
+function useScrollOfHaste(state) {
+    if (state.scrollsOfHaste > 0) {
+        state.scrollsOfHaste--;
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Calculate task energy cost with optional haste modifier
+ */
+function calcTaskEnergyCostWithHaste(task, zoneId, state, useHaste = false) {
+    const baseCost = calcTaskEnergyCostSingleRep(task, zoneId, state);
+    return useHaste ? baseCost / HASTE_MULT : baseCost;
 }
 
 /**

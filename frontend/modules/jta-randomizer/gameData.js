@@ -245,19 +245,105 @@ export const PERKS = {
     },
 };
 
-// Item types (simplified - only tracking energy-giving items)
+// Item types - full list from the game
 export const ItemType = {
-    Food: 0,        // +5 energy
-    Fish: 13,       // +10 energy
-    Calamari: 19,   // +50 energy
-    CaveInsects: 29, // +5 energy
+    Food: 0,
+    Arrow: 1,
+    Coin: 2,
+    Mushroom: 3,
+    GoblinSupplies: 4,
+    TravelEquipment: 5,
+    Book: 6,
+    ScrollOfHaste: 7,
+    GoblinWaraxe: 8,
+    FiremakingKit: 9,
+    Reagents: 10,
+    MagicalRoots: 11,
+    GoblinTreasure: 12,
+    Fish: 13,
+    BanditWeapons: 14,
+    Cactus: 15,
+    CityChain: 16,
+    WerewolfFur: 17,
+    OasisWater: 18,
+    Calamari: 19,
+    MysticIncense: 20,
+    OracleBones: 21,
+    WormHideCoat: 22,
+    DjinnLamp: 23,
+    Dreamcatcher: 24,
+    MagicEssence: 25,
+    CraftingRecipe: 26,
+    KnightlyBoots: 27,
+    DragonScale: 28,
+    CaveInsects: 29,
+    MagicalVessel: 30,
+    MagicRing: 31,
+    Count: 32,
 };
 
+// Artifact constants
+export const HASTE_MULT = 5;  // ScrollOfHaste makes next task 5x faster
+export const MAGIC_RING_MULT = 3;  // MagicRing gives 3x XP
+
+// Artifacts - special single-use items with powerful effects
+export const ARTIFACTS = [ItemType.ScrollOfHaste, ItemType.Dreamcatcher, ItemType.MagicRing];
+
+// Energy-giving items (consumable for energy)
 export const ENERGY_ITEMS = {
     [ItemType.Food]: 5,
     [ItemType.Fish]: 10,
     [ItemType.Calamari]: 50,
     [ItemType.CaveInsects]: 5,
+};
+
+// Item skill modifiers - bonus to skill progress when consumed
+// Format: { [skill]: multiplier } where multiplier is added to skill progress
+export const ITEM_SKILL_MODIFIERS = {
+    [ItemType.Arrow]: { [SkillType.Combat]: 0.15 },
+    [ItemType.Coin]: { [SkillType.Charisma]: 0.15 },
+    [ItemType.Mushroom]: { [SkillType.Magic]: 0.2, [SkillType.Search]: 0.2 },
+    [ItemType.GoblinSupplies]: { [SkillType.Subterfuge]: 0.15, [SkillType.Combat]: 0.1 },
+    [ItemType.TravelEquipment]: { [SkillType.Travel]: 0.1, [SkillType.Survival]: 0.1 },
+    [ItemType.Book]: { [SkillType.Study]: 0.1 },
+    [ItemType.GoblinWaraxe]: { [SkillType.Combat]: 1 },
+    [ItemType.FiremakingKit]: { [SkillType.Survival]: 0.15 },
+    [ItemType.Reagents]: { [SkillType.Magic]: 0.2, [SkillType.Crafting]: 0.1, [SkillType.Druid]: 0.1 },
+    [ItemType.MagicalRoots]: { [SkillType.Survival]: 0.1, [SkillType.Magic]: 0.1, [SkillType.Druid]: 0.1 },
+    [ItemType.GoblinTreasure]: { [SkillType.Subterfuge]: 0.5, [SkillType.Survival]: 0.5 },
+    [ItemType.BanditWeapons]: { [SkillType.Subterfuge]: 0.1, [SkillType.Combat]: 0.2 },
+    [ItemType.Cactus]: { [SkillType.Survival]: 0.1, [SkillType.Fortitude]: 0.1 },
+    [ItemType.CityChain]: { [SkillType.Charisma]: 0.5, [SkillType.Subterfuge]: 0.5 },
+    [ItemType.WerewolfFur]: { [SkillType.Charisma]: 0.2, [SkillType.Survival]: 0.2 },
+    [ItemType.OasisWater]: { [SkillType.Magic]: 0.2, [SkillType.Survival]: 0.1 },
+    [ItemType.MysticIncense]: { [SkillType.Ascension]: 0.1 },
+    [ItemType.OracleBones]: { [SkillType.Search]: 0.2, [SkillType.Druid]: 0.2 },
+    [ItemType.WormHideCoat]: { [SkillType.Fortitude]: 1 },
+    [ItemType.DjinnLamp]: { [SkillType.Ascension]: 0.3, [SkillType.Magic]: 0.3 },
+    [ItemType.MagicEssence]: { [SkillType.Magic]: 3 },
+    [ItemType.CraftingRecipe]: { [SkillType.Crafting]: 0.3 },
+    [ItemType.KnightlyBoots]: { [SkillType.Combat]: 0.2, [SkillType.Fortitude]: 0.2 },
+    [ItemType.DragonScale]: { [SkillType.Combat]: 0.5, [SkillType.Fortitude]: 0.5 },
+    [ItemType.MagicalVessel]: { [SkillType.Ascension]: 0.3 },
+};
+
+// Boss unlock map - which hidden task each boss unlocks
+export const BOSS_UNLOCKS = {
+    36: 37,   // Goblin Warlord -> Save the Village
+    47: 48,   // Angry Ent -> Gather Magical Roots
+    57: 58,   // Goblin Chieftain -> Wipe Out Goblins
+    67: 68,   // Bandits -> Loot Bandit Camp
+    87: 89,   // Corrupt Mayor -> Purge Corrupt Bureaucracy
+    98: 99,   // Werewolf -> Gather Shed Fur from Lair
+    117: 118, // Kraken -> Explore Kraken's Lair
+    127: 128, // Horde of Lizardfolk -> Steal Their Oracle Bones
+    137: 138, // Giant Sandworm -> Learn to Dance the Worm
+    147: 148, // Sleepy Djinn -> Find More Lamps
+    167: 168, // The Weaver of Dreams -> Contain the Dream
+    // Late game bosses (zones 16+)
+    177: 178, // Mage's Guild Headmaster -> Become Honorary Headmaster
+    187: 188, // Dragon Spawn -> Gather Dragon Scales
+    197: 198, // Dragon -> Hunt Down the Dragon's Spawn
 };
 
 // Zone data extracted from zones.ts
