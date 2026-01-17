@@ -22,12 +22,15 @@ This document outlines the remaining work for the Loops module, an incremental g
 | Bug 1: Mana 100/110 | ✅ Fixed | Was ALTTP-specific (event item awarded at start) - mana now initializes correctly |
 | Bug 5: Unpause mana | ✅ Fixed | Added `_shouldResetOnResume()` to refill mana when queue is complete |
 | Bug 8: mode=loop URL | ✅ Clarified | Not a bug - mode is named `loops` (plural), use `?mode=loops` |
+| Phase 2: Cost Generation | ✅ Complete | `costGenerator.js`, `costDataManager.js` implemented |
+| Cost UI Integration | ✅ Complete | "Generate Costs" button added to Loops panel |
+| Console Commands | ✅ Complete | `window.generateCosts()`, `window.costDataManager` available |
 
 ### In Progress
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Phase 2: Cost data files | 🔄 Planning | Decisions made, discussing cost generation algorithm |
+| Cost data integration with queueAnalyzer | 🔄 Pending | Update queueAnalyzer to use loaded cost data |
 
 ### Remaining Bugs (Need UI Testing)
 
