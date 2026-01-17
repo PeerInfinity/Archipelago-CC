@@ -75,3 +75,11 @@ These modules provide shared functionality but do not have their own UI panels.
 -   **[Path Analyzer](./pathAnalyzer.md):** The core logic and UI rendering components for the path analysis tool, used by `regionsPanel` and `pathAnalyzerPanel`.
 -   **[Shared](./shared.md):** Thread-agnostic utilities including rule engine, state interface, and game logic modules.
 -   **[Window Base](./window-base.md):** Communication client for standalone apps opened via `window.open()`.
+
+## Related Documentation
+
+- **[Developer Guides](../developer/guides/)** - Development guides for working with modules
+- **[Module System Guide](../developer/guides/module-system.md)** - How the module system works
+- **[Creating Modules Guide](../developer/guides/creating-modules.md)** - Build your own modules
+- **[Event System Guide](../developer/guides/event-system.md)** - Inter-module communication
+- **[Frontend README](../../../frontend/README.md)** - Frontend overview and directory structure
