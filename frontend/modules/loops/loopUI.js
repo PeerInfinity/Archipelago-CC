@@ -443,9 +443,34 @@ export class LoopUI {
       return;
     }
 
-    // Check if sphere log is loaded
+    // Check if sphere log is loaded - try multiple sources
+    let sphereLog = null;
+
+    // First try stateManager snapshot
     const snapshot = stateManager.getLatestStateSnapshot();
-    const sphereLog = snapshot?.sphereLog;
+    sphereLog = snapshot?.sphereLog;
+
+    // If not in snapshot, try sphereState module
+    if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
+      const getSphereData = window.centralRegistry?.getPublicFunction?.('sphereState', 'getSphereData');
+      if (getSphereData) {
+        const sphereData = getSphereData();
+        if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
+          // Convert sphereData to the format expected by cost generator
+          sphereLog = sphereData.map((sphere, index) => ({
+            type: 'state_update',
+            sphere_index: index + 1,
+            player_data: {
+              '1': {
+                sphere_locations: sphere.locations || [],
+                new_accessible_regions: sphere.newRegions || [],
+              }
+            }
+          }));
+          log('info', `Using sphereState data: ${sphereLog.length} spheres`);
+        }
+      }
+    }
 
     if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
       log('warn', 'No sphere log available for cost generation');

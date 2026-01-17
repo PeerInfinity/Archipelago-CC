@@ -336,10 +336,34 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
           return null;
         }
 
-        // If no sphere log provided, get from stateManager
+        // If no sphere log provided, try to get it from sphereState module
         if (!sphereLog) {
+          // First try stateManager snapshot (legacy path)
           const snapshot = stateManager.getLatestStateSnapshot();
           sphereLog = snapshot?.sphereLog;
+
+          // If not in snapshot, try sphereState module
+          if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
+            const getSphereData = window.centralRegistry?.getPublicFunction?.('sphereState', 'getSphereData');
+            if (getSphereData) {
+              const sphereData = getSphereData();
+              // getSphereData returns processed sphere data, convert to raw format
+              if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
+                // Convert sphereData to the format expected by cost generator
+                sphereLog = sphereData.map((sphere, index) => ({
+                  type: 'state_update',
+                  sphere_index: index + 1,
+                  player_data: {
+                    '1': {
+                      sphere_locations: sphere.locations || [],
+                      new_accessible_regions: sphere.newRegions || [],
+                    }
+                  }
+                }));
+                console.log(`Using sphereState data: ${sphereLog.length} spheres`);
+              }
+            }
+          }
         }
 
         if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
