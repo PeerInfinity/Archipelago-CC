@@ -31,6 +31,35 @@ The system is built on a **proxy pattern** that separates the main UI thread fro
 - **`StateManagerProxy` (`stateManagerProxy.js`):** The public-facing interface on the main UI thread. All other modules interact with this proxy. It sends commands to the worker and caches the latest state **snapshot** it receives back.
 - **`stateManagerProxySingleton.js`**: Ensures only one instance of the proxy exists, providing a global access point for all modules.
 - **`stateManagerWorker.js`**: The script that bootstraps the worker, instantiates the `StateManager`, and handles the `postMessage` communication bridge.
+- **`CommandQueue` (`core/commandQueue.js`):** Manages command queuing in the worker. Commands are enqueued immediately upon arrival and processed in FIFO order, providing debugging visibility and controlled execution flow.
+
+### CommandQueue System
+
+The CommandQueue is an infrastructure component that manages the flow of commands to the StateManager:
+
+```
+Incoming Commands          CommandQueue              StateManager
+    │                      ┌──────────┐              ┌──────────┐
+    ├───postMessage────────► enqueue  │              │          │
+    │                      ├──────────┤              │ process  │
+    ├───postMessage────────► enqueue  ├───dequeue───►│ command  │
+    │                      ├──────────┤              │          │
+    └───postMessage────────► enqueue  │              └──────────┘
+                           └──────────┘
+```
+
+**Key Features:**
+- FIFO command processing
+- Debug mode for command flow visibility
+- Success/failure history tracking
+- Command metrics (counts by type, peak queue depth)
+- Foundation for future command batching
+
+**Debugging:** Enable debug mode to log command flow:
+```javascript
+// In worker initialization
+const queue = new CommandQueue({ debugMode: true });
+```
 
 ## The Data Flow: Commands and Snapshots
 

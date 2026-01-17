@@ -4,18 +4,6 @@ This document outlines the development priorities for the Archipelago JSON Expor
 
 ## Current Priorities
 
-### Discovery Mode
-
-*   **[TASK]** Implement the UI panel for Discovery mode settings.
-*   **[TASK]** Update the region graph module to support Discovery mode.
-*   **[TASK]** Get Discovery mode working with the Text Adventure module.
-*   **[TASK]** Update other modules to support Discovery mode.
-
-### Loops Mode
-
-*   **[TASK]** Get the main Loops module working.
-*   **[TASK]** Implement the remaining features of Loops mode.
-
 ### Iframe Interface
 
 *   **[TASK]** Clean and document the iframe interface.
@@ -62,3 +50,23 @@ These are ambitious features for future consideration.
 
 *   **Reverse Exporter (APWorld Generation):** Implement a tool to generate a playable `.apworld` file from a `rules.json` file, effectively reversing the export process.
 *   **Flash Game Integration:** Experiment with integrating Ruffle or SWFRecomp.
+
+## Completed Features
+
+### Discovery Mode (Completed)
+
+The Discovery mode system is fully implemented with the following components:
+
+*   **[DONE]** `discovery` module - Core state management for discovered regions, locations, and exits
+*   **[DONE]** `discoveryPanel` - UI for managing discovery settings
+*   **[DONE]** Region graph integration with discovery mode
+*   **[DONE]** Text Adventure discovery support
+*   **[DONE]** Integration across locations, exits, regions, and other modules
+
+### Loops Mode (In Progress)
+
+The Loops module core implementation is complete:
+
+*   **[DONE]** `loops` module - 13+ JavaScript files implementing the incremental game mode
+*   **[DONE]** Core features: loopState, loopUI, loopRenderer, loopBlockBuilder
+*   **[IN PROGRESS]** Additional features and polish
