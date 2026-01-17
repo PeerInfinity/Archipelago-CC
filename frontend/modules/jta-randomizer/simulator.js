@@ -53,18 +53,13 @@ export function calcProgressPerTick(task, zoneId, state) {
         }
     }
 
-    // Item skill modifiers - items boost skills (e.g., Arrows +15% Combat per item)
-    // Each item stacks additively: 5 Arrows = 5 * 0.15 = +75% Combat
+    // Skill speed modifiers from consumed items
+    // Items must be USED to provide bonuses (consumed, added to skillSpeedModifiers)
+    // These bonuses reset each run but accumulate as items are used during a run
     for (const skill of task.skills) {
-        let itemBonus = 0;
-        for (const [itemType, count] of state.items) {
-            const mods = ITEM_SKILL_MODIFIERS[itemType];
-            if (mods && mods[skill]) {
-                itemBonus += mods[skill] * count;
-            }
-        }
-        if (itemBonus > 0) {
-            mult *= (1 + itemBonus);
+        const speedMod = state.skillSpeedModifiers[skill] || 0;
+        if (speedMod > 0) {
+            mult *= (1 + speedMod);
         }
     }
 
@@ -711,7 +706,7 @@ export function simulateRun(state, options = {}) {
         (runType === "auto" && itemEnergy > 0 && (itemsCouldReachNewZone || itemsAreRipe));
 
     if (shouldPush && itemEnergy > 0) {
-        const consumed = consumeItemsForEnergy(state);
+        const consumed = consumeAllItems(state);
         energy += consumed;
         if (verbose) {
             runLog.push(`PUSH RUN: +${consumed.toFixed(1)} energy from items, total: ${energy.toFixed(1)}`);
@@ -778,7 +773,7 @@ export function simulateRun(state, options = {}) {
 
                             // On push runs, consume items immediately
                             if (shouldPush) {
-                                const gained = consumeItemsForEnergy(state);
+                                const gained = consumeAllItems(state);
                                 if (gained > 0) {
                                     energy += gained;
                                     if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
@@ -802,7 +797,7 @@ export function simulateRun(state, options = {}) {
 
                     // On push runs, consume items immediately
                     if (shouldPush) {
-                        const gained = consumeItemsForEnergy(state);
+                        const gained = consumeAllItems(state);
                         if (gained > 0) {
                             energy += gained;
                             if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
@@ -818,8 +813,8 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 2: Collect energy items (only on collect runs)
-        if (!didSomething && !shouldPush) {
+        // Priority 2: Collect energy items (on all runs)
+        if (!didSomething) {
             const itemTasks = getReachableItemTasks(reachableZones, state);
             for (const it of itemTasks) {
                 // Only collect if we can afford the task in the zone
@@ -851,7 +846,7 @@ export function simulateRun(state, options = {}) {
 
                     // On push runs, consume energy items immediately
                     if (shouldPush) {
-                        const gained = consumeItemsForEnergy(state);
+                        const gained = consumeAllItems(state);
                         if (gained > 0) {
                             energy += gained;
                             if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
@@ -867,9 +862,9 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 3: Collect skill-boosting items (only on collect runs)
-        // These items provide passive bonuses that persist across resets
-        if (!didSomething && !shouldPush) {
+        // Priority 3: Collect skill-boosting items (on all runs)
+        // These items provide bonuses when consumed on push runs
+        if (!didSomething) {
             const boostTasks = getReachableSkillBoostTasks(reachableZones, state);
             for (const bt of boostTasks) {
                 // Only collect if we can afford the task
@@ -946,7 +941,7 @@ export function simulateRun(state, options = {}) {
 
                     // On push runs, consume items immediately
                     if (shouldPush) {
-                        const gained = consumeItemsForEnergy(state);
+                        const gained = consumeAllItems(state);
                         if (gained > 0) {
                             energy += gained;
                             if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
@@ -987,7 +982,7 @@ export function simulateRun(state, options = {}) {
 
                         // On push runs, consume items as we go
                         if (shouldPush) {
-                            const gained = consumeItemsForEnergy(state);
+                            const gained = consumeAllItems(state);
                             if (gained > 0) {
                                 energy += gained;
                                 if (verbose) runLog.push(`  +${gained.toFixed(0)} from items`);
@@ -1158,6 +1153,9 @@ export function doEnergyReset(state) {
     // Items persist at 50% across resets
     halveItems(state);
 
+    // Reset skill speed modifiers (temporary bonuses from consumed items)
+    state.skillSpeedModifiers = {};
+
     // Artifacts also persist at 50%
     state.scrollsOfHaste = Math.ceil(state.scrollsOfHaste / 2);
     state.magicRings = Math.ceil(state.magicRings / 2);
@@ -1186,6 +1184,7 @@ export function createInitialState() {
         maxEnergy: STARTING_ENERGY,
         skillLevels: {},      // skill -> level (integer)
         skillXp: {},          // skill -> partial XP progress (decimal)
+        skillSpeedModifiers: {},  // skill -> accumulated bonus from consumed items (resets each run)
         perks: new Set(),
         power: 0,
         attunement: 0,
@@ -1283,18 +1282,35 @@ function addItems(state, itemNameOrType, count) {
 }
 
 /**
- * Consume all food-type items for energy
- * Returns energy gained
+ * Consume all items - both energy items and skill-boosting items
+ * Energy items provide immediate energy
+ * Skill-boosting items add to skillSpeedModifiers for the current run
  */
-function consumeItemsForEnergy(state) {
+function consumeAllItems(state) {
     let energyGained = 0;
+
     for (const [itemType, count] of state.items) {
+        if (count <= 0) continue;
+
+        // Energy items provide energy
         const energyPerItem = ENERGY_ITEMS[itemType];
-        if (energyPerItem !== undefined && count > 0) {
+        if (energyPerItem !== undefined) {
             energyGained += energyPerItem * count;
-            state.items.set(itemType, 0);
         }
+
+        // Skill-boosting items add to speed modifiers
+        const mods = ITEM_SKILL_MODIFIERS[itemType];
+        if (mods) {
+            for (const [skill, bonus] of Object.entries(mods)) {
+                const skillId = Number(skill);
+                state.skillSpeedModifiers[skillId] = (state.skillSpeedModifiers[skillId] || 0) + bonus * count;
+            }
+        }
+
+        // Consume the items
+        state.items.set(itemType, 0);
     }
+
     return energyGained;
 }
 
@@ -1588,7 +1604,7 @@ function simulateRunDetailed(state, options = {}) {
     detailedLog.push(`Starting energy: ${energy.toFixed(1)}`);
 
     if (shouldPush && itemEnergy > 0) {
-        const consumed = consumeItemsForEnergy(state);
+        const consumed = consumeAllItems(state);
         energy += consumed;
         detailedLog.push(`Consumed items: +${consumed.toFixed(1)} energy -> ${energy.toFixed(1)} total`);
     } else if (itemEnergy > 0) {
@@ -1658,7 +1674,7 @@ function simulateRunDetailed(state, options = {}) {
                         detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] Zone ${z} mandatory tasks (cost=${zoneCost.toFixed(1)})`);
 
                         if (shouldPush) {
-                            const gained = consumeItemsForEnergy(state);
+                            const gained = consumeAllItems(state);
                             if (gained > 0) {
                                 energy += gained;
                                 detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] +${gained.toFixed(0)} from items`);
@@ -1679,7 +1695,7 @@ function simulateRunDetailed(state, options = {}) {
                 tasksCompletedThisRun.add(pt.task.id);
 
                 if (shouldPush) {
-                    const gained = consumeItemsForEnergy(state);
+                    const gained = consumeAllItems(state);
                     if (gained > 0) {
                         energy += gained;
                     }
@@ -1759,7 +1775,7 @@ function simulateRunDetailed(state, options = {}) {
                     detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] BOSS: ${bt.task.name}${useHaste ? ' (hasted)' : ''} (cost=${actualCost.toFixed(1)})`);
 
                     if (shouldPush) {
-                        const gained = consumeItemsForEnergy(state);
+                        const gained = consumeAllItems(state);
                         if (gained > 0) {
                             energy += gained;
                             detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] +${gained.toFixed(0)} from items`);
@@ -1800,7 +1816,7 @@ function simulateRunDetailed(state, options = {}) {
                         }
 
                         if (shouldPush) {
-                            const gained = consumeItemsForEnergy(state);
+                            const gained = consumeAllItems(state);
                             if (gained > 0) {
                                 energy += gained;
                                 detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] +${gained.toFixed(0)} from items`);
