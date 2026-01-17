@@ -24,6 +24,7 @@ These modules provide foundational services that other modules depend on. They t
 -   **[Client](./client.md):** Handles WebSocket communication with the Archipelago server.
 -   **[Discovery](./discovery.md):** Tracks the "discovered" state of regions, locations, and exits for game modes like Archipelago Loops.
 -   **[PlayerState](./playerState.md):** Tracks the player's current region, primarily for UI-centric features like the Text Adventure.
+-   **[Sphere State](./sphereState.md):** Manages sphere log data and progression tracking for games supporting the sphere system.
 -   **[Timer](./timer.md):** Manages the logic for the automated location checking timer.
 -   **[ProgressBar](./progressBar.md):** Provides the core logic for creating and managing generic, event-driven progress bars.
 -   **[MetaGame](./metaGame.md):** An event orchestration system for creating scripted, narrative, or tutorial-like experiences.
@@ -34,6 +35,7 @@ These modules provide foundational services that other modules depend on. They t
 
 These modules each correspond to a UI panel that the user can interact with in the Golden Layout interface.
 
+-   **[Discovery Panel](./discoveryPanel.md):** Provides a UI for managing discovery mode settings and displaying discovered items.
 -   **[Dungeons](./dungeons.md):** Displays dungeon-specific information, such as bosses and medallion requirements.
 -   **[Editor](./editor.md):** A simple JSON viewer for inspecting application data like `rules.json`.
 -   **[Events](./events.md):** A debug panel for inspecting registered handlers for the `eventBus` and `eventDispatcher`.
@@ -46,6 +48,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Path Analyzer Panel](./pathAnalyzerPanel.md):** A dedicated panel for running the path analysis tool.
 -   **[Player State Panel](./playerStatePanel.md):** A simple panel for displaying the player's current state (e.g., current region).
 -   **[Presets](./presets.md):** Handles loading of pre-configured game files (`rules.json`).
+-   **[Region Graph](./regionGraph.md):** Interactive visualization of region connectivity using Cytoscape.js with real-time accessibility updates.
 -   **[Regions](./regions.md):** Displays the game world organized by regions and their connections.
 -   **[Settings](./settings.md):** Provides a UI for editing application settings.
 -   **[Spoiler Test](./spoilerTest.md):** The primary tool for validating game logic by replaying a game's progression against its spoiler log.
