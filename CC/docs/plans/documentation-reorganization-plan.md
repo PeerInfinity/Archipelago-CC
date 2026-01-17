@@ -93,15 +93,58 @@ This document outlines the plan for reorganizing and updating the project docume
 
 ### Phase 1: Document Recently Added Features (Highest Priority)
 
-**Task 1.1: Identify recently added features**
-- Review git history for new modules/features
-- Compare existing docs to current code state
-- Create list of undocumented or under-documented features
+**Task 1.1: Identify recently added features** - COMPLETED (2026-01-17)
+
+Analysis identified the following documentation gaps:
+
+#### Undocumented Frontend Modules (14 total)
+
+| Module | Priority | Notes |
+|--------|----------|-------|
+| loops | HIGH | 88KB, 7 files - complex module |
+| regionGraph | HIGH | Region graph visualization |
+| sphereState | HIGH | Sphere state management |
+| discoveryPanel | HIGH | Discovery system UI |
+| helpers | MEDIUM | Helper utility functions (22KB) |
+| ruleConverter | MEDIUM | Rule format conversion |
+| editorCodeMirror6 | MEDIUM | Code editor integration |
+| editorCore | MEDIUM | Core editor infrastructure |
+| iframe-base | MEDIUM | Base iframe component |
+| window-base | MEDIUM | Base window component |
+| shared | MEDIUM | Shared utilities |
+| spoilerChecklist | MEDIUM | Spoiler checklist UI |
+| testModule | LOW | Testing infrastructure |
+| textAdventure-remote | LOW | Remote text adventure |
+
+#### Recently Added Backend Features (Dec 2025 - Jan 2026)
+
+| Feature | Location | Priority | Notes |
+|---------|----------|----------|-------|
+| SC2 count_from_list state method | exporter/games/sc2.py | HIGH | New state method pattern |
+| NamedTuple callable attributes | exporter/analyzer/ | HIGH | Rule functions in NamedTuple fields |
+| Mode-dependent glitch helpers (ALttP) | exporter/games/alttp.py | HIGH | Mode detection and resolution |
+| Universal small key handling | exporter/games/alttp.py | MEDIUM | ALttP-specific |
+| Entrance rule closure patterns | exporter/analyzer/ | MEDIUM | Closure pattern fixes |
+| Conditional placement resolution | exporter/games/alttp.py | MEDIUM | ALTTP exporter |
+| World generator cross-validation | world_generator/ | MEDIUM | Advancement flag preservation |
+
+#### Missing Module-Level READMEs
+
+| Module | Size | Priority |
+|--------|------|----------|
+| exporter/ | 145KB | CRITICAL |
+| world_generator/ | 528KB | CRITICAL |
 
 **Task 1.2: Create documentation for new features**
 - Write docs for each identified feature
 - Follow existing documentation patterns
 - Include usage examples
+
+**Recommended priority order:**
+1. Create exporter/README.md and world_generator/README.md
+2. Document high-priority frontend modules (loops, regionGraph, sphereState, discoveryPanel)
+3. Document SC2/ALttP exporter enhancements
+4. Document remaining frontend modules
 
 ### Phase 2: Sort Planning Documents (High Priority)
 
@@ -265,7 +308,7 @@ Analysis performed 2026-01-17. Documents categorized by implementation status.
 - [x] Moved 4 completed plans to completed/
 - [x] Moved 8 partial plans to partial/
 - [x] Created README.md for plans directory
-- [ ] Identify recently added features needing docs
+- [x] Identified recently added features needing docs (14 frontend modules, 7 backend features, 2 missing READMEs)
 
 ### Future Sessions
 - [ ] Phase 1: Document Recently Added Features
