@@ -1,10 +1,19 @@
 # Documentation Reorganization Plan
 
 **Created:** 2026-01-17
-**Status:** Planning
+**Status:** In Progress
 **Last Updated:** 2026-01-17
 
 This document outlines the plan for reorganizing and updating the project documentation. This is a large task that will likely span multiple sessions.
+
+## Clarifications (from discussion)
+
+- **Game debugging guides**: Leave as-is; prompting scripts rely on current file structure
+- **Proposals directory**: Deliberately separate from plans; proposals are for Discord posts
+- **Upstream bugs directory**: Leave as-is for now
+- **Test results**: Generated automatically by GitHub workflows
+- **Cross-linking**: Good idea to pursue
+- **Planning documents**: Sort by completion status and move to subdirectories
 
 ## Current State Summary
 
@@ -82,99 +91,95 @@ This document outlines the plan for reorganizing and updating the project docume
 
 ## Reorganization Tasks
 
-### Phase 1: Fill Critical Gaps (High Priority)
+### Phase 1: Document Recently Added Features (Highest Priority)
 
-**Task 1.1: Create `/exporter/README.md`**
+**Task 1.1: Identify recently added features**
+- Review git history for new modules/features
+- Compare existing docs to current code state
+- Create list of undocumented or under-documented features
+
+**Task 1.2: Create documentation for new features**
+- Write docs for each identified feature
+- Follow existing documentation patterns
+- Include usage examples
+
+### Phase 2: Sort Planning Documents (High Priority)
+
+**Task 2.1: Analyze CC/docs/plans completion status**
+- Review each planning document
+- Categorize as: completed, partial, pending, abandoned
+
+**Task 2.2: Create subdirectory structure**
+- `CC/docs/plans/completed/` - fully implemented plans
+- `CC/docs/plans/partial/` - partially implemented plans
+- `CC/docs/plans/` - active/pending plans remain at root
+
+**Task 2.3: Move documents to appropriate subdirectories**
+- Move completed plans to completed/
+- Move partial plans to partial/
+- Update any cross-references
+
+### Phase 3: Compare Docs to Code (High Priority)
+
+**Task 3.1: Audit existing documentation accuracy**
+- Compare docs/json/ content to actual code
+- Identify outdated information
+- Note missing coverage for existing features
+
+**Task 3.2: Update outdated documentation**
+- Fix inaccuracies found in audit
+- Update examples that no longer work
+- Remove references to deprecated features
+
+### Phase 4: Fill Critical Gaps (Medium Priority)
+
+**Task 4.1: Create `/exporter/README.md`**
 - Document the analyzer, converter, sphere_logger
 - Document game handler architecture
 - Include usage examples
 - Cross-reference docs/json/developer/guides content
 
-**Task 1.2: Create `/world_generator/README.md`**
+**Task 4.2: Create `/world_generator/README.md`**
 - Document the generation pipeline
 - Document CLI options
 - Include usage examples
 - Cross-reference docs/json/developer/guides/world-generator.md
 
-**Task 1.3: Create `/docs/json/developer/README.md`**
+**Task 4.3: Create `/docs/json/developer/README.md`**
 - Provide table of contents for developer section
 - Brief description of each subsection
 - Quick-start links for common tasks
 
-**Task 1.4: Enhance `/frontend/README.md`**
+**Task 4.4: Enhance `/frontend/README.md`**
 - Add module system overview
 - Add directory structure guide
 - Add build/development instructions
 - Link to detailed module docs
 
-### Phase 2: Consolidate Redundant Content (Medium Priority)
+### Phase 5: Improve Navigation (Lower Priority)
 
-**Task 2.1: Consolidate game debugging guides**
-- Merge 6 separate guides into single document
-- Use sections for different modes (single, multiclient, multiworld, parallel)
-- Add cloud-specific callouts within main guide
-- Archive or delete redundant files
-
-**Task 2.2: Organize testing documentation**
-- Create `/docs/json/developer/testing/README.md` as hub
-- Keep individual files but improve cross-linking
-- Ensure scripts/test README links to main docs
-
-**Task 2.3: Clarify CC/docs/plans vs proposals**
-- Add clear README to CC/docs/plans explaining purpose
-- Add status/owner/target metadata to plan files
-- Ensure proposals/ focuses on upstream changes
-- Keep CC/docs/plans for internal implementation plans
-
-### Phase 3: Update Stale Content (Medium Priority)
-
-**Task 3.1: Review project roadmap**
-- Check each item against current implementation
-- Mark completed items
-- Update priorities based on current state
-- Add dates to significant milestones
-
-**Task 3.2: Review upstream-bugs/**
-- Determine if issues are still relevant
-- Archive resolved issues or convert to reference
-- Add links to upstream issue tracker if applicable
-
-**Task 3.3: Verify test results currency**
-- Compare test results dates with recent code changes
-- Regenerate if needed
-- Document test result freshness expectations
-
-### Phase 4: Improve Navigation (Lower Priority)
-
-**Task 4.1: Add cross-references**
+**Task 5.1: Add cross-references**
 - Link between related docs
 - Add "See Also" sections consistently
 - Ensure bidirectional linking
 
-**Task 4.2: Create troubleshooting index**
+**Task 5.2: Create troubleshooting index**
 - Central hub for common issues
 - Link to specific solutions in other docs
 - Add to docs/json/user/
 
-**Task 4.3: Add section READMEs**
+**Task 5.3: Add section READMEs**
 - `/docs/json/developer/reference/README.md`
-- `/docs/json/developer/proposals/README.md` (enhance existing)
 - `/docs/json/developer/test-results/README.md`
 
-### Phase 5: CC Directory Cleanup (Lower Priority)
+### Phase 6: CC Directory Organization (Lower Priority)
 
-**Task 5.1: Organize CC files by purpose**
-- Group debugging guides
-- Group how-to guides
-- Archive historical/completed planning docs
+**Task 6.1: Add README to CC/docs/plans/**
+- Explain purpose of planning documents
+- Describe subdirectory structure
+- Link to key active plans
 
-**Task 5.2: Add metadata to planning documents**
-- Status (draft, in-progress, completed, abandoned)
-- Owner/primary contributor
-- Dependencies on other plans
-- Target milestone if applicable
-
-**Task 5.3: Update CLAUDE.md**
+**Task 6.2: Update CLAUDE.md**
 - Ensure all important references are current
 - Add links to new documentation
 - Remove references to deprecated approaches
@@ -203,36 +208,79 @@ After making documentation changes:
 3. Confirm file paths are accurate
 4. Regenerate auto-generated docs if needed
 
+## Planning Documents Status Analysis
+
+Analysis performed 2026-01-17. Documents categorized by implementation status.
+
+### Completed (4 documents)
+
+| Document | Description |
+|----------|-------------|
+| bomb-rush-cyberfunk-helper-export-plan.md | JavaScript fallback implementation working, spoiler tests passing |
+| json-tools-installer-apworld-plan.md | All 5 phases complete as of 2026-01-04 |
+| loops-testing-options-report.md | Analysis complete, recommended Option 1 |
+| rule-format-migration-analysis.md | Bidirectional coverage analysis complete |
+
+### Partial (8 documents)
+
+| Document | Description | Notes |
+|----------|-------------|-------|
+| analyzer-post-process-improvements.md | For loops, conditionals, f-strings implemented | Parameter substitution Phase 2 pending |
+| expand-explain-tool-plan.md | Infrastructure planned | Full execution deferred |
+| helper-generation-plan.md | Phase 0-2 started | Phase 3+ not completed |
+| loops-planning-document.md | Bug fixes identified | Stats panel, phases 2-4 outlined |
+| rule-format-inconsistencies.md | Issues 1-2 fixed | Issues 3-4 documented as expected |
+| rule-format-migration-plan.md | Phase 1 complete (2025-12-18) | Phases 2-5 pending |
+| rule-format-standardization-plan.md | Work items outlined | No checkmarks on status |
+| ut-worldgen-tracking-integration-plan.md | Core implemented | Simple games work, complex fail |
+
+### Pending (8 documents)
+
+| Document | Description |
+|----------|-------------|
+| arithmetic-rules-plan.md | Arithmetic class for Rule Builder |
+| generic-pathfinding-tools-plan.md | Path-dependent patterns like bunny rules |
+| json-tools-apworld-plan.md | Package JSON Tools for distribution |
+| remove-helper-ast-storage-plan.md | Remove redundant AST storage |
+| setting-value-refactor-plan.md | Split setting_value into option_value/world_attribute |
+| timer-loops-integration.md | Timer/Loops module integration |
+| worker-side-spoiler-test-plan.md | Move spoiler tests to worker (2-3x speedup) |
+| world-generator-game-handlers-plan.md | Handler pattern refactoring |
+
+### Summary
+
+- **Completed**: 4 documents
+- **Partial**: 8 documents
+- **Pending**: 8 documents
+- **Total**: 20 documents (excluding this file and code-issues-and-opportunities.md)
+
 ## Progress Tracking
 
 ### Session 1: 2026-01-17
 - [x] Initial investigation of documentation state
 - [x] Created this planning document
 - [x] Created code-issues-and-opportunities.md
-- [ ] Phase 1 tasks (pending)
+- [x] Analyzed CC/docs/plans completion status
+- [x] Created completed/ and partial/ subdirectories
+- [x] Moved 4 completed plans to completed/
+- [x] Moved 8 partial plans to partial/
+- [x] Created README.md for plans directory
+- [ ] Identify recently added features needing docs
 
 ### Future Sessions
-- [ ] Phase 1: Fill Critical Gaps
-- [ ] Phase 2: Consolidate Redundant Content
-- [ ] Phase 3: Update Stale Content
-- [ ] Phase 4: Improve Navigation
-- [ ] Phase 5: CC Directory Cleanup
+- [ ] Phase 1: Document Recently Added Features
+- [ ] Phase 2: Sort Planning Documents (in progress)
+- [ ] Phase 3: Compare Docs to Code
+- [ ] Phase 4: Fill Critical Gaps
+- [ ] Phase 5: Improve Navigation
+- [ ] Phase 6: CC Directory Organization
 
 ## Questions for Clarification
 
-Before proceeding with implementation, the following questions may need clarification:
+~~All initial questions have been answered. See "Clarifications" section above.~~
 
-1. **Priority of consolidation vs new content**: Should we prioritize filling gaps (new READMEs) or consolidating redundant content first?
-
-2. **Archive strategy**: Should deprecated/historical documents be deleted, moved to an archive folder, or kept with prominent "archived" notices?
-
-3. **Upstream bugs treatment**: Are the Landstalker memory leak docs still relevant? Should they be archived or updated?
-
-4. **Test result automation**: Are test results regenerated automatically via CI, or do they need manual regeneration?
-
-5. **Game debugging consolidation**: Is there a preference for keeping separate cloud-specific guides vs. integrating cloud notes into main guides?
-
-6. **CC/docs/plans metadata format**: What metadata format would be most useful for tracking plan status? YAML frontmatter, table at top, or something else?
+**Remaining questions:**
+- What are the "recently added features" that need documentation? (To be determined by code review)
 
 ## Related Documents
 
