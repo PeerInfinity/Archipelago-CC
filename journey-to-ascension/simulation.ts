@@ -1485,3 +1485,13 @@ export function updateGamestate() {
             item: t.task_definition.item
         }));
 };
+
+// Set energy (for testing)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).setEnergy = (current: number, max?: number) => {
+    GAMESTATE.current_energy = current;
+    if (max !== undefined) {
+        GAMESTATE.max_energy = max;
+    }
+    return { current: GAMESTATE.current_energy, max: GAMESTATE.max_energy };
+};

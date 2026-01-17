@@ -23,9 +23,9 @@ import {
 } from './gameData.js';
 
 import {
-    calcTaskCost, calcProgressPerTick, calcTaskTicks,
+    calcTaskCost, calcProgressPerTick, calcTaskTicks, isSingleTick,
     calcTaskEnergyCost, calcTaskXp, createInitialState,
-    simulateRun, doEnergyReset
+    simulateRun, doEnergyReset, calcEnergyDrainPerTick
 } from './simulator.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -74,13 +74,20 @@ function createGameServer(port) {
  * Run the game with instant mode and execute specific tasks
  * Returns detailed per-task results for comparison
  */
-async function runGameWithInstantMode(page, taskSequence) {
+async function runGameWithInstantMode(page, taskSequence, startingEnergy = 100) {
     // Initialize game in headless mode
     await page.evaluate(() => {
         window.initializeHeadless();
         window.pauseGameLoop();
         window.setInstantMode(true);
     });
+
+    // Set starting energy if different from default
+    if (startingEnergy !== 100) {
+        await page.evaluate((energy) => {
+            window.setEnergy(energy, energy);
+        }, startingEnergy);
+    }
 
     const results = {
         taskResults: [],
@@ -143,10 +150,11 @@ async function runGameWithInstantMode(page, taskSequence) {
 /**
  * Run a simulation using the simulator to compute expected energy for tasks
  */
-function runSimulatorForTasks(taskSequence) {
+function runSimulatorForTasks(taskSequence, startingEnergy = 100) {
     const state = createInitialState();
-    // Initialize currentEnergy to maxEnergy (simulator doesn't set this by default)
-    state.currentEnergy = state.maxEnergy;
+    // Initialize currentEnergy to specified starting energy
+    state.currentEnergy = startingEnergy;
+    state.maxEnergy = startingEnergy;
 
     const results = {
         taskResults: [],
@@ -229,6 +237,8 @@ function compareResults(gameResults, simResults) {
     const numTasks = Math.min(gameResults.taskResults.length, simResults.taskResults.length);
     let mismatches = 0;
     let totalEnergyDiff = 0;
+    let resetCases = 0;
+    let skippedCases = 0;
 
     console.log('Initial state:');
     console.log(`  Game: energy=${gameResults.initialState.currentEnergy}`);
@@ -239,9 +249,20 @@ function compareResults(gameResults, simResults) {
         const simTask = simResults.taskResults[i];
 
         if (!gameTask.success || !simTask.success) {
+            skippedCases++;
             console.log(`Task ${i + 1} (ID ${gameTask.taskId}): SKIPPED`);
             if (gameTask.error) console.log(`  Game error: ${gameTask.error}`);
             if (simTask.error) console.log(`  Sim error: ${simTask.error}`);
+            continue;
+        }
+
+        // If reset was triggered, the energy measurement is unreliable
+        // (energy gets clamped to 0, so we only measure available energy, not actual cost)
+        if (gameTask.triggeredReset) {
+            resetCases++;
+            console.log(`Task ${i + 1} "${gameTask.taskName}": RESET TRIGGERED`);
+            console.log(`  Game: ${gameTask.beforeEnergy.toFixed(2)} -> ${gameTask.afterEnergy.toFixed(2)} (had ${gameTask.beforeEnergy.toFixed(2)}, needed ${simTask.expectedEnergyCost.toFixed(2)})`);
+            console.log(`  Insufficient energy - reset expected`);
             continue;
         }
 
@@ -255,19 +276,23 @@ function compareResults(gameResults, simResults) {
             console.log(`  Game: ${gameTask.beforeEnergy.toFixed(2)} -> ${gameTask.afterEnergy.toFixed(2)} (used: ${gameTask.energyUsed.toFixed(4)})`);
             console.log(`  Sim expected:     ${simTask.expectedEnergyCost.toFixed(4)}`);
             console.log(`  Difference:       ${energyDiff.toFixed(4)}`);
-            if (gameTask.triggeredReset) console.log(`  Game triggered reset!`);
         } else {
             console.log(`Task ${i + 1} "${gameTask.taskName}": OK`);
             console.log(`  Game: ${gameTask.beforeEnergy.toFixed(2)} -> ${gameTask.afterEnergy.toFixed(2)} (used: ${gameTask.energyUsed.toFixed(2)})`);
-            if (gameTask.triggeredReset) console.log(`  Game triggered reset!`);
         }
     }
 
+    const validComparisons = numTasks - skippedCases - resetCases;
     console.log(`\n=== SUMMARY ===`);
-    console.log(`Tasks compared: ${numTasks}`);
-    console.log(`Mismatches: ${mismatches}`);
-    console.log(`Total energy difference: ${totalEnergyDiff.toFixed(4)}`);
-    console.log(`Match rate: ${((numTasks - mismatches) / numTasks * 100).toFixed(1)}%`);
+    console.log(`Total tasks: ${numTasks}`);
+    console.log(`  Skipped (errors): ${skippedCases}`);
+    console.log(`  Reset triggered: ${resetCases}`);
+    console.log(`  Valid comparisons: ${validComparisons}`);
+    console.log(`  Mismatches: ${mismatches}`);
+    if (validComparisons > 0) {
+        console.log(`  Total energy difference: ${totalEnergyDiff.toFixed(4)}`);
+        console.log(`  Match rate: ${((validComparisons - mismatches) / validComparisons * 100).toFixed(1)}%`);
+    }
 
     // Final state comparison
     console.log('\n=== FINAL STATE ===');
@@ -278,11 +303,174 @@ function compareResults(gameResults, simResults) {
 }
 
 /**
- * Main test function
+ * Complete all tasks needed to reach a target zone
+ * This completes ALL reps of mandatory tasks and Travel tasks to advance through zones
+ */
+async function advanceToZone(page, targetZone, verbose = false) {
+    // Get available tasks and complete them until we reach the target zone
+    for (let attempts = 0; attempts < 500; attempts++) {
+        const state = await page.evaluate(() => window.getFullState());
+
+        if (state.currentZone >= targetZone) {
+            return { success: true, zone: state.currentZone };
+        }
+
+        // Get all tasks using getAvailableTasks (which uses current GAMESTATE)
+        // Note: window.getGamestate may point to stale object after initializeHeadless
+        const allTasks = await page.evaluate(() => {
+            // Use the full state API which returns data from the current GAMESTATE
+            const state = window.getFullState();
+            return state.tasks;
+        });
+
+        // Find first enabled task that still has reps to complete
+        const enabledTask = allTasks.find(t => t.enabled && t.reps < t.maxReps);
+
+        if (!enabledTask) {
+            // Debug: show task states
+            const incomplete = allTasks.filter(t => t.reps < t.maxReps);
+            return {
+                success: false,
+                error: `No enabled tasks. Zone ${state.currentZone}. Incomplete tasks: ${incomplete.map(t => `${t.name}(${t.reps}/${t.maxReps},en=${t.enabled})`).join(', ')}`,
+                zone: state.currentZone
+            };
+        }
+
+        if (verbose) {
+            console.log(`  Advancing: ${enabledTask.name} (${enabledTask.reps}/${enabledTask.maxReps})`);
+        }
+
+        // Perform and complete this task
+        const result = await page.evaluate((id) => window.performTask(id), enabledTask.id);
+        if (!result.success) {
+            return { success: false, error: `performTask failed: ${result.error}`, zone: state.currentZone };
+        }
+
+        await page.evaluate(() => window.stepTick());
+
+        // Check if task was actually advanced (using getFullState which uses current GAMESTATE)
+        const afterState = await page.evaluate(() => window.getFullState());
+        const updatedTask = afterState.tasks.find(t => t.id === enabledTask.id);
+        const newReps = updatedTask ? updatedTask.reps : -1;
+
+        if (newReps === enabledTask.reps) {
+            return {
+                success: false,
+                error: `Task ${enabledTask.name} did not advance (still ${newReps}/${enabledTask.maxReps})`,
+                zone: state.currentZone
+            };
+        }
+    }
+
+    return { success: false, error: 'Max attempts reached' };
+}
+
+/**
+ * Test a single task with fresh game state and sufficient energy
+ * Returns the actual energy used by the game
+ */
+async function testSingleTask(page, taskId, zoneId, port, testEnergy = 100000) {
+    // Reload the page to get fresh game state
+    await page.goto(`http://localhost:${port}`);
+
+    // Wait for game to initialize
+    await page.waitForFunction(() => typeof window.getFullState === 'function', { timeout: 10000 });
+
+    // Initialize in headless mode with instant mode
+    await page.evaluate(() => {
+        window.initializeHeadless();
+        window.pauseGameLoop();
+        window.setInstantMode(true);
+    });
+
+    // Set high energy so we don't run out
+    await page.evaluate((energy) => {
+        window.setEnergy(energy, energy);
+    }, testEnergy);
+
+    // If we need to be in a different zone, advance to it by completing tasks
+    if (zoneId > 0) {
+        const advanceResult = await advanceToZone(page, zoneId, false); // Set to true for debug
+        if (!advanceResult.success) {
+            return {
+                taskId,
+                success: false,
+                error: `Could not reach zone ${zoneId}: ${advanceResult.error}`
+            };
+        }
+
+        // Reset energy after advancing
+        await page.evaluate((energy) => {
+            window.setEnergy(energy, energy);
+        }, testEnergy);
+    }
+
+    const beforeState = await page.evaluate(() => window.getFullState());
+
+    // Build simulator state from game state (skills, perks, etc.)
+    // This ensures simulator uses same conditions as the game
+    const simState = {
+        maxEnergy: beforeState.maxEnergy,
+        skillLevels: {},
+        skillXp: {},
+        skillSpeedModifiers: {},
+        perks: new Set(beforeState.perks),
+        power: beforeState.power,
+        attunement: beforeState.attunement,
+        currentZone: beforeState.currentZone,
+        highestZone: beforeState.highestZone,
+        highestZoneFullyCompleted: beforeState.highestZoneFullyCompleted,
+        items: new Map(),
+        scrollsOfHaste: 0,
+        magicRings: 0,
+        bossesDefeated: new Set(),
+        unlockedHiddenTasks: new Set(),
+    };
+
+    // Copy skill levels
+    for (const skill of beforeState.skills) {
+        simState.skillLevels[skill.type] = skill.level;
+        simState.skillXp[skill.type] = skill.progress;
+    }
+
+    // Perform the task
+    const performResult = await page.evaluate((id) => {
+        return window.performTask(id);
+    }, taskId);
+
+    if (!performResult.success) {
+        return {
+            taskId,
+            success: false,
+            error: performResult.error
+        };
+    }
+
+    // Step tick to complete it
+    await page.evaluate(() => window.stepTick());
+
+    const afterState = await page.evaluate(() => window.getFullState());
+
+    return {
+        taskId,
+        taskName: performResult.taskName,
+        success: true,
+        beforeEnergy: beforeState.currentEnergy,
+        afterEnergy: afterState.currentEnergy,
+        energyUsed: beforeState.currentEnergy - afterState.currentEnergy,
+        skillLevelsBefore: beforeState.skills,
+        skillLevelsAfter: afterState.skills,
+        triggeredReset: afterState.isInEnergyReset,
+        simState: simState  // Return the captured state for simulator comparison
+    };
+}
+
+/**
+ * Main test function - comprehensive per-task comparison
  */
 async function main() {
-    console.log('Journey to Ascension - Instant Mode Test');
-    console.log('========================================\n');
+    console.log('Journey to Ascension - Comprehensive Task Energy Test');
+    console.log('======================================================\n');
 
     // Check if JTA directory exists
     if (!existsSync(JTA_DIR)) {
@@ -290,24 +478,6 @@ async function main() {
         console.error('Please clone the game repository first.');
         process.exit(1);
     }
-
-    // Define test task sequence - tasks from Zone 0 (The Village)
-    // These are the first few mandatory tasks in the starting zone
-    const testTasks = [];
-
-    // Get Zone 0 tasks from game data
-    const zone0 = ZONES[0];
-    if (zone0) {
-        console.log(`Zone 0 "${zone0.name}" has ${zone0.tasks.length} tasks:`);
-        for (const task of zone0.tasks) {
-            console.log(`  ID ${task.id}: ${task.name} (costMult: ${task.costMult}, maxReps: ${task.maxReps})`);
-            if (testTasks.length < 5) {
-                testTasks.push(task.id);
-            }
-        }
-    }
-
-    console.log(`\nTesting with tasks: ${testTasks.join(', ')}\n`);
 
     // Start game server
     const PORT = 8765;
@@ -332,25 +502,84 @@ async function main() {
         // Wait for game to initialize
         await page.waitForFunction(() => typeof window.getFullState === 'function', { timeout: 10000 });
 
-        console.log('Game loaded, running instant mode test...\n');
+        console.log('Game loaded.\n');
 
-        // Run game with instant mode
-        const gameResults = await runGameWithInstantMode(page, testTasks);
-        console.log(`Game completed ${gameResults.taskResults.length} tasks`);
+        // Determine how many zones to test (from command line arg or default to 3)
+        const maxZones = parseInt(process.argv[2]) || 3;
 
-        // Run simulator for comparison
-        console.log('Running simulator for comparison...');
-        const simResults = runSimulatorForTasks(testTasks);
-        console.log(`Simulator computed ${simResults.taskResults.length} tasks`);
+        let mismatches = 0;
+        let tested = 0;
 
-        // Compare results
-        const success = compareResults(gameResults, simResults);
+        // Test tasks from multiple zones
+        for (let zoneId = 0; zoneId < Math.min(maxZones, ZONES.length); zoneId++) {
+            const zone = ZONES[zoneId];
+            console.log(`\n=== Zone ${zoneId}: "${zone.name}" ===\n`);
+            console.log('Task'.padEnd(30) + 'Game'.padStart(12) + 'Simulator'.padStart(12) + 'Diff'.padStart(10) + 'Status');
+            console.log('-'.repeat(74));
 
-        if (success) {
-            console.log('\n✓ All tests passed!');
-        } else {
-            console.log('\n✗ Some tests failed - investigating differences...');
+            for (const task of zone.tasks) {
+                // Test task in game
+                const gameResult = await testSingleTask(page, task.id, zoneId, PORT);
+
+                if (!gameResult.success) {
+                    console.log(`${task.name.substring(0, 29).padEnd(30)} ${'ERROR'.padStart(12)} ${'-'.padStart(12)} ${'-'.padStart(10)} SKIP`);
+                    // Show error details for non-"not enabled" errors
+                    if (!gameResult.error.includes('not enabled')) {
+                        console.log(`  Error: ${gameResult.error}`);
+                    }
+                    continue;
+                }
+
+                // Calculate expected energy cost using simulator with the game's actual state
+                // This ensures we compare apples-to-apples (same skill levels, perks, etc.)
+                const simEnergyCost = calcTaskEnergyCost(task, zoneId, gameResult.simState);
+
+                const diff = Math.abs(gameResult.energyUsed - simEnergyCost);
+                const status = diff < 0.01 ? 'OK' : 'MISMATCH';
+
+                if (diff >= 0.01) {
+                    mismatches++;
+                }
+                tested++;
+
+                console.log(
+                    `${task.name.substring(0, 29).padEnd(30)}` +
+                    `${gameResult.energyUsed.toFixed(4).padStart(12)}` +
+                    `${simEnergyCost.toFixed(4).padStart(12)}` +
+                    `${diff.toFixed(4).padStart(10)}` +
+                    ` ${status}`
+                );
+
+                // If mismatch, show detailed breakdown
+                if (diff >= 0.01) {
+                    // Get detailed calculation from simulator using game's state
+                    const ss = gameResult.simState;
+                    const taskCost = calcTaskCost(task, zoneId);
+                    const progressPerTick = calcProgressPerTick(task, zoneId, ss);
+                    const ticks = calcTaskTicks(task, zoneId, ss);
+                    const singleTick = isSingleTick(task, zoneId, ss);
+                    const drainPerTick = calcEnergyDrainPerTick(task, zoneId, ss, singleTick);
+
+                    console.log(`  Breakdown:`);
+                    console.log(`    Task cost (base): ${taskCost.toFixed(4)}`);
+                    console.log(`    Progress/tick: ${progressPerTick.toFixed(4)}`);
+                    console.log(`    Ticks needed: ${ticks}`);
+                    console.log(`    Single tick: ${singleTick}`);
+                    console.log(`    Energy drain/tick: ${drainPerTick.toFixed(4)}`);
+                    console.log(`    costMult: ${task.costMult}, maxReps: ${task.maxReps}`);
+                    console.log(`    Skills: ${task.skills.map(s => `${SKILL_NAMES[s]}:${ss.skillLevels[s]||0}`).join(', ')}`);
+                }
+            }
+        }
+
+        console.log('-'.repeat(74));
+        console.log(`\nResults: ${tested - mismatches}/${tested} tasks match (${((tested - mismatches) / tested * 100).toFixed(1)}%)`);
+
+        if (mismatches > 0) {
+            console.log(`\n${mismatches} mismatches found - simulator needs adjustment`);
             process.exit(1);
+        } else {
+            console.log('\n✓ All tests passed! Simulator matches game.');
         }
 
     } catch (error) {
