@@ -867,7 +867,48 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 4: Defeat affordable bosses (use ScrollOfHaste if available)
+        // Priority 3: Collect skill-boosting items (only on collect runs)
+        // These items provide passive bonuses that persist across resets
+        if (!didSomething && !shouldPush) {
+            const boostTasks = getReachableSkillBoostTasks(reachableZones, state);
+            for (const bt of boostTasks) {
+                // Only collect if we can afford the task
+                if (bt.canAfford && bt.totalCost <= energy) {
+                    // Navigate to the zone
+                    for (let z = 0; z < bt.zoneId; z++) {
+                        if (!zonesCompleted.has(z)) {
+                            const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                            energy -= zoneCost;
+                            const zone = ZONES[z];
+                            const mandatoryTasks = getMandatoryTasks(zone);
+                            for (const task of mandatoryTasks) {
+                                applyTaskXp(task, z, state);
+                                if (task.item !== null) addItems(state, task.item, task.maxReps);
+                                if (task.perk !== null) addPerk(state, task.perk);
+                                tasksCompletedThisRun.add(task.id);
+                            }
+                            zonesCompleted.add(z);
+                            state.currentZone = z;
+                            if (z > state.highestZone) state.highestZone = z;
+                        }
+                    }
+
+                    // Collect the skill-boosting items
+                    energy -= bt.fullCost;
+                    applyTaskXp(bt.task, bt.zoneId, state);
+                    addItems(state, bt.task.item, bt.task.maxReps);
+                    tasksCompletedThisRun.add(bt.task.id);
+
+                    if (verbose) {
+                        runLog.push(`Zone ${bt.zoneId} ${bt.task.name}: collected skill items (boost=${bt.totalBonusValue.toFixed(2)})`);
+                    }
+                    didSomething = true;
+                    break;
+                }
+            }
+        }
+
+        // Priority 5: Defeat affordable bosses (use ScrollOfHaste if available)
         // Bosses unlock hidden tasks and give valuable items (often artifacts)
         if (!didSomething && highestReachable >= 0) {
             const bossTasks = getReachableBossTasks(highestReachable, state);
@@ -918,7 +959,7 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 5: Advance through any zones we haven't completed this run
+        // Priority 6: Advance through any zones we haven't completed this run
         // This includes zones we may have visited before but not finished mandatory tasks
         if (!didSomething && highestReachable >= 0) {
             // Complete zones up to the highest we can reach
@@ -958,7 +999,7 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 6: Farm tasks - prioritize bottleneck skills, then best XP
+        // Priority 7: Farm tasks - prioritize bottleneck skills, then best XP
         if (!didSomething) {
             // First, identify bottleneck skills for future zones
             const maxReachable = highestReachable >= 0 ? highestReachable : 0;
