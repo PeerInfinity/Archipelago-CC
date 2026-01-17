@@ -5,7 +5,7 @@
 
 import {
     ZONES, PERKS, PerkType, SkillType, TaskType,
-    SKILL_XP_MULT, SKILL_NAMES, getMandatoryTasks,
+    SKILL_XP_MULT, SKILL_NAMES, PERK_NAMES, getMandatoryTasks,
     ENERGY_ITEMS, ItemType, ARTIFACTS, HASTE_MULT, MAGIC_RING_MULT,
     ITEM_SKILL_MODIFIERS, BOSS_UNLOCKS
 } from './gameData.js';
@@ -50,6 +50,21 @@ export function calcProgressPerTick(task, zoneId, state) {
             if (perk && perk.skillModifiers[skill]) {
                 mult *= (1 + perk.skillModifiers[skill]);
             }
+        }
+    }
+
+    // Item skill modifiers - items boost skills (e.g., Arrows +15% Combat per item)
+    // Each item stacks additively: 5 Arrows = 5 * 0.15 = +75% Combat
+    for (const skill of task.skills) {
+        let itemBonus = 0;
+        for (const [itemType, count] of state.items) {
+            const mods = ITEM_SKILL_MODIFIERS[itemType];
+            if (mods && mods[skill]) {
+                itemBonus += mods[skill] * count;
+            }
+        }
+        if (itemBonus > 0) {
+            mult *= (1 + itemBonus);
         }
     }
 
@@ -172,12 +187,21 @@ export function calcXpNeeded(level, skillType) {
 
 /**
  * Calculate XP gained from completing a task (one rep)
+ *
+ * The original game awards XP every tick: xp_per_tick = progress * 8 * xpMult
+ * A rep takes ceil(cost / progress) ticks to complete.
+ * Total XP per rep = ticks * progress * 8 * xpMult ≈ cost * 8 * xpMult
+ *
  * @param xpBoosted - if true, applies Magic Ring 3x XP multiplier
  */
 export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
     const progress = calcProgressPerTick(task, zoneId, state);
+    const cost = calcTaskCost(task, zoneId);
+    const ticks = Math.ceil(cost / progress);
+
+    // XP per tick, then multiply by ticks to get XP per rep
     const XP_MULT = 8;
-    let xp = progress * XP_MULT * task.xpMult;
+    let xp = progress * XP_MULT * task.xpMult * ticks;
 
     // Writing perk - 50% more XP
     if (state.perks.has(PerkType.Writing)) {
@@ -468,30 +492,53 @@ function getBottleneckTrainingTasks(maxZone, state, bottleneckSkills) {
         : 0;
 
     for (const gt of allTasks) {
-        // Count how many bottleneck skills this task trains
+        // Count how many bottleneck skills this task trains directly
         const bottleneckSkillsTrained = gt.task.skills.filter(s => bottleneckSkills.has(s));
-        const numBottlenecks = bottleneckSkillsTrained.length;
+        let numBottlenecks = bottleneckSkillsTrained.length;
 
-        if (numBottlenecks > 0) {
+        // Also check if task gives items that boost bottleneck skills
+        const itemType = gt.task.item !== null ? getItemType(gt.task.item) : null;
+        const itemMods = itemType !== null ? ITEM_SKILL_MODIFIERS[itemType] : null;
+        const itemBoostsBottleneck = [];
+        if (itemMods) {
+            for (const skill of bottleneckSkills) {
+                if (itemMods[skill]) {
+                    itemBoostsBottleneck.push(skill);
+                }
+            }
+        }
+
+        // Include task if it either trains or boosts bottleneck skills via items
+        if (numBottlenecks > 0 || itemBoostsBottleneck.length > 0) {
             // Calculate value considering:
             // - Skill weight (how soon we need it)
             // - Skill deficit (how far below average we are)
+            // - Item bonuses (items that boost bottleneck skills are very valuable)
             let priorityScore = 0;
+
+            // Score for directly trained skills
             for (const skill of bottleneckSkillsTrained) {
                 const weight = skillWeights.get(skill) || 1;
                 const level = state.skillLevels[skill] || 0;
-                // Deficit bonus: extra priority for skills below average
-                // Using sqrt to dampen the effect but still prioritize low skills
                 const deficit = Math.max(0, avgSkillLevel - level);
                 const deficitBonus = Math.sqrt(deficit + 1);
-                // Combined score: base weight * deficit bonus
                 priorityScore += weight * deficitBonus;
+            }
+
+            // Score for item skill boosts (items provide persistent bonuses!)
+            // Weight item bonuses highly because they accumulate across resets
+            for (const skill of itemBoostsBottleneck) {
+                const weight = skillWeights.get(skill) || 1;
+                const itemBonus = itemMods[skill] * gt.task.maxReps; // Total boost from all items
+                // Give 2x weight to item bonuses since they persist
+                priorityScore += weight * itemBonus * 2;
             }
 
             relevantTasks.push({
                 ...gt,
                 numBottlenecks,
                 bottleneckSkillsTrained,
+                itemBoostsBottleneck,
                 priorityScore,
                 priorityPerEnergy: priorityScore / gt.singleRepCost,
             });
@@ -562,6 +609,46 @@ function getReachableItemTasks(reachableZones, state) {
 
     // Sort by net gain (best items first)
     return itemTasks.sort((a, b) => b.netGain - a.netGain);
+}
+
+/**
+ * Get all skill-boosting item tasks from reachable zones
+ * These items provide passive bonuses to skills just by holding them
+ * Returns tasks sorted by total skill bonus value
+ */
+function getReachableSkillBoostTasks(reachableZones, state) {
+    const boostTasks = [];
+
+    for (const zoneInfo of reachableZones) {
+        const zoneTasks = getGrindableTasks(zoneInfo.zoneId, state);
+        for (const gt of zoneTasks) {
+            // Check if this task gives a skill-boosting item
+            const itemType = gt.task.item !== null ? getItemType(gt.task.item) : null;
+            if (itemType !== null && ITEM_SKILL_MODIFIERS[itemType]) {
+                const mods = ITEM_SKILL_MODIFIERS[itemType];
+                const totalBonus = Object.values(mods).reduce((sum, val) => sum + val, 0);
+                const itemCount = gt.task.maxReps;
+                const totalBonusValue = totalBonus * itemCount;
+
+                const energyToReachZone = state.maxEnergy - zoneInfo.energyAtStart;
+                const totalCost = energyToReachZone + gt.fullCost;
+
+                boostTasks.push({
+                    ...gt,
+                    itemType,
+                    modifiers: mods,
+                    totalBonusValue,
+                    energyAtZone: zoneInfo.energyAtStart,
+                    totalCost,
+                    bonusPerEnergy: totalBonusValue / gt.fullCost,
+                    canAfford: gt.fullCost <= zoneInfo.energyAtStart,
+                });
+            }
+        }
+    }
+
+    // Sort by bonus per energy (best value first)
+    return boostTasks.sort((a, b) => b.bonusPerEnergy - a.bonusPerEnergy);
 }
 
 /**
@@ -731,7 +818,7 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 2: Collect items (only on collect runs or if items have positive net value in-zone)
+        // Priority 2: Collect energy items (only on collect runs)
         if (!didSomething && !shouldPush) {
             const itemTasks = getReachableItemTasks(reachableZones, state);
             for (const it of itemTasks) {
@@ -780,7 +867,7 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 2.5: Defeat affordable bosses (use ScrollOfHaste if available)
+        // Priority 4: Defeat affordable bosses (use ScrollOfHaste if available)
         // Bosses unlock hidden tasks and give valuable items (often artifacts)
         if (!didSomething && highestReachable >= 0) {
             const bossTasks = getReachableBossTasks(highestReachable, state);
@@ -831,7 +918,7 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 3: Advance through any zones we haven't completed this run
+        // Priority 5: Advance through any zones we haven't completed this run
         // This includes zones we may have visited before but not finished mandatory tasks
         if (!didSomething && highestReachable >= 0) {
             // Complete zones up to the highest we can reach
@@ -871,7 +958,7 @@ export function simulateRun(state, options = {}) {
             }
         }
 
-        // Priority 4: Farm tasks - prioritize bottleneck skills, then best XP
+        // Priority 6: Farm tasks - prioritize bottleneck skills, then best XP
         if (!didSomething) {
             // First, identify bottleneck skills for future zones
             const maxReachable = highestReachable >= 0 ? highestReachable : 0;
@@ -884,9 +971,21 @@ export function simulateRun(state, options = {}) {
             }
 
             // If no bottleneck tasks available, fall back to best XP tasks
+            // Prefer tasks that give skill-boosting items
             if (tasksToFarm.length === 0) {
                 const allReachableTasks = getAllReachableGrindableTasks(maxReachable, state);
-                tasksToFarm = [...allReachableTasks].sort((a, b) => b.totalXpPerEnergy - a.totalXpPerEnergy);
+                tasksToFarm = [...allReachableTasks].sort((a, b) => {
+                    // Bonus for tasks that give skill-boosting items
+                    const aItemType = a.task.item !== null ? getItemType(a.task.item) : null;
+                    const bItemType = b.task.item !== null ? getItemType(b.task.item) : null;
+                    const aHasSkillItem = aItemType !== null && ITEM_SKILL_MODIFIERS[aItemType];
+                    const bHasSkillItem = bItemType !== null && ITEM_SKILL_MODIFIERS[bItemType];
+
+                    // Give 50% bonus to XP value for tasks with skill items
+                    const aValue = a.totalXpPerEnergy * (aHasSkillItem ? 1.5 : 1);
+                    const bValue = b.totalXpPerEnergy * (bHasSkillItem ? 1.5 : 1);
+                    return bValue - aValue;
+                });
             }
 
             for (const gt of tasksToFarm) {
@@ -931,6 +1030,16 @@ export function simulateRun(state, options = {}) {
                         energy -= reps * gt.singleRepCost;
                         applyTaskXp(gt.task, gt.zoneId, state, 1, reps);
                         tasksCompletedThisRun.add(gt.task.id);
+
+                        // Collect items from farming (items per full task completion)
+                        // Each full completion = maxReps reps
+                        if (gt.task.item !== null) {
+                            const fullCompletions = Math.floor(reps / gt.task.maxReps);
+                            if (fullCompletions > 0) {
+                                addItems(state, gt.task.item, gt.task.maxReps * fullCompletions);
+                            }
+                        }
+
                         if (verbose) {
                             const skillNames = gt.task.skills.map(s => SKILL_NAMES[s]).join('/');
                             runLog.push(`Zone ${gt.zoneId} ${gt.task.name} x${reps} [${skillNames}]: -${(reps * gt.singleRepCost).toFixed(1)}`);
@@ -1326,6 +1435,462 @@ export function runBaselineSimulation(maxZone = 15) {
 
 // Re-export ZONES for convenience
 export { ZONES } from './gameData.js';
+
+/**
+ * Run a detailed simulation showing every action taken
+ * @param maxResets - maximum number of resets to simulate
+ * @param targetZone - target zone to reach
+ * @returns detailed log of all actions
+ */
+export function runDetailedSimulation(maxResets = 10, targetZone = 15) {
+    let state = createInitialState();
+    const output = [];
+
+    output.push('='.repeat(80));
+    output.push('DETAILED SIMULATION LOG');
+    output.push('='.repeat(80));
+    output.push('');
+
+    for (let reset = 0; reset < maxResets; reset++) {
+        output.push(`${'='.repeat(30)} RESET ${reset} ${'='.repeat(30)}`);
+        output.push(`Starting state:`);
+        output.push(`  Max Energy: ${state.maxEnergy.toFixed(1)}`);
+        output.push(`  Highest Zone: ${state.highestZone}`);
+        output.push(`  Perks: ${state.perks.size} [${Array.from(state.perks).map(p => PERK_NAMES[p]).join(', ')}]`);
+
+        // Show key skill levels
+        const skillSummary = [];
+        for (let i = 0; i < SKILL_NAMES.length; i++) {
+            const level = state.skillLevels[i] || 0;
+            if (level > 0) {
+                skillSummary.push(`${SKILL_NAMES[i].substring(0,3)}:${level}`);
+            }
+        }
+        if (skillSummary.length > 0) {
+            output.push(`  Skills: ${skillSummary.join(' ')}`);
+        }
+
+        // Show items
+        const itemEnergy = calcItemEnergy(state);
+        if (itemEnergy > 0) {
+            output.push(`  Items: ${itemEnergy.toFixed(0)} energy worth`);
+        }
+        output.push('');
+
+        // Simulate this run with detailed tracking
+        const runResult = simulateRunDetailed(state, { maxZone: targetZone });
+
+        // Output the detailed run log
+        for (const entry of runResult.detailedLog) {
+            output.push(entry);
+        }
+
+        output.push('');
+        output.push(`Run summary:`);
+        output.push(`  Zones completed: ${runResult.zonesVisited.join(' -> ') || 'none'}`);
+        output.push(`  Highest zone this run: ${runResult.highestZoneReached}`);
+        output.push(`  Tasks completed: ${runResult.tasksCompleted.size}`);
+        output.push(`  Perks gained: ${runResult.perksGained.length > 0 ? runResult.perksGained.map(p => PERK_NAMES[p]).join(', ') : 'none'}`);
+        output.push('');
+
+        // Check if we reached target
+        if (runResult.highestZoneReached >= targetZone) {
+            output.push(`*** TARGET ZONE ${targetZone} REACHED! ***`);
+            break;
+        }
+
+        // Do energy reset
+        const prevMaxEnergy = state.maxEnergy;
+        state = doEnergyReset(state);
+        const energyGain = state.maxEnergy - prevMaxEnergy;
+
+        output.push(`Energy reset:`);
+        if (energyGain > 0) {
+            output.push(`  Energetic Memory: +${energyGain.toFixed(2)} max energy`);
+        }
+        output.push(`  New max energy: ${state.maxEnergy.toFixed(1)}`);
+        output.push('');
+    }
+
+    return output.join('\n');
+}
+
+/**
+ * Simulate a single run with detailed action logging
+ */
+function simulateRunDetailed(state, options = {}) {
+    const { maxZone = ZONES.length - 1 } = options;
+
+    let energy = state.maxEnergy;
+    const detailedLog = [];
+    const tasksCompletedThisRun = new Set();
+    const perksGained = [];
+    const zonesVisited = [];
+
+    // Track starting skill levels to show gains
+    const startingSkillLevels = { ...state.skillLevels };
+
+    // Determine if this should be a push run
+    const itemEnergy = calcItemEnergy(state);
+    const nextNewZone = state.highestZone + 1;
+
+    let totalCostToNextNewZone = 0;
+    for (let z = 0; z <= nextNewZone && z < ZONES.length; z++) {
+        totalCostToNextNewZone += calcZoneMandatoryEnergyCost(z, state);
+    }
+
+    const itemsCouldReachNewZone = energy + itemEnergy >= totalCostToNextNewZone * 0.9;
+    const itemsAreRipe = itemEnergy >= energy * 0.2;
+    const shouldPush = itemEnergy > 0 && (itemsCouldReachNewZone || itemsAreRipe);
+
+    detailedLog.push(`Run type: ${shouldPush ? 'PUSH' : 'COLLECT'}`);
+    detailedLog.push(`Starting energy: ${energy.toFixed(1)}`);
+
+    if (shouldPush && itemEnergy > 0) {
+        const consumed = consumeItemsForEnergy(state);
+        energy += consumed;
+        detailedLog.push(`Consumed items: +${consumed.toFixed(1)} energy -> ${energy.toFixed(1)} total`);
+    } else if (itemEnergy > 0) {
+        detailedLog.push(`Saving items: ${itemEnergy.toFixed(0)} energy worth`);
+    }
+    detailedLog.push('');
+
+    // Show zone costs
+    detailedLog.push('Zone mandatory costs:');
+    for (let z = 0; z <= Math.min(maxZone, state.highestZone + 3); z++) {
+        const cost = calcZoneMandatoryEnergyCost(z, state);
+        const zoneName = ZONES[z]?.name || `Zone ${z}`;
+        const reachable = cost <= energy ? '✓' : '✗';
+        detailedLog.push(`  ${z}: ${zoneName.padEnd(22)} cost=${cost.toFixed(1).padStart(8)} ${reachable}`);
+    }
+    detailedLog.push('');
+
+    const zonesCompleted = new Set();
+    let iterations = 0;
+    const MAX_ITERATIONS = 100; // Lower limit for detailed logging
+
+    detailedLog.push('Actions:');
+
+    while (energy > 0.1 && iterations < MAX_ITERATIONS) {
+        iterations++;
+
+        const reachableZones = getReachableZones(energy, state, maxZone);
+        const highestReachable = reachableZones.length > 0
+            ? Math.max(...reachableZones.filter(z => z.canComplete).map(z => z.zoneId), -1)
+            : -1;
+
+        let didSomething = false;
+
+        // Priority 1: Perks
+        const perkTasks = getReachablePerkTasks(reachableZones, state);
+        for (const pt of perkTasks) {
+            const hastedPerkCost = pt.fullCost / HASTE_MULT;
+            const hastedTotalCost = pt.totalEnergyNeeded - pt.fullCost + hastedPerkCost;
+            const canAffordWithHaste = state.scrollsOfHaste > 0 && hastedTotalCost <= energy;
+            const canAffordNormal = pt.totalEnergyNeeded <= energy;
+
+            if (canAffordWithHaste || canAffordNormal) {
+                const useHaste = canAffordWithHaste && pt.fullCost > energy * 0.3;
+                const actualPerkCost = useHaste ? hastedPerkCost : pt.fullCost;
+
+                // Navigate to zone
+                for (let z = 0; z < pt.zoneId; z++) {
+                    if (!zonesCompleted.has(z)) {
+                        const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                        energy -= zoneCost;
+                        const zone = ZONES[z];
+                        const mandatoryTasks = getMandatoryTasks(zone);
+                        for (const task of mandatoryTasks) {
+                            applyTaskXp(task, z, state);
+                            if (task.item !== null) addItems(state, task.item, task.maxReps);
+                            if (task.perk !== null) {
+                                addPerk(state, task.perk);
+                                perksGained.push(task.perk);
+                            }
+                            tasksCompletedThisRun.add(task.id);
+                        }
+                        zonesCompleted.add(z);
+                        zonesVisited.push(z);
+                        state.currentZone = z;
+                        if (z > state.highestZone) state.highestZone = z;
+
+                        detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] Zone ${z} mandatory tasks (cost=${zoneCost.toFixed(1)})`);
+
+                        if (shouldPush) {
+                            const gained = consumeItemsForEnergy(state);
+                            if (gained > 0) {
+                                energy += gained;
+                                detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] +${gained.toFixed(0)} from items`);
+                            }
+                        }
+                    }
+                }
+
+                if (useHaste) {
+                    state.scrollsOfHaste--;
+                }
+
+                energy -= actualPerkCost;
+                applyTaskXp(pt.task, pt.zoneId, state);
+                addPerk(state, pt.task.perk);
+                perksGained.push(pt.task.perk);
+                if (pt.task.item !== null) addItems(state, pt.task.item, pt.task.maxReps);
+                tasksCompletedThisRun.add(pt.task.id);
+
+                if (shouldPush) {
+                    const gained = consumeItemsForEnergy(state);
+                    if (gained > 0) {
+                        energy += gained;
+                    }
+                }
+
+                detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] PERK: ${pt.task.name} -> ${PERK_NAMES[pt.task.perk]}${useHaste ? ' (hasted)' : ''} (cost=${actualPerkCost.toFixed(1)})`);
+                didSomething = true;
+                break;
+            }
+        }
+
+        // Priority 2: Items (on collect runs)
+        if (!didSomething && !shouldPush) {
+            const itemTasks = getReachableItemTasks(reachableZones, state);
+            for (const it of itemTasks) {
+                if (it.canAfford && it.totalCost <= energy) {
+                    for (let z = 0; z < it.zoneId; z++) {
+                        if (!zonesCompleted.has(z)) {
+                            const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                            energy -= zoneCost;
+                            const zone = ZONES[z];
+                            for (const task of getMandatoryTasks(zone)) {
+                                applyTaskXp(task, z, state);
+                                if (task.item !== null) addItems(state, task.item, task.maxReps);
+                                if (task.perk !== null) {
+                                    addPerk(state, task.perk);
+                                    perksGained.push(task.perk);
+                                }
+                                tasksCompletedThisRun.add(task.id);
+                            }
+                            zonesCompleted.add(z);
+                            zonesVisited.push(z);
+                            state.currentZone = z;
+                            if (z > state.highestZone) state.highestZone = z;
+
+                            detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] Zone ${z} mandatory (cost=${zoneCost.toFixed(1)})`);
+                        }
+                    }
+
+                    energy -= it.fullCost;
+                    applyTaskXp(it.task, it.zoneId, state);
+                    addItems(state, it.task.item, it.task.maxReps);
+                    tasksCompletedThisRun.add(it.task.id);
+
+                    detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] ITEM: ${it.task.name} (value=${it.itemValue.toFixed(0)}, cost=${it.fullCost.toFixed(1)})`);
+                    didSomething = true;
+                    break;
+                }
+            }
+        }
+
+        // Priority 3: Bosses
+        if (!didSomething && highestReachable >= 0) {
+            const bossTasks = getReachableBossTasks(highestReachable, state);
+            for (const bt of bossTasks) {
+                const baseFullCost = bt.fullCost;
+                const hastedCost = baseFullCost / HASTE_MULT;
+                const canAffordWithHaste = state.scrollsOfHaste > 0 && hastedCost <= energy;
+                const canAffordNormal = baseFullCost <= energy;
+
+                if (canAffordWithHaste || canAffordNormal) {
+                    const useHaste = canAffordWithHaste && baseFullCost > energy * 0.5;
+                    const actualCost = useHaste ? hastedCost : baseFullCost;
+
+                    if (useHaste) state.scrollsOfHaste--;
+
+                    energy -= actualCost;
+                    applyTaskXp(bt.task, bt.zoneId, state);
+                    if (bt.task.item !== null) addItems(state, bt.task.item, bt.task.maxReps);
+                    state.bossesDefeated.add(bt.task.id);
+                    tasksCompletedThisRun.add(bt.task.id);
+
+                    if (bt.unlocksTaskId) {
+                        state.unlockedHiddenTasks.add(bt.unlocksTaskId);
+                    }
+
+                    detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] BOSS: ${bt.task.name}${useHaste ? ' (hasted)' : ''} (cost=${actualCost.toFixed(1)})`);
+
+                    if (shouldPush) {
+                        const gained = consumeItemsForEnergy(state);
+                        if (gained > 0) {
+                            energy += gained;
+                            detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] +${gained.toFixed(0)} from items`);
+                        }
+                    }
+
+                    didSomething = true;
+                    break;
+                }
+            }
+        }
+
+        // Priority 4: Advance zones
+        if (!didSomething && highestReachable >= 0) {
+            for (let z = 0; z <= highestReachable; z++) {
+                if (!zonesCompleted.has(z)) {
+                    const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                    if (zoneCost <= energy) {
+                        energy -= zoneCost;
+                        const zone = ZONES[z];
+                        for (const task of getMandatoryTasks(zone)) {
+                            applyTaskXp(task, z, state);
+                            if (task.item !== null) addItems(state, task.item, task.maxReps);
+                            if (task.perk !== null) {
+                                addPerk(state, task.perk);
+                                perksGained.push(task.perk);
+                            }
+                            tasksCompletedThisRun.add(task.id);
+                        }
+                        zonesCompleted.add(z);
+                        zonesVisited.push(z);
+                        state.currentZone = z;
+                        if (z > state.highestZone) {
+                            state.highestZone = z;
+                            detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] NEW ZONE ${z}: ${zone.name} (cost=${zoneCost.toFixed(1)})`);
+                        } else {
+                            detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] Zone ${z} mandatory (cost=${zoneCost.toFixed(1)})`);
+                        }
+
+                        if (shouldPush) {
+                            const gained = consumeItemsForEnergy(state);
+                            if (gained > 0) {
+                                energy += gained;
+                                detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] +${gained.toFixed(0)} from items`);
+                            }
+                        }
+                        didSomething = true;
+                    }
+                }
+            }
+        }
+
+        // Priority 5: Farm XP
+        if (!didSomething) {
+            const maxReachable = highestReachable >= 0 ? highestReachable : 0;
+            const bottleneckSkills = getBottleneckSkills(state, energy, maxReachable);
+            let tasksToFarm = [];
+
+            if (bottleneckSkills.size > 0) {
+                tasksToFarm = getBottleneckTrainingTasks(maxReachable, state, bottleneckSkills);
+            }
+
+            if (tasksToFarm.length === 0) {
+                const allReachableTasks = getAllReachableGrindableTasks(maxReachable, state);
+                tasksToFarm = [...allReachableTasks].sort((a, b) => b.totalXpPerEnergy - a.totalXpPerEnergy);
+            }
+
+            for (const gt of tasksToFarm) {
+                const zoneInfo = reachableZones.find(z => z.zoneId === gt.zoneId);
+                if (!zoneInfo) continue;
+
+                let energyAtZone = energy;
+                for (let z = 0; z < gt.zoneId; z++) {
+                    if (!zonesCompleted.has(z)) {
+                        energyAtZone -= calcZoneMandatoryEnergyCost(z, state);
+                    }
+                }
+
+                if (gt.singleRepCost <= energyAtZone) {
+                    for (let z = 0; z < gt.zoneId; z++) {
+                        if (!zonesCompleted.has(z)) {
+                            const zoneCost = calcZoneMandatoryEnergyCost(z, state);
+                            energy -= zoneCost;
+                            const zone = ZONES[z];
+                            for (const task of getMandatoryTasks(zone)) {
+                                applyTaskXp(task, z, state);
+                                if (task.item !== null) addItems(state, task.item, task.maxReps);
+                                if (task.perk !== null) {
+                                    addPerk(state, task.perk);
+                                    perksGained.push(task.perk);
+                                }
+                                tasksCompletedThisRun.add(task.id);
+                            }
+                            zonesCompleted.add(z);
+                            zonesVisited.push(z);
+                            state.currentZone = z;
+                            if (z > state.highestZone) state.highestZone = z;
+                        }
+                    }
+
+                    const reps = Math.min(
+                        Math.floor(energy / gt.singleRepCost),
+                        gt.task.maxReps * 3
+                    );
+                    if (reps > 0) {
+                        const cost = reps * gt.singleRepCost;
+                        energy -= cost;
+                        applyTaskXp(gt.task, gt.zoneId, state, 1, reps);
+                        tasksCompletedThisRun.add(gt.task.id);
+
+                        const skillNames = gt.task.skills.map(s => SKILL_NAMES[s].substring(0,3)).join('/');
+                        detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] FARM: ${gt.task.name} x${reps} [${skillNames}] (cost=${cost.toFixed(1)})`);
+                        didSomething = true;
+                        break;
+                    }
+                }
+            }
+
+            // Partial XP spending
+            if (!didSomething && energy > 0.5) {
+                const allTasks = getAllReachableGrindableTasks(maxReachable, state);
+                const sorted = allTasks.sort((a, b) => b.xpPerEnergy - a.xpPerEnergy);
+
+                for (const gt of sorted) {
+                    if (gt.zoneId === 0 || zonesCompleted.has(gt.zoneId - 1) || gt.zoneId <= highestReachable) {
+                        const partialReps = energy / gt.singleRepCost;
+                        if (partialReps > 0.01) {
+                            applyTaskXp(gt.task, gt.zoneId, state, 1, partialReps);
+                            tasksCompletedThisRun.add(gt.task.id);
+
+                            const skillNames = gt.task.skills.map(s => SKILL_NAMES[s].substring(0,3)).join('/');
+                            detailedLog.push(`  [${(0).toFixed(1).padStart(6)}] PARTIAL: ${gt.task.name} [${skillNames}] (spent=${energy.toFixed(1)})`);
+                            energy = 0;
+                            didSomething = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!didSomething) {
+            detailedLog.push(`  [${energy.toFixed(1).padStart(6)}] Stuck - no actions available`);
+            break;
+        }
+    }
+
+    // Show skill gains
+    const skillGains = [];
+    for (let i = 0; i < SKILL_NAMES.length; i++) {
+        const startLevel = startingSkillLevels[i] || 0;
+        const endLevel = state.skillLevels[i] || 0;
+        const gain = endLevel - startLevel;
+        if (gain > 0) {
+            skillGains.push(`${SKILL_NAMES[i].substring(0,3)}:+${gain}`);
+        }
+    }
+    if (skillGains.length > 0) {
+        detailedLog.push('');
+        detailedLog.push(`Skill gains: ${skillGains.join(' ')}`);
+    }
+
+    return {
+        highestZoneReached: state.highestZone,
+        remainingEnergy: energy,
+        state,
+        detailedLog,
+        tasksCompleted: tasksCompletedThisRun,
+        perksGained,
+        zonesVisited,
+    };
+}
 
 // If running directly with Node.js
 if (typeof process !== 'undefined' && process.argv[1]?.includes('simulator')) {
