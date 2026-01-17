@@ -309,21 +309,29 @@ Analysis performed 2026-01-17. Documents categorized by implementation status.
 - [x] Moved 8 partial plans to partial/
 - [x] Created README.md for plans directory
 - [x] Identified recently added features needing docs (14 frontend modules, 7 backend features, 2 missing READMEs)
+- [x] Created exporter/README.md (critical module documentation)
+- [x] Created world_generator/README.md (critical module documentation)
+- [x] Created docs/json/modules/regionGraph.md
+- [x] Created docs/json/modules/sphereState.md
+- [x] Created docs/json/modules/discoveryPanel.md
+- [x] Updated docs/json/modules/README.md with new module references
+
+### Clarifications (session 1 continued)
+- Backend features don't need separate docs; include in main feature docs
+- Loops module: wait until finished before documenting
+- ruleConverter: experimental/unfinished, skip for now
+- Planning document categorization: some may be miscategorized (lower priority)
 
 ### Future Sessions
-- [ ] Phase 1: Document Recently Added Features
-- [ ] Phase 2: Sort Planning Documents (in progress)
+- [ ] Document remaining frontend modules (helpers, editorCodeMirror6, editorCore, etc.)
 - [ ] Phase 3: Compare Docs to Code
-- [ ] Phase 4: Fill Critical Gaps
-- [ ] Phase 5: Improve Navigation
+- [ ] Phase 4: Fill Critical Gaps (docs/json/developer/README.md, frontend/README.md)
+- [ ] Phase 5: Improve Navigation (cross-references)
 - [ ] Phase 6: CC Directory Organization
 
 ## Questions for Clarification
 
-~~All initial questions have been answered. See "Clarifications" section above.~~
-
-**Remaining questions:**
-- What are the "recently added features" that need documentation? (To be determined by code review)
+All questions resolved. See "Clarifications" sections above.
 
 ## Related Documents
 
