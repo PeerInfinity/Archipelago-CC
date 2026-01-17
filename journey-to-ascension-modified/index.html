@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<title>Journey to Ascension</title>
+
+<body>
+    <div id="background"></div>
+    <!-- Hidden until game's ready to render -->
+    <main>
+        <div id="game-area" class="hidden">
+            <div id="left-sidebar" class="sidebar">
+                <div id="settings-area">
+                    <button id="open-settings" class="sidebar-button">⚙</button>
+                    <button id="open-energy-reset" class="sidebar-button">♻</button>
+                </div>
+                <button id="open-prestige" class="hidden"><h2>Prestige: 1337<br />(+42)</h2></button>
+                <button id="open-stats" class="sidebar-button"><span>📈Stats</span></button>
+                <div id="attunement" class="sidebar-section sidebar-item-text hidden">🌀Attunement: 1337</div>
+                <div id="power" class="sidebar-section sidebar-item-text hidden">💪Power: 1337</div>
+                <div id="skills"></div>
+            </div>
+            <div id="main-area">
+                <div id="play-area">
+                    <div id="left-column">
+                        <div id="zone" class="sidebar-section">
+                            <h2 id="zone-name">Lorem Ipsum</h2>
+                        </div>
+                        <div id="tasks"></div>
+                    </div>
+                    <div id="right-column" class="sidebar">
+                        <div id="controls" class="sidebar-section">
+                            <h3 class="section-name">Controls</h3>
+                            <div id="controls-list" class="elements-list"></div>
+                        </div>
+                        <div id="artifacts" class="sidebar-section hidden">
+                            <h3 class="section-name">Artifacts</h3>
+                            <button id="artifact-undo">Undo</button>
+                            <h3 class="section-info">ℹ</h3>
+                            <div id="artifacts-list" class="elements-list"></div>
+                        </div>
+                        <div id="items" class="sidebar-section">
+                            <h3 class="section-name">Items</h3>
+                            <button id="item-undo">Undo</button>
+                            <h3 class="section-info">ℹ</h3>
+                            <div id="items-list" class="elements-list"></div>
+                        </div>
+                        <div id="perks" class="sidebar-section">
+                            <h3 class="section-name">Perks</h3>
+                            <h3 class="section-info">ℹ</h3>
+                            <div id="perks-list" class="elements-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Down here so it'll be on-top without messing with the z-index -->
+                <div id="top-area">
+                    <div id="energy">
+                        <span class="label"></span>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                            <span class="progress-value">100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over-overlay" class="full-screen-overlay hidden"></div>
+
+        <div id="end-of-content-overlay" class="full-screen-overlay hidden">
+            <div id="end-of-content-box">
+                <h2 id=>End of Content</h2>
+                <p>You've reached the end of all content that exists!</p>
+                <p>Congrats on winning the game. Fow now.</p>
+                <h3 id="end-of-content-reset-count"></h3>
+                <button id="end-of-content-reset">Do Energy Reset</button>
+            </div>
+        </div>
+
+        <div id="prestige-overlay" class="full-screen-overlay hidden">
+            <div id="prestige-box" class="overlay-box"></div>
+        </div>
+
+        <div id="settings-overlay" class="full-screen-overlay hidden">
+            <div id="settings" class="overlay-box">
+                <button class="close">X</button>
+                <div>
+                    <button id="save">Save</button>
+                    <button id="load">Load</button>
+                </div>
+                <button id="changelog">Changelog</button>
+            </div>
+        </div>
+
+        <div id="changelog-overlay" class="full-screen-overlay hidden">
+            <div id="changelog-box" class="overlay-box"></div>
+        </div>
+
+        <div id="confirmation-overlay" class="full-screen-overlay hidden"></div>
+        <div id="stats-overlay" class="full-screen-overlay hidden">
+            <div id="stats-box" class="overlay-box"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div id="messages"></div>
+    </footer>
+
+    <div id="tooltip" class="tooltip hidden"></div>
+
+    <script type="module" src="./build/game.js"></script>
+</body>

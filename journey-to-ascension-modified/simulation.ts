@@ -9,6 +9,7 @@ import { AWAKENING_DIVINE_SPARK_MULT, ENERGETIC_MEMORY_MULT, MAJOR_TIME_COMPRESS
 
 // MARK: Constants
 let task_progress_mult = 1;
+let instant_mode = false;
 const ZONE_SPEEDUP_BASE = 1.05;
 export const BOSS_MAX_ENERGY_DISPARITY = 5;
 const STARTING_ENERGY = 100;
@@ -289,6 +290,43 @@ function progressTask(task: Task, progress: number, consume_energy = true) {
     updateEnabledTasks();
 }
 
+function completeTaskInstantly(task: Task) {
+    // Calculate remaining reps and complete them all at once
+    const remaining_reps = task.task_definition.max_reps - task.reps;
+    if (remaining_reps <= 0) {
+        return;
+    }
+
+    const cost = calcTaskCost(task);
+    const progress_per_tick = calcTaskProgressMultiplier(task);
+
+    // For each remaining rep, calculate energy and XP
+    for (let rep = 0; rep < remaining_reps; rep++) {
+        // Calculate energy cost for this rep
+        const is_single_tick = isSingleTickTaskImpl(progress_per_tick, cost);
+        const ticks_for_rep = calcTaskTicks(progress_per_tick, cost - task.progress);
+        const energy_per_tick = calcEnergyDrainPerTick(task, is_single_tick);
+        const energy_for_rep = ticks_for_rep * energy_per_tick;
+
+        // Deduct energy
+        modifyEnergy(-energy_for_rep);
+
+        // Grant XP (using the full cost as progress, similar to normal completion)
+        const xp_progress = cost - task.progress;
+        for (const skill of task.task_definition.skills) {
+            addSkillXp(skill, calcSkillXp(task, xp_progress));
+        }
+
+        // Reset progress and apply rep effects
+        task.progress = 0;
+        applyFinishTaskRepEffects(task);
+    }
+
+    // Task is now fully complete
+    fullyFinishTask(task);
+    updateEnabledTasks();
+}
+
 function updateActiveTask() {
     let active_task = GAMESTATE.active_task;
     if (!active_task) {
@@ -301,6 +339,14 @@ function updateActiveTask() {
 
     // Can't undo after the item's started having an effect
     disableItemUndo();
+
+    // Instant mode: complete the entire task in one tick
+    if (instant_mode) {
+        completeTaskInstantly(active_task);
+        GAMESTATE.active_task = null;
+        saveGame();
+        return;
+    }
 
     const progress = calcTaskProgressPerTick(active_task);
     const old_rep_count = active_task.reps;
@@ -1315,3 +1361,137 @@ export function updateGamestate() {
 (window as any).doEnergyReset = () => doEnergyReset();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).advanceZone = () => advanceZone();
+
+// MARK: Instant Mode API (for simulator/randomizer integration)
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).setInstantMode = (enabled: boolean) => {
+    instant_mode = enabled;
+    return instant_mode;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).isInstantMode = () => instant_mode;
+
+// Manual tick advancement - useful when running without the interval timer
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).stepTick = () => {
+    updateGamestate();
+    return {
+        energy: GAMESTATE.current_energy,
+        zone: GAMESTATE.current_zone,
+        isInEnergyReset: GAMESTATE.is_in_energy_reset
+    };
+};
+
+// Start a specific task by ID
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).performTask = (taskId: number) => {
+    const task = GAMESTATE.tasks.find(t => t.task_definition.id === taskId);
+    if (!task) {
+        return { success: false, error: `Task ${taskId} not found in current zone` };
+    }
+    if (!task.enabled) {
+        return { success: false, error: `Task ${taskId} is not enabled` };
+    }
+    if (task.reps >= task.task_definition.max_reps) {
+        return { success: false, error: `Task ${taskId} is already completed` };
+    }
+
+    GAMESTATE.active_task = task;
+    tryApplySingleRepEffects(task);
+    return { success: true, taskName: task.task_definition.name };
+};
+
+// Get a serialized snapshot of the full game state
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).getFullState = () => {
+    return {
+        // Energy
+        currentEnergy: GAMESTATE.current_energy,
+        maxEnergy: GAMESTATE.max_energy,
+        isInEnergyReset: GAMESTATE.is_in_energy_reset,
+        energyResetCount: GAMESTATE.energy_reset_count,
+
+        // Zone
+        currentZone: GAMESTATE.current_zone,
+        highestZone: GAMESTATE.highest_zone,
+        highestZoneFullyCompleted: GAMESTATE.highest_zone_fully_completed,
+
+        // Skills (as array of {type, level, progress})
+        skills: GAMESTATE.skills.map(s => ({
+            type: s.type,
+            level: s.level,
+            progress: s.progress
+        })),
+
+        // Perks (as array of active perk types)
+        perks: Array.from(GAMESTATE.perks.entries())
+            .filter(([_, active]) => active)
+            .map(([perkType, _]) => perkType),
+
+        // Items (as array of {type, count})
+        items: Array.from(GAMESTATE.items.entries())
+            .filter(([_, count]) => count > 0)
+            .map(([itemType, count]) => ({ type: itemType, count })),
+
+        // Tasks in current zone
+        tasks: GAMESTATE.tasks.map(t => ({
+            id: t.task_definition.id,
+            name: t.task_definition.name,
+            reps: t.reps,
+            maxReps: t.task_definition.max_reps,
+            progress: t.progress,
+            enabled: t.enabled,
+            completed: t.reps >= t.task_definition.max_reps
+        })),
+
+        // Extra stats
+        power: GAMESTATE.power,
+        attunement: GAMESTATE.attunement,
+
+        // Prestige
+        prestigeCount: GAMESTATE.prestige_count,
+        divineSpark: GAMESTATE.divine_spark,
+        prestigeAvailable: GAMESTATE.prestige_available
+    };
+};
+
+// Use an item by type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).useItem = (itemType: number, useAll: boolean = false) => {
+    const count = GAMESTATE.items.get(itemType) ?? 0;
+    if (count <= 0) {
+        return { success: false, error: `No items of type ${itemType}` };
+    }
+    clickItem(itemType as ItemType, useAll);
+    return { success: true, used: useAll ? count : 1 };
+};
+
+// Get available tasks in current zone
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).getAvailableTasks = () => {
+    return GAMESTATE.tasks
+        .filter(t => t.enabled && t.reps < t.task_definition.max_reps)
+        .map(t => ({
+            id: t.task_definition.id,
+            name: t.task_definition.name,
+            type: t.task_definition.type,
+            reps: t.reps,
+            maxReps: t.task_definition.max_reps,
+            costMult: t.task_definition.cost_multiplier,
+            skills: t.task_definition.skills,
+            perk: t.task_definition.perk,
+            item: t.task_definition.item
+        }));
+};
+
+// Set energy (for testing)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).setEnergy = (current: number, max?: number) => {
+    GAMESTATE.current_energy = current;
+    if (max !== undefined) {
+        GAMESTATE.max_energy = max;
+    }
+    return { current: GAMESTATE.current_energy, max: GAMESTATE.max_energy };
+};

@@ -42,3 +42,35 @@ document.addEventListener("DOMContentLoaded", () => {
     RENDERING.initialize();
     RENDERING.start();
 }
+
+// MARK: Game Loop Control (for simulator/randomizer integration)
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).pauseGameLoop = () => {
+    if (GAME_LOOP_INTERVAL > 0) {
+        clearInterval(GAME_LOOP_INTERVAL);
+        GAME_LOOP_INTERVAL = 0;
+        return true;
+    }
+    return false;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).resumeGameLoop = () => {
+    if (GAME_LOOP_INTERVAL === 0) {
+        setTickRate();
+        return true;
+    }
+    return false;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).isGameLoopPaused = () => GAME_LOOP_INTERVAL === 0;
+
+// Initialize game without starting the loop (for headless/test mode)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).initializeHeadless = () => {
+    GAMESTATE = new Gamestate();
+    GAMESTATE.initialize();
+    return true;
+};

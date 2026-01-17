@@ -1,0 +1,14 @@
+const ENERGY_EMOJI = "🔋";
+export const ENERGY_TEXT = `${ENERGY_EMOJI}Energy`;
+const XP_EMOJI = "♟️";
+export const XP_TEXT = `${XP_EMOJI}XP`;
+const DIVINE_SPARK_EMOJI = "✨";
+export const DIVINE_SPARK_TEXT = `${DIVINE_SPARK_EMOJI}Divine Spark`;
+export const ATTUNEMENT_EMOJI = "🌀";
+export const ATTUNEMENT_TEXT = `${ATTUNEMENT_EMOJI}Attunement`;
+export const POWER_EMOJI = "💪";
+export const POWER_TEXT = `${POWER_EMOJI}Power`;
+export const HASTE_EMOJI = "🐇";
+export const HASTE_TEXT = `${HASTE_EMOJI}Haste`;
+export const TRAVEL_EMOJI = "🗺️";
+export const MINOR_TIME_COMPRESSION_EMOJI = "⌚";
