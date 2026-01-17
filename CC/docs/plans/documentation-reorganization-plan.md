@@ -1,7 +1,7 @@
 # Documentation Reorganization Plan
 
 **Created:** 2026-01-17
-**Status:** In Progress (Phases 1, 2, 5 complete)
+**Status:** In Progress (Phases 1, 2, 3, 5 complete)
 **Last Updated:** 2026-01-17
 
 This document outlines the plan for reorganizing and updating the project documentation. This is a large task that will likely span multiple sessions.
@@ -338,9 +338,12 @@ Analysis performed 2026-01-17. Documents categorized by implementation status.
 - [x] Added Documentation section to CLAUDE.md with links to all key docs
 - [x] Added Source-Level Documentation section to docs/json/README.md linking to module READMEs
 - [x] Added Related Documentation section to docs/json/modules/README.md
+- [x] Audited documentation vs code (state-management, module-system, roadmap)
+- [x] Added CommandQueue documentation to state-management.md
+- [x] Updated project-roadmap.md (Discovery complete, Loops in progress)
 
 ### Future Sessions
-- [ ] Phase 3: Compare Docs to Code
+- [x] Phase 3: Compare Docs to Code - PARTIAL (key docs audited, more could be done)
 - [x] Phase 5: Improve Navigation (cross-references) - COMPLETED
 - [ ] Phase 6: CC Directory Organization
 
