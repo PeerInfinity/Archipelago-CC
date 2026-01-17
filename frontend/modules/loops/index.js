@@ -320,6 +320,9 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       stateManager: stateManager,
       pathFinder: _pathFinder,
       eventBus: _moduleEventBus,
+      costDataManager: _costDataManager,
+      dispatcher: moduleDispatcher,
+      playerStateAPI: playerStateAPI,
     });
 
     log('info', '[Loops Module] Cost generation components initialized');
@@ -379,9 +382,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
           console.log(`Regions: ${Object.keys(costs.regions).length}`);
           console.log(`Locations: ${Object.keys(costs.locations).length}`);
           console.log('Use window.costDataManager.downloadCostData() to download the costs file.');
-
-          // Store in cost data manager
-          _costDataManager.setCostData(costs, 'console');
+          // Cost data is already stored by the generator
         }
 
         return costs;

@@ -1,20 +1,22 @@
 /**
  * Cost Generator for Loop Mode
  *
- * Generates per-region and per-location mana costs by simulating
- * a playthrough of the sphere log using the actual game systems.
+ * Generates per-region and per-location mana costs by running an actual
+ * playthrough of the sphere log using the real loop game mechanics.
  *
  * The algorithm:
- * 1. Start at Menu with max mana
+ * 1. Start at Menu with max mana, costs initialized to defaults
  * 2. For each sphere log entry (location to check):
- *    a. Find path from Menu to target location
- *    b. Assign costs to uncosted regions (currentMana / 2 / uncostedCount)
- *    c. Assign location cost (currentMana)
- *    d. Simulate traveling the path (explore/move actions)
- *    e. Simulate checking the location
- *    f. Award XP, reduce mana
- *    g. If mana runs out, reset loop and continue
- *    h. After checking, reset loop
+ *    a. Find path from start region to target location
+ *    b. For each region in path without a cost:
+ *       - Calculate cost = floor(currentMana / 2 / uncostedRegionsRemaining)
+ *       - Assign to costDataManager BEFORE queuing the action
+ *    c. For the location (if no cost assigned):
+ *       - Calculate cost = floor(currentMana / 2)
+ *       - Assign to costDataManager BEFORE queuing the action
+ *    d. Queue actions via dispatcher/playerStateAPI
+ *    e. Process through actual loop game mechanics
+ *    f. Wait for completion, reset loop
  * 3. Assign default costs to any remaining unvisited regions/locations
  * 4. Output costs.json
  */
@@ -25,7 +27,7 @@ const logger = createUniversalLogger('costGenerator');
 
 /**
  * CostGenerator class
- * Generates mana costs by simulating sphere log playthrough
+ * Generates mana costs by running actual loop game mechanics
  */
 export class CostGenerator {
   constructor(dependencies) {
@@ -33,33 +35,25 @@ export class CostGenerator {
     this.stateManager = dependencies.stateManager;
     this.pathFinder = dependencies.pathFinder;
     this.eventBus = dependencies.eventBus;
+    this.costDataManager = dependencies.costDataManager;
+    this.dispatcher = dependencies.dispatcher;
+    this.playerStateAPI = dependencies.playerStateAPI;
 
-    // Cost data being generated
-    this.costs = {
-      version: '1.0',
-      generatedAt: null,
-      generatedFrom: null,
-      regions: {
-        Menu: { moveCost: 0 },
-      },
-      locations: {},
-      defaultRegionCost: 10,
-      defaultLocationCost: 10,
-    };
-
-    // Simulation state
-    this.discoveredRegions = new Set(['Menu']);
-    this.checkedLocations = new Set();
+    // Generation state
     this.isGenerating = false;
     this.isCancelled = false;
 
     // Progress tracking
     this.totalEntries = 0;
     this.processedEntries = 0;
+
+    // Track what we've assigned costs to
+    this.assignedRegions = new Set();
+    this.assignedLocations = new Set();
   }
 
   /**
-   * Generate cost data from sphere log
+   * Generate cost data from sphere log using actual game mechanics
    * @param {Array} sphereLog - Parsed sphere log entries
    * @param {string} sourceFileName - Name of the source file for metadata
    * @returns {Object} Generated cost data
@@ -71,18 +65,17 @@ export class CostGenerator {
 
     this.isGenerating = true;
     this.isCancelled = false;
+    this.assignedRegions = new Set();
+    this.assignedLocations = new Set();
 
-    logger.info('Starting cost generation...');
+    logger.info('Starting cost generation with actual game mechanics...');
 
     try {
-      // Save current state
-      const savedState = this._saveState();
+      // Save current loop state for restoration
+      const savedState = this._saveLoopState();
 
-      // Reset for simulation
-      this._resetForSimulation();
-
-      // Initialize cost data
-      this.costs = {
+      // Initialize cost data with defaults
+      const costs = {
         version: '1.0',
         generatedAt: new Date().toISOString(),
         generatedFrom: sourceFileName,
@@ -93,6 +86,20 @@ export class CostGenerator {
         defaultRegionCost: 10,
         defaultLocationCost: 10,
       };
+
+      // Mark Menu as assigned
+      this.assignedRegions.add('Menu');
+
+      // Load initial costs into costDataManager
+      this.costDataManager.setCostData(costs, 'generation-in-progress');
+
+      // Get start region
+      const startRegions = this.stateManager.getStartRegions?.() || ['Menu'];
+      const startRegion = startRegions[0] || 'Menu';
+      logger.info(`Using start region: ${startRegion}`);
+
+      // Configure loop state for generation
+      this._configureLoopStateForGeneration();
 
       // Filter to state_update entries with sphere_locations
       const locationEntries = this._extractLocationEntries(sphereLog);
@@ -108,7 +115,7 @@ export class CostGenerator {
           break;
         }
 
-        await this._processLocationEntry(entry);
+        await this._processLocationEntry(entry, costs, startRegion);
         this.processedEntries++;
 
         // Publish progress
@@ -120,15 +127,18 @@ export class CostGenerator {
       }
 
       // Assign default costs to unvisited regions/locations
-      this._assignDefaultCosts();
+      this._assignDefaultCosts(costs);
 
-      // Restore original state
-      this._restoreState(savedState);
+      // Update costDataManager with final costs
+      this.costDataManager.setCostData(costs, sourceFileName || 'generated');
+
+      // Restore original loop state
+      this._restoreLoopState(savedState);
 
       logger.info('Cost generation complete');
-      logger.info(`Generated costs for ${Object.keys(this.costs.regions).length} regions and ${Object.keys(this.costs.locations).length} locations`);
+      logger.info(`Generated costs for ${Object.keys(costs.regions).length} regions and ${Object.keys(costs.locations).length} locations`);
 
-      return this.costs;
+      return costs;
     } finally {
       this.isGenerating = false;
     }
@@ -189,11 +199,13 @@ export class CostGenerator {
   }
 
   /**
-   * Process a single location entry
+   * Process a single location entry using actual game mechanics
    * @param {Object} entry - Location entry to process
+   * @param {Object} costs - Cost data being built
+   * @param {string} startRegion - Starting region for paths
    */
-  async _processLocationEntry(entry) {
-    const { locationName, newAccessibleRegions } = entry;
+  async _processLocationEntry(entry, costs, startRegion) {
+    const { locationName } = entry;
 
     // Get location's region from static data
     const staticData = this.stateManager.getStaticData();
@@ -212,115 +224,122 @@ export class CostGenerator {
 
     logger.debug(`Processing: ${locationName} in ${targetRegion}`);
 
-    // Find path from Menu to target region
-    const path = this.pathFinder.findPathWithExits('Menu', targetRegion);
+    // Clear the current queue - trim path back to start region
+    this.playerStateAPI.trimPath?.(startRegion, 1);
+
+    // Find path from start region to target region
+    const path = this.pathFinder.findPathWithExits(startRegion, targetRegion);
 
     if (!path) {
       logger.warn(`No path found to ${targetRegion} for ${locationName}`);
       return;
     }
 
-    // Identify uncosted regions in path
+    // Identify regions in path without costs
     const uncostedRegions = path.steps
       .map(step => step.region)
-      .filter(region => !this.costs.regions[region]);
+      .filter(region => !this.assignedRegions.has(region));
 
-    // Assign costs to uncosted regions
+    // Calculate and assign costs to uncosted regions BEFORE queuing
     if (uncostedRegions.length > 0) {
       const manaForRegions = this.loopState.currentMana / 2;
-      const costPerRegion = Math.floor(manaForRegions / uncostedRegions.length);
+      let remainingUncosted = uncostedRegions.length;
 
       for (const region of uncostedRegions) {
-        this.costs.regions[region] = {
+        const costPerRegion = Math.floor(manaForRegions / remainingUncosted);
+        costs.regions[region] = {
           moveCost: Math.max(1, costPerRegion), // Minimum cost of 1
         };
-        logger.debug(`Assigned region cost: ${region} = ${costPerRegion}`);
+        this.assignedRegions.add(region);
+        remainingUncosted--;
+
+        logger.debug(`Assigned region cost: ${region} = ${costPerRegion} (mana: ${this.loopState.currentMana})`);
       }
+
+      // Update costDataManager so the costs are used when actions run
+      this.costDataManager.setCostData(costs, 'generation-in-progress');
     }
 
-    // Assign location cost (use current mana as the cost)
-    if (!this.costs.locations[locationName]) {
-      this.costs.locations[locationName] = Math.floor(this.loopState.currentMana);
-      logger.debug(`Assigned location cost: ${locationName} = ${this.costs.locations[locationName]}`);
+    // Calculate and assign location cost BEFORE queuing (use half of remaining mana)
+    if (!this.assignedLocations.has(locationName)) {
+      const locationCost = Math.floor(this.loopState.currentMana / 2);
+      costs.locations[locationName] = Math.max(1, locationCost);
+      this.assignedLocations.add(locationName);
+
+      logger.debug(`Assigned location cost: ${locationName} = ${locationCost} (mana: ${this.loopState.currentMana})`);
+
+      // Update costDataManager
+      this.costDataManager.setCostData(costs, 'generation-in-progress');
     }
 
-    // Simulate traveling the path
-    await this._simulatePath(path, locationName);
-
-    // Reset loop after checking location
-    this._resetLoop();
-  }
-
-  /**
-   * Simulate traveling a path and checking a location
-   * @param {Object} path - Path with steps
-   * @param {string} locationName - Location to check at the end
-   */
-  async _simulatePath(path, locationName) {
-    for (let i = 0; i < path.steps.length; i++) {
+    // Queue the path actions using proper user:regionMove events
+    let previousRegion = startRegion;
+    for (let i = 1; i < path.steps.length; i++) {
       const step = path.steps[i];
-      const region = step.region;
-
-      // First visit to a region = explore (2x move cost)
-      // Subsequent visits = move (1x move cost)
-      const isFirstVisit = !this.discoveredRegions.has(region);
-      const regionCost = this.costs.regions[region]?.moveCost || this.costs.defaultRegionCost;
-      const actionCost = isFirstVisit ? regionCost * 2 : regionCost;
-
-      // Consume mana
-      this.loopState.currentMana -= actionCost;
-
-      // Award XP for this region
-      if (this.loopState.addRegionXP) {
-        this.loopState.addRegionXP(region, actionCost);
-      }
-
-      // Mark as discovered
-      if (isFirstVisit) {
-        this.discoveredRegions.add(region);
-      }
-
-      // Check for mana depletion
-      if (this.loopState.currentMana <= 0) {
-        logger.debug('Mana depleted during path traversal, resetting loop');
-        this._resetLoop();
-        // Continue from where we stopped (simplified - just reset and continue)
-      }
+      this.dispatcher.publish('loops', 'user:regionMove', {
+        sourceRegion: previousRegion,
+        targetRegion: step.region,
+        exitName: step.exitUsed,
+        updatePath: true,
+      }, { initialTarget: 'bottom' });
+      previousRegion = step.region;
     }
 
-    // Check the location
-    const locationCost = this.costs.locations[locationName] || this.costs.defaultLocationCost;
-    this.loopState.currentMana -= locationCost;
+    // Add the location check at the end
+    this.playerStateAPI.addLocationCheck?.(locationName, targetRegion);
 
-    // Award XP for location's region
-    const staticData = this.stateManager.getStaticData();
-    const locationData = staticData?.locations?.get(locationName);
-    const locationRegion = locationData?.parent_region || locationData?.region;
-    if (locationRegion && this.loopState.addRegionXP) {
-      this.loopState.addRegionXP(locationRegion, locationCost);
+    // Start processing if not already started
+    if (!this.loopState.isProcessing) {
+      this.loopState.startProcessing();
     }
 
-    this.checkedLocations.add(locationName);
+    // Wait for the location to be checked
+    await this._waitForLocationCheck(locationName);
 
-    // Check for mana depletion
-    if (this.loopState.currentMana <= 0) {
-      logger.debug('Mana depleted after location check, resetting loop');
-      this._resetLoop();
-    }
+    // Reset loop for next entry (refill mana, reset action progress)
+    this.loopState._resetLoop?.();
+    // Unpause after reset
+    this.loopState.setPaused(false);
+
+    // Small delay between iterations for stability
+    await new Promise(resolve => setTimeout(resolve, 10));
   }
 
   /**
-   * Reset the loop (refill mana, keep XP)
+   * Wait for a location to be checked
+   * @param {string} locationName - Location to wait for
+   * @returns {Promise<boolean>} True if checked, false if timeout
    */
-  _resetLoop() {
-    this.loopState.currentMana = this.loopState.maxMana;
-    // Keep discovered regions and XP
+  async _waitForLocationCheck(locationName) {
+    return new Promise((resolve) => {
+      let timeout;
+      const handler = (data) => {
+        const snapshot = data?.snapshot || this.stateManager.getLatestStateSnapshot();
+        const isNowChecked = snapshot?.checkedLocations?.includes(locationName);
+
+        if (isNowChecked) {
+          clearTimeout(timeout);
+          this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+          resolve(true);
+        }
+      };
+
+      this.eventBus.subscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+
+      // Safety timeout (5 seconds per location in instant mode should be plenty)
+      timeout = setTimeout(() => {
+        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+        logger.warn(`Timeout waiting for ${locationName} to be checked`);
+        resolve(false);
+      }, 5000);
+    });
   }
 
   /**
    * Assign default costs to unvisited regions/locations
+   * @param {Object} costs - Cost data being built
    */
-  _assignDefaultCosts() {
+  _assignDefaultCosts(costs) {
     const staticData = this.stateManager.getStaticData();
 
     if (!staticData) return;
@@ -328,26 +347,26 @@ export class CostGenerator {
     // Find uncosted regions and use highest neighbor cost
     if (staticData.regions) {
       for (const [regionName, regionData] of staticData.regions.entries()) {
-        if (!this.costs.regions[regionName]) {
-          const neighborCost = this._getHighestNeighborCost(regionName, regionData);
-          this.costs.regions[regionName] = {
-            moveCost: neighborCost || this.costs.defaultRegionCost,
+        if (!this.assignedRegions.has(regionName)) {
+          const neighborCost = this._getHighestNeighborCost(regionName, regionData, costs);
+          costs.regions[regionName] = {
+            moveCost: neighborCost || costs.defaultRegionCost,
           };
-          logger.debug(`Assigned default region cost: ${regionName} = ${neighborCost || this.costs.defaultRegionCost}`);
+          logger.debug(`Assigned default region cost: ${regionName} = ${neighborCost || costs.defaultRegionCost}`);
         }
       }
     }
 
     // Find uncosted locations and use highest existing location cost
     if (staticData.locations) {
-      const maxLocationCost = Math.max(
-        this.costs.defaultLocationCost,
-        ...Object.values(this.costs.locations)
-      );
+      const existingCosts = Object.values(costs.locations);
+      const maxLocationCost = existingCosts.length > 0
+        ? Math.max(costs.defaultLocationCost, ...existingCosts)
+        : costs.defaultLocationCost;
 
       for (const [locationName] of staticData.locations.entries()) {
-        if (!this.costs.locations[locationName]) {
-          this.costs.locations[locationName] = maxLocationCost;
+        if (!this.assignedLocations.has(locationName)) {
+          costs.locations[locationName] = maxLocationCost;
         }
       }
     }
@@ -357,15 +376,16 @@ export class CostGenerator {
    * Get highest cost of neighboring regions
    * @param {string} regionName - Region to check
    * @param {Object} regionData - Region data with exits
+   * @param {Object} costs - Current cost data
    * @returns {number} Highest neighbor cost
    */
-  _getHighestNeighborCost(regionName, regionData) {
+  _getHighestNeighborCost(regionName, regionData, costs) {
     let highestCost = 0;
 
     if (regionData.exits) {
       for (const exit of regionData.exits) {
         const neighborRegion = exit.connected_region;
-        const neighborCost = this.costs.regions[neighborRegion]?.moveCost;
+        const neighborCost = costs.regions[neighborRegion]?.moveCost;
         if (neighborCost && neighborCost > highestCost) {
           highestCost = neighborCost;
         }
@@ -376,48 +396,60 @@ export class CostGenerator {
   }
 
   /**
-   * Save current state for restoration
-   * @returns {Object} Saved state
+   * Configure loop state for generation mode
    */
-  _saveState() {
-    return {
-      currentMana: this.loopState.currentMana,
-      maxMana: this.loopState.maxMana,
-      regionXP: new Map(this.loopState.regionXP),
-      isPaused: this.loopState.isPaused,
-      isProcessing: this.loopState.isProcessing,
-    };
-  }
-
-  /**
-   * Restore saved state
-   * @param {Object} savedState - State to restore
-   */
-  _restoreState(savedState) {
-    this.loopState.currentMana = savedState.currentMana;
-    this.loopState.maxMana = savedState.maxMana;
-    this.loopState.regionXP = savedState.regionXP;
-    this.loopState.isPaused = savedState.isPaused;
-    this.loopState.isProcessing = savedState.isProcessing;
-  }
-
-  /**
-   * Reset for simulation
-   */
-  _resetForSimulation() {
+  _configureLoopStateForGeneration() {
     // Reset mana to max
     this.loopState.currentMana = this.loopState.maxMana;
 
     // Clear XP (fresh simulation)
     this.loopState.regionXP = new Map();
 
-    // Stop any processing
-    this.loopState.isPaused = true;
-    this.loopState.isProcessing = false;
+    // Enable instant mode and no-mana-depletion-reset
+    this.loopState.setInstantMode(true);
+    this.loopState.setNoManaDepletionReset(true);
 
-    // Clear simulation tracking
-    this.discoveredRegions = new Set(['Menu']);
-    this.checkedLocations = new Set();
+    // Unpause
+    this.loopState.setPaused(false);
+
+    logger.info('Loop state configured for generation (instant mode, no mana reset)');
+  }
+
+  /**
+   * Save current loop state for restoration
+   * @returns {Object} Saved state
+   */
+  _saveLoopState() {
+    return {
+      currentMana: this.loopState.currentMana,
+      maxMana: this.loopState.maxMana,
+      regionXP: new Map(this.loopState.regionXP),
+      isPaused: this.loopState.isPaused,
+      isProcessing: this.loopState.isProcessing,
+      instantMode: this.loopState.instantMode,
+      noManaDepletionReset: this.loopState.noManaDepletionReset,
+      gameSpeed: this.loopState.gameSpeed,
+    };
+  }
+
+  /**
+   * Restore saved loop state
+   * @param {Object} savedState - State to restore
+   */
+  _restoreLoopState(savedState) {
+    this.loopState.currentMana = savedState.currentMana;
+    this.loopState.maxMana = savedState.maxMana;
+    this.loopState.regionXP = savedState.regionXP;
+    this.loopState.isPaused = savedState.isPaused;
+    this.loopState.isProcessing = savedState.isProcessing;
+    this.loopState.setInstantMode(savedState.instantMode);
+    this.loopState.setNoManaDepletionReset(savedState.noManaDepletionReset);
+    this.loopState.setGameSpeed(savedState.gameSpeed);
+
+    // Stop any ongoing processing
+    this.loopState.stopProcessing?.();
+
+    logger.info('Loop state restored');
   }
 
   /**
@@ -425,7 +457,8 @@ export class CostGenerator {
    * @returns {string} JSON string
    */
   exportToJSON() {
-    return JSON.stringify(this.costs, null, 2);
+    const costs = this.costDataManager.getCostData();
+    return JSON.stringify(costs, null, 2);
   }
 
   /**
@@ -433,7 +466,7 @@ export class CostGenerator {
    * @returns {Object} Cost data
    */
   getCosts() {
-    return this.costs;
+    return this.costDataManager.getCostData();
   }
 }
 
