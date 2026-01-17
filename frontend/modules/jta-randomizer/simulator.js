@@ -117,11 +117,10 @@ export function calcEnergyDrainPerTick(task, zoneId, state, singleTick) {
     }
 
     // Reflections on the Journey - reduce drain based on zone difference
+    // Note: when zoneDiff <= 0, Math.pow(0.95, zoneDiff) >= 1 (increases drain for zones above highest)
     if (state.perks.has(PerkType.ReflectionsOnTheJourney)) {
         const zoneDiff = state.highestZone - zoneId;
-        if (zoneDiff > 0) {
-            drain *= Math.pow(REFLECTIONS_BASE, zoneDiff);
-        }
+        drain *= Math.pow(REFLECTIONS_BASE, zoneDiff);
     }
 
     // Zone scaling - later zones cost more energy per tick
@@ -173,8 +172,9 @@ export function calcXpNeeded(level, skillType) {
 
 /**
  * Calculate XP gained from completing a task (one rep)
+ * @param xpBoosted - if true, applies Magic Ring 3x XP multiplier
  */
-export function calcTaskXp(task, zoneId, state) {
+export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
     const progress = calcProgressPerTick(task, zoneId, state);
     const XP_MULT = 8;
     let xp = progress * XP_MULT * task.xpMult;
@@ -186,6 +186,11 @@ export function calcTaskXp(task, zoneId, state) {
 
     // Zone scaling
     xp *= Math.pow(1.25, zoneId);
+
+    // Magic Ring - 3x XP boost
+    if (xpBoosted) {
+        xp *= MAGIC_RING_MULT;
+    }
 
     return xp;
 }
@@ -254,9 +259,10 @@ export function getReachableZones(startingEnergy, state, maxZone = ZONES.length 
  *
  * @param reps - number of full task completions (each completion = maxReps of the task)
  * @param actualReps - if set, use this for XP calculation instead of task.maxReps
+ * @param xpBoosted - if true, applies Magic Ring 3x XP multiplier
  */
-function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null) {
-    const xpPerRep = calcTaskXp(task, zoneId, state);
+function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xpBoosted = false) {
+    const xpPerRep = calcTaskXp(task, zoneId, state, xpBoosted);
     const repsPerCompletion = actualReps !== null ? actualReps : task.maxReps;
     const totalXp = xpPerRep * repsPerCompletion * reps;
 
@@ -676,10 +682,11 @@ export function simulateRun(state, options = {}) {
                             for (const task of mandatoryTasks) {
                                 applyTaskXp(task, z, state);
                                 if (task.item !== null) addItems(state, task.item, task.maxReps);
-                                if (task.perk !== null) state.perks.add(task.perk);
+                                if (task.perk !== null) addPerk(state, task.perk);
                                 tasksCompletedThisRun.add(task.id);
                             }
                             zonesCompleted.add(z);
+                            state.currentZone = z;
                             if (z > state.highestZone) state.highestZone = z;
 
                             // On push runs, consume items immediately
@@ -702,7 +709,7 @@ export function simulateRun(state, options = {}) {
                     // Now complete the perk task
                     energy -= actualPerkCost;
                     applyTaskXp(pt.task, pt.zoneId, state);
-                    state.perks.add(pt.task.perk);
+                    addPerk(state, pt.task.perk);
                     if (pt.task.item !== null) addItems(state, pt.task.item, pt.task.maxReps);
                     tasksCompletedThisRun.add(pt.task.id);
 
@@ -740,10 +747,11 @@ export function simulateRun(state, options = {}) {
                             for (const task of mandatoryTasks) {
                                 applyTaskXp(task, z, state);
                                 if (task.item !== null) addItems(state, task.item, task.maxReps);
-                                if (task.perk !== null) state.perks.add(task.perk);
+                                if (task.perk !== null) addPerk(state, task.perk);
                                 tasksCompletedThisRun.add(task.id);
                             }
                             zonesCompleted.add(z);
+                            state.currentZone = z;
                             if (z > state.highestZone) state.highestZone = z;
                         }
                     }
@@ -837,10 +845,11 @@ export function simulateRun(state, options = {}) {
                         for (const task of mandatoryTasks) {
                             applyTaskXp(task, z, state);
                             if (task.item !== null) addItems(state, task.item, task.maxReps);
-                            if (task.perk !== null) state.perks.add(task.perk);
+                            if (task.perk !== null) addPerk(state, task.perk);
                             tasksCompletedThisRun.add(task.id);
                         }
                         zonesCompleted.add(z);
+                        state.currentZone = z;
                         if (z > state.highestZone) {
                             state.highestZone = z;
                             if (verbose) {
@@ -904,10 +913,11 @@ export function simulateRun(state, options = {}) {
                             for (const task of getMandatoryTasks(zone)) {
                                 applyTaskXp(task, z, state);
                                 if (task.item !== null) addItems(state, task.item, task.maxReps);
-                                if (task.perk !== null) state.perks.add(task.perk);
+                                if (task.perk !== null) addPerk(state, task.perk);
                                 tasksCompletedThisRun.add(task.id);
                             }
                             zonesCompleted.add(z);
+                            state.currentZone = z;
                             if (z > state.highestZone) state.highestZone = z;
                         }
                     }
@@ -988,16 +998,11 @@ export function simulateRun(state, options = {}) {
  * Simulate energy reset
  */
 export function doEnergyReset(state) {
-    // Energetic Memory - gain max energy based on zone reached
+    // Energetic Memory - gain max energy based on current zone when energy ran out
+    // Uses currentZone (where player ended up), not highestZone (highest ever reached)
     if (state.perks.has(PerkType.EnergeticMemory)) {
-        const gain = (state.highestZone + 1) * ENERGETIC_MEMORY_MULT;
+        const gain = (state.currentZone + 1) * ENERGETIC_MEMORY_MULT;
         state.maxEnergy += gain;
-    }
-
-    // Energy spell gives +50 max energy (one time)
-    if (state.perks.has(PerkType.EnergySpell) && !state.energySpellApplied) {
-        state.maxEnergy += 50;
-        state.energySpellApplied = true;
     }
 
     // Items persist at 50% across resets
@@ -1017,6 +1022,9 @@ export function doEnergyReset(state) {
         state.highestZone - 1
     );
 
+    // Reset current zone to 0 for next run
+    state.currentZone = 0;
+
     return state;
 }
 
@@ -1031,6 +1039,7 @@ export function createInitialState() {
         perks: new Set(),
         power: 0,
         attunement: 0,
+        currentZone: 0,       // Zone player is currently in (for Energetic Memory)
         highestZone: -1,
         highestZoneFullyCompleted: -1,
         energySpellApplied: false,
@@ -1041,6 +1050,23 @@ export function createInitialState() {
         unlockedHiddenTasks: new Set(), // Hidden tasks unlocked by defeating bosses
         itemsFoundThisReset: [],    // For Dreamcatcher artifact
     };
+}
+
+/**
+ * Add a perk to the state, applying any immediate effects
+ * Matches the original game's tryAddPerk behavior
+ */
+function addPerk(state, perkType) {
+    if (perkType === null || state.perks.has(perkType)) {
+        return; // Already has perk or no perk to add
+    }
+
+    // Energy Spell gives +50 max energy immediately when acquired
+    if (perkType === PerkType.EnergySpell) {
+        state.maxEnergy += 50;
+    }
+
+    state.perks.add(perkType);
 }
 
 /**
