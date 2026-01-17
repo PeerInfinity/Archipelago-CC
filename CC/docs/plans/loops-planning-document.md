@@ -46,6 +46,15 @@ This document outlines the remaining work for the Loops module, an incremental g
 - **Cost generation**: Start with manual tool, add automatic option and CLI later
 - **Missing files**: Prompt user with options
 
+**Cost Generation Algorithm:**
+- **Path calculation**: Use existing PathFinder from `frontend/modules/shared/pathfinder.js`, extend if needed
+- **Cost formula rationale**: `currentMana / 2` reserves half mana for location check
+- **Explore vs Move**: Track both inventory-based accessibility AND discovery state separately
+- **Location→Region mapping**: Use `staticData.locations` with `parent_region` field
+- **Unreachable regions**: Determine neighbors via exit connections, use highest neighbor cost
+- **XP simulation**: Simulate accurately using actual game code (loopState), reset state after generation
+- **Output precision**: Integers only, use `Math.floor()`
+
 ---
 
 ## Core Concepts
