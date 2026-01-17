@@ -58,7 +58,7 @@ test.describe('Loop Mode Bug Investigation', () => {
       return window.centralRegistry && typeof window.centralRegistry.getPublicFunction === 'function';
     }, { timeout: 30000 });
 
-    // Get loopState
+    // Test the fix: when all actions are completed and user unpauses, mana should refill
     const result = await page.evaluate(async () => {
       const getLoopState = window.centralRegistry.getPublicFunction('loops', 'getLoopState');
       const getPlayerStateAPI = window.centralRegistry.getPublicFunction('loops', 'getPlayerStateAPI');
@@ -73,28 +73,52 @@ test.describe('Loop Mode Bug Investigation', () => {
       // Record initial state
       const initialMana = { current: loopState.currentMana, max: loopState.maxMana };
 
-      // Consume some mana manually
-      loopState.currentMana = 50;
-      const afterConsumeMana = { current: loopState.currentMana, max: loopState.maxMana };
+      // Simulate a queue with completed actions
+      // First, consume some mana (simulating actions being processed)
+      loopState.currentMana = 30;
 
-      // Pause and then unpause
+      // Simulate queue being at the end (all actions completed)
+      const queue = loopState.getActionQueue();
+      loopState.currentActionIndex = queue.length; // Past the end = queue finished
+
+      // Mark all actions as completed
+      if (loopState.actionQueueManager) {
+        queue.forEach((action, index) => {
+          loopState.actionQueueManager.markCompleted(action.pathIndex);
+          loopState.actionQueueManager.setProgress(action.pathIndex, 100);
+        });
+      }
+
+      const beforeUnpauseMana = { current: loopState.currentMana, max: loopState.maxMana };
+
+      // Pause first (simulating queue finished state)
       loopState.setPaused(true);
+
+      // Now unpause - this should trigger a reset and refill mana
       loopState.setPaused(false);
 
       const afterUnpauseMana = { current: loopState.currentMana, max: loopState.maxMana };
 
       return {
         initialMana,
-        afterConsumeMana,
+        beforeUnpauseMana,
         afterUnpauseMana,
         manaRefilled: afterUnpauseMana.current === afterUnpauseMana.max,
+        queueLength: queue.length,
       };
     });
 
     console.log('Unpause mana test result:', result);
-    if (!result.manaRefilled) {
-      console.log('Note: Mana was NOT refilled on unpause. This may or may not be a bug depending on context.');
+
+    // The fix should ensure mana is refilled when unpausing after queue completion
+    if (result.manaRefilled) {
+      console.log('SUCCESS: Mana was refilled on unpause after queue completion');
+    } else {
+      console.log('ISSUE: Mana was NOT refilled on unpause after queue completion');
     }
+
+    // After the fix, this should pass
+    expect(result.manaRefilled).toBe(true);
   });
 
   test('Bug 8: Check mode=loops URL parameter (correct spelling)', async ({ page }) => {
