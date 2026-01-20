@@ -1,6 +1,40 @@
 # Worker-Side Spoiler Test Execution Plan
 
-## Overview
+**Status: COMPLETED**
+
+**Completed:** All phases implemented. Worker-side execution is now the default.
+
+## Implementation Summary
+
+The worker-side spoiler test was successfully implemented, moving test execution from the main thread to the worker thread. This eliminated the communication overhead (~50% of test time) that resulted from hundreds of round-trip messages between threads.
+
+### Files Created/Modified
+
+| File | Action | Description |
+|------|--------|-------------|
+| `frontend/modules/stateManager/core/workerSpoilerTest.js` | CREATED | Worker-side test runner (612 lines) |
+| `frontend/modules/stateManager/stateManagerWorker.js` | MODIFIED | Added `runSpoilerTest`, `abortSpoilerTest`, `signalAnalysisComplete` commands |
+| `frontend/modules/stateManager/stateManagerProxy.js` | MODIFIED | Added proxy methods and message handlers |
+| `frontend/modules/spoilerTest/testOrchestrator.js` | MODIFIED | Integrated worker execution with fallback |
+
+### Key Features Implemented
+
+- **Worker-side test execution**: All sphere processing happens in worker thread
+- **Progress updates**: Per-sphere progress messages to main thread
+- **Mismatch reporting**: Detailed mismatch information for debugging
+- **Abort support**: Clean abort mechanism with proper cleanup
+- **Fallback support**: Main-thread execution available if worker unavailable
+- **Profiling integration**: Worker profiling data included in results
+
+### Configuration
+
+Worker-side execution is enabled by default via `useWorkerSideSpoilerTest = true` in testOrchestrator.js.
+
+---
+
+## Original Design Document
+
+### Overview
 
 This document outlines a plan to move spoiler test execution from the main thread to the worker thread. Currently, spoiler tests involve hundreds of round-trip communications between the main thread and worker, creating significant overhead (~50% of test time). By moving the test execution to the worker, we can eliminate this overhead and achieve 2-3x speedup.
 
@@ -176,297 +210,6 @@ Benefits:
 }
 ```
 
-## Implementation Plan
-
-### Phase 1: Create Worker-Side Test Runner
-
-**File: `frontend/modules/stateManager/core/workerSpoilerTest.js`**
-
-```javascript
-/**
- * Worker-side spoiler test execution
- *
- * Processes sphere events entirely within the worker to eliminate
- * communication overhead with the main thread.
- */
-
-import { profiler } from '../../shared/profiler.js';
-
-export class WorkerSpoilerTest {
-  constructor(stateManager, postMessage) {
-    this.sm = stateManager;
-    this.postMessage = postMessage;
-    this.aborted = false;
-  }
-
-  /**
-   * Run the full spoiler test
-   */
-  async run(sphereData, config) {
-    const { playerId, stopOnFirstError, verboseMode } = config;
-
-    profiler.start('workerSpoilerTest');
-
-    const results = {
-      passed: true,
-      processedEvents: 0,
-      mismatchDetails: [],
-      locationsChecked: 0,
-      itemsAdded: 0
-    };
-
-    try {
-      // Disable auto-collect events
-      this.sm.setAutoCollectEventsConfig(false);
-      this.sm.setSpoilerTestMode(true);
-
-      for (let i = 0; i < sphereData.length; i++) {
-        if (this.aborted) break;
-
-        const sphere = sphereData[i];
-        const sphereResult = await this.processSphere(sphere, playerId, i);
-
-        results.processedEvents++;
-        results.locationsChecked += sphereResult.locationsChecked;
-        results.itemsAdded += sphereResult.itemsAdded;
-
-        // Send progress update
-        this.postMessage({
-          type: 'spoilerTestProgress',
-          eventIndex: i,
-          totalEvents: sphereData.length,
-          sphereIndex: sphere.sphereIndex,
-          passed: sphereResult.passed
-        });
-
-        if (!sphereResult.passed) {
-          results.passed = false;
-          results.mismatchDetails.push(sphereResult.mismatch);
-
-          if (stopOnFirstError) break;
-        }
-      }
-    } finally {
-      // Re-enable auto-collect events
-      this.sm.setAutoCollectEventsConfig(true);
-      this.sm.setSpoilerTestMode(false);
-
-      profiler.end('workerSpoilerTest');
-      results.profilingData = profiler.getData();
-    }
-
-    return results;
-  }
-
-  /**
-   * Process a single sphere
-   */
-  async processSphere(sphere, playerId, index) {
-    // Implementation details...
-  }
-
-  /**
-   * Compare accessible locations
-   */
-  compareLocations(expected, snapshot) {
-    // Port comparison logic from comparisonEngine.js
-  }
-
-  /**
-   * Compare accessible regions
-   */
-  compareRegions(expected, snapshot) {
-    // Port comparison logic from comparisonEngine.js
-  }
-
-  /**
-   * Abort the test
-   */
-  abort() {
-    this.aborted = true;
-  }
-}
-```
-
-### Phase 2: Add Worker Commands
-
-**File: `frontend/modules/stateManager/stateManagerWorker.js`**
-
-Add new command handlers:
-
-```javascript
-import { WorkerSpoilerTest } from './core/workerSpoilerTest.js';
-
-let activeSpoilerTest = null;
-
-// In handleMessage switch:
-
-case 'runSpoilerTest':
-  if (!workerInitialized || !stateManagerInstance) {
-    throw new Error('Worker not initialized');
-  }
-
-  activeSpoilerTest = new WorkerSpoilerTest(
-    stateManagerInstance,
-    (msg) => self.postMessage(msg)
-  );
-
-  const testResult = await activeSpoilerTest.run(
-    message.payload.sphereData,
-    message.payload.config
-  );
-
-  self.postMessage({
-    type: 'spoilerTestComplete',
-    queryId: message.queryId,
-    result: testResult
-  });
-
-  activeSpoilerTest = null;
-  break;
-
-case 'abortSpoilerTest':
-  if (activeSpoilerTest) {
-    activeSpoilerTest.abort();
-  }
-  break;
-```
-
-### Phase 3: Update Main Thread
-
-**File: `frontend/modules/stateManager/stateManagerProxy.js`**
-
-Add proxy methods:
-
-```javascript
-/**
- * Run spoiler test entirely in worker
- */
-async runSpoilerTest(sphereData, config) {
-  return new Promise((resolve, reject) => {
-    const queryId = this.nextQueryId++;
-
-    // Set up progress handler
-    const progressHandler = (msg) => {
-      if (msg.type === 'spoilerTestProgress') {
-        this.eventBus.publish('spoilerTest:progress', msg);
-      }
-    };
-
-    // Temporary listener for progress
-    this.worker.addEventListener('message', progressHandler);
-
-    // Set up completion handler
-    this.pendingQueries.set(queryId, {
-      resolve: (result) => {
-        this.worker.removeEventListener('message', progressHandler);
-        resolve(result);
-      },
-      reject
-    });
-
-    this.sendCommandToWorker({
-      command: 'runSpoilerTest',
-      queryId,
-      payload: { sphereData, config }
-    });
-  });
-}
-
-/**
- * Abort running spoiler test
- */
-abortSpoilerTest() {
-  this.sendCommandToWorker({
-    command: 'abortSpoilerTest'
-  });
-}
-```
-
-**File: `frontend/modules/spoilerTest/testOrchestrator.js`**
-
-Update to use worker-side execution:
-
-```javascript
-async runFullSpoilerTest(spoilerLogData, playerId, logPath) {
-  // Prepare sphere data (use existing sphereState parsing)
-  const sphereData = this.prepareSphereDataForWorker(spoilerLogData, playerId);
-
-  const config = {
-    playerId,
-    stopOnFirstError: this.stateConfig.stopOnFirstError,
-    verboseMode: this.verboseMode
-  };
-
-  // Subscribe to progress updates
-  const unsubscribe = this.eventBus.subscribe('spoilerTest:progress', (data) => {
-    this.updateStepInfo(data.eventIndex, data.totalEvents);
-    this.uiCallbacks.log('info', `Sphere ${data.sphereIndex}: ${data.passed ? 'PASS' : 'FAIL'}`);
-  });
-
-  try {
-    const result = await stateManager.runSpoilerTest(sphereData, config);
-
-    // Handle final result
-    if (result.passed) {
-      this.uiCallbacks.log('success', 'All spheres passed!');
-    } else {
-      this.uiCallbacks.log('error', `Test failed with ${result.mismatchDetails.length} mismatches`);
-    }
-
-    return result;
-  } finally {
-    unsubscribe();
-  }
-}
-```
-
-### Phase 4: Testing & Validation
-
-1. **Unit tests** for WorkerSpoilerTest class
-2. **Integration tests** comparing results with old implementation
-3. **Performance benchmarks** to measure speedup
-4. **Edge case testing**:
-   - Abort during execution
-   - Games with sub-spheres (0.1, 0.2, etc.)
-   - Multiworld games
-   - Games with add_sphere_items_upfront flag
-
-## Files to Modify/Create
-
-| File | Action | Description |
-|------|--------|-------------|
-| `frontend/modules/stateManager/core/workerSpoilerTest.js` | CREATE | Worker-side test runner |
-| `frontend/modules/stateManager/stateManagerWorker.js` | MODIFY | Add runSpoilerTest command |
-| `frontend/modules/stateManager/stateManagerProxy.js` | MODIFY | Add proxy methods |
-| `frontend/modules/stateManager/stateManagerCommands.js` | MODIFY | Add command constants |
-| `frontend/modules/spoilerTest/testOrchestrator.js` | MODIFY | Use worker execution |
-
-## Migration Strategy
-
-1. **Parallel implementation**: Keep existing code, add new worker-side path
-2. **Feature flag**: Allow switching between old and new implementations
-3. **Gradual rollout**: Test with specific games first
-4. **Deprecation**: Remove old code path after validation
-
-## Expected Performance Improvement
-
-| Metric | Current | Expected |
-|--------|---------|----------|
-| ALTTP test time | 13.6s | ~5s |
-| Communication overhead | 6.6s | ~0.1s |
-| Commands per test | 400+ | 2 |
-| Speedup | 1x | 2-3x |
-
-## Risks & Mitigations
-
-| Risk | Mitigation |
-|------|------------|
-| Behavior differences | Extensive testing, parallel run comparison |
-| Memory usage (large sphere data) | Stream data if needed, test with large games |
-| Abort handling complexity | Clear abort flag checking, cleanup on abort |
-| UI responsiveness | One progress update per sphere (see Design Decisions) |
-
 ## Design Decisions
 
 ### 1. Fallback to Old Implementation
@@ -557,13 +300,14 @@ eventBus.subscribe('spoilerTest:mismatch', async (data) => {
 
 This logic will be ported directly to the worker without modification.
 
-## Timeline Estimate
+## Expected Performance Improvement
 
-- Phase 1 (Worker test runner): 4-6 hours
-- Phase 2 (Worker commands): 1-2 hours
-- Phase 3 (Main thread updates): 2-3 hours
-- Phase 4 (Testing): 2-4 hours
-- **Total**: 9-15 hours of development
+| Metric | Current | Expected |
+|--------|---------|----------|
+| ALTTP test time | 13.6s | ~5s |
+| Communication overhead | 6.6s | ~0.1s |
+| Commands per test | 400+ | 2 |
+| Speedup | 1x | 2-3x |
 
 ## References
 

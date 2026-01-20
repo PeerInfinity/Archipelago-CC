@@ -8,18 +8,32 @@ The goal is to complete the export standardization before documentation and publ
 
 ## Current Status
 
-### World Generator Test Results (as of 2025-12-18)
+### World Generator Test Results (as of 2026-01-14)
 
 The world generator already performs AST→Rule Builder format conversion. Current results:
 
+**Canonical Mode** (items placed in original locations with `--canonical-seed1`):
+
 | Step | Passed | Failed | Pass Rate |
 |------|--------|--------|-----------|
-| World Generation (AST→RB conversion) | 69/69 | 0 | 100% |
-| Test Seed Generation | 61/69 | 8 | 88% |
-| Test Spoiler Test | 56/61 | 5 | 92% |
-| Cross-Validation | 39/61 | 22 | 64% |
+| Original Generation | 60/60 | 0 | 100% |
+| Original Spoiler Test | 60/60 | 0 | 100% |
+| World Generation | 60/60 | 0 | 100% |
+| Seed Generation | 60/60 | 0 | 100% |
+| Rules Comparison | 60/60 | 0 | 100% |
+| WorldGen Spoiler Test | 60/60 | 0 | 100% |
+| Cross-Validation | 60/60 | 0 | 100% |
 
-**Key insight**: Format conversion itself works for all 69 games. Failures occur in subsequent logic validation, indicating rule semantics issues rather than format issues.
+**Random Mode** (standard randomized placement):
+
+| Step | Passed | Failed | Pass Rate |
+|------|--------|--------|-----------|
+| World Generation | 60/60 | 0 | 100% |
+| Seed Generation | 60/60 | 0 | 100% |
+| WorldGen Spoiler Test | 60/60 | 0 | 100% |
+| Cross-Validation | 38/60 | 22 | 63% |
+
+**Key insight**: Format conversion works for all 60 games in both modes. Random mode cross-validation failures occur due to different item placements producing different sphere logs, not format issues.
 
 ### Existing Infrastructure
 
@@ -117,29 +131,30 @@ The AST analyzer produces these rule types:
 - File names (e.g., `cc_format.py` → `ast_format.py`)
 - Converter module names and functions
 
-**Files to Rename**:
-- `rule_builder/cc_format.py` → `rule_builder/ast_format.py`
-- `exporter/converter/cc_to_rule_builder.py` → `exporter/converter/ast_to_rule_builder.py`
-- `exporter/converter/rule_builder_to_cc.py` → `exporter/converter/rule_builder_to_ast.py`
+**Files Renamed** (completed):
+- `rule_builder/cc_format.py` → `rule_builder/ast_format.py` ✅
+- `exporter/converter/cc_to_rule_builder.py` → `exporter/converter/ast_to_rule_builder.py` ✅
+- `exporter/converter/rule_builder_to_cc.py` → `exporter/converter/rule_builder_to_ast.py` ✅
+- `exporter/converter/test_rule_builder_to_cc.py` → `exporter/converter/test_rule_builder_to_ast.py` ✅
 
-**Functions/Variables to Rename** (examples):
-- `parse_cc_rule()` → `parse_ast_rule()`
-- `convert_cc_to_rule_builder()` → `convert_ast_to_rule_builder()`
-- `CCToRuleBuilder` → `ASTToRuleBuilder`
-- `_converted_from_cc` → `_converted_from_ast`
+**Functions/Classes Renamed** (completed):
+- `convert_cc_to_rule_builder()` → `convert_ast_to_rule_builder()` ✅
+- `convert_rule_builder_to_cc()` → `convert_rule_builder_to_ast()` ✅
+- `CCToRuleBuilder` → `ASTToRuleBuilder` ✅
+- `RuleBuilderToCC` → `RuleBuilderToAST` ✅
+- `exporter/converter/__init__.py` exports updated ✅
 
-**Implementation Steps**:
-- [x] Rename files
-- [x] Update all imports
-- [x] Rename functions, classes, and variables
-- [x] Update documentation
+**Remaining Work**:
+- [ ] Update `exporter/converter/cli.py` - still imports from old module names on lines 117-118
+- [ ] Update `exporter/converter/README.md` - still references old function names
+- [ ] Update `docs/json/developer/guides/format-converter.md` - still uses old "cc" naming throughout
 - [ ] Run tests to ensure nothing broke
 
 **Acceptance Criteria**:
 - No references to "CC format" remain in code or documentation
 - All tests pass
 
-**Status**: COMPLETED (2025-12-18) - All renames done, awaiting test verification
+**Status**: PARTIALLY COMPLETE - Core files renamed, but CLI and documentation still need updates
 
 ---
 
@@ -169,8 +184,9 @@ The AST analyzer remains unchanged—it still produces AST format internally. Th
 
 Currently, worldgen `HelperCall` rules inline `body_data` at every call site, duplicating helper bodies many times. This defeats the purpose of helpers and bloats file sizes.
 
-*Required Changes*:
-- [ ] Remove `body_data` from `HelperCall._get_args_dict()` in `rule_builder/rules.py`
+*Progress*: The `HelperCall.to_dict()` method has been updated to no longer include `body_data` in output—it now outputs only `rule`, `_original_ast_type`, and optionally `options` and `args`.
+
+*Remaining Changes*:
 - [ ] Update world generator to export helpers to the `helpers` section instead of inlining
 - [ ] Modify `world_generator/rule_codegen.py` to:
   - Generate a `get_helper_definitions()` method returning all helper bodies
@@ -178,8 +194,7 @@ Currently, worldgen `HelperCall` rules inline `body_data` at every call site, du
 - [ ] Frontend already supports reference-based lookup (no changes needed)
 
 *Files to modify*:
-- `rule_builder/rules.py:2976-2981` - `HelperCall._get_args_dict()`
-- `world_generator/rule_codegen.py:1241-1307` - `_convert_helper()` method
+- `world_generator/rule_codegen.py` - `_convert_helper()` method
 
 *Expected impact*: 50-80% file size reduction for worldgen rules.json files
 
@@ -196,9 +211,8 @@ Currently, worldgen `HelperCall` rules inline `body_data` at every call site, du
 **Goal**: Convert all existing presets from AST format to Rule Builder format.
 
 **Current State**:
-- 85 non-worldgen presets use AST format
-- 71 worldgen presets use mixed format (already mostly Rule Builder)
-- ~20,500 helper rules, ~16,400 complex expressions in AST format
+- 60 game templates currently tested
+- Worldgen presets use mixed format (already mostly Rule Builder)
 
 **Implementation Steps**:
 - [ ] Update exporter settings in `host.yaml` to output Rule Builder format
@@ -291,7 +305,7 @@ Currently, worldgen `HelperCall` rules inline `body_data` at every call site, du
 ### Testing Strategy
 
 1. **Unit Tests**: Converter round-trip tests already exist
-2. **Integration Tests**: World generator tests (69 games)
+2. **Integration Tests**: World generator tests (60 games)
 3. **Spoiler Tests**: Per-game validation against sphere logs
 4. **Regression Tests**: Compare before/after for each phase
 
@@ -306,16 +320,14 @@ Each phase can be rolled back independently:
 
 ### Known Issues to Address
 
-Games failing world generator tests (may need special handling):
-- Aquaria, Stardew Valley, Subnautica, Super Mario Land 2, Muse Dash, Messenger, Yacht Dice, Kingdom Hearts 2 (Test Gen failures)
-- A Hat in Time, Bomb Rush Cyberfunk, Hylics 2, Starcraft 2, The Wind Waker (Spoiler Test failures)
+All 60 games now pass in Canonical mode. Random mode cross-validation failures (22 games) are expected due to different item placements producing different sphere logs—this is not a format conversion issue.
 
 ---
 
 ## Priority Order
 
 1. **Phase 0** (format decisions) - Should be done first to inform other phases
-2. **Phase 1** (CC→AST renaming) - Improves clarity, low risk
+2. **Phase 1** (CC→AST renaming) - Improves clarity, low risk - **partially complete**
 3. **Phase 2** (exporter update) - Enables Phase 3
 4. **Phase 3** (regenerate presets) - Main deliverable before announcements
 5. **Phase 4** (frontend unification) - Can be done incrementally after announcements

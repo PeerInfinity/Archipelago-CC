@@ -22,12 +22,16 @@ We chose **Option A** (extend JSONWorldBuilder) with an important addition: **dy
 ### Key Components
 
 **1. JSONWorldBuilder.build_world()** (`world_generator/json_world_builder.py`)
-- Now runs full generation steps: `generate_early`, `create_regions`, `create_items`, `set_rules`, `generate_basic`
+- Now runs full generation steps: `generate_early`, `create_regions`, `create_items`, `set_rules`, `generate_basic`, `pre_fill`
 - Sets up `CollectionState` BEFORE generation (some worlds access it during generation)
+- Loads options from JSON data when available (falls back to defaults)
+- Copies world attributes from JSON via `_copy_world_attributes_from_json()` for seed-specific values
+- Sets `generation_is_fake = True` so worlds know they're in tracking context
 - Produces a fully-functional world suitable for tracking
 
 **2. TrackerCore.generate_and_load_worldgen_world()** (`worlds/tracker/TrackerCore.py`)
 - Regenerates Python files from rules.json using WorldGenerator
+- Uses seed-specific directories (e.g., `adventure_worldgen_12345`) for parallel-safe operation
 - Unregisters existing worldgen class and reloads the module
 - Ensures the worldgen world matches the specific seed being tracked
 
@@ -71,6 +75,27 @@ generate_and_load_worldgen_world()
 ```
 
 ## Implementation Details
+
+### Options Loading from JSON
+
+Options are now loaded from the JSON rules file when building the world:
+
+```python
+json_options = {}
+if self._json_data:
+    world_data = self._json_data.get('world', {}).get('1', {})
+    json_options = world_data.get('options', {})
+
+for name, option in world_type.options_dataclass.type_hints.items():
+    if name in json_options:
+        setattr(args, name, {1: option.from_any(json_options[name])})
+    else:
+        setattr(args, name, {1: option.from_any(option.default)})
+```
+
+### World Attribute Copying
+
+After world generation, runtime world attributes (like `auto_scroll_levels`, `sprite_data`) are copied from the JSON onto the world instance via `_copy_world_attributes_from_json()`. This ensures seed-specific computed values match the original seed.
 
 ### Critical Timing: CollectionState
 
@@ -119,9 +144,9 @@ remaining_locations = [location.address for location in mw.worlds[1].get_locatio
 
 | File | Changes |
 |------|---------|
-| `world_generator/json_world_builder.py` | Run generation steps in `build_world()`, CollectionState timing fix |
-| `worlds/tracker/TrackerCore.py` | Add `initialize_tracking_from_worldgen()`, modify `generate_and_load_worldgen_world()` to always regenerate, integrate into `initalize_tracker_core()` |
-| `worlds/tracker/fuzzer_hook.py` | Set `seed_name`, call `auto_discover_rules_json()`, filter list addresses |
+| `world_generator/json_world_builder.py` | Run generation steps in `build_world()`, CollectionState timing fix, options loading from JSON, world attribute copying via `_copy_world_attributes_from_json()` |
+| `worlds/tracker/TrackerCore.py` | Add `initialize_tracking_from_worldgen()`, modify `generate_and_load_worldgen_world()` to always regenerate with seed-specific directories, integrate into `initalize_tracker_core()` |
+| `worlds/tracker/fuzzer_hook.py` | Set `seed_name`, call `auto_discover_rules_json()`, filter list addresses, add `--fractional-spheres` mode, add explain stats collection, add `MultiworldHook` for multiworld testing |
 | `world_generator/templates.py` | Fix f-string escaping bug in `_load_canonical_options` template |
 | `exporter/exporter.py` | Add `cleanup_multiworld` parameter (default False) |
 | `host.yaml` | Enable `save_rules_json: true` for testing |
@@ -139,21 +164,21 @@ remaining_locations = [location.address for location in mw.worlds[1].get_locatio
 
 ## Known Limitations
 
-1. **Options**: Worldgen worlds use default options, not the original seed's options. This can cause logic mismatches for games with option-dependent rules.
+1. **Complex Games**: Games like ALTTP with many option-dependent rules or complex world attributes may not track correctly. Some games have runtime-computed values that aren't fully captured in the JSON export.
 
-2. **Complex Games**: Games like ALTTP with many option-dependent rules may not track correctly until options handling is improved.
+2. **Performance**: Regenerating Python files and reloading modules adds overhead compared to using pre-existing worldgen classes.
 
-3. **Performance**: Regenerating Python files and reloading modules adds overhead compared to using pre-existing worldgen classes.
+3. **List Addresses**: Games with list-type location addresses are partially supported (those locations are skipped in fuzzer validation).
 
-4. **List Addresses**: Games with list-type location addresses are partially supported (those locations are skipped in fuzzer validation).
+4. **World Attributes**: While options are now loaded from JSON, some games have runtime-computed world attributes (e.g., `auto_scroll_levels`, `sprite_data`) that are set during generation. These are copied from JSON when available, but complex nested structures may not transfer perfectly.
 
 ## Open Questions (Remaining)
 
-1. **Options from slot_data**: Should we extract actual options from slot_data and apply them to the worldgen world? This would improve accuracy for option-dependent rules.
+1. **Precollected items**: How should starting items be handled in worldgen tracking? (Currently cleared from multiworld.precollected_items to avoid double-counting since they're added via set_items_received().)
 
-2. **Precollected items**: How should starting items be handled in worldgen tracking?
+2. **Entrance randomization**: How does ER interact with worldgen worlds?
 
-3. **Entrance randomization**: How does ER interact with worldgen worlds?
+3. **Complex world attributes**: Some games compute world attributes during generation (e.g., shop inventories). How should these be handled when they can't be serialized to JSON?
 
 ## Success Criteria
 
@@ -167,13 +192,13 @@ remaining_locations = [location.address for location in mw.worlds[1].get_locatio
 
 ## Future Improvements
 
-1. **Options Extraction**: Parse options from slot_data and apply to worldgen world for better accuracy.
+1. **Caching**: Cache regenerated worldgen worlds by rules.json hash to avoid redundant regeneration.
 
-2. **Caching**: Cache regenerated worldgen worlds by rules.json hash to avoid redundant regeneration.
+2. **Complex Game Support**: Investigate and fix ALTTP and other complex games.
 
-3. **Complex Game Support**: Investigate and fix ALTTP and other complex games.
+3. **Error Handling**: Better error messages when worldgen tracking fails, with specific guidance on fallback.
 
-4. **Error Handling**: Better error messages when worldgen tracking fails, with specific guidance on fallback.
+4. **World Attribute Serialization**: Improve JSON export to capture more runtime-computed world attributes for complex games.
 
 ## Related Documents
 

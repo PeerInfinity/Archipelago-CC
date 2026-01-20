@@ -24,8 +24,12 @@ The `args.args` nesting is redundant and confusing. The inner `args` array conta
 **Current Workaround**: The evaluator's default case checks for `args._original_ast_type === 'helper'` and extracts `args.args`:
 
 ```javascript
-// ruleEngine.js:5016-5017
-if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+// ruleEngine.js:5643-5651 (supports both old and new formats)
+if (Array.isArray(args)) {
+  // New flattened format - args is directly an array
+  helperArgs = args;
+} else if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+  // Old nested format - args.args contains the helper arguments
   helperArgs = args.args;
 }
 ```
@@ -93,16 +97,19 @@ if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
 **Current Workaround**: The evaluator handles both formats by checking `type` and recursively evaluating:
 
 ```javascript
-// ruleEngine.js:4551-4566
+// ruleEngine.js:4664-4678
 if (locations.type === 'constant') {
   locations = locations.value;
 } else if (locations.type === 'list' && Array.isArray(locations.value)) {
+  // Recursively evaluate list items
   locations = locations.value.map(item => {
     if (item && typeof item === 'object' && (item.type || item.rule)) {
       return evaluateRule(item, context, depth + 1, localScope);
     }
     return item;
   });
+} else if (locations.type || locations.rule) {
+  locations = evaluateRule(locations, context, depth + 1, localScope);
 }
 ```
 
@@ -135,11 +142,16 @@ location.parent_region.dungeon.boss.can_defeat()
 **Current Workaround**: Both `ruleEngine.js` and `statePersistence.js` have special attribute resolution:
 
 ```javascript
-// statePersistence.js:739-751
+// statePersistence.js:787-797
 if (attributeName === 'dungeon' && baseObject && typeof baseObject.dungeon === 'string') {
   const dungeonName = baseObject.dungeon;
-  if (sm.dungeons instanceof Map && sm.dungeons.has(dungeonName)) {
+  // Look up the actual dungeon object from sm.dungeons
+  if (sm.dungeons && sm.dungeons instanceof Map && sm.dungeons.has(dungeonName)) {
     return sm.dungeons.get(dungeonName);
+  }
+  // Also try plain object access if not a Map
+  if (sm.dungeons && !(sm.dungeons instanceof Map) && sm.dungeons[dungeonName]) {
+    return sm.dungeons[dungeonName];
   }
 }
 ```
@@ -188,11 +200,13 @@ location.parent_region.dungeon.boss.can_defeat()
 **Current Workaround**: The evaluator maps `.boss` to `.bosses["None"]` or first boss:
 
 ```javascript
-// ruleEngine.js:1276-1284
+// ruleEngine.js:1506-1517
 if (rule.attr === 'boss') {
   const hasBoss = baseObject.boss !== undefined;
   const hasBosses = baseObject.bosses !== undefined;
+
   if (!hasBoss && hasBosses) {
+    // Use the new bosses format - default to "None" entry
     const boss = baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
     return boss;
   }
@@ -252,11 +266,11 @@ Issues 3 (dungeon string vs object) and 4 (boss vs bosses naming) are working co
 ## Related Files
 
 **Evaluator Workarounds**:
-- `frontend/modules/shared/ruleEngine.js` - Lines 1276-1312, 4551-4600, 5011-5026
-- `frontend/modules/stateManager/core/statePersistence.js` - Lines 736-780
+- `frontend/modules/shared/ruleEngine.js` - Lines 1506-1517 (boss resolution), 4664-4678 (placement search), 5643-5651 (helper args)
+- `frontend/modules/stateManager/core/statePersistence.js` - Lines 787-797 (dungeon string resolution)
 
-**Converter** (where fixes should go):
-- `exporter/converter/ast_to_rule_builder.py`
+**Converter** (where fixes were applied):
+- `exporter/converter/ast_to_rule_builder.py` - Lines 996-1033 (`_convert_helper`), 1317-1449 (`_flatten_locations`, `_convert_placement_search`)
 
 **Documentation**:
-- `CC/docs/plans/rule-format-migration-plan.md`
+- `CC/docs/plans/partial/rule-format-migration-plan.md`

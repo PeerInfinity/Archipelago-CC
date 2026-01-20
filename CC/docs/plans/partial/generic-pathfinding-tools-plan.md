@@ -1,5 +1,18 @@
 # Generic Pathfinding Tools for WorldGen Worlds
 
+## Current Status (Updated 2026-01-20)
+
+| Phase | Status | Notes |
+|-------|--------|-------|
+| Phase 1: Infrastructure | **Complete** | `rule_builder/pathfinding.py` implemented, but no unit tests or schema updates |
+| Phase 2: ALttP Integration | **Different Approach** | ALttP exporter uses simplified rules + metadata, not generic pathfinding tools |
+| Phase 3: WorldGen Support | Not Started | `rule_codegen.py` has no pathfinding support |
+| Phase 4: Frontend Support | Not Started | `ruleEngine.js` has no pathfinding rule types |
+
+**Key Finding**: The pathfinding infrastructure exists but is not connected to the ALttP export pipeline. ALttP bunny rules are handled via simplified replacement rules with metadata export, not the generic pathfinding tools.
+
+---
+
 ## Overview
 
 This document outlines the plan to implement generic pathfinding tools that enable worldgen worlds to handle complex path-dependent accessibility rules. The primary motivation is ALttP's bunny rules, but the design should be generic enough to support other games with similar requirements.
@@ -152,45 +165,67 @@ Check properties of the entrance used to reach current location.
 
 ## Implementation Plan
 
-### Phase 1: Infrastructure (Week 1)
+### Phase 1: Infrastructure - COMPLETE
 
-**Files to create/modify:**
+**Files created/modified:**
 
-1. **`rule_builder/pathfinding.py`** (NEW)
-   - `EntranceChainChecker` class
-   - `HypotheticalStateEvaluator` class
-   - `PathFinder` class with BFS implementation
+1. **`rule_builder/pathfinding.py`** (CREATED)
+   - `PathExistsToRegion` class - BFS pathfinding to target region
+   - `HypotheticalState` class - State wrapper with hypothetical items
+   - `RegionProperty` class - Region property definitions
+   - `EntranceChainCondition` class - Entrance chain conditions
+   - `BunnyAccessibilityCheck` class - ALttP-specific bunny rule evaluation
+   - `find_paths_to_region()` - Core BFS implementation
+   - `can_reach_via_bunny_path()` - ALttP bunny path checking
+   - `ALTTP_REGION_PROPERTIES` - Standard ALttP region properties
 
-2. **`world_generator/rule_codegen.py`**
-   - Add code generation for new rule types
-   - Generate pathfinding helper imports
+2. **`world_generator/rule_codegen.py`** - NOT UPDATED
+   - No code generation for pathfinding rule types added
 
-3. **`frontend/schema/rules.schema.json`**
-   - Add schema definitions for new rule types
+3. **`frontend/schema/rules.schema.json`** - NOT UPDATED
+   - No schema definitions for new rule types added
 
 **Deliverables:**
-- [ ] Basic pathfinding infrastructure in Python
+- [x] Basic pathfinding infrastructure in Python
 - [ ] Schema definitions for new rule types
 - [ ] Unit tests for pathfinding tools
 
-### Phase 2: ALttP Integration (Week 2)
+### Phase 2: ALttP Integration - DIFFERENT APPROACH TAKEN
 
-**Files to modify:**
+**What was planned:**
+- Export bunny rules using new pathfinding format
+- Use `BunnyAccessibilityCheck` from pathfinding.py
 
-1. **`exporter/games/alttp.py`**
-   - Export bunny rules using new pathfinding format instead of simplifying
-   - Add region type metadata (is_light_world, is_dark_world, is_dungeon)
-   - Export entrance metadata (bunny_passable, etc.)
+**What was implemented:**
 
-2. **`worlds/alttp/Rules.py`** (reference only)
-   - Document how original bunny rules map to new format
+Instead of using the generic pathfinding tools, the ALttP exporter (`exporter/games/alttp.py`) uses a **simplified replacement approach**:
+
+1. **Bunny rule interception** - `override_rule_analysis()` intercepts bunny rule lambdas
+2. **Simplified replacement** - `_get_bunny_replacement_rule()` replaces bunny rules with:
+   - `True` for locations in `BUNNY_ACCESSIBLE_LOCATIONS`
+   - `True` for `MANDATORY_SUPERBUNNY_LOCATIONS` in glitch modes
+   - `Moon Pearl OR Magic Mirror` for `MIRROR_SUPERBUNNY_LOCATIONS` in glitch modes
+   - `Moon Pearl` for all other bunny-affected locations
+3. **Metadata export** - `add_game_info()` exports bunny rule metadata for potential future use:
+   - `bunny_impassable_caves`
+   - `bunny_accessible_locations`
+   - `mandatory_superbunny_locations`
+   - `mirror_superbunny_locations`
+
+**Rationale for different approach:**
+- Simpler to implement and maintain
+- Works for most common cases
+- Metadata export allows future enhancement without changing rule format
+- Avoids complexity of BFS pathfinding in frontend JavaScript
 
 **Deliverables:**
-- [ ] ALttP exporter uses pathfinding rules for bunny logic
-- [ ] UT fuzz tests pass at higher rate
+- [x] ALttP exporter handles bunny rules (via simplified replacement)
+- [x] Bunny rule metadata exported for future use
+- [ ] ~~ALttP exporter uses pathfinding rules for bunny logic~~ (different approach)
+- [ ] UT fuzz tests pass at higher rate (needs verification)
 - [ ] Documentation of bunny rule mapping
 
-### Phase 3: WorldGen World Support (Week 3)
+### Phase 3: WorldGen World Support - NOT STARTED
 
 **Files to modify:**
 
@@ -207,16 +242,16 @@ Check properties of the entrance used to reach current location.
 - [ ] Generated Rules.py includes pathfinding logic
 - [ ] Integration tests with ALttP worldgen
 
-### Phase 4: Frontend Support (Week 4)
+### Phase 4: Frontend Support - NOT STARTED
 
 **Files to modify:**
 
-1. **`frontend/src/rule-evaluator.ts`** (or equivalent)
+1. **`frontend/modules/shared/ruleEngine.js`**
    - JavaScript implementation of pathfinding rules
    - BFS pathfinding for entrance chains
 
-2. **`frontend/src/types/rules.ts`**
-   - TypeScript types for pathfinding rules
+2. **`frontend/modules/stateManager/core/ruleEvaluator.js`**
+   - Pathfinding rule type handling
 
 **Deliverables:**
 - [ ] Tracker can evaluate pathfinding rules
@@ -350,7 +385,7 @@ class HypotheticalState:
 
 ## Success Criteria
 
-1. **ALttP UT fuzz tests**: Pass rate increases from ~30% to >80%
+1. **ALttP UT fuzz tests**: Pass rate increases from ~30% to >80% (needs verification)
 2. **Performance**: Rule evaluation <10ms per location
 3. **Test coverage**: >90% coverage of pathfinding code
 4. **Documentation**: All new rule types documented with examples
@@ -365,9 +400,13 @@ class HypotheticalState:
 
 4. **Tracker visualization**: Defer to Phase 4 (Frontend Support). The explain tool should show which paths were checked and which succeeded/failed.
 
+5. **Simplified ALttP approach (NEW)**: Phase 2 took a simplified approach using replacement rules + metadata export instead of generic pathfinding. This trades accuracy for simplicity and can be enhanced later using the exported metadata.
+
 ## Open Questions
 
 1. How to visualize pathfinding in the tracker explain tool? (Deferred to Phase 4)
+2. Should we revisit Phase 2 to use generic pathfinding tools, or is the simplified approach sufficient?
+3. What is the actual ALttP fuzz test pass rate with the current implementation?
 
 ## References
 
@@ -375,4 +414,6 @@ class HypotheticalState:
 - ALttP UnderworldGlitchRules.py: `worlds/alttp/UnderworldGlitchRules.py`
 - ALttP OverworldGlitchRules.py: `worlds/alttp/OverworldGlitchRules.py`
 - Rule Builder: `rule_builder/`
+- Pathfinding module: `rule_builder/pathfinding.py`
+- ALttP Exporter: `exporter/games/alttp.py`
 - World Generator: `world_generator/`

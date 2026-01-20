@@ -1,6 +1,6 @@
 # Overview: What Is This?
 
-The Archipelago JSON Export Tools project provides an advanced tracker for [Archipelago](https://archipelago.gg/) multiworld randomizer games.
+The Archipelago JSON Export Tools project provides an advanced tracker for [Archipelago](https://archipelago.gg/) multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games into one cooperative multiplayer experience, where items from one game can be found in another player's game.
 
 **Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
 
@@ -35,6 +35,8 @@ This lets you explore the interface and see how the logic tracking works without
 To use the tracker with your own multiworld games, you'll need to run a local setup that generates the required `rules.json` files.
 
 ### Setup
+
+**Which repository should I use?** Clone `PeerInfinity/Archipelago` (shown below) for a clean setup. The `-CC` variant is for active development with Claude Code. See [Tips & Tricks](./tips-and-tricks.md#which-repository-should-i-use) for details.
 
 ```bash
 # Clone the repository

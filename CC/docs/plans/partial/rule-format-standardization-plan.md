@@ -1,5 +1,16 @@
 # Rule Format Standardization Plan
 
+## Progress Summary
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| Phase 1 | Pattern Optimizations | ✅ Complete |
+| Phase 2 | Complete Type Coverage | ⚠️ Partially Complete |
+| Phase 3 | WorldGen Alignment | In Progress |
+| Phase 4 | Regenerate All Presets | Not Started |
+
+**Last Updated**: 2026-01-20
+
 ## Goal
 
 Standardize all rule exports on Rule Builder format. The AST analyzer will continue to analyze Python code and produce AST format internally, but the output will be converted to Rule Builder format before export.
@@ -35,7 +46,7 @@ Both the original exporter and WorldGen should produce identical Rule Builder fo
    - `rule_builder_to_ast.py` - Converts Rule Builder format to AST format
    - Supports most common rule types
 
-2. **Exporter Integration** (`exporter/exporter.py:2235-2251`)
+2. **Exporter Integration** (`exporter/exporter.py:2330-2348`)
    - Already calls `convert_rules_file_to_rule_builder()` on export
    - Controlled by `rules_json_format` parameter (default: `"rule_builder"`)
 
@@ -45,27 +56,28 @@ Both the original exporter and WorldGen should produce identical Rule Builder fo
 
 ### Existing Planning Documents
 
-- `rule-format-migration-plan.md` - Phased migration plan
-- `rule-format-inconsistencies.md` - Known format issues
-- `rule-format-migration-analysis.md` - Analysis of format differences
+- `partial/rule-format-migration-plan.md` - Detailed phased migration plan (in progress)
+- `completed/rule-format-inconsistencies.md` - Known format issues (resolved)
+- `completed/rule-format-migration-analysis.md` - Analysis of format differences (complete)
 
 ## Remaining Work
 
 ### 1. Complete AST → Rule Builder Conversion Coverage
 
-Some AST types are not fully converted to clean Rule Builder format:
+Status of AST type conversion coverage:
 
-| AST Type | Current Behavior | Desired Behavior |
-|----------|-----------------|------------------|
-| `setting_value` | Preserved as custom | Convert to `SettingValue` rule |
-| `subscript` | Preserved as custom | Convert to `Subscript` rule |
-| `helper` | Nested args structure | Flatten to direct args |
-| `compare` | Basic conversion | Full operator support |
-| `binary_op` | Basic conversion | Full operator support |
+| AST Type | Current Behavior | Status |
+|----------|-----------------|--------|
+| `setting_value` | Converts to `SettingValue` rule (converter support) | ⚠️ Rule class missing in rules.py |
+| `option_value` | Converts to `OptionValue` rule | ✅ Complete |
+| `subscript` | Preserved as custom `AST_subscript` | ⚠️ No Rule class exists |
+| `helper` | Flattened args structure | ✅ Fixed (2025-12-19) |
+| `compare` | Converts to `Compare` rule | ✅ Complete |
+| `binary_op` | Converts to `Arithmetic` rule | ✅ Complete |
 
-### 2. Pattern Optimizations
+### 2. Pattern Optimizations ✅ COMPLETE
 
-Convert verbose patterns to cleaner Rule Builder equivalents:
+All pattern optimizations are implemented in `ast_to_rule_builder.py`:
 
 #### 2.1 Combine Has into HasAll/HasAny
 
@@ -157,17 +169,25 @@ Update `compare_rules_json.py` to normalize Rule Builder format before compariso
 
 ## Implementation Order
 
-### Phase 1: Pattern Optimizations in Converter (High Impact)
-1. Add `_optimize_and_or()` method to combine Has into HasAll/HasAny
-2. Add `_flatten_nested()` method for nested And/Or
-3. Add `_simplify_trivial()` method for single-child And/Or
-4. Add tests for each optimization
+### Phase 1: Pattern Optimizations in Converter ✅ COMPLETE
 
-### Phase 2: Complete Type Coverage
-1. Add `SettingValue` rule to Rule Builder
-2. Add `Subscript` rule to Rule Builder
-3. Update converter to use new rules
-4. Fix helper args nesting issue
+Implemented methods in `ast_to_rule_builder.py`:
+- `_combine_has_rules()` - combines Has into HasAll/HasAny
+- `_flatten_composite()` - flattens nested And/Or
+- `_remove_identity_elements()` - removes True_ from And, False_ from Or
+- `_check_absorbing_element()` - checks for False_ in And, True_ in Or
+- `_optimize_composite()` - orchestrates all optimizations
+
+### Phase 2: Complete Type Coverage (PARTIALLY COMPLETE)
+
+| Task | Status |
+|------|--------|
+| Add `SettingValue` rule to Rule Builder | ⚠️ Converter outputs it, but Rule class missing |
+| Add `Subscript` rule to Rule Builder | ⚠️ Not started |
+| Update converter to use new rules | ✅ Converter supports SettingValue output |
+| Fix helper args nesting issue | ✅ Fixed (2025-12-19) |
+
+Note: `OptionValue` Rule class exists and works. `SettingValue` is a legacy alias that needs a proper Rule class or should be consolidated with `OptionValue`.
 
 ### Phase 3: WorldGen Alignment
 1. Fix helper body format differences
@@ -195,11 +215,11 @@ Update `compare_rules_json.py` to normalize Rule Builder format before compariso
 ## Files to Modify
 
 ### Converter
-- `exporter/converter/ast_to_rule_builder.py` - Add optimizations
-- `exporter/converter/rule_builder_to_ast.py` - Handle new patterns
+- `exporter/converter/ast_to_rule_builder.py` - ✅ Optimizations complete
+- `exporter/converter/rule_builder_to_ast.py` - Handle new patterns (if needed)
 
 ### Rule Builder
-- `rule_builder/rules.py` - Add `SettingValue`, `Subscript` rules
+- `rule_builder/rules.py` - ⚠️ Add `SettingValue` class (or consolidate with `OptionValue`), add `Subscript` rule
 
 ### WorldGen
 - `world_generator/rule_codegen.py` - Align helper generation
