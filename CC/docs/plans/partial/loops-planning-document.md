@@ -8,6 +8,58 @@ This document outlines the remaining work for the Loops module, an incremental g
 
 ---
 
+## Progress Tracker
+
+### Completed Work
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Phase 1: loopStats module | ✅ Complete | `frontend/modules/loopStats/` with queueAnalyzer, UI, tests |
+| loopStats public API | ✅ Complete | getQueueAnalyzer, getAnalysis, analyzeQueue exposed via centralRegistry |
+| loopStats e2e tests | ✅ Complete | `tests/e2e/loopStats.spec.js` |
+| Timer test integration | ✅ Complete | loops queue test uses loopStats, has maxLoops limit |
+| Bug investigation tests | ✅ Complete | `tests/e2e/loopBugs.spec.js` |
+| Bug 1: Mana 100/110 | ✅ Fixed | Was ALTTP-specific (event item awarded at start) - mana now initializes correctly |
+| Bug 5: Unpause mana | ✅ Fixed | Added `_shouldResetOnResume()` to refill mana when queue is complete |
+| Bug 8: mode=loop URL | ✅ Clarified | Not a bug - mode is named `loops` (plural), use `?mode=loops` |
+| Phase 2: Cost Generation | ✅ Complete | `costGenerator.js`, `costDataManager.js` implemented |
+| Cost UI Integration | ✅ Complete | "Generate Costs" button added to Loops panel |
+| Console Commands | ✅ Complete | `window.generateCosts()`, `window.costDataManager` available |
+
+### In Progress
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Cost data integration with queueAnalyzer | 🔄 Pending | Update queueAnalyzer to use loaded cost data |
+
+### Remaining Bugs (Need UI Testing)
+
+| Bug | Priority | Notes |
+|-----|----------|-------|
+| Completed action delay | Medium | Needs manual UI observation |
+| Region block ordering | Medium | Needs manual UI testing |
+| Region links not clickable | Medium | Needs manual UI testing |
+| Timer not restarting | Low | Needs investigation |
+
+### Design Decisions Made
+
+**Phase 2 Implementation:**
+- **Cost loading location**: In main Loops module as subcomponent
+- **Cost loading timing**: When entering loop mode or loading different rules data
+- **Cost generation**: Start with manual tool, add automatic option and CLI later
+- **Missing files**: Prompt user with options
+
+**Cost Generation Algorithm:**
+- **Path calculation**: Use existing PathFinder from `frontend/modules/shared/pathfinder.js`, extend if needed
+- **Cost formula rationale**: `currentMana / 2` reserves half mana for location check
+- **Explore vs Move**: Track both inventory-based accessibility AND discovery state separately
+- **Location→Region mapping**: Use `staticData.locations` with `parent_region` field
+- **Unreachable regions**: Determine neighbors via exit connections, use highest neighbor cost
+- **XP simulation**: Simulate accurately using actual game code (loopState), reset state after generation
+- **Output precision**: Integers only, use `Math.floor()`
+
+---
+
 ## Core Concepts
 
 ### What is a "Loop"?
@@ -39,16 +91,16 @@ When the action queue completes successfully:
 
 #### Known Bugs to Investigate
 
-| Bug | Description | Priority |
-|-----|-------------|----------|
-| Mana initialization | Mana starts at 100/110 on fresh load instead of 100/100 | High |
-| Completed action delay | Delay in removing completed check location actions from queue | Medium |
-| Region block ordering | Blocks sometimes appear in wrong order (should match action queue order) | Medium |
-| Region links not clickable | Links in loop panel don't respond to clicks | Medium |
-| Unpause mana issue | Unpausing when queue finished restarts without refilling mana | High |
-| Timer not restarting | Timer doesn't restart when queue for undiscovered region finishes | Low |
-| Queue continuation bug | After location check finishes, keeps looping through rest of queue | Medium |
-| mode=loop URL param | `?mode=loop` URL parameter may not work | Medium |
+| Bug | Description | Priority | Status |
+|-----|-------------|----------|--------|
+| Mana initialization | Mana starts at 100/110 on fresh load instead of 100/100 | High | ✅ FIXED - ALTTP-specific (event item at start) |
+| Completed action delay | Delay in removing completed check location actions from queue | Medium | Needs UI testing |
+| Region block ordering | Blocks sometimes appear in wrong order (should match action queue order) | Medium | Needs UI testing |
+| Region links not clickable | Links in loop panel don't respond to clicks | Medium | Needs UI testing |
+| Unpause mana issue | Unpausing when queue finished restarts without refilling mana | High | ✅ FIXED - Added `_shouldResetOnResume()` |
+| Timer not restarting | Timer doesn't restart when queue for undiscovered region finishes | Low | Needs investigation |
+| Queue continuation bug | After location check finishes, keeps looping through rest of queue | Medium | Code reviewed - logic appears correct |
+| mode=loop URL param | `?mode=loop` URL parameter may not work | Medium | ✅ NOT A BUG - Use `?mode=loops` (plural) |
 
 #### Bug Fix Approach
 

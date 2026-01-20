@@ -113,6 +113,11 @@
       "path": "./modules/loops/index.js",
       "enabled": true
     },
+    "loopStats": {
+      "path": "./modules/loopStats/index.js",
+      "enabled": true,
+      "requires": ["loops"]
+    },
     "presets": {
       "path": "./modules/presets/index.js",
       "enabled": true
@@ -219,6 +224,7 @@
     "playerState",
     "playerStatePanel",
     "loops",
+    "loopStats",
     "presets",
     "spoilerTest",
     "sphereState",
