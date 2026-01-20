@@ -6883,6 +6883,30 @@ class HelperCodeGenerator:
                     return f'state.has_group_unique({group_expr}, player)'
                 return f'state.has_group_unique({group_expr}, player, {count})'
 
+        elif method == 'has_from_list':
+            # has_from_list(items, player, count) - player in middle position
+            if len(args) >= 1:
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    items_repr = repr(list(items)) if items else '[]'
+                else:
+                    items_repr = self._generate_expression(args[0])
+                # Count is the second arg in exported JSON (after items list)
+                count_expr = self._generate_expression(args[1]) if len(args) > 1 else '1'
+                return f'state.has_from_list({items_repr}, player, {count_expr})'
+
+        elif method == 'has_from_list_unique':
+            # has_from_list_unique(items, player, count) - player in middle position
+            if len(args) >= 1:
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    items_repr = repr(list(items)) if items else '[]'
+                else:
+                    items_repr = self._generate_expression(args[0])
+                # Count is the second arg in exported JSON (after items list)
+                count_expr = self._generate_expression(args[1]) if len(args) > 1 else '1'
+                return f'state.has_from_list_unique({items_repr}, player, {count_expr})'
+
         elif method == 'can_reach':
             if len(args) >= 1:
                 # First try to get a constant value
