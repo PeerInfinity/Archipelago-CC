@@ -1604,9 +1604,10 @@ class RuleCodeGenerator:
         self.required_imports.add('Has')
 
         item_raw = rule.get('item', '')
-        item = self._extract_constant_value(item_raw, '')
+        # Use _extract_constant to handle binary_op (e.g., "Letter " + letter -> "Letter O")
+        item = self._extract_constant(item_raw, '')
         count_raw = rule.get('count', 1)
-        count = self._extract_constant_value(count_raw, 1)
+        count = self._extract_constant(count_raw, 1)
 
         item_escaped = self._escape_string(item)
 
