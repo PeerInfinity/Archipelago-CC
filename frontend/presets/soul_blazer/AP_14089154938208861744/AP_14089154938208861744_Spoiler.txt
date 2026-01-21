@@ -1,0 +1,537 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Soul Blazer
+Location Count:                  300
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Goal:                            Deathtoll
+Act Progression:                 Vanilla
+Stones Placement:                Vanilla
+Stones Count:                    6
+Open Deathtoll:                  No
+Starting Sword:                  Vanilla
+Magician's Item:                 Random Spell
+Magician's Soul:                 Vanilla
+Text Speed:                      Instant
+Release Cutscenes:               Show
+Equipment Stats:                 Semi Progressive
+Equipment Scaling:               Vanilla
+Gem/Exp Pool:                    Random Range
+Randomize Lair Enemies:          No
+Randomize Lair Type:             No
+Randomize Lair Number of Enemies:No
+Randomize Lair Spawn Rate:       No
+Randomize Pre-Spawned Enemies:   No
+
+
+Locations:
+
+Trial Room - Chest: Sword of Life
+Trial Room - Magician's Item: Flame Ball
+Trail Room - Magician's Soul: Soul of Magician
+Grass Valley - Tool Shop Owner's Item: EXP
+Grass Valley - Teddy's Item: Strange Bottle
+Grass Valley - Village Chief's item: Black Stone
+Grass Valley - Secret Tile on Cliff Overlooking Tulip: West Crocodile
+Grass Valley - Goat Pen Secret Tile (South-East Corner): Sleeping Dolphin
+Grass Valley - Secret Tile Under Sleeping Tulip (Push Left): Mermaid Statue to Blester
+Grass Valley - Hideout Cliff Secret Tile: EXP
+Grass Valley - Hideout Cliff Crystal's Item: GEMs
+Grass Valley Treasure Room - Crystal's Item: Lisa
+Grass Valley Treasure Room - Left Chest: Nome the Snail
+Grass Valley Treasure Room - Right Chest: Grandpa for South-West Tunnel
+Underground Castle West - Lair East of Entrance: Magic Bell
+Underground Castle West - Lair West of Bridge: Ivy to Treasure Room
+Underground Castle West - Lair North of Triangle Torch Chest: GEMs
+Underground Castle West - North-East Lair: Watermill Keeper
+Underground Castle West - Plant Cage Lair: Bridge Guard
+Underground Castle West - South-East Island Lair: Snail Jockey (Unknown)
+Underground Castle West - Crystal on Ledge's Item: Locked Door to South-West Room
+Underground Castle West - Triangle Pillar Chest: Big House Upper Mermaid with Gift
+Underground Castle West - Triangle Torch Chest: Village Chief's House
+Underground Castle West - North-East Island Chest: Soldier in North-East Building
+Underground Castle East - Dream-Locked Chest: Steps to 2nd Floor
+Underground Castle East - Dream-Locked Lair: Cat in Locked Room
+Underground Castle West - Lair Above the Elevator: Stalking Cat 2
+Underground Castle East - Entrance Lair: Mermaid Queen
+Underground Castle East - Southern U Lair: Village Chief
+Underground Castle East - Northern U Lair: Light Armor
+Underground Castle East - Stone Garden Lair: Zantetsu Sword
+Underground Castle East - Conveyor Dead-End Left Lair: EXP
+Underground Castle East - Conveyor Dead-End Right Lair: Nothing
+Underground Castle East - 4-Lair Gauntlet Lair: West Mermaid Guard
+Underground Castle East - Narrow Bridge Lair: G.Leaf
+Underground Castle East - Lair Near Jewel Fairy: Unremarkable Concert Hall Soldier
+Leo's Painting - Solid Arm Boss Lair: Nothing
+Leo's Painting Room 2 - Entrance Lair: Mermaid's Tears
+Leo's Painting Room 1 - Exit Lair: Ivy Above Dungeon
+Leo's Painting Room 3 - North-East Lair: Goat Wife
+Leo's Painting Room 3 - South-East Lair: Cafe Squirrel
+Leo's Painting Room 4 - Left Center Lair: Nothing
+Leo's Painting Room 3 - North-West Metal Enemies Lair: GEMs
+Leo's Painting Room 4 - North Metal Enemies Lair: Dancing Grandma Left
+Leo's Painting Room 1 - Entrance Lair: Woodstin Squirrel
+Leo's Painting Room 3 - Entrance Lair: Actinidia Plant
+Leo's Painting Room 2 - Center Chest: EXP
+Leo's Painting Room 2 - Metal Enemies Chest: Psycho Sword
+Greenwood - Shy Bird's Item: Medical Herb
+Greenwood - Master Crystal's Item: the Big Pearl
+Greenwood - Woodstin Trio's Prize: Sleeping Cat
+Greenwood - Greenwood's Guardian's Item: Purple Stone
+Greenwood Tunnels - Turbo's Bones Tile: Mousehole Plant
+Greenwood Tunnels - Mole's Reward: Grandpa Guarding Lune
+Greenwood - Hungry Squirrel's Item: Red-Hot Stick
+Greenwood - Not-So-Hungry Squirrel's Item: Soldier Near Basement Stairs
+Greenwood Tunnels - Mole's Soul: Boy with Gift
+Greenwood - Sleeping Stump Chest: EXP
+Greenwood Tunnels - Mole's Chest: Strange Bottle
+Lostside Marsh - Entrance Lair: Medical Herb
+Lostside Marsh - Island West of Water Shrine Lair: West Lab Plant
+Water Shrine 1F - Center Island Lair: Iron Armor
+Water Shrine B1 - Pillars Near Waterfalls Lair: Graveyard Guard Dog
+Water Shrine B1 - Moving Spike Trap Lair: Soldier with Dr. Leo (Oct)
+Water Shrine B2 - West Side-Room Lair: GEMs
+Water Shrine B2 - North Hallway Lair: Marie the Doll
+Water Shrine B2 - Statue Room Lair: The Soul Blade
+Water Shrine B1 - B2 to 1F Connector Lair: Soldier with Item Underfoot
+Lostside Marsh - Lair North of Water Shrine: Tulip by Leo's House
+Fire Shrine 1F - East-Most Lair: North-East Bird
+Fire Shrine B1 - South-East Lair: Mushroom Shoes
+Fire Shrine B1 - South Lair: EXP
+Fire Shrine B1 - North-West Lair: GEMs
+Fire Shrine B2 - Lair West of Stairs: Angelfish with Soul
+Fire Shrine B2 - Lair Past First Heated Path: Emblem F
+Fire Shrine B2 - Heated Circle Lair: Mushroom for Southern Tunnel
+Fire Shrine B2 - Snaking Path Center Lair: Angelfish East of Center
+Fire Shrine B2 - Snaking Path Narrow Bridge Lair: Great Door to Models of Town
+Fire Shrine B1 - Isolated Room Lair: Gazing Girl
+Fire Shrine B2 - Metal Enemies Lair: Not-So-Hungry Squirrel
+Water Shrine B1 - Moving Spike Trap Crystal's Item: Snail with Boy
+Water Shrine B2 - West Secret Tile: Grandpa for South-East Lake
+Fire Shrine B2 - Heated Path Crystal's Item: Magic Flare
+Fire Shrine 1F - Metal Enemies Crystal's Item: Big House West Room Mermaid with Gift.
+Water Shrine 1F - Chest Near Exit: EXP
+Water Shrine B1 - Chest Behind the Waterfall: Sleeping Stump and Squirrel
+Water Shrine B1 - Moving Spike Trap Chest: Medical Herb
+Water Shrine B2 - South-East Chest: GEMs
+Water Shrine B2 - South-West Chest: Spirit Sword
+Fire Shrine 1F - 2nd Bridge from the Left Chest: Emblem H
+Fire Shrine B1 - Chest Near the Stairs: Greenwood's Guardian
+Fire Shrine B1 - Metal Enemies Chest: Snail in Secret Room with Gift
+Fire Shrine B2 - Triple Scorpion Chest: Angelfish South of Center
+Fire Shrine B2 - Chest Near Exit: Boy for Western Tunnel
+Lostside Marsh - Lair South-West of Light Shrine: Bashful Maid
+Lostside Marsh - Lair East of Fire Shrine: Tulip by Chief's House
+Light Shrine 1F - North Lair: Grandpa Husband
+Lostside Marsh - Crystal Near Light Shrine's Item: Medical Herb
+Light Shrine 1F - Spirit Enemies Chest: Soul of Detection
+Light Shrine B1 - East Lair: Grandpa Guarding Jail
+Light Shrine B1 - Lair Near Portal: Critical Sword
+Light Shrine B1 - Elemental Statues Boss Lair: GEMs
+Light Shrine B1 - North-West Spirit Enemies Lair: Medical Herb
+Southerta - Lair North of Warp: Dream Rod
+Southerta - Tree Island Lair: Devout Mouse
+Southerta - Ambush North Lair: Hungry Squirrel
+Southerta - Ambush South Lair: Mermaid Troupe Leader
+Southerta - Dried Pond Lair: Dolphin to North-East Platform
+Seabed Sanctuary - Mermaid Queen's Item: Silver Stone
+Southerta - Tree Maze Chest: GEMs
+Seabed Sanctuary - Common House Main Mermaid's Item: Maid at the Bar
+Seabed Sanctuary - Common House North Mermaid's Item: Medical Herb
+Seabed Sanctuary - Common House East Room Chest: Bedroom Mouse
+Seabed Sanctuary - Lue the Dolphin's Item: Dr. Leo
+Seabed Sanctuary - Common House West Room Mermaid's Item: Mole with Soul
+Seabed Sanctuary - Dolphin Ride Chest: Medical Herb
+Seabed Sanctuary - North-East Mermaid's Item: Girl for Eastern Tunnel
+Seabed Sanctuary - Angelfish's Soul: GEMs
+Southerta - Isolated Lair: Mouse with Gift
+Seabed - South-East Corner Lair: Soul of Shield
+Rockbird - West Center Lake Lair: Singer Outside
+Rockbird - South-West Lake Lair: Swimming Mermaid
+Rockbird - Center Lake South-West Lair: GEMs
+Rockbird - Center Lake North-East Lair: Ivy to Hideout Crystal
+Rockbird - North-Western Island Crystal's Item: Thunder Ring
+Rockbird - East Lakes Lower Chest: a door key
+Rockbird - East Lakes Upper Chest: GEMs
+Seabed - South-West Lair: Bashful Soldier
+Durean - Lair West of Entrance: Center Crocodile
+Durean - North Lowest Level Lair: Emblem B
+Durean - North-East Island Lair: Shy Bird with Gift
+Durean - North Middle Level Lair: Lucky Blade
+Durean - North Middle Level Lava Pool Lair: Medical Herb
+Durean - Metal Enemies Lair: Ivy to South-East Grass Valley
+Durean - Western Peninsula Lair: Medical Herb
+Durean - North Upper Level Lava Pool Lair: Great Door with Soul
+Seabed - South-West Crystal's Item: Dolphin to West Chest
+Durean - East Island Chest: Platinum Card
+Durean - East Lava River Chest: Emblem A
+Seabed North-East - Lair South of the Current: Sleeping Mushroom
+Seabed North-East - Lair Out in the Open: EXP
+Seabed North-East - West Nook Lair: Snail Jockey (Flash)
+Blester - Lair East of the Entrance: Tool Shop Owner
+Blester - Lair Further East of the Entrance: Dog Waiter
+Blester - Eastern Pillars Lair: Master Crystal Deer
+Blester - Western Pillars Lair: South-East Bird
+Blester - Metal Enemies Lair: Recovery Sword
+Seabed North-East - Crystal South of the Current's Item: Strange Bottle
+Seabed North-West - Seaweed Maze South-West Lair: Magic Armor
+Seabed North-West - Seaweed Maze East Lair: GEMs
+Ghost Ship - Floating Skull Boss Lair: Delicious Seeds
+Seabed North-West - Chest in South-East Cove: Sniffing Dog
+Ghost Ship - Chest: EXP
+Seabed North-West - Secret Cove Top-Left Chest: Mermaid Dancer Anna
+Seabed North-West - Secret Cove Top-Right Chest: Medical Herb
+Seabed North-West - Secret Cove Bottom-Left Chest: Medical Herb
+Seabed North-West - Secret Cove Bottom-Right Chest: a mobile key
+Mountain North Slope - Mountain Base Lair: Tool Shop Owner's Son
+Mountain North Slope - Mid Level Lair: North-East Mermaid with Gift
+Mountain North Slope - Lair Up on the Ledge: Bird by Marsh
+Aurora's Ridge - Lair at Top of the Slide: Soul of Light
+Aurora's Ridge - Path through the Snow Right Lair: Plant in Locked Room
+Aurora's Ridge - Path through the Snow Left Lair: Right Moat Guard Soldier
+Mountain Summit Cave - Lair After the Ice: North-West Grandpa
+Mountain Summit Cave - Entrance Lair: Jumping Angelfish
+Mountain Summit Cave - Entrance Shortcut Crystal's Item: Walkable Dog
+Mountain of Souls - Secret Snail's Item: Ice Armor
+Mountain of Souls - Boy with Gift's Item: Mermaid Attendant Right
+Mountain North Slope - South-East Chest Down the Slide: Ivy to Secret Tile
+Aurora's Ridge - Buried Treasure Middle-Left Chest: Crab-Walking Old Man
+Aurora's Ridge - Buried Treasure Left-Most Chest: Mouse Outside Hole
+Aurora's Ridge - Buried Treasure Middle-Right Chest: Boy in Jail
+Aurora's Ridge - Buried Treasure Right-Most Chest: Curious Angelfish
+Mountain of Souls - Mountain King's Item: GEMs
+Mountain of Souls - Nome the Snail's Item: Blue Stone
+Mountain Summit Cave - Lair in the Middle of the Ice: Mountain King
+Ice Hill - North-East Corner Lair: a pass
+Ice Hill - Center Alcove Left Lair: Monmo the Mole
+Ice Hill - Center Alcove Right Lair: Soul Armor
+Ice Hill - Middle Icy Slide Lair: Architect
+Ice Hill - Lair Across the Wall: GEMs
+Ice Hill - South-West Corner Lair: Soldier Guarding Right Tower
+Laynole West - Lair Amongst the Ice Flowers: Tornado
+Laynole West - Icy Spiral Center Lair: Emblem E
+Laynole West - South-West Corner Lair: Great Door to Lab
+Laynole West - Icy Spiral End Lair: Soldier at the Bar
+Laynole West - South Invisible Bridge Lair: Strange Bottle
+Laynole West - North Invisible Bridge Chest: Observant Soldier
+Lune Passage - Lair Between Two Cliffs: Mystic Armor
+Lune Passage - Lair Under the Waterfall: Lonely Old Man
+Lune - South-East Corner Lair: Emblem D
+Lune - Clockwise Gauntlet Lair: A.Leaf
+Lune - Counter-Clockwise Gauntlet Lair: Goat Pen
+Lune - Dream-Locked Lair: Mermaid Dancer Nanna
+Lune - Poseidon Boss Lair: Medical Herb
+Lune Passage - Center of the River Crystal's Item: Girl Near Entrance
+Lune - Mushroom's Dream Tile: Soldier with Soul
+Laynole East - Chest Past the Invisible Bridge: Medical Herb
+Laynole East - Chest Past the Second Invisible Bridge: Prison-Break Dolphin
+Leo's Lab B1 - South-West Blocked Pipe Lair: King Magridd
+Leo's Lab B1 - Platform North of Big Pipe Lair: GEMs
+Leo's Lab B1 - North then East Lair: Circling Mouse 2
+Leo's Lab 1F - Locked Room - Inside Chest of Drawers: GEMs
+Leo's Lab 1F - Locked Room Under Chest of Drawers: Red-Hot Ball
+Leo's Lab Mousehole - Mouse with Gift's Item: Goat's Food
+Leo's Lab 1F - Mousehole Plant's Item: Doll in Chapel
+Leo's Lab 1F - Free Chest: Statue to Ghost Ship
+Leo's Lab 2F - Sleeping Cat's Item: Exercising Chest of Drawers
+Leo's Lab 2F - Actinidia Plant's Item: Shield Bracelet
+Leo's Lab 2F - Chapel Door's Soul: Singer in Concert Hall
+Leo's Lab Attic - Marie the Doll's Item: Green Stone
+Leo's Lab Attic - Chest of Drawer's Item: GEMs
+Leo's Lab B1 - North-West Platform Lair: Lue the Dolphin
+Leo's Lab B1 - South-East Platform off Small Pipes Lair: Steps to the Attic
+Leo's Lab B1 - South-East Pipe Gauntlet Bottom Lair: Model Town Right
+Leo's Lab B1 - South-East Pipe Gauntlet Top Lair: Mushroom at North-East Lake
+Leo's Lab B1 - North-West Triple Pipe Bridge Lair: Woodstin Trio Deer
+Leo's Lab B2 - Hot Pipe Second From the Left Lair: GEMs
+Leo's Lab B2 - Platform Past the Double Fire Pits Lair: EXP
+Leo's Lab B2 - Lair Inside the Pipe Tube: Elemental Mail
+Leo's Lab B2 - Inverted T Lair: Phoenix
+Leo's Lab B2 - Lair Past the Last Fire Pit: Strange Bottle
+Leo's Lab B2 - South-West Crystal's Item: Big House East Room Mermaid
+Model Town Left - Western Outskirts Lair: Mermaid Dancer Kanna
+Model Town Left - West Small Field Lair: Circling Mouse 1
+Model Town Left - West House on the Middle Hill Lair: Soldier Architect
+Model Town Left - Lair South-West Near the River: Sleeping Soldier
+Model Town Left - Hilltop Ambush Top Lair: EXP
+Model Town Left - West House on the Left Hill Lair: Tulip Above Dungeon
+Model Town Left - Center Lair West of River: GEMs
+Model Town Left - House Maze Lair: Medical Herb
+Model Town Left - Hilltop Ambush Bottom Lair: Soldier Who Knows a Guy
+Model Town Left - North-East Crystal's Item: Sleeping Tulip
+Model Town Left - House Maze Chest: Queen Magridd
+Model Town Left - North Hilltop Left Chest: Medical Herb
+Model Town Left - North Hilltop Right Chest: Emblem C
+Model Town Right - Shrinking Houses Lair: Medical Herb
+Model Town Right - North-West Purple Pools Lair: Dancing Grandma Right
+Model Town Right - South-West Fenced Lair: Hole for the Outside Mole
+Model Town Right - North-East Tree-Lined Path Lair: Snail Jockey (Legend)
+Model Town Right - South-East Farm Lair: Snail with Grandpa
+Model Town Right - Center Suburbs Top Chest: Maid in Concert Hall
+Model Town Right - Center Suburbs Bottom Chest: Red-Hot Mirror
+Power Plant - South-East Gauntlet Lair: Mole's Ribbon
+Power Plant - Tin Doll Boss Lair: Cat in Attic
+Power Plant - Crystal's Item: Soldier with Dr. Leo (Dok)
+Power Plant - Chest Near Start: Leo's brush
+Magridd Castle B1 - North-West Corner Lair: Mermaid Statue to Rockbird
+Magridd Castle B1 - North-East Corner Skeleton Tile Item: Super Bracelet
+Magridd Castle B1 - West Chest: Peekaboo Mole
+Magridd Castle B1 - North-East Corner Chest: Chest of Drawers in Attic
+Magridd Castle Town - Sleeping Soldier's Item: Soul of Reality
+Magridd Castle Town - Queen's Item: Emblem G
+Magridd Castle Town - Concert Hall Secret Tile: Solitary Mushroom
+Magridd Castle Town - Maid at the Bar's Item: Mermaid Attendant Left
+Magridd Castle Town - Castle Grounds Secret Tile: Leo's House
+Magridd Castle Town - King Magridd's Item: Brown Stone
+Magridd Castle Town - Soldier's Soul: Boy in Hut
+Magridd Castle B1 - Lower Level Center Lair: Unobservant Soldier
+Magridd Castle B2 - Left Column South Lair: Medical Herb
+Magridd Castle B2 - Snake Crossing Lair: Big House Main Mermaid with Gift
+Magridd Castle B2 - Spirit Crossing Right Lair: East Mermaid Guard
+Magridd Castle B2 - Left Column North Lair: the VIP Card
+Magridd Castle B2 - Right Column Lair: Model Town Left
+Magridd Castle B2 - Spirit Crossing Left Lair: Strange Bottle
+Magridd Castle B3 - Dodge the 3 Spears Lair: Gourmet Goat
+Magridd Castle B3 - Center Right Lair: Medical Herb
+Magridd Castle B3 - East Now-there-are-Spikes-here Lair: Soldier Guarding Left Tower
+Magridd Castle B3 - East Used-to-be-Spikes Lair: Teleporting Grandma
+Magridd Castle B3 - Dodge the Two Spears Lair: Harp String
+Magridd Castle B2 - North Invisible Chest: EXP
+Magridd Castle B2 - South-West Invisible Chest: Mermaid Statue to Durean
+Magridd Castle B2 - Fake Dead-End Invisible Chest: Squirrel in West Tree
+Magridd Castle B3 - North-West Invisible Chest: GEMs
+Left Tower 1F - North-East Corner Lair: Graveyard Crocodile
+Left Tower 3F - Jail Cells North-West Lair: Light Arrow
+Left Tower 3F - Jail Cells North-East Lair: Chest of Drawers in Locked Room
+Left Tower 3F - Jail Cells South-West Lair: Strange Bottle
+Left Tower 3F - South-East Corner Lair: Stalking Cat 1
+Left Tower 2F - North-West Room Lair: Spark Bomb
+Left Tower 2F - South-East Room Lair: Woodstin Trio Dog
+Right Tower 1F - South-East Corner Lair: Soldier with Castle
+Right Tower 1F - North-West Corner Lair: Mole Hole to South-West
+Right Tower 1F - Center Gauntlet Lair: Bubble Armor
+Right Tower 2F - Center Hidden Room Lair: Medical Herb
+Right Tower 2F - East Lair: Power Bracelet
+Right Tower 3F - Fireball Shooter Ambush Lair: Patrolling Soldier
+Airship Deck - Demon Falcon Boss Lair: Flame Pillar
+Right Tower 2F - Left Chest: Boy Guarding Hideout
+Right Tower 2F - Right Chest: Mole with Gift
+Right Tower 3F - Top-Left Chest: Dolphin in North-West House
+Right Tower 3F - Bottom-Right Chest: Lonely Goat
+Magridd Castle Town - Secret Tile Under the Queen: Rotator
+Airship Dock - Dr. Leo's Item: GEMs
+World of Evil South - South-West Chest: Medical Herb
+World of Evil South - South-East Chest: Steps to Power Plant
+World of Evil South - West Warp Chest: Sleeping Bird
+World of Evil North - East Corridor Chest: Mermaid in North-West House
+Dazzling Space - East Block Corridor Chest: EXP
+Dazzling Space - Chest West of Entrance: Tulip South of Goat Pen
+Victory: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Trial Room - Chest: Sword of Life
+}
+2: {
+  Trail Room - Magician's Soul: Soul of Magician
+  Trial Room - Magician's Item: Flame Ball
+  Underground Castle West - Crystal on Ledge's Item: Locked Door to South-West Room
+  Underground Castle West - Lair West of Bridge: Ivy to Treasure Room
+  Underground Castle West - North-East Lair: Watermill Keeper
+  Underground Castle West - Plant Cage Lair: Bridge Guard
+  Underground Castle West - Triangle Pillar Chest: Big House Upper Mermaid with Gift
+  Underground Castle West - Triangle Torch Chest: Village Chief's House
+}
+3: {
+  Grass Valley Treasure Room - Crystal's Item: Lisa
+  Grass Valley Treasure Room - Left Chest: Nome the Snail
+  Grass Valley Treasure Room - Right Chest: Grandpa for South-West Tunnel
+  Underground Castle East - 4-Lair Gauntlet Lair: West Mermaid Guard
+  Underground Castle East - Entrance Lair: Mermaid Queen
+  Underground Castle East - Narrow Bridge Lair: G.Leaf
+  Underground Castle East - Southern U Lair: Village Chief
+  Underground Castle East - Stone Garden Lair: Zantetsu Sword
+  Underground Castle West - Lair Above the Elevator: Stalking Cat 2
+}
+4: {
+  Fire Shrine 1F - 2nd Bridge from the Left Chest: Emblem H
+  Fire Shrine 1F - Metal Enemies Crystal's Item: Big House West Room Mermaid with Gift.
+  Fire Shrine B1 - Chest Near the Stairs: Greenwood's Guardian
+  Fire Shrine B1 - Metal Enemies Chest: Snail in Secret Room with Gift
+  Fire Shrine B1 - South-East Lair: Mushroom Shoes
+  Fire Shrine B2 - Chest Near Exit: Boy for Western Tunnel
+  Fire Shrine B2 - Heated Circle Lair: Mushroom for Southern Tunnel
+  Fire Shrine B2 - Heated Path Crystal's Item: Magic Flare
+  Fire Shrine B2 - Lair Past First Heated Path: Emblem F
+  Fire Shrine B2 - Lair West of Stairs: Angelfish with Soul
+  Fire Shrine B2 - Metal Enemies Lair: Not-So-Hungry Squirrel
+  Fire Shrine B2 - Snaking Path Narrow Bridge Lair: Great Door to Models of Town
+  Grass Valley - Village Chief's item: Black Stone
+  Water Shrine B1 - B2 to 1F Connector Lair: Soldier with Item Underfoot
+  Water Shrine B1 - Chest Behind the Waterfall: Sleeping Stump and Squirrel
+  Water Shrine B1 - Moving Spike Trap Lair: Soldier with Dr. Leo (Oct)
+  Water Shrine B2 - North Hallway Lair: Marie the Doll
+  Water Shrine B2 - South-West Chest: Spirit Sword
+  Water Shrine B2 - Statue Room Lair: The Soul Blade
+  Water Shrine B2 - West Secret Tile: Grandpa for South-East Lake
+}
+5: {
+  Aurora's Ridge - Buried Treasure Left-Most Chest: Mouse Outside Hole
+  Aurora's Ridge - Lair at Top of the Slide: Soul of Light
+  Greenwood - Greenwood's Guardian's Item: Purple Stone
+  Ice Hill - Center Alcove Left Lair: Monmo the Mole
+  Ice Hill - Center Alcove Right Lair: Soul Armor
+  Ice Hill - Middle Icy Slide Lair: Architect
+  Ice Hill - North-East Corner Lair: a pass
+  Ice Hill - South-West Corner Lair: Soldier Guarding Right Tower
+  Laynole West - Icy Spiral Center Lair: Emblem E
+  Laynole West - Lair Amongst the Ice Flowers: Tornado
+  Laynole West - South-West Corner Lair: Great Door to Lab
+  Mountain North Slope - Mid Level Lair: North-East Mermaid with Gift
+  Mountain North Slope - Mountain Base Lair: Tool Shop Owner's Son
+  Mountain North Slope - South-East Chest Down the Slide: Ivy to Secret Tile
+  Mountain Summit Cave - Lair After the Ice: North-West Grandpa
+  Mountain Summit Cave - Lair in the Middle of the Ice: Mountain King
+  Mountain of Souls - Secret Snail's Item: Ice Armor
+  Seabed Sanctuary - Mermaid Queen's Item: Silver Stone
+  Southerta - Ambush North Lair: Hungry Squirrel
+  Southerta - Ambush South Lair: Mermaid Troupe Leader
+  Southerta - Dried Pond Lair: Dolphin to North-East Platform
+  Southerta - Lair North of Warp: Dream Rod
+}
+6: {
+  Light Shrine B1 - East Lair: Grandpa Guarding Jail
+  Light Shrine B1 - Lair Near Portal: Critical Sword
+  Seabed Sanctuary - North-East Mermaid's Item: Girl for Eastern Tunnel
+  Underground Castle East - Dream-Locked Chest: Steps to 2nd Floor
+}
+7: {
+  Leo's Lab 1F - Free Chest: Statue to Ghost Ship
+  Leo's Lab B1 - North-West Platform Lair: Lue the Dolphin
+  Leo's Lab B1 - North-West Triple Pipe Bridge Lair: Woodstin Trio Deer
+  Leo's Lab B1 - South-East Pipe Gauntlet Bottom Lair: Model Town Right
+  Leo's Lab B1 - South-East Platform off Small Pipes Lair: Steps to the Attic
+  Leo's Lab B1 - South-West Blocked Pipe Lair: King Magridd
+  Leo's Lab B2 - Inverted T Lair: Phoenix
+  Mountain of Souls - Nome the Snail's Item: Blue Stone
+}
+8: {
+  Leo's Lab Attic - Marie the Doll's Item: Green Stone
+  Magridd Castle B1 - North-East Corner Chest: Chest of Drawers in Attic
+  Magridd Castle B1 - North-West Corner Lair: Mermaid Statue to Rockbird
+  Magridd Castle B2 - Left Column North Lair: the VIP Card
+  Magridd Castle B2 - Right Column Lair: Model Town Left
+  Magridd Castle B2 - Snake Crossing Lair: Big House Main Mermaid with Gift
+  Magridd Castle B2 - Spirit Crossing Right Lair: East Mermaid Guard
+  Magridd Castle B3 - Dodge the 3 Spears Lair: Gourmet Goat
+  Magridd Castle B3 - Dodge the Two Spears Lair: Harp String
+  Magridd Castle B3 - East Now-there-are-Spikes-here Lair: Soldier Guarding Left Tower
+  Model Town Right - Center Suburbs Bottom Chest: Red-Hot Mirror
+  Model Town Right - North-West Purple Pools Lair: Dancing Grandma Right
+  Model Town Right - South-West Fenced Lair: Hole for the Outside Mole
+}
+9: {
+  Model Town Left - House Maze Chest: Queen Magridd
+  Model Town Left - Lair South-West Near the River: Sleeping Soldier
+  Model Town Left - North Hilltop Right Chest: Emblem C
+  Model Town Left - North-East Crystal's Item: Sleeping Tulip
+  Right Tower 1F - Center Gauntlet Lair: Bubble Armor
+  Right Tower 1F - North-West Corner Lair: Mole Hole to South-West
+  Right Tower 1F - South-East Corner Lair: Soldier with Castle
+  Seabed Sanctuary - Common House Main Mermaid's Item: Maid at the Bar
+}
+10: {
+  Ghost Ship - Floating Skull Boss Lair: Delicious Seeds
+  Magridd Castle Town - Castle Grounds Secret Tile: Leo's House
+  Magridd Castle Town - King Magridd's Item: Brown Stone
+  Magridd Castle Town - Queen's Item: Emblem G
+  Magridd Castle Town - Sleeping Soldier's Item: Soul of Reality
+  Rockbird - Center Lake North-East Lair: Ivy to Hideout Crystal
+  Rockbird - East Lakes Lower Chest: a door key
+  Rockbird - North-Western Island Crystal's Item: Thunder Ring
+  Southerta - Isolated Lair: Mouse with Gift
+}
+11: {
+  Greenwood - Hungry Squirrel's Item: Red-Hot Stick
+  Magridd Castle B2 - South-West Invisible Chest: Mermaid Statue to Durean
+  Right Tower 2F - Left Chest: Boy Guarding Hideout
+  Right Tower 2F - Right Chest: Mole with Gift
+  World of Evil South - South-East Chest: Steps to Power Plant
+  World of Evil South - West Warp Chest: Sleeping Bird
+}
+12: {
+  Durean - East Island Chest: Platinum Card
+  Durean - Lair West of Entrance: Center Crocodile
+  Durean - Metal Enemies Lair: Ivy to South-East Grass Valley
+  Durean - North Lowest Level Lair: Emblem B
+  Durean - North Middle Level Lair: Lucky Blade
+  Durean - North-East Island Lair: Shy Bird with Gift
+  Power Plant - Chest Near Start: Leo's brush
+  Power Plant - Crystal's Item: Soldier with Dr. Leo (Dok)
+  Power Plant - South-East Gauntlet Lair: Mole's Ribbon
+  Seabed - South-West Crystal's Item: Dolphin to West Chest
+}
+13: {
+  Grass Valley - Secret Tile Under Sleeping Tulip (Push Left): Mermaid Statue to Blester
+  Grass Valley - Secret Tile on Cliff Overlooking Tulip: West Crocodile
+  Greenwood Tunnels - Mole's Reward: Grandpa Guarding Lune
+  Left Tower 1F - North-East Corner Lair: Graveyard Crocodile
+  Left Tower 2F - North-West Room Lair: Spark Bomb
+  Left Tower 2F - South-East Room Lair: Woodstin Trio Dog
+  Left Tower 3F - Jail Cells North-East Lair: Chest of Drawers in Locked Room
+  Left Tower 3F - Jail Cells North-West Lair: Light Arrow
+  Left Tower 3F - South-East Corner Lair: Stalking Cat 1
+  Leo's Painting Room 1 - Entrance Lair: Woodstin Squirrel
+  Leo's Painting Room 2 - Entrance Lair: Mermaid's Tears
+  Leo's Painting Room 2 - Metal Enemies Chest: Psycho Sword
+  Leo's Painting Room 3 - Entrance Lair: Actinidia Plant
+  Leo's Painting Room 4 - North Metal Enemies Lair: Dancing Grandma Left
+  Seabed Sanctuary - Common House West Room Mermaid's Item: Mole with Soul
+}
+14: {
+  Blester - Eastern Pillars Lair: Master Crystal Deer
+  Blester - Lair East of the Entrance: Tool Shop Owner
+  Blester - Metal Enemies Lair: Recovery Sword
+  Durean - East Lava River Chest: Emblem A
+  Durean - North Upper Level Lava Pool Lair: Great Door with Soul
+  Greenwood - Woodstin Trio's Prize: Sleeping Cat
+  Greenwood Tunnels - Mole's Soul: Boy with Gift
+  Greenwood Tunnels - Turbo's Bones Tile: Mousehole Plant
+  Laynole East - Chest Past the Second Invisible Bridge: Prison-Break Dolphin
+  Leo's Lab 1F - Locked Room Under Chest of Drawers: Red-Hot Ball
+  Lune - Clockwise Gauntlet Lair: A.Leaf
+  Lune - Counter-Clockwise Gauntlet Lair: Goat Pen
+  Lune - South-East Corner Lair: Emblem D
+  Seabed North-East - Lair South of the Current: Sleeping Mushroom
+}
+15: {
+  Grass Valley - Goat Pen Secret Tile (South-East Corner): Sleeping Dolphin
+  Greenwood - Master Crystal's Item: the Big Pearl
+  Leo's Lab 2F - Chapel Door's Soul: Singer in Concert Hall
+  Lune - Mushroom's Dream Tile: Soldier with Soul
+  Seabed Sanctuary - Lue the Dolphin's Item: Dr. Leo
+  Victory: Victory
+}
+16: {
+  Magridd Castle Town - Secret Tile Under the Queen: Rotator
+  Seabed North-West - Secret Cove Bottom-Right Chest: a mobile key
+}
+17: {
+  Airship Deck - Demon Falcon Boss Lair: Flame Pillar
+}
