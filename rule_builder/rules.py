@@ -3252,6 +3252,36 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             # No evaluation available
             return True
 
+        def get_value(self, state: CollectionState) -> int | float:
+            """Get the numeric value from this helper for use in Arithmetic.
+
+            Some helpers (like double_jump_height) return integer counts rather than
+            booleans. When used in Arithmetic expressions, we need the actual numeric
+            value, not a boolean conversion.
+            """
+            # Tier 1: Check if body_rule has get_value
+            if self.body_rule is not None:
+                if hasattr(self.body_rule, 'get_value'):
+                    return self.body_rule.get_value(state)
+                if hasattr(self.body_rule, 'get_count'):
+                    return self.body_rule.get_count(state)
+                # Fall back to boolean conversion
+                return 1 if self.body_rule(state) else 0
+
+            # Tier 2/3: Call helper function and return its value
+            if self.helper_func is not None:
+                result = self.helper_func(state, self.player, *self.args)
+                # If result is numeric, return it directly
+                if isinstance(result, (int, float)):
+                    return result
+                # Otherwise treat as boolean
+                return 1 if result else 0
+
+            return 0
+
+        # Alias for Arithmetic compatibility
+        get_count = get_value
+
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
             if self.body_rule is not None:
