@@ -102,6 +102,32 @@ class CallVisitorMixin:
 
         logging.debug(f"Collected all args: {args}")
 
+        # Process keyword arguments
+        kwargs = {}  # Dict of keyword name -> analyzed value
+        kwargs_with_nodes = []  # Pairs of (ast.keyword, result) for filtering
+        for kw_node in node.keywords:
+            if kw_node.arg is None:
+                # **kwargs unpacking - skip for now (complex to handle)
+                logging.debug(f"Skipping **kwargs unpacking in call")
+                continue
+
+            kw_result = self.visit(kw_node.value)
+            if kw_result is None:
+                logging.error(f"Failed to analyze keyword argument {kw_node.arg} in call: {ast.dump(kw_node.value)}")
+                continue
+
+            kwargs[kw_node.arg] = kw_result
+            kwargs_with_nodes.append((kw_node, kw_result))
+
+        if kwargs:
+            logging.debug(f"Collected keyword args: {kwargs}")
+
+        # Filter keyword arguments early (remove state, player, world)
+        # This makes filtered_kwargs available to all code paths below
+        filtered_kwargs = self._filter_special_kwargs(kwargs_with_nodes) if kwargs_with_nodes else {}
+        if filtered_kwargs:
+            logging.debug(f"Filtered keyword args: {filtered_kwargs}")
+
         # --- Determine the type of call ---
 
         # 1. Helper function call (identified by name)
@@ -182,6 +208,8 @@ class CallVisitorMixin:
 
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
+
+            # Note: filtered_kwargs is already computed above after collecting kwargs
 
             # Resolve variable references in arguments (e.g., lambda defaults)
             # Skip this when preserve_parameter_names is True - we want to keep params as name references
@@ -307,7 +335,7 @@ class CallVisitorMixin:
                             if has_dynamic_for_loops_resolved(resolved_func):
                                 logging.debug(f"Function {resolved_func_name} has dynamic for loops, preserving as helper")
                                 self._register_helper_usage(resolved_func_name, resolved_func, args_with_nodes)
-                                return self._make_helper_rule(resolved_func_name, filtered_args)
+                                return self._make_helper_rule(resolved_func_name, filtered_args, filtered_kwargs)
 
                             # Check if 'state' is passed as an argument using original AST nodes
                             has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
@@ -361,7 +389,7 @@ class CallVisitorMixin:
                                                 else:
                                                     logging.debug(f"Not caching {actual_func_name} - has params {extra_params}")
                                             # Return a helper call with original args (like manual preservation)
-                                            return self._make_helper_rule(actual_func_name, filtered_args)
+                                            return self._make_helper_rule(actual_func_name, filtered_args, filtered_kwargs)
                                     logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                                     return recursive_result
                                 else:
@@ -383,7 +411,7 @@ class CallVisitorMixin:
                  if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
                      if closure_func_name and self.game_handler.should_preserve_as_helper(closure_func_name):
                          logging.debug(f"Game handler requests preserving closure {closure_func_name} as helper, skipping recursive analysis")
-                         return self._make_helper_rule(closure_func_name, filtered_args)
+                         return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
@@ -438,7 +466,7 @@ class CallVisitorMixin:
                      if has_dynamic_for_loops(actual_func):
                          logging.debug(f"Function {closure_func_name} has dynamic for loops, preserving as helper")
                          self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
-                         return self._make_helper_rule(closure_func_name, filtered_args)
+                         return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
 
                      # Check if 'state' is passed as an argument (directly or indirectly)
                      has_state_arg = any(references_state(arg) for arg in node.args)
@@ -494,7 +522,7 @@ class CallVisitorMixin:
                                           else:
                                               logging.debug(f"Not caching {closure_func_name} - has params {extra_params}")
                                       # Return a helper call with original args (like manual preservation)
-                                      return self._make_helper_rule(closure_func_name, filtered_args)
+                                      return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
                               logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                               return recursive_result # Return the detailed analysis result
                           else:
@@ -965,8 +993,8 @@ class CallVisitorMixin:
                 logging.debug(f"Created map result: {result}")
                 return result
 
-            # Create helper result with filtered args (no state/player in JSON)
-            result = self._make_helper_rule(func_name, filtered_args)
+            # Create helper result with filtered args and kwargs (no state/player in JSON)
+            result = self._make_helper_rule(func_name, filtered_args, filtered_kwargs)
             logging.debug(f"Created helper result: {result}")
             # Register for automatic discovery
             self._register_helper_usage(func_name)
@@ -1291,7 +1319,7 @@ class CallVisitorMixin:
 
                 # Create helper result with the captured arguments
                 # DO NOT recursively analyze - we want to capture the call AS IS with its arguments
-                result = self._make_helper_rule(method_name, filtered_args)
+                result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                 logging.debug(f"Created helper result for self method: {result}")
                 # Register for automatic discovery
                 self._register_helper_usage(method_name)
@@ -1359,7 +1387,7 @@ class CallVisitorMixin:
                 filtered_args = resolved_args
 
                 # Create helper result
-                result = self._make_helper_rule(method_name, filtered_args)
+                result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                 logging.debug(f"Created helper result for logic method: {result}")
                 # Register for automatic discovery
                 self._register_helper_usage(method_name)
@@ -1383,7 +1411,7 @@ class CallVisitorMixin:
                     filtered_args = self._filter_special_args(args_with_nodes)
 
                     # Create helper result
-                    result = self._make_helper_rule(method_name, filtered_args)
+                    result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                     logging.debug(f"Created helper result for module function: {result}")
 
                     # Register for automatic discovery WITH the function object
@@ -1583,7 +1611,7 @@ class CallVisitorMixin:
                     filtered_args = resolved_args
 
                     # Create helper result
-                    result = self._make_helper_rule(method_name, filtered_args)
+                    result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                     logging.debug(f"Created helper result for module method: {result}")
                     # Register for automatic discovery
                     self._register_helper_usage(method_name)

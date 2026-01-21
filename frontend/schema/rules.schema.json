@@ -314,7 +314,12 @@
         "args": {
           "type": "array",
           "items": { "$ref": "#/$defs/rule" },
-          "description": "Arguments for 'helper', 'state_method', 'function_call'."
+          "description": "Positional arguments for 'helper', 'state_method', 'function_call'."
+        },
+        "kwargs": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/rule" },
+          "description": "Keyword arguments for 'helper' type. Keys are parameter names, values are rule objects."
         },
         "conditions": {
           "type": "array",

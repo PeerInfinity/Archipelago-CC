@@ -4551,6 +4551,7 @@ class RuleCodeGenerator:
         """Convert helper rule to HelperCall()."""
         helper_name = rule.get('name', '')
         args = rule.get('args', [])
+        kwargs = rule.get('kwargs', {})
 
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
@@ -4560,53 +4561,18 @@ class RuleCodeGenerator:
             # Convert arguments to Python code
             arg_strs = []
             for arg in args:
-                if isinstance(arg, dict) and arg.get('type') == 'constant':
-                    arg_strs.append(repr(arg.get('value')))
-                elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
-                    # Rule Builder format constant
-                    arg_strs.append(repr(arg.get('args', {}).get('value')))
-                elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
-                    # Resolve setting_value args to their actual values
-                    setting = arg.get('setting', '')
-                    if setting in self.settings:
-                        arg_strs.append(repr(self.settings[setting]))
-                    else:
-                        arg_strs.append('None')
-                elif isinstance(arg, dict) and arg.get('rule') == 'AST_setting_value':
-                    # Rule Builder format setting value (from CC converter)
-                    setting = arg.get('args', {}).get('setting', '')
-                    if setting in self.settings:
-                        arg_strs.append(repr(self.settings[setting]))
-                    else:
-                        arg_strs.append('None')
-                elif isinstance(arg, dict) and arg.get('rule') == 'Arithmetic':
-                    arith_result = self._evaluate_arithmetic_constant(arg)
-                    arg_strs.append(arith_result if arith_result else 'None')
-                elif isinstance(arg, dict) and arg.get('type') == 'attribute':
-                    # Handle attribute access on setting_value (e.g., world.options.goal.value)
-                    obj = arg.get('object', {})
-                    if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
-                        setting = obj.get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    else:
-                        arg_strs.append('None')
-                elif isinstance(arg, dict) and arg.get('type') == 'name':
-                    # Handle name references from AST format
-                    name = arg.get('name', '')
-                    if name in ('self', 'world'):
-                        # 'self' or 'world' references represent the game world object in the
-                        # original rule lambda. For worldgen helpers, this is implicitly available
-                        # via state.multiworld.worlds[player], so we skip this argument entirely.
-                        pass  # Skip this argument - don't add to arg_strs
-                    else:
-                        # Unknown name reference - default to None
-                        arg_strs.append('None')
-                else:
-                    # For complex args, try to convert
-                    arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
+                arg_strs.append(self._convert_helper_arg(arg))
+
+            # Convert keyword arguments to Python code
+            kwarg_strs = []
+            for kw_name, kw_value in kwargs.items():
+                kw_value_str = self._convert_helper_arg(kw_value)
+                # Skip None values that represent filtered args
+                if kw_value_str != 'None' or not isinstance(kw_value, dict):
+                    kwarg_strs.append(f'{kw_name}={kw_value_str}')
+
+            # Filter out None values from arg_strs (which represent skipped args like 'world')
+            arg_strs = [a for a in arg_strs if a is not None]
 
             # Build HelperCall with helper_func reference
             # Try to convert the helper body to a Rule Builder expression for Tier 1 support
@@ -4617,6 +4583,10 @@ class RuleCodeGenerator:
 
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
+
+            if kwarg_strs:
+                # Pass kwargs as a dict to HelperCall
+                parts.append(f'kwargs={{{", ".join(kwarg_strs)}}}')
 
             if body_rule_code:
                 # Tier 1: Include body_rule for full explain support
@@ -4630,6 +4600,63 @@ class RuleCodeGenerator:
         # under default/normal game settings
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_helper_arg(self, arg: Any) -> str:
+        """Convert a single helper argument to Python code string.
+
+        Args:
+            arg: The argument value (can be a dict with type info or a raw value)
+
+        Returns:
+            Python code string representation of the argument, or None if it should be skipped
+        """
+        if isinstance(arg, dict) and arg.get('type') == 'constant':
+            return repr(arg.get('value'))
+        elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
+            # Rule Builder format constant
+            return repr(arg.get('args', {}).get('value'))
+        elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
+            # Resolve setting_value args to their actual values
+            setting = arg.get('setting', '')
+            if setting in self.settings:
+                return repr(self.settings[setting])
+            else:
+                return 'None'
+        elif isinstance(arg, dict) and arg.get('rule') == 'AST_setting_value':
+            # Rule Builder format setting value (from CC converter)
+            setting = arg.get('args', {}).get('setting', '')
+            if setting in self.settings:
+                return repr(self.settings[setting])
+            else:
+                return 'None'
+        elif isinstance(arg, dict) and arg.get('rule') == 'Arithmetic':
+            arith_result = self._evaluate_arithmetic_constant(arg)
+            return arith_result if arith_result else 'None'
+        elif isinstance(arg, dict) and arg.get('type') == 'attribute':
+            # Handle attribute access on setting_value (e.g., world.options.goal.value)
+            obj = arg.get('object', {})
+            if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
+                setting = obj.get('setting', '')
+                if setting in self.settings:
+                    return repr(self.settings[setting])
+                else:
+                    return 'None'
+            else:
+                return 'None'
+        elif isinstance(arg, dict) and arg.get('type') == 'name':
+            # Handle name references from AST format
+            name = arg.get('name', '')
+            if name in ('self', 'world'):
+                # 'self' or 'world' references represent the game world object in the
+                # original rule lambda. For worldgen helpers, this is implicitly available
+                # via state.multiworld.worlds[player], so we skip this argument entirely.
+                return None  # Signal to skip this argument
+            else:
+                # Unknown name reference - default to None
+                return 'None'
+        else:
+            # For complex args, try to convert
+            return repr(arg) if not isinstance(arg, dict) else 'None'
 
     def _convert_weighted_sum(self, rule: Dict[str, Any]) -> str:
         """Convert weighted_sum helper to WeightedSum rule.
@@ -4693,6 +4720,7 @@ class RuleCodeGenerator:
         instead of AST format with 'type': 'helper'.
         """
         args = rule.get('args', [])
+        kwargs = rule.get('kwargs', {})
 
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
@@ -4807,6 +4835,13 @@ class RuleCodeGenerator:
                 else:
                     arg_strs.append(repr(arg))
 
+            # Convert keyword arguments using the same logic
+            kwarg_strs = []
+            for kw_name, kw_value in kwargs.items():
+                kw_value_str = self._convert_helper_kwarg_value(kw_value)
+                if kw_value_str is not None:
+                    kwarg_strs.append(f'{kw_name}={kw_value_str}')
+
             # Build HelperCall with helper_func reference
             # Try to convert the helper body to a Rule Builder expression for Tier 1 support
             body_rule_code = self._try_convert_helper_body_to_rule(helper_name, args)
@@ -4815,6 +4850,10 @@ class RuleCodeGenerator:
 
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
+
+            if kwarg_strs:
+                # Pass kwargs as a dict to HelperCall
+                parts.append(f'kwargs={{{", ".join(kwarg_strs)}}}')
 
             if body_rule_code:
                 # Tier 1: Include body_rule for full explain support
@@ -4829,6 +4868,37 @@ class RuleCodeGenerator:
         # (This matches the behavior of _convert_helper for consistency)
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_helper_kwarg_value(self, value: Any) -> str:
+        """Convert a single helper keyword argument value to Python code string.
+
+        This uses the same logic as positional arguments but returns the code string.
+        """
+        if isinstance(value, dict):
+            rule_type = value.get('rule', '')
+            if rule_type == 'Constant':
+                return repr(value.get('args', {}).get('value'))
+            elif rule_type == 'True_':
+                return 'True'
+            elif rule_type == 'False_':
+                return 'False'
+            elif value.get('type') == 'constant':
+                return repr(value.get('value'))
+            elif rule_type == 'SettingValue' or rule_type == 'AST_setting_value':
+                setting = value.get('args', {}).get('setting', '')
+                if setting in self.settings:
+                    return repr(self.settings[setting])
+                return 'None'
+            elif rule_type == 'OptionValue':
+                option = value.get('args', {}).get('option', '')
+                if option in self.settings:
+                    return repr(self.settings[option])
+                return 'None'
+            else:
+                # For complex values, try to return as repr
+                return 'None'
+        else:
+            return repr(value)
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to a location_item_name() call.
