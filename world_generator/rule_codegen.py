@@ -919,6 +919,8 @@ class RuleCodeGenerator:
         converters = {
             'constant': self._convert_constant,
             'item_check': self._convert_item_check,
+            'item_check_any': self._convert_item_check_any,
+            'item_check_all': self._convert_item_check_all,
             'count_check': self._convert_count_check,
             'group_check': self._convert_group_check,
             'and': self._convert_and,
@@ -1615,6 +1617,50 @@ class RuleCodeGenerator:
             return f'Has("{item_escaped}")'
         else:
             return f'Has("{item_escaped}", {count})'
+
+    def _convert_item_check_any(self, rule: Dict[str, Any]) -> str:
+        """Convert item_check_any to HasAny().
+
+        item_check_any represents "has any of these items" checks.
+        Used by game-specific exporters like Soul Blazer.
+        """
+        items_raw = rule.get('items', [])
+        items = [self._extract_constant_value(item, str(item)) for item in items_raw]
+
+        if not items:
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if len(items) == 1:
+            self.required_imports.add('Has')
+            item_escaped = self._escape_string(items[0])
+            return f'Has("{item_escaped}")'
+
+        self.required_imports.add('HasAny')
+        items_str = ', '.join(repr(item) for item in items)
+        return f'HasAny({items_str})'
+
+    def _convert_item_check_all(self, rule: Dict[str, Any]) -> str:
+        """Convert item_check_all to HasAll().
+
+        item_check_all represents "has all of these items" checks.
+        Used by game-specific exporters like Soul Blazer.
+        """
+        items_raw = rule.get('items', [])
+        items = [self._extract_constant_value(item, str(item)) for item in items_raw]
+
+        if not items:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        if len(items) == 1:
+            self.required_imports.add('Has')
+            item_escaped = self._escape_string(items[0])
+            return f'Has("{item_escaped}")'
+
+        self.required_imports.add('HasAll')
+        items_str = ', '.join(repr(item) for item in items)
+        return f'HasAll({items_str})'
 
     def _convert_count_check(self, rule: Dict[str, Any]) -> str:
         """Convert count_check to Has().
