@@ -6012,9 +6012,13 @@ class HelperCodeGenerator:
         """
         option = expr.get('option', '')
 
-        # Check if this is actually a known option or a world attribute
+        # Extract base option name for checking (handles paths like "goal.option_vanilla")
+        # The base name is the first part before any '.' (e.g., "goal" from "goal.option_vanilla")
+        base_option = option.split('.')[0] if '.' in option else option
+
+        # Check if the base option is a known option or a world attribute
         # Some games export world attributes with option_value type incorrectly
-        if option in self.option_definitions:
+        if base_option in self.option_definitions:
             base_path = f'state.multiworld.worlds[player].options.{option}'
         else:
             # Not a known option - treat as world attribute
