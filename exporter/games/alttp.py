@@ -118,6 +118,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._is_glitch_mode = self._check_glitch_mode(world)
         self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
+        self._entrance_shuffle_mode = self._check_entrance_shuffle_mode(world)
         self._item_placements: Dict[str, str] = {}
 
     def _check_glitch_mode(self, world) -> bool:
@@ -167,6 +168,27 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if is_universal:
             logger.info(f"ALttP: Universal small keys detected (small_key_shuffle={small_key_value})")
         return is_universal
+
+    def _check_entrance_shuffle_mode(self, world) -> str:
+        """Check the entrance shuffle mode.
+
+        Returns the entrance_shuffle option value, or 'vanilla' if not set.
+        Used to detect modes that trigger complex glitch rules.
+
+        Entrance shuffle modes:
+        - vanilla: No shuffle
+        - dungeons_simple, simple, restricted: Basic shuffles with simpler rules
+        - dungeons_full, full: Complex rules with dungeon_entrance.access_rule
+        - dungeons_crossed, crossed, insanity: Complex rules with fix_fake_world
+        """
+        if world is None or not hasattr(world, 'options'):
+            return 'vanilla'
+        if not hasattr(world.options, 'entrance_shuffle'):
+            return 'vanilla'
+        mode = world.options.entrance_shuffle.current_key
+        if mode in ('full', 'dungeons_full'):
+            logger.info(f"ALttP: Entrance shuffle mode '{mode}' detected - will intercept glitch rules")
+        return mode
 
     def _get_option_value(self, option_name: str) -> Any:
         """Get the value of an option from the world.
@@ -954,10 +976,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._current_location_context = location_name
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
-        """Intercept bunny rules before standard analysis.
+        """Intercept complex rules before standard analysis.
 
-        Bunny rules are complex lambdas created by set_bunny_rules() that can't be
-        properly analyzed because they contain nested lambdas and dynamic path lookups.
+        Handles:
+        1. Bunny rules: Complex lambdas created by set_bunny_rules() that can't be
+           properly analyzed because they contain nested lambdas and dynamic path lookups.
+        2. Dungeon reentry rules: Lambdas from dungeon_reentry_rules() that reference
+           dungeon_entrance closure variable which can't be serialized.
+
         We detect these by checking the function's qualified name and replace them
         with simpler rules.
         """
@@ -971,8 +997,136 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             logger.debug(f"ALttP: Intercepting bunny rule for '{location_name}'")
             return self._get_bunny_replacement_rule(location_name)
 
-        # Not a bunny rule - let standard analysis handle it
+        # Check if this is a dungeon reentry rule lambda
+        # These are created in dungeon_reentry_rules() and reference dungeon_entrance
+        if 'dungeon_reentry_rules' in func_qualname:
+            target_name = rule_target_name or self._current_location_context or ''
+            return self._get_dungeon_reentry_replacement_rule(rule_func, target_name)
+
+        # Check if this is an underworld glitch rule lambda
+        # These are created in underworld_glitches_rules() and may reference dungeon_entrance
+        if 'underworld_glitches_rules' in func_qualname:
+            target_name = rule_target_name or self._current_location_context or ''
+            return self._get_underworld_glitch_replacement_rule(rule_func, target_name)
+
+        # Not a special rule - let standard analysis handle it
         return None
+
+    def _get_dungeon_reentry_replacement_rule(self, rule_func, target_name: str) -> Dict[str, Any]:
+        """Get a replacement rule for dungeon reentry rules.
+
+        Dungeon reentry rules from dungeon_reentry_rules() reference a dynamically
+        determined dungeon_entrance variable that can't be serialized. These rules
+        are active when entrance_shuffle is 'full' or 'dungeons_full'.
+
+        The rules are:
+        1. Entry rule: dungeon_entrance.access_rule(fake_pearl_state(state, player))
+           - Checks if dungeon entrance is accessible with Moon Pearl
+           - Simplified to: requires Moon Pearl (conservative but safe)
+
+        2. Exit rule: dungeon_entrance.can_reach(state)
+           - Checks if dungeon entrance region is reachable
+           - Simplified to: True_ (permissive - allows exit even if entrance not reached)
+           - This is safe because it's an exit restriction, not an entry requirement
+
+        Args:
+            rule_func: The rule function to analyze
+            target_name: The name of the entrance/location this rule applies to
+
+        Returns:
+            A simplified rule dict
+        """
+        # Try to determine which type of rule this is by examining closure variables
+        closure_vars = {}
+        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+            free_vars = rule_func.__code__.co_freevars
+            for var_name, cell in zip(free_vars, rule_func.__closure__):
+                try:
+                    closure_vars[var_name] = cell.cell_contents
+                except ValueError:
+                    pass
+
+        # Check if dungeon_entrance is in closure - if so, this is one of the complex rules
+        if 'dungeon_entrance' in closure_vars:
+            dungeon_entrance = closure_vars['dungeon_entrance']
+            entrance_name = getattr(dungeon_entrance, 'name', 'unknown')
+            logger.info(f"ALttP: Intercepting dungeon_reentry rule for '{target_name}' "
+                       f"(dungeon_entrance={entrance_name})")
+
+            # Try to get the source code to distinguish between access_rule and can_reach
+            try:
+                import inspect
+                source = inspect.getsource(rule_func)
+                if 'access_rule' in source and 'fake_pearl_state' in source:
+                    # Entry rule - requires reaching dungeon entrance with Moon Pearl
+                    # Simplify to just requiring Moon Pearl
+                    logger.debug(f"ALttP: Replacing access_rule(fake_pearl_state) with Moon Pearl requirement")
+                    return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+                elif 'can_reach' in source:
+                    # Exit rule - checks if entrance region is reachable
+                    # Simplify to True_ (permissive) since we can't know the entrance
+                    logger.debug(f"ALttP: Replacing can_reach rule with True_")
+                    return {'rule': 'True_'}
+            except (OSError, TypeError):
+                pass
+
+            # Default: if we can't determine the type, use Moon Pearl (safer)
+            logger.debug(f"ALttP: Unknown dungeon_reentry rule type, using Moon Pearl")
+            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+
+        # No dungeon_entrance in closure - this might be a simpler rule
+        # Let it fall through to standard analysis
+        logger.debug(f"ALttP: dungeon_reentry rule without dungeon_entrance closure for '{target_name}'")
+        return None
+
+    def _get_underworld_glitch_replacement_rule(self, rule_func, target_name: str) -> Optional[Dict[str, Any]]:
+        """Get a replacement rule for underworld glitch rules.
+
+        Some rules in underworld_glitches_rules() also reference dungeon_entrance
+        through calls to dungeon_reentry_rules(). These need similar handling.
+
+        Args:
+            rule_func: The rule function to analyze
+            target_name: The name of the entrance/location this rule applies to
+
+        Returns:
+            A simplified rule dict, or None if standard analysis should handle it
+        """
+        # Check closure variables for dungeon_entrance
+        closure_vars = {}
+        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+            free_vars = rule_func.__code__.co_freevars
+            for var_name, cell in zip(free_vars, rule_func.__closure__):
+                try:
+                    closure_vars[var_name] = cell.cell_contents
+                except ValueError:
+                    pass
+
+        # Only intercept if dungeon_entrance is in closure
+        if 'dungeon_entrance' not in closure_vars:
+            return None
+
+        dungeon_entrance = closure_vars['dungeon_entrance']
+        entrance_name = getattr(dungeon_entrance, 'name', 'unknown')
+        logger.info(f"ALttP: Intercepting underworld_glitch rule for '{target_name}' "
+                   f"(dungeon_entrance={entrance_name})")
+
+        # Try to get the source code to understand the rule
+        try:
+            import inspect
+            source = inspect.getsource(rule_func)
+            if 'access_rule' in source and 'fake_pearl_state' in source:
+                logger.debug(f"ALttP: Replacing underworld access_rule with Moon Pearl requirement")
+                return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+            elif 'can_reach' in source:
+                logger.debug(f"ALttP: Replacing underworld can_reach rule with True_")
+                return {'rule': 'True_'}
+        except (OSError, TypeError):
+            pass
+
+        # Default: use Moon Pearl requirement
+        logger.debug(f"ALttP: Unknown underworld_glitch rule type, using Moon Pearl")
+        return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.
