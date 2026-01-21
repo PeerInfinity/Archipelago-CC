@@ -1147,6 +1147,10 @@ class RuleCodeGenerator:
             count = args.get('count', 1)
             if not items:
                 return self._make_bool_constant(True)
+            # HasFromList expects count to be an int, not a complex expression
+            # If count is a dict (expression), return None to signal lambda mode needed
+            if isinstance(count, dict):
+                return None  # Signal that lambda mode is needed
             self.required_imports.add('HasFromList')
             # HasFromList expects (*item_names: str, count: int = 1)
             items_str = ', '.join(repr(item) for item in items)
@@ -1157,6 +1161,10 @@ class RuleCodeGenerator:
             count = args.get('count', 1)
             if not items:
                 return self._make_bool_constant(True)
+            # HasFromListUnique expects count to be an int, not a complex expression
+            # If count is a dict (expression), return None to signal lambda mode needed
+            if isinstance(count, dict):
+                return None  # Signal that lambda mode is needed
             self.required_imports.add('HasFromListUnique')
             # HasFromListUnique expects (*item_names: str, count: int = 1)
             items_str = ', '.join(repr(item) for item in items)
@@ -5192,6 +5200,7 @@ class HelperCodeGenerator:
         self.helper_data: Dict[str, Any] = {}  # Full helper data including param_mappings
         self.uses_math: bool = False  # Track if math functions are used
         self.uses_placement_lookup: bool = False  # Track if placement_lookup is used
+        self.uses_logging: bool = False  # Track if logging module is used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
         # Track NamedTuple types encountered during code generation
         # Maps tuple of field names to a generated class name
@@ -5232,6 +5241,22 @@ class HelperCodeGenerator:
         """
         self._current_location = location
         self._current_entrance = entrance
+
+    def _escape_string(self, s: str, quote_char: str = '"') -> str:
+        """Escape a string for use in generated Python code.
+
+        Args:
+            s: The string to escape
+            quote_char: The quote character to escape (" or ')
+
+        Returns:
+            The escaped string (without surrounding quotes)
+        """
+        escaped = s.replace('\\', '\\\\')
+        if quote_char == '"':
+            return escaped.replace('"', '\\"')
+        else:
+            return escaped.replace("'", "\\'")
 
     def _get_namedtuple_class_name(self, fields: tuple) -> str:
         """
@@ -5935,12 +5960,16 @@ class HelperCodeGenerator:
                 function = args.get('function', {})
                 # Try to generate the function call expression
                 if isinstance(function, dict):
-                    # Check if this is a math module function call (e.g., math.ceil)
-                    # and set uses_math flag if so
+                    # Check if this is a math or logging module function call
+                    # and set the appropriate flags for imports
                     if function.get('type') == 'attribute':
                         obj = function.get('object', {})
-                        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
-                            self.uses_math = True
+                        if isinstance(obj, dict) and obj.get('type') == 'name':
+                            obj_name = obj.get('name')
+                            if obj_name == 'math':
+                                self.uses_math = True
+                            elif obj_name == 'logging':
+                                self.uses_logging = True
 
                     func_expr = self._generate_expression(function)
                     # Function call arguments may be in 'call_args' or 'args' (nested)
@@ -7144,12 +7173,16 @@ class HelperCodeGenerator:
         func = expr.get('function', {})
         args = expr.get('args', [])
 
-        # Check if this is a math module function call (e.g., math.sqrt)
-        # and set uses_math flag if so
+        # Check if this is a math or logging module function call
+        # and set the appropriate flags for imports
         if isinstance(func, dict) and func.get('type') == 'attribute':
             obj = func.get('object', {})
-            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
-                self.uses_math = True
+            if isinstance(obj, dict) and obj.get('type') == 'name':
+                obj_name = obj.get('name')
+                if obj_name == 'math':
+                    self.uses_math = True
+                elif obj_name == 'logging':
+                    self.uses_logging = True
 
             # Special handling for calling .count() on a generator expression
             # Generator objects don't have .count(), need to wrap in tuple()
