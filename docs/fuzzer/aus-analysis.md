@@ -5,12 +5,16 @@
 **Game**: An Untitled Story
 **APWorld Source**: https://github.com/ThatOneGuy27/Archipelago-aus
 **Version**: v1.1-beta
-**Failure Rate**: 100% (10/10 runs failed)
-**Error Type**: `None` (logic mismatch - NameError during rule evaluation)
+**Status**: FIXED
+**Failure Rate**: 0% (10/10 runs pass)
 
-## Root Cause
+## Solution Implemented
 
-The UT fuzzer fails because helper functions referenced in the exported rules are not defined in the generated worldgen code.
+Created `exporter/games/aus.py` game handler that provides manual helper definitions for the `AUSRules` class methods. Also fixed a bug in `rule_builder/rules.py` where `HelperCall.Resolved` lacked a `get_value()` method, causing integer-returning helpers to be incorrectly converted to booleans when used in Arithmetic expressions.
+
+## Original Root Cause
+
+The UT fuzzer originally failed because helper functions referenced in the exported rules were not defined in the generated worldgen code.
 
 ### Technical Details
 
@@ -136,13 +140,36 @@ Add `aus` to a list of apworlds known to be incompatible with UT fuzzer.
 ## Test Commands
 
 ```bash
-# Reproduce failure
-python fuzz.py -r 1 -j 1 -g aus -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed 0
-
-# View error log
-cat fuzz_output/error/aus/0/0.log
+# Run fuzzer tests
+python fuzz.py -r 10 -j 4 -g aus -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
+
+## Fix Details
+
+### Files Changed
+
+1. **`exporter/games/aus.py`** (new)
+   - Defines all 18 helper functions used by `AUSRules` class
+   - Simple item checks: `can_divebomb`, `has_fire`, `hatched`, etc.
+   - Composite helpers: `can_shoot` (fire OR ice), `can_light_torches`
+   - Integer helpers: `jump_height`, `double_jump_height`
+   - Parameterized helpers: `jump_height_min(amount)`, `total_money(amount)`
+
+2. **`rule_builder/rules.py`**
+   - Added `get_value()` method to `HelperCall.Resolved`
+   - Enables integer-returning helpers to work correctly in Arithmetic
+   - Without this fix, helpers returning int were converted to 0/1
+
+### Key Insight
+
+The apworld uses helpers like `double_jump_height()` that return integers, and these are used in arithmetic expressions:
+```python
+double_jump_height(state) + can_stick(state) >= 2
+```
+
+The Rule Builder's `Arithmetic` class calls `_get_operand_value()` which looks for `get_value()` or `get_count()` methods. Without these, it falls back to boolean conversion (truthy=1, falsy=0), breaking integer arithmetic.
 
 ---
 *Analysis date: 2026-01-21*
+*Fix date: 2026-01-21*
 *Archipelago version: 0.6.5*
