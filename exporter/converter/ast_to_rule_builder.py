@@ -444,12 +444,18 @@ class ASTToRuleBuilder:
 
         if method == 'has_all':
             items = get_items_from_arg(get_arg_value(0, []), [])
-            if isinstance(items, list) and len(items) > 0:
+            if isinstance(items, list):
+                if len(items) == 0:
+                    # has_all([]) is vacuously true
+                    return self._make_rule('True_', {})
                 return self._make_rule('HasAll', {'items': items})
 
         elif method == 'has_any':
             items = get_items_from_arg(get_arg_value(0, []), [])
-            if isinstance(items, list) and len(items) > 0:
+            if isinstance(items, list):
+                if len(items) == 0:
+                    # has_any([]) is always false - can't have any of nothing
+                    return self._make_rule('False_', {})
                 return self._make_rule('HasAny', {'items': items})
 
         elif method == 'has_all_counts':
