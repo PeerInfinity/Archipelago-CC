@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison (APWorlds)
 
-**Generated:** 2026-01-21 00:43:35
+**Generated:** 2026-01-21 20:05:49
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -14,8 +14,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 16 (12.9%)
-- **Passing Original Only:** 26 (21.0%)
+- **Passing Both:** 17 (13.7%)
+- **Passing Original Only:** 25 (20.2%)
 - **Passing Modified Only:** 11 (8.9%)
 - **Passing Neither:** 71 (57.3%)
 
@@ -40,9 +40,9 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Axiom Verge | ⚠️ 50.0% | ❌ 0.0% |
 | Balatro | ❌ 0.0% | ❌ 0.0% |
 | Brotato | ❌ 30.0% | ✅ 70.0% |
-| Castlevania: Dawn of Sorrow | ✅ 100.0% | ❌ 30.0% |
+| Castlevania: Dawn of Sorrow | ✅ 100.0% | ⚠️ 50.0% |
 | Cavern of Dreams | ❌ 20.0% | ❌ 0.0% |
-| ChecksMate | ✅ 100.0% | ✅ 100.0% |
+| ChecksMate | ✅ 100.0% | ⚠️ 90.0% |
 | Chrono Trigger Jets of Time | ❌ 0.0% | ❌ 0.0% |
 | ClusterTruck | ❌ 30.0% | ❌ 30.0% |
 | Corn Kidz 64 | ✅ 100.0% | ❌ 0.0% |
@@ -55,7 +55,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Diddy Kong Racing | ⚠️ 50.0% | ❌ 0.0% |
 | Digimon World | ⚠️ 60.0% | ❌ 0.0% |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 20.0% |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 0.0% |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% |
 | Final Fantasy Tactics Advance | ⚠️ 70.0% | ⚠️ 60.0% |
 | Fire Emblem Sacred Stones | ❌ 40.0% | ❌ 0.0% |
@@ -66,11 +66,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Grim Dawn | ⚠️ 70.0% | ⚠️ 60.0% |
 | Hammerwatch | ❌ 40.0% | ⚠️ 50.0% |
 | Hatsune Miku Project Diva Mega Mix+ | ❌ 10.0% | ✅ 100.0% |
-| Here Comes Niko! | ⚠️ 80.0% | ❌ 40.0% |
+| Here Comes Niko! | ⚠️ 80.0% | ✅ 100.0% |
 | Iji | ❌ 30.0% | ❌ 0.0% |
 | Into the Breach | ❌ 20.0% | ❌ 0.0% |
 | Isles Of Sea And Sky | ✅ 100.0% | ✅ 100.0% |
-| Ittle Dew 2 | ✅ 90.0% | ❌ 0.0% |
+| Ittle Dew 2 | ✅ 90.0% | ✅ 90.0% |
 | Jigsaw | ❌ 30.0% | ❌ 0.0% |
 | K-On! After School Live!! | ✅ 100.0% | ✅ 100.0% |
 | Keep Talking and Nobody Explodes | ⚠️ 70.0% | ❌ 0.0% |
@@ -82,7 +82,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Lego Star Wars: The Complete Saga | ✅ 90.0% | ⚠️ 80.0% |
 | Lil Gator Game | ❌ 0.0% | ❌ 0.0% |
 | Lingo 2 | ⚠️ 90.0% | ❌ 0.0% |
-| Little Witch Nobeta | ✅ 100.0% | ❌ 0.0% |
+| Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% |
 | Luigi's Mansion | ❌ 20.0% | ✅ 70.0% |
 | Lunacid | ❌ 0.0% | ❌ 10.0% |
 | Majora's Mask Recompiled | ❌ 0.0% | ❌ 0.0% |
@@ -145,25 +145,26 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% |
 | Zelda II: The Adventure of Link | ❌ 20.0% | ✅ 100.0% |
-| osu! | ❌ 0.0% | ✅ 100.0% |
-| plateup | ❌ 0.0% | ⚠️ 80.0% |
+| osu! | ❌ 0.0% | ❌ 0.0% |
+| plateup | ❌ 0.0% | ⚠️ 70.0% |
 
-## Games Passing Both (16)
+## Games Passing Both (17)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name |
 |-----------|
-| ChecksMate |
 | Cuphead |
 | Dome Keeper |
 | GZDoom |
 | Isles Of Sea And Sky |
+| Ittle Dew 2 |
 | K-On! After School Live!! |
 | Kingdom Hearts Birth by Sleep |
 | Kingdom Hearts Chain of Memories |
 | Kingdom Hearts RE Chain of Memories |
 | Kirby Super Star |
+| Little Witch Nobeta |
 | MetroCUBEvania |
 | Ratchet & Clank 2 |
 | Spinball |
@@ -171,7 +172,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | TOEM: A Photo Adventure |
 | Tevi |
 
-## Games Passing Original Only (26)
+## Games Passing Original Only (25)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -182,12 +183,11 @@ These games pass in the Original UT but fail in the Modified UT.
 | Anodyne |
 | Astalon |
 | Castlevania: Dawn of Sorrow |
+| ChecksMate |
 | Corn Kidz 64 |
 | DORONKO WANKO |
 | Frogmonster |
-| Ittle Dew 2 |
 | Lego Star Wars: The Complete Saga |
-| Little Witch Nobeta |
 | Minit |
 | Pseudoregalia |
 | Rabi-Ribi |
@@ -214,13 +214,13 @@ These games pass in the Modified UT but fail in the Original UT.
 | Actraiser |
 | Brotato |
 | Hatsune Miku Project Diva Mega Mix+ |
+| Here Comes Niko! |
 | League of Legends |
 | Luigi's Mansion |
 | Metroid Fusion |
 | Simon Tatham's Portable Puzzle Collection |
 | Sonic Heroes |
 | Zelda II: The Adventure of Link |
-| osu! |
 
 ## Games Passing Neither (71)
 
@@ -255,7 +255,6 @@ These games fail in both Universal Tracker versions.
 | Golden Sun The Lost Age |
 | Grim Dawn |
 | Hammerwatch |
-| Here Comes Niko! |
 | Iji |
 | Into the Breach |
 | Jigsaw |
@@ -298,6 +297,7 @@ These games fail in both Universal Tracker versions.
 | Watery Words |
 | Yu-Gi-Oh! Dungeon Dice Monsters |
 | Yu-Gi-Oh! Forbidden Memories |
+| osu! |
 | plateup |
 
 ## Notes
