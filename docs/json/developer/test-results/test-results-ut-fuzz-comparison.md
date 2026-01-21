@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison
 
-**Generated:** 2026-01-21 20:05:49
+**Generated:** 2026-01-21 20:33:40
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -18,15 +18,15 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Passing Original Only:** 7 (8.2%)
 - **Passing Modified Only:** 29 (34.1%)
 - **Passing Neither:** 16 (18.8%)
-- **Passing Modified with no custom code:** 41 (48.2%)
-- **Passing Modified Only with no custom code:** 14 (16.5%)
+- **Passing Modified with no custom code:** 40 (47.1%)
+- **Passing Modified Only with no custom code:** 13 (15.3%)
 
 ## Full Comparison
 
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 0.0% | ✅ 100.0% | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ 0.0% | ⚠️ 60.0% | 11.8KB | ✅ | 654.1KB |
+| A Link to the Past | ❌ 0.0% | ✅ 90.0% | 11.8KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 90.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -51,7 +51,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Factorio | ❌ 0.0% | ✅ 100.0% | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ❌ 10.0% | ✅ 100.0% | ✅ | ✅ | 68.6KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ 0.0% | ✅ 80.0% | ✅ | ✅ | 1302.5KB |
+| Final Fantasy Mystic Quest | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | 1302.5KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.2KB |
@@ -172,13 +172,13 @@ These games pass in the Modified UT but fail in the Original UT.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 7.0KB | ✅ | 235.0KB |
+| A Link to the Past | 11.8KB | ✅ | 654.1KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | DLCQuest | 1.2KB | ✅ | 51.3KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
 | Factorio | 5.1KB | ✅ | 298.4KB |
 | Faxanadu | ✅ | ✅ | 68.6KB |
-| Final Fantasy Mystic Quest | ✅ | ✅ | 1302.5KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 688.9KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.3KB |
 | Links Awakening DX | 7.4KB | ✅ | 714.5KB |
@@ -207,8 +207,8 @@ These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Link to the Past | 11.8KB | ✅ | 654.1KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.3KB |
+| Final Fantasy Mystic Quest | ✅ | ✅ | 1302.5KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ✅ | ✅ | 754.0KB |
