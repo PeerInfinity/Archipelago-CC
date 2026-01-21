@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md)
 
-**Generated:** 2026-01-21 00:43:35
+**Generated:** 2026-01-21 20:05:49
 
-**Source Data Created:** 2026-01-21T00:43:35.653830
+**Source Data Created:** 2026-01-21T20:05:49.594352
 
-**Source Data Last Updated:** 2026-01-21T00:43:35.653838
+**Source Data Last Updated:** 2026-01-21T20:05:49.594358
 
 **Universal Tracker Version:** Modified (this repository)
 
@@ -23,23 +23,23 @@
 ## Summary
 
 - **Total Games:** 124
-- **Games with 100% Pass Rate:** 27 (21.8%)
-- **Games with Failures:** 97 (78.2%)
+- **Games with 100% Pass Rate:** 28 (22.6%)
+- **Games with Failures:** 96 (77.4%)
 - **Total Fuzz Runs:** 1240
-- **Successful Runs:** 340 (27.4%)
-- **Failed Runs:** 738
-- **Timed Out Runs:** 23
-- **Ignored Runs:** 139
+- **Successful Runs:** 353 (28.5%)
+- **Failed Runs:** 729
+- **Timed Out Runs:** 18
+- **Ignored Runs:** 140
 
 ### Explain Support Summary
 
-- **Games with Explain Stats:** 111
-- **Games with 100% Explain Coverage:** 92
+- **Games with Explain Stats:** 110
+- **Games with 100% Explain Coverage:** 91
 - **Games with No Explain Support:** 11
-- **Locations with Explain Support:** 15,566
-- **Locations without Explain Support:** 3,587
-- **Locations with Default Rule:** 16,374
-- **Overall Explain Coverage:** 81.3%
+- **Locations with Explain Support:** 15,342
+- **Locations without Explain Support:** 3,568
+- **Locations with Default Rule:** 16,299
+- **Overall Explain Coverage:** 81.1%
 
 ## Test Results
 
@@ -50,7 +50,7 @@
 | A Link Between Worlds | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | ANIMAL WELL | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
 | Actraiser | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
-| Against the Storm | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% |
+| Against the Storm | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Air Delivery | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | An Untitled Story | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Anodyne | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
@@ -62,22 +62,22 @@
 | Axiom Verge | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Balatro | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
 | Brotato | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
-| Castlevania: Dawn of Sorrow | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
+| Castlevania: Dawn of Sorrow | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
 | Cavern of Dreams | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
-| ChecksMate | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| ChecksMate | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
 | Chrono Trigger Jets of Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | ClusterTruck | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
 | Corn Kidz 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | CrossCode | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Crystal Project | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Crystalis | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
+| Crystalis | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
 | Cuphead | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% |
 | DORONKO WANKO | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
 | Deep Rock Galactic | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
 | Diddy Kong Racing | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Digimon World | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
 | Dome Keeper | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Duke Nukem 3D | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% |
+| Duke Nukem 3D | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
 | Final Fantasy Tactics A2 | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
 | Final Fantasy Tactics Advance | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | Fire Emblem Sacred Stones | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
@@ -88,11 +88,11 @@
 | Grim Dawn | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% |
 | Hammerwatch | ❌ | 10 | 5 | 4 | 0 | 1 | ⚠️ 50.0% |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Here Comes Niko! | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
+| Here Comes Niko! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Iji | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Into the Breach | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Isles Of Sea And Sky | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Ittle Dew 2 | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| Ittle Dew 2 | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
 | Jigsaw | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | K-On! After School Live!! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Keep Talking and Nobody Explodes | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
@@ -104,11 +104,11 @@
 | Lego Star Wars: The Complete Saga | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% |
 | Lil Gator Game | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Lingo 2 | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% |
-| Little Witch Nobeta | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Little Witch Nobeta | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Luigi's Mansion | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
 | Lunacid | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | Majora's Mask Recompiled | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Mario Kart Double Dash | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% |
+| Mario Kart Double Dash | ❌ | 10 | 0 | 5 | 5 | 0 | ❌ 0.0% |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Metroid Zero Mission | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
@@ -154,7 +154,7 @@
 | Tetris Attack | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
 | Tevi | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | The Legend of Zelda - Oracle of Seasons | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| The Legend of Zelda - Phantom Hourglass | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| The Legend of Zelda - Phantom Hourglass | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | The Sims 4 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | ToeJam and Earl | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
 | TurnipBoy | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
@@ -162,13 +162,13 @@
 | Vampire Survivors | ❌ | 10 | 3 | 1 | 0 | 6 | ❌ 30.0% |
 | Wario Land | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Watery Words | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Wordipelago | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| Wordipelago | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
 | XCOM 2 War of the Chosen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | Yu-Gi-Oh! Forbidden Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| plateup | ❌ | 10 | 8 | 1 | 1 | 0 | ⚠️ 80.0% |
+| osu! | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| plateup | ❌ | 10 | 7 | 1 | 2 | 0 | ⚠️ 70.0% |
 
 ## Error Details
 
@@ -187,8 +187,7 @@
 ### Against the Storm
 
 - **FillError**: 4 occurrence(s)
-- **None**: 5 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### Air Delivery
 
@@ -234,11 +233,15 @@
 
 ### Castlevania: Dawn of Sorrow
 
-- **None**: 7 occurrence(s)
+- **None**: 5 occurrence(s)
 
 ### Cavern of Dreams
 
 - **None**: 8 occurrence(s)
+
+### ChecksMate
+
+- **None**: 1 occurrence(s)
 
 ### Chrono Trigger Jets of Time
 
@@ -264,7 +267,7 @@
 
 ### Crystalis
 
-- **None**: 7 occurrence(s)
+- **None**: 6 occurrence(s)
 
 ### DORONKO WANKO
 
@@ -284,12 +287,11 @@
 
 ### Duke Nukem 3D
 
-- **None**: 7 occurrence(s)
+- **None**: 9 occurrence(s)
 
 ### Final Fantasy Tactics A2
 
-- **Too many non-special starting units to randomize**: 6 occurrence(s)
-- **'' is not in list**: 1 occurrence(s)
+- **Too many non-special starting units to randomize**: 7 occurrence(s)
 
 ### Final Fantasy Tactics Advance
 
@@ -322,10 +324,6 @@
 
 - **None**: 4 occurrence(s)
 
-### Here Comes Niko!
-
-- **None**: 6 occurrence(s)
-
 ### Iji
 
 - **None**: 10 occurrence(s)
@@ -334,10 +332,6 @@
 
 - **No module named 'pysat'**: 8 occurrence(s)
 - **None**: 2 occurrence(s)
-
-### Ittle Dew 2
-
-- **None**: 9 occurrence(s)
 
 ### Jigsaw
 
@@ -360,10 +354,6 @@
 - **None**: 9 occurrence(s)
 - **<class 'TimeoutError'>**: 1 occurrence(s)
 
-### Little Witch Nobeta
-
-- **None**: 10 occurrence(s)
-
 ### Lunacid
 
 - **None**: 9 occurrence(s)
@@ -374,7 +364,8 @@
 
 ### Mario Kart Double Dash
 
-- **<class 'TimeoutError'>**: 10 occurrence(s)
+- **None**: 5 occurrence(s)
+- **<class 'TimeoutError'>**: 5 occurrence(s)
 
 ### Metroid Zero Mission
 
@@ -534,7 +525,7 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### The Legend of Zelda - Phantom Hourglass
 
-- **None**: 7 occurrence(s)
+- **None**: 8 occurrence(s)
 - **Phantom Hourglass: failed GER after 10 attempts.**: 2 occurrence(s)
 
 ### The Sims 4
@@ -567,7 +558,7 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 ### Wordipelago
 
-- **None**: 9 occurrence(s)
+- **None**: 8 occurrence(s)
 
 ### XCOM 2 War of the Chosen
 
@@ -581,10 +572,14 @@ All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Do
 
 - **None**: 10 occurrence(s)
 
+### osu!
+
+- **'>=' not supported between instances of 'int' and 'str'**: 10 occurrence(s)
+
 ### plateup
 
 - **FillError**: 1 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
+- **<class 'TimeoutError'>**: 2 occurrence(s)
 
 
 ## Explain Support Details
@@ -596,10 +591,10 @@ This section shows which games have rules that support the `explain_json()` meth
 | A Link Between Worlds | 257 | 0 | 257 | 0 | ❌ 0% |
 | Axiom Verge | 125 | 0 | 125 | 0 | ❌ 0% |
 | ChecksMate | 71 | 0 | 67 | 4 | ❌ 0% |
-| Duke Nukem 3D | 91 | 0 | 20 | 71 | ❌ 0% |
 | Into the Breach | 21 | 0 | 21 | 0 | ❌ 0% |
 | Kingdom Hearts RE Chain of Memories | 247 | 0 | 101 | 146 | ❌ 0% |
 | Lego Star Wars: The Complete Saga | 74 | 0 | 3 | 71 | ❌ 0% |
+| Mario Kart Double Dash | 149 | 0 | 1 | 148 | ❌ 0% |
 | Metroid Fusion | 126 | 0 | 126 | 0 | ❌ 0% |
 | Monster Sanctuary | 572 | 0 | 572 | 0 | ❌ 0% |
 | Soul Blazer | 300 | 0 | 94 | 206 | ❌ 0% |
@@ -616,7 +611,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | A Difficult Game About Climbing | 16 | 0 | 0 | 16 | ✅ 100% |
 | ANIMAL WELL | 120 | 120 | 0 | 0 | ✅ 100% |
 | Actraiser | 175 | 57 | 0 | 118 | ✅ 100% |
-| Against the Storm | 161 | 161 | 0 | 0 | ✅ 100% |
+| Against the Storm | 176 | 176 | 0 | 0 | ✅ 100% |
 | Air Delivery | 27 | 17 | 0 | 10 | ✅ 100% |
 | Anodyne | 364 | 0 | 0 | 364 | ✅ 100% |
 | Another Crabs Treasure | 614 | 181 | 0 | 433 | ✅ 100% |
@@ -628,7 +623,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Brotato | 153 | 0 | 0 | 153 | ✅ 100% |
 | Castlevania: Dawn of Sorrow | 226 | 90 | 0 | 136 | ✅ 100% |
 | Cavern of Dreams | 478 | 0 | 0 | 478 | ✅ 100% |
-| ClusterTruck | 109 | 94 | 0 | 15 | ✅ 100% |
+| ClusterTruck | 114 | 99 | 0 | 15 | ✅ 100% |
 | Corn Kidz 64 | 187 | 187 | 0 | 0 | ✅ 100% |
 | CrossCode | 432 | 408 | 0 | 24 | ✅ 100% |
 | Crystalis | 101 | 46 | 0 | 55 | ✅ 100% |
@@ -645,7 +640,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Hatsune Miku Project Diva Mega Mix+ | 500 | 500 | 0 | 0 | ✅ 100% |
 | Here Comes Niko! | 944 | 265 | 0 | 679 | ✅ 100% |
 | Iji | 177 | 0 | 0 | 177 | ✅ 100% |
-| Isles Of Sea And Sky | 610 | 361 | 0 | 249 | ✅ 100% |
+| Isles Of Sea And Sky | 586 | 345 | 0 | 241 | ✅ 100% |
 | Ittle Dew 2 | 143 | 143 | 0 | 0 | ✅ 100% |
 | Jigsaw | 93 | 93 | 0 | 0 | ✅ 100% |
 | K-On! After School Live!! | 589 | 589 | 0 | 0 | ✅ 100% |
@@ -655,7 +650,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | League of Legends | 510 | 506 | 0 | 4 | ✅ 100% |
 | Lingo 2 | 501 | 501 | 0 | 0 | ✅ 100% |
 | Little Witch Nobeta | 55 | 15 | 0 | 40 | ✅ 100% |
-| Luigi's Mansion | 742 | 438 | 0 | 304 | ✅ 100% |
+| Luigi's Mansion | 512 | 213 | 0 | 299 | ✅ 100% |
 | MetroCUBEvania | 9 | 2 | 0 | 7 | ✅ 100% |
 | Metroid Zero Mission | 100 | 0 | 0 | 100 | ✅ 100% |
 | Minishoot Adventures | 194 | 194 | 0 | 0 | ✅ 100% |
@@ -691,18 +686,17 @@ This section shows which games have rules that support the `explain_json()` meth
 | TOEM: A Photo Adventure | 191 | 4 | 0 | 187 | ✅ 100% |
 | Tetris Attack | 300 | 0 | 0 | 300 | ✅ 100% |
 | The Legend of Zelda - Oracle of Seasons | 233 | 0 | 0 | 233 | ✅ 100% |
-| The Legend of Zelda - Phantom Hourglass | 298 | 0 | 0 | 298 | ✅ 100% |
-| The Sims 4 | 330 | 287 | 0 | 43 | ✅ 100% |
+| The Legend of Zelda - Phantom Hourglass | 291 | 0 | 0 | 291 | ✅ 100% |
+| The Sims 4 | 327 | 285 | 0 | 42 | ✅ 100% |
 | ToeJam and Earl | 605 | 8 | 0 | 597 | ✅ 100% |
 | TurnipBoy | 45 | 22 | 0 | 23 | ✅ 100% |
 | Tyrian | 135 | 0 | 0 | 135 | ✅ 100% |
-| Vampire Survivors | 271 | 94 | 0 | 177 | ✅ 100% |
+| Vampire Survivors | 281 | 93 | 0 | 188 | ✅ 100% |
 | Watery Words | 150 | 150 | 0 | 0 | ✅ 100% |
-| Wordipelago | 163 | 19 | 0 | 144 | ✅ 100% |
+| Wordipelago | 169 | 19 | 0 | 150 | ✅ 100% |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 92 | 92 | 0 | 0 | ✅ 100% |
 | Yu-Gi-Oh! Forbidden Memories | 678 | 678 | 0 | 0 | ✅ 100% |
 | Zelda II: The Adventure of Link | 106 | 80 | 0 | 26 | ✅ 100% |
-| osu! | 148 | 0 | 0 | 148 | ✅ 100% |
 | plateup | 385 | 382 | 0 | 3 | ✅ 100% |
 
 ## Notes
