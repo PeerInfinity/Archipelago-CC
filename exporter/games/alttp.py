@@ -1743,6 +1743,28 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Process regions to handle entrance/exit rules and fix mixed region locations
         regions = data.get('regions', {})
         for player_id, player_regions in regions.items():
+            # Identify starting regions (directly connected from Menu with no item requirements)
+            # These regions are accessible in "Link state" at the start of the game
+            starting_regions = set()
+            menu_data = player_regions.get('Menu', {})
+            for exit_data in menu_data.get('exits', []):
+                rule = exit_data.get('access_rule', {})
+                # Consider a region "starting" if Menu connects to it with True_ rule
+                # or no special item requirements (just reachability checks like CanReachLocation)
+                # Handle both Rule Builder format (rule: True_) and AST format (type: constant, value: True)
+                is_true_rule = (
+                    not rule or
+                    rule.get('rule') == 'True_' or
+                    (rule.get('type') == 'constant' and rule.get('value') == True) or
+                    rule.get('rule') == 'CanReachLocation' or
+                    rule.get('type') == 'state_method'  # can_reach checks are also passable
+                )
+                if is_true_rule:
+                    connected = exit_data.get('connected_region')
+                    if connected:
+                        starting_regions.add(connected)
+            logger.debug(f"ALttP: Identified starting regions for player {player_id}: {starting_regions}")
+
             for region_name, region_data in player_regions.items():
                 is_dark_world = region_data.get('is_dark_world', False)
                 is_light_world = region_data.get('is_light_world', False)
@@ -1763,9 +1785,36 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         location_data['access_rule'] = self._resolve_placement_conditionals(access_rule)
                         access_rule = location_data.get('access_rule', {})
 
-                    # For mixed regions, remove Moon Pearl requirement from compound rules
-                    # (since Light World paths are available, Moon Pearl isn't required)
-                    if is_mixed_region and access_rule and location_name not in self._bunny_accessible_locations:
+                    # For mixed regions, remove Moon Pearl requirement from compound rules.
+                    #
+                    # In the original ALttP bunny rules (Rules.py set_bunny_rules):
+                    # - is_link(region) returns True if region.is_dark_world (inverted) or
+                    #   region.is_light_world (standard)
+                    # - When is_link() returns True, path finding happens but Moon Pearl
+                    #   is only made optional if a PURE Link path exists
+                    #
+                    # The is_dark_world/is_light_world flags indicate CONNECTIVITY, not
+                    # whether a pure path exists. A mixed region might only have item-gated
+                    # paths from Link territory, so we can't assume Moon Pearl is optional.
+                    #
+                    # Region types: 1=LightWorld, 2=DarkWorld, 3=Cave, 4=Dungeon
+                    # In inverted mode, only type 2 (pure DarkWorld) guarantees Link access.
+                    # In standard mode, mixed regions have Light World (Link) paths.
+                    region_type = region_data.get('type', 0)
+                    is_starting_region = region_name in starting_regions
+                    should_remove_moon_pearl = False
+                    if access_rule and location_name not in self._bunny_accessible_locations:
+                        if self._is_inverted_mode:
+                            # In inverted mode, only pure DarkWorld (type 2) and starting regions
+                            # guarantee Link access. Mixed regions might have item-gated paths,
+                            # so we conservatively keep Moon Pearl requirement.
+                            should_remove_moon_pearl = (region_type == 2) or is_starting_region
+                        else:
+                            # In standard mode, player is Link in Light World, bunny in Dark World.
+                            # Remove Moon Pearl for mixed regions (since Light World paths exist).
+                            should_remove_moon_pearl = is_mixed_region
+
+                    if should_remove_moon_pearl:
                         location_data['access_rule'] = self._remove_moon_pearl_from_rule(
                             access_rule, location_name
                         )
@@ -1798,12 +1847,26 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'], exit_name
                         )
                         # For exits from mixed regions, remove Moon Pearl requirement
-                        # since there are Light World paths available.
-                        # Exception: In inverted mode, bunny-impassable caves still need
-                        # Moon Pearl since the player might enter as a bunny.
-                        # In standard mode, the player is never a bunny in Light World
-                        # regions, so bunny-impassable doesn't apply.
-                        should_keep_moon_pearl = is_bunny_impassable and self._is_inverted_mode
+                        # since there are Link-state paths available.
+                        # Exceptions:
+                        # 1. Bunny-impassable caves in inverted mode still need Moon Pearl
+                        # 2. In inverted mode, exits to pure Light World (bunny territory)
+                        #    still require Moon Pearl to act in the destination
+                        connected_region_name = exit_data.get('connected_region', '')
+                        connected_region = player_regions.get(connected_region_name, {})
+                        dest_is_light = connected_region.get('is_light_world', False)
+                        dest_is_dark = connected_region.get('is_dark_world', False)
+                        dest_is_pure_bunny_territory = False
+                        if self._is_inverted_mode:
+                            # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
+                            dest_is_pure_bunny_territory = dest_is_light and not dest_is_dark
+                        else:
+                            # Standard: pure Dark World is bunny (handled elsewhere)
+                            pass
+                        should_keep_moon_pearl = (
+                            (is_bunny_impassable and self._is_inverted_mode) or
+                            dest_is_pure_bunny_territory
+                        )
                         if is_mixed_region and not should_keep_moon_pearl:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
