@@ -119,6 +119,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
         self._entrance_shuffle_mode = self._check_entrance_shuffle_mode(world)
+        self._is_no_logic = self._check_no_logic_mode(world)
         self._item_placements: Dict[str, str] = {}
 
     def _check_glitch_mode(self, world) -> bool:
@@ -189,6 +190,23 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if mode in ('full', 'dungeons_full'):
             logger.info(f"ALttP: Entrance shuffle mode '{mode}' detected - will intercept glitch rules")
         return mode
+
+    def _check_no_logic_mode(self, world) -> bool:
+        """Check if the world is in no_logic mode.
+
+        In no_logic mode, accessibility rules are not enforced by the server.
+        Everything is considered accessible, so we should not generate
+        restrictive rules like shop price requirements.
+        """
+        if world is None or not hasattr(world, 'options'):
+            return False
+        if not hasattr(world.options, 'glitches_required'):
+            return False
+        glitches_mode = world.options.glitches_required.current_key
+        is_no_logic = glitches_mode == 'no_logic'
+        if is_no_logic:
+            logger.info(f"ALttP: no_logic mode detected - shop price rules will be skipped")
+        return is_no_logic
 
     def _get_option_value(self, option_name: str) -> Any:
         """Get the value of an option from the world.
@@ -983,9 +1001,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
            properly analyzed because they contain nested lambdas and dynamic path lookups.
         2. Dungeon reentry rules: Lambdas from dungeon_reentry_rules() that reference
            dungeon_entrance closure variable which can't be serialized.
+        3. Underworld glitch rules: Lambdas from underworld_glitches_rules() that have
+           complex dict lookups with lambda values.
 
-        We detect these by checking the function's qualified name and replace them
-        with simpler rules.
+        We detect these by checking the function's qualified name and closure variables.
         """
         if rule_func is None:
             return None
@@ -1009,8 +1028,67 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             target_name = rule_target_name or self._current_location_context or ''
             return self._get_underworld_glitch_replacement_rule(rule_func, target_name)
 
+        # Check if closure contains underworld_glitches_rules lambdas
+        # This catches rules combined via add_rule() that wrap the original lambdas
+        if self._has_problematic_closure(rule_func):
+            target_name = rule_target_name or self._current_location_context or ''
+            return self._get_underworld_glitch_replacement_rule(rule_func, target_name)
+
         # Not a special rule - let standard analysis handle it
         return None
+
+    def _has_problematic_closure(self, func, depth: int = 0) -> bool:
+        """Recursively check if a function has problematic closure variables.
+
+        Detects:
+        - Lambdas from underworld_glitches_rules() or dungeon_reentry_rules()
+        - Dicts with lambda values (rule_map)
+        - Known problematic closure variable names
+
+        Args:
+            func: Function to check
+            depth: Recursion depth (to prevent infinite recursion)
+
+        Returns:
+            True if problematic closures are found
+        """
+        if depth > 5 or not callable(func):
+            return False
+
+        # Check qualname of this function
+        func_qualname = getattr(func, '__qualname__', '')
+        if 'underworld_glitches_rules' in func_qualname or 'dungeon_reentry_rules' in func_qualname:
+            return True
+
+        # Check closure variables
+        if not hasattr(func, '__closure__') or func.__closure__ is None:
+            return False
+
+        free_vars = getattr(func.__code__, 'co_freevars', ())
+        for var_name, cell in zip(free_vars, func.__closure__):
+            try:
+                value = cell.cell_contents
+
+                # Check for known problematic variable names
+                if var_name in ('dungeon_entrance', 'rule_map', 'mire_clip', 'hera_clip',
+                               'mirrorless_moat_rule', 'hera_rule', 'gt_rule'):
+                    return True
+
+                # Check for dicts with callable values
+                if isinstance(value, dict):
+                    if any(callable(v) for v in value.values()):
+                        return True
+
+                # Recursively check callable closure variables
+                if callable(value):
+                    if self._has_problematic_closure(value, depth + 1):
+                        return True
+
+            except ValueError:
+                # Empty cell
+                pass
+
+        return False
 
     def _get_dungeon_reentry_replacement_rule(self, rule_func, target_name: str) -> Dict[str, Any]:
         """Get a replacement rule for dungeon reentry rules.
@@ -1082,8 +1160,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     def _get_underworld_glitch_replacement_rule(self, rule_func, target_name: str) -> Optional[Dict[str, Any]]:
         """Get a replacement rule for underworld glitch rules.
 
-        Some rules in underworld_glitches_rules() also reference dungeon_entrance
-        through calls to dungeon_reentry_rules(). These need similar handling.
+        Some rules in underworld_glitches_rules() contain complex constructs that
+        can't be properly serialized:
+        1. Lambdas referencing dungeon_entrance closure variable
+        2. Dicts with lambda values (rule_map) that get serialized as strings
+        3. Nested lambdas (like mirrorless_moat_rule -> hera_rule -> rule_map)
 
         Args:
             rule_func: The rule function to analyze
@@ -1092,41 +1173,84 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         Returns:
             A simplified rule dict, or None if standard analysis should handle it
         """
-        # Check closure variables for dungeon_entrance
+        import inspect
+
+        # Check closure variables for problematic constructs
         closure_vars = {}
+        has_problematic_closure = False
+        problematic_reason = None
+
         if hasattr(rule_func, '__closure__') and rule_func.__closure__:
             free_vars = rule_func.__code__.co_freevars
             for var_name, cell in zip(free_vars, rule_func.__closure__):
                 try:
-                    closure_vars[var_name] = cell.cell_contents
+                    value = cell.cell_contents
+                    closure_vars[var_name] = value
+
+                    # Check for dungeon_entrance (Entrance object)
+                    if var_name == 'dungeon_entrance':
+                        has_problematic_closure = True
+                        problematic_reason = f"dungeon_entrance={getattr(value, 'name', 'unknown')}"
+
+                    # Check for rule_map (dict with lambda values)
+                    elif var_name == 'rule_map' and isinstance(value, dict):
+                        has_problematic_closure = True
+                        problematic_reason = "rule_map dict"
+
+                    # Check for nested lambdas (mirrorless_moat_rule, hera_rule, gt_rule, etc.)
+                    elif callable(value) and 'underworld_glitches_rules' in getattr(value, '__qualname__', ''):
+                        has_problematic_closure = True
+                        problematic_reason = f"nested lambda {var_name}"
+
+                    # Check for mire_clip, hera_clip (lambda functions)
+                    elif var_name in ('mire_clip', 'hera_clip', 'mirrorless_moat_rule', 'hera_rule', 'gt_rule'):
+                        if callable(value):
+                            has_problematic_closure = True
+                            problematic_reason = f"glitch helper lambda {var_name}"
                 except ValueError:
                     pass
 
-        # Only intercept if dungeon_entrance is in closure
-        if 'dungeon_entrance' not in closure_vars:
+        # If no problematic closure found, let standard analysis handle it
+        if not has_problematic_closure:
             return None
 
-        dungeon_entrance = closure_vars['dungeon_entrance']
-        entrance_name = getattr(dungeon_entrance, 'name', 'unknown')
         logger.info(f"ALttP: Intercepting underworld_glitch rule for '{target_name}' "
-                   f"(dungeon_entrance={entrance_name})")
+                   f"(reason: {problematic_reason})")
 
-        # Try to get the source code to understand the rule
+        # Try to determine the best replacement rule based on source code
         try:
-            import inspect
             source = inspect.getsource(rule_func)
-            if 'access_rule' in source and 'fake_pearl_state' in source:
-                logger.debug(f"ALttP: Replacing underworld access_rule with Moon Pearl requirement")
-                return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
-            elif 'can_reach' in source:
-                logger.debug(f"ALttP: Replacing underworld can_reach rule with True_")
-                return {'rule': 'True_'}
-        except (OSError, TypeError):
-            pass
 
-        # Default: use Moon Pearl requirement
-        logger.debug(f"ALttP: Unknown underworld_glitch rule type, using Moon Pearl")
-        return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+            # Rules with access_rule(fake_pearl_state) need Moon Pearl
+            if 'access_rule' in source and 'fake_pearl_state' in source:
+                logger.debug(f"ALttP: Replacing with Moon Pearl requirement")
+                return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+
+            # Rules with Magic Mirror as alternative should use Magic Mirror
+            # Example: state.has('Magic Mirror', player) or mirrorless_moat_rule(state)
+            if 'Magic Mirror' in source:
+                logger.debug(f"ALttP: Rule has Magic Mirror alternative - using Magic Mirror OR True_")
+                return {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
+
+            # Rules that only check can_reach are permissive
+            if 'can_reach' in source and 'access_rule' not in source:
+                logger.debug(f"ALttP: Replacing can_reach rule with True_")
+                return {'rule': 'True_'}
+
+            # Rules with mire_clip, hera_clip typically require specific items
+            # These are glitch rules that allow alternate access paths
+            if 'mire_clip' in source or 'hera_clip' in source:
+                logger.debug(f"ALttP: Replacing clip-based rule with True_ (permissive for glitch rules)")
+                return {'rule': 'True_'}
+
+        except (OSError, TypeError) as e:
+            logger.debug(f"ALttP: Could not inspect source: {e}")
+
+        # Default: use permissive True_ for glitch rules
+        # This is safe because glitch rules represent alternate access paths;
+        # being permissive means the tracker won't incorrectly block progress
+        logger.debug(f"ALttP: Using permissive True_ for unknown underworld_glitch rule")
+        return {'rule': 'True_'}
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.
@@ -1398,7 +1522,16 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         - Arrows (type 4): can_hold_arrows(player, price)
 
         Returns None for other price types (Rupees, etc.) which have no requirements.
+
+        Note: In no_logic mode for single-player worlds, set_rules() returns early
+        without setting any rules. While shop rules are added in create_shops(),
+        they are not enforced in no_logic mode. We skip generating shop price
+        rules to match server behavior.
         """
+        # In no_logic mode, rules are not enforced - skip shop price requirements
+        if self._is_no_logic:
+            return None
+
         shop_price_type = location_data.get('shop_price_type')
         shop_price = location_data.get('shop_price', 0)
 
