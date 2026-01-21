@@ -832,7 +832,7 @@ def generate_rules_py(data: ExtractedData) -> str:
         if helper_data.defaults
     }
 
-    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values)
+    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values, data.metadata.option_definitions)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
     helper_generator = HelperCodeGenerator(

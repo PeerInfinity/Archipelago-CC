@@ -12,10 +12,12 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from AST format rules."""
 
-    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None) -> None:
+    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None,
+                 option_definitions: Dict[str, Any] = None) -> None:
         self.required_imports: Set[str] = set()
         self.game_name = game_name
         self.settings = settings or {}  # Resolved settings for evaluating setting_value nodes
+        self.option_definitions = option_definitions or {}  # Option definitions for Choice value lookups
         # Sanitize game name for use in Python identifiers
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
@@ -327,6 +329,218 @@ class RuleCodeGenerator:
                     return None
                 values.append(val)
             return values
+
+        return None
+
+    def _evaluate_compare_rule(self, arg: Dict[str, Any]) -> Optional[str]:
+        """
+        Evaluate a Compare rule to a boolean repr string if possible.
+
+        Handles comparisons where one or both sides can be resolved to constants
+        at generation time. This is particularly useful for option comparisons
+        like `options.logic == "glitched"` which can be evaluated based on the
+        settings values available during generation.
+
+        Returns:
+            'True' or 'False' if the comparison can be evaluated,
+            None if the comparison cannot be fully resolved.
+        """
+        if not isinstance(arg, dict):
+            return None
+
+        # Handle both AST format (type='compare') and Rule Builder format (rule='Compare')
+        arg_rule = arg.get('rule', '')
+        arg_type = arg.get('type', '')
+
+        if arg_rule == 'Compare':
+            args = arg.get('args', {})
+            left = args.get('left')
+            op = args.get('op', '==')
+            right = args.get('right')
+        elif arg_type == 'compare':
+            left = arg.get('left')
+            op = arg.get('op', '==')
+            right = arg.get('right')
+        else:
+            return None
+
+        # Resolve left operand
+        left_val = self._resolve_compare_operand(left)
+        # Resolve right operand
+        right_val = self._resolve_compare_operand(right)
+
+        if left_val is None or right_val is None:
+            return None
+
+        # Handle Choice option comparisons where the setting value is numeric
+        # but the comparison is against a string option key (e.g., logic == "glitched")
+        # In this case, we need to convert the string to its numeric value
+        if isinstance(left_val, int) and isinstance(right_val, str):
+            # First try to get the setting name from the operand
+            setting_name = self._get_setting_name_from_operand(left)
+            if setting_name:
+                converted = self._convert_option_key_to_value(setting_name, right_val)
+                if converted is not None:
+                    right_val = converted
+            else:
+                # If the operand was already resolved to a raw value, try all option definitions
+                converted = self._try_convert_option_key_all_defs(left_val, right_val)
+                if converted is not None:
+                    right_val = converted
+        elif isinstance(right_val, int) and isinstance(left_val, str):
+            # Same for reversed operands
+            setting_name = self._get_setting_name_from_operand(right)
+            if setting_name:
+                converted = self._convert_option_key_to_value(setting_name, left_val)
+                if converted is not None:
+                    left_val = converted
+            else:
+                # If the operand was already resolved to a raw value, try all option definitions
+                converted = self._try_convert_option_key_all_defs(right_val, left_val)
+                if converted is not None:
+                    left_val = converted
+
+        # Evaluate the comparison
+        try:
+            if op in ('==', 'eq'):
+                result = left_val == right_val
+            elif op in ('!=', 'ne', 'noteq'):
+                result = left_val != right_val
+            elif op in ('<', 'lt'):
+                result = left_val < right_val
+            elif op in ('<=', 'le', 'lte'):
+                result = left_val <= right_val
+            elif op in ('>', 'gt'):
+                result = left_val > right_val
+            elif op in ('>=', 'ge', 'gte'):
+                result = left_val >= right_val
+            elif op == 'in':
+                result = left_val in right_val
+            elif op in ('not in', 'notin'):
+                result = left_val not in right_val
+            else:
+                return None
+            return repr(result)
+        except (TypeError, ValueError):
+            return None
+
+    def _get_setting_name_from_operand(self, operand: Any) -> Optional[str]:
+        """Extract the setting name from a SettingValue/OptionValue operand."""
+        if not isinstance(operand, dict):
+            return None
+        rule_type = operand.get('rule', '')
+        ast_type = operand.get('type', '')
+
+        if rule_type == 'SettingValue':
+            return operand.get('args', {}).get('setting', '')
+        if rule_type == 'OptionValue':
+            return operand.get('args', {}).get('option', '')
+        if ast_type == 'setting_value':
+            return operand.get('setting', '')
+        if ast_type == 'option_value':
+            return operand.get('option', '')
+        if rule_type == 'AST_setting_value':
+            return operand.get('args', {}).get('setting', '')
+        return None
+
+    def _convert_option_key_to_value(self, setting_name: str, key: str) -> Optional[int]:
+        """
+        Convert an option key string (like 'glitched') to its numeric value.
+
+        For Choice options, keys map to values via option_<key> = <value> pattern.
+        This looks up the option definition to find the mapping.
+        """
+        # Check option_definitions if available
+        if hasattr(self, 'option_definitions') and setting_name in self.option_definitions:
+            opt_def = self.option_definitions[setting_name]
+            # name_lookup maps int -> string, so we need to reverse it
+            name_lookup = opt_def.get('name_lookup', {})
+            for int_val, str_key in name_lookup.items():
+                if str_key == key:
+                    return int(int_val)
+            # Also try choices format (string -> int) for compatibility
+            choices = opt_def.get('choices', {})
+            if key in choices:
+                return choices[key]
+        return None
+
+    def _try_convert_option_key_all_defs(self, int_val: int, str_key: str) -> Optional[int]:
+        """
+        Try to convert a string option key to its numeric value by checking all option definitions.
+
+        This is used when the Compare operand was already resolved to a raw integer value
+        (e.g., the exporter resolved options.logic to 1), and we need to find if the string
+        matches this value in any option definition.
+
+        Returns the integer value if a match is found, None otherwise.
+        """
+        if not hasattr(self, 'option_definitions'):
+            return None
+
+        for setting_name, opt_def in self.option_definitions.items():
+            # Check name_lookup (int -> string mapping)
+            name_lookup = opt_def.get('name_lookup', {})
+            for defined_int, defined_str in name_lookup.items():
+                if defined_str == str_key and int(defined_int) == int_val:
+                    # Found a match: the string key maps to the same int value
+                    return int_val
+            # Also try choices format (string -> int)
+            choices = opt_def.get('choices', {})
+            if str_key in choices and choices[str_key] == int_val:
+                return int_val
+        return None
+
+    def _resolve_compare_operand(self, operand: Any) -> Any:
+        """
+        Resolve a compare operand to a concrete value if possible.
+
+        Handles:
+        - Raw values (strings, numbers, bools)
+        - Constant rules (AST and Rule Builder formats)
+        - SettingValue rules (resolves from self.settings)
+        - OptionValue rules (resolves from self.settings)
+        - WorldAttribute rules (resolves from self.world_attributes)
+        """
+        if operand is None:
+            return None
+
+        # Raw value
+        if not isinstance(operand, dict):
+            return operand
+
+        rule_type = operand.get('rule', '')
+        ast_type = operand.get('type', '')
+
+        # Constant values
+        if rule_type == 'Constant':
+            return operand.get('args', {}).get('value')
+        if ast_type == 'constant':
+            return operand.get('value')
+
+        # Setting/Option values
+        if rule_type == 'SettingValue':
+            setting = operand.get('args', {}).get('setting', '')
+            return self.settings.get(setting)
+        if rule_type == 'OptionValue':
+            option = operand.get('args', {}).get('option', '')
+            return self.settings.get(option)
+        if ast_type == 'setting_value':
+            setting = operand.get('setting', '')
+            return self.settings.get(setting)
+        if ast_type == 'option_value':
+            option = operand.get('option', '')
+            return self.settings.get(option)
+        if rule_type == 'AST_setting_value':
+            setting = operand.get('args', {}).get('setting', '')
+            return self.settings.get(setting)
+
+        # World attributes
+        if rule_type == 'WorldAttribute':
+            attribute = operand.get('args', {}).get('attribute', '')
+            return self.world_attributes.get(attribute)
+        if ast_type == 'world_attribute':
+            attribute = operand.get('attribute', '')
+            return self.world_attributes.get(attribute)
 
         return None
 
@@ -4654,6 +4868,14 @@ class RuleCodeGenerator:
             else:
                 # Unknown name reference - default to None
                 return 'None'
+        elif isinstance(arg, dict) and (arg.get('type') == 'compare' or arg.get('rule') == 'Compare'):
+            # Handle Compare rules - evaluate at generation time if possible
+            # This is common for option comparisons like: options.logic == "glitched"
+            compare_result = self._evaluate_compare_rule(arg)
+            if compare_result is not None:
+                return compare_result
+            else:
+                return 'None'
         else:
             # For complex args, try to convert
             return repr(arg) if not isinstance(arg, dict) else 'None'
@@ -4829,6 +5051,14 @@ class RuleCodeGenerator:
                     elif arg_rule == 'Arithmetic':
                         arith_result = self._evaluate_arithmetic_constant(arg)
                         arg_strs.append(arith_result if arith_result else 'None')
+                    elif arg_rule == 'Compare' or arg.get('type') == 'compare':
+                        # Handle Compare rules - evaluate at generation time if possible
+                        # This is common for option comparisons like: options.logic == "glitched"
+                        compare_result = self._evaluate_compare_rule(arg)
+                        if compare_result is not None:
+                            arg_strs.append(compare_result)
+                        else:
+                            arg_strs.append('None')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
@@ -5272,6 +5502,9 @@ class HelperCodeGenerator:
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
         self._current_entrance: Optional[str] = None
+        # Track current helper's parameters during code generation
+        # Used to recognize when a "helper" call is actually a call to a parameter (lambda)
+        self._current_helper_params: Set[str] = set()
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -5436,8 +5669,16 @@ class HelperCodeGenerator:
 
         signature = f"def {func_name}({', '.join(sig_params)}) -> {return_type}:"
 
-        # Generate function body
-        body_code = self._generate_body(body)
+        # Set current helper parameters for proper lambda call generation
+        # This allows _expr_helper to recognize when a "helper" is actually a parameter
+        self._current_helper_params = set(params)
+
+        try:
+            # Generate function body
+            body_code = self._generate_body(body)
+        finally:
+            # Clear the context after generation
+            self._current_helper_params = set()
 
         # Combine signature and body
         return f"{signature}\n{self._indent(body_code)}"
@@ -6895,6 +7136,14 @@ class HelperCodeGenerator:
         if name in self.known_helpers:
             return self.get_helper_call(name, args)
 
+        # Check if this is a call to a parameter (lambda) of the current helper
+        # This handles patterns like: glitched_rule(state) where glitched_rule is a parameter
+        # that was passed as a lambda like: lambda s: s.has("Item", player)
+        if name in self._current_helper_params:
+            # This is a lambda parameter - call it with state as the argument
+            # The lambdas are defined as: lambda s: <rule> where s is the state
+            return f'{name}(state)'
+
         # Built-in Python functions
         if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float'):
             arg_exprs = [self._generate_expression(a) for a in args]
@@ -7241,6 +7490,27 @@ class HelperCodeGenerator:
         # The exported helper body may be missing the player argument
         if func_code == 'state.multiworld.get_entrance' and len(arg_exprs) == 1:
             arg_exprs.append('player')
+
+        # Special handling for state method calls that need player argument
+        # This handles lambdas like: lambda s: s.has('Item') which need player
+        # These are common in helpers that take callback functions
+        if isinstance(func, dict) and func.get('type') == 'attribute':
+            attr = func.get('attr', '')
+            obj = func.get('object', {})
+            # Check if this is a state method that needs player
+            state_methods_needing_player = {'has', 'has_all', 'has_any', 'has_group', 'count', 'count_group'}
+            if attr in state_methods_needing_player:
+                # Check if the object is a simple name (like 's' from a lambda)
+                # and we have at least one argument (the item name) but no player
+                if isinstance(obj, dict) and obj.get('type') == 'name':
+                    # These methods need player as the second argument
+                    # has(item, player), has_all(items, player), etc.
+                    if attr in ('has', 'count') and len(arg_exprs) == 1:
+                        # has(item) -> has(item, player)
+                        arg_exprs.append('player')
+                    elif attr in ('has_all', 'has_any', 'has_group', 'count_group') and len(arg_exprs) == 1:
+                        # has_all(items) -> has_all(items, player)
+                        arg_exprs.append('player')
 
         # Special handling for .can_reach() method calls - needs state argument
         # Location and Region objects have can_reach(state) but exported code may call it without args
