@@ -5506,10 +5506,30 @@ class HelperCodeGenerator:
         return f"return {self._generate_expression(value)}"
 
     def _generate_for_range(self, stmt: Dict[str, Any]) -> str:
-        """Generate Python for loop over range."""
+        """Generate Python for loop over range.
+
+        Supports:
+        - range(count) - old format with 'count' key
+        - range(start, stop) - new format with 'start' and 'stop' keys
+        - range(start, stop, step) - new format with 'start', 'stop', and 'step' keys
+        """
         var = stmt.get('var', '_')
-        count = self._generate_expression(stmt.get('count', {'type': 'constant', 'value': 0}))
         body = stmt.get('body', [])
+
+        # Determine range() arguments
+        if 'start' in stmt and 'stop' in stmt:
+            # New format: range(start, stop) or range(start, stop, step)
+            start = self._generate_expression(stmt['start'])
+            stop = self._generate_expression(stmt['stop'])
+            if 'step' in stmt:
+                step = self._generate_expression(stmt['step'])
+                range_code = f"range({start}, {stop}, {step})"
+            else:
+                range_code = f"range({start}, {stop})"
+        else:
+            # Old format: range(count)
+            count = self._generate_expression(stmt.get('count', {'type': 'constant', 'value': 0}))
+            range_code = f"range({count})"
 
         body_lines = []
         for s in body:
@@ -5517,7 +5537,7 @@ class HelperCodeGenerator:
 
         body_code = '\n'.join(body_lines) if body_lines else 'pass'
 
-        return f"for {var} in range({count}):\n{self._indent(body_code)}"
+        return f"for {var} in {range_code}:\n{self._indent(body_code)}"
 
     def _generate_for_iter(self, stmt: Dict[str, Any]) -> str:
         """Generate Python for loop over iterable."""
