@@ -1105,8 +1105,29 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return None
 
+    def get_location_attributes(self, location, world) -> Dict[str, Any]:
+        """Get ALttP-specific location attributes including shop price info.
+
+        For shop locations, exports shop_price and shop_price_type which are used
+        to generate access rules based on the price type (Hearts, Bombs, Arrows).
+        """
+        attributes = super().get_location_attributes(location, world)
+
+        # Export shop price information if present
+        shop_price_type = getattr(location, 'shop_price_type', None)
+        shop_price = getattr(location, 'shop_price', 0)
+
+        if shop_price_type is not None:
+            # Convert enum to int if needed
+            price_type_value = int(shop_price_type) if hasattr(shop_price_type, 'value') else shop_price_type
+            attributes['shop_price_type'] = price_type_value
+            attributes['shop_price'] = shop_price
+            logger.debug(f"ALttP: Exported shop price info for '{location.name}': type={price_type_value}, price={shop_price}")
+
+        return attributes
+
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
-        """Post-process location data to handle bunny rule lambdas.
+        """Post-process location data to handle bunny rule lambdas and shop price rules.
 
         When bunny rules are serialized, they appear as strings like:
         "<function set_bunny_rules.<locals>.get_rule_to_add.<locals>.<lambda>>"
@@ -1115,6 +1136,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         - If the location is bunny-accessible, the bunny rule part is always True
         - Otherwise, require Moon Pearl
 
+        For shop locations with randomized cost types, generates access rules:
+        - Hearts (type 1): has_hearts helper with count = (price // 8) + 1
+        - Bombs (type 3): can_use_bombs helper with count = price
+        - Arrows (type 4): can_hold_arrows helper with count = price
+
         Note: Most bunny rules are now intercepted earlier by override_rule_analysis,
         but this handles any that slip through in serialized form.
         """
@@ -1122,7 +1148,144 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             location_data['access_rule'] = self._process_bunny_rules(
                 location_data['access_rule'], location_name
             )
+
+        # Generate shop price rules if applicable
+        # This replaces the broken shop_price_rules helper call that references 'location'
+        shop_price_rule = self._generate_shop_price_rule(location_data)
+        if shop_price_rule:
+            existing_rule = location_data.get('access_rule')
+            # Remove any existing shop_price_rules helper from the rule
+            if existing_rule:
+                existing_rule = self._remove_shop_price_rules_helper(existing_rule)
+            if existing_rule and existing_rule != {'rule': 'True_'}:
+                # Combine with existing rule using AND
+                location_data['access_rule'] = {
+                    'rule': 'And',
+                    'children': [existing_rule, shop_price_rule]
+                }
+            else:
+                location_data['access_rule'] = shop_price_rule
+            logger.debug(f"ALttP: Added shop price rule for '{location_name}'")
+
         return location_data
+
+    def _remove_shop_price_rules_helper(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Remove shop_price_rules helper calls from a rule tree.
+
+        The original shop_price_rules helper references 'location' which doesn't exist
+        in the rule context. We replace it with True_ since we generate a proper rule
+        in _generate_shop_price_rule.
+
+        Returns True_ if the rule is entirely a shop_price_rules call,
+        otherwise returns the rule with shop_price_rules calls removed.
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Check if this is a shop_price_rules helper call (multiple formats exist)
+        # Format 1: {"rule": "shop_price_rules", "_original_ast_type": "helper", ...}
+        # Format 2: {"type": "helper", "name": "shop_price_rules", ...}
+        is_shop_price_rules = (
+            rule.get('rule') == 'shop_price_rules' or
+            (rule.get('_original_ast_type') == 'helper' and rule.get('rule') == 'shop_price_rules') or
+            (rule.get('type') == 'helper' and rule.get('name') == 'shop_price_rules')
+        )
+        if is_shop_price_rules:
+            logger.debug("ALttP: Removing broken shop_price_rules helper call")
+            return {'rule': 'True_'}
+
+        # Handle And rules - recursively process and filter out True_
+        if rule.get('rule') == 'And':
+            children = rule.get('children', [])
+            processed = [self._remove_shop_price_rules_helper(c) for c in children]
+            # Filter out True_ results
+            filtered = [c for c in processed if c != {'rule': 'True_'}]
+            if not filtered:
+                return {'rule': 'True_'}
+            elif len(filtered) == 1:
+                return filtered[0]
+            else:
+                return {'rule': 'And', 'children': filtered}
+
+        # Handle Or rules
+        if rule.get('rule') == 'Or':
+            children = rule.get('children', [])
+            processed = [self._remove_shop_price_rules_helper(c) for c in children]
+            # If any became True_, the whole Or is True_
+            if any(c == {'rule': 'True_'} for c in processed):
+                return {'rule': 'True_'}
+            return {'rule': 'Or', 'children': processed}
+
+        # Handle AST-style and/or rules
+        if rule.get('type') in ('and', 'or'):
+            conditions = rule.get('conditions', [])
+            processed = [self._remove_shop_price_rules_helper(c) for c in conditions]
+            if rule.get('type') == 'and':
+                filtered = [c for c in processed if c != {'rule': 'True_'}]
+                if not filtered:
+                    return {'rule': 'True_'}
+                elif len(filtered) == 1:
+                    return filtered[0]
+                else:
+                    return {'type': 'and', 'conditions': filtered}
+            else:  # or
+                if any(c == {'rule': 'True_'} for c in processed):
+                    return {'rule': 'True_'}
+                return {'type': 'or', 'conditions': processed}
+
+        return rule
+
+    def _generate_shop_price_rule(self, location_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Generate an access rule for shop price requirements.
+
+        Based on ALttP shop_price_rules in Shops.py:
+        - Hearts (type 1): has_hearts(player, (price // 8) + 1)
+        - Bombs (type 3): can_use_bombs(player, price)
+        - Arrows (type 4): can_hold_arrows(player, price)
+
+        Returns None for other price types (Rupees, etc.) which have no requirements.
+        """
+        shop_price_type = location_data.get('shop_price_type')
+        shop_price = location_data.get('shop_price', 0)
+
+        if shop_price_type is None:
+            return None
+
+        # Helper to create a constant argument in the correct Rule Builder format
+        def _constant_arg(value):
+            return {
+                'rule': 'Constant',
+                'args': {'value': value},
+                '_converted_from_ast': True
+            }
+
+        # ShopPriceType values from ALttP Shops.py:
+        # Hearts = 1, Bombs = 3, Arrows = 4
+        if shop_price_type == 1:  # Hearts
+            heart_count = (shop_price // 8) + 1
+            return {
+                'rule': 'has_hearts',
+                '_original_ast_type': 'helper',
+                '_converted_from_ast': True,
+                'args': [_constant_arg(heart_count)]
+            }
+        elif shop_price_type == 3:  # Bombs
+            return {
+                'rule': 'can_use_bombs',
+                '_original_ast_type': 'helper',
+                '_converted_from_ast': True,
+                'args': [_constant_arg(shop_price)]
+            }
+        elif shop_price_type == 4:  # Arrows
+            return {
+                'rule': 'can_hold_arrows',
+                '_original_ast_type': 'helper',
+                '_converted_from_ast': True,
+                'args': [_constant_arg(shop_price)]
+            }
+
+        # No rule needed for Rupees, Magic, etc.
+        return None
 
     def _process_bunny_rules(self, rule: Dict[str, Any], location_name: str) -> Dict[str, Any]:
         """Recursively process a rule tree to replace bunny rule lambdas."""
