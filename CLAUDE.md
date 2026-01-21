@@ -161,6 +161,19 @@ python scripts/setup/update_host_settings.py full-spoilers
 | Repository diffs | `docs/json/developer/diffs/repository-changes.md` |
 | Cloud setup | `CC/cloud-setup.md` |
 
+## Documentation
+
+| Topic | Location |
+|-------|----------|
+| Main documentation portal | `docs/json/README.md` |
+| Developer documentation | `docs/json/developer/README.md` |
+| Frontend modules reference | `docs/json/modules/README.md` |
+| Exporter module | `exporter/README.md` |
+| World generator module | `world_generator/README.md` |
+| Rule Builder module | `rule_builder/README.md` |
+| Frontend overview | `frontend/README.md` |
+| Planning documents | `CC/docs/plans/README.md` |
+
 ## Notes
 - For frontend debugging, `console.log` is easier than configuring the logging system
 - If the environment isn't set up, read `CC/cloud-setup.md` first

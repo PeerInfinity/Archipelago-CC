@@ -6,6 +6,47 @@ This document outlines the plan to expand the Rule Builder's `explain_json()` an
 
 Currently, when `ast_format.py` parses AST format rules into Rule Builder objects, many rule types fall through to `True_()`, losing their explain functionality. This plan addresses that gap.
 
+## Implementation Status
+
+**Last Updated**: January 2026
+
+### Completed
+
+| Phase | Component | Status | Notes |
+|-------|-----------|--------|-------|
+| 1 | `ast_explain.py` | ✅ Done | Created with 30+ handlers (more than planned) |
+| 1 | `ASTRule` wrapper class | ✅ Done | `rules.py:2272` |
+| 2 | `Not` class | ✅ Done | `rules.py:2327` |
+| 2 | `CountItem` class | ✅ Done | `rules.py:2361` |
+| 2 | `Compare` class | ✅ Done | `rules.py:2433` |
+| 2 | `Conditional` class | ✅ Done | `rules.py:3027` |
+| 2 | `HelperCall` class | ✅ Done | `rules.py:3157` (class exists, not wired to parser) |
+| 2 | `OptionValue` class | ✅ Done | `rules.py:3469` (not wired to parser) |
+| 3 | Parser updates | ✅ Partial | Compare, CountItem, Conditional, Not integrated |
+| 5 | AST explain functions | ✅ Done | Comprehensive coverage in `ast_explain.py` |
+
+### Design Decisions (Deviations from Plan)
+
+1. **`RegionCheck` → Reused `CanReachRegion`**: Instead of creating a new `RegionCheck` class, the parser reuses the existing `CanReachRegion` class (`ast_format.py:335-338`). This is functionally equivalent and avoids class proliferation.
+
+2. **`SettingValue` → `OptionValue`**: The class was implemented as `OptionValue` with a different API that resolves option values at runtime via the world object, rather than caching at instantiation time.
+
+### Not Yet Implemented
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Phase 4: HelperCall tiered approach | ❌ Pending | `HelperCall` class exists but parser uses `ASTRule` fallback for unknown helpers |
+| `OptionValue` parser integration | ❌ Pending | Class exists but not wired into `ast_format.py` |
+| World generator HelperCall emission | ❌ Pending | Generator doesn't emit `HelperCall` rules |
+
+### Current Behavior
+
+- **Known helpers**: Parsed via `_parse_helper()`, attempts to find matching Rule Builder class
+- **Unknown helpers**: Wrapped in `ASTRule` for explain support (fallback approach)
+- **Option/setting values**: Not parsed into `OptionValue`; wrapped in `ASTRule`
+
+---
+
 ## Problem Statement
 
 ### Current State
@@ -133,7 +174,7 @@ class ASTRule(Rule[TWorld], game="Archipelago"):
 
 ## Implementation Plan
 
-### Phase 1: Core Infrastructure
+### Phase 1: Core Infrastructure ✅ COMPLETE
 
 **Files to modify**: `rule_builder/rules.py`, `rule_builder/ast_format.py`
 
@@ -197,9 +238,11 @@ class ASTRule(Rule[TWorld], game="Archipelago"):
             return explain_ast_rule(self.rule_data, state, self.player)
 ```
 
-### Phase 2: New Rule Builder Classes
+### Phase 2: New Rule Builder Classes ✅ MOSTLY COMPLETE
 
-#### 2.1 RegionCheck Class
+> **Note**: `RegionCheck` was not created; existing `CanReachRegion` is reused instead. `SettingValue` was implemented as `OptionValue` with a different API.
+
+#### 2.1 RegionCheck Class (SKIPPED - using existing CanReachRegion)
 
 Maps `region_check` type (note: different from `can_reach` which is for regions by name):
 
@@ -291,9 +334,9 @@ class CountItem(Rule[TWorld], game="Archipelago"):
             return [{"type": "text", "text": f"Count of {self.item_name}"}]
 ```
 
-#### 2.4 SettingValue Class
+#### 2.4 SettingValue Class (IMPLEMENTED AS OptionValue)
 
-For accessing game settings/options:
+For accessing game settings/options (implemented as `OptionValue` in `rules.py:3469`):
 
 ```python
 @dataclasses.dataclass()
@@ -391,9 +434,11 @@ class Not(WrapperRule[TWorld], game="Archipelago"):
             return messages
 ```
 
-### Phase 3: Update ast_format.py
+### Phase 3: Update ast_format.py ✅ PARTIAL
 
-Update the parser to use new classes and fall back to ASTRule:
+Update the parser to use new classes and fall back to ASTRule.
+
+> **Status**: Parser updated for `Compare`, `CountItem`, `Conditional`, `Not`. `OptionValue` not integrated. Unknown helpers wrapped in `ASTRule`.
 
 ```python
 def parse_ast_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
@@ -419,7 +464,9 @@ def parse_ast_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -
         return ASTRule(rule_data=data)
 ```
 
-### Phase 4: Helper Function Support via HelperCall
+### Phase 4: Helper Function Support via HelperCall ❌ NOT IMPLEMENTED
+
+> **Status**: The `HelperCall` class exists in `rules.py:3157` but the tiered approach is not implemented. Currently, unknown helpers are wrapped in `ASTRule` as a fallback, which provides explain support but not the full tiered evaluation described below.
 
 The world generator already converts helper definitions from `rules.json` into Python functions in `Rules.py`. We leverage this with a tiered approach:
 
@@ -653,7 +700,9 @@ def set_rules(world):
 - Helper body contains unsupported AST format types
 - Helper body references external data structures
 
-### Phase 5: AST Rule Explain Function
+### Phase 5: AST Rule Explain Function ✅ COMPLETE
+
+> **Status**: Fully implemented in `rule_builder/ast_explain.py` with 30+ handlers covering all common rule types. Implementation exceeds the original plan scope.
 
 Create the comprehensive explain function:
 

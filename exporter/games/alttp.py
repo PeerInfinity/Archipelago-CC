@@ -460,10 +460,26 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             logger.debug(f"ALttP: No item placements available for placement_search evaluation")
             return True
 
-        # Flatten locations list
+        # Flatten locations list - handle multiple formats:
+        # 1. Simple list: ["Location Name", player] or just "Location Name"
+        # 2. Tuple format: {"type": "tuple", "elements": [{"type": "constant", "value": "Location Name"}, ...]}
+        # 3. Direct dict: {"type": "constant", "value": "Location Name"}
         location_names = []
         for loc in locations:
-            if isinstance(loc, list) and len(loc) >= 1:
+            if isinstance(loc, dict):
+                # Handle tuple format: {"type": "tuple", "elements": [...]}
+                if loc.get('type') == 'tuple':
+                    elements = loc.get('elements', [])
+                    if elements:
+                        first_elem = elements[0]
+                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
+                            location_names.append(first_elem.get('value', ''))
+                        elif isinstance(first_elem, str):
+                            location_names.append(first_elem)
+                # Handle constant format: {"type": "constant", "value": "Location Name"}
+                elif loc.get('type') == 'constant':
+                    location_names.append(loc.get('value', ''))
+            elif isinstance(loc, list) and len(loc) >= 1:
                 location_names.append(loc[0])  # First element is the location name
             elif isinstance(loc, str):
                 location_names.append(loc)
@@ -652,7 +668,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     player = player_arg.get('value', 1)
                 else:
                     player = player_arg
-                locations = test.get('locations', [])
+                # Extract locations - could be a list or a dict with 'type': 'list' and 'value'
+                locations_arg = test.get('locations', [])
+                if isinstance(locations_arg, dict) and locations_arg.get('type') == 'list':
+                    locations = locations_arg.get('value', [])
+                else:
+                    locations = locations_arg
             return self._evaluate_placement_search(item_name, player, locations)
 
         # Handle Compare with AST_placement_lookup (both Rule Builder and AST format)
@@ -873,6 +894,26 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 else:
                     processed_args[key] = value
             return {**rule, 'args': processed_args}
+
+        # Handle basement_key_rule helper - this internally checks for Hyrule Castle keys
+        # With universal keys, replace with can_buy_unlimited helper
+        # Check multiple formats:
+        # 1. Rule Builder format: {'rule': 'basement_key_rule'}
+        # 2. AST converted format: {'_original_ast_type': 'helper', 'rule': 'basement_key_rule'}
+        # 3. Helper format: {'type': 'helper', 'name': 'basement_key_rule'}
+        is_basement_key_rule = (
+            rule.get('rule') == 'basement_key_rule' or
+            (rule.get('_original_ast_type') == 'helper' and rule.get('rule') == 'basement_key_rule') or
+            (rule.get('type') == 'helper' and rule.get('name') == 'basement_key_rule')
+        )
+        if is_basement_key_rule:
+            return {
+                'type': 'helper',
+                'name': 'can_buy_unlimited',
+                'args': [
+                    {'type': 'constant', 'value': 'Small Key (Universal)'}
+                ]
+            }
 
         return rule
 
@@ -1280,7 +1321,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         )
                         access_rule = location_data.get('access_rule', {})
 
-                                # Replace dungeon small key checks when universal keys are enabled
+                    # Replace dungeon small key checks when universal keys are enabled
                     if self._is_universal_keys and access_rule:
                         location_data['access_rule'] = self._replace_small_key_checks(access_rule)
 
@@ -1477,13 +1518,18 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             logger.debug(f"ALttP: Removed Moon Pearl from mixed region exit '{rule_name}'")
             return {'rule': 'True_'}
 
-        # Handle Rule Builder And - filter out Moon Pearl children
+        # Handle Rule Builder And - recursively process children and filter out Moon Pearl
         if rule.get('rule') == 'And':
             children = rule.get('children', [])
-            # Remove children that are pure Moon Pearl rules
+            # First, recursively process each child to remove Moon Pearl from nested rules
+            processed_children = [
+                self._remove_moon_pearl_from_rule(child, rule_name)
+                for child in children
+            ]
+            # Then filter out children that became True_ (pure Moon Pearl rules)
             filtered_children = [
-                child for child in children
-                if not self._is_pure_moon_pearl_rule(child)
+                child for child in processed_children
+                if child != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(child)
             ]
             if len(filtered_children) != len(children):
                 logger.debug(f"ALttP: Removed Moon Pearl from AND rule for exit '{rule_name}'")
@@ -1498,10 +1544,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Handle AST-style 'and' rules
         if rule.get('type') == 'and':
             conditions = rule.get('conditions', [])
-            # Remove conditions that are pure Moon Pearl rules
+            # First, recursively process each condition to remove Moon Pearl from nested rules
+            processed_conditions = [
+                self._remove_moon_pearl_from_rule(cond, rule_name)
+                for cond in conditions
+            ]
+            # Then filter out conditions that became True_ (pure Moon Pearl rules)
             filtered_conditions = [
-                cond for cond in conditions
-                if not self._is_pure_moon_pearl_rule(cond)
+                cond for cond in processed_conditions
+                if cond != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(cond)
             ]
             if len(filtered_conditions) != len(conditions):
                 logger.debug(f"ALttP: Removed Moon Pearl from AND rule for exit '{rule_name}'")

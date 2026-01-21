@@ -18,7 +18,7 @@ import { ExpansionStateManager } from './expansionStateManager.js';
 import { LoopRenderer } from './loopRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
 import { LoopBlockBuilder } from './loopBlockBuilder.js';
-import { getPlayerStateAPI, getLoopsModuleDispatcher } from './index.js';
+import { getPlayerStateAPI, getLoopsModuleDispatcher, getCostGenerator, getCostDataManager } from './index.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 
@@ -183,6 +183,7 @@ export class LoopUI {
             <label for="loop-ui-state-import" class="button">Import</label> <!-- Changed ID -->
             <input type="file" id="loop-ui-state-import" class="hidden" accept=".json" /> <!-- Changed ID -->
             <button id="loop-ui-hard-reset" class="button">Hard Reset</button> <!-- Changed ID -->
+            <button id="loop-ui-generate-costs" class="button">Generate Costs</button>
         </div>
     `;
     return element;
@@ -264,6 +265,8 @@ export class LoopUI {
     attachButtonHandler('loop-ui-export-state', this._exportState);
 
     attachButtonHandler('loop-ui-hard-reset', this._handleHardResetClick);
+
+    attachButtonHandler('loop-ui-generate-costs', this._handleGenerateCostsClick);
 
     // Import button and file input
     // Use querySelector to find the label acting as a button
@@ -423,6 +426,109 @@ export class LoopUI {
       this.renderLoopPanel();
       // Use console.warn instead of window.consoleManager
       log('warn', 'Game has been hard reset!');
+    }
+  }
+
+  /**
+   * Handle Generate Costs button click
+   * Triggers cost generation from the loaded sphere log
+   */
+  async _handleGenerateCostsClick() {
+    const costGenerator = getCostGenerator();
+    const costDataManager = getCostDataManager();
+
+    if (!costGenerator) {
+      log('error', 'Cost generator not available');
+      alert('Cost generator not initialized. Please try again later.');
+      return;
+    }
+
+    // Check if sphere log is loaded - try multiple sources
+    let sphereLog = null;
+
+    // First try stateManager snapshot
+    const snapshot = stateManager.getLatestStateSnapshot();
+    sphereLog = snapshot?.sphereLog;
+
+    // If not in snapshot, try sphereState module
+    if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
+      const getSphereData = window.centralRegistry?.getPublicFunction?.('sphereState', 'getSphereData');
+      if (getSphereData) {
+        const sphereData = getSphereData();
+        if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
+          // Convert sphereData to the format expected by cost generator
+          sphereLog = sphereData.map((sphere, index) => ({
+            type: 'state_update',
+            sphere_index: index + 1,
+            player_data: {
+              '1': {
+                sphere_locations: sphere.locations || [],
+                new_accessible_regions: sphere.newRegions || [],
+              }
+            }
+          }));
+          log('info', `Using sphereState data: ${sphereLog.length} spheres`);
+        }
+      }
+    }
+
+    if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
+      log('warn', 'No sphere log available for cost generation');
+      alert('No sphere log is loaded. Please load a rules file with a sphere log first.');
+      return;
+    }
+
+    // Confirm with user
+    const confirmMsg = 'Generate cost data from the current sphere log?\n\n' +
+      'This will simulate a playthrough to calculate mana costs for all regions and locations.\n\n' +
+      'The current loop state will be temporarily modified but restored after generation.';
+
+    if (!confirm(confirmMsg)) {
+      return;
+    }
+
+    // Update button to show progress
+    const generateBtn = this.rootElement?.querySelector('#loop-ui-generate-costs');
+    if (generateBtn) {
+      generateBtn.textContent = 'Generating...';
+      generateBtn.disabled = true;
+    }
+
+    try {
+      log('info', 'Starting cost generation from UI...');
+
+      // Get source file name if available
+      const rulesPath = stateManager.getStaticData()?.rulesFilePath || 'sphere_log';
+      const sourceFileName = rulesPath.split('/').pop();
+
+      // Generate costs
+      const costs = await costGenerator.generate(sphereLog, sourceFileName);
+
+      if (costs) {
+        // Store in cost data manager
+        costDataManager.setCostData(costs, `generated:${sourceFileName}`);
+
+        // Download the generated costs
+        costDataManager.downloadCostData(`costs_${sourceFileName.replace('.json', '')}.json`);
+
+        log('info', 'Cost generation complete and downloaded');
+        alert(`Cost data generated successfully!\n\n` +
+          `Regions: ${Object.keys(costs.regions).length}\n` +
+          `Locations: ${Object.keys(costs.locations).length}\n\n` +
+          `The costs.json file has been downloaded.`);
+      } else {
+        log('warn', 'Cost generation returned no data');
+        alert('Cost generation completed but produced no data. Check the console for details.');
+      }
+    } catch (error) {
+      log('error', 'Cost generation failed:', error);
+      alert(`Cost generation failed: ${error.message}`);
+    } finally {
+      // Restore button
+      if (generateBtn) {
+        generateBtn.textContent = 'Generate Costs';
+        generateBtn.disabled = false;
+      }
     }
   }
 

@@ -3,6 +3,11 @@ import loopStateSingleton from './loopStateSingleton.js';
 import { LoopUI } from './loopUI.js';
 import { handleUserLocationCheckForLoops, handleUserItemCheckForLoops, handleUserExitClickedForLoops, initializeLoopEvents } from './loopEvents.js'; // Import handlers
 
+// Cost generation and management
+import { CostGenerator } from './costGenerator.js';
+import { CostDataManager } from './costDataManager.js';
+import { PathFinder } from '../shared/pathfinder.js';
+
 // --- Module Info ---
 export const moduleInfo = {
   name: 'loops',
@@ -24,6 +29,11 @@ let _moduleEventBus = null;
 let moduleDispatcher = null; // To store the full dispatcher instance
 let _playerStateAPI = null; // Store playerState API for access by loopUI
 
+// Cost generation instances
+let _costGenerator = null;
+let _costDataManager = null;
+let _pathFinder = null;
+
 // Export dispatcher for use by other files in this module (e.g., loopEvents.js)
 export function getLoopsModuleDispatcher() {
   return moduleDispatcher;
@@ -32,6 +42,19 @@ export function getLoopsModuleDispatcher() {
 // Export function to get playerState API for use by loopUI
 export function getPlayerStateAPI() {
   return _playerStateAPI;
+}
+
+// Export cost generation components
+export function getCostGenerator() {
+  return _costGenerator;
+}
+
+export function getCostDataManager() {
+  return _costDataManager;
+}
+
+export function getPathFinder() {
+  return _pathFinder;
 }
 
 let loopUnsubscribeHandles = [];
@@ -115,6 +138,19 @@ export function register(registrationApi) {
     return moduleDispatcher;
   });
 
+  // Register cost generation public functions
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getCostGenerator', () => {
+    return _costGenerator;
+  });
+
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getCostDataManager', () => {
+    return _costDataManager;
+  });
+
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getPathFinder', () => {
+    return _pathFinder;
+  });
+
   // Register Loops settings schema snippet
   registrationApi.registerSettingsSchema({
     type: 'object',
@@ -184,6 +220,13 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopState:exploreActionRepeated');
   registrationApi.registerEventBusPublisher('loopUI:modeChanged');
   registrationApi.registerEventBusPublisher('loops:setLoopMode');
+
+  // Cost generation events
+  registrationApi.registerEventBusPublisher('costGenerator:progress');
+  registrationApi.registerEventBusPublisher('costGenerator:complete');
+  registrationApi.registerEventBusPublisher('costDataManager:loaded');
+  registrationApi.registerEventBusPublisher('costDataManager:loadError');
+  registrationApi.registerEventBusPublisher('costDataManager:cleared');
 }
 
 /**
@@ -262,6 +305,151 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   // Initialize loop events handlers
   initializeLoopEvents(_moduleEventBus);
 
+  // Initialize cost generation components
+  log('info', '[Loops Module] Initializing cost generation components...');
+  try {
+    // Create PathFinder instance
+    _pathFinder = new PathFinder(stateManager);
+
+    // Create CostDataManager instance
+    _costDataManager = new CostDataManager(_moduleEventBus);
+
+    // Create CostGenerator instance with dependencies
+    _costGenerator = new CostGenerator({
+      loopState: loopStateSingleton,
+      stateManager: stateManager,
+      pathFinder: _pathFinder,
+      eventBus: _moduleEventBus,
+      costDataManager: _costDataManager,
+      dispatcher: moduleDispatcher,
+      playerStateAPI: playerStateAPI,
+    });
+
+    log('info', '[Loops Module] Cost generation components initialized');
+
+    // Expose cost generation tools on window for console access
+    if (typeof window !== 'undefined') {
+      window.costGenerator = _costGenerator;
+      window.costDataManager = _costDataManager;
+
+      // Add convenience function for console use
+      // Options: { forceRegenerate: boolean, rulesPath: string }
+      window.generateCosts = async (options = {}) => {
+        if (!_costGenerator) {
+          console.error('Cost generator not initialized');
+          return null;
+        }
+
+        const { forceRegenerate = false } = options;
+        let { rulesPath } = options;
+
+        // Try to get rulesPath from URL if not provided
+        if (!rulesPath) {
+          const urlParams = new URLSearchParams(window.location.search);
+          rulesPath = urlParams.get('rules');
+        }
+
+        // If we have a rulesPath and not forcing regeneration, try to load existing costs
+        if (rulesPath && !forceRegenerate) {
+          console.log('Checking for existing costs file...');
+          const existingCosts = await _costDataManager.tryLoadFromPreset(rulesPath);
+          if (existingCosts) {
+            console.log('Loaded existing costs file!');
+            console.log(`Regions: ${Object.keys(existingCosts.regions).length}`);
+            console.log(`Locations: ${Object.keys(existingCosts.locations).length}`);
+            return existingCosts;
+          }
+          console.log('No existing costs file found, generating...');
+        }
+
+        // Get sphere log from sphereState module
+        let sphereLog = null;
+
+        // First try stateManager snapshot (legacy path)
+        const snapshot = stateManager.getLatestStateSnapshot();
+        sphereLog = snapshot?.sphereLog;
+
+        // If not in snapshot, try sphereState module
+        if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
+          const getSphereData = window.centralRegistry?.getPublicFunction?.('sphereState', 'getSphereData');
+          if (getSphereData) {
+            const sphereData = getSphereData();
+            // getSphereData returns processed sphere data, convert to raw format
+            if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
+              // Convert sphereData to the format expected by cost generator
+              sphereLog = sphereData.map((sphere, index) => ({
+                type: 'state_update',
+                sphere_index: index + 1,
+                player_data: {
+                  '1': {
+                    sphere_locations: sphere.locations || [],
+                    new_accessible_regions: sphere.newRegions || [],
+                  }
+                }
+              }));
+              console.log(`Using sphereState data: ${sphereLog.length} spheres`);
+            }
+          }
+        }
+
+        if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
+          console.error('No sphere log available. Load a rules file first or provide a sphere log array.');
+          return null;
+        }
+
+        console.log('Starting cost generation...');
+        const costs = await _costGenerator.generate(sphereLog, rulesPath || 'console');
+
+        if (costs) {
+          console.log('Cost generation complete!');
+          console.log(`Regions: ${Object.keys(costs.regions).length}`);
+          console.log(`Locations: ${Object.keys(costs.locations).length}`);
+
+          // Store the rulesPath for later saving
+          if (rulesPath) {
+            costs._rulesPath = rulesPath;
+            const saveInfo = _costDataManager.getCostDataForSaving(rulesPath);
+            console.log(`To save, call: window.saveCosts() or manually save to: ${saveInfo.path}`);
+
+            // Expose the cost data for external saving (e.g., by Playwright)
+            window.__generatedCostData__ = saveInfo;
+          } else {
+            console.log('Use window.costDataManager.downloadCostData() to download the costs file.');
+          }
+        }
+
+        return costs;
+      };
+
+      // Add function to save costs to preset directory (triggers download in browser)
+      window.saveCosts = () => {
+        const costs = _costDataManager.getCostData();
+        if (!costs) {
+          console.error('No cost data to save. Run generateCosts() first.');
+          return null;
+        }
+
+        const rulesPath = costs._rulesPath;
+        if (!rulesPath) {
+          // Fall back to URL param
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlRulesPath = urlParams.get('rules');
+          if (urlRulesPath) {
+            return _costDataManager.saveCostsToPreset(urlRulesPath);
+          }
+          console.error('No rules path available. Provide rulesPath or use downloadCostData().');
+          return null;
+        }
+
+        return _costDataManager.saveCostsToPreset(rulesPath);
+      };
+
+      log('info', '[Loops Module] Console commands available: window.generateCosts(), window.costGenerator, window.costDataManager');
+    }
+  } catch (error) {
+    log('error', '[Loops Module] Error initializing cost generation components:', error);
+  }
+
   // Clean up previous subscriptions before adding new ones
   loopUnsubscribeHandles.forEach((unsubscribe) => unsubscribe());
   loopUnsubscribeHandles = [];
@@ -315,6 +503,19 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     loopUnsubscribeHandles = [];
     _moduleEventBus = null; // Clear references
     moduleDispatcher = null; // Clear the dispatcher on cleanup
+
+    // Clear cost generation components
+    _costGenerator = null;
+    _costDataManager = null;
+    _pathFinder = null;
+
+    // Clear window references
+    if (typeof window !== 'undefined') {
+      delete window.costGenerator;
+      delete window.costDataManager;
+      delete window.generateCosts;
+    }
+
     // Call dispose on loopStateSingleton if it exists
     if (
       loopStateSingleton &&
