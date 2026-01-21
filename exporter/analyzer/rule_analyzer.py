@@ -164,6 +164,29 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
                 filtered.append(arg_result)
         return filtered
 
+    def _filter_special_kwargs(self, kwargs_with_nodes):
+        """
+        Filter out state, player, and world keyword arguments.
+
+        Args:
+            kwargs_with_nodes: List of (ast.keyword, arg_result) tuples
+
+        Returns:
+            Dict of kwarg_name -> arg_result with state/player/world filtered out
+        """
+        filtered = {}
+        for kw_node, kw_result in kwargs_with_nodes:
+            kw_name = kw_node.arg
+            # Skip keyword arguments with names like 'state', 'player', 'world'
+            if kw_name in ('state', 'player', 'world'):
+                logging.debug(f"_filter_special_kwargs: Filtering out keyword arg '{kw_name}'")
+                continue
+            # Also check if the value is a reference to state/player/world
+            is_state, is_player, is_world = self._is_state_or_player_or_world_arg(kw_node.value, kw_result)
+            if not (is_state or is_player or is_world):
+                filtered[kw_name] = kw_result
+        return filtered
+
     def _build_parameter_mapping(self, func, args_with_nodes):
         """
         Build a mapping of parameter names to argument values for function inlining.

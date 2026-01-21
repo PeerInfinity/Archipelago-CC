@@ -444,12 +444,18 @@ class ASTToRuleBuilder:
 
         if method == 'has_all':
             items = get_items_from_arg(get_arg_value(0, []), [])
-            if isinstance(items, list) and len(items) > 0:
+            if isinstance(items, list):
+                if len(items) == 0:
+                    # has_all([]) is vacuously true
+                    return self._make_rule('True_', {})
                 return self._make_rule('HasAll', {'items': items})
 
         elif method == 'has_any':
             items = get_items_from_arg(get_arg_value(0, []), [])
-            if isinstance(items, list) and len(items) > 0:
+            if isinstance(items, list):
+                if len(items) == 0:
+                    # has_any([]) is always false - can't have any of nothing
+                    return self._make_rule('False_', {})
                 return self._make_rule('HasAny', {'items': items})
 
         elif method == 'has_all_counts':
@@ -1000,16 +1006,18 @@ class ASTToRuleBuilder:
         If the helper was originally converted from Rule Builder format,
         restore it. Otherwise, convert to Rule Builder format with flattened args.
 
-        Output format (empty 'options' and 'args' omitted):
+        Output format (empty 'options', 'args', and 'kwargs' omitted):
             {
                 "rule": "helper_name",
                 "args": [arg1, arg2, ...],  # Flattened list, not nested; omitted if empty
+                "kwargs": {"key": value, ...},  # Keyword arguments; omitted if empty
                 "_original_ast_type": "helper",
                 "_converted_from_ast": true
             }
         """
         helper_name = rule.get('name', 'Unknown')
         args = rule.get('args', [])
+        kwargs = rule.get('kwargs', {})
 
         # Check for round-trip metadata
         if rule.get('_converted_from_rule_builder'):
@@ -1021,8 +1029,14 @@ class ASTToRuleBuilder:
             for arg in args
         ]
 
+        # Convert kwargs values (they may be nested rule dicts)
+        converted_kwargs = {
+            key: (self._convert_rule(value) if isinstance(value, dict) else value)
+            for key, value in kwargs.items()
+        }
+
         # Build flattened structure - args is a list at top level, not nested in a dict
-        # Empty options and args are omitted to reduce JSON size
+        # Empty options, args, and kwargs are omitted to reduce JSON size
         result: Dict[str, Any] = {
             'rule': helper_name,
             '_original_ast_type': 'helper',
@@ -1030,6 +1044,8 @@ class ASTToRuleBuilder:
         }
         if converted_args:
             result['args'] = converted_args
+        if converted_kwargs:
+            result['kwargs'] = converted_kwargs
         return result
 
     # -------------------------------------------------------------------------

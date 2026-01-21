@@ -3174,10 +3174,19 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             args=(),
             body_data={"type": "item_check", "item": "Flippers"}
         )
+
+        # With keyword arguments
+        rule = HelperCall(
+            helper_func=_game_enough_cats,
+            helper_name="enough_cats",
+            args=(walls_table, 1),
+            kwargs={"strange": True}
+        )
     """
     helper_func: Callable[..., bool] | None = None
     helper_name: str = ""
     args: tuple[Any, ...] = ()
+    kwargs: dict[str, Any] | None = None
     body_rule: "Rule[TWorld] | None" = None
     body_data: dict | None = None
 
@@ -3192,6 +3201,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             self.helper_func,
             self.helper_name,
             self.args,
+            self.kwargs or {},
             resolved_body_rule,
             self.body_data,
             player=world.player,
@@ -3200,9 +3210,13 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
     @override
     def __str__(self) -> str:
+        parts = []
         if self.args:
-            args_str = ", ".join(repr(a) for a in self.args)
-            return f"Helper:{self.helper_name}({args_str})"
+            parts.append(", ".join(repr(a) for a in self.args))
+        if self.kwargs:
+            parts.append(", ".join(f"{k}={repr(v)}" for k, v in self.kwargs.items()))
+        if parts:
+            return f"Helper:{self.helper_name}({', '.join(parts)})"
         return f"Helper:{self.helper_name}"
 
     @override
@@ -3210,7 +3224,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         """Returns a JSON compatible dict representation of this helper call.
 
         This outputs the format expected by the frontend, matching the AST exporter format.
-        Empty 'options' and 'args' are omitted.
+        Empty 'options', 'args', and 'kwargs' are omitted.
         """
         result: dict[str, Any] = {
             "rule": self.helper_name,
@@ -3229,12 +3243,24 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
                 else:
                     exported_args.append(arg)
             result["args"] = exported_args
+        if self.kwargs:
+            # Convert boolean kwargs to AST format for frontend compatibility
+            exported_kwargs = {}
+            for k, v in self.kwargs.items():
+                if v is True:
+                    exported_kwargs[k] = {"rule": "True_"}
+                elif v is False:
+                    exported_kwargs[k] = {"rule": "False_"}
+                else:
+                    exported_kwargs[k] = v
+            result["kwargs"] = exported_kwargs
         return result
 
     class Resolved(Rule.Resolved):
         helper_func: Callable[..., bool] | None
         helper_name: str
         args: tuple[Any, ...]
+        kwargs: dict[str, Any]
         body_rule: "Rule.Resolved | None"
         body_data: dict | None
         skip_cache: ClassVar[bool] = True
@@ -3247,7 +3273,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
             # Tier 2/3: Fall back to Python function
             if self.helper_func is not None:
-                return self.helper_func(state, self.player, *self.args)
+                return self.helper_func(state, self.player, *self.args, **self.kwargs)
 
             # No evaluation available
             return True
@@ -3270,7 +3296,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
             # Tier 2/3: Call helper function and return its value
             if self.helper_func is not None:
-                result = self.helper_func(state, self.player, *self.args)
+                result = self.helper_func(state, self.player, *self.args, **self.kwargs)
                 # If result is numeric, return it directly
                 if isinstance(result, (int, float)):
                     return result
