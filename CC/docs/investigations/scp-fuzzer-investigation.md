@@ -5,8 +5,9 @@
 **Game**: Super Cat Planet
 **APWorld Version**: v0.1.4b
 **Template**: `Super Cat Planet.yaml`
-**Failure Rate**: 40% (4 out of 10 runs)
+**Original Failure Rate**: 40% (4 out of 10 runs)
 **Error Type**: Logic mismatch (None)
+**Status**: ✅ FIXED - 0% failure rate after fix
 
 ## Root Cause
 
@@ -113,6 +114,48 @@ python fuzz.py -r 10 -j 4 -g scp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 
 Current expected results: ~40% failure rate
 Fixed expected results: 0% failure rate (or different failure causes)
+
+## Fix Implemented
+
+The fix was implemented in the following files:
+
+### 1. Exporter - Capture keyword arguments from AST
+- `exporter/analyzer/ast_visitors/base.py` - Added kwargs parameter to `_make_helper_rule()`
+- `exporter/analyzer/ast_visitors/call_visitor.py` - Added `node.keywords` processing and filtered kwargs
+- `exporter/analyzer/rule_analyzer.py` - Added `_filter_special_kwargs()` method
+
+### 2. AST to Rule Builder conversion
+- `exporter/converter/ast_to_rule_builder.py` - Added kwargs handling in `_convert_helper()`
+
+### 3. Schema update
+- `frontend/schema/rules.schema.json` - Added `kwargs` property definition
+
+### 4. World generator - Handle kwargs in HelperCall generation
+- `world_generator/rule_codegen.py` - Updated `_convert_helper()` and `_convert_rule_builder_helper()` to handle kwargs
+
+### 5. Rule Builder - Support kwargs in HelperCall
+- `rule_builder/rules.py` - Added `kwargs` field to `HelperCall` class and `Resolved` class
+
+### Test Results After Fix
+
+```
+Success: 10
+Failures: 0
+Timeouts: 0
+Ignored: 0
+```
+
+The exported JSON now correctly includes the `strange=True` keyword argument:
+
+```json
+{
+  "rule": "enough_cats",
+  "args": [...],
+  "kwargs": {
+    "strange": {"rule": "True_"}
+  }
+}
+```
 
 ## Investigation Date
 
