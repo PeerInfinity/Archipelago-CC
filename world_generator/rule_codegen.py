@@ -919,6 +919,8 @@ class RuleCodeGenerator:
         converters = {
             'constant': self._convert_constant,
             'item_check': self._convert_item_check,
+            'item_check_any': self._convert_item_check_any,
+            'item_check_all': self._convert_item_check_all,
             'count_check': self._convert_count_check,
             'group_check': self._convert_group_check,
             'and': self._convert_and,
@@ -1604,9 +1606,10 @@ class RuleCodeGenerator:
         self.required_imports.add('Has')
 
         item_raw = rule.get('item', '')
-        item = self._extract_constant_value(item_raw, '')
+        # Use _extract_constant to handle binary_op (e.g., "Letter " + letter -> "Letter O")
+        item = self._extract_constant(item_raw, '')
         count_raw = rule.get('count', 1)
-        count = self._extract_constant_value(count_raw, 1)
+        count = self._extract_constant(count_raw, 1)
 
         item_escaped = self._escape_string(item)
 
@@ -1614,6 +1617,50 @@ class RuleCodeGenerator:
             return f'Has("{item_escaped}")'
         else:
             return f'Has("{item_escaped}", {count})'
+
+    def _convert_item_check_any(self, rule: Dict[str, Any]) -> str:
+        """Convert item_check_any to HasAny().
+
+        item_check_any represents "has any of these items" checks.
+        Used by game-specific exporters like Soul Blazer.
+        """
+        items_raw = rule.get('items', [])
+        items = [self._extract_constant_value(item, str(item)) for item in items_raw]
+
+        if not items:
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if len(items) == 1:
+            self.required_imports.add('Has')
+            item_escaped = self._escape_string(items[0])
+            return f'Has("{item_escaped}")'
+
+        self.required_imports.add('HasAny')
+        items_str = ', '.join(repr(item) for item in items)
+        return f'HasAny({items_str})'
+
+    def _convert_item_check_all(self, rule: Dict[str, Any]) -> str:
+        """Convert item_check_all to HasAll().
+
+        item_check_all represents "has all of these items" checks.
+        Used by game-specific exporters like Soul Blazer.
+        """
+        items_raw = rule.get('items', [])
+        items = [self._extract_constant_value(item, str(item)) for item in items_raw]
+
+        if not items:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        if len(items) == 1:
+            self.required_imports.add('Has')
+            item_escaped = self._escape_string(items[0])
+            return f'Has("{item_escaped}")'
+
+        self.required_imports.add('HasAll')
+        items_str = ', '.join(repr(item) for item in items)
+        return f'HasAll({items_str})'
 
     def _convert_count_check(self, rule: Dict[str, Any]) -> str:
         """Convert count_check to Has().
@@ -4360,6 +4407,34 @@ class RuleCodeGenerator:
                             self.required_imports.add('Or')
                             return f'Or({", ".join(checks)})'
 
+            # Case 3: state_method with has_all_counts - handle item requirement dicts
+            # Pattern: any(state.has_all_counts(sublist) for sublist in [{item: count, ...}, ...])
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'has_all_counts':
+                # Filter out empty dicts - has_all_counts({}) is always True
+                non_empty_items = [item for item in items if isinstance(item, dict) and item]
+
+                if not non_empty_items:
+                    # All dicts are empty - always True (has_all_counts({}) is always True)
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                # Generate HasAllCounts for each non-empty dict
+                # HasAllCounts expects a dict: {'item_name': count, ...}
+                checks = []
+                for item_dict in non_empty_items:
+                    if isinstance(item_dict, dict):
+                        # Convert {item: count, ...} to HasAllCounts dict format
+                        items_dict_str = "{" + ", ".join(
+                            f"'{self._escape_string(k, chr(39))}': {v}" for k, v in item_dict.items()
+                        ) + "}"
+                        checks.append(f"HasAllCounts({items_dict_str})")
+                self.required_imports.add('HasAllCounts')
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
             # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
@@ -6012,9 +6087,13 @@ class HelperCodeGenerator:
         """
         option = expr.get('option', '')
 
-        # Check if this is actually a known option or a world attribute
+        # Extract base option name for checking (handles paths like "goal.option_vanilla")
+        # The base name is the first part before any '.' (e.g., "goal" from "goal.option_vanilla")
+        base_option = option.split('.')[0] if '.' in option else option
+
+        # Check if the base option is a known option or a world attribute
         # Some games export world attributes with option_value type incorrectly
-        if option in self.option_definitions:
+        if base_option in self.option_definitions:
             base_path = f'state.multiworld.worlds[player].options.{option}'
         else:
             # Not a known option - treat as world attribute

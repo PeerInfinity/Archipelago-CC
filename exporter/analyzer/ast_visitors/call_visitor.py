@@ -80,6 +80,23 @@ class CallVisitorMixin:
                  logging.error(f"Failed to analyze argument {i} in call: {ast.dump(arg_node)}")
                  # More permissive - continue even if arg analysis fails
                  continue
+
+            # Handle starred expressions (*args unpacking)
+            # When visit_Starred returns unpacked_args, expand them into the args list
+            if arg_result.get('type') == 'starred':
+                unpacked = arg_result.get('unpacked_args')
+                if unpacked:
+                    logging.debug(f"Unpacking starred argument with {len(unpacked)} values")
+                    for unpacked_arg in unpacked:
+                        args.append(unpacked_arg)
+                        # Use the original starred node for all unpacked args (for filtering purposes)
+                        args_with_nodes.append((arg_node, unpacked_arg))
+                else:
+                    # Starred expression couldn't be resolved - log warning but try to continue
+                    logging.warning(f"Starred argument {i} could not be unpacked: {arg_result}")
+                    # Skip this argument - we can't determine its values
+                continue
+
             args.append(arg_result)
             args_with_nodes.append((arg_node, arg_result))
 
@@ -1131,19 +1148,31 @@ class CallVisitorMixin:
                     if len(filtered_args) >= 2:
                         second_arg = filtered_args[1]
                         if isinstance(second_arg, dict):
-                            # Try to resolve the expression to a concrete value
-                            resolved_value = self.expression_resolver.resolve_expression(second_arg)
-                            if resolved_value is not None and isinstance(resolved_value, int):
-                                # Successfully resolved to an integer value
-                                logging.debug(f"Resolved count parameter: {second_arg} -> {resolved_value}")
-                                result['count'] = {'type': 'constant', 'value': resolved_value}
-                            elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
-                                # Already a constant, use as-is
-                                logging.debug(f"Found constant count parameter: {second_arg}")
-                                result['count'] = second_arg
+                            # When preserve_parameter_names is True and this is a name reference,
+                            # don't resolve to default value - keep as name reference for helper bodies
+                            should_resolve = True
+                            if getattr(self, 'preserve_parameter_names', False):
+                                if second_arg.get('type') == 'name':
+                                    should_resolve = False
+                                    logging.debug(f"Preserving parameter name reference: {second_arg}")
+
+                            if should_resolve:
+                                # Try to resolve the expression to a concrete value
+                                resolved_value = self.expression_resolver.resolve_expression(second_arg)
+                                if resolved_value is not None and isinstance(resolved_value, int):
+                                    # Successfully resolved to an integer value
+                                    logging.debug(f"Resolved count parameter: {second_arg} -> {resolved_value}")
+                                    result['count'] = {'type': 'constant', 'value': resolved_value}
+                                elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
+                                    # Already a constant, use as-is
+                                    logging.debug(f"Found constant count parameter: {second_arg}")
+                                    result['count'] = second_arg
+                                else:
+                                    # Could not resolve to a constant value, keep as-is
+                                    logging.debug(f"Found unresolved count parameter: {second_arg}")
+                                    result['count'] = second_arg
                             else:
-                                # Could not resolve to a constant value, keep as-is
-                                logging.debug(f"Found unresolved count parameter: {second_arg}")
+                                # preserve_parameter_names is True and this is a name - keep as-is
                                 result['count'] = second_arg
                 elif method == 'has_group' and len(filtered_args) >= 1:
                     # Unwrap group name if it's a constant
