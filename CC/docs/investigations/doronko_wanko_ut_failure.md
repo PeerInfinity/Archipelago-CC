@@ -2,134 +2,91 @@
 
 ## Summary
 
-The DORONKO WANKO apworld fails the Universal Tracker (UT) fuzz test approximately 20-30% of the time. The failures occur when the `logic` option is set to `standard` (as opposed to `glitched`).
+The DORONKO WANKO apworld was failing the Universal Tracker (UT) fuzz test approximately 20-30% of the time. The failures occurred due to bugs in the world generator when handling option-dependent helper arguments.
 
-## Root Causes
+**Status: FIXED** - All issues have been resolved.
 
-There are **two separate issues** in the world generator (`world_generator/rule_codegen.py`) that cause this failure:
+## Root Causes (Fixed)
+
+Three separate bugs in the world generator (`world_generator/rule_codegen.py`) caused the failures:
 
 ### Issue 1: Compare Rule Arguments Not Evaluated
 
-**Location:** `rule_codegen.py` lines 4804-4806 in `_convert_rule_builder_helper()`
+**Location:** `rule_codegen.py` - `_convert_helper()` and `_convert_rule_builder_helper()`
 
-**Problem:** When a helper function is called with a `Compare` rule as an argument (e.g., `options.logic == "glitched"`), the code generator doesn't know how to convert this to Python code and defaults to `None`.
+**Problem:** When a helper function received a `Compare` rule as an argument (e.g., `options.logic == "glitched"`), the code generator didn't know how to convert it to Python and defaulted to `None`.
 
-**Example:**
-- Original rule: `can_get_all_paintings(options.logic == "glitched", state, player)`
-- Exported JSON arg: `{"rule": "Compare", "args": {"left": {"rule": "SettingValue", "args": {"setting": "logic"}}, "op": "==", "right": "glitched"}}`
-- Generated Python: `HelperCall(helper_func=can_get_all_paintings, args=(None,))`
-
-**Expected:** The Compare rule should be evaluated at generation time since both sides are known:
-- If `settings["logic"] == "glitched"` → `True`
-- If `settings["logic"] == "standard"` → `False`
+**Fix:** Added `_evaluate_compare_rule()` and supporting methods to:
+- Resolve SettingValue/OptionValue operands from the settings
+- Handle Choice option string-to-int conversion using `name_lookup` from option definitions
+- Handle already-resolved values by checking all option definitions
 
 ### Issue 2: Conditional with Lambda Parameters Incorrectly Generated
 
-**Location:** `rule_codegen.py` helper function generation
+**Location:** `rule_codegen.py` - `HelperGenerator._expr_helper()`
 
-**Problem:** The `glitched_logic_check` helper has a conditional that should call lambda function parameters, but is incorrectly converted to always return `True`.
-
-**Original helper body (from JSON):**
-```json
-{
-  "type": "conditional",
-  "test": {"type": "name", "name": "is_glitched"},
-  "if_true": {"type": "helper", "name": "glitched_rule"},
-  "if_false": {"type": "helper", "name": "normal_rule"}
-}
-```
-
-**Generated Python (INCORRECT):**
+**Problem:** The `glitched_logic_check` helper had a conditional that should call lambda function parameters, but `_expr_helper()` returned `True` for unknown helpers, resulting in:
 ```python
-def glitched_logic_check(state, player, is_glitched=None, normal_rule=None, glitched_rule=None):
-    return (True if is_glitched else True)
+return (True if is_glitched else True)  # Always True!
 ```
 
-**Expected Python:**
+**Fix:**
+- Added `_current_helper_params` tracking to `HelperGenerator`
+- Modified `generate_helper_function()` to set parameter context during generation
+- Modified `_expr_helper()` to recognize when a helper name is a parameter and generate proper calls:
 ```python
-def glitched_logic_check(state, player, is_glitched=None, normal_rule=None, glitched_rule=None):
-    if is_glitched:
-        return glitched_rule(state)
-    else:
-        return normal_rule(state)
+return (glitched_rule(state) if is_glitched else normal_rule(state))
 ```
 
-## Impact
+### Issue 3: Lambda State Method Calls Missing Player Argument
 
-When `logic: standard`:
-1. The `is_glitched` argument is `None` (should be `False`)
-2. Even if it were `False`, `glitched_logic_check` returns `True` regardless
-3. This causes `can_get_all_paintings` to always return `True` when `Train Unlock` and `Train Wheel` are collected
-4. The UT and server disagree on which locations are accessible because the rule logic is broken
+**Location:** `rule_codegen.py` - `_expr_function_call()`
 
-## Recommended Fixes
+**Problem:** Lambdas like `lambda s: s.has('Item')` were generated without the required `player` argument.
 
-### Fix 1: Handle Compare Rules in Helper Arguments
-
-In `_convert_rule_builder_helper()`, add handling for `Compare` rules:
-
+**Fix:** Added special handling in `_expr_function_call()` to detect state method calls (`has`, `has_all`, `has_any`, etc.) and automatically append the `player` argument when missing:
 ```python
-elif arg_rule == 'Compare':
-    # Evaluate comparison at generation time
-    args_dict = arg.get('args', {})
-    left = args_dict.get('left')
-    op = args_dict.get('op', '==')
-    right = args_dict.get('right')
-    
-    # Resolve left side (usually a SettingValue)
-    left_val = None
-    if isinstance(left, dict):
-        if left.get('rule') == 'SettingValue':
-            setting = left.get('args', {}).get('setting', '')
-            left_val = self.settings.get(setting)
-    
-    # Resolve right side (usually a constant)
-    right_val = right if not isinstance(right, dict) else right.get('value')
-    
-    # Evaluate the comparison
-    if left_val is not None and right_val is not None:
-        if op == '==':
-            result = left_val == right_val
-        elif op == '!=':
-            result = left_val != right_val
-        # ... handle other operators
-        arg_strs.append(repr(result))
-    else:
-        arg_strs.append('None')
+lambda s: s.has('Item', player)
 ```
 
-### Fix 2: Properly Generate Conditionals with Callable Parameters
+### Issue 4: Option Definitions Not Passed to RuleCodeGenerator
 
-When generating helper functions with conditional bodies where branches reference parameters (lambdas), ensure the parameters are called, not just referenced:
+**Location:** `templates.py`
 
-```python
-# When if_true/if_false are helper references to parameter names
-if branch.get('type') == 'helper':
-    param_name = branch.get('name')
-    if param_name in helper_params:
-        # This is a callable parameter - generate a call
-        return f'{param_name}(state)'
-```
+**Problem:** `RuleCodeGenerator` didn't receive `option_definitions`, preventing proper Choice option string-to-int conversion.
 
-## Workaround
+**Fix:** Updated `RuleCodeGenerator` constructor to accept `option_definitions` and passed it from `templates.py`.
 
-Until these fixes are implemented, users can:
-1. Avoid apworlds that pass option-dependent expressions to helper functions
-2. Manually create game-specific exporters that handle these patterns
+## Test Results
 
-## Files to Modify
-
-1. `world_generator/rule_codegen.py`:
-   - `_convert_rule_builder_helper()` - Add Compare rule handling
-   - `generate_helper_function()` - Fix conditional generation with callable parameters
+Before fix: ~70% success rate (3 failures out of 10)
+After fix: 100% success rate (0 failures out of 20+)
 
 ## Test Commands
 
 ```bash
-# Reproduce failure
 source .venv/bin/activate
-python fuzz.py -r 10 -j 1 -g doronko_wanko -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 
-# Check specific failing seed
-python fuzz.py -r 1 -j 1 -g doronko_wanko -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <SEED>
+# Run fuzzer tests
+python fuzz.py -r 10 -j 4 -g doronko_wanko -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+
+# Verify via test runner
+python scripts/test/test-all-ut-fuzz.py --runs 10 --include-list "DORONKO WANKO.yaml" --custom-worlds-only
 ```
+
+## Files Modified
+
+1. `world_generator/rule_codegen.py`:
+   - Added `_evaluate_compare_rule()`
+   - Added `_resolve_compare_operand()`
+   - Added `_get_setting_name_from_operand()`
+   - Added `_convert_option_key_to_value()`
+   - Added `_try_convert_option_key_all_defs()`
+   - Added Compare rule handling in `_convert_helper()` and `_convert_rule_builder_helper()`
+   - Added `_current_helper_params` tracking to `HelperGenerator`
+   - Modified `generate_helper_function()` to set params context
+   - Modified `_expr_helper()` to handle parameter calls
+   - Modified `_expr_function_call()` to add missing player argument
+
+2. `world_generator/templates.py`:
+   - Updated `RuleCodeGenerator` instantiation to pass `option_definitions`
