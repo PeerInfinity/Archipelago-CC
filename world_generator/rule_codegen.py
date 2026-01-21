@@ -4360,6 +4360,34 @@ class RuleCodeGenerator:
                             self.required_imports.add('Or')
                             return f'Or({", ".join(checks)})'
 
+            # Case 3: state_method with has_all_counts - handle item requirement dicts
+            # Pattern: any(state.has_all_counts(sublist) for sublist in [{item: count, ...}, ...])
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'has_all_counts':
+                # Filter out empty dicts - has_all_counts({}) is always True
+                non_empty_items = [item for item in items if isinstance(item, dict) and item]
+
+                if not non_empty_items:
+                    # All dicts are empty - always True (has_all_counts({}) is always True)
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                # Generate HasAllCounts for each non-empty dict
+                # HasAllCounts expects a dict: {'item_name': count, ...}
+                checks = []
+                for item_dict in non_empty_items:
+                    if isinstance(item_dict, dict):
+                        # Convert {item: count, ...} to HasAllCounts dict format
+                        items_dict_str = "{" + ", ".join(
+                            f"'{self._escape_string(k, chr(39))}': {v}" for k, v in item_dict.items()
+                        ) + "}"
+                        checks.append(f"HasAllCounts({items_dict_str})")
+                self.required_imports.add('HasAllCounts')
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
             # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
