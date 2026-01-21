@@ -751,3 +751,65 @@ class ExpressionVisitorMixin:
         except Exception as e:
             logging.error(f"Error in visit_BoolOp: {e}")
             return None
+
+    def visit_Starred(self, node):
+        """
+        Handle starred expressions (*args unpacking) in function calls.
+
+        This handles patterns like:
+            needed_for_words(state, player, *(rules_for_difficulty["pointShop"]))
+
+        When the starred value resolves to a list/tuple, we return a special
+        'starred' type that the call visitor will unpack into individual arguments.
+        """
+        logging.debug(f"\nvisit_Starred called:")
+        logging.debug(f"Value: {ast.dump(node.value)}")
+
+        # Visit the value inside the starred expression
+        value_result = self.visit(node.value)
+
+        if value_result is None:
+            logging.error(f"Failed to analyze starred expression value: {ast.dump(node.value)}")
+            return None
+
+        logging.debug(f"Starred value result: {value_result}")
+
+        # Try to resolve the value to an actual list/tuple
+        resolved_value = None
+
+        if value_result.get('type') == 'constant':
+            resolved_value = value_result.get('value')
+        elif value_result.get('type') == 'name':
+            resolved_value = self.expression_resolver.resolve_variable(value_result['name'])
+        elif value_result.get('type') == 'subscript':
+            resolved_value = self.expression_resolver.resolve_expression(value_result)
+        elif value_result.get('type') == 'attribute':
+            resolved_value = self.expression_resolver.resolve_expression(value_result)
+
+        # If we resolved to a list/tuple, return each element as an unpacked argument
+        if resolved_value is not None and isinstance(resolved_value, (list, tuple)):
+            logging.debug(f"Resolved starred expression to list/tuple with {len(resolved_value)} items: {resolved_value}")
+            # Convert each element to a constant
+            unpacked_args = []
+            for item in resolved_value:
+                if isinstance(item, (int, float, str, bool, type(None))):
+                    unpacked_args.append({'type': 'constant', 'value': item})
+                elif hasattr(item, 'value') and isinstance(item.value, (int, float, str, bool)):
+                    # Handle enum values
+                    unpacked_args.append({'type': 'constant', 'value': item.value})
+                else:
+                    logging.warning(f"Starred item is not a simple value: {type(item).__name__}")
+                    unpacked_args.append({'type': 'constant', 'value': item})
+
+            return {
+                'type': 'starred',
+                'unpacked_args': unpacked_args
+            }
+
+        # If we couldn't resolve, return a starred marker with the unresolved value
+        # The call visitor may still be able to handle this at a later stage
+        logging.debug(f"Could not resolve starred expression to list/tuple, returning unresolved starred")
+        return {
+            'type': 'starred',
+            'value': value_result
+        }

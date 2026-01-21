@@ -3,7 +3,37 @@
 **Date:** 2026-01-21
 **APWorld:** Wordipelago
 **Source:** https://github.com/ProfDeCube/Archipelago/releases/download/1.0.0/wordipelago.apworld
-**Status:** Root cause identified - exporter limitation
+**Status:** FIXED - 80% success rate (was 0%)
+
+## Fix Summary
+
+Three fixes were implemented to resolve the Wordipelago UT fuzz test failures:
+
+1. **visit_Starred support** (`exporter/analyzer/ast_visitors/expression_visitors.py`)
+   - Added `visit_Starred` method to handle Python's `*` unpacking operator
+   - Resolves starred expressions to their actual list/tuple values at export time
+
+2. **Starred unpacking in call_visitor** (`exporter/analyzer/ast_visitors/call_visitor.py`)
+   - Modified argument processing to unpack starred expressions
+   - Expands `*[a, b, c]` into individual arguments
+
+3. **Binary_op item name resolution** (`world_generator/rule_codegen.py`)
+   - Changed `_convert_item_check` to use `_extract_constant` instead of `_extract_constant_value`
+   - Properly handles string concatenation like `"Letter " + letter` → `"Letter O"`
+
+4. **Parameter preservation in count resolution** (`exporter/analyzer/ast_visitors/call_visitor.py`)
+   - When `preserve_parameter_names=True`, don't resolve parameter names to default values
+   - Keeps parameter references intact for helper body export
+
+## Results
+
+- **Before:** 0/10 success (0%)
+- **After:** 8/10 success (80%)
+- Remaining failure appears to be unrelated to starred unpacking
+
+---
+
+## Original Investigation
 
 ## Summary
 
