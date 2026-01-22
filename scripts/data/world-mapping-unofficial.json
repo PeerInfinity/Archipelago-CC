@@ -1,0 +1,1242 @@
+{
+  "A Dance of Fire and Ice": {
+    "apworld_path": "custom_worlds/adofai.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "adofai"
+  },
+  "A Difficult Game About Climbing": {
+    "apworld_path": "custom_worlds/difficult_climbing.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "difficult_climbing"
+  },
+  "A Link Between Worlds": {
+    "apworld_path": "custom_worlds/albw.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "albw"
+  },
+  "ANIMAL WELL": {
+    "apworld_path": "custom_worlds/animal_well.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "animal_well"
+  },
+  "Actraiser": {
+    "apworld_path": "custom_worlds/actraiser.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "actraiser"
+  },
+  "Against the Storm": {
+    "apworld_path": "custom_worlds/against_the_storm.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "against_the_storm"
+  },
+  "Air Delivery": {
+    "apworld_path": "custom_worlds/air_delivery.apworld",
+    "exporter_path": "exporter/games/unofficial/air_delivery.py",
+    "exporter_size": 6804,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "air_delivery"
+  },
+  "An Untitled Story": {
+    "apworld_path": "custom_worlds/aus.apworld",
+    "exporter_path": "exporter/games/unofficial/aus.py",
+    "exporter_size": 8885,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "aus"
+  },
+  "Anodyne": {
+    "apworld_path": "custom_worlds/anodyne.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "anodyne"
+  },
+  "Another Crabs Treasure": {
+    "apworld_path": "custom_worlds/another_crab.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "another_crab"
+  },
+  "Ape Escape": {
+    "apworld_path": "custom_worlds/apeescape.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "apeescape"
+  },
+  "Ape Escape 3": {
+    "apworld_path": "custom_worlds/ape_escape_3.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ape_escape_3"
+  },
+  "Astalon": {
+    "apworld_path": "custom_worlds/astalon.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "astalon"
+  },
+  "Autopelago": {
+    "apworld_path": "custom_worlds/autopelago.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "autopelago"
+  },
+  "Axiom Verge": {
+    "apworld_path": "custom_worlds/axiomverge.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "axiomverge"
+  },
+  "Balatro": {
+    "apworld_path": "custom_worlds/balatro.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "balatro"
+  },
+  "Brotato": {
+    "apworld_path": "custom_worlds/brotato.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "brotato"
+  },
+  "Castlevania: Dawn of Sorrow": {
+    "apworld_path": "custom_worlds/cv_dos.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "cv_dos"
+  },
+  "Cavern of Dreams": {
+    "apworld_path": "custom_worlds/cavern_of_dreams.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "cavern_of_dreams"
+  },
+  "ChecksMate": {
+    "apworld_path": "custom_worlds/checksmate.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "checksmate"
+  },
+  "Chrono Trigger Jets of Time": {
+    "apworld_path": "custom_worlds/ctjot.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ctjot"
+  },
+  "ClusterTruck": {
+    "apworld_path": "custom_worlds/cluster_truck.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "cluster_truck"
+  },
+  "Corn Kidz 64": {
+    "apworld_path": "custom_worlds/cornkidz64.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "cornkidz64"
+  },
+  "CrossCode": {
+    "apworld_path": "custom_worlds/crosscode.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "crosscode"
+  },
+  "Crystal Project": {
+    "apworld_path": "custom_worlds/crystal_project.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "crystal_project"
+  },
+  "Crystalis": {
+    "apworld_path": "custom_worlds/crystalis.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "crystalis"
+  },
+  "Cuphead": {
+    "apworld_path": "custom_worlds/cuphead.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "cuphead"
+  },
+  "DORONKO WANKO": {
+    "apworld_path": "custom_worlds/doronko_wanko.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "doronko_wanko"
+  },
+  "Deep Rock Galactic": {
+    "apworld_path": "custom_worlds/deep_rock_galactic.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "deep_rock_galactic"
+  },
+  "Diddy Kong Racing": {
+    "apworld_path": "custom_worlds/diddy_kong_racing.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "diddy_kong_racing"
+  },
+  "Digimon World": {
+    "apworld_path": "custom_worlds/dw1.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "dw1"
+  },
+  "Dome Keeper": {
+    "apworld_path": "custom_worlds/dome_keeper.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "dome_keeper"
+  },
+  "Duke Nukem 3D": {
+    "apworld_path": "custom_worlds/duke3d.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "duke3d"
+  },
+  "Final Fantasy Tactics A2": {
+    "apworld_path": "custom_worlds/ffta2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ffta2"
+  },
+  "Final Fantasy Tactics Advance": {
+    "apworld_path": "custom_worlds/ffta.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ffta"
+  },
+  "Fire Emblem Sacred Stones": {
+    "apworld_path": "custom_worlds/fe8.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "fe8"
+  },
+  "Frogmonster": {
+    "apworld_path": "custom_worlds/frogmonster.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "frogmonster"
+  },
+  "GZDoom": {
+    "apworld_path": "custom_worlds/gzdoom.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "gzdoom"
+  },
+  "Garfield Kart - Furious Racing": {
+    "apworld_path": "custom_worlds/garfkart.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "garfkart"
+  },
+  "Golden Sun The Lost Age": {
+    "apworld_path": "custom_worlds/gstla.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "gstla"
+  },
+  "Grim Dawn": {
+    "apworld_path": "custom_worlds/grim_dawn.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "grim_dawn"
+  },
+  "Hammerwatch": {
+    "apworld_path": "custom_worlds/hammerwatch.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "hammerwatch"
+  },
+  "Hatsune Miku Project Diva Mega Mix+": {
+    "apworld_path": "custom_worlds/megamix.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "megamix"
+  },
+  "Here Comes Niko!": {
+    "apworld_path": "custom_worlds/hcniko.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "hcniko"
+  },
+  "Iji": {
+    "apworld_path": "custom_worlds/iji.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "iji"
+  },
+  "Into the Breach": {
+    "apworld_path": "custom_worlds/into_the_breach.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "into_the_breach"
+  },
+  "Isles Of Sea And Sky": {
+    "apworld_path": "custom_worlds/isles_of_sea_and_sky.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "isles_of_sea_and_sky"
+  },
+  "Ittle Dew 2": {
+    "apworld_path": "custom_worlds/ittle_dew_2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ittle_dew_2"
+  },
+  "Jigsaw": {
+    "apworld_path": "custom_worlds/jigsaw.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "jigsaw"
+  },
+  "K-On! After School Live!!": {
+    "apworld_path": "custom_worlds/kon.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "kon"
+  },
+  "Keep Talking and Nobody Explodes": {
+    "apworld_path": "custom_worlds/ktane.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ktane"
+  },
+  "Kingdom Hearts Birth by Sleep": {
+    "apworld_path": "custom_worlds/khbbs.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "khbbs"
+  },
+  "Kingdom Hearts Chain of Memories": {
+    "apworld_path": "custom_worlds/khcom.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "khcom"
+  },
+  "Kingdom Hearts RE Chain of Memories": {
+    "apworld_path": "custom_worlds/khrecom.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "khrecom"
+  },
+  "Kirby Super Star": {
+    "apworld_path": "custom_worlds/kss.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "kss"
+  },
+  "League of Legends": {
+    "apworld_path": "custom_worlds/lol.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lol"
+  },
+  "Lego Star Wars: The Complete Saga": {
+    "apworld_path": "custom_worlds/lego_star_wars_tcs.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lego_star_wars_tcs"
+  },
+  "Lil Gator Game": {
+    "apworld_path": "custom_worlds/lil_gator_game.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lil_gator_game"
+  },
+  "Lingo 2": {
+    "apworld_path": "custom_worlds/lingo2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lingo2"
+  },
+  "Little Witch Nobeta": {
+    "apworld_path": "custom_worlds/little_witch_nobeta.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "little_witch_nobeta"
+  },
+  "Luigi's Mansion": {
+    "apworld_path": "custom_worlds/luigismansion.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "luigismansion"
+  },
+  "Lunacid": {
+    "apworld_path": "custom_worlds/lunacid.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lunacid"
+  },
+  "Majora's Mask Recompiled": {
+    "apworld_path": "custom_worlds/mm_recomp.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "mm_recomp"
+  },
+  "Mario Kart Double Dash": {
+    "apworld_path": "custom_worlds/mario_kart_double_dash.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "mario_kart_double_dash"
+  },
+  "MetroCUBEvania": {
+    "apworld_path": "custom_worlds/metrocubevania.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "metrocubevania"
+  },
+  "Metroid Fusion": {
+    "apworld_path": "custom_worlds/metroidfusion.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "metroidfusion"
+  },
+  "Metroid Zero Mission": {
+    "apworld_path": "custom_worlds/mzm.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "mzm"
+  },
+  "Minishoot Adventures": {
+    "apworld_path": "custom_worlds/minishoot.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "minishoot"
+  },
+  "Minit": {
+    "apworld_path": "custom_worlds/minit.apworld",
+    "exporter_path": "exporter/games/unofficial/minit.py",
+    "exporter_size": 15444,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "minit"
+  },
+  "Monster Sanctuary": {
+    "apworld_path": "custom_worlds/monster_sanctuary.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "monster_sanctuary"
+  },
+  "Nine Sols": {
+    "apworld_path": "custom_worlds/nine_sols.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "nine_sols"
+  },
+  "Ori and the Blind Forest": {
+    "apworld_path": "custom_worlds/oribf.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "oribf"
+  },
+  "Ori and the Will of the Wisps": {
+    "apworld_path": "custom_worlds/ori_wotw.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ori_wotw"
+  },
+  "Oxygen Not Included": {
+    "apworld_path": "custom_worlds/oni.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "oni"
+  },
+  "Pizza Tower": {
+    "apworld_path": "custom_worlds/pizza_tower.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "pizza_tower"
+  },
+  "Pokemon FireRed and LeafGreen": {
+    "apworld_path": "custom_worlds/pokemon_frlg.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "pokemon_frlg"
+  },
+  "Pokemon Mystery Dungeon Explorers of Sky": {
+    "apworld_path": "custom_worlds/pmd_eos.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "pmd_eos"
+  },
+  "Pseudoregalia": {
+    "apworld_path": "custom_worlds/pseudoregalia.apworld",
+    "exporter_path": "exporter/games/unofficial/pseudoregalia.py",
+    "exporter_size": 17477,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "pseudoregalia"
+  },
+  "Rabi-Ribi": {
+    "apworld_path": "custom_worlds/rabi_ribi.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "rabi_ribi"
+  },
+  "Rain World": {
+    "apworld_path": "custom_worlds/rain_world.apworld",
+    "exporter_path": "exporter/games/unofficial/rain_world.py",
+    "exporter_size": 11908,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "rain_world"
+  },
+  "Ratchet & Clank 2": {
+    "apworld_path": "custom_worlds/rac2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "rac2"
+  },
+  "Reventure": {
+    "apworld_path": "custom_worlds/reventure.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "reventure"
+  },
+  "Rift Wizard": {
+    "apworld_path": "custom_worlds/riftwizard.apworld",
+    "exporter_path": "exporter/games/unofficial/riftwizard.py",
+    "exporter_size": 6740,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "riftwizard"
+  },
+  "Rift of the Necrodancer": {
+    "apworld_path": "custom_worlds/rotn.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "rotn"
+  },
+  "Rusted Moss": {
+    "apworld_path": "custom_worlds/rusted_moss.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "rusted_moss"
+  },
+  "Sentinels of the Multiverse": {
+    "apworld_path": "custom_worlds/sotm.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sotm"
+  },
+  "Shadow The Hedgehog": {
+    "apworld_path": "custom_worlds/shadow_the_hedgehog.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "shadow_the_hedgehog"
+  },
+  "Ship of Harkinian": {
+    "apworld_path": "custom_worlds/oot_soh.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "oot_soh"
+  },
+  "Simon Tatham's Portable Puzzle Collection": {
+    "apworld_path": "custom_worlds/sgtpuzzles.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sgtpuzzles"
+  },
+  "Sly 2: Band of Thieves": {
+    "apworld_path": "custom_worlds/sly2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sly2"
+  },
+  "Sly Cooper and the Thievius Raccoonus": {
+    "apworld_path": "custom_worlds/sly1.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sly1"
+  },
+  "Sonic Adventure DX": {
+    "apworld_path": "custom_worlds/sadx.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sadx"
+  },
+  "Sonic Heroes": {
+    "apworld_path": "custom_worlds/sonic_heroes.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sonic_heroes"
+  },
+  "Sonic Rush": {
+    "apworld_path": "custom_worlds/sonic_rush.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sonic_rush"
+  },
+  "Sonic the Hedgehog 1": {
+    "apworld_path": "custom_worlds/sonic1.apworld",
+    "exporter_path": "exporter/games/unofficial/sonic1.py",
+    "exporter_size": 9633,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "sonic1"
+  },
+  "Soul Blazer": {
+    "apworld_path": "custom_worlds/soulblazer.apworld",
+    "exporter_path": "exporter/games/unofficial/soulblazer.py",
+    "exporter_size": 10837,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": true,
+    "has_custom_game_logic": false,
+    "world_directory": "soulblazer"
+  },
+  "Spinball": {
+    "apworld_path": "custom_worlds/spinball.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "spinball"
+  },
+  "Spyro 3": {
+    "apworld_path": "custom_worlds/spyro3.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "spyro3"
+  },
+  "Stacklands": {
+    "apworld_path": "custom_worlds/stacklands.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "stacklands"
+  },
+  "Star Fox 64": {
+    "apworld_path": "custom_worlds/star_fox_64.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "star_fox_64"
+  },
+  "Star Wars Episode I Racer": {
+    "apworld_path": "custom_worlds/swr.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "swr"
+  },
+  "Super Cat Planet": {
+    "apworld_path": "custom_worlds/scp.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "scp"
+  },
+  "Symphony of the Night": {
+    "apworld_path": "custom_worlds/sotn.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sotn"
+  },
+  "System Shock 2": {
+    "apworld_path": "custom_worlds/ss2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ss2"
+  },
+  "TCG Card Shop Simulator": {
+    "apworld_path": "custom_worlds/tcg_card_shop_simulator.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tcg_card_shop_simulator"
+  },
+  "TOEM: A Photo Adventure": {
+    "apworld_path": "custom_worlds/toem.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "toem"
+  },
+  "Tetris Attack": {
+    "apworld_path": "custom_worlds/tetrisattack.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tetrisattack"
+  },
+  "Tevi": {
+    "apworld_path": "custom_worlds/tevi.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tevi"
+  },
+  "The Legend of Zelda - Oracle of Seasons": {
+    "apworld_path": "custom_worlds/tloz_oos.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tloz_oos"
+  },
+  "The Legend of Zelda - Phantom Hourglass": {
+    "apworld_path": "custom_worlds/tloz_ph.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tloz_ph"
+  },
+  "The Sims 4": {
+    "apworld_path": "custom_worlds/sims4.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sims4"
+  },
+  "ToeJam and Earl": {
+    "apworld_path": "custom_worlds/tje.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tje"
+  },
+  "TurnipBoy": {
+    "apworld_path": "custom_worlds/turnipboy.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "turnipboy"
+  },
+  "Tyrian": {
+    "apworld_path": "custom_worlds/tyrian.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tyrian"
+  },
+  "Vampire Survivors": {
+    "apworld_path": "custom_worlds/vampire_survivors.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "vampire_survivors"
+  },
+  "Wario Land": {
+    "apworld_path": "custom_worlds/wl.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "wl"
+  },
+  "Watery Words": {
+    "apworld_path": "custom_worlds/waterywords.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "waterywords"
+  },
+  "Wordipelago": {
+    "apworld_path": "custom_worlds/wordipelago.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "wordipelago"
+  },
+  "XCOM 2 War of the Chosen": {
+    "apworld_path": "custom_worlds/x2wotc.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "x2wotc"
+  },
+  "Yu-Gi-Oh! Dungeon Dice Monsters": {
+    "apworld_path": "custom_worlds/yugiohddm.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "yugiohddm"
+  },
+  "Yu-Gi-Oh! Forbidden Memories": {
+    "apworld_path": "custom_worlds/fm.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "fm"
+  },
+  "Zelda II: The Adventure of Link": {
+    "apworld_path": "custom_worlds/zelda2.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "zelda2"
+  },
+  "osu!": {
+    "apworld_path": "custom_worlds/osu.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "osu"
+  },
+  "plateup": {
+    "apworld_path": "custom_worlds/plateup.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "plateup"
+  }
+}
