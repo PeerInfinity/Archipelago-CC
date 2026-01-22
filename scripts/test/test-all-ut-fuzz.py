@@ -40,6 +40,7 @@ from lib.test_utils import (
     get_world_directory_name_from_game_name,
     build_and_load_world_mapping
 )
+from setup.update_host_settings import update_host_yaml
 
 # Global variable to cache apworld download URLs
 _apworld_download_urls: Dict[str, str] = {}
@@ -428,6 +429,11 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Configure host settings for UT fuzz testing
+    # Enable skip_export_for_native_ut to speed up testing for worlds with native UT support
+    print("Configuring host settings for UT fuzz testing...")
+    update_host_yaml({'skip_export_for_native_ut': True})
 
     # Clean up empty worldgen directories before loading worlds
     cleanup_empty_worldgen_dirs()
