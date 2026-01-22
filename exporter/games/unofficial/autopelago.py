@@ -155,81 +155,25 @@ class AutopelagoGameExportHandler(GenericGameExportHandler):
             if rat_count == 0:
                 return {'type': 'constant', 'value': True}
 
-            # Convert rat_count to a rule the worldgen can handle.
-            # Rat Pack gives 5 rats, all others give 1 each.
-            # We approximate by checking:
-            # - For N <= 5: any(Rat Pack) OR count_true(N, individual_rats)
-            # - For N > 5: all(Rat Pack, count_true(N-5, individual_rats)) OR count_true(N, individual_rats)
-            # - For N > 12: must have Rat Pack since only 12 individual rats exist
+            # Use weighted_sum rule format (same as Rift Wizard mana counting).
+            # This properly handles counting multiple copies of items with different weights.
+            # The worldgen converts this to WeightedSum(threshold=N, items=[...])
             if self._item_name_to_rat_count:
-                # Build list of individual rat item checks (weight = 1)
-                individual_rat_checks = []
-                rat_pack_name = None
+                # Build list of [item_name, weight] pairs for weighted_sum
+                items_with_weights = []
                 for item_name, rat_value in self._item_name_to_rat_count.items():
-                    if rat_value == 5:
-                        rat_pack_name = item_name  # Rat Pack
-                    elif rat_value == 1:
-                        individual_rat_checks.append({
-                            'type': 'item_check',
-                            'item': item_name,
-                            'count': 1
-                        })
+                    if rat_value > 0:
+                        items_with_weights.append([item_name, float(rat_value)])
 
-                num_individual_rats = len(individual_rat_checks)
-
-                if rat_count <= 5:
-                    # Either have Rat Pack (5 rats) OR have N individual rats
-                    options = []
-                    if rat_pack_name:
-                        options.append({
-                            'type': 'item_check',
-                            'item': rat_pack_name,
-                            'count': 1
-                        })
-                    if rat_count <= num_individual_rats:
-                        options.append({
-                            'type': 'count_true',
-                            'count': rat_count,
-                            'conditions': individual_rat_checks
-                        })
-                    if len(options) == 1:
-                        return options[0]
-                    return {'type': 'or', 'conditions': options}
-
-                elif rat_count <= num_individual_rats:
-                    # Either (Rat Pack + (N-5) individuals) OR (N individuals)
-                    options = []
-                    if rat_pack_name:
-                        options.append({
-                            'type': 'and',
-                            'conditions': [
-                                {'type': 'item_check', 'item': rat_pack_name, 'count': 1},
-                                {'type': 'count_true', 'count': rat_count - 5, 'conditions': individual_rat_checks}
-                            ]
-                        })
-                    options.append({
-                        'type': 'count_true',
-                        'count': rat_count,
-                        'conditions': individual_rat_checks
-                    })
-                    if len(options) == 1:
-                        return options[0]
-                    return {'type': 'or', 'conditions': options}
-
-                else:
-                    # Must have Rat Pack since N > individual rat count
-                    # Need Rat Pack (5) + as many individuals as possible
-                    needed_individuals = min(rat_count - 5, num_individual_rats)
-                    if not rat_pack_name:
-                        # Can't satisfy without Rat Pack
-                        return {'type': 'constant', 'value': False}
-                    return {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': rat_pack_name, 'count': 1},
-                            {'type': 'count_true', 'count': needed_individuals, 'conditions': individual_rat_checks}
-                        ]
-                    }
+                # Use the weighted_sum helper format that rule_codegen expects
+                return {
+                    'rule': 'weighted_sum',
+                    '_original_ast_type': 'helper',
+                    'args': [
+                        {'rule': 'Constant', 'args': {'value': float(rat_count)}},
+                        {'rule': 'Constant', 'args': {'value': items_with_weights}}
+                    ]
+                }
             else:
                 # Fallback if we couldn't load the rat count data
                 logger.warning(f"Cannot convert rat_count {rat_count} - missing item data")
@@ -296,28 +240,3 @@ class AutopelagoGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def get_helpers(self) -> Dict[str, Any]:
-        """Return helper definitions for Autopelago.
-
-        The check_rat_count helper handles the rat counting logic.
-        """
-        helpers = super().get_helpers()
-
-        if self._item_name_to_rat_count:
-            # Build the rat count helper
-            # This creates a weighted sum: sum(count(item) * weight) >= required
-            rat_items = []
-            for item_name, rat_value in self._item_name_to_rat_count.items():
-                if rat_value > 0:
-                    rat_items.append({
-                        'item': item_name,
-                        'weight': rat_value
-                    })
-
-            helpers['check_rat_count'] = {
-                'type': 'weighted_item_sum',
-                'description': 'Check if player has enough rats (sum of item counts weighted by rat value)',
-                'items': rat_items
-            }
-
-        return helpers
