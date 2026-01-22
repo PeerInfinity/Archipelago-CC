@@ -158,6 +158,10 @@
     {
       "name": "XCOM 2 War of the Chosen.yaml",
       "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
+    },
+    {
+      "name": "ChecksMate.yaml",
+      "reason": "Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties."
     }
   ],
   "requires_javascript_helpers_list": [
