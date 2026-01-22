@@ -48,11 +48,9 @@ Options:
 
 import argparse
 import os
-import re
 import shutil
 import subprocess
 import sys
-import tempfile
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -370,90 +368,26 @@ def setup_dev_environment(target_dir: Path, dry_run: bool = False) -> bool:
 
 
 def apply_romless_patches(target_dir: Path, dry_run: bool = False) -> bool:
-    """Apply ROM-less patches to allow generation without ROM files."""
+    """Apply ROM-less patches to allow generation without ROM files.
+
+    This delegates to scripts/setup/apply_romless_patches.py which uses
+    the world-init-files.diff to patch world files. The diff-based approach
+    will fail cleanly if the Archipelago version doesn't match.
+
+    Note: ROM-less generation also requires skip_required_files support in
+    settings.py, which should be provided by the core JSON Tools patches.
+    If that support is missing, the world patches will fail at runtime.
+    """
     print_header("Applying ROM-less Patches")
 
     venv_path = target_dir / ".venv"
     python_exe = get_python_executable(venv_path)
     patch_script = target_dir / "scripts" / "setup" / "apply_romless_patches.py"
-    settings_file = target_dir / "settings.py"
 
     if dry_run:
-        print(f"  [DRY RUN] Would add skip_required_files to {settings_file}")
         print(f"  [DRY RUN] Would run: {python_exe} {patch_script}")
         return True
 
-    # Modify settings.py to enable ROM-less generation:
-    # 1. Add skip_required_files = True at the top
-    # 2. Patch the __getattribute__ method to check skip_required_files before raising FileNotFoundError
-    if settings_file.exists():
-        content = settings_file.read_text()
-        modified = False
-
-        # Add skip_required_files if not present
-        if "skip_required_files" not in content:
-            # Add after the imports at the top of the file
-            lines = content.split('\n')
-            insert_idx = 0
-            for i, line in enumerate(lines):
-                if line.startswith('import ') or line.startswith('from '):
-                    insert_idx = i + 1
-                elif insert_idx > 0 and line.strip() and not line.startswith('#'):
-                    break
-
-            # Insert the variable
-            lines.insert(insert_idx, '')
-            lines.insert(insert_idx + 1, '# Added by install_json_tools.py for ROM-less generation')
-            lines.insert(insert_idx + 2, 'skip_required_files = True')
-            lines.insert(insert_idx + 3, '')
-            content = '\n'.join(lines)
-            modified = True
-            print("  [OK] Added skip_required_files = True to settings.py")
-
-        # Patch the __getattribute__ method to check skip_required_files
-        # The vanilla code raises FileNotFoundError when a required file doesn't exist
-        # We need to add a check to skip this when skip_required_files is True
-        old_pattern = '''            if attr.required and not attr.exists() and not super().__getattribute__("_has_attr"):
-                # if a file is required, and the one from settings does not exist, ask the user to provide it
-                # unless we are dumping the settings, because that would ask for each entry
-                with _lock:  # lock to avoid opening multiple
-                    new = None if no_gui else attr.browse()
-                    if new is None:
-                        raise FileNotFoundError(f"{attr} does not exist, but "
-                                                f"{self.__class__.__name__}.{item} is required")'''
-
-        new_pattern = '''            if attr.required and not attr.exists() and not super().__getattribute__("_has_attr"):
-                # if a file is required, and the one from settings does not exist, ask the user to provide it
-                # unless we are dumping the settings, because that would ask for each entry
-                # or skip_required_files is True (added by install_json_tools.py)
-                if skip_required_files:
-                    import warnings
-                    warnings.warn(f"{attr} does not exist, but {self.__class__.__name__}.{item} is required. "
-                                  f"Continuing anyway as skip_required_files is set.")
-                    return attr
-                with _lock:  # lock to avoid opening multiple
-                    new = None if no_gui else attr.browse()
-                    if new is None:
-                        raise FileNotFoundError(f"{attr} does not exist, but "
-                                                f"{self.__class__.__name__}.{item} is required")'''
-
-        if old_pattern in content:
-            content = content.replace(old_pattern, new_pattern)
-            modified = True
-            print("  [OK] Patched settings.py to check skip_required_files")
-        elif "skip_required_files is True" not in content and "skip_required_files:" not in content:
-            # Pattern not found exactly - try to warn user
-            print("  [WARN] Could not find expected pattern in settings.py to patch")
-            print("  ROM-based games may still require ROMs")
-
-        if modified:
-            settings_file.write_text(content)
-        else:
-            print("  [OK] settings.py already configured for ROM-less generation")
-    else:
-        print(f"  [WARN] settings.py not found: {settings_file}")
-
-    # Now apply the romless patches to the world files
     if not patch_script.exists():
         print(f"  [SKIP] ROM-less patches script not found: {patch_script}")
         print("  (romless_patches component may not be installed)")
@@ -467,10 +401,12 @@ def apply_romless_patches(target_dir: Path, dry_run: bool = False) -> bool:
     )
 
     if not success:
-        print("  [WARN] Failed to apply ROM-less patches")
-        print("  ROM-based games may require ROM files for generation")
+        print("  [FAIL] Failed to apply ROM-less patches")
+        print("  This may indicate an incompatible Archipelago version.")
+        print("  ROM-less generation will not be available.")
+        return False
 
-    return True  # Don't fail the installation for this
+    return True
 
 
 def run_adventure_test(target_dir: Path, dry_run: bool = False) -> bool:
