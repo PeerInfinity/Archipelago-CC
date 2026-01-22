@@ -117,6 +117,7 @@ def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
 
         chart_data.append({
             'game_name': game_name,
+            'template_file': template_filename,
             'world_directory': world_directory,
             'passed': passed,
             'total': total,
@@ -181,6 +182,11 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"**Parallel Jobs:** {metadata.get('jobs', 'Unknown')}\n\n"
         md_content += f"**Timeout Per Generation:** {metadata.get('timeout', 'Unknown')}s\n\n"
 
+    # Track unexpected pass/fail game names for listing later
+    unexpected_pass_games = []
+    unexpected_fail_games = []  # Games with actual logic failures
+    unexpected_fail_timeout_only_games = []  # Games that only failed due to timeouts
+
     if chart_data:
         total_games = len(chart_data)
         passed = sum(1 for d in chart_data if d['passed'])
@@ -206,40 +212,45 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
         # Add expected/unexpected pass/fail categorization (only for modified UT)
         if excluded_games and ut_version == 'modified':
-            # Build set of excluded game names (without .yaml suffix for matching)
-            excluded_names = set()
-            for name in excluded_games.keys():
-                if name.endswith('.yaml'):
-                    excluded_names.add(name[:-5])  # Remove .yaml
-                else:
-                    excluded_names.add(name)
+            # Build set of excluded template names for matching
+            excluded_templates = set(excluded_games.keys())
 
             expected_passes = 0
             unexpected_passes = 0
             expected_failures = 0
-            unexpected_failures = 0
+            unexpected_failures_logic = 0  # Actual logic failures
+            unexpected_failures_timeout_only = 0  # Only timeouts, no logic failures
 
             for d in chart_data:
                 game_name = d['game_name']
-                is_excluded = game_name in excluded_names
+                template_file = d.get('template_file', '')
+                is_excluded = template_file in excluded_templates
                 is_passing = d['passed']
+                has_logic_failures = d.get('failure', 0) > 0
 
                 if is_excluded:
                     if is_passing:
                         unexpected_passes += 1
+                        unexpected_pass_games.append(game_name)
                     else:
                         expected_failures += 1
                 else:
                     if is_passing:
                         expected_passes += 1
                     else:
-                        unexpected_failures += 1
+                        if has_logic_failures:
+                            unexpected_failures_logic += 1
+                            unexpected_fail_games.append(game_name)
+                        else:
+                            unexpected_failures_timeout_only += 1
+                            unexpected_fail_timeout_only_games.append(game_name)
 
             md_content += "### Expected vs Unexpected Results\n\n"
             md_content += f"- **Expected Passes:** {expected_passes} (not excluded, passed)\n"
             md_content += f"- **Unexpected Passes:** {unexpected_passes} (excluded, but passed)\n"
             md_content += f"- **Expected Failures:** {expected_failures} (excluded, failed as expected)\n"
-            md_content += f"- **Unexpected Failures:** {unexpected_failures} (not excluded, but failed)\n\n"
+            md_content += f"- **Unexpected Failures (logic):** {unexpected_failures_logic} (not excluded, logic mismatch)\n"
+            md_content += f"- **Unexpected Failures (timeout only):** {unexpected_failures_timeout_only} (not excluded, only timeouts)\n\n"
 
         # Add explain stats summary if available
         games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
@@ -457,6 +468,24 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += "|----------|--------|\n"
         for game, reason in sorted(excluded_games.items()):
             md_content += f"| {game} | {reason} |\n"
+
+        # Add lists of unexpected passes and failures
+        if unexpected_pass_games:
+            md_content += "\n### Unexpected Passes\n\n"
+            for game in sorted(unexpected_pass_games):
+                md_content += f"- {game}\n"
+
+        if unexpected_fail_games:
+            md_content += "\n### Unexpected Failures (Logic Mismatch)\n\n"
+            md_content += "These games have actual logic mismatches between UT and Python:\n\n"
+            for game in sorted(unexpected_fail_games):
+                md_content += f"- {game}\n"
+
+        if unexpected_fail_timeout_only_games:
+            md_content += "\n### Unexpected Failures (Timeout Only)\n\n"
+            md_content += "These games failed only due to timeouts, not logic mismatches:\n\n"
+            for game in sorted(unexpected_fail_timeout_only_games):
+                md_content += f"- {game}\n"
 
     return md_content
 
@@ -728,8 +757,8 @@ def main():
     world_mapping = load_world_mapping(project_root)
 
     # Load exclude lists for different world sources
-    # For bundled worlds: use main test exclude list (same as test-results-summary.md)
-    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
+    # For bundled worlds: use main + worldgen exclude lists (UT fuzz uses worldgen to regenerate)
+    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='all', skip_worldgen_variants=True)
     excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
     # For apworlds: use UT fuzz apworld exclude list
     excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld')
