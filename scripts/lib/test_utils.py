@@ -39,10 +39,11 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
     """
     Load the template exclude list from scripts/data/template-exclude-list.json.
 
-    The exclude list file contains three arrays:
+    The exclude list file contains multiple arrays:
     - 'exclude_list': Permanent exclusions that apply to all tests
     - 'main_test_exclude_list': Games excluded from spoiler-minimal and multiclient tests
     - 'worldgen_test_exclude_list': Games excluded from world-generator tests
+    - 'ut_fuzz_apworld_exclude_list': Community apworlds excluded from UT fuzz testing
 
     Automatically includes WorldGen versions of each excluded template.
     For example, if "Blasphemous.yaml" is excluded, "Blasphemous WorldGen.yaml"
@@ -57,6 +58,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                   - 'main': Permanent exclusions + main test exclusions
                   - 'worldgen': Permanent exclusions + worldgen test exclusions
                   - 'permanent': Only permanent exclusions (exclude_list)
+                  - 'ut_fuzz_apworld': Permanent exclusions + UT fuzz apworld exclusions
 
     Returns:
         List[str] if include_reasons=False: List of template filenames to exclude
@@ -112,6 +114,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
             # Load the test-type specific lists (may not exist in old format files)
             main_list = normalize_list(data.get('main_test_exclude_list', []))
             worldgen_list = normalize_list(data.get('worldgen_test_exclude_list', []))
+            ut_fuzz_apworld_list = normalize_list(data.get('ut_fuzz_apworld_exclude_list', []))
 
             # Combine lists based on test_type
             if test_type == 'permanent':
@@ -120,6 +123,8 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                 combined_list = permanent_list + main_list
             elif test_type == 'worldgen':
                 combined_list = permanent_list + worldgen_list
+            elif test_type == 'ut_fuzz_apworld':
+                combined_list = permanent_list + ut_fuzz_apworld_list
             else:  # 'all' or any other value
                 combined_list = permanent_list + main_list + worldgen_list
 

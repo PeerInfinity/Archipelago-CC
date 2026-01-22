@@ -158,6 +158,10 @@
     {
       "name": "XCOM 2 War of the Chosen.yaml",
       "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
+    },
+    {
+      "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
+      "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
     }
   ],
   "requires_javascript_helpers_list": [
