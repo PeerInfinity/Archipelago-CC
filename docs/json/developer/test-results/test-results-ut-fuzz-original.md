@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-22 00:13:12
+**Generated:** 2026-01-22 02:19:23
 
 **Source Data Created:** 2026-01-11T20:29:15.868280
 
@@ -35,8 +35,8 @@
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 11.8KB | ✅ | 654.1KB |
+| A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
+| A Link to the Past | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 100.1KB | ✅ | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | 26.0KB |
@@ -84,7 +84,7 @@
 | Noita | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.0KB | ✅ | 308.9KB |
-| Overcooked! 2 | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 25.9KB | ✅ | 489.2KB |
+| Overcooked! 2 | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ | 10 | 3 | 5 | 0 | 2 | ❌ 30.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
@@ -95,12 +95,12 @@
 | Secret of Evermore | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 266.1KB |
-| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.5KB | 1136.1KB |
+| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
 | Stardew Valley | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.8KB | 8.0KB | 2430.1KB |
 | Subnautica | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Super Mario 64 | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 875.0KB |
+| Super Mario Land 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 92.5KB | ✅ | 875.0KB |
 | Super Mario World | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
@@ -116,7 +116,7 @@
 | VVVVVV | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
 | Yacht Dice | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
-| Yoshi's Island | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 9.3KB | ✅ | 283.2KB |
+| Yoshi's Island | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 9.2KB | ✅ | 283.2KB |
 | Yu-Gi-Oh! 2006 | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ❌ | 10 | 5 | 1 | 0 | 4 | ⚠️ 50.0% | ✅ | ✅ | 155.5KB |

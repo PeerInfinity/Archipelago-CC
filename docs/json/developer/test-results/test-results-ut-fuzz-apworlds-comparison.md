@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison (APWorlds)
 
-**Generated:** 2026-01-22 00:13:12
+**Generated:** 2026-01-22 02:19:23
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -14,10 +14,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 21 (16.9%)
-- **Passing Original Only:** 21 (16.9%)
-- **Passing Modified Only:** 10 (8.1%)
-- **Passing Neither:** 72 (58.1%)
+- **Passing Both:** 22 (17.7%)
+- **Passing Original Only:** 20 (16.1%)
+- **Passing Modified Only:** 12 (9.7%)
+- **Passing Neither:** 70 (56.5%)
 
 ## Full Comparison
 
@@ -29,8 +29,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | ANIMAL WELL | ⚠️ 90.0% | ❌ 0.0% |
 | Actraiser | ⚠️ 80.0% | ✅ 80.0% |
 | Against the Storm | ❌ 0.0% | ❌ 0.0% |
-| Air Delivery | ✅ 100.0% | ❌ 0.0% |
-| An Untitled Story | ✅ 100.0% | ❌ 0.0% |
+| Air Delivery | ✅ 100.0% | ❌ 40.0% |
+| An Untitled Story | ✅ 100.0% | ✅ 100.0% |
 | Anodyne | ✅ 100.0% | ❌ 0.0% |
 | Another Crabs Treasure | ⚠️ 60.0% | ⚠️ 50.0% |
 | Ape Escape | ❌ 0.0% | ⚠️ 60.0% |
@@ -55,7 +55,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Diddy Kong Racing | ⚠️ 50.0% | ❌ 0.0% |
 | Digimon World | ⚠️ 60.0% | ❌ 0.0% |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 20.0% |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% |
 | Final Fantasy Tactics Advance | ⚠️ 70.0% | ⚠️ 60.0% |
 | Fire Emblem Sacred Stones | ❌ 40.0% | ❌ 0.0% |
@@ -105,7 +105,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Rain World | ✅ 30.0% | ❌ 0.0% |
 | Ratchet & Clank 2 | ✅ 100.0% | ✅ 100.0% |
 | Reventure | ✅ 100.0% | ❌ 0.0% |
-| Rift Wizard | ✅ 100.0% | ❌ 0.0% |
+| Rift Wizard | ✅ 100.0% | ⚠️ 70.0% |
 | Rift of the Necrodancer | ❌ 30.0% | ❌ 30.0% |
 | Rusted Moss | ⚠️ 60.0% | ❌ 0.0% |
 | Sentinels of the Multiverse | ❌ 0.0% | ❌ 0.0% |
@@ -113,12 +113,12 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% |
-| Sonic Heroes | ❌ 0.0% | ❌ 0.0% |
+| Sonic Heroes | ❌ 0.0% | ✅ 0.0% |
 | Sonic Rush | ✅ 100.0% | ❌ 40.0% |
-| Sonic the Hedgehog 1 | ✅ 100.0% | ❌ 30.0% |
-| Soul Blazer | ✅ 100.0% | ❌ 0.0% |
+| Sonic the Hedgehog 1 | ✅ 100.0% | ⚠️ 90.0% |
+| Soul Blazer | ✅ 100.0% | ⚠️ 80.0% |
 | Spinball | ✅ 100.0% | ✅ 100.0% |
 | Spyro 3 | ❌ 20.0% | ❌ 0.0% |
 | Stacklands | ⚠️ 90.0% | ❌ 0.0% |
@@ -145,15 +145,16 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% |
 | Zelda II: The Adventure of Link | ❌ 20.0% | ✅ 100.0% |
-| osu! | ❌ 0.0% | ❌ 0.0% |
+| osu! | ❌ 0.0% | ✅ 100.0% |
 | plateup | ❌ 0.0% | ⚠️ 80.0% |
 
-## Games Passing Both (21)
+## Games Passing Both (22)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name |
 |-----------|
+| An Untitled Story |
 | Castlevania: Dawn of Sorrow |
 | Cuphead |
 | DORONKO WANKO |
@@ -176,14 +177,13 @@ These games have 100% success rate in both Universal Tracker versions.
 | Tevi |
 | Vampire Survivors |
 
-## Games Passing Original Only (21)
+## Games Passing Original Only (20)
 
 These games pass in the Original UT but fail in the Modified UT.
 
 | Game Name |
 |-----------|
 | Air Delivery |
-| An Untitled Story |
 | Anodyne |
 | Astalon |
 | ChecksMate |
@@ -204,7 +204,7 @@ These games pass in the Original UT but fail in the Modified UT.
 | Wordipelago |
 | XCOM 2 War of the Chosen |
 
-## Games Passing Modified Only (10)
+## Games Passing Modified Only (12)
 
 These games pass in the Modified UT but fail in the Original UT.
 
@@ -219,9 +219,11 @@ These games pass in the Modified UT but fail in the Original UT.
 | Luigi's Mansion |
 | Metroid Fusion |
 | Simon Tatham's Portable Puzzle Collection |
+| Sonic Heroes |
 | Zelda II: The Adventure of Link |
+| osu! |
 
-## Games Passing Neither (72)
+## Games Passing Neither (70)
 
 These games fail in both Universal Tracker versions.
 
@@ -281,7 +283,6 @@ These games fail in both Universal Tracker versions.
 | Sly 2: Band of Thieves |
 | Sly Cooper and the Thievius Raccoonus |
 | Sonic Adventure DX |
-| Sonic Heroes |
 | Spyro 3 |
 | Stacklands |
 | Star Wars Episode I Racer |
@@ -297,7 +298,6 @@ These games fail in both Universal Tracker versions.
 | Watery Words |
 | Yu-Gi-Oh! Dungeon Dice Monsters |
 | Yu-Gi-Oh! Forbidden Memories |
-| osu! |
 | plateup |
 
 ## Notes

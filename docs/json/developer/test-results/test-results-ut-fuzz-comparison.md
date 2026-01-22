@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison
 
-**Generated:** 2026-01-22 00:13:12
+**Generated:** 2026-01-22 02:19:23
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -18,15 +18,15 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Passing Original Only:** 7 (8.2%)
 - **Passing Modified Only:** 29 (34.1%)
 - **Passing Neither:** 16 (18.8%)
-- **Passing Modified with no custom code:** 40 (47.1%)
-- **Passing Modified Only with no custom code:** 13 (15.3%)
+- **Passing Modified with no custom code:** 39 (45.9%)
+- **Passing Modified Only with no custom code:** 12 (14.1%)
 
 ## Full Comparison
 
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ 0.0% | ✅ 100.0% | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ 0.0% | ✅ 90.0% | 11.8KB | ✅ | 654.1KB |
+| A Hat in Time | ❌ 0.0% | ✅ 100.0% | 18.0KB | ✅ | 235.0KB |
+| A Link to the Past | ❌ 0.0% | ✅ 90.0% | 100.1KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 90.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -74,7 +74,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Noita | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Old School Runescape | ✅ 100.0% | ✅ 100.0% | 1.0KB | ✅ | 308.9KB |
-| Overcooked! 2 | ❌ 20.0% | ✅ 50.0% | 25.9KB | ✅ | 489.2KB |
+| Overcooked! 2 | ❌ 20.0% | ✅ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ 100.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ 30.0% | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
@@ -85,12 +85,12 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Secret of Evermore | ✅ 100.0% | ❌ 0.0% | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ 10.0% | ✅ 100.0% | ✅ | ✅ | 266.1KB |
-| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 87.5KB | 1136.1KB |
+| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
 | Stardew Valley | ❌ 0.0% | ❌ 0.0% | 18.8KB | 8.0KB | 2430.1KB |
 | Subnautica | ❌ 10.0% | ✅ 100.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Super Mario 64 | ❌ 40.0% | ✅ 100.0% | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ 10.0% | ✅ 100.0% | ✅ | ✅ | 875.0KB |
+| Super Mario Land 2 | ❌ 10.0% | ✅ 100.0% | 92.5KB | ✅ | 875.0KB |
 | Super Mario World | ⚠️ 70.0% | ✅ 90.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ 0.0% | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
@@ -106,7 +106,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | VVVVVV | ⚠️ 80.0% | ✅ 100.0% | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 44.7KB |
 | Yacht Dice | ❌ 0.0% | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
-| Yoshi's Island | ❌ 20.0% | ✅ 100.0% | 9.3KB | ✅ | 283.2KB |
+| Yoshi's Island | ❌ 20.0% | ✅ 100.0% | 9.2KB | ✅ | 283.2KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 50.0% | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ⚠️ 50.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
@@ -171,8 +171,8 @@ These games pass in the Modified UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Hat in Time | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | 11.8KB | ✅ | 654.1KB |
+| A Hat in Time | 18.0KB | ✅ | 235.0KB |
+| A Link to the Past | 100.1KB | ✅ | 654.1KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | DLCQuest | 1.2KB | ✅ | 51.3KB |
@@ -185,20 +185,20 @@ These games pass in the Modified UT but fail in the Original UT.
 | Metamath | ✅ | ✅ | 47.5KB |
 | Muse Dash | ✅ | ✅ | 231.5KB |
 | Noita | ✅ | ✅ | 74.6KB |
-| Overcooked! 2 | 25.9KB | ✅ | 489.2KB |
+| Overcooked! 2 | 28.5KB | ✅ | 489.2KB |
 | Saving Princess | ✅ | ✅ | 33.5KB |
 | Shivers | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | 266.1KB |
 | Subnautica | 2.2KB | ✅ | 207.8KB |
 | Super Mario 64 | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ✅ | ✅ | 875.0KB |
+| Super Mario Land 2 | 92.5KB | ✅ | 875.0KB |
 | Super Mario World | ✅ | ✅ | 178.2KB |
 | Terraria | 16.8KB | ✅ | 283.0KB |
 | The Messenger | 14.7KB | ✅ | 211.8KB |
 | The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | Timespinner | 2.2KB | ✅ | 267.3KB |
 | VVVVVV | 3.8KB | ✅ | 22.7KB |
-| Yoshi's Island | 9.3KB | ✅ | 283.2KB |
+| Yoshi's Island | 9.2KB | ✅ | 283.2KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
 ## Games Passing Neither (16)
@@ -217,7 +217,7 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.3KB | 51.3KB | 1044.7KB |
-| Starcraft 2 | 28.7KB | 87.5KB | 1136.1KB |
+| Starcraft 2 | 28.7KB | 87.4KB | 1136.1KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.1KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.1KB |
 | Yacht Dice | 0.9KB | 285.0KB | 249.5KB |
