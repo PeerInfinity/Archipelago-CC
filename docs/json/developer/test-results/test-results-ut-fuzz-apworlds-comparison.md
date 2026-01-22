@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison (APWorlds)
 
-**Generated:** 2026-01-21 18:13:13
+**Generated:** 2026-01-21 18:23:03
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -14,10 +14,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 21 (16.9%)
-- **Passing Original Only:** 21 (16.9%)
-- **Passing Modified Only:** 10 (8.1%)
-- **Passing Neither:** 72 (58.1%)
+- **Passing Both:** 22 (17.7%)
+- **Passing Original Only:** 20 (16.1%)
+- **Passing Modified Only:** 12 (9.7%)
+- **Passing Neither:** 70 (56.5%)
 
 ## Full Comparison
 
@@ -29,8 +29,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | ANIMAL WELL | ⚠️ 90.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Actraiser | ⚠️ 80.0% | ✅ 80.0% | N/A | N/A | N/A |
 | Against the Storm | ❌ 0.0% | ❌ 0.0% | N/A | N/A | N/A |
-| Air Delivery | ✅ 100.0% | ❌ 0.0% | N/A | N/A | N/A |
-| An Untitled Story | ✅ 100.0% | ❌ 0.0% | N/A | N/A | N/A |
+| Air Delivery | ✅ 100.0% | ❌ 40.0% | N/A | N/A | N/A |
+| An Untitled Story | ✅ 100.0% | ✅ 100.0% | N/A | N/A | N/A |
 | Anodyne | ✅ 100.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Another Crabs Treasure | ⚠️ 60.0% | ⚠️ 50.0% | N/A | N/A | N/A |
 | Ape Escape | ❌ 0.0% | ⚠️ 60.0% | N/A | N/A | N/A |
@@ -55,7 +55,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Diddy Kong Racing | ⚠️ 50.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Digimon World | ⚠️ 60.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | N/A | N/A | N/A |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 20.0% | N/A | N/A | N/A |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% | N/A | N/A | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 70.0% | ⚠️ 60.0% | N/A | N/A | N/A |
 | Fire Emblem Sacred Stones | ❌ 40.0% | ❌ 0.0% | N/A | N/A | N/A |
@@ -105,7 +105,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Rain World | ✅ 30.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Ratchet & Clank 2 | ✅ 100.0% | ✅ 100.0% | N/A | N/A | N/A |
 | Reventure | ✅ 100.0% | ❌ 0.0% | N/A | N/A | N/A |
-| Rift Wizard | ✅ 100.0% | ❌ 0.0% | N/A | N/A | N/A |
+| Rift Wizard | ✅ 100.0% | ⚠️ 70.0% | N/A | N/A | N/A |
 | Rift of the Necrodancer | ❌ 30.0% | ❌ 30.0% | N/A | N/A | N/A |
 | Rusted Moss | ⚠️ 60.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Sentinels of the Multiverse | ❌ 0.0% | ❌ 0.0% | N/A | N/A | N/A |
@@ -113,12 +113,12 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% | N/A | N/A | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | N/A | N/A | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% | N/A | N/A | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% | N/A | N/A | N/A |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% | N/A | N/A | N/A |
-| Sonic Heroes | ❌ 0.0% | ❌ 0.0% | N/A | N/A | N/A |
+| Sonic Heroes | ❌ 0.0% | ✅ 0.0% | N/A | N/A | N/A |
 | Sonic Rush | ✅ 100.0% | ❌ 40.0% | N/A | N/A | N/A |
-| Sonic the Hedgehog 1 | ✅ 100.0% | ❌ 30.0% | N/A | N/A | N/A |
-| Soul Blazer | ✅ 100.0% | ❌ 0.0% | N/A | N/A | N/A |
+| Sonic the Hedgehog 1 | ✅ 100.0% | ⚠️ 90.0% | N/A | N/A | N/A |
+| Soul Blazer | ✅ 100.0% | ⚠️ 80.0% | N/A | N/A | N/A |
 | Spinball | ✅ 100.0% | ✅ 100.0% | N/A | N/A | N/A |
 | Spyro 3 | ❌ 20.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Stacklands | ⚠️ 90.0% | ❌ 0.0% | N/A | N/A | N/A |
@@ -145,15 +145,16 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% | N/A | N/A | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | N/A | N/A | N/A |
 | Zelda II: The Adventure of Link | ❌ 20.0% | ✅ 100.0% | N/A | N/A | N/A |
-| osu! | ❌ 0.0% | ❌ 0.0% | N/A | N/A | N/A |
+| osu! | ❌ 0.0% | ✅ 100.0% | N/A | N/A | N/A |
 | plateup | ❌ 0.0% | ⚠️ 80.0% | N/A | N/A | N/A |
 
-## Games Passing Both (21)
+## Games Passing Both (22)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| An Untitled Story | N/A | N/A | N/A |
 | Castlevania: Dawn of Sorrow | N/A | N/A | N/A |
 | Cuphead | N/A | N/A | N/A |
 | DORONKO WANKO | N/A | N/A | N/A |
@@ -176,14 +177,13 @@ These games have 100% success rate in both Universal Tracker versions.
 | Tevi | N/A | N/A | N/A |
 | Vampire Survivors | N/A | N/A | N/A |
 
-## Games Passing Original Only (21)
+## Games Passing Original Only (20)
 
 These games pass in the Original UT but fail in the Modified UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | Air Delivery | N/A | N/A | N/A |
-| An Untitled Story | N/A | N/A | N/A |
 | Anodyne | N/A | N/A | N/A |
 | Astalon | N/A | N/A | N/A |
 | ChecksMate | N/A | N/A | N/A |
@@ -204,7 +204,7 @@ These games pass in the Original UT but fail in the Modified UT.
 | Wordipelago | N/A | N/A | N/A |
 | XCOM 2 War of the Chosen | N/A | N/A | N/A |
 
-## Games Passing Modified Only (10)
+## Games Passing Modified Only (12)
 
 These games pass in the Modified UT but fail in the Original UT.
 
@@ -219,9 +219,11 @@ These games pass in the Modified UT but fail in the Original UT.
 | Luigi's Mansion | N/A | N/A | N/A |
 | Metroid Fusion | N/A | N/A | N/A |
 | Simon Tatham's Portable Puzzle Collection | N/A | N/A | N/A |
+| Sonic Heroes | N/A | N/A | N/A |
 | Zelda II: The Adventure of Link | N/A | N/A | N/A |
+| osu! | N/A | N/A | N/A |
 
-## Games Passing Neither (72)
+## Games Passing Neither (70)
 
 These games fail in both Universal Tracker versions.
 
@@ -281,7 +283,6 @@ These games fail in both Universal Tracker versions.
 | Sly 2: Band of Thieves | N/A | N/A | N/A |
 | Sly Cooper and the Thievius Raccoonus | N/A | N/A | N/A |
 | Sonic Adventure DX | N/A | N/A | N/A |
-| Sonic Heroes | N/A | N/A | N/A |
 | Spyro 3 | N/A | N/A | N/A |
 | Stacklands | N/A | N/A | N/A |
 | Star Wars Episode I Racer | N/A | N/A | N/A |
@@ -297,7 +298,6 @@ These games fail in both Universal Tracker versions.
 | Watery Words | N/A | N/A | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | N/A | N/A | N/A |
 | Yu-Gi-Oh! Forbidden Memories | N/A | N/A | N/A |
-| osu! | N/A | N/A | N/A |
 | plateup | N/A | N/A | N/A |
 
 ## Notes
