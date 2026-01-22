@@ -140,6 +140,10 @@
       "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
     },
     {
+      "name": "Chrono Trigger Jets of Time.yaml",
+      "reason": "Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations."
+    },
+    {
       "name": "Corn Kidz 64.yaml",
       "reason": "Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture."
     },
