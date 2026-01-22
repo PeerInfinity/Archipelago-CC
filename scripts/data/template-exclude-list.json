@@ -158,6 +158,10 @@
     {
       "name": "XCOM 2 War of the Chosen.yaml",
       "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
+    },
+    {
+      "name": "Keep Talking and Nobody Explodes.yaml",
+      "reason": "Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible."
     }
   ],
   "requires_javascript_helpers_list": [
