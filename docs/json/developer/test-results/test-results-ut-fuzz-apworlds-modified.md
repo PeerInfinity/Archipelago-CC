@@ -2,15 +2,15 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-[View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-hybrid-comparison.md)
+[View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md)
 
-**Generated:** 2026-01-22 20:51:46
+**Generated:** 2026-01-21 20:10:20
 
 **Source Data Created:** 2026-01-22T03:03:45.237866
 
 **Source Data Last Updated:** 2026-01-22T03:03:45.237873
 
-**Universal Tracker Version:** Modified (worldgen-based tracking)
+**Universal Tracker Version:** Modified (this repository)
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -35,8 +35,8 @@
 
 - **Expected Passes:** 34 (not excluded, passed)
 - **Unexpected Passes:** 0 (excluded, but passed)
-- **Expected Failures:** 14 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 76 (not excluded, logic mismatch)
+- **Expected Failures:** 7 (excluded, failed as expected)
+- **Unexpected Failures (logic):** 83 (not excluded, logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (not excluded, only timeouts)
 
 ### Explain Support Summary
@@ -738,19 +738,12 @@ These community APWorlds are excluded from UT fuzz testing due to incompatible r
 | APWorld | Reason |
 |---------|--------|
 | Air Delivery.yaml | Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue. |
-| Ape Escape 3.yaml | Uses Rulesets class with condense() method that returns closure (lambda state: self.check(state, player)). Exporter cannot trace through closure to extract actual rules stored in self.critical/self.rules lists. Rules export as unknown 'check' helper which defaults to True. |
 | Astalon.yaml | Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules. |
-| ChecksMate.yaml | Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties. |
-| Chrono Trigger Jets of Time.yaml | Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations. |
 | Corn Kidz 64.yaml | Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture. |
-| Digimon World.yaml | Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format. |
 | Frogmonster.yaml | Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld. |
-| Keep Talking and Nobody Explodes.yaml | Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible. |
 | Rabi-Ribi.yaml | Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis. |
 | Soul Blazer.yaml | Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context. |
-| The Sims 4.yaml | APWorld bug: fill_slot_data() returns keys like 'goal' but generate_early() expects 'goal_value'. Key mismatch causes KeyError during worldgen regeneration. |
 | XCOM 2 War of the Chosen.yaml | Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline. |
-| Yu-Gi-Oh! Forbidden Memories.yaml | Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules. |
 
 ### Unexpected Failures (Logic Mismatch)
 
@@ -763,16 +756,20 @@ These games have actual logic mismatches between UT and Python:
 - Anodyne
 - Another Crabs Treasure
 - Ape Escape
+- Ape Escape 3
 - Autopelago
 - Axiom Verge
 - Balatro
 - Cavern of Dreams
+- ChecksMate
+- Chrono Trigger Jets of Time
 - ClusterTruck
 - CrossCode
 - Crystal Project
 - Crystalis
 - Deep Rock Galactic
 - Diddy Kong Racing
+- Digimon World
 - Duke Nukem 3D
 - Final Fantasy Tactics A2
 - Final Fantasy Tactics Advance
@@ -784,6 +781,7 @@ These games have actual logic mismatches between UT and Python:
 - Iji
 - Into the Breach
 - Jigsaw
+- Keep Talking and Nobody Explodes
 - Lego Star Wars: The Complete Saga
 - Lil Gator Game
 - Lingo 2
@@ -824,6 +822,7 @@ These games have actual logic mismatches between UT and Python:
 - Tetris Attack
 - The Legend of Zelda - Oracle of Seasons
 - The Legend of Zelda - Phantom Hourglass
+- The Sims 4
 - ToeJam and Earl
 - TurnipBoy
 - Tyrian
@@ -831,4 +830,5 @@ These games have actual logic mismatches between UT and Python:
 - Watery Words
 - Wordipelago
 - Yu-Gi-Oh! Dungeon Dice Monsters
+- Yu-Gi-Oh! Forbidden Memories
 - plateup
