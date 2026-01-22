@@ -6392,6 +6392,25 @@ class HelperCodeGenerator:
                     return f'state.can_reach({entrance_expr}, "Entrance", player)'
                 return f'state.can_reach({repr(entrance)}, "Entrance", player)'
 
+            # Handle AST_group_count rules (Rule Builder format for count_group)
+            # These come from state.count_group() calls in access rules
+            if rule_type == 'AST_group_count':
+                args = expr.get('args', {})
+                group = args.get('group', '')
+                if isinstance(group, dict):
+                    group_expr = self._generate_expression(group)
+                    return f'state.count_group({group_expr}, player)'
+                return f'state.count_group({repr(group)}, player)'
+
+            # Handle CountGroup rules (Rule Builder format)
+            if rule_type == 'CountGroup':
+                args = expr.get('args', {})
+                group = args.get('group', '')
+                if isinstance(group, dict):
+                    group_expr = self._generate_expression(group)
+                    return f'state.count_group({group_expr}, player)'
+                return f'state.count_group({repr(group)}, player)'
+
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown types are typically progression checks that evaluate to true
