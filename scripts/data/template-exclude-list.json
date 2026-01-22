@@ -158,6 +158,10 @@
     {
       "name": "XCOM 2 War of the Chosen.yaml",
       "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
+    },
+    {
+      "name": "Chrono Trigger Jets of Time.yaml",
+      "reason": "Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations."
     }
   ],
   "requires_javascript_helpers_list": [
