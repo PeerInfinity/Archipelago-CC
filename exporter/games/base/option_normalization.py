@@ -72,10 +72,11 @@ class OptionNormalizationMixin:
             if node_type == 'compare':
                 left = node.get('left', {})
                 right = node.get('right', {})
+                op = node.get('op', '==')
 
                 # Check if left is an option_value or setting_value for a Choice option
                 left_option = None
-                left_type = left.get('type', '')
+                left_type = left.get('type', '') if isinstance(left, dict) else ''
                 if left_type == 'option_value':
                     option = left.get('option', '')
                     if option in option_reverse_lookups:
@@ -87,7 +88,7 @@ class OptionNormalizationMixin:
 
                 # Check if right is an option_value or setting_value for a Choice option
                 right_option = None
-                right_type = right.get('type', '')
+                right_type = right.get('type', '') if isinstance(right, dict) else ''
                 if right_type == 'option_value':
                     option = right.get('option', '')
                     if option in option_reverse_lookups:
@@ -96,6 +97,37 @@ class OptionNormalizationMixin:
                     setting = right.get('setting', '')
                     if setting in option_reverse_lookups:
                         right_option = setting
+
+                # NEW: Handle case where option was resolved to a raw integer constant
+                # and compared to a string option name (e.g., 0 == "vanilla")
+                if not left_option and not right_option and op in ('==', '!='):
+                    # Get raw values
+                    left_val = left
+                    right_val = right
+                    if isinstance(left, dict) and left.get('type') == 'constant':
+                        left_val = left.get('value')
+                    if isinstance(right, dict) and right.get('type') == 'constant':
+                        right_val = right.get('value')
+
+                    # Check for int == string pattern
+                    resolved_result = None
+                    if isinstance(left_val, int) and isinstance(right_val, str):
+                        for opt_name, reverse_lookup in option_reverse_lookups.items():
+                            if right_val in reverse_lookup:
+                                expected_int = reverse_lookup[right_val]
+                                resolved_result = (left_val == expected_int) if op == '==' else (left_val != expected_int)
+                                logger.debug(f"Resolved raw helper comparison {left_val} {op} '{right_val}' to {resolved_result}")
+                                break
+                    elif isinstance(right_val, int) and isinstance(left_val, str):
+                        for opt_name, reverse_lookup in option_reverse_lookups.items():
+                            if left_val in reverse_lookup:
+                                expected_int = reverse_lookup[left_val]
+                                resolved_result = (expected_int == right_val) if op == '==' else (expected_int != right_val)
+                                logger.debug(f"Resolved raw helper comparison '{left_val}' {op} {right_val} to {resolved_result}")
+                                break
+
+                    if resolved_result is not None:
+                        return {'type': 'constant', 'value': resolved_result}
 
                 # Convert the other side if one side is a Choice option
                 result = dict(node)
@@ -200,10 +232,11 @@ class OptionNormalizationMixin:
                 args = node.get('args', node)
                 left = args.get('left', {})
                 right = args.get('right', {})
+                op = args.get('op', '==')
 
                 # Check if left is an option_value or setting_value for a Choice option
                 left_option = None
-                left_type = left.get('type') or left.get('rule')
+                left_type = left.get('type') or left.get('rule') if isinstance(left, dict) else None
                 if left_type in ('option_value', 'OptionValue'):
                     left_args = left.get('args', left)
                     option = left_args.get('option', '')
@@ -217,7 +250,7 @@ class OptionNormalizationMixin:
 
                 # Check if right is an option_value or setting_value for a Choice option
                 right_option = None
-                right_type = right.get('type') or right.get('rule')
+                right_type = right.get('type') or right.get('rule') if isinstance(right, dict) else None
                 if right_type in ('option_value', 'OptionValue'):
                     right_args = right.get('args', right)
                     option = right_args.get('option', '')
@@ -228,6 +261,60 @@ class OptionNormalizationMixin:
                     setting = right_args.get('setting', '')
                     if setting in option_reverse_lookups:
                         right_option = setting
+
+                # NEW: Handle case where option was resolved to a raw integer constant
+                # and compared to a string option name (e.g., 0 == "vanilla")
+                # This happens when self.options.X is resolved to its integer value during export
+                if not left_option and not right_option and op in ('==', '!='):
+                    # Get raw values (left/right could be raw int/str or wrapped in constant)
+                    left_val = left
+                    right_val = right
+                    if isinstance(left, dict):
+                        if left.get('type') == 'constant' or left.get('rule') == 'Constant':
+                            left_val = left.get('value') if 'value' in left else left.get('args', {}).get('value')
+                    if isinstance(right, dict):
+                        if right.get('type') == 'constant' or right.get('rule') == 'Constant':
+                            right_val = right.get('value') if 'value' in right else right.get('args', {}).get('value')
+
+                    # Check for int == string pattern where string is a known option name
+                    resolved_result = None
+                    if isinstance(left_val, int) and isinstance(right_val, str):
+                        # Look for an option where left_val maps to right_val
+                        for opt_name, reverse_lookup in option_reverse_lookups.items():
+                            if right_val in reverse_lookup:
+                                expected_int = reverse_lookup[right_val]
+                                if op == '==':
+                                    resolved_result = left_val == expected_int
+                                else:  # op == '!='
+                                    resolved_result = left_val != expected_int
+                                logger.debug(f"Resolved raw option comparison {left_val} {op} '{right_val}' to {resolved_result} (option {opt_name})")
+                                break
+                    elif isinstance(right_val, int) and isinstance(left_val, str):
+                        # Look for an option where right_val maps to left_val
+                        for opt_name, reverse_lookup in option_reverse_lookups.items():
+                            if left_val in reverse_lookup:
+                                expected_int = reverse_lookup[left_val]
+                                if op == '==':
+                                    resolved_result = expected_int == right_val
+                                else:  # op == '!='
+                                    resolved_result = expected_int != right_val
+                                logger.debug(f"Resolved raw option comparison '{left_val}' {op} {right_val} to {resolved_result} (option {opt_name})")
+                                break
+
+                    # If we resolved the comparison to a boolean, return a True_/False_ rule
+                    if resolved_result is not None:
+                        if 'args' in node:
+                            # Rule format
+                            if resolved_result:
+                                return {'rule': 'True_'}
+                            else:
+                                return {'rule': 'False_'}
+                        else:
+                            # AST format
+                            if resolved_result:
+                                return {'type': 'constant', 'value': True}
+                            else:
+                                return {'type': 'constant', 'value': False}
 
                 # Convert the other side if one side is a Choice option
                 if 'args' in node:
