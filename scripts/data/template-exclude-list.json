@@ -1,5 +1,5 @@
 {
-  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
+  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'ut_fuzz_apworld_exclude_list' contains community apworlds excluded from UT fuzz testing due to incompatible rule patterns or apworld bugs. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
   "exclude_list": [
     {
       "name": "Archipelago.yaml",
@@ -128,6 +128,36 @@
     {
       "name": "Yacht Dice.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    }
+  ],
+  "ut_fuzz_apworld_exclude_list": [
+    {
+      "name": "Air Delivery.yaml",
+      "reason": "Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue."
+    },
+    {
+      "name": "Astalon.yaml",
+      "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
+    },
+    {
+      "name": "Corn Kidz 64.yaml",
+      "reason": "Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture."
+    },
+    {
+      "name": "Frogmonster.yaml",
+      "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
+    },
+    {
+      "name": "Rabi-Ribi.yaml",
+      "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
+    },
+    {
+      "name": "Soul Blazer.yaml",
+      "reason": "Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context."
+    },
+    {
+      "name": "XCOM 2 War of the Chosen.yaml",
+      "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
     }
   ],
   "requires_javascript_helpers_list": [
