@@ -144,6 +144,10 @@
       "reason": "Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture."
     },
     {
+      "name": "Digimon World.yaml",
+      "reason": "Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format."
+    },
+    {
       "name": "Frogmonster.yaml",
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
     },
@@ -160,8 +164,8 @@
       "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
     },
     {
-      "name": "Digimon World.yaml",
-      "reason": "Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format."
+      "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
+      "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
     }
   ],
   "requires_javascript_helpers_list": [
