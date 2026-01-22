@@ -1,0 +1,1239 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Ori and the Will of the Wisps
+Location Count:                  390
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Logic difficulty:                Moki
+Glitches:                        No
+Starting location:               Marsh
+Goal:                            trees
+Relic Count:                     7
+Hard mode:                       No
+Randomize Doors:                 No
+Quality of life:                 Yes
+Shrines and trials hints:        Yes
+Knowledge hints:                 Yes
+Teleporters:                     Yes
+Extra teleporters:               No
+Bonus items:                     Yes
+Extra bonus items:               No
+Skill upgrades:                  No
+Better random spawn:             No
+Better Wellspring:               No
+No Rain:                         No
+No Combat:                       
+No Trials:                       No
+No Willow hearts:                No
+Remove Quests:                   All
+No Keystone doors:               No
+Open mode:                       No
+Glades Done:                     No
+Shop Keywords Icons:             No
+Spawn with Sword:                Yes
+Vanilla shop upgrades:           No
+Launch on Seir:                  No
+Start Inventory from Pool:       
+DeathLink amount:                0
+
+
+Starting Items:
+
+Inkwater Marsh TP
+Sword
+
+Locations:
+
+MarshSpawn.RockHC: Keystone
+MarshSpawn.FirstPickupEX: Glide
+MarshSpawn.GrappleHC: Keystone
+MarshSpawn.BridgeEX: 100 Spirit Light
+MarshSpawn.ResilienceShard: Water Dash
+MarshSpawn.ResilienceOre: 100 Spirit Light
+MarshSpawn.BashEC: Energy Fragment
+MarshSpawn.PreLupoEX: Keystone
+MarshSpawn.LupoMap: Glades TP
+MarshSpawn.RegenTree: 100 Spirit Light
+MarshSpawn.LeverEC: Fracture
+MarshSpawn.LeftTokkEX: Keystone
+MarshSpawn.FightRoomEX: Gorlek Ore
+MarshSpawn.CaveKS: 200 Spirit Light
+MarshSpawn.TokkKeystoneQuest: 200 Spirit Light
+MarshSpawn.CaveOre: Grapple
+MarshSpawn.LongSwimEX: 200 Spirit Light
+MarshSpawn.BurrowOre: 100 Spirit Light
+MarshSpawn.LifepactShard: 100 Spirit Light
+MarshSpawn.BurrowsApproachLedgeEX: 100 Spirit Light
+MarshSpawn.CrusherSwimEX: 200 Spirit Light
+MarshSpawn.TokkTabletQuest: 100 Spirit Light
+MarshSpawn.RecklessShard: 200 Spirit Light
+MarshSpawn.MokkEX: 200 Spirit Light
+MarshSpawn.FangEC: Life Pact
+MarshSpawn.FangQI: Dash
+MarshSpawn.MokkFangQuest: 50 Spirit Light
+MarshSpawn.DamageTree: 50 Spirit Light
+MarshSpawn.PoolsPathEX: Keystone
+MidnightBurrows.LeftKS: Energy Fragment
+MidnightBurrows.RightKS: Keystone
+MidnightBurrows.UpperKS: Health Fragment
+MidnightBurrows.LowerKS: Health Regeneration
+MidnightBurrows.LupoMap: Catalyst
+MidnightBurrows.DeflectorShard: 100 Spirit Light
+MidnightBurrows.TabletQI: 100 Spirit Light
+HowlsDen.RightHC: 100 Spirit Light
+HowlsDen.LeftHC: Health Fragment
+HowlsDen.AboveDoorKS: Health Fragment
+HowlsDen.MagnetShard: 50 Spirit Light
+HowlsDen.SwordTree: Keystone
+HowlsDen.BoneOre: 50 Spirit Light
+HowlsDen.AboveTPEX: Gorlek Ore
+HowlsDen.LaserKS: Health Regeneration
+HowlsDen.CombatShrine: Charge Blaze
+HowlsDen.DoubleJumpEX: 200 Spirit Light
+HowlsDen.StickyShard: Gorlek Ore
+HowlsDen.DoubleJumpTree: 100 Spirit Light
+MarshPastOpher.TrialLeftEX: 200 Spirit Light
+MarshPastOpher.TrialOre: 100 Spirit Light
+MarshPastOpher.TrialEC: 200 Spirit Light
+MarshPastOpher.TrialHC: Energy Fragment
+MarshPastOpher.TrialRightEX: Keystone
+MarshPastOpher.SpiritTrial: 100 Spirit Light
+MarshPastOpher.CombatShrine: Energy Fragment
+MarshPastOpher.SwingPoleEX: 100 Spirit Light
+MarshPastOpher.LeftEyestone: 50 Spirit Light
+MarshPastOpher.RightEyestone: Bash
+MarshPastOpher.BowEC: 200 Spirit Light
+MarshPastOpher.BowTree: Health Regeneration
+MarshPastOpher.CeilingEX: Energy Regeneration
+MarshPastOpher.PoolsPathEC: Keystone
+MarshPastOpher.PoolsPathEX: 100 Spirit Light
+WestHollow.CrusherHC: Gorlek Ore
+WestHollow.FarLeftEX: Gorlek Ore
+WestHollow.RockPuzzleEX: 50 Spirit Light
+WestHollow.HiddenEC: 100 Spirit Light
+WestHollow.QuickshotShard: 100 Spirit Light
+WestHollow.SwimEC: 50 Spirit Light
+WestHollow.LupoMap: Gorlek Ore
+WestHollow.TrialHC: 50 Spirit Light
+WestHollow.SpiritTrial: 50 Spirit Light
+WestHollow.FallingSlugEX: Ultra Bash
+WestHollow.AboveDashEX: Energy Fragment
+WestHollow.DashRightEX: Lifeforce
+WestHollow.CrusherEX: 50 Spirit Light
+WestHollow.DashTree: 200 Spirit Light
+EastHollow.HandToHandMap: Mouldwood Depths TP
+EastHollow.GladesApproachOre: 100 Spirit Light
+EastHollow.HornBeetleFightEX: Energy Fragment
+EastHollow.SpikeLanternEX: 200 Spirit Light
+EastHollow.SecretRoofEX: 50 Spirit Light
+EastHollow.MortarEX: Keystone
+EastHollow.BashEC: Blaze
+EastHollow.BashHC: Water Breath
+EastHollow.BashEX: 100 Spirit Light
+EastHollow.BashTree: Gorlek Ore
+EastHollow.KwolokAmuletQuest: 50 Spirit Light
+EastHollow.RightKwolokEX: Gorlek Ore
+EastHollow.SilentSwimEC: Health Fragment
+EastHollow.SplinterShard: 200 Spirit Light
+EastHollow.ForestsVoice: 100 Spirit Light
+EastHollow.WellspringDoneTalk: Energy (Shard)
+EastHollow.KwolokSwimOre: 100 Spirit Light
+EastHollow.KwolokSwimLeftEX: 50 Spirit Light
+EastHollow.KwolokSwimRightEX: 100 Spirit Light
+EastHollow.DepthsExteriorEX: 100 Spirit Light
+GladesTown.HandToHandPouch: 100 Spirit Light
+GladesTown.HandToHandLantern: Kwolok's Hollow TP
+GladesTown.HandToHandCanteen: 50 Spirit Light
+GladesTown.FamilyReunionKey: 50 Spirit Light
+GladesTown.AcornQI: Health Fragment
+GladesTown.MokiAcornQuest: Energy Fragment
+GladesTown.HoleHutEC: 50 Spirit Light
+GladesTown.AboveGromHC: 100 Spirit Light
+GladesTown.LupoSwimHC: 100 Spirit Light
+GladesTown.UpperOre: Ultra Grapple
+GladesTown.LowerOre: 50 Spirit Light
+GladesTown.ArcingShard: Keystone
+GladesTown.BountyShard: Regenerate Efficiency
+GladesTown.LupoSoupEX: Energy Fragment
+GladesTown.BraveMokiHutEX: 100 Spirit Light
+GladesTown.MotayHutEX: Sentry
+GladesTown.HoleHutEX: Shuriken Efficiency
+GladesTown.UpperLeftEX: Regenerate
+GladesTown.LupoSwimMiddleEX: Energy Harvest
+GladesTown.CaveBurrowEX: Keystone
+GladesTown.BelowHoleHutEX: 100 Spirit Light
+GladesTown.KeyMokiHutEX: Health Fragment
+GladesTown.AboveTpEX: Gorlek Ore
+GladesTown.AboveCaveEX: 100 Spirit Light
+GladesTown.LupoSwimLeftEX: 50 Spirit Light
+GladesTown.UpdraftCeilingEX: Gorlek Ore
+GladesTown.LeafPileEX: Rapid Sentry
+GladesTown.DamageTree: Gorlek Ore
+GladesTown.RebuildTheGlades: 100 Spirit Light
+GladesTown.TwillenGemQuest: 50 Spirit Light
+GladesTown.RegrowTheGlades: 50 Spirit Light
+WestGlades.GrappleEX: Extra Double Jump
+WestGlades.AbovePlantEX: 50 Spirit Light
+WestGlades.LowerPoolEX: Keystone
+WestGlades.UpperPoolEX: Health Fragment
+WestGlades.SwimEC: 100 Spirit Light
+WestGlades.LeftOre: Finesse
+WestGlades.RightOre: Gorlek Ore
+WestGlades.ShrineHC: 50 Spirit Light
+WestGlades.CombatShrine: Hammer
+OuterWellspring.RightWallOre: Keystone
+OuterWellspring.RightWallEC: Gorlek Ore
+OuterWellspring.RightWallEX: Gorlek Ore
+OuterWellspring.TrialOre: 200 Spirit Light
+OuterWellspring.SpiritTrial: Energy Fragment
+OuterWellspring.UltraGrappleShard: Outer Ruins TP
+OuterWellspring.HiddenHC: Clean Water
+OuterWellspring.EntranceRoofEX: Gorlek Ore
+OuterWellspring.WheelEX: 100 Spirit Light
+OuterWellspring.BasementEC: Wingclip
+OuterWellspring.LifeHarvestShard: 100 Spirit Light
+OuterWellspring.SwimEX: 100 Spirit Light
+OuterWellspring.SwimOre: 50 Spirit Light
+OuterWellspring.TheLostCompass: Energy Fragment
+InnerWellspring.ThornShard: Keystone
+InnerWellspring.ThornEX: 100 Spirit Light
+InnerWellspring.ThreeWheelsEX: Extra Air Dash
+InnerWellspring.WaterSwitchEX: 50 Spirit Light
+InnerWellspring.DrainHC: Overcharge
+InnerWellspring.DrainEX: Shard Slot
+InnerWellspring.LaserOre: 50 Spirit Light
+InnerWellspring.LeverEC: 50 Spirit Light
+InnerWellspring.LupoEX: 50 Spirit Light
+InnerWellspring.LupoMap: Gorlek Ore
+InnerWellspring.ShortcutWheelEX: Flash
+InnerWellspring.GrappleTreeEX: 50 Spirit Light
+InnerWellspring.GrappleTree: Swap
+InnerWellspring.AboveSpinArenaEX: Sentry Efficiency
+InnerWellspring.HandToHandHerbs: Gorlek Ore
+InnerWellspring.RotateRoomEX: Life Harvest
+InnerWellspring.RotateRoomOre: Vitality
+InnerWellspring.NeedleQI: 100 Spirit Light
+InnerWellspring.LibraryEX: 100 Spirit Light
+InnerWellspring.AboveTpEX: Health Fragment
+InnerWellspring.BlueMoonSeed: Woods Entrance TP
+InnerWellspring.SwimOre: 100 Spirit Light
+InnerWellspring.EscapeRevisitEX: Keystone
+InnerWellspring.WaterEscape: 50 Spirit Light
+PoolsApproach.MarshPathCurrentEX: Gorlek Ore
+PoolsApproach.AboveWheelEX: 100 Spirit Light
+PoolsApproach.MillPathHC: 50 Spirit Light
+PoolsApproach.MillPathEC: Gorlek Ore
+PoolsApproach.MillPathEX: 100 Spirit Light
+EastPools.RightOre: 100 Spirit Light
+EastPools.KwolokAmuletQI: Static Shuriken
+EastPools.TwoCrushersEX: Keystone
+EastPools.BubbleCurrentEX: Keystone
+EastPools.BelowLeverEX: Baur's Reach TP
+EastPools.AboveDoorOre: 50 Spirit Light
+EastPools.PurpleWallHC: Ancestral Light 1
+EastPools.HandToHandSpyglass: Health Fragment
+EastPools.AboveTpEX: 50 Spirit Light
+EastPools.LupoOre: Keystone
+EastPools.UltraBashShard: 50 Spirit Light
+EastPools.FightRoomHC: Health Fragment
+EastPools.SpiritTrial: 100 Spirit Light
+EastPools.EnergyHarvestShard: 50 Spirit Light
+EastPools.LupoEX: Keystone
+EastPools.LupoMap: Shard Slot
+EastPools.BehindCrusherEX: Energy Fragment
+EastPools.GrassSeed: 100 Spirit Light
+UpperPools.LowerKS: Gorlek Ore
+UpperPools.UpperLeftKS: 50 Spirit Light
+UpperPools.UpperMidKS: Health Fragment
+UpperPools.UpperRightKS: Exploding Spear
+UpperPools.FishPoolEX: 50 Spirit Light
+UpperPools.FishPoolOre: Bow Efficiency
+UpperPools.BubblesEC: 50 Spirit Light
+UpperPools.RightBubblesEX: Wellspring TP
+UpperPools.LeftBubblesEX: Keystone
+UpperPools.SwimDashTree: Keystone
+UpperPools.SwimDashCurrentEX: Keystone
+UpperPools.RoofEX: Health Fragment
+UpperPools.WaterfallEC: Gorlek Ore
+WestPools.BurrowEX: Shard Slot
+WestPools.BurrowOre: 100 Spirit Light
+WestPools.TpEX: Keystone
+WestPools.EscapeRevisitEX: Overflow
+WestPools.ForestsStrength: Willow's End TP
+WoodsEntry.LastTreeBranch: Nothing
+WoodsEntry.DollQI: Energy Fragment
+WoodsEntry.TreeSeed: 50 Spirit Light
+WoodsEntry.MudPitEX: Keystone
+WoodsEntry.LedgeOre: 100 Spirit Light
+WoodsEntry.LeafPileEX: 50 Spirit Light
+WoodsEntry.TpEX: 50 Spirit Light
+WoodsEntry.LowerKS: Gorlek Ore
+WoodsEntry.UpperKS: 100 Spirit Light
+WoodsMain.RightKS: Gorlek Ore
+WoodsMain.UpperKS: Gorlek Ore
+WoodsMain.LeftKS: Deflector
+WoodsMain.LowerKS: Keystone
+WoodsMain.BehindWallOre: Spear
+WoodsMain.LowerLeafPileEX: Health Fragment
+WoodsMain.MiddleLeafPileEX: Arcing
+WoodsMain.UpperLeafPileEX: 50 Spirit Light
+WoodsMain.YellowWallEX: Energy Fragment
+WoodsMain.HiddenOre: 50 Spirit Light
+WoodsMain.HiddenEX: Gorlek Ore
+WoodsMain.BelowKeystonesEX: 50 Spirit Light
+WoodsMain.BehindDoorRoofEX: Energy Fragment
+WoodsMain.PetrifiedHowlEX: Splinter
+WoodsMain.SpiritTrial: Health Fragment
+WoodsMain.OverflowShard: 200 Spirit Light
+WoodsMain.CombatShrine: Gorlek Ore
+WoodsMain.ShrineEX: 50 Spirit Light
+WoodsMain.FeedingGroundsEX: Blaze Efficiency
+LowerReach.BelowBaurEX: Grenade Efficiency
+LowerReach.AboveBaurLowerEX: Bounty
+LowerReach.AboveBaurUpperEX: Energy Fragment
+LowerReach.IcefallOre: Health Fragment
+LowerReach.IcefallEX: Health Fragment
+LowerReach.AboveDoorEX: Keystone
+LowerReach.HiddenOre: Keystone
+LowerReach.LupoMap: Gorlek Ore
+LowerReach.MeltIceEX: Energy Regeneration
+LowerReach.BurrowEX: Thorn
+LowerReach.TPLeftEX: Gorlek Ore
+LowerReach.BelowLupoEX: 50 Spirit Light
+LowerReach.BreakWallEX: 50 Spirit Light
+LowerReach.WindBottomEX: 50 Spirit Light
+LowerReach.WindHiddenEX: 100 Spirit Light
+LowerReach.HandToHandHat: 50 Spirit Light
+LowerReach.SnowballHC: Health Fragment
+LowerReach.RoofLeftEX: 100 Spirit Light
+LowerReach.RoofRightEX: 50 Spirit Light
+LowerReach.FractureShard: Hammer Shockwave
+LowerReach.EscapeRevisitEX: 100 Spirit Light
+LowerReach.ForestsMemory: Energy Fragment
+LowerReach.RightKS: 50 Spirit Light
+LowerReach.UpperLeftKS: 100 Spirit Light
+LowerReach.MiddleLeftKS: 50 Spirit Light
+LowerReach.BottomLeftKS: 50 Spirit Light
+LowerReach.TrialEX: Keystone
+LowerReach.SpiritTrial: 200 Spirit Light
+LowerReach.CatalystShard: 100 Spirit Light
+LowerReach.HandToHandSoup: 50 Spirit Light
+UpperReach.LifeForceShard: Shuriken
+UpperReach.LifeForceEX: Energy Fragment
+UpperReach.LowerKS: Keystone
+UpperReach.UpperKS: 50 Spirit Light
+UpperReach.MiddleLeftKS: Energy Fragment
+UpperReach.MiddleRightKS: Quickshot
+UpperReach.SoupOre: Grenade
+UpperReach.SwingPoleEX: Shard Slot
+UpperReach.SwimEX: Gorlek Ore
+UpperReach.LightBurstTree: Triple Jump
+UpperReach.TreeOre: 50 Spirit Light
+UpperReach.WellEX: Gorlek Ore
+UpperReach.SpringSeed: Keystone
+UpperReach.HiddenEX: 50 Spirit Light
+UpperDepths.EntrySpikesEX: 50 Spirit Light
+UpperDepths.EntryRoofEX: Gorlek Ore
+UpperDepths.EntryOre: Woods Exit TP
+UpperDepths.RightEntryKS: 50 Spirit Light
+UpperDepths.LeftEntryKS: Energy Fragment
+UpperDepths.SwimEC: 100 Spirit Light
+UpperDepths.TeleporterEX: Keystone
+UpperDepths.LeftHealthKS: 100 Spirit Light
+UpperDepths.RightHealthKS: 200 Spirit Light
+UpperDepths.LightcatcherSeed: Midnight Burrows TP
+UpperDepths.BossPathEX: Shard Slot
+UpperDepths.KeystoneHC: 50 Spirit Light
+UpperDepths.HiveEX: Health Fragment
+UpperDepths.ForestsEyes: 50 Spirit Light
+LowerDepths.RaceStartHC: Feeding Grounds TP
+LowerDepths.SpiritTrial: 50 Spirit Light
+LowerDepths.BelowDoorOre: 50 Spirit Light
+LowerDepths.SpiritSurgeShard: 50 Spirit Light
+LowerDepths.HandToHandSilk: Central Wastes TP
+LowerDepths.CombatShrine: Energy Fragment
+LowerDepths.SwimEC: Health Fragment
+LowerDepths.LupoMap: Ancestral Light 2
+LowerDepths.LeftEX: Launch
+LowerDepths.RightEX: 1 Spirit Light
+LowerDepths.FlashTree: 200 Spirit Light
+LowerWastes.WestTPOre: 200 Spirit Light
+LowerWastes.PurpleWallEX: Gorlek Ore
+LowerWastes.SunsetViewEX: Flash Efficiency
+LowerWastes.SpiritTrial: Gorlek Ore
+LowerWastes.SandBridgeOre: 50 Spirit Light
+LowerWastes.EerieGemQI: Last Stand
+LowerWastes.MuncherTunnelEC: Keystone
+LowerWastes.SandPotHC: 100 Spirit Light
+LowerWastes.SandPotEX: Health Fragment
+LowerWastes.MuncherPitEX: 200 Spirit Light
+LowerWastes.BottomRightEX: 50 Spirit Light
+LowerWastes.BottomRightHC: Keystone
+LowerWastes.LastStandShard: Keystone
+LowerWastes.LastStandEX: Howl's Den TP
+LowerWastes.MuncherClimbEX: 50 Spirit Light
+LowerWastes.SkeetoHiveEX: Keystone
+LowerWastes.HandToHandMapstone: 100 Spirit Light
+LowerWastes.LupoMap: Gorlek Ore
+LowerWastes.BurrowTree: Resilience
+LowerWastes.BurrowTreeEX: Keystone
+LowerWastes.UpperPathEC: Central Luma TP
+LowerWastes.UpperPathEX: 100 Spirit Light
+LowerWastes.UpperPathHiddenEX: Magnet
+LowerWastes.UpperPathHC: Gorlek Ore
+LowerWastes.EastTPOre: 100 Spirit Light
+UpperWastes.LowerKS: 100 Spirit Light
+UpperWastes.UpperKS: Spirit Surge
+UpperWastes.TurmoilShard: Keystone
+UpperWastes.KSDoorEX: Gorlek Ore
+UpperWastes.LedgeEC: 50 Spirit Light
+UpperWastes.MissileSpawnEX: Health Fragment
+UpperWastes.PurpleWallEX: 50 Spirit Light
+UpperWastes.PurpleWallHC: 50 Spirit Light
+UpperWastes.RoofEX: 100 Spirit Light
+UpperWastes.SpinLasersRightEX: 100 Spirit Light
+UpperWastes.SpinLasersMiddleEX: 50 Spirit Light
+UpperWastes.SpinLasersLowerEX: Keystone
+UpperWastes.FlowersSeed: Sticky
+UpperWastes.WallOre: 100 Spirit Light
+WindtornRuins.EscapeRevisitEC: Reckless
+WindtornRuins.Seir: Spear Efficiency
+WindtornRuins.HandToHandComplete: 50 Spirit Light
+WeepingRidge.Ore: Gorlek Ore
+WeepingRidge.LaunchTree: 50 Spirit Light
+WeepingRidge.SpikeClimbEX: Energy Fragment
+WeepingRidge.PortalEX: 50 Spirit Light
+WillowsEnd.SpikesOre: Health Fragment
+WillowsEnd.EntryEX: Energy Fragment
+WillowsEnd.PoisonfallHC: Energy Fragment
+WillowsEnd.LupoMap: 100 Spirit Light
+WillowsEnd.WindSpinOre: 100 Spirit Light
+WillowsEnd.RedirectEX: Energy Regeneration
+WillowsEnd.UpperLeftEX: Gorlek Ore
+WillowsEnd.UpperRightEX: 100 Spirit Light
+TwillenShop.Overcharge: Sense
+TwillenShop.TripleJump: 100 Spirit Light
+TwillenShop.Wingclip: Flap
+TwillenShop.Swap: Turmoil
+TwillenShop.LightHarvest: Light Harvest
+TwillenShop.Vitality: Burrow
+TwillenShop.Energy: Health Fragment
+TwillenShop.Finesse: 100 Spirit Light
+OpherShop.WaterBreath: Health Fragment
+OpherShop.Spike: 100 Spirit Light
+OpherShop.SpiritSmash: 50 Spirit Light
+OpherShop.Teleport: 100 Spirit Light
+OpherShop.SpiritStar: Energy Fragment
+OpherShop.Blaze: 50 Spirit Light
+OpherShop.Sentry: Gorlek Ore
+OpherShop.ExplodingSpike: 100 Spirit Light
+OpherShop.ShockSmash: Bow
+OpherShop.StaticStar: 50 Spirit Light
+OpherShop.ChargeBlaze: Keystone
+OpherShop.RapidSentry: 50 Spirit Light
+LupoShop.HCMapIcon: 50 Spirit Light
+LupoShop.ECMapIcon: Double Jump
+LupoShop.ShardMapIcon: Gorlek Ore
+Victory: Victory
+
+Playthrough:
+
+0: {
+  Inkwater Marsh TP
+  Sword
+}
+1: {
+  BreakCrystal: BreakCrystal
+  C.MarshSpawn.LeftSpawnSignpost: C.MarshSpawn.LeftSpawnSignpost
+  C.MarshSpawn.OpherBarrier: C.MarshSpawn.OpherBarrier
+  F.MarshSpawn.Main: F.MarshSpawn.Main
+  GladesTown.TuleySpawned: GladesTown.TuleySpawned
+  MarshSpawn.FirstPickupEX: Glide
+  MarshSpawn.LogBroken: MarshSpawn.LogBroken
+  MarshSpawn.RockHC: Keystone
+  MarshSpawn.ToOpherBarrier: MarshSpawn.ToOpherBarrier
+}
+2: {
+  C.MarshPastOpher.BowPath: C.MarshPastOpher.BowPath
+  C.MarshPastOpher.MillView: C.MarshPastOpher.MillView
+  C.MarshPastOpher.TrialStart: C.MarshPastOpher.TrialStart
+  C.MarshSpawn.BrokenBridge: C.MarshSpawn.BrokenBridge
+  C.MarshSpawn.CaveEntrance: C.MarshSpawn.CaveEntrance
+  E.MarshPastOpher.BowPath: E.MarshPastOpher.BowPath
+  E.MarshPastOpher.MillView: E.MarshPastOpher.MillView
+  H.MarshPastOpher.BowPath: H.MarshPastOpher.BowPath
+  MarshPastOpher.TrunkWall: MarshPastOpher.TrunkWall
+  MarshSpawn.PreLupoEX: Keystone
+  MarshSpawn.ResilienceShard: Water Dash
+  MarshSpawn.TokkBarrier: MarshSpawn.TokkBarrier
+}
+3: {
+  C.MarshPastOpher.TrialArea: C.MarshPastOpher.TrialArea
+  C.MarshPastOpher.UnderTrunk: C.MarshPastOpher.UnderTrunk
+  C.MarshSpawn.Cave: C.MarshSpawn.Cave
+  F.MarshShrine: F.MarshShrine
+  H.MarshPastOpher.TrialArea: H.MarshPastOpher.TrialArea
+  H.MarshSpawn.Cave: H.MarshSpawn.Cave
+  MarshPastOpher.TrialEC: 200 Spirit Light
+  MarshPastOpher.TrialLeftEX: 200 Spirit Light
+  MarshSpawn.CaveFight: MarshSpawn.CaveFight
+  MarshSpawn.FightRoomEX: Gorlek Ore
+  MarshSpawn.KeystoneDoor: MarshSpawn.KeystoneDoor
+  MarshSpawn.LeftTokkEX: Keystone
+}
+4: {
+  C.MarshSpawn.HowlApproach: C.MarshSpawn.HowlApproach
+  MarshSpawn.CaveKS: 200 Spirit Light
+  MarshSpawn.CaveKS.quest: MarshSpawn.CaveKS
+  MarshSpawn.HowlBurnt: MarshSpawn.HowlBurnt
+  MarshSpawn.RecklessShard: 200 Spirit Light
+}
+5: {
+  C.HowlsDen.AboveBoneBridge: C.HowlsDen.AboveBoneBridge
+  C.HowlsDen.BoneBridge: C.HowlsDen.BoneBridge
+  HowlsDen.BoneBarrier: HowlsDen.BoneBarrier
+  HowlsDen.SwordTree: Keystone
+  HowlsDen.SwordTree.quest: HowlsDen.SwordTree
+  HowlsDen.UpperLoopEntranceBarrier: HowlsDen.UpperLoopEntranceBarrier
+  MarshSpawn.MokkEX: 200 Spirit Light
+  MarshSpawn.TokkKeystoneQuest: 200 Spirit Light
+  MarshSpawn.TokkKeystoneQuest.quest: MarshSpawn.TokkKeystoneQuest
+}
+6: {
+  C.HowlsDen.UpperLoopEntrance: C.HowlsDen.UpperLoopEntrance
+  F.HowlsDen.Teleporter: F.HowlsDen.Teleporter
+  HowlsDen.AboveTPEX: Gorlek Ore
+  HowlsDen.RainLifted: HowlsDen.RainLifted
+  MarshSpawn.LupoMap: Glades TP
+  OpherShop.ChargeBlaze: Keystone
+  OpherShop.Sentry: Gorlek Ore
+  OpherShop.ShockSmash: Bow
+  OpherShop.SpiritStar: Energy Fragment
+}
+7: {
+  C.GladesTown.TwillenHome: C.GladesTown.TwillenHome
+  Combat.Ranged: Combat.Ranged
+  F.GladesTown.Teleporter: F.GladesTown.Teleporter
+  TwillenShop.Energy: Health Fragment
+  TwillenShop.Vitality: Burrow
+  TwillenShop.Wingclip: Flap
+}
+8: {
+  Combat.Sand: Combat.Sand
+  GladesTown.LupoSoupEX: Energy Fragment
+  GladesTown.UpdraftCeilingEX: Gorlek Ore
+  LupoShop.ECMapIcon: Double Jump
+  LupoShop.ShardMapIcon: Gorlek Ore
+}
+9: {
+  C.GladesTown.West: C.GladesTown.West
+  C.HowlsDen.DoubleJumpApproach: C.HowlsDen.DoubleJumpApproach
+  C.HowlsDen.DoubleJumpTreeLedge: C.HowlsDen.DoubleJumpTreeLedge
+  C.MarshPastOpher.BowApproach: C.MarshPastOpher.BowApproach
+  C.MarshSpawn.AboveHowlArena: C.MarshSpawn.AboveHowlArena
+  C.MarshSpawn.PoolsBurrowsSignpost: C.MarshSpawn.PoolsBurrowsSignpost
+  Combat.Aerial: Combat.Aerial
+  Combat.Dangerous: Combat.Dangerous
+  E.MarshPastOpher.BowArea: E.MarshPastOpher.BowArea
+  H.HowlsDen.UpperLoopExit: H.HowlsDen.UpperLoopExit
+  H.MarshPastOpher.BowApproach: H.MarshPastOpher.BowApproach
+  H.MarshSpawn.AboveHowlArena: H.MarshSpawn.AboveHowlArena
+  H.MarshSpawn.FangPlatform: H.MarshSpawn.FangPlatform
+  HowlsDen.AboveDoorKS: Health Fragment
+  HowlsDen.StickyShard: Gorlek Ore
+  HowlsDen.UpperLoopExitBarrier: HowlsDen.UpperLoopExitBarrier
+  MarshPastOpher.BowEC: 200 Spirit Light
+  MarshSpawn.CaveOre: Grapple
+  MarshSpawn.FangQI: Dash
+  MarshSpawn.FangQI.quest: MarshSpawn.FangQI
+}
+10: {
+  C.HowlsDen.UpperLoopExit: C.HowlsDen.UpperLoopExit
+  C.MarshPastOpher.UpperBowArea: C.MarshPastOpher.UpperBowArea
+  E.MarshPastOpher.UpperBowArea: E.MarshPastOpher.UpperBowArea
+  HowlsDen.DoubleJumpTreeCombat: HowlsDen.DoubleJumpTreeCombat
+  MarshPastOpher.RightEyestone: Bash
+  MarshPastOpher.TrialActivation: MarshPastOpher.TrialActivation
+  MarshPastOpher.TrialRightEX: Keystone
+  MarshSpawn.GrappleHC: Keystone
+  MarshSpawn.MokkFangQuest.quest: MarshSpawn.MokkFangQuest
+}
+11: {
+  C.MarshPastOpher.PoolsPathEast: C.MarshPastOpher.PoolsPathEast
+  C.MarshPastOpher.PoolsPathMiddle: C.MarshPastOpher.PoolsPathMiddle
+  C.MarshSpawn.BeforeBurrows: C.MarshSpawn.BeforeBurrows
+  C.MarshSpawn.BurrowsEntry: C.MarshSpawn.BurrowsEntry
+  C.MarshSpawn.PoolsPath: C.MarshSpawn.PoolsPath
+  C.OuterWellspring.EastDoor: C.OuterWellspring.EastDoor
+  C.OuterWellspring.EntranceDoor: C.OuterWellspring.EntranceDoor
+  C.OuterWellspring.TrialApproach: C.OuterWellspring.TrialApproach
+  C.OuterWellspring.TrialRoom: C.OuterWellspring.TrialRoom
+  C.OuterWellspring.TrialStart: C.OuterWellspring.TrialStart
+  C.OuterWellspring.WestDoor: C.OuterWellspring.WestDoor
+  C.WestGlades.Center: C.WestGlades.Center
+  C.WestGlades.MillApproach: C.WestGlades.MillApproach
+  C.WestGlades.PastTown: C.WestGlades.PastTown
+  C.WestGlades.ShrineArea: C.WestGlades.ShrineArea
+  C.WestGlades.Upper: C.WestGlades.Upper
+  Combat.Bat: Combat.Bat
+  E.OuterWellspring.AboveEntranceDoor: E.OuterWellspring.AboveEntranceDoor
+  E.OuterWellspring.TrialRoom: E.OuterWellspring.TrialRoom
+  E.WestGlades.PastTown: E.WestGlades.PastTown
+  F.GladesShrine: F.GladesShrine
+  H.MarshSpawn.BurrowFightArena: H.MarshSpawn.BurrowFightArena
+  H.OuterWellspring.TrialRoom: H.OuterWellspring.TrialRoom
+  H.WestGlades.MillApproach: H.WestGlades.MillApproach
+  H.WestGlades.Upper: H.WestGlades.Upper
+  HowlsDen.DoubleJumpEX: 200 Spirit Light
+  LowerReach.BearSneezed: LowerReach.BearSneezed
+  MarshPastOpher.PoolsPathEC: Keystone
+  MarshPastOpher.PoolsPathFloor: MarshPastOpher.PoolsPathFloor
+  MarshSpawn.BashEC: Energy Fragment
+  MarshSpawn.BurrowsOpen: MarshSpawn.BurrowsOpen
+  MarshSpawn.DamageTreeOpen: MarshSpawn.DamageTreeOpen
+  MarshSpawn.PoolsPathEX: Keystone
+  OuterWellspring.EntranceDoorOpen: OuterWellspring.EntranceDoorOpen
+  OuterWellspring.EntranceRoofEX: Gorlek Ore
+  OuterWellspring.LifeHarvestWallBroken: OuterWellspring.LifeHarvestWallBroken
+  OuterWellspring.RightWallEC: Gorlek Ore
+  OuterWellspring.RightWallEX: Gorlek Ore
+  OuterWellspring.RightWallOre: Keystone
+  OuterWellspring.TrialOre: 200 Spirit Light
+  OuterWellspring.WestDoorBlueMoonFree: OuterWellspring.WestDoorBlueMoonFree
+  WestGlades.RightOre: Gorlek Ore
+}
+12: {
+  C.InnerWellspring.BelowDrainLever: C.InnerWellspring.BelowDrainLever
+  C.InnerWellspring.DrainRoom: C.InnerWellspring.DrainRoom
+  C.InnerWellspring.DrainRoomTop: C.InnerWellspring.DrainRoomTop
+  C.InnerWellspring.EntranceDoor: C.InnerWellspring.EntranceDoor
+  C.InnerWellspring.ThornShardArea: C.InnerWellspring.ThornShardArea
+  C.MarshPastOpher.PoolsPathOneWayWall: C.MarshPastOpher.PoolsPathOneWayWall
+  C.MarshPastOpher.PoolsPathWest: C.MarshPastOpher.PoolsPathWest
+  C.MidnightBurrows.Central: C.MidnightBurrows.Central
+  C.MidnightBurrows.LeverRoom: C.MidnightBurrows.LeverRoom
+  C.MidnightBurrows.PortalRoom: C.MidnightBurrows.PortalRoom
+  C.MidnightBurrows.TabletRoom: C.MidnightBurrows.TabletRoom
+  E.InnerWellspring.DrainRoom: E.InnerWellspring.DrainRoom
+  E.InnerWellspring.EntranceDoor: E.InnerWellspring.EntranceDoor
+  E.MarshPastOpher.PoolsPathEast: E.MarshPastOpher.PoolsPathEast
+  F.MidnightBurrows.Teleporter: F.MidnightBurrows.Teleporter
+  H.InnerWellspring.DrainRoomTop: H.InnerWellspring.DrainRoomTop
+  H.MarshPastOpher.PoolsPathEast: H.MarshPastOpher.PoolsPathEast
+  H.MidnightBurrows.TabletRoom: H.MidnightBurrows.TabletRoom
+  HowlsDen.KeystoneDoor: HowlsDen.KeystoneDoor
+  InnerWellspring.DrainRoomTopWheel: InnerWellspring.DrainRoomTopWheel
+  InnerWellspring.ShortCutWheel: InnerWellspring.ShortCutWheel
+  InnerWellspring.ThornShard: Keystone
+  InnerWellspring.ThreeWheels: InnerWellspring.ThreeWheels
+  InnerWellspring.UpperCorruption: InnerWellspring.UpperCorruption
+  MarshPastOpher.EyestoneDoor: MarshPastOpher.EyestoneDoor
+  MidnightBurrows.LeftKS: Energy Fragment
+  MidnightBurrows.Lever: MidnightBurrows.Lever
+  OuterWellspring.HiddenHC: Clean Water
+  OuterWellspring.LifeHarvestLeverPulled: OuterWellspring.LifeHarvestLeverPulled
+}
+13: {
+  C.HowlsDen.BoneBridgeDoor: C.HowlsDen.BoneBridgeDoor
+  C.InnerWellspring.WestDoor: C.InnerWellspring.WestDoor
+  C.MidnightBurrows.DenConnection: C.MidnightBurrows.DenConnection
+  C.MidnightBurrows.East: C.MidnightBurrows.East
+  C.MidnightBurrows.PortalCorridor: C.MidnightBurrows.PortalCorridor
+  C.WestHollow.Entrance: C.WestHollow.Entrance
+  E.InnerWellspring.WestDoor: E.InnerWellspring.WestDoor
+  E.WestHollow.Entrance: E.WestHollow.Entrance
+  H.HowlsDen.MidwayBottomLoop: H.HowlsDen.MidwayBottomLoop
+  H.InnerWellspring.WestDoor: H.InnerWellspring.WestDoor
+  H.WestHollow.MokiByTwillen: H.WestHollow.MokiByTwillen
+  HowlsDen.SecretRoomWall: HowlsDen.SecretRoomWall
+  InnerWellspring.DrainLever: InnerWellspring.DrainLever
+  InnerWellspring.DrainRoomBottomWheel: InnerWellspring.DrainRoomBottomWheel
+  InnerWellspring.LupoMap: Gorlek Ore
+  InnerWellspring.MiddleDoorsOpen: InnerWellspring.MiddleDoorsOpen
+  InnerWellspring.ShortcutWheelEX: Flash
+  InnerWellspring.WaterDashSwitch: InnerWellspring.WaterDashSwitch
+  MarshSpawn.CrusherSwimEX: 200 Spirit Light
+  MarshSpawn.LongSwimEX: 200 Spirit Light
+  MidnightBurrows.HowlsDenShortcut: MidnightBurrows.HowlsDenShortcut
+  MidnightBurrows.RightKS: Keystone
+  MidnightBurrows.UpperKS: Health Fragment
+  WestGlades.LowerPoolEX: Keystone
+  WestGlades.UpperPoolEX: Health Fragment
+  WestHollow.CrusherHC: Gorlek Ore
+  WestHollow.UpperDrainLeverPulled: WestHollow.UpperDrainLeverPulled
+}
+14: {
+  C.HowlsDen.SecretRoom: C.HowlsDen.SecretRoom
+  C.InnerWellspring.DrainAreaExit: C.InnerWellspring.DrainAreaExit
+  C.InnerWellspring.EastDoor: C.InnerWellspring.EastDoor
+  C.WestHollow.HollowDrainMiddle: C.WestHollow.HollowDrainMiddle
+  C.WestHollow.RockPuzzle: C.WestHollow.RockPuzzle
+  DepthsLight: DepthsLight
+  E.InnerWellspring.EastDoor: E.InnerWellspring.EastDoor
+  E.WestHollow.HollowDrainMiddle: E.WestHollow.HollowDrainMiddle
+  E.WestHollow.RockPuzzle: E.WestHollow.RockPuzzle
+  H.InnerWellspring.EastDoor: H.InnerWellspring.EastDoor
+  H.WestHollow.RockPuzzle: H.WestHollow.RockPuzzle
+  HowlsDen.LeftHC: Health Fragment
+  InnerWellspring.SpinArena: InnerWellspring.SpinArena
+  WestHollow.PurpleDoorOpen: WestHollow.PurpleDoorOpen
+  WestHollow.RockPuzzleSolved: WestHollow.RockPuzzleSolved
+  WestHollow.UpperTongueExtended: WestHollow.UpperTongueExtended
+}
+15: {
+  C.WestHollow.PastRockPuzzleDoor: C.WestHollow.PastRockPuzzleDoor
+  C.WestHollow.PastRockPuzzleDoorEnemyPaths: C.WestHollow.PastRockPuzzleDoorEnemyPaths
+  E.WestHollow.FarLeftRoom: E.WestHollow.FarLeftRoom
+  F.BeetleFight: F.BeetleFight
+  F.EastHollow.Teleporter: F.EastHollow.Teleporter
+  InnerWellspring.SpinningRoomOpen: InnerWellspring.SpinningRoomOpen
+  WestHollow.FullyDrained: WestHollow.FullyDrained
+}
+16: {
+  C.InnerWellspring.SpinPuzzle: C.InnerWellspring.SpinPuzzle
+  C.WestHollow.DashApproach: C.WestHollow.DashApproach
+  C.WestHollow.HollowDrainLower: C.WestHollow.HollowDrainLower
+  C.WestHollow.PolesPond: C.WestHollow.PolesPond
+  C.WestHollow.TrialApproach: C.WestHollow.TrialApproach
+  C.WestHollow.TrialStart: C.WestHollow.TrialStart
+  E.WestHollow.DashApproach: E.WestHollow.DashApproach
+  E.WestHollow.SubmergedPlatform: E.WestHollow.SubmergedPlatform
+  InnerWellspring.SpinPuzzleSolved: InnerWellspring.SpinPuzzleSolved
+  WestHollow.DoorLever: WestHollow.DoorLever
+  WestHollow.FarLeftEX: Gorlek Ore
+  WestHollow.LowerTongueExtended: WestHollow.LowerTongueExtended
+  WestHollow.LupoMap: Gorlek Ore
+  WestHollow.TrialActivation: WestHollow.TrialActivation
+}
+17: {
+  C.InnerWellspring.GrappleThroughZigZagSpikes: C.InnerWellspring.GrappleThroughZigZagSpikes
+  C.InnerWellspring.PastSpinPuzzle: C.InnerWellspring.PastSpinPuzzle
+  C.WestHollow.DashArea: C.WestHollow.DashArea
+  C.WestHollow.DashCrushers: C.WestHollow.DashCrushers
+  C.WestHollow.DashRoomTopRight: C.WestHollow.DashRoomTopRight
+  InnerWellspring.TopDoorOpen: InnerWellspring.TopDoorOpen
+  WestHollow.AboveDashEX: Energy Fragment
+  WestHollow.DashTree: 200 Spirit Light
+  WestHollow.UpperTongueRetracted: WestHollow.UpperTongueRetracted
+}
+18: {
+  E.OuterWellspring.AboveWestDoor: E.OuterWellspring.AboveWestDoor
+  F.InnerWellspring.EscapeSequence: F.InnerWellspring.EscapeSequence
+  F.InnerWellspring.Teleporter: F.InnerWellspring.Teleporter
+  InnerWellspring.AboveTpEX: Health Fragment
+  InnerWellspring.BlueMoonSeed: Woods Entrance TP
+  InnerWellspring.BlueMoonSeed.quest: InnerWellspring.BlueMoonSeed
+  InnerWellspring.NeedleQI.quest: InnerWellspring.NeedleQI
+  InnerWellspring.WaterEscape.quest: InnerWellspring.WaterEscape
+  OuterWellspring.TrialActivation: OuterWellspring.TrialActivation
+  OuterWellspring.UltraGrappleShard: Outer Ruins TP
+}
+19: {
+  InnerWellspring.EscapeRevisitEX: Keystone
+  OpherShop.WaterBreath: Health Fragment
+  OuterWellspring.SpiritTrial: Energy Fragment
+  OuterWellspring.TheLostCompass: Energy Fragment
+  OuterWellspring.TheLostCompass.quest: OuterWellspring.TheLostCompass
+  TuleyShop.BlueMoon: TuleyShop.BlueMoon
+}
+20: {
+  GladesTown.UpperLeftEX: Regenerate
+}
+21: {
+  C.LowerReach.AboveEntry: C.LowerReach.AboveEntry
+  C.LowerReach.Entry: C.LowerReach.Entry
+  C.LowerReach.Icefall: C.LowerReach.Icefall
+  C.LowerReach.TrialStart: C.LowerReach.TrialStart
+  C.LowerReach.VeralHome: C.LowerReach.VeralHome
+  C.PoolsApproach.MillPath: C.PoolsApproach.MillPath
+  C.PoolsApproach.MillPathCheckpoint: C.PoolsApproach.MillPathCheckpoint
+  C.PoolsApproach.OnTopOfWheel: C.PoolsApproach.OnTopOfWheel
+  C.UpperWastes.OutsideRuins: C.UpperWastes.OutsideRuins
+  C.UpperWastes.RuinsApproach: C.UpperWastes.RuinsApproach
+  C.UpperWastes.SpinLasers: C.UpperWastes.SpinLasers
+  C.WoodsEntry.BelowTeleporter: C.WoodsEntry.BelowTeleporter
+  C.WoodsEntry.FirstMud: C.WoodsEntry.FirstMud
+  C.WoodsEntry.ShriekMeet: C.WoodsEntry.ShriekMeet
+  C.WoodsEntry.TwoKeystoneRoom: C.WoodsEntry.TwoKeystoneRoom
+  E.LowerReach.Icefall: E.LowerReach.Icefall
+  EastHollow.BeetleDefeated: EastHollow.BeetleDefeated
+  F.UpperWastes.NorthTP: F.UpperWastes.NorthTP
+  F.WoodsEntry.Teleporter: F.WoodsEntry.Teleporter
+  H.LowerReach.Entry: H.LowerReach.Entry
+  LowerReach.BearBridgeBroken: LowerReach.BearBridgeBroken
+  LowerReach.TrialEX: Keystone
+  MarshPastOpher.CombatShrineCompleted: MarshPastOpher.CombatShrineCompleted
+  PoolsApproach.MarshPathCurrentEX: Gorlek Ore
+  PoolsApproach.MillPathECWall: PoolsApproach.MillPathECWall
+  PoolsApproach.UnderwaterWallBroken: PoolsApproach.UnderwaterWallBroken
+  PoolsApproach.WheelWall: PoolsApproach.WheelWall
+  UpperWastes.FlowersSeed.quest: UpperWastes.FlowersSeed
+  UpperWastes.SpinLasersLowerEX: Keystone
+  WoodsEntry.KeystoneDoor: WoodsEntry.KeystoneDoor
+  WoodsEntry.LastTreeBranch.quest: WoodsEntry.LastTreeBranch
+  WoodsEntry.LowerKS: Gorlek Ore
+  WoodsEntry.MudPitEX: Keystone
+  WoodsEntry.TreeSeed.quest: WoodsEntry.TreeSeed
+}
+22: {
+  C.EastHollow.AfterBeetleFight: C.EastHollow.AfterBeetleFight
+  C.EastHollow.BashTreeCheckpoint: C.EastHollow.BashTreeCheckpoint
+  C.EastHollow.Kwolok: C.EastHollow.Kwolok
+  C.WoodsMain.AfterKuMeet: C.WoodsMain.AfterKuMeet
+  C.WoodsMain.FourKeystoneRoom: C.WoodsMain.FourKeystoneRoom
+  E.WoodsEntry.TwoKeystoneRoom: E.WoodsEntry.TwoKeystoneRoom
+  EastHollow.BashEC: Blaze
+  EastHollow.BashTree: Gorlek Ore
+  EastHollow.DepthsLever: EastHollow.DepthsLever
+  EastHollow.ForestsVoice.quest: EastHollow.ForestsVoice
+  EastHollow.HornBeetleFightEX: Energy Fragment
+  EastHollow.MortarEX: Keystone
+  EastHollow.RightKwolokEX: Gorlek Ore
+  EastHollow.SilentSwimEC: Health Fragment
+  EastHollow.SilentSwimWall: EastHollow.SilentSwimWall
+  EastHollow.SpikeLanternEX: 200 Spirit Light
+  EastHollow.WellspringDoneTalk.quest: EastHollow.WellspringDoneTalk
+  GladesTown.BuildHuts: GladesTown.BuildHuts
+  LowerReach.FreezeBaurFurnace: LowerReach.FreezeBaurFurnace
+  LowerReach.ThawBaurFurnace: LowerReach.ThawBaurFurnace
+  MarshPastOpher.CombatShrine: Energy Fragment
+  PoolsApproach.MillPathEC: Gorlek Ore
+  PoolsApproach.WheelFreed: PoolsApproach.WheelFreed
+  TuleyShop.LastTree: TuleyShop.LastTree
+  TuleyShop.LastTreeBranchRejected: TuleyShop.LastTreeBranchRejected
+  TuleyShop.SelaFlowers: TuleyShop.SelaFlowers
+  WoodsMain.BehindWallOre: Spear
+  WoodsMain.KSRoomYellowBarrierBroken: WoodsMain.KSRoomYellowBarrierBroken
+  WoodsMain.KeystoneDoor: WoodsMain.KeystoneDoor
+  WoodsMain.LeftKS: Deflector
+  WoodsMain.LowerLeafPileEX: Health Fragment
+  WoodsMain.RightKS: Gorlek Ore
+  WoodsMain.UpperKS: Gorlek Ore
+}
+23: {
+  C.EastHollow.AboveDepths: C.EastHollow.AboveDepths
+  C.EastPools.LeverRoom: C.EastPools.LeverRoom
+  C.WoodsMain.BalloonLure: C.WoodsMain.BalloonLure
+  C.WoodsMain.GiantSkull: C.WoodsMain.GiantSkull
+  Combat.Shielded: Combat.Shielded
+  E.EastHollow.AboveDepths: E.EastHollow.AboveDepths
+  EastHollow.BashHC: Water Breath
+  EastHollow.DepthsOpen: EastHollow.DepthsOpen
+  EastHollow.SplinterShard: 200 Spirit Light
+  EastHollow.VoiceDoorOpen: EastHollow.VoiceDoorOpen
+  EastPools.BelowEntryLeverBubble: EastPools.BelowEntryLeverBubble
+  EastPools.BubbleCurrentEX: Keystone
+  EastPools.EntryLever: EastPools.EntryLever
+  EastPools.KwolokAmuletQI.quest: EastPools.KwolokAmuletQI
+  EastPools.TwoCrushersEX: Keystone
+  F.DenShrine: F.DenShrine
+  GladesTown.DamageTree: Gorlek Ore
+  GladesTown.FamilyReunionKey.quest: GladesTown.FamilyReunionKey
+  GladesTown.MotayHutEX: Sentry
+  GladesTown.RoofsOverHeads: GladesTown.RoofsOverHeads
+  H.EastPools.LeverRoom: H.EastPools.LeverRoom
+  HowlsDen.CombatShrineCompleted: HowlsDen.CombatShrineCompleted
+  LowerReach.AboveBaurUpperEX: Energy Fragment
+  LowerReach.Lever: LowerReach.Lever
+  MarshPastOpher.TrialHC: Energy Fragment
+  WoodsMain.BalloonLureBlobDestroyed: WoodsMain.BalloonLureBlobDestroyed
+  WoodsMain.BehindDoorRoofEX: Energy Fragment
+  WoodsMain.LowerKS: Keystone
+}
+24: {
+  C.EastHollow.MapMoki: C.EastHollow.MapMoki
+  C.EastPools.BehindEntryDoor: C.EastPools.BehindEntryDoor
+  C.EastPools.TokkBubble: C.EastPools.TokkBubble
+  C.LowerReach.CentralEnemyPaths: C.LowerReach.CentralEnemyPaths
+  C.LowerReach.CentralFurnacePedestal: C.LowerReach.CentralFurnacePedestal
+  C.LowerReach.WindChannel: C.LowerReach.WindChannel
+  C.UpperDepths.FirstFirefly: C.UpperDepths.FirstFirefly
+  C.UpperDepths.RightKeystonePath: C.UpperDepths.RightKeystonePath
+  C.WoodsMain.BeforeLog: C.WoodsMain.BeforeLog
+  C.WoodsMain.BrokenOwl: C.WoodsMain.BrokenOwl
+  C.WoodsMain.MidwayTrial: C.WoodsMain.MidwayTrial
+  C.WoodsMain.PetrifiedHowl: C.WoodsMain.PetrifiedHowl
+  C.WoodsMain.TrialEnd: C.WoodsMain.TrialEnd
+  E.LowerReach.CentralFurnacePedestal: E.LowerReach.CentralFurnacePedestal
+  EastHollow.HandToHandMap: Mouldwood Depths TP
+  EastHollow.HandToHandMap.quest: EastHollow.HandToHandMap
+  EastPools.BelowLeverEX: Baur's Reach TP
+  EastPools.TokkBubbleFree: EastPools.TokkBubbleFree
+  EastPools.TokkBubblePurpleWall: EastPools.TokkBubblePurpleWall
+  GladesTown.GromsWall: GladesTown.GromsWall
+  H.WoodsMain.PetrifiedHowl: H.WoodsMain.PetrifiedHowl
+  LowerReach.FreezeCentralFurnace: LowerReach.FreezeCentralFurnace
+  LowerReach.LupoMap: Gorlek Ore
+  LowerReach.ThawCentralFurnace: LowerReach.ThawCentralFurnace
+  MarshSpawn.BurrowArena: MarshSpawn.BurrowArena
+  UpperDepths.EntryKeystoneDoor: UpperDepths.EntryKeystoneDoor
+  UpperDepths.EntryOre: Woods Exit TP
+  UpperDepths.EntryRoofEX: Gorlek Ore
+  UpperDepths.LeftEntryKS: Energy Fragment
+  WestGlades.CombatShrineCompleted: WestGlades.CombatShrineCompleted
+  WoodsEntry.DollQI: Energy Fragment
+  WoodsEntry.DollQI.quest: WoodsEntry.DollQI
+  WoodsMain.BalloonLureYellowBarrierBroken: WoodsMain.BalloonLureYellowBarrierBroken
+  WoodsMain.HiddenEX: Gorlek Ore
+  WoodsMain.LogBlobDestroyed: WoodsMain.LogBlobDestroyed
+  WoodsMain.OverflowShard: 200 Spirit Light
+  WoodsMain.TrialActivation: WoodsMain.TrialActivation
+}
+25: {
+  C.EastPools.NextToLupoOre: C.EastPools.NextToLupoOre
+  C.EastPools.TPArea: C.EastPools.TPArea
+  C.LowerDepths.BeforeTree: C.LowerDepths.BeforeTree
+  C.LowerDepths.Central: C.LowerDepths.Central
+  C.LowerDepths.East: C.LowerDepths.East
+  C.LowerDepths.TreeArea: C.LowerDepths.TreeArea
+  C.LowerDepths.West: C.LowerDepths.West
+  C.LowerReach.BelowTokk: C.LowerReach.BelowTokk
+  C.LowerReach.OutsideTPRoom: C.LowerReach.OutsideTPRoom
+  C.LowerWastes.LeverArea: C.LowerWastes.LeverArea
+  C.LowerWastes.MuncherClimb: C.LowerWastes.MuncherClimb
+  C.LowerWastes.MuncherTunnel: C.LowerWastes.MuncherTunnel
+  C.LowerWastes.SandPot: C.LowerWastes.SandPot
+  C.LowerWastes.SkeetoHive: C.LowerWastes.SkeetoHive
+  C.LowerWastes.SunsetView: C.LowerWastes.SunsetView
+  C.LowerWastes.ThirstyGorlek: C.LowerWastes.ThirstyGorlek
+  C.LowerWastes.UpperPath: C.LowerWastes.UpperPath
+  C.LowerWastes.WoodenBridge: C.LowerWastes.WoodenBridge
+  C.MoraEscape: C.MoraEscape
+  C.MoraSecondPhase: C.MoraSecondPhase
+  C.UpperDepths.BelowHive: C.UpperDepths.BelowHive
+  C.UpperDepths.Central: C.UpperDepths.Central
+  C.UpperDepths.KeydoorLedge: C.UpperDepths.KeydoorLedge
+  C.UpperDepths.LowerConnection: C.UpperDepths.LowerConnection
+  C.UpperDepths.MoraPath: C.UpperDepths.MoraPath
+  C.UpperDepths.OutsideMoraFight: C.UpperDepths.OutsideMoraFight
+  C.UpperDepths.SecondKSRoom: C.UpperDepths.SecondKSRoom
+  C.UpperReach.KeystoneRoom: C.UpperReach.KeystoneRoom
+  C.UpperReach.UpperSoupPaths: C.UpperReach.UpperSoupPaths
+  C.UpperWastes.KeystoneRoom: C.UpperWastes.KeystoneRoom
+  C.WoodsMain.FeedingGrounds: C.WoodsMain.FeedingGrounds
+  E.LowerDepths.East: E.LowerDepths.East
+  E.LowerDepths.TreeArea: E.LowerDepths.TreeArea
+  E.LowerReach.OutsideTPRoom: E.LowerReach.OutsideTPRoom
+  E.LowerWastes.LeverArea: E.LowerWastes.LeverArea
+  E.LowerWastes.MuncherTunnel: E.LowerWastes.MuncherTunnel
+  E.LowerWastes.Shovel: E.LowerWastes.Shovel
+  E.LowerWastes.UpperPath: E.LowerWastes.UpperPath
+  E.MoraSecondPhase: E.MoraSecondPhase
+  E.UpperDepths.BelowHive: E.UpperDepths.BelowHive
+  E.UpperDepths.MoraPath: E.UpperDepths.MoraPath
+  E.UpperDepths.SecondKSRoom: E.UpperDepths.SecondKSRoom
+  EastPools.LowerWaterDrained: EastPools.LowerWaterDrained
+  EastPools.LupoOre: Keystone
+  F.DepthsShrine: F.DepthsShrine
+  F.LowerReach.Teleporter: F.LowerReach.Teleporter
+  F.LowerWastes.EastTP: F.LowerWastes.EastTP
+  F.LowerWastes.WestTP: F.LowerWastes.WestTP
+  F.MoraFirstPhase: F.MoraFirstPhase
+  F.UpperDepths.BelowHive: F.UpperDepths.BelowHive
+  F.UpperDepths.Teleporter: F.UpperDepths.Teleporter
+  F.WoodsMain.Teleporter: F.WoodsMain.Teleporter
+  F.WoodsShrine: F.WoodsShrine
+  GladesTown.ClearThorns: GladesTown.ClearThorns
+  GladesTown.HandToHandPouch.quest: GladesTown.HandToHandPouch
+  GladesTown.KeyMokiHutEX: Health Fragment
+  H.LowerReach.OutsideTPRoom: H.LowerReach.OutsideTPRoom
+  H.UpperReach.UpperSoupPaths: H.UpperReach.UpperSoupPaths
+  LowerDepths.CombatShrineCompleted: LowerDepths.CombatShrineCompleted
+  LowerDepths.FlashTree: 200 Spirit Light
+  LowerDepths.LeftEX: Launch
+  LowerDepths.RaceStartHC: Feeding Grounds TP
+  LowerDepths.SwimEC: Health Fragment
+  LowerDepths.TrialActivation: LowerDepths.TrialActivation
+  LowerReach.AboveDoorEX: Keystone
+  LowerReach.HiddenOre: Keystone
+  LowerReach.TPLeftEX: Gorlek Ore
+  LowerWastes.BottomRightHC: Keystone
+  LowerWastes.BurrowTreeEX: Keystone
+  LowerWastes.EerieGemQI.quest: LowerWastes.EerieGemQI
+  LowerWastes.LupoMap: Gorlek Ore
+  LowerWastes.MuncherPitEX: 200 Spirit Light
+  LowerWastes.MuncherTunnelEC: Keystone
+  LowerWastes.PurpleWallEX: Gorlek Ore
+  LowerWastes.SandPlatformLever: LowerWastes.SandPlatformLever
+  LowerWastes.SandPotEX: Health Fragment
+  LowerWastes.SkeetoHiveEX: Keystone
+  LowerWastes.TrialActivation: LowerWastes.TrialActivation
+  LowerWastes.UpperPathEC: Central Luma TP
+  LowerWastes.UpperPathHC: Gorlek Ore
+  LowerWastes.UpperPathHiddenEX: Magnet
+  LowerWastes.WestTPOre: 200 Spirit Light
+  UpperDepths.ForestsEyes.quest: UpperDepths.ForestsEyes
+  UpperDepths.HiveEX: Health Fragment
+  UpperDepths.LightPuzzle: UpperDepths.LightPuzzle
+  UpperDepths.LightcatcherSeed: Midnight Burrows TP
+  UpperDepths.LightcatcherSeed.quest: UpperDepths.LightcatcherSeed
+  UpperDepths.RightHealthKS: 200 Spirit Light
+  UpperDepths.TeleporterEX: Keystone
+  UpperReach.FreezeFurnace: UpperReach.FreezeFurnace
+  UpperReach.SoupOre: Grenade
+  UpperReach.ThawFurnace: UpperReach.ThawFurnace
+  UpperWastes.KSDoorEX: Gorlek Ore
+  UpperWastes.KeystoneDoor: UpperWastes.KeystoneDoor
+  WestGlades.CombatShrine: Hammer
+  WoodsMain.CombatShrineCompleted: WoodsMain.CombatShrineCompleted
+  WoodsMain.SpiritTrial: Health Fragment
+  WoodsMain.YellowWallEX: Energy Fragment
+}
+26: {
+  C.UpperReach.OutsideTreeRoom: C.UpperReach.OutsideTreeRoom
+  C.UpperReach.UpperSoupFrozenPaths: C.UpperReach.UpperSoupFrozenPaths
+  C.UpperReach.UpperSoupThawedPaths: C.UpperReach.UpperSoupThawedPaths
+  C.UpperWastes.MissilePuzzleLeft: C.UpperWastes.MissilePuzzleLeft
+  E.UpperReach.OutsideTreeRoom: E.UpperReach.OutsideTreeRoom
+  EastPools.ArenaWall: EastPools.ArenaWall
+  EastPools.UltraBashWall: EastPools.UltraBashWall
+  F.EastPools.TPArea: F.EastPools.TPArea
+  F.EastPools.Teleporter: F.EastPools.Teleporter
+  F.LowerReach.OutsideTPRoom: F.LowerReach.OutsideTPRoom
+  GladesTown.AboveTpEX: Gorlek Ore
+  GladesTown.ArcingShard: Keystone
+  GladesTown.CaveBurrowEX: Keystone
+  GladesTown.CaveEntrance: GladesTown.CaveEntrance
+  GladesTown.OnwardsAndUpwards: GladesTown.OnwardsAndUpwards
+  GladesTown.TwillenGemQuest.quest: GladesTown.TwillenGemQuest
+  InnerWellspring.HandToHandHerbs: Gorlek Ore
+  InnerWellspring.HandToHandHerbs.quest: InnerWellspring.HandToHandHerbs
+  LowerDepths.CombatShrine: Energy Fragment
+  LowerReach.LeftFurnace: LowerReach.LeftFurnace
+  LowerReach.WindLantern: LowerReach.WindLantern
+  LowerWastes.LastStandEX: Howl's Den TP
+  LowerWastes.LastStandShard: Keystone
+  LowerWastes.SpiritTrial: Gorlek Ore
+  TuleyShop.Lightcatchers: TuleyShop.Lightcatchers
+  UpperReach.KeystoneDoor: UpperReach.KeystoneDoor
+  UpperReach.LifeForceEX: Energy Fragment
+  UpperReach.LifeForceShard: Shuriken
+  UpperReach.LowerKS: Keystone
+  UpperReach.MiddleLeftKS: Energy Fragment
+  UpperReach.SwimEX: Gorlek Ore
+  UpperWastes.LeverDoor: UpperWastes.LeverDoor
+  UpperWastes.MissileSpawnEX: Health Fragment
+  UpperWastes.TurmoilShard: Keystone
+  WoodsMain.CombatShrine: Gorlek Ore
+}
+27: {
+  C.EastPools.WaterdashArena: C.EastPools.WaterdashArena
+  C.LowerReach.SnowballEnemyPaths: C.LowerReach.SnowballEnemyPaths
+  E.GladesTown.AcornCave: E.GladesTown.AcornCave
+  E.LowerReach.SoupMoki: E.LowerReach.SoupMoki
+  E.UpperReach.TreeRoom: E.UpperReach.TreeRoom
+  EastPools.FightArenas: EastPools.FightArenas
+  GladesTown.AcornQI: Health Fragment
+  GladesTown.AcornQI.quest: GladesTown.AcornQI
+  LowerReach.HandToHandSoup.quest: LowerReach.HandToHandSoup
+  LowerReach.IcefallEX: Health Fragment
+  LowerReach.IcefallOre: Health Fragment
+  LowerReach.KeystoneDoor: LowerReach.KeystoneDoor
+  LowerReach.RolledSnowball: LowerReach.RolledSnowball
+  LowerReach.TPLantern: LowerReach.TPLantern
+  MidnightBurrows.KeystoneDoor: MidnightBurrows.KeystoneDoor
+  UpperDepths.CentralKeystoneDoor: UpperDepths.CentralKeystoneDoor
+  UpperReach.LightBurstTree: Triple Jump
+  UpperReach.SpringSeed: Keystone
+  UpperReach.SpringSeed.quest: UpperReach.SpringSeed
+  UpperReach.WellEX: Gorlek Ore
+}
+28: {
+  C.EastPools.MissilePuzzle: C.EastPools.MissilePuzzle
+  C.LowerReach.EastFurnace: C.LowerReach.EastFurnace
+  C.LowerReach.PastSnowball: C.LowerReach.PastSnowball
+  E.LowerReach.PastSnowball: E.LowerReach.PastSnowball
+  E.LowerReach.SwimmingPool: E.LowerReach.SwimmingPool
+  EastPools.BehindCrusherEX: Energy Fragment
+  EastPools.CentralRoomPurpleWall: EastPools.CentralRoomPurpleWall
+  EastPools.FightRoomHC: Health Fragment
+  EastPools.LupoPurpleFloor: EastPools.LupoPurpleFloor
+  F.LowerReach.EastEnemyPaths: F.LowerReach.EastEnemyPaths
+  GladesTown.MokiAcornQuest: Energy Fragment
+  GladesTown.MokiAcornQuest.quest: GladesTown.MokiAcornQuest
+  LowerReach.EastDoorLantern: LowerReach.EastDoorLantern
+  LowerReach.FreezeEastFurnace: LowerReach.FreezeEastFurnace
+  LowerReach.HandToHandHat.quest: LowerReach.HandToHandHat
+  LowerReach.SnowballHC: Health Fragment
+  LowerReach.ThawEastFurnace: LowerReach.ThawEastFurnace
+  LowerReach.TrialActivation: LowerReach.TrialActivation
+  MidnightBurrows.TabletQI.quest: MidnightBurrows.TabletQI
+  TuleyShop.SpringPlants: TuleyShop.SpringPlants
+}
+29: {
+  C.EastPools.CentralRoom: C.EastPools.CentralRoom
+  C.EastPools.LupoArea: C.EastPools.LupoArea
+  C.KwolokFight: C.KwolokFight
+  C.LowerReach.ArenaArea: C.LowerReach.ArenaArea
+  E.KwolokFight: E.KwolokFight
+  E.LowerReach.ArenaArea: E.LowerReach.ArenaArea
+  EastPools.CentralRoomBubbleFree: EastPools.CentralRoomBubbleFree
+  EastPools.GrassSeed.quest: EastPools.GrassSeed
+  EastPools.LupoEX: Keystone
+  F.KwolokEscape: F.KwolokEscape
+  F.WestPools.Teleporter: F.WestPools.Teleporter
+  GladesTown.HandToHandLantern: Kwolok's Hollow TP
+  GladesTown.HandToHandLantern.quest: GladesTown.HandToHandLantern
+  H.LowerReach.ArenaArea: H.LowerReach.ArenaArea
+  LowerReach.ArenaBeaten: LowerReach.ArenaBeaten
+  LowerReach.SpiritTrial: 200 Spirit Light
+  MarshSpawn.TokkTabletQuest.quest: MarshSpawn.TokkTabletQuest
+  WestPools.ForestsStrength: Willow's End TP
+  WestPools.ForestsStrength.quest: WestPools.ForestsStrength
+  WestPools.TpEX: Keystone
+}
+30: {
+  C.LowerReach.BridgeWispPath: C.LowerReach.BridgeWispPath
+  C.LowerReach.WispPathCheckpoint: C.LowerReach.WispPathCheckpoint
+  C.UpperPools.BeforeKeystoneDoor: C.UpperPools.BeforeKeystoneDoor
+  C.UpperPools.KeystoneRoom: C.UpperPools.KeystoneRoom
+  C.UpperPools.KeystoneRoomBubbleSpawner: C.UpperPools.KeystoneRoomBubbleSpawner
+  C.UpperPools.KeystoneRoomEntrance: C.UpperPools.KeystoneRoomEntrance
+  C.UpperPools.LeftBubbleSpamRoom: C.UpperPools.LeftBubbleSpamRoom
+  C.UpperPools.RightBubbleSpamRoom: C.UpperPools.RightBubbleSpamRoom
+  C.WeepingRidge.WillowEntranceLedge: C.WeepingRidge.WillowEntranceLedge
+  C.WestPools.LeftKwolokPlatform: C.WestPools.LeftKwolokPlatform
+  C.WestPools.RightKwolokPlatform: C.WestPools.RightKwolokPlatform
+  C.WillowsEnd.AboveInnerTP: C.WillowsEnd.AboveInnerTP
+  C.WillowsEnd.BoulderHeartPath: C.WillowsEnd.BoulderHeartPath
+  C.WillowsEnd.Entry: C.WillowsEnd.Entry
+  C.WillowsEnd.GlideHeartPath: C.WillowsEnd.GlideHeartPath
+  C.WillowsEnd.GlideRooms: C.WillowsEnd.GlideRooms
+  C.WillowsEnd.GrappleHeart: C.WillowsEnd.GrappleHeart
+  C.WillowsEnd.GrappleHeartMidPoint: C.WillowsEnd.GrappleHeartMidPoint
+  C.WillowsEnd.MiniBossFight: C.WillowsEnd.MiniBossFight
+  C.WillowsEnd.RedirectHeartPuzzle: C.WillowsEnd.RedirectHeartPuzzle
+  C.WillowsEnd.Upper: C.WillowsEnd.Upper
+  C.WillowsEnd.UpperHeartCheckpoint: C.WillowsEnd.UpperHeartCheckpoint
+  C.WillowsEnd.UpperHeartPath: C.WillowsEnd.UpperHeartPath
+  C.WillowsEnd.West: C.WillowsEnd.West
+  E.LowerReach.WispPathCheckpoint: E.LowerReach.WispPathCheckpoint
+  E.UpperPools.KeystoneRoom: E.UpperPools.KeystoneRoom
+  E.WillowsEnd.AboveInnerTP: E.WillowsEnd.AboveInnerTP
+  E.WillowsEnd.BoulderHeartPath: E.WillowsEnd.BoulderHeartPath
+  E.WillowsEnd.Entry: E.WillowsEnd.Entry
+  E.WillowsEnd.GlideRooms: E.WillowsEnd.GlideRooms
+  E.WillowsEnd.GrappleHeart: E.WillowsEnd.GrappleHeart
+  E.WillowsEnd.RedirectHeartPath: E.WillowsEnd.RedirectHeartPath
+  E.WillowsEnd.UpperHeartPath: E.WillowsEnd.UpperHeartPath
+  E.WillowsEnd.West: E.WillowsEnd.West
+  EastHollow.KwolokAmuletQuest.quest: EastHollow.KwolokAmuletQuest
+  F.LowerReach.SnowEscape: F.LowerReach.SnowEscape
+  F.WillowsEnd.InnerTP: F.WillowsEnd.InnerTP
+  H.LowerReach.WispPathCheckpoint: H.LowerReach.WispPathCheckpoint
+  H.UpperPools.BeforeKeystoneDoor: H.UpperPools.BeforeKeystoneDoor
+  H.WillowsEnd.GlideHeartPath: H.WillowsEnd.GlideHeartPath
+  H.WillowsEnd.GrappleHeart: H.WillowsEnd.GrappleHeart
+  H.WillowsEnd.GrappleHeartMidPoint: H.WillowsEnd.GrappleHeartMidPoint
+  H.WillowsEnd.MiniBossFight: H.WillowsEnd.MiniBossFight
+  H.WillowsEnd.RedirectHeartPath: H.WillowsEnd.RedirectHeartPath
+  LowerDepths.HandToHandSilk: Central Wastes TP
+  LowerDepths.HandToHandSilk.quest: LowerDepths.HandToHandSilk
+  LowerReach.ForestsMemory: Energy Fragment
+  LowerReach.ForestsMemory.quest: LowerReach.ForestsMemory
+  TuleyShop.StickyGrass: TuleyShop.StickyGrass
+  UpperPools.BubbleSpamLever: UpperPools.BubbleSpamLever
+  UpperPools.BubbleSpamWall: UpperPools.BubbleSpamWall
+  UpperPools.KeystoneDoor: UpperPools.KeystoneDoor
+  UpperPools.KeystoneRoomBubbleFree: UpperPools.KeystoneRoomBubbleFree
+  UpperPools.LeftBubblesEX: Keystone
+  UpperPools.LowerKS: Gorlek Ore
+  UpperPools.TrialActivation: UpperPools.TrialActivation
+  UpperPools.UpperMidKS: Health Fragment
+  WillowsEnd.BoulderHeart: WillowsEnd.BoulderHeart
+  WillowsEnd.BurrowHeart: WillowsEnd.BurrowHeart
+  WillowsEnd.EntryEX: Energy Fragment
+  WillowsEnd.GlideHeart: WillowsEnd.GlideHeart
+  WillowsEnd.GrappleWheelsHeart: WillowsEnd.GrappleWheelsHeart
+  WillowsEnd.MinibossHeart: WillowsEnd.MinibossHeart
+  WillowsEnd.PoisonfallHC: Energy Fragment
+  WillowsEnd.PortalShortcut: WillowsEnd.PortalShortcut
+  WillowsEnd.RedirectHeart: WillowsEnd.RedirectHeart
+  WillowsEnd.SpikesOre: Health Fragment
+  WillowsEnd.SpinLasersHeart: WillowsEnd.SpinLasersHeart
+  WillowsEnd.SpinPortalsHeart: WillowsEnd.SpinPortalsHeart
+  WillowsEnd.UpperLeftEX: Gorlek Ore
+}
+31: {
+  C.UpperPools.TreeRoomEntrance: C.UpperPools.TreeRoomEntrance
+  C.WindtornRuins.UpperRuinsDoor: C.WindtornRuins.UpperRuinsDoor
+  E.WindtornRuins.UpperRuinsDoor: E.WindtornRuins.UpperRuinsDoor
+  EastPools.HandToHandSpyglass: Health Fragment
+  EastPools.HandToHandSpyglass.quest: EastPools.HandToHandSpyglass
+  GladesTown.RegrowTheGlades.quest: GladesTown.RegrowTheGlades
+  UpperPools.ButtonDoorAboveTree: UpperPools.ButtonDoorAboveTree
+  UpperPools.RightBubblesEX: Wellspring TP
+  UpperPools.SwimDashCurrentEX: Keystone
+  UpperPools.SwimDashTree: Keystone
+  UpperPools.TreeRoomLeftBubbleFree: UpperPools.TreeRoomLeftBubbleFree
+  UpperPools.TreeRoomRightBubbleFree: UpperPools.TreeRoomRightBubbleFree
+  WindtornRuins.RuinsLever: WindtornRuins.RuinsLever
+}
+32: {
+  C.UpperPools.DrainPuzzleEntrance: C.UpperPools.DrainPuzzleEntrance
+  C.WindtornRuins.BrokenMural: C.WindtornRuins.BrokenMural
+  E.UpperPools.DrainPuzzleRight: E.UpperPools.DrainPuzzleRight
+  F.WindtornRuins.RuinsTP: F.WindtornRuins.RuinsTP
+  GladesTown.HandToHandCanteen.quest: GladesTown.HandToHandCanteen
+  H.UpperPools.DrainPuzzleRight: H.UpperPools.DrainPuzzleRight
+  UpperPools.DrainRoomPurpleWall: UpperPools.DrainRoomPurpleWall
+  UpperPools.RoofEX: Health Fragment
+  UpperPools.UpperWaterDrained: UpperPools.UpperWaterDrained
+  UpperPools.WaterfallEC: Gorlek Ore
+  WindtornRuins.HeartBarrier: WindtornRuins.HeartBarrier
+}
+33: {
+  C.UpperPools.DrainPuzzleExit: C.UpperPools.DrainPuzzleExit
+  F.WindtornRuins.Escape: F.WindtornRuins.Escape
+  LowerWastes.HandToHandMapstone.quest: LowerWastes.HandToHandMapstone
+  WindtornRuins.Seir.quest: WindtornRuins.Seir
+}
+34: {
+  C.WeepingRidge.Bottom: C.WeepingRidge.Bottom
+  E.WeepingRidge.Bottom: E.WeepingRidge.Bottom
+  H.WeepingRidge.Bottom: H.WeepingRidge.Bottom
+  WeepingRidge.ElevatorFightCompleted: WeepingRidge.ElevatorFightCompleted
+  WindtornRuins.HandToHandComplete.quest: WindtornRuins.HandToHandComplete
+}
+35: {
+  C.WeepingRidge.AboveTree: C.WeepingRidge.AboveTree
+  C.WeepingRidge.LaunchArea: C.WeepingRidge.LaunchArea
+  H.WeepingRidge.LaunchArea: H.WeepingRidge.LaunchArea
+  Victory: Victory
+  WeepingRidge.Ore: Gorlek Ore
+  WeepingRidge.SpikeClimbEX: Energy Fragment
+}
+36: {
+  C.UpperDepths.FirstKSRoom: C.UpperDepths.FirstKSRoom
+  C.UpperReach.TreeRoom: C.UpperReach.TreeRoom
+  C.UpperWastes.MissilePuzzleMiddle: C.UpperWastes.MissilePuzzleMiddle
+  C.WoodsMain.TrialStart: C.WoodsMain.TrialStart
+  E.LowerDepths.West: E.LowerDepths.West
+  E.MarshSpawn.PoolsBurrowsSignpost: E.MarshSpawn.PoolsBurrowsSignpost
+  E.OuterWellspring.EntranceDoor: E.OuterWellspring.EntranceDoor
+  E.UpperDepths.Central: E.UpperDepths.Central
+  E.UpperDepths.FirstKSRoom: E.UpperDepths.FirstKSRoom
+  E.WillowsEnd.Upper: E.WillowsEnd.Upper
+  E.WoodsMain.AbovePit: E.WoodsMain.AbovePit
+  GladesTown.RebuildTheGlades.quest: GladesTown.RebuildTheGlades
+  H.LowerDepths.West: H.LowerDepths.West
+  H.OuterWellspring.EntranceDoor: H.OuterWellspring.EntranceDoor
+  OuterWellspring.FallingWheel: OuterWellspring.FallingWheel
+  SkipKwolok: SkipKwolok
+  SkipMora1: SkipMora1
+  SkipMora2: SkipMora2
+  UpperWastes.WormEscapeEnd: UpperWastes.WormEscapeEnd
+  WestHollow.LowerTongueRetracted: WestHollow.LowerTongueRetracted
+}
