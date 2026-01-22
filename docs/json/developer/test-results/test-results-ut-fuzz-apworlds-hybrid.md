@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-22 21:49:04
+**Generated:** 2026-01-22 22:11:56
 
 **Source Data Created:** 2026-01-22T21:21:59.389653
 
@@ -51,9 +51,9 @@ Of the 44 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 91.1KB
+- **Total Exporter Code:** 108.4KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 91.1KB
+- **Combined Total:** 108.4KB
 
 ## Test Results
 
@@ -138,7 +138,7 @@ Of the 44 games with 100% pass rate:
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pseudoregalia | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | 10 | 1 | 0 | 0 | 9 | ❌ 10.0% | ✅ | ✅ | N/A |
-| Rain World | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% | 11.6KB | ✅ | N/A |
+| Rain World | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Reventure | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Rift Wizard | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | 6.6KB | ✅ | N/A |
@@ -158,7 +158,7 @@ Of the 44 games with 100% pass rate:
 | Spinball | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Stacklands | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Star Fox 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Star Fox 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |

@@ -792,7 +792,7 @@
   "Rain World": {
     "apworld_path": "custom_worlds/rain_world.apworld",
     "exporter_path": "exporter/games/unofficial/rain_world.py",
-    "exporter_size": 11908,
+    "exporter_size": 11997,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -991,11 +991,11 @@
   },
   "Star Fox 64": {
     "apworld_path": "custom_worlds/star_fox_64.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/star_fox_64.py",
+    "exporter_size": 17536,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "star_fox_64"
   },

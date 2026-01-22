@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-22 21:49:04
+**Generated:** 2026-01-22 22:11:56
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -102,7 +102,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Pokemon Mystery Dungeon Explorers of Sky | ⚠️ 80.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pseudoregalia | ✅ 100.0% | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ 10.0% | ✅ 10.0% | ✅ | ✅ | N/A |
-| Rain World | ✅ 30.0% | ❌ 0.0% | 11.6KB | ✅ | N/A |
+| Rain World | ✅ 30.0% | ❌ 0.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Reventure | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Rift Wizard | ✅ 100.0% | ⚠️ 70.0% | 6.6KB | ✅ | N/A |
@@ -122,7 +122,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Spinball | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ 20.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Stacklands | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Star Fox 64 | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Star Fox 64 | ✅ 100.0% | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -195,13 +195,13 @@ These games pass in the Original UT but fail in the Hybrid UT.
 | Frogmonster | ✅ | ✅ | N/A |
 | Minit | 15.1KB | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
-| Rain World | 11.6KB | ✅ | N/A |
+| Rain World | 11.7KB | ✅ | N/A |
 | Reventure | ✅ | ✅ | N/A |
 | Rift Wizard | 6.6KB | ✅ | N/A |
 | Sonic Rush | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |
-| Star Fox 64 | ✅ | ✅ | N/A |
+| Star Fox 64 | 17.1KB | ✅ | N/A |
 | Wordipelago | ✅ | ✅ | N/A |
 
 ## Games Passing Hybrid Only (14)

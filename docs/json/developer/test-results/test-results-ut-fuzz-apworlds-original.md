@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-22 21:49:04
+**Generated:** 2026-01-22 22:11:56
 
 **Source Data Created:** 2026-01-10T22:45:14.627157
 
@@ -35,15 +35,15 @@
 
 Of the 42 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 34/42 (81.0%)
+- **Passing with Generic Exporter:** 33/42 (78.6%)
 - **Passing with Generic Logic:** 42/42 (100.0%)
-- **Passing with Both Generic:** 34/42 (81.0%)
+- **Passing with Both Generic:** 33/42 (78.6%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 91.1KB
+- **Total Exporter Code:** 108.4KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 91.1KB
+- **Combined Total:** 108.4KB
 
 ## Test Results
 
@@ -127,7 +127,7 @@ Of the 42 games with 100% pass rate:
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Pseudoregalia | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | 10 | 1 | 0 | 0 | 9 | ❌ 10.0% | ✅ | ✅ | N/A |
-| Rain World | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% | 11.6KB | ✅ | N/A |
+| Rain World | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Reventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Rift Wizard | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 6.6KB | ✅ | N/A |
@@ -147,7 +147,7 @@ Of the 42 games with 100% pass rate:
 | Spinball | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ | 10 | 2 | 3 | 3 | 2 | ❌ 20.0% | ✅ | ✅ | N/A |
 | Stacklands | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | N/A |
-| Star Fox 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Star Fox 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
