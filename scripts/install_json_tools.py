@@ -10,14 +10,18 @@ Archipelago installation. It:
 3. Downloads and installs the JSON Tools Installer apworld
 4. Runs the installer to download and patch JSON Tools components
 5. Sets up the development environment
-6. Runs a verification test (A Link to the Past by default)
+6. Optionally applies ROM-less patches for testing ROM-based games
+7. Runs a verification test (Adventure by default, or ALTTP with --romless)
 
 Usage:
-    # Install stable version with default components
+    # Install stable version with default components (tests with Adventure)
     python scripts/install_json_tools.py
 
     # Install dev version with all components
     python scripts/install_json_tools.py --dev --all
+
+    # Install with ROM-less patches (tests with ALTTP)
+    python scripts/install_json_tools.py --romless
 
     # Install to a specific directory
     python scripts/install_json_tools.py --target-dir /path/to/install
@@ -25,15 +29,16 @@ Usage:
     # Skip tests
     python scripts/install_json_tools.py --skip-tests
 
-    # Run the full fuzzer test instead of the quick ALTTP test
+    # Run the full fuzzer test
     python scripts/install_json_tools.py --test fuzzer
 
 Options:
     --dev               Use development branch (PeerInfinity/Archipelago-CC @ main)
                         Default is stable (PeerInfinity/Archipelago @ JSONExport)
     --all               Install all components (frontend, presets, docs, etc.)
+    --romless           Install and apply ROM-less patches (enables ALTTP testing)
     --target-dir DIR    Install to specified directory (default: ./archipelago-json-tools)
-    --test MODE         Test mode: alttp (default), fuzzer, or none
+    --test MODE         Test mode: adventure (default), alttp (needs --romless), fuzzer, none
     --skip-tests        Same as --test none
     --skip-clone        Skip cloning (assume Archipelago already exists in target dir)
     --skip-setup        Skip development environment setup
@@ -364,6 +369,144 @@ def setup_dev_environment(target_dir: Path, dry_run: bool = False) -> bool:
     return success
 
 
+def apply_romless_patches(target_dir: Path, dry_run: bool = False) -> bool:
+    """Apply ROM-less patches to allow generation without ROM files."""
+    print_header("Applying ROM-less Patches")
+
+    venv_path = target_dir / ".venv"
+    python_exe = get_python_executable(venv_path)
+    patch_script = target_dir / "scripts" / "setup" / "apply_romless_patches.py"
+    settings_file = target_dir / "settings.py"
+
+    if dry_run:
+        print(f"  [DRY RUN] Would add skip_required_files to {settings_file}")
+        print(f"  [DRY RUN] Would run: {python_exe} {patch_script}")
+        return True
+
+    # Modify settings.py to enable ROM-less generation:
+    # 1. Add skip_required_files = True at the top
+    # 2. Patch the __getattribute__ method to check skip_required_files before raising FileNotFoundError
+    if settings_file.exists():
+        content = settings_file.read_text()
+        modified = False
+
+        # Add skip_required_files if not present
+        if "skip_required_files" not in content:
+            # Add after the imports at the top of the file
+            lines = content.split('\n')
+            insert_idx = 0
+            for i, line in enumerate(lines):
+                if line.startswith('import ') or line.startswith('from '):
+                    insert_idx = i + 1
+                elif insert_idx > 0 and line.strip() and not line.startswith('#'):
+                    break
+
+            # Insert the variable
+            lines.insert(insert_idx, '')
+            lines.insert(insert_idx + 1, '# Added by install_json_tools.py for ROM-less generation')
+            lines.insert(insert_idx + 2, 'skip_required_files = True')
+            lines.insert(insert_idx + 3, '')
+            content = '\n'.join(lines)
+            modified = True
+            print("  [OK] Added skip_required_files = True to settings.py")
+
+        # Patch the __getattribute__ method to check skip_required_files
+        # The vanilla code raises FileNotFoundError when a required file doesn't exist
+        # We need to add a check to skip this when skip_required_files is True
+        old_pattern = '''            if attr.required and not attr.exists() and not super().__getattribute__("_has_attr"):
+                # if a file is required, and the one from settings does not exist, ask the user to provide it
+                # unless we are dumping the settings, because that would ask for each entry
+                with _lock:  # lock to avoid opening multiple
+                    new = None if no_gui else attr.browse()
+                    if new is None:
+                        raise FileNotFoundError(f"{attr} does not exist, but "
+                                                f"{self.__class__.__name__}.{item} is required")'''
+
+        new_pattern = '''            if attr.required and not attr.exists() and not super().__getattribute__("_has_attr"):
+                # if a file is required, and the one from settings does not exist, ask the user to provide it
+                # unless we are dumping the settings, because that would ask for each entry
+                # or skip_required_files is True (added by install_json_tools.py)
+                if skip_required_files:
+                    import warnings
+                    warnings.warn(f"{attr} does not exist, but {self.__class__.__name__}.{item} is required. "
+                                  f"Continuing anyway as skip_required_files is set.")
+                    return attr
+                with _lock:  # lock to avoid opening multiple
+                    new = None if no_gui else attr.browse()
+                    if new is None:
+                        raise FileNotFoundError(f"{attr} does not exist, but "
+                                                f"{self.__class__.__name__}.{item} is required")'''
+
+        if old_pattern in content:
+            content = content.replace(old_pattern, new_pattern)
+            modified = True
+            print("  [OK] Patched settings.py to check skip_required_files")
+        elif "skip_required_files is True" not in content and "skip_required_files:" not in content:
+            # Pattern not found exactly - try to warn user
+            print("  [WARN] Could not find expected pattern in settings.py to patch")
+            print("  ROM-based games may still require ROMs")
+
+        if modified:
+            settings_file.write_text(content)
+        else:
+            print("  [OK] settings.py already configured for ROM-less generation")
+    else:
+        print(f"  [WARN] settings.py not found: {settings_file}")
+
+    # Now apply the romless patches to the world files
+    if not patch_script.exists():
+        print(f"  [SKIP] ROM-less patches script not found: {patch_script}")
+        print("  (romless_patches component may not be installed)")
+        return True  # Not a failure, just skip
+
+    success, _, _ = run_command(
+        [str(python_exe), str(patch_script)],
+        "Apply ROM-less patches to world files",
+        cwd=target_dir,
+        capture_output=False,
+    )
+
+    if not success:
+        print("  [WARN] Failed to apply ROM-less patches")
+        print("  ROM-based games may require ROM files for generation")
+
+    return True  # Don't fail the installation for this
+
+
+def run_adventure_test(target_dir: Path, dry_run: bool = False) -> bool:
+    """Run a quick verification test using Adventure (no ROM required)."""
+    print_header("Running Verification Test (Adventure)")
+
+    venv_path = target_dir / ".venv"
+    python_exe = get_python_executable(venv_path)
+    test_script = target_dir / "scripts" / "test" / "test-all-templates.py"
+
+    if dry_run:
+        print(f"  [DRY RUN] Would run: {python_exe} {test_script} --include-list \"Adventure.yaml\"")
+        return True
+
+    if not test_script.exists():
+        print(f"  [WARN] Test script not found: {test_script}")
+        return False
+
+    print("  Running Adventure template test...")
+    print("  This verifies the installation is working correctly.\n")
+
+    success, stdout, stderr = run_command(
+        [str(python_exe), str(test_script), "--include-list", "Adventure.yaml"],
+        "Run Adventure test",
+        cwd=target_dir,
+        capture_output=False,
+    )
+
+    if success:
+        print("\n  [OK] Adventure test passed!")
+    else:
+        print("\n  [FAIL] Adventure test failed")
+
+    return success
+
+
 def run_alttp_test(target_dir: Path, dry_run: bool = False) -> bool:
     """Run a quick verification test using A Link to the Past."""
     print_header("Running Verification Test (A Link to the Past)")
@@ -574,10 +717,15 @@ def main():
         help="Skip development environment setup",
     )
     parser.add_argument(
+        "--romless",
+        action="store_true",
+        help="Install and apply ROM-less patches (allows testing ROM-based games without ROMs)",
+    )
+    parser.add_argument(
         "--test",
-        choices=["alttp", "fuzzer", "none"],
-        default="alttp",
-        help="Test mode: alttp (default, quick), fuzzer (comprehensive), or none",
+        choices=["adventure", "alttp", "fuzzer", "none"],
+        default=None,  # Will be set based on --romless
+        help="Test mode: adventure (default), alttp (requires --romless), fuzzer, or none",
     )
     parser.add_argument(
         "--skip-tests",
@@ -596,6 +744,10 @@ def main():
     if args.skip_tests:
         args.test = "none"
 
+    # Default test based on --romless
+    if args.test is None:
+        args.test = "alttp" if args.romless else "adventure"
+
     version = "dev" if args.dev else "stable"
     target_dir = args.target_dir.resolve()
 
@@ -603,6 +755,8 @@ def main():
     print(f"  Version: {version}")
     print(f"  Target: {target_dir}")
     print(f"  Install all: {args.all}")
+    print(f"  ROM-less patches: {args.romless}")
+    print(f"  Test: {args.test}")
     if args.dry_run:
         print("  Mode: DRY RUN")
 
@@ -646,11 +800,19 @@ def main():
     else:
         print("\n[SKIP] Skipping development environment setup (--skip-setup)")
 
-    # Step 7: Run tests
+    # Step 7: Apply ROM-less patches (if requested)
+    if args.romless:
+        apply_romless_patches(target_dir, args.dry_run)
+    else:
+        print("\n[SKIP] Skipping ROM-less patches (use --romless to enable)")
+
+    # Step 8: Run tests
     test_results = None
     results_ok = True
 
-    if args.test == "alttp":
+    if args.test == "adventure":
+        results_ok = run_adventure_test(target_dir, args.dry_run)
+    elif args.test == "alttp":
         results_ok = run_alttp_test(target_dir, args.dry_run)
     elif args.test == "fuzzer":
         test_results = run_fuzzer_test(target_dir, args.dry_run)
