@@ -7753,5 +7753,41 @@
         ]
       }
     }
+  },
+  "autopelago": {
+    "name": "Autopelago",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Autopelago"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      },
+      "AP_89879469403067454848": {
+        "seed": 906691059,
+        "games": [
+          {
+            "player": 1,
+            "name": "0-0",
+            "game": "Autopelago"
+          }
+        ],
+        "files": [
+          "AP_89879469403067454848.archipelago",
+          "AP_89879469403067454848_Spoiler.txt",
+          "AP_89879469403067454848_rules.json"
+        ]
+      }
+    }
   }
 }
