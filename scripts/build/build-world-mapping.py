@@ -763,22 +763,59 @@ def build_apworld_mapping(custom_worlds_dir: str) -> Dict[str, Dict[str, any]]:
 
 
 def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Build a mapping between template game names and their world directory names'
+    )
+    parser.add_argument(
+        '--apworlds-only',
+        action='store_true',
+        help='Only scan custom_worlds/ for .apworld files (skip bundled worlds)'
+    )
+    parser.add_argument(
+        '--output', '-o',
+        type=str,
+        help='Output file path (default: scripts/data/world-mapping.json, '
+             'or scripts/data/world-mapping-unofficial.json with --apworlds-only)'
+    )
+    args = parser.parse_args()
+
     # Script is now in scripts/build/, so go up two levels to reach project root
     project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     worlds_dir = os.path.join(project_root, 'worlds')
     custom_worlds_dir = os.path.join(project_root, 'custom_worlds')
-    output_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping.json')
 
-    print(f"Scanning worlds directory: {worlds_dir}")
-    mapping = build_world_mapping(worlds_dir)
+    # Determine output file
+    if args.output:
+        output_file = args.output
+        if not os.path.isabs(output_file):
+            output_file = os.path.join(project_root, output_file)
+    elif args.apworlds_only:
+        output_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping-unofficial.json')
+    else:
+        output_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping.json')
 
-    # Also scan custom_worlds directory for .apworld files
-    print(f"Scanning custom worlds directory: {custom_worlds_dir}")
-    apworld_mapping = build_apworld_mapping(custom_worlds_dir)
+    mapping = {}
+    apworld_count = 0
 
-    # Merge apworld mappings into the main mapping
-    # apworld entries will override regular world entries if there's a conflict
-    mapping.update(apworld_mapping)
+    if not args.apworlds_only:
+        print(f"Scanning worlds directory: {worlds_dir}")
+        mapping = build_world_mapping(worlds_dir)
+
+        # Also scan custom_worlds directory for .apworld files
+        print(f"Scanning custom worlds directory: {custom_worlds_dir}")
+        apworld_mapping = build_apworld_mapping(custom_worlds_dir)
+
+        # Merge apworld mappings into the main mapping
+        # apworld entries will override regular world entries if there's a conflict
+        mapping.update(apworld_mapping)
+        apworld_count = len(apworld_mapping)
+    else:
+        # Only scan apworlds
+        print(f"Scanning custom worlds directory (apworlds only): {custom_worlds_dir}")
+        mapping = build_apworld_mapping(custom_worlds_dir)
+        apworld_count = len(mapping)
 
     if not mapping:
         print("No world mappings found!")
@@ -792,7 +829,10 @@ def main():
         with open(output_file, 'w') as f:
             json.dump(mapping, f, indent=2, sort_keys=True)
         print(f"\nWorld mapping saved to: {output_file}")
-        print(f"Found {len(mapping)} game mappings ({len(apworld_mapping)} from apworld files)")
+        if args.apworlds_only:
+            print(f"Found {len(mapping)} apworld mappings")
+        else:
+            print(f"Found {len(mapping)} game mappings ({apworld_count} from apworld files)")
     except IOError as e:
         print(f"Error saving mapping file: {e}")
         return 1

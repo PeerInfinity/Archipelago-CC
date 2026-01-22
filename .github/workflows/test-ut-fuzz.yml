@@ -214,9 +214,9 @@ jobs:
           echo "Regenerating templates..."
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-          # Update world mapping to include new apworlds
-          echo "Updating world mapping..."
-          python scripts/build/build-world-mapping.py
+          # Update world mapping for apworlds (generates world-mapping-unofficial.json)
+          echo "Updating world mapping for apworlds..."
+          python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Swap to original Universal Tracker
         if: inputs.test_original_ut
@@ -274,6 +274,14 @@ jobs:
           path: fuzz_output/
           retention-days: 7
 
+      - name: Upload world mapping for apworlds
+        if: ${{ inputs.test_apworlds && matrix.split_num == 1 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
+          retention-days: 7
+
   # Combine UT fuzz results
   combine-ut-fuzz:
     name: Combine UT Fuzz Results
@@ -303,6 +311,13 @@ jobs:
         with:
           pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-*
           path: artifacts
+
+      - name: Download world mapping for apworlds
+        if: inputs.test_apworlds
+        uses: actions/download-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data
 
       - name: Combine test results
         env:
@@ -390,6 +405,11 @@ jobs:
           # Add generated documentation (includes test-results-ut-fuzz.md and test-results-ut-fuzz-*.md)
           git add -f docs/json/developer/test-results/test-results-ut-fuzz*.md || true
 
+          # Add world mapping for apworlds (if it exists)
+          if [ -f scripts/data/world-mapping-unofficial.json ]; then
+            git add -f scripts/data/world-mapping-unofficial.json
+          fi
+
           if ! git diff --staged --quiet; then
             git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.test_original_ut && 'original' || 'modified' }} UT)
 
@@ -404,6 +424,7 @@ jobs:
             Includes:
             - Test results JSON
             - Generated documentation (test-results-ut-fuzz.md)
+            ${{ inputs.test_apworlds && '- World mapping for apworlds (world-mapping-unofficial.json)' || '' }}
             "
             git push origin ut-fuzz-test
           fi

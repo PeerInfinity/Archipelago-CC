@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-22 02:19:23
+**Generated:** 2026-01-21 18:23:03
 
 **Source Data Created:** 2026-01-11T20:29:15.868280
 
@@ -30,6 +30,20 @@
 - **Failed Runs:** 339
 - **Timed Out Runs:** 1
 - **Ignored Runs:** 25
+
+### Generic Exporter/Logic Statistics
+
+Of the 40 games with 100% pass rate:
+
+- **Passing with Generic Exporter:** 28/40 (70.0%)
+- **Passing with Generic Logic:** 37/40 (92.5%)
+- **Passing with Both Generic:** 28/40 (70.0%)
+
+**Combined Custom Code Size:**
+
+- **Total Exporter Code:** 662.7KB
+- **Total Game Logic Code:** 652.0KB
+- **Combined Total:** 1314.7KB
 
 ## Test Results
 

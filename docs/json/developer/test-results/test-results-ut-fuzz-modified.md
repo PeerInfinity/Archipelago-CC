@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-22 02:19:23
+**Generated:** 2026-01-21 18:23:03
 
 **Source Data Created:** 2026-01-21T20:33:39.978966
 
@@ -40,6 +40,20 @@
 - **Locations without Explain Support:** 841
 - **Locations with Default Rule:** 20,812
 - **Overall Explain Coverage:** 93.0%
+
+### Generic Exporter/Logic Statistics
+
+Of the 62 games with 100% pass rate:
+
+- **Passing with Generic Exporter:** 39/62 (62.9%)
+- **Passing with Generic Logic:** 62/62 (100.0%)
+- **Passing with Both Generic:** 39/62 (62.9%)
+
+**Combined Custom Code Size:**
+
+- **Total Exporter Code:** 662.7KB
+- **Total Game Logic Code:** 652.0KB
+- **Combined Total:** 1314.7KB
 
 ## Test Results
 

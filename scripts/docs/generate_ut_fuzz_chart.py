@@ -35,18 +35,38 @@ def load_test_results(results_file: str) -> Dict[str, Any]:
 
 def load_world_mapping(project_root: str) -> Dict[str, Dict[str, Any]]:
     """
-    Load the world mapping from JSON file.
+    Load the world mapping from JSON files.
+
+    Loads both world-mapping.json (official/bundled worlds) and
+    world-mapping-unofficial.json (apworlds) if they exist.
+    Unofficial mapping takes precedence for any conflicts.
 
     Returns the full world mapping dict with all game info including
     world_directory, exporter_size, game_logic_size, etc.
     """
-    mapping_file = os.path.join(project_root, 'scripts/data/world-mapping.json')
+    mapping = {}
+
+    # Load official world mapping
+    official_file = os.path.join(project_root, 'scripts/data/world-mapping.json')
     try:
-        with open(mapping_file, 'r') as f:
-            return json.load(f)
+        with open(official_file, 'r') as f:
+            mapping = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"Warning: Could not load world mapping file {mapping_file}: {e}")
-        return {}
+        print(f"Warning: Could not load official world mapping file {official_file}: {e}")
+
+    # Load unofficial world mapping (apworlds) and merge
+    unofficial_file = os.path.join(project_root, 'scripts/data/world-mapping-unofficial.json')
+    try:
+        with open(unofficial_file, 'r') as f:
+            unofficial_mapping = json.load(f)
+            mapping.update(unofficial_mapping)
+            print(f"Loaded {len(unofficial_mapping)} entries from unofficial world mapping")
+    except FileNotFoundError:
+        pass  # Unofficial mapping is optional
+    except json.JSONDecodeError as e:
+        print(f"Warning: Could not parse unofficial world mapping file {unofficial_file}: {e}")
+
+    return mapping
 
 
 def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -202,13 +222,58 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"- **Locations with Default Rule:** {total_locs_default:,}\n"
             md_content += f"- **Overall Explain Coverage:** {overall_explain_coverage:.1f}%\n\n"
 
+        # Add Generic Exporter/Logic Statistics section
+        passed_with_generic_exporter = 0
+        passed_with_generic_logic = 0
+        passed_with_both_generic = 0
+        total_exporter_size = 0
+        total_logic_size = 0
+
+        for data in chart_data:
+            game_name = data['game_name']
+            is_passing = data['passed']
+
+            # Get exporter and logic info from world_mapping
+            has_custom_exporter = False
+            has_custom_logic = False
+            exporter_size = 0
+            logic_size = 0
+
+            if game_name in world_mapping:
+                exporter_size = world_mapping[game_name].get('exporter_size', 0)
+                logic_size = world_mapping[game_name].get('game_logic_size', 0)
+                has_custom_exporter = exporter_size > 0
+                has_custom_logic = logic_size > 0
+                total_exporter_size += exporter_size
+                total_logic_size += logic_size
+
+            if is_passing:
+                if not has_custom_exporter:
+                    passed_with_generic_exporter += 1
+                if not has_custom_logic:
+                    passed_with_generic_logic += 1
+                if not has_custom_exporter and not has_custom_logic:
+                    passed_with_both_generic += 1
+
+        md_content += "### Generic Exporter/Logic Statistics\n\n"
+        md_content += f"Of the {passed} games with 100% pass rate:\n\n"
+        if passed > 0:
+            md_content += f"- **Passing with Generic Exporter:** {passed_with_generic_exporter}/{passed} ({passed_with_generic_exporter/passed*100:.1f}%)\n"
+            md_content += f"- **Passing with Generic Logic:** {passed_with_generic_logic}/{passed} ({passed_with_generic_logic/passed*100:.1f}%)\n"
+            md_content += f"- **Passing with Both Generic:** {passed_with_both_generic}/{passed} ({passed_with_both_generic/passed*100:.1f}%)\n"
+        else:
+            md_content += f"- **Passing with Generic Exporter:** 0/0\n"
+            md_content += f"- **Passing with Generic Logic:** 0/0\n"
+            md_content += f"- **Passing with Both Generic:** 0/0\n"
+
+        md_content += f"\n**Combined Custom Code Size:**\n\n"
+        md_content += f"- **Total Exporter Code:** {total_exporter_size / 1024:.1f}KB\n"
+        md_content += f"- **Total Game Logic Code:** {total_logic_size / 1024:.1f}KB\n"
+        md_content += f"- **Combined Total:** {(total_exporter_size + total_logic_size) / 1024:.1f}KB\n\n"
+
     md_content += "## Test Results\n\n"
-    if world_source == "apworlds":
-        md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |\n"
-        md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|\n"
-    else:
-        md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |\n"
-        md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|\n"
+    md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |\n"
+    md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|\n"
 
     for data in chart_data:
         game_name = data['game_name']
@@ -235,32 +300,26 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         else:
             rate_display = f"❌ {success_rate:.1f}%"
 
-        if world_source == "apworlds":
-            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
-        else:
-            # Get exporter and game logic sizes from world mapping
-            exporter_indicator = "N/A"
-            logic_indicator = "N/A"
-            if game_name in world_mapping:
-                exporter_size = world_mapping[game_name].get('exporter_size', 0)
-                game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
-                exporter_indicator = format_file_size(exporter_size)
-                logic_indicator = format_file_size(game_logic_size)
+        # Get exporter and game logic sizes from world mapping
+        exporter_indicator = "N/A"
+        logic_indicator = "N/A"
+        if game_name in world_mapping:
+            exporter_size = world_mapping[game_name].get('exporter_size', 0)
+            game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+            exporter_indicator = format_file_size(exporter_size)
+            logic_indicator = format_file_size(game_logic_size)
 
-            # Get rules.json size
-            rules_size_indicator = "N/A"
-            if project_root and world_dir:
-                rules_size = get_rules_json_size(project_root, world_dir)
-                if rules_size > 0:
-                    rules_size_indicator = f"{rules_size / 1024:.1f}KB"
+        # Get rules.json size
+        rules_size_indicator = "N/A"
+        if project_root and world_dir:
+            rules_size = get_rules_json_size(project_root, world_dir)
+            if rules_size > 0:
+                rules_size_indicator = f"{rules_size / 1024:.1f}KB"
 
-            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
+        md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
 
     if not chart_data:
-        if world_source == "apworlds":
-            md_content += "| No data available | - | - | - | - | - | - | - |\n"
-        else:
-            md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
+        md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
 
     # Add error details section if there are any failures
     games_with_errors = [d for d in chart_data if d['failure'] > 0 or d.get('errors')]
@@ -320,10 +379,9 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Timeout:** Number of runs that exceeded the time limit\n"
     md_content += "- **Ignored:** Number of runs skipped due to option errors\n"
     md_content += "- **Success Rate:** Percentage of successful runs\n"
-    if world_source != "apworlds":
-        md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
-        md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
-        md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
+    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
+    md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
     md_content += "\n"
 
     if games_with_explain_stats:
@@ -461,12 +519,8 @@ def generate_comparison_markdown(original_data: List[Dict[str, Any]],
 
     # Main comparison table
     md_content += "## Full Comparison\n\n"
-    if world_source == "apworlds":
-        md_content += "| Game Name | Original Success Rate | Modified Success Rate |\n"
-        md_content += "|-----------|:---------------------:|:---------------------:|\n"
-    else:
-        md_content += "| Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |\n"
-        md_content += "|-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|\n"
+    md_content += "| Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |\n"
+    md_content += "|-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|\n"
 
     for game in all_games:
         orig = original_by_game.get(game)
@@ -495,88 +549,56 @@ def generate_comparison_markdown(original_data: List[Dict[str, Any]],
         else:
             mod_display = "N/A"
 
-        if world_source == "apworlds":
-            md_content += f"| {game} | {orig_display} | {mod_display} |\n"
-        else:
-            exporter, logic, rules_size = get_game_info(game)
-            md_content += f"| {game} | {orig_display} | {mod_display} | {exporter} | {logic} | {rules_size} |\n"
+        exporter, logic, rules_size = get_game_info(game)
+        md_content += f"| {game} | {orig_display} | {mod_display} | {exporter} | {logic} | {rules_size} |\n"
 
     # Games passing both
     if passing_both:
         md_content += f"\n## Games Passing Both ({len(passing_both)})\n\n"
         md_content += "These games have 100% success rate in both Universal Tracker versions.\n\n"
-        if world_source == "apworlds":
-            md_content += "| Game Name |\n"
-            md_content += "|-----------|\n"
-        else:
-            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
         for game in passing_both:
-            if world_source == "apworlds":
-                md_content += f"| {game} |\n"
-            else:
-                exporter, logic, rules_size = get_game_info(game)
-                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+            exporter, logic, rules_size = get_game_info(game)
+            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
 
     # Games passing original only
     if passing_original_only:
         md_content += f"\n## Games Passing Original Only ({len(passing_original_only)})\n\n"
         md_content += "These games pass in the Original UT but fail in the Modified UT.\n\n"
-        if world_source == "apworlds":
-            md_content += "| Game Name |\n"
-            md_content += "|-----------|\n"
-        else:
-            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
         for game in passing_original_only:
-            if world_source == "apworlds":
-                md_content += f"| {game} |\n"
-            else:
-                exporter, logic, rules_size = get_game_info(game)
-                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+            exporter, logic, rules_size = get_game_info(game)
+            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
 
     # Games passing modified only
     if passing_modified_only:
         md_content += f"\n## Games Passing Modified Only ({len(passing_modified_only)})\n\n"
         md_content += "These games pass in the Modified UT but fail in the Original UT.\n\n"
-        if world_source == "apworlds":
-            md_content += "| Game Name |\n"
-            md_content += "|-----------|\n"
-        else:
-            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
         for game in passing_modified_only:
-            if world_source == "apworlds":
-                md_content += f"| {game} |\n"
-            else:
-                exporter, logic, rules_size = get_game_info(game)
-                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+            exporter, logic, rules_size = get_game_info(game)
+            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
 
     # Games passing neither
     if passing_neither:
         md_content += f"\n## Games Passing Neither ({len(passing_neither)})\n\n"
         md_content += "These games fail in both Universal Tracker versions.\n\n"
-        if world_source == "apworlds":
-            md_content += "| Game Name |\n"
-            md_content += "|-----------|\n"
-        else:
-            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
         for game in passing_neither:
-            if world_source == "apworlds":
-                md_content += f"| {game} |\n"
-            else:
-                exporter, logic, rules_size = get_game_info(game)
-                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+            exporter, logic, rules_size = get_game_info(game)
+            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
 
     # Notes section
     md_content += "\n## Notes\n\n"
     md_content += "- **Original Success Rate:** Percentage of fuzz runs that passed in the Original Universal Tracker\n"
     md_content += "- **Modified Success Rate:** Percentage of fuzz runs that passed in the Modified Universal Tracker\n"
-    if world_source != "apworlds":
-        md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
-        md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
-        md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
+    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
+    md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
     md_content += "- A game is considered \"passing\" if it has a 100% success rate (0 failures, 0 timeouts)\n"
 
     return md_content
