@@ -91,10 +91,10 @@ class AutopelagoGameExportHandler(GenericGameExportHandler):
             if len(converted) == 1:
                 return converted[0]
 
-            # Combine with "all"
+            # Use 'and' type with 'conditions' key (worldgen format)
             return {
-                'type': 'all',
-                'rules': converted
+                'type': 'and',
+                'conditions': converted
             }
 
         # Handle "any" - any one requirement must be met
@@ -112,10 +112,10 @@ class AutopelagoGameExportHandler(GenericGameExportHandler):
             if len(converted) == 1:
                 return converted[0]
 
-            # Combine with "any"
+            # Use 'or' type with 'conditions' key (worldgen format)
             return {
-                'type': 'any',
-                'rules': converted
+                'type': 'or',
+                'conditions': converted
             }
 
         # Handle "any_two" - at least 2 requirements must be met
@@ -131,11 +131,11 @@ class AutopelagoGameExportHandler(GenericGameExportHandler):
             if len(converted) < 2:
                 return {'type': 'constant', 'value': False}
 
-            # Use count_true with threshold of 2
+            # Use count_true with 'conditions' key (worldgen format)
             return {
                 'type': 'count_true',
                 'count': 2,
-                'rules': converted
+                'conditions': converted
             }
 
         # Handle "item" - requires a specific item
@@ -155,17 +155,81 @@ class AutopelagoGameExportHandler(GenericGameExportHandler):
             if rat_count == 0:
                 return {'type': 'constant', 'value': True}
 
-            # Build a sum of all rat items
-            # For Rule Builder, we need to express this as sum of item counts
+            # Convert rat_count to a rule the worldgen can handle.
+            # Rat Pack gives 5 rats, all others give 1 each.
+            # We approximate by checking:
+            # - For N <= 5: any(Rat Pack) OR count_true(N, individual_rats)
+            # - For N > 5: all(Rat Pack, count_true(N-5, individual_rats)) OR count_true(N, individual_rats)
+            # - For N > 12: must have Rat Pack since only 12 individual rats exist
             if self._item_name_to_rat_count:
-                # Create item count checks for each rat item, weighted by rat value
-                # This becomes: sum(count(item) * rat_value for all rat items) >= rat_count
-                # We'll use a helper for this complex rule
-                return {
-                    'type': 'helper',
-                    'name': 'check_rat_count',
-                    'args': [{'type': 'constant', 'value': rat_count}]
-                }
+                # Build list of individual rat item checks (weight = 1)
+                individual_rat_checks = []
+                rat_pack_name = None
+                for item_name, rat_value in self._item_name_to_rat_count.items():
+                    if rat_value == 5:
+                        rat_pack_name = item_name  # Rat Pack
+                    elif rat_value == 1:
+                        individual_rat_checks.append({
+                            'type': 'item_check',
+                            'item': item_name,
+                            'count': 1
+                        })
+
+                num_individual_rats = len(individual_rat_checks)
+
+                if rat_count <= 5:
+                    # Either have Rat Pack (5 rats) OR have N individual rats
+                    options = []
+                    if rat_pack_name:
+                        options.append({
+                            'type': 'item_check',
+                            'item': rat_pack_name,
+                            'count': 1
+                        })
+                    if rat_count <= num_individual_rats:
+                        options.append({
+                            'type': 'count_true',
+                            'count': rat_count,
+                            'conditions': individual_rat_checks
+                        })
+                    if len(options) == 1:
+                        return options[0]
+                    return {'type': 'or', 'conditions': options}
+
+                elif rat_count <= num_individual_rats:
+                    # Either (Rat Pack + (N-5) individuals) OR (N individuals)
+                    options = []
+                    if rat_pack_name:
+                        options.append({
+                            'type': 'and',
+                            'conditions': [
+                                {'type': 'item_check', 'item': rat_pack_name, 'count': 1},
+                                {'type': 'count_true', 'count': rat_count - 5, 'conditions': individual_rat_checks}
+                            ]
+                        })
+                    options.append({
+                        'type': 'count_true',
+                        'count': rat_count,
+                        'conditions': individual_rat_checks
+                    })
+                    if len(options) == 1:
+                        return options[0]
+                    return {'type': 'or', 'conditions': options}
+
+                else:
+                    # Must have Rat Pack since N > individual rat count
+                    # Need Rat Pack (5) + as many individuals as possible
+                    needed_individuals = min(rat_count - 5, num_individual_rats)
+                    if not rat_pack_name:
+                        # Can't satisfy without Rat Pack
+                        return {'type': 'constant', 'value': False}
+                    return {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': rat_pack_name, 'count': 1},
+                            {'type': 'count_true', 'count': needed_individuals, 'conditions': individual_rat_checks}
+                        ]
+                    }
             else:
                 # Fallback if we couldn't load the rat count data
                 logger.warning(f"Cannot convert rat_count {rat_count} - missing item data")
