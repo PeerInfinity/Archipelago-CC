@@ -50,9 +50,6 @@ class RainWorldGameExportHandler(GenericGameExportHandler):
         """
         prepared = super().prepare_closure_vars(rule_func, closure_vars)
 
-        # Store current closure for use in expand_rule
-        self._current_closure_vars = prepared.copy()
-
         # Look for Simple or Compound condition instances in the closure
         # The closure captures 'self' from Simple.check() or Compound.check()
         # Make a copy of items to avoid modification during iteration
@@ -98,6 +95,10 @@ class RainWorldGameExportHandler(GenericGameExportHandler):
                     except ValueError:
                         # Cell may be empty
                         pass
+
+        # Store current closure for use in expand_rule
+        # This must be done AFTER extracting configs so they're available in expand_rule
+        self._current_closure_vars = prepared.copy()
 
         return prepared
 
