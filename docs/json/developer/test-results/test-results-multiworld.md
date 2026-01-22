@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-14 22:17:06
+**Generated:** 2026-01-21 19:42:35
 
 ## Summary
 
@@ -31,7 +31,7 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 72.4KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 100.1KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |

@@ -19,6 +19,7 @@ BOOLEAN_SETTINGS = [
     'auto_collect_events',
     'filter_event_items',
     'update_frontend_presets',
+    'skip_export_for_native_ut',
 ]
 
 STRING_SETTINGS = {
@@ -40,6 +41,7 @@ PRESETS = {
         'auto_collect_events': False,
         'filter_event_items': False,
         'update_frontend_presets': False,
+        'skip_export_for_native_ut': False,
     },
     'minimal-spoilers': {
         'skip_required_files': True,
@@ -54,6 +56,7 @@ PRESETS = {
         'auto_collect_events': False,
         'filter_event_items': False,
         'update_frontend_presets': True,
+        'skip_export_for_native_ut': False,
     },
     'full-spoilers': {
         'skip_required_files': True,
@@ -68,6 +71,7 @@ PRESETS = {
         'auto_collect_events': False,
         'filter_event_items': False,
         'update_frontend_presets': True,
+        'skip_export_for_native_ut': False,
     },
     'ut-comparison': {
         'skip_required_files': True,
@@ -82,6 +86,22 @@ PRESETS = {
         'auto_collect_events': True,  # Enable event auto-collection to match UT behavior
         'filter_event_items': True,  # Filter out event locations/items to match UT output
         'update_frontend_presets': True,
+        'skip_export_for_native_ut': False,
+    },
+    'ut-fuzz': {
+        'skip_required_files': True,
+        'save_rules_json': True,
+        'rules_json_format': 'rule_builder',
+        'skip_preset_copy_if_rules_identical': False,
+        'save_sphere_log': True,
+        'verbose_sphere_log': False,
+        'extend_sphere_log_to_all_locations': False,
+        'log_fractional_sphere_details': True,
+        'log_integer_sphere_details': False,
+        'auto_collect_events': True,  # Enable event auto-collection to match UT behavior
+        'filter_event_items': True,  # Filter out event locations/items to match UT output
+        'update_frontend_presets': True,
+        'skip_export_for_native_ut': True,  # Skip slow rule export for worlds with native UT support
     },
 }
 
@@ -104,6 +124,9 @@ def update_host_yaml(settings=None):
 
     # Update settings if provided
     if settings:
+        # Ensure general_options section exists
+        if 'general_options' not in data:
+            data['general_options'] = {}
         for key, value in settings.items():
             data['general_options'][key] = value
             print(f"Set {key} = {value}")

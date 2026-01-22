@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-14 22:17:06
+**Generated:** 2026-01-21 19:42:35
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,9 +44,9 @@ Of the 53 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 327.2KB
+- **Total Exporter Code:** 354.9KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 327.2KB
+- **Combined Total:** 354.9KB
 
 ## Test Results
 
@@ -54,7 +54,7 @@ Of the 53 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 237.9KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 72.4KB | ✅ | 666.4KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 100.1KB | ✅ | 666.4KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.4KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -136,8 +136,8 @@ Of the 53 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | Super Mario Land 2 WorldGen | 92.5KB |
-| 2 | A Link to the Past WorldGen | 72.4KB |
+| 1 | A Link to the Past WorldGen | 100.1KB |
+| 2 | Super Mario Land 2 WorldGen | 92.5KB |
 | 3 | Overcooked! 2 WorldGen | 28.5KB |
 | 4 | Super Mario 64 WorldGen | 21.4KB |
 | 5 | A Hat in Time WorldGen | 18.0KB |
@@ -165,65 +165,34 @@ These templates are excluded from testing:
 
 | Template | Reason |
 |----------|--------|
-| APWorld Manager WorldGen.yaml | Not a game. |
 | APWorld Manager.yaml | Not a game. |
-| Archipelago WorldGen.yaml | Not a game. |
 | Archipelago.yaml | Not a game. |
-| Blasphemous WorldGen.yaml | The spoiler test currently freezes. |
 | Blasphemous.yaml | The spoiler test currently freezes. |
-| Bomb Rush Cyberfunk WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Bomb Rush Cyberfunk.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Celeste (Open World) WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Celeste (Open World).yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Final Fantasy WorldGen.yaml | Requires manual configuration and is not compatible with the spoiler test. |
 | Final Fantasy.yaml | Requires manual configuration and is not compatible with the spoiler test. |
-| Hollow Knight WorldGen.yaml | The spoiler test currently freezes. |
 | Hollow Knight.yaml | The spoiler test currently freezes. |
-| JSON Tools Installer WorldGen.yaml | Not a game. |
 | JSON Tools Installer.yaml | Not a game. |
-| Jak and Daxter The Precursor Legacy WorldGen.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
 | Jak and Daxter The Precursor Legacy.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
-| Kingdom Hearts 2 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kingdom Hearts 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Kingdom Hearts WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Kirby's Dream Land 3 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Landstalker - The Treasures of King Nole WorldGen WorldGen.yaml | Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code. |
-| Landstalker - The Treasures of King Nole WorldGen.yaml | Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code. |
-| Lingo WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Ocarina of Time WorldGen.yaml | The default yaml file fails to generate. |
 | Ocarina of Time.yaml | The default yaml file fails to generate. |
-| Pokemon Emerald WorldGen.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
 | Pokemon Emerald.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
-| Pokemon Red and Blue WorldGen.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
 | Pokemon Red and Blue.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
-| Raft WorldGen.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
 | Raft.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
-| SMZ3 WorldGen.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
 | SMZ3.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
-| Secret of Evermore WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Secret of Evermore.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Starcraft 2 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Starcraft 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Stardew Valley WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Sudoku WorldGen.yaml | Cannot be used for generating worlds. |
 | Sudoku.yaml | Cannot be used for generating worlds. |
-| Super Metroid WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Super Metroid.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| TUNIC WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | TUNIC.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| The Witness WorldGen.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
 | The Witness.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
-| Universal Tracker WorldGen.yaml | Not a game. |
 | Universal Tracker.yaml | Not a game. |
-| Yacht Dice WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Yacht Dice.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Yu-Gi-Oh! 2006 WorldGen.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
 | Yu-Gi-Oh! 2006.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
-| Zillion WorldGen.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
 | Zillion.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
 
 ## Notes

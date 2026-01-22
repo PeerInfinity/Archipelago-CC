@@ -417,13 +417,30 @@ def categorize_ut_fuzz_error(error_types):
     return ('exceptions', {'types': error_types})
 
 
+def load_ut_fuzz_apworld_exclude_list(project_root):
+    """Load the ut_fuzz_apworld_exclude_list from template-exclude-list.json.
+
+    Returns a set of template names that are excluded from UT fuzz apworld tests.
+    """
+    exclude_file = Path(project_root) / 'scripts' / 'data' / 'template-exclude-list.json'
+    if not exclude_file.exists():
+        return set()
+
+    try:
+        with open(exclude_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        excludes = data.get('ut_fuzz_apworld_exclude_list', [])
+        return {item['name'] for item in excludes}
+    except Exception as e:
+        print(f"Error loading UT fuzz apworld exclude list: {e}", file=sys.stderr)
+        return set()
+
+
 def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode='fixed'):
-    """Get apworlds that fail the UT fuzz test in modified UT but pass in original UT.
+    """Get apworlds that fail the UT fuzz test.
 
     This identifies apworlds (community-built .apworld files) that fail the
-    Universal Tracker fuzz test with the modified UT, but pass with the original UT.
-    This helps identify issues introduced by modifications rather than pre-existing
-    compatibility problems.
+    Universal Tracker fuzz test with the specified UT version.
 
     Args:
         project_root: Path to the project root
@@ -442,14 +459,8 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
         world_source='apworlds'
     )
 
-    # Also load original UT results to filter out games that fail in both
-    original_ut_data = load_ut_fuzz_test_results(
-        project_root,
-        ut_version='original',
-        seed_mode=seed_mode,
-        world_source='apworlds'
-    )
-    original_results = original_ut_data.get('results', {})
+    # Load the exclusion list for apworld UT fuzz tests
+    exclude_list = load_ut_fuzz_apworld_exclude_list(project_root)
 
     ut_results = ut_fuzz_data.get('results', {})
     failures = []
@@ -463,12 +474,8 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
         if ut_fuzz.get('passed', False):
             continue
 
-        # Check if the game passes in the original UT
-        # Only include games that fail in modified but pass in original
-        original_result = original_results.get(template_name, {})
-        original_ut_fuzz = original_result.get('ut_fuzz', {})
-        if not original_ut_fuzz.get('passed', False):
-            # Game also fails in original UT - skip it
+        # Skip if in the exclusion list
+        if template_name in exclude_list:
             continue
 
         # Build failure entry

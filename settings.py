@@ -537,6 +537,7 @@ class GeneralOptions(Group):
     auto_collect_events: bool = False  # Auto-collect event items when locations become accessible
     filter_event_items: bool = False  # Filter out event locations/items from sphere log output (matches UT behavior)
     update_frontend_presets: bool = False
+    skip_export_for_native_ut: bool = False  # Skip rule export for worlds with native UT support (ut_can_gen_without_yaml)
 
 
 class ServerOptions(Group):

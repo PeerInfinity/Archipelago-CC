@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-14 22:17:06
+**Generated:** 2026-01-21 19:42:35
 
 **Source Data Created:** 2026-01-14T22:01:37.032250
 
@@ -31,7 +31,7 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.21 | 5.21 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 72.4KB | ✅ |
+| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 100.1KB | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |

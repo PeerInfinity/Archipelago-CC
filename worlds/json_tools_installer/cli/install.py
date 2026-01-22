@@ -355,6 +355,11 @@ def main(args=None):
         action="store_true",
         help="Use bundled patch files instead of downloading",
     )
+    parser.add_argument(
+        "--yes", "-y",
+        action="store_true",
+        help="Skip confirmation prompts (auto-confirm)",
+    )
 
     parsed = parser.parse_args(args)
 
@@ -368,11 +373,14 @@ def main(args=None):
 
     if not version_info.is_supported:
         print(f"\n[WARNING] {version_info.notes}")
-        if not parsed.dry_run:
+        if not parsed.dry_run and not parsed.yes:
             response = input("Continue anyway? [y/N]: ")
             if response.lower() != 'y':
                 print("Aborted.")
                 return 1
+        elif parsed.yes:
+            print("  (Auto-confirmed with --yes)")
+
 
     # Handle actions
     if parsed.uninstall:

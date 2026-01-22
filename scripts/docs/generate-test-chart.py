@@ -353,7 +353,7 @@ def main():
     if minimal_data or full_data or mp_data or mw_data or ut_data:
         # Load the exclude list with reasons for main tests
         # Convert list of dicts to dict for generate_summary_chart
-        excluded_list = load_template_exclude_list(project_root, include_reasons=True, test_type='main')
+        excluded_list = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
         excluded_games_main = {item['name']: item['reason'] for item in excluded_list}
 
         # Get metadata for intermittent failures
@@ -376,7 +376,7 @@ def main():
     if minimal_wg_data or full_wg_data or mp_wg_data or mw_wg_data:
         # Load the exclude list with reasons for worldgen tests (includes main + worldgen exclusions)
         # Convert list of dicts to dict for generate_summary_chart
-        excluded_list_wg = load_template_exclude_list(project_root, include_reasons=True, test_type='all')
+        excluded_list_wg = load_template_exclude_list(project_root, include_reasons=True, test_type='all', skip_worldgen_variants=True)
         excluded_games_worldgen = {item['name']: item['reason'] for item in excluded_list_wg}
 
         # Get metadata for intermittent failures from worldgen results

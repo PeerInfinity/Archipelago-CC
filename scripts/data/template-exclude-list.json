@@ -1,5 +1,5 @@
 {
-  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
+  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'ut_fuzz_apworld_exclude_list' contains community apworlds excluded from UT fuzz testing due to incompatible rule patterns or apworld bugs. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
   "exclude_list": [
     {
       "name": "Archipelago.yaml",
@@ -46,10 +46,6 @@
     {
       "name": "Jak and Daxter The Precursor Legacy.yaml",
       "reason": "Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test."
-    },
-    {
-      "name": "Landstalker - The Treasures of King Nole WorldGen.yaml",
-      "reason": "Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code."
     },
     {
       "name": "Pokemon Emerald.yaml",
@@ -128,6 +124,64 @@
     {
       "name": "Yacht Dice.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    }
+  ],
+  "ut_fuzz_apworld_exclude_list": [
+    {
+      "name": "Air Delivery.yaml",
+      "reason": "Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue."
+    },
+    {
+      "name": "Ape Escape 3.yaml",
+      "reason": "Uses Rulesets class with condense() method that returns closure (lambda state: self.check(state, player)). Exporter cannot trace through closure to extract actual rules stored in self.critical/self.rules lists. Rules export as unknown 'check' helper which defaults to True."
+    },
+    {
+      "name": "Astalon.yaml",
+      "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
+    },
+    {
+      "name": "ChecksMate.yaml",
+      "reason": "Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties."
+    },
+    {
+      "name": "Chrono Trigger Jets of Time.yaml",
+      "reason": "Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations."
+    },
+    {
+      "name": "Corn Kidz 64.yaml",
+      "reason": "Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture."
+    },
+    {
+      "name": "Digimon World.yaml",
+      "reason": "Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format."
+    },
+    {
+      "name": "Frogmonster.yaml",
+      "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
+    },
+    {
+      "name": "Keep Talking and Nobody Explodes.yaml",
+      "reason": "Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible."
+    },
+    {
+      "name": "Rabi-Ribi.yaml",
+      "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
+    },
+    {
+      "name": "Soul Blazer.yaml",
+      "reason": "Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context."
+    },
+    {
+      "name": "The Sims 4.yaml",
+      "reason": "APWorld bug: fill_slot_data() returns keys like 'goal' but generate_early() expects 'goal_value'. Key mismatch causes KeyError during worldgen regeneration."
+    },
+    {
+      "name": "XCOM 2 War of the Chosen.yaml",
+      "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
+    },
+    {
+      "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
+      "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
     }
   ],
   "requires_javascript_helpers_list": [

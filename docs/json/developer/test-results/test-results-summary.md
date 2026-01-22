@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-14 22:17:06
+**Generated:** 2026-01-21 19:42:35
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -48,16 +48,16 @@ Of the 73 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 532.5KB
+- **Total Exporter Code:** 560.2KB
 - **Total Game Logic Code:** 267.8KB
-- **Combined Total:** 800.4KB
+- **Combined Total:** 828.0KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 72.4KB | ✅ | 654.1KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 100.1KB | ✅ | 654.1KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
@@ -149,8 +149,8 @@ Of the 73 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | Super Mario Land 2 | 92.5KB |
-| 2 | A Link to the Past | 72.4KB |
+| 1 | A Link to the Past | 100.1KB |
+| 2 | Super Mario Land 2 | 92.5KB |
 | 3 | Super Metroid | 60.9KB |
 | 4 | Lingo | 38.0KB |
 | 5 | Starcraft 2 | 28.7KB |
@@ -215,39 +215,21 @@ These templates are excluded from testing:
 
 | Template | Reason |
 |----------|--------|
-| APWorld Manager WorldGen.yaml | Not a game. |
 | APWorld Manager.yaml | Not a game. |
-| Archipelago WorldGen.yaml | Not a game. |
 | Archipelago.yaml | Not a game. |
-| Blasphemous WorldGen.yaml | The spoiler test currently freezes. |
 | Blasphemous.yaml | The spoiler test currently freezes. |
-| Final Fantasy WorldGen.yaml | Requires manual configuration and is not compatible with the spoiler test. |
 | Final Fantasy.yaml | Requires manual configuration and is not compatible with the spoiler test. |
-| Hollow Knight WorldGen.yaml | The spoiler test currently freezes. |
 | Hollow Knight.yaml | The spoiler test currently freezes. |
-| JSON Tools Installer WorldGen.yaml | Not a game. |
 | JSON Tools Installer.yaml | Not a game. |
-| Jak and Daxter The Precursor Legacy WorldGen.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
 | Jak and Daxter The Precursor Legacy.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
-| Landstalker - The Treasures of King Nole WorldGen WorldGen.yaml | Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code. |
-| Landstalker - The Treasures of King Nole WorldGen.yaml | Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code. |
-| Ocarina of Time WorldGen.yaml | The default yaml file fails to generate. |
 | Ocarina of Time.yaml | The default yaml file fails to generate. |
-| Pokemon Emerald WorldGen.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
 | Pokemon Emerald.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
-| Pokemon Red and Blue WorldGen.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
 | Pokemon Red and Blue.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
-| SMZ3 WorldGen.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
 | SMZ3.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
-| Sudoku WorldGen.yaml | Cannot be used for generating worlds. |
 | Sudoku.yaml | Cannot be used for generating worlds. |
-| Universal Tracker WorldGen.yaml | Not a game. |
 | Universal Tracker.yaml | Not a game. |
-| Yacht Dice WorldGen.yaml | Temporarily excluded. It currently times out the multiworld test. |
 | Yacht Dice.yaml | Temporarily excluded. It currently times out the multiworld test. |
-| Yu-Gi-Oh! 2006 WorldGen.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
 | Yu-Gi-Oh! 2006.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
-| Zillion WorldGen.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
 | Zillion.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
 
 ## Notes
