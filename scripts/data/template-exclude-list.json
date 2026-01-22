@@ -154,6 +154,10 @@
     {
       "name": "XCOM 2 War of the Chosen.yaml",
       "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
+    },
+    {
+      "name": "Digimon World.yaml",
+      "reason": "Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format."
     }
   ],
   "requires_javascript_helpers_list": [
