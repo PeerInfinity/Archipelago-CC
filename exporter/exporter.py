@@ -1726,6 +1726,18 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             except Exception as e:
                                 logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
 
+                # Allow game handler to add extra locations that weren't created for this seed
+                # This is useful for games like Sims 4 where locations depend on DLC options
+                if game_handler and hasattr(game_handler, 'get_extra_locations_for_region'):
+                    try:
+                        existing_location_names = [loc['name'] for loc in region_data['locations']]
+                        extra_locations = game_handler.get_extra_locations_for_region(region.name, existing_location_names)
+                        if extra_locations:
+                            logger.debug(f"Adding {len(extra_locations)} extra locations to region '{region.name}'")
+                            region_data['locations'].extend(extra_locations)
+                    except Exception as e:
+                        logger.error(f"Error getting extra locations for region '{region.name}': {str(e)}")
+
                 # Auto-mark regions with no locations and no exits as dynamically_added
                 # These are structural regions that exist for navigation but have no content
                 if (not region_data.get('dynamically_added') and
