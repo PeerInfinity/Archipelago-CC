@@ -1101,11 +1101,11 @@
   },
   "The Sims 4": {
     "apworld_path": "custom_worlds/sims4.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/sims4.py",
+    "exporter_size": 5604,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "sims4"
   },

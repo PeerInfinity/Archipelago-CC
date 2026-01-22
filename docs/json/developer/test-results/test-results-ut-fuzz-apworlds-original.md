@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-hybrid-comparison.md)
 
-**Generated:** 2026-01-22 20:59:24
+**Generated:** 2026-01-22 21:21:59
 
 **Source Data Created:** 2026-01-10T22:45:14.627157
 
@@ -41,9 +41,9 @@ Of the 42 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 85.7KB
+- **Total Exporter Code:** 91.1KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 85.7KB
+- **Combined Total:** 91.1KB
 
 ## Test Results
 
@@ -158,7 +158,7 @@ Of the 42 games with 100% pass rate:
 | Tevi | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| The Sims 4 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| The Sims 4 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.5KB | ✅ | N/A |
 | ToeJam and Earl | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Tyrian | ❌ | 10 | 4 | 4 | 0 | 2 | ❌ 40.0% | ✅ | ✅ | N/A |
