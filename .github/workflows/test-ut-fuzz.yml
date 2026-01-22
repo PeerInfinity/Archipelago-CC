@@ -43,9 +43,9 @@ on:
         default: false
 
       prefer_native_ut:
-        description: 'Prefer native UT support for compatible worlds (skips slow rule export). Only applies to modified UT.'
+        description: 'Prefer native UT support for compatible worlds (skips rule export). Only applies to modified UT.'
         type: boolean
-        default: true
+        default: false
 
       test_apworlds:
         description: 'Test stable APWorlds from community index instead of bundled worlds'
