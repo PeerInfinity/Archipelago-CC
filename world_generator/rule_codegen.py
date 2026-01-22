@@ -770,6 +770,49 @@ class RuleCodeGenerator:
         """
         return helper_name
 
+    def _contains_dynamic_reference(self, value: Any, depth: int = 0) -> bool:
+        """
+        Check if a value contains dynamic references (option_value, setting_value, etc.)
+        that cannot be statically resolved at generation time.
+
+        Args:
+            value: A rule dict, primitive, or nested structure
+            depth: Recursion depth for cycle prevention
+
+        Returns:
+            True if the value contains dynamic references
+        """
+        if depth > 20:
+            return True  # Assume dynamic at max depth
+
+        if not isinstance(value, dict):
+            return False
+
+        value_type = value.get('type', '')
+
+        # These types represent dynamic runtime values
+        dynamic_types = {
+            'option_value',
+            'setting_value',
+            'world_attribute',
+            'attribute',  # attribute access can wrap option_value
+        }
+
+        if value_type in dynamic_types:
+            return True
+
+        # Recursively check all dict values
+        for v in value.values():
+            if isinstance(v, dict):
+                if self._contains_dynamic_reference(v, depth + 1):
+                    return True
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict) and self._contains_dynamic_reference(item, depth + 1):
+                        return True
+
+        return False
+
     def _is_rule_builder_convertible(self, rule: Dict[str, Any], depth: int = 0) -> bool:
         """
         Check if a rule can be converted to a native Rule Builder expression.
@@ -843,12 +886,16 @@ class RuleCodeGenerator:
                         self._is_rule_builder_convertible(if_false, depth + 1))
             return False
 
-        # For item_check and count_check, verify the item name is a constant
-        # (not a dynamic reference like world_attribute)
-        if rule_type in ('item_check', 'count_check'):
-            item = rule.get('item')
-            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'setting_value', 'option_value'):
+        # For item_check and count_check, verify the item name and count are constants
+        # (not dynamic references like world_attribute, option_value, etc.)
+        if rule_type in ('item_check', 'count_check', 'group_check'):
+            item = rule.get('item') or rule.get('group')
+            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'setting_value', 'option_value', 'attribute'):
                 # Dynamic item reference - not convertible to static Rule Builder
+                return False
+            # Also check the count field - dynamic counts can't be statically converted
+            count = rule.get('count')
+            if self._contains_dynamic_reference(count):
                 return False
 
         # Recursively check nested rules
@@ -6291,6 +6338,17 @@ class HelperCodeGenerator:
                 function = args.get('function', {})
                 # Try to generate the function call expression
                 if isinstance(function, dict):
+                    # Special case: if the function is a helper, it already includes
+                    # state and player in its signature and returns a bool directly.
+                    # Original code like wizpig_1(world)(state) becomes wizpig_1(state, player)
+                    # so we don't need to add extra () call.
+                    if function.get('type') == 'helper':
+                        helper_name = function.get('name', '')
+                        if helper_name in self.known_helpers:
+                            # The helper function already returns bool, not a callable
+                            # Just generate the helper call directly
+                            return self._generate_expression(function)
+
                     # Check if this is a math or logging module function call
                     # and set the appropriate flags for imports
                     if function.get('type') == 'attribute':
