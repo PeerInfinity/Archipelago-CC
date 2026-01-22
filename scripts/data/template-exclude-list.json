@@ -176,6 +176,10 @@
       "reason": "Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context."
     },
     {
+      "name": "The Legend of Zelda - Phantom Hourglass.yaml",
+      "reason": "Entrance randomization fails frequently with complex option combinations. GER algorithm fails after 10 attempts with mixed pool settings."
+    },
+    {
       "name": "The Sims 4.yaml",
       "reason": "APWorld bug: fill_slot_data() returns keys like 'goal' but generate_early() expects 'goal_value'. Key mismatch causes KeyError during worldgen regeneration."
     },
