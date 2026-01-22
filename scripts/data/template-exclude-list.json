@@ -132,6 +132,10 @@
       "reason": "Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue."
     },
     {
+      "name": "Ape Escape 3.yaml",
+      "reason": "Uses Rulesets class with condense() method that returns closure (lambda state: self.check(state, player)). Exporter cannot trace through closure to extract actual rules stored in self.critical/self.rules lists. Rules export as unknown 'check' helper which defaults to True."
+    },
+    {
       "name": "Astalon.yaml",
       "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
     },
