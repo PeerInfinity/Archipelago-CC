@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison (APWorlds)
 
-**Generated:** 2026-01-21 20:33:40
+**Generated:** 2026-01-22 00:13:12
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
 
@@ -14,10 +14,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 17 (13.7%)
-- **Passing Original Only:** 25 (20.2%)
-- **Passing Modified Only:** 11 (8.9%)
-- **Passing Neither:** 71 (57.3%)
+- **Passing Both:** 21 (16.9%)
+- **Passing Original Only:** 21 (16.9%)
+- **Passing Modified Only:** 10 (8.1%)
+- **Passing Neither:** 72 (58.1%)
 
 ## Full Comparison
 
@@ -40,9 +40,9 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Axiom Verge | ⚠️ 50.0% | ❌ 0.0% |
 | Balatro | ❌ 0.0% | ❌ 0.0% |
 | Brotato | ❌ 30.0% | ✅ 70.0% |
-| Castlevania: Dawn of Sorrow | ✅ 100.0% | ⚠️ 50.0% |
+| Castlevania: Dawn of Sorrow | ✅ 100.0% | ✅ 100.0% |
 | Cavern of Dreams | ❌ 20.0% | ❌ 0.0% |
-| ChecksMate | ✅ 100.0% | ⚠️ 90.0% |
+| ChecksMate | ✅ 100.0% | ❌ 0.0% |
 | Chrono Trigger Jets of Time | ❌ 0.0% | ❌ 0.0% |
 | ClusterTruck | ❌ 30.0% | ❌ 30.0% |
 | Corn Kidz 64 | ✅ 100.0% | ❌ 0.0% |
@@ -50,12 +50,12 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Crystal Project | ❌ 30.0% | ❌ 0.0% |
 | Crystalis | ⚠️ 70.0% | ❌ 0.0% |
 | Cuphead | ✅ 0.0% | ✅ 0.0% |
-| DORONKO WANKO | ✅ 100.0% | ⚠️ 70.0% |
+| DORONKO WANKO | ✅ 100.0% | ✅ 100.0% |
 | Deep Rock Galactic | ❌ 0.0% | ⚠️ 50.0% |
 | Diddy Kong Racing | ⚠️ 50.0% | ❌ 0.0% |
 | Digimon World | ⚠️ 60.0% | ❌ 0.0% |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 0.0% |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 20.0% |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% |
 | Final Fantasy Tactics Advance | ⚠️ 70.0% | ⚠️ 60.0% |
 | Fire Emblem Sacred Stones | ❌ 40.0% | ❌ 0.0% |
@@ -94,7 +94,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Minit | ✅ 100.0% | ❌ 0.0% |
 | Monster Sanctuary | ❌ 10.0% | ❌ 0.0% |
 | Nine Sols | ❌ 0.0% | ❌ 0.0% |
-| Ori and the Blind Forest | ❌ 0.0% | ❌ 0.0% |
+| Ori and the Blind Forest | ❌ 0.0% | ❌ 20.0% |
 | Ori and the Will of the Wisps | ❌ 0.0% | ❌ 0.0% |
 | Oxygen Not Included | ⚠️ 80.0% | ⚠️ 80.0% |
 | Pizza Tower | ⚠️ 60.0% | ❌ 10.0% |
@@ -113,10 +113,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% |
-| Sonic Heroes | ❌ 0.0% | ✅ 0.0% |
-| Sonic Rush | ✅ 100.0% | ❌ 20.0% |
+| Sonic Heroes | ❌ 0.0% | ❌ 0.0% |
+| Sonic Rush | ✅ 100.0% | ❌ 40.0% |
 | Sonic the Hedgehog 1 | ✅ 100.0% | ❌ 30.0% |
 | Soul Blazer | ✅ 100.0% | ❌ 0.0% |
 | Spinball | ✅ 100.0% | ✅ 100.0% |
@@ -124,7 +124,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Stacklands | ⚠️ 90.0% | ❌ 0.0% |
 | Star Fox 64 | ✅ 100.0% | ❌ 0.0% |
 | Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% |
-| Super Cat Planet | ✅ 100.0% | ⚠️ 60.0% |
+| Super Cat Planet | ✅ 100.0% | ✅ 100.0% |
 | Symphony of the Night | ✅ 100.0% | ✅ 100.0% |
 | System Shock 2 | ❌ 30.0% | ❌ 0.0% |
 | TCG Card Shop Simulator | ❌ 0.0% | ❌ 0.0% |
@@ -137,7 +137,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | ToeJam and Earl | ❌ 10.0% | ❌ 0.0% |
 | TurnipBoy | ✅ 100.0% | ❌ 0.0% |
 | Tyrian | ❌ 40.0% | ❌ 30.0% |
-| Vampire Survivors | ✅ 40.0% | ❌ 30.0% |
+| Vampire Survivors | ✅ 40.0% | ✅ 40.0% |
 | Wario Land | ❌ 0.0% | ❌ 0.0% |
 | Watery Words | ⚠️ 90.0% | ❌ 0.0% |
 | Wordipelago | ✅ 90.0% | ❌ 0.0% |
@@ -146,15 +146,17 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% |
 | Zelda II: The Adventure of Link | ❌ 20.0% | ✅ 100.0% |
 | osu! | ❌ 0.0% | ❌ 0.0% |
-| plateup | ❌ 0.0% | ⚠️ 70.0% |
+| plateup | ❌ 0.0% | ⚠️ 80.0% |
 
-## Games Passing Both (17)
+## Games Passing Both (21)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name |
 |-----------|
+| Castlevania: Dawn of Sorrow |
 | Cuphead |
+| DORONKO WANKO |
 | Dome Keeper |
 | GZDoom |
 | Isles Of Sea And Sky |
@@ -168,11 +170,13 @@ These games have 100% success rate in both Universal Tracker versions.
 | MetroCUBEvania |
 | Ratchet & Clank 2 |
 | Spinball |
+| Super Cat Planet |
 | Symphony of the Night |
 | TOEM: A Photo Adventure |
 | Tevi |
+| Vampire Survivors |
 
-## Games Passing Original Only (25)
+## Games Passing Original Only (21)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -182,10 +186,8 @@ These games pass in the Original UT but fail in the Modified UT.
 | An Untitled Story |
 | Anodyne |
 | Astalon |
-| Castlevania: Dawn of Sorrow |
 | ChecksMate |
 | Corn Kidz 64 |
-| DORONKO WANKO |
 | Frogmonster |
 | Lego Star Wars: The Complete Saga |
 | Minit |
@@ -198,13 +200,11 @@ These games pass in the Original UT but fail in the Modified UT.
 | Sonic the Hedgehog 1 |
 | Soul Blazer |
 | Star Fox 64 |
-| Super Cat Planet |
 | TurnipBoy |
-| Vampire Survivors |
 | Wordipelago |
 | XCOM 2 War of the Chosen |
 
-## Games Passing Modified Only (11)
+## Games Passing Modified Only (10)
 
 These games pass in the Modified UT but fail in the Original UT.
 
@@ -219,10 +219,9 @@ These games pass in the Modified UT but fail in the Original UT.
 | Luigi's Mansion |
 | Metroid Fusion |
 | Simon Tatham's Portable Puzzle Collection |
-| Sonic Heroes |
 | Zelda II: The Adventure of Link |
 
-## Games Passing Neither (71)
+## Games Passing Neither (72)
 
 These games fail in both Universal Tracker versions.
 
@@ -282,6 +281,7 @@ These games fail in both Universal Tracker versions.
 | Sly 2: Band of Thieves |
 | Sly Cooper and the Thievius Raccoonus |
 | Sonic Adventure DX |
+| Sonic Heroes |
 | Spyro 3 |
 | Stacklands |
 | Star Wars Episode I Racer |
