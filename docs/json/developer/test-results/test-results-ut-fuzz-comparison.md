@@ -1,8 +1,8 @@
-# Universal Tracker Fuzz Test Comparison
+# Universal Tracker Fuzz Test Comparison: Original vs Modified
 
-**Generated:** 2026-01-21 20:10:20
+**Generated:** 2026-01-22 20:51:46
 
-This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (this repository).
+This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
