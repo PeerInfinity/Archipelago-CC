@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "created": "2026-01-22T22:06:08.692941",
+    "last_updated": "2026-01-22T22:06:59.723029",
+    "script_version": "1.0.0",
+    "ut_version": "hybrid",
+    "prefer_native_ut": true,
+    "world_source": "apworlds",
+    "seed_mode": "random",
+    "seed": "random",
+    "runs_per_game": 50,
+    "jobs": 2,
+    "timeout": 60,
+    "total_templates": 1
+  },
+  "results": {
+    "Majora's Mask Recompiled.yaml": {
+      "ut_fuzz": {
+        "passed": false,
+        "total": 50,
+        "success": 37,
+        "failure": 13,
+        "timeout": 0,
+        "ignored": 0,
+        "errors": {
+          "None": [
+            0,
+            18,
+            22,
+            24,
+            32,
+            34,
+            36,
+            42,
+            43,
+            44,
+            45,
+            48,
+            47
+          ]
+        }
+      },
+      "world_info": {
+        "game_name": "Majora's Mask Recompiled",
+        "world_directory": "mm_recomp"
+      },
+      "timestamp": "2026-01-22T22:06:59.722796",
+      "explain_stats": {
+        "game": "Majora's Mask Recompiled WorldGen_38230771967764327721",
+        "total_locations": 415,
+        "locations_with_explain": 360,
+        "locations_default_rule": 54,
+        "locations_without_explain": 1,
+        "explain_coverage_percent": 99.72,
+        "locations_without_explain_list": [
+          {
+            "name": "East Clock Town Milk Bar Milk Purchase",
+            "region": "Clock Town"
+          }
+        ],
+        "total_entrances": 49,
+        "entrances_with_explain": 25,
+        "entrances_default_rule": 24,
+        "entrances_without_explain": 0,
+        "entrance_explain_coverage_percent": 100.0,
+        "entrances_without_explain_list": []
+      }
+    }
+  }
+}
