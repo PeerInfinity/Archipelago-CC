@@ -981,9 +981,17 @@ class TrackerCore():
             self.log_to_tab("World Author has requested UT be disabled on this world, please respect their decision")
             return
 
-        # Try worldgen-based tracking first if rules.json is available
         self._log_debug("initalize_tracker_core", {"rules_json_path": self.rules_json_path})
-        if self.rules_json_path:
+
+        # Check if world has native UT support (ut_can_gen_without_yaml)
+        # If so, prefer native UT over worldgen-based tracking because:
+        # 1. Native UT is specifically designed by the apworld author
+        # 2. It doesn't require the potentially slow rules export/worldgen pipeline
+        # 3. Some worlds (e.g., Nine Sols) have rule patterns incompatible with worldgen
+        has_native_ut = getattr(connected_cls, "ut_can_gen_without_yaml", False)
+
+        # Try worldgen-based tracking if rules.json is available AND world lacks native UT
+        if self.rules_json_path and not has_native_ut:
             self.logger.info(f"Attempting worldgen-based tracking from {self.rules_json_path}")
             self._log_debug("attempting_worldgen_tracking", {"rules_json_path": self.rules_json_path})
             # Generate a fresh worldgen world from the rules.json file
@@ -1002,8 +1010,8 @@ class TrackerCore():
             else:
                 self.logger.warning("Failed to generate worldgen world, falling back to standard tracking")
 
-        # first check if we don't need a yaml
-        if getattr(connected_cls, "ut_can_gen_without_yaml", False):
+        # Use native UT support if available (ut_can_gen_without_yaml)
+        if has_native_ut:
             with tempfile.TemporaryDirectory() as tempdir:
                 self.write_empty_yaml(self.game, self.slot_name, tempdir)
                 self.player_id = 1

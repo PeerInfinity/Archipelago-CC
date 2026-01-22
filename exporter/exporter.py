@@ -2270,7 +2270,16 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     Returns:
         Dict containing paths to generated files
     """
-    
+
+    # For single-world multiworlds, check if the world has native UT support.
+    # If so, skip rule export since the tracker will use native UT instead of worldgen.
+    # This avoids slow rule analysis for games with incompatible rule patterns (e.g., Nine Sols).
+    if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
+        world = list(multiworld.worlds.values())[0]
+        if getattr(world.__class__, "ut_can_gen_without_yaml", False):
+            logger.info(f"Skipping rule export for {world.game}: world has native UT support (ut_can_gen_without_yaml)")
+            return {}
+
     os.makedirs(output_dir, exist_ok=True)
 
     # --- Configuration for Excluded Fields (now defined globally) ---

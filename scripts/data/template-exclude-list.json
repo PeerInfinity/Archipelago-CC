@@ -148,10 +148,6 @@
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
     },
     {
-      "name": "Nine Sols.yaml",
-      "reason": "Uses JSON-based rule system with eval_rule/eval_criterion helpers. Export takes 85+ seconds (vs 15s timeout) and analyzer hits 11000+ call limit. Apworld has native UT support but incompatible with worldgen-based fuzz testing."
-    },
-    {
       "name": "Rabi-Ribi.yaml",
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
