@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
-    "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 7135,
+    "exporter_path": "exporter/games/official/ahit.py",
+    "exporter_size": 18402,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -27,8 +27,8 @@
     "world_directory": "ahit_worldgen2"
   },
   "A Link to the Past": {
-    "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 12092,
+    "exporter_path": "exporter/games/official/alttp.py",
+    "exporter_size": 102463,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -135,8 +135,8 @@
     "world_directory": "adventure_worldgen2"
   },
   "Aquaria": {
-    "exporter_path": "exporter/games/aquaria.py",
-    "exporter_size": 1861,
+    "exporter_path": "exporter/games/official/aquaria.py",
+    "exporter_size": 1859,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -153,11 +153,11 @@
     "world_directory": "aquaria_worldgen"
   },
   "Archipelago": {
-    "exporter_path": "exporter/games/generic.py",
-    "exporter_size": 9938,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": "frontend/modules/shared/gameLogic/generic/genericLogic.js",
     "game_logic_size": 8898,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": true,
     "world_directory": "generic"
   },
@@ -189,8 +189,8 @@
     "world_directory": "blasphemous"
   },
   "Bomb Rush Cyberfunk": {
-    "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
-    "exporter_size": 1471,
+    "exporter_path": "exporter/games/official/bomb_rush_cyberfunk.py",
+    "exporter_size": 1469,
     "game_logic_path": "frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bomb_rush_cyberfunkLogic.js",
     "game_logic_size": 41274,
     "has_custom_exporter": true,
@@ -225,8 +225,8 @@
     "world_directory": "bumpstik_worldgen"
   },
   "Castlevania - Circle of the Moon": {
-    "exporter_path": "exporter/games/cvcotm.py",
-    "exporter_size": 4060,
+    "exporter_path": "exporter/games/official/cvcotm.py",
+    "exporter_size": 4058,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -270,8 +270,8 @@
     "world_directory": "celeste_open_world"
   },
   "Celeste 64": {
-    "exporter_path": "exporter/games/celeste64.py",
-    "exporter_size": 4173,
+    "exporter_path": "exporter/games/official/celeste64.py",
+    "exporter_size": 4171,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -360,8 +360,8 @@
     "world_directory": "codingadventure_worldgen"
   },
   "DLCQuest": {
-    "exporter_path": "exporter/games/dlcquest.py",
-    "exporter_size": 1205,
+    "exporter_path": "exporter/games/official/dlcquest.py",
+    "exporter_size": 1203,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -450,8 +450,8 @@
     "world_directory": "dkc3_worldgen"
   },
   "Factorio": {
-    "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 5231,
+    "exporter_path": "exporter/games/official/factorio.py",
+    "exporter_size": 5229,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -558,8 +558,8 @@
     "world_directory": "hylics2_worldgen"
   },
   "Inscryption": {
-    "exporter_path": "exporter/games/inscryption.py",
-    "exporter_size": 8162,
+    "exporter_path": "exporter/games/official/inscryption.py",
+    "exporter_size": 8160,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -594,8 +594,8 @@
     "world_directory": "jakanddaxter_worldgen"
   },
   "Jak and Daxter: The Precursor Legacy": {
-    "exporter_path": "exporter/games/jakanddaxter.py",
-    "exporter_size": 22092,
+    "exporter_path": "exporter/games/official/jakanddaxter.py",
+    "exporter_size": 22090,
     "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
     "game_logic_size": 4743,
     "has_custom_exporter": true,
@@ -612,8 +612,8 @@
     "world_directory": "kh1"
   },
   "Kingdom Hearts 2": {
-    "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 20002,
+    "exporter_path": "exporter/games/official/kh2.py",
+    "exporter_size": 20000,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -630,8 +630,8 @@
     "world_directory": "kh1_worldgen"
   },
   "Kirby's Dream Land 3": {
-    "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 10315,
+    "exporter_path": "exporter/games/official/kdl3.py",
+    "exporter_size": 10313,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -639,8 +639,8 @@
     "world_directory": "kdl3"
   },
   "Landstalker - The Treasures of King Nole": {
-    "exporter_path": "exporter/games/landstalker.py",
-    "exporter_size": 3641,
+    "exporter_path": "exporter/games/official/landstalker.py",
+    "exporter_size": 3639,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -657,8 +657,8 @@
     "world_directory": "landstalker_worldgen"
   },
   "Lingo": {
-    "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 38931,
+    "exporter_path": "exporter/games/official/lingo.py",
+    "exporter_size": 38929,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10907,
     "has_custom_exporter": true,
@@ -666,8 +666,8 @@
     "world_directory": "lingo"
   },
   "Links Awakening DX": {
-    "exporter_path": "exporter/games/ladx.py",
-    "exporter_size": 7529,
+    "exporter_path": "exporter/games/official/ladx.py",
+    "exporter_size": 7527,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -855,8 +855,8 @@
     "world_directory": "oot"
   },
   "Old School Runescape": {
-    "exporter_path": "exporter/games/osrs.py",
-    "exporter_size": 1030,
+    "exporter_path": "exporter/games/official/osrs.py",
+    "exporter_size": 1028,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -873,8 +873,8 @@
     "world_directory": "osrs_worldgen"
   },
   "Overcooked! 2": {
-    "exporter_path": "exporter/games/overcooked2.py",
-    "exporter_size": 26548,
+    "exporter_path": "exporter/games/official/overcooked2.py",
+    "exporter_size": 29192,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -891,8 +891,8 @@
     "world_directory": "overcooked2_worldgen"
   },
   "Paint": {
-    "exporter_path": "exporter/games/paint.py",
-    "exporter_size": 2736,
+    "exporter_path": "exporter/games/official/paint.py",
+    "exporter_size": 2734,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -909,8 +909,8 @@
     "world_directory": "paint_worldgen"
   },
   "Pokemon Emerald": {
-    "exporter_path": "exporter/games/pokemon_emerald.py",
-    "exporter_size": 5360,
+    "exporter_path": "exporter/games/official/pokemon_emerald.py",
+    "exporter_size": 5358,
     "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
     "game_logic_size": 8939,
     "has_custom_exporter": true,
@@ -927,8 +927,8 @@
     "world_directory": "pokemon_emerald_worldgen"
   },
   "Pokemon Red and Blue": {
-    "exporter_path": "exporter/games/pokemon_rb.py",
-    "exporter_size": 12460,
+    "exporter_path": "exporter/games/official/pokemon_rb.py",
+    "exporter_size": 12461,
     "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
     "game_logic_size": 13303,
     "has_custom_exporter": true,
@@ -945,8 +945,8 @@
     "world_directory": "pokemon_rb_worldgen"
   },
   "Raft": {
-    "exporter_path": "exporter/games/raft.py",
-    "exporter_size": 5576,
+    "exporter_path": "exporter/games/official/raft.py",
+    "exporter_size": 5574,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -981,8 +981,8 @@
     "world_directory": "ror2_worldgen"
   },
   "SMZ3": {
-    "exporter_path": "exporter/games/smz3.py",
-    "exporter_size": 62768,
+    "exporter_path": "exporter/games/official/smz3.py",
+    "exporter_size": 62766,
     "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
     "game_logic_size": 52544,
     "has_custom_exporter": true,
@@ -1017,8 +1017,8 @@
     "world_directory": "saving_princess_worldgen"
   },
   "Secret of Evermore": {
-    "exporter_path": "exporter/games/soe.py",
-    "exporter_size": 5443,
+    "exporter_path": "exporter/games/official/soe.py",
+    "exporter_size": 5441,
     "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
     "game_logic_size": 7085,
     "has_custom_exporter": true,
@@ -1071,10 +1071,10 @@
     "world_directory": "sa2b_worldgen"
   },
   "Starcraft 2": {
-    "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 29356,
+    "exporter_path": "exporter/games/official/sc2.py",
+    "exporter_size": 29354,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
-    "game_logic_size": 89569,
+    "game_logic_size": 89543,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "sc2"
@@ -1089,8 +1089,8 @@
     "world_directory": "sc2_worldgen"
   },
   "Stardew Valley": {
-    "exporter_path": "exporter/games/stardew_valley.py",
-    "exporter_size": 19216,
+    "exporter_path": "exporter/games/official/stardew_valley.py",
+    "exporter_size": 19214,
     "game_logic_path": "frontend/modules/shared/gameLogic/stardew_valley/stardew_valleyLogic.js",
     "game_logic_size": 8179,
     "has_custom_exporter": true,
@@ -1107,8 +1107,8 @@
     "world_directory": "stardew_valley_worldgen"
   },
   "Subnautica": {
-    "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 2207,
+    "exporter_path": "exporter/games/official/subnautica.py",
+    "exporter_size": 2205,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1134,8 +1134,8 @@
     "world_directory": "apsudoku"
   },
   "Super Mario 64": {
-    "exporter_path": "exporter/games/sm64ex.py",
-    "exporter_size": 21907,
+    "exporter_path": "exporter/games/official/sm64ex.py",
+    "exporter_size": 21912,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1152,11 +1152,11 @@
     "world_directory": "sm64ex_worldgen"
   },
   "Super Mario Land 2": {
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/official/marioland2.py",
+    "exporter_size": 94682,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "marioland2"
   },
@@ -1188,8 +1188,8 @@
     "world_directory": "smw_worldgen"
   },
   "Super Metroid": {
-    "exporter_path": "exporter/games/sm.py",
-    "exporter_size": 62347,
+    "exporter_path": "exporter/games/official/sm.py",
+    "exporter_size": 62373,
     "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
     "game_logic_size": 117281,
     "has_custom_exporter": true,
@@ -1242,8 +1242,8 @@
     "world_directory": "toem_rule_builder_worldgen"
   },
   "TUNIC": {
-    "exporter_path": "exporter/games/tunic.py",
-    "exporter_size": 3138,
+    "exporter_path": "exporter/games/official/tunic.py",
+    "exporter_size": 3136,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1260,8 +1260,8 @@
     "world_directory": "tunic_worldgen"
   },
   "Terraria": {
-    "exporter_path": "exporter/games/terraria.py",
-    "exporter_size": 17227,
+    "exporter_path": "exporter/games/official/terraria.py",
+    "exporter_size": 17225,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1296,8 +1296,8 @@
     "world_directory": "tloz_worldgen"
   },
   "The Messenger": {
-    "exporter_path": "exporter/games/messenger.py",
-    "exporter_size": 15005,
+    "exporter_path": "exporter/games/official/messenger.py",
+    "exporter_size": 15003,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1314,8 +1314,8 @@
     "world_directory": "messenger_worldgen"
   },
   "The Wind Waker": {
-    "exporter_path": "exporter/games/tww.py",
-    "exporter_size": 7151,
+    "exporter_path": "exporter/games/official/tww.py",
+    "exporter_size": 7149,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1332,8 +1332,8 @@
     "world_directory": "tww_worldgen"
   },
   "The Witness": {
-    "exporter_path": "exporter/games/witness.py",
-    "exporter_size": 14458,
+    "exporter_path": "exporter/games/official/witness.py",
+    "exporter_size": 14470,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1350,8 +1350,8 @@
     "world_directory": "witness_worldgen"
   },
   "Timespinner": {
-    "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 2260,
+    "exporter_path": "exporter/games/official/timespinner.py",
+    "exporter_size": 2258,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1395,8 +1395,8 @@
     "world_directory": "tracker"
   },
   "VVVVVV": {
-    "exporter_path": "exporter/games/v6.py",
-    "exporter_size": 3870,
+    "exporter_path": "exporter/games/official/v6.py",
+    "exporter_size": 3868,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1431,8 +1431,8 @@
     "world_directory": "wargroove_worldgen"
   },
   "Yacht Dice": {
-    "exporter_path": "exporter/games/yachtdice.py",
-    "exporter_size": 931,
+    "exporter_path": "exporter/games/official/yachtdice.py",
+    "exporter_size": 929,
     "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
     "game_logic_size": 291890,
     "has_custom_exporter": true,
@@ -1449,8 +1449,8 @@
     "world_directory": "yachtdice_worldgen"
   },
   "Yoshi's Island": {
-    "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 9486,
+    "exporter_path": "exporter/games/official/yoshisisland.py",
+    "exporter_size": 9413,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1467,8 +1467,8 @@
     "world_directory": "yoshisisland_worldgen"
   },
   "Yu-Gi-Oh! 2006": {
-    "exporter_path": "exporter/games/yugioh06.py",
-    "exporter_size": 1349,
+    "exporter_path": "exporter/games/official/yugioh06.py",
+    "exporter_size": 1347,
     "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
     "game_logic_size": 21951,
     "has_custom_exporter": true,
