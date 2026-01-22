@@ -1173,35 +1173,42 @@ class CallVisitorMixin:
 
                     result = {'type': 'item_check', 'item': item_value}
                     # Check for count parameter (now in position 1 after filtering)
+                    # Also check filtered_kwargs for count passed as keyword argument
+                    count_arg = None
                     if len(filtered_args) >= 2:
-                        second_arg = filtered_args[1]
-                        if isinstance(second_arg, dict):
+                        count_arg = filtered_args[1]
+                    elif 'count' in filtered_kwargs:
+                        count_arg = filtered_kwargs['count']
+                        logging.debug(f"Found count as keyword argument: {count_arg}")
+
+                    if count_arg is not None:
+                        if isinstance(count_arg, dict):
                             # When preserve_parameter_names is True and this is a name reference,
                             # don't resolve to default value - keep as name reference for helper bodies
                             should_resolve = True
                             if getattr(self, 'preserve_parameter_names', False):
-                                if second_arg.get('type') == 'name':
+                                if count_arg.get('type') == 'name':
                                     should_resolve = False
-                                    logging.debug(f"Preserving parameter name reference: {second_arg}")
+                                    logging.debug(f"Preserving parameter name reference: {count_arg}")
 
                             if should_resolve:
                                 # Try to resolve the expression to a concrete value
-                                resolved_value = self.expression_resolver.resolve_expression(second_arg)
+                                resolved_value = self.expression_resolver.resolve_expression(count_arg)
                                 if resolved_value is not None and isinstance(resolved_value, int):
                                     # Successfully resolved to an integer value
-                                    logging.debug(f"Resolved count parameter: {second_arg} -> {resolved_value}")
+                                    logging.debug(f"Resolved count parameter: {count_arg} -> {resolved_value}")
                                     result['count'] = {'type': 'constant', 'value': resolved_value}
-                                elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
+                                elif count_arg.get('type') == 'constant' and isinstance(count_arg.get('value'), int):
                                     # Already a constant, use as-is
-                                    logging.debug(f"Found constant count parameter: {second_arg}")
-                                    result['count'] = second_arg
+                                    logging.debug(f"Found constant count parameter: {count_arg}")
+                                    result['count'] = count_arg
                                 else:
                                     # Could not resolve to a constant value, keep as-is
-                                    logging.debug(f"Found unresolved count parameter: {second_arg}")
-                                    result['count'] = second_arg
+                                    logging.debug(f"Found unresolved count parameter: {count_arg}")
+                                    result['count'] = count_arg
                             else:
                                 # preserve_parameter_names is True and this is a name - keep as-is
-                                result['count'] = second_arg
+                                result['count'] = count_arg
                 elif method == 'has_group' and len(filtered_args) >= 1:
                     # Unwrap group name if it's a constant
                     group_arg = filtered_args[0]
@@ -1213,23 +1220,30 @@ class CallVisitorMixin:
                         group_value = group_arg
                     result = {'type': 'group_check', 'group': group_value}
                     # Check for count parameter (now in position 1 after filtering)
+                    # Also check filtered_kwargs for count passed as keyword argument
+                    count_arg = None
                     if len(filtered_args) >= 2:
-                        second_arg = filtered_args[1]
-                        if isinstance(second_arg, dict):
+                        count_arg = filtered_args[1]
+                    elif 'count' in filtered_kwargs:
+                        count_arg = filtered_kwargs['count']
+                        logging.debug(f"Found group count as keyword argument: {count_arg}")
+
+                    if count_arg is not None:
+                        if isinstance(count_arg, dict):
                             # Try to resolve the expression to a concrete value
-                            resolved_value = self.expression_resolver.resolve_expression(second_arg)
+                            resolved_value = self.expression_resolver.resolve_expression(count_arg)
                             if resolved_value is not None and isinstance(resolved_value, int):
                                 # Successfully resolved to an integer value
-                                logging.debug(f"Resolved group count parameter: {second_arg} -> {resolved_value}")
+                                logging.debug(f"Resolved group count parameter: {count_arg} -> {resolved_value}")
                                 result['count'] = {'type': 'constant', 'value': resolved_value}
-                            elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
+                            elif count_arg.get('type') == 'constant' and isinstance(count_arg.get('value'), int):
                                 # Already a constant, use as-is
-                                logging.debug(f"Found constant group count parameter: {second_arg}")
-                                result['count'] = second_arg
+                                logging.debug(f"Found constant group count parameter: {count_arg}")
+                                result['count'] = count_arg
                             else:
                                 # Could not resolve to a constant value, keep as-is
-                                logging.debug(f"Found unresolved group count parameter: {second_arg}")
-                                result['count'] = second_arg
+                                logging.debug(f"Found unresolved group count parameter: {count_arg}")
+                                result['count'] = count_arg
                 elif method == 'count_group' and len(filtered_args) >= 1:
                     # state.count_group(group_name, player) -> returns the count of items in a group
                     # Unwrap group name if it's a constant
