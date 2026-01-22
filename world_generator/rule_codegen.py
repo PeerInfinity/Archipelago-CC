@@ -2364,6 +2364,13 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
+        # Try to recognize count_from_list_unique pattern:
+        # state.count_from_list_unique(items, player) >= count
+        # Converts to: HasFromListUnique(*items, count=count)
+        result = self._try_convert_count_from_list_unique_compare(left, op, right)
+        if result is not None:
+            return result
+
         # Check if this is a comparison between list constants (resolved placement lookups)
         # JavaScript can't compare arrays by value, so we must statically evaluate these
         left_list_val = self._get_list_constant_value(left)
@@ -4709,6 +4716,55 @@ class RuleCodeGenerator:
                     self.required_imports.add('Or')
                     return f'Or({", ".join(checks)})'
 
+            # Case 4: state_method with has_all - handle list of lists of item names
+            # Pattern: any(state.has_all(sublist, player) for sublist in [[item1, item2], [item3], ...])
+            # This is commonly used in ANIMAL WELL and similar worlds
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'has_all':
+                # Check if all items in the iterator are lists (list of lists pattern)
+                if all(isinstance(item, list) for item in items):
+                    # Filter out empty lists - has_all([]) is always True
+                    non_empty_sublists = [item for item in items if item]
+
+                    if not non_empty_sublists:
+                        # All sublists are empty - always True (has_all([]) is always True)
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                    # Generate HasAll or Has for each sublist
+                    checks = []
+                    for sublist in non_empty_sublists:
+                        if len(sublist) == 1:
+                            # Single item - use Has
+                            item = sublist[0]
+                            # Skip None items
+                            if item is None:
+                                continue
+                            item_escaped = self._escape_string(str(item), "'")
+                            self.required_imports.add('Has')
+                            checks.append(f"Has('{item_escaped}')")
+                        else:
+                            # Multiple items - use HasAll
+                            # Filter out None values
+                            valid_items = [item for item in sublist if item is not None]
+                            if not valid_items:
+                                continue
+                            items_str = ', '.join(
+                                f"'{self._escape_string(str(item), chr(39))}'" for item in valid_items
+                            )
+                            self.required_imports.add('HasAll')
+                            checks.append(f'HasAll({items_str})')
+
+                    if not checks:
+                        # All sublists only contained None - always True
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                    if len(checks) == 1:
+                        return checks[0]
+                    else:
+                        self.required_imports.add('Or')
+                        return f'Or({", ".join(checks)})'
+
             # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
@@ -4765,6 +4821,89 @@ class RuleCodeGenerator:
             return f'Has("{item_escaped}")'
         else:
             return f'Has("{item_escaped}", {count})'
+
+    def _try_convert_count_from_list_unique_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert a count_from_list_unique comparison to HasFromListUnique().
+
+        Pattern: state.count_from_list_unique(items, player) >= count
+        Converts to: HasFromListUnique(*items, count=count)
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Get the count from the right side
+        # Handle constant, Constant, or Arithmetic rules
+        count = None
+        if isinstance(right, dict):
+            if right.get('type') == 'constant':
+                count = right.get('value', 0)
+            elif right.get('rule') == 'Constant':
+                count = right.get('args', {}).get('value', 0)
+            elif right.get('rule') == 'Arithmetic':
+                # Handle Arithmetic (e.g., 8 * 1.0 for eggs_required * factor)
+                arith_args = right.get('args', {})
+                left_val = arith_args.get('left')
+                right_val = arith_args.get('right')
+                op_arith = arith_args.get('op', '')
+                # Try to evaluate simple arithmetic with constants
+                if isinstance(left_val, (int, float)) and isinstance(right_val, (int, float)):
+                    if op_arith == '*':
+                        count = int(left_val * right_val)
+                    elif op_arith == '+':
+                        count = int(left_val + right_val)
+                    elif op_arith == '-':
+                        count = int(left_val - right_val)
+                    elif op_arith == '/':
+                        count = int(left_val / right_val) if right_val != 0 else None
+
+        if count is None:
+            return None
+
+        # Check if left side is a StateMethod with count_from_list_unique
+        method = None
+        args = []
+
+        # Check for Rule Builder format: {"rule": "StateMethod", "args": {"method": ..., "args": [...]}}
+        if left.get('rule') == 'StateMethod':
+            rb_args = left.get('args', {})
+            method = rb_args.get('method', '')
+            args = rb_args.get('args', [])
+        # Check for lowercase state_method format
+        elif left.get('type') == 'state_method':
+            method = left.get('method', '')
+            args = left.get('args', [])
+
+        if method != 'count_from_list_unique':
+            return None
+
+        # Extract item list from args
+        items = []
+        if args and isinstance(args[0], dict):
+            if args[0].get('type') == 'constant':
+                items = args[0].get('value', [])
+
+        if not items:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        else:
+            return None
+
+        # Generate HasFromListUnique with the items and count
+        self.required_imports.add('HasFromListUnique')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromListUnique({items_str}, count={count})'
 
     def _extract_prog_items_item_name(self, expr: Any) -> Optional[str]:
         """
