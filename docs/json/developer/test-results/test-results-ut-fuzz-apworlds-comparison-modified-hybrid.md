@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-22 21:49:04
+**Generated:** 2026-01-22 22:11:56
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -15,18 +15,18 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 - **Total Games Tested:** 124
 - **Passing Both:** 33 (26.6%)
-- **Passing Modified Only:** 2 (1.6%)
+- **Passing Modified Only:** 6 (4.8%)
 - **Passing Hybrid Only:** 11 (8.9%)
-- **Passing Neither:** 78 (62.9%)
+- **Passing Neither:** 74 (59.7%)
 
 ## Full Comparison
 
 | Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Dance of Fire and Ice | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| A Difficult Game About Climbing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| A Difficult Game About Climbing | ✅ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | A Link Between Worlds | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| ANIMAL WELL | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| ANIMAL WELL | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Actraiser | ✅ 80.0% | ✅ 80.0% | ✅ | ✅ | N/A |
 | Against the Storm | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ❌ 40.0% | ✅ 100.0% | 6.6KB | ✅ | N/A |
@@ -52,7 +52,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Cuphead | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ⚠️ 50.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
-| Diddy Kong Racing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Diddy Kong Racing | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Digimon World | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
@@ -62,7 +62,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Frogmonster | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | GZDoom | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Golden Sun The Lost Age | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Golden Sun The Lost Age | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Grim Dawn | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Hammerwatch | ⚠️ 50.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -102,7 +102,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pseudoregalia | ❌ 0.0% | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ❌ 0.0% | ✅ 10.0% | ✅ | ✅ | N/A |
-| Rain World | ❌ 0.0% | ❌ 0.0% | 11.6KB | ✅ | N/A |
+| Rain World | ✅ 30.0% | ❌ 0.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Reventure | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Rift Wizard | ⚠️ 70.0% | ⚠️ 70.0% | 6.6KB | ✅ | N/A |
@@ -122,7 +122,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Spinball | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Stacklands | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Star Fox 64 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Star Fox 64 | ✅ 100.0% | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ⚠️ 70.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -188,14 +188,18 @@ These games have 100% success rate in both Universal Tracker versions.
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (2)
+## Games Passing Modified Only (6)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| A Difficult Game About Climbing | ✅ | ✅ | N/A |
+| Diddy Kong Racing | ✅ | ✅ | N/A |
 | Here Comes Niko! | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
+| Rain World | 11.7KB | ✅ | N/A |
+| Star Fox 64 | 17.1KB | ✅ | N/A |
 
 ## Games Passing Hybrid Only (11)
 
@@ -215,13 +219,12 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
-## Games Passing Neither (78)
+## Games Passing Neither (74)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Difficult Game About Climbing | ✅ | ✅ | N/A |
 | A Link Between Worlds | ✅ | ✅ | N/A |
 | ANIMAL WELL | ✅ | ✅ | N/A |
 | Against the Storm | ✅ | ✅ | N/A |
@@ -237,7 +240,6 @@ These games fail in both Universal Tracker versions.
 | CrossCode | ✅ | ✅ | N/A |
 | Crystal Project | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ✅ | ✅ | N/A |
-| Diddy Kong Racing | ✅ | ✅ | N/A |
 | Digimon World | ✅ | ✅ | N/A |
 | Duke Nukem 3D | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ✅ | ✅ | N/A |
@@ -267,7 +269,6 @@ These games fail in both Universal Tracker versions.
 | Pokemon FireRed and LeafGreen | ✅ | ✅ | N/A |
 | Pokemon Mystery Dungeon Explorers of Sky | ✅ | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
-| Rain World | 11.6KB | ✅ | N/A |
 | Reventure | ✅ | ✅ | N/A |
 | Rift Wizard | 6.6KB | ✅ | N/A |
 | Rift of the Necrodancer | ✅ | ✅ | N/A |
@@ -283,7 +284,6 @@ These games fail in both Universal Tracker versions.
 | Soul Blazer | 10.6KB | ✅ | N/A |
 | Spyro 3 | ✅ | ✅ | N/A |
 | Stacklands | ✅ | ✅ | N/A |
-| Star Fox 64 | ✅ | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | ✅ | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
