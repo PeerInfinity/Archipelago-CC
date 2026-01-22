@@ -18,9 +18,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List
 
-# Add parent directory to path to import from chart_generators
+# Add parent directory to path to import from chart_generators and lib
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from chart_generators.utils import format_file_size, get_rules_json_size
+from lib.test_utils import load_template_exclude_list
 
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
@@ -135,7 +137,8 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
                                metadata: Dict[str, Any],
                                world_mapping: Dict[str, Dict[str, Any]],
                                project_root: str = None,
-                               world_source: str = "bundled") -> str:
+                               world_source: str = "bundled",
+                               excluded_games: Dict[str, str] = None) -> str:
     """
     Generate a markdown table for UT fuzz test data.
 
@@ -145,6 +148,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         world_mapping: Full world mapping dict with game info
         project_root: Project root path for looking up rules.json sizes
         world_source: Source of worlds (bundled or apworlds)
+        excluded_games: Dict mapping game names to exclusion reasons (for apworlds)
     """
     # Determine seed info and UT version
     seed = metadata.get('seed', 'random')
@@ -199,6 +203,43 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"- **Failed Runs:** {total_failure}\n"
         md_content += f"- **Timed Out Runs:** {total_timeout}\n"
         md_content += f"- **Ignored Runs:** {total_ignored}\n\n"
+
+        # Add expected/unexpected pass/fail categorization (only for modified UT)
+        if excluded_games and ut_version == 'modified':
+            # Build set of excluded game names (without .yaml suffix for matching)
+            excluded_names = set()
+            for name in excluded_games.keys():
+                if name.endswith('.yaml'):
+                    excluded_names.add(name[:-5])  # Remove .yaml
+                else:
+                    excluded_names.add(name)
+
+            expected_passes = 0
+            unexpected_passes = 0
+            expected_failures = 0
+            unexpected_failures = 0
+
+            for d in chart_data:
+                game_name = d['game_name']
+                is_excluded = game_name in excluded_names
+                is_passing = d['passed']
+
+                if is_excluded:
+                    if is_passing:
+                        unexpected_passes += 1
+                    else:
+                        expected_failures += 1
+                else:
+                    if is_passing:
+                        expected_passes += 1
+                    else:
+                        unexpected_failures += 1
+
+            md_content += "### Expected vs Unexpected Results\n\n"
+            md_content += f"- **Expected Passes:** {expected_passes} (not excluded, passed)\n"
+            md_content += f"- **Unexpected Passes:** {unexpected_passes} (excluded, but passed)\n"
+            md_content += f"- **Expected Failures:** {expected_failures} (excluded, failed as expected)\n"
+            md_content += f"- **Unexpected Failures:** {unexpected_failures} (not excluded, but failed)\n\n"
 
         # Add explain stats summary if available
         games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
@@ -401,6 +442,21 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "5. Comparing UT's accessibility calculations to the Python sphere log\n\n"
     md_content += "Failures indicate that for certain option combinations, UT's logic "
     md_content += "differs from Python's logic. This helps identify edge cases that need fixing.\n"
+
+    # Add Excluded Templates section (only for modified UT)
+    if excluded_games and ut_version == 'modified':
+        if world_source == "apworlds":
+            md_content += "\n## Excluded APWorlds\n\n"
+            md_content += "These community APWorlds are excluded from UT fuzz testing due to incompatible rule patterns or APWorld bugs:\n\n"
+            md_content += "| APWorld | Reason |\n"
+            md_content += "|---------|--------|\n"
+        else:
+            md_content += "\n## Excluded Templates\n\n"
+            md_content += "These templates are excluded from testing:\n\n"
+            md_content += "| Template | Reason |\n"
+            md_content += "|----------|--------|\n"
+        for game, reason in sorted(excluded_games.items()):
+            md_content += f"| {game} | {reason} |\n"
 
     return md_content
 
@@ -671,6 +727,14 @@ def main():
     # Load world mapping for creating game links
     world_mapping = load_world_mapping(project_root)
 
+    # Load exclude lists for different world sources
+    # For bundled worlds: use main test exclude list (same as test-results-summary.md)
+    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
+    excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
+    # For apworlds: use UT fuzz apworld exclude list
+    excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld')
+    excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_apworld}
+
     # Output directory
     output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
     os.makedirs(output_dir, exist_ok=True)
@@ -726,8 +790,9 @@ def main():
         key = f"{world_source}-{ut_version}"
         chart_data_by_type[key] = chart_data
 
-        # Generate markdown
-        md_content = generate_ut_fuzz_markdown(chart_data, metadata, world_mapping, project_root, world_source)
+        # Generate markdown with appropriate exclude list based on world source
+        excluded_games = excluded_games_apworld if world_source == "apworlds" else excluded_games_bundled
+        md_content = generate_ut_fuzz_markdown(chart_data, metadata, world_mapping, project_root, world_source, excluded_games)
 
         # Determine output path
         if args.output and len(result_files) == 1:

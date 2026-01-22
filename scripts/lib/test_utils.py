@@ -35,18 +35,19 @@ def read_host_yaml_config(project_root: str) -> Dict:
         return {}
 
 
-def load_template_exclude_list(project_root: str = None, include_reasons: bool = False, test_type: str = 'all'):
+def load_template_exclude_list(project_root: str = None, include_reasons: bool = False, test_type: str = 'all', skip_worldgen_variants: bool = False):
     """
     Load the template exclude list from scripts/data/template-exclude-list.json.
 
-    The exclude list file contains three arrays:
+    The exclude list file contains several arrays:
     - 'exclude_list': Permanent exclusions that apply to all tests
     - 'main_test_exclude_list': Games excluded from spoiler-minimal and multiclient tests
     - 'worldgen_test_exclude_list': Games excluded from world-generator tests
+    - 'ut_fuzz_apworld_exclude_list': Community apworlds excluded from UT fuzz testing
 
-    Automatically includes WorldGen versions of each excluded template.
+    By default, automatically includes WorldGen versions of each excluded template.
     For example, if "Blasphemous.yaml" is excluded, "Blasphemous WorldGen.yaml"
-    will also be excluded.
+    will also be excluded. Set skip_worldgen_variants=True to disable this.
 
     Args:
         project_root: Optional project root path. If not provided, will be inferred.
@@ -57,6 +58,8 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                   - 'main': Permanent exclusions + main test exclusions
                   - 'worldgen': Permanent exclusions + worldgen test exclusions
                   - 'permanent': Only permanent exclusions (exclude_list)
+                  - 'ut_fuzz_apworld': Only UT fuzz apworld exclusions (no WorldGen variants added)
+        skip_worldgen_variants: If True, don't add WorldGen variants (useful for display purposes)
 
     Returns:
         List[str] if include_reasons=False: List of template filenames to exclude
@@ -80,14 +83,14 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                 name = item['name']
                 reason = item['reason']
                 result.append(item)
-                # Add WorldGen variant if the template ends in .yaml
-                if name.endswith('.yaml'):
+                # Add WorldGen variant if the template ends in .yaml and doesn't already have WorldGen
+                if name.endswith('.yaml') and 'WorldGen' not in name:
                     worldgen_name = name[:-5] + ' WorldGen.yaml'
                     result.append({'name': worldgen_name, 'reason': reason})
             else:
                 result.append(item)
-                # Add WorldGen variant if the template ends in .yaml
-                if item.endswith('.yaml'):
+                # Add WorldGen variant if the template ends in .yaml and doesn't already have WorldGen
+                if item.endswith('.yaml') and 'WorldGen' not in item:
                     worldgen_name = item[:-5] + ' WorldGen.yaml'
                     result.append(worldgen_name)
         return result
@@ -112,6 +115,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
             # Load the test-type specific lists (may not exist in old format files)
             main_list = normalize_list(data.get('main_test_exclude_list', []))
             worldgen_list = normalize_list(data.get('worldgen_test_exclude_list', []))
+            ut_fuzz_apworld_list = normalize_list(data.get('ut_fuzz_apworld_exclude_list', []))
 
             # Combine lists based on test_type
             if test_type == 'permanent':
@@ -120,23 +124,41 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                 combined_list = permanent_list + main_list
             elif test_type == 'worldgen':
                 combined_list = permanent_list + worldgen_list
+            elif test_type == 'ut_fuzz_apworld':
+                # Return UT fuzz apworld list without adding WorldGen variants
+                if include_reasons:
+                    return ut_fuzz_apworld_list
+                else:
+                    return [item['name'] for item in ut_fuzz_apworld_list]
             else:  # 'all' or any other value
                 combined_list = permanent_list + main_list + worldgen_list
 
             # Return with or without reasons
-            if include_reasons:
-                return add_worldgen_variants(combined_list, with_reasons=True)
+            if skip_worldgen_variants:
+                if include_reasons:
+                    return combined_list
+                else:
+                    return [item['name'] for item in combined_list]
             else:
-                names = [item['name'] for item in combined_list]
-                return add_worldgen_variants(names, with_reasons=False)
+                if include_reasons:
+                    return add_worldgen_variants(combined_list, with_reasons=True)
+                else:
+                    names = [item['name'] for item in combined_list]
+                    return add_worldgen_variants(names, with_reasons=False)
 
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
         # If file doesn't exist or is malformed, return default list
-        if include_reasons:
-            items_with_reasons = [{'name': name, 'reason': ''} for name in default_exclude_list]
-            return add_worldgen_variants(items_with_reasons, with_reasons=True)
+        if skip_worldgen_variants:
+            if include_reasons:
+                return [{'name': name, 'reason': ''} for name in default_exclude_list]
+            else:
+                return default_exclude_list
         else:
-            return add_worldgen_variants(default_exclude_list, with_reasons=False)
+            if include_reasons:
+                items_with_reasons = [{'name': name, 'reason': ''} for name in default_exclude_list]
+                return add_worldgen_variants(items_with_reasons, with_reasons=True)
+            else:
+                return add_worldgen_variants(default_exclude_list, with_reasons=False)
 
 
 def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:

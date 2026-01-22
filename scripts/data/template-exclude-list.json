@@ -48,10 +48,6 @@
       "reason": "Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test."
     },
     {
-      "name": "Landstalker - The Treasures of King Nole WorldGen.yaml",
-      "reason": "Temporarily excluded. The tests fail, reporting a memory leak that might be in the original world code."
-    },
-    {
       "name": "Pokemon Emerald.yaml",
       "reason": "Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test."
     },

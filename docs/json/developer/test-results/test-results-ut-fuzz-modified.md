@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
 
-**Generated:** 2026-01-22 03:03:45
+**Generated:** 2026-01-21 19:48:07
 
 **Source Data Created:** 2026-01-21T20:33:39.978966
 
@@ -30,6 +30,13 @@
 - **Failed Runs:** 188
 - **Timed Out Runs:** 1
 - **Ignored Runs:** 41
+
+### Expected vs Unexpected Results
+
+- **Expected Passes:** 60 (not excluded, passed)
+- **Unexpected Passes:** 2 (excluded, but passed)
+- **Expected Failures:** 9 (excluded, failed as expected)
+- **Unexpected Failures:** 14 (not excluded, but failed)
 
 ### Explain Support Summary
 
@@ -373,3 +380,26 @@ The UT fuzzer tests Universal Tracker compatibility by:
 5. Comparing UT's accessibility calculations to the Python sphere log
 
 Failures indicate that for certain option combinations, UT's logic differs from Python's logic. This helps identify edge cases that need fixing.
+
+## Excluded Templates
+
+These templates are excluded from testing:
+
+| Template | Reason |
+|----------|--------|
+| APWorld Manager.yaml | Not a game. |
+| Archipelago.yaml | Not a game. |
+| Blasphemous.yaml | The spoiler test currently freezes. |
+| Final Fantasy.yaml | Requires manual configuration and is not compatible with the spoiler test. |
+| Hollow Knight.yaml | The spoiler test currently freezes. |
+| JSON Tools Installer.yaml | Not a game. |
+| Jak and Daxter The Precursor Legacy.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
+| Ocarina of Time.yaml | The default yaml file fails to generate. |
+| Pokemon Emerald.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
+| Pokemon Red and Blue.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
+| SMZ3.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
+| Sudoku.yaml | Cannot be used for generating worlds. |
+| Universal Tracker.yaml | Not a game. |
+| Yacht Dice.yaml | Temporarily excluded. It currently times out the multiworld test. |
+| Yu-Gi-Oh! 2006.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
+| Zillion.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |

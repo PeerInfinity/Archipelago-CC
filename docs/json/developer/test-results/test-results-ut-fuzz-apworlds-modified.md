@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md)
 
-**Generated:** 2026-01-22 03:03:45
+**Generated:** 2026-01-21 19:48:07
 
 **Source Data Created:** 2026-01-22T03:03:45.237866
 
@@ -30,6 +30,13 @@
 - **Failed Runs:** 681
 - **Timed Out Runs:** 12
 - **Ignored Runs:** 139
+
+### Expected vs Unexpected Results
+
+- **Expected Passes:** 34 (not excluded, passed)
+- **Unexpected Passes:** 0 (excluded, but passed)
+- **Expected Failures:** 7 (excluded, failed as expected)
+- **Unexpected Failures:** 83 (not excluded, but failed)
 
 ### Explain Support Summary
 
@@ -722,3 +729,17 @@ The UT fuzzer tests Universal Tracker compatibility by:
 5. Comparing UT's accessibility calculations to the Python sphere log
 
 Failures indicate that for certain option combinations, UT's logic differs from Python's logic. This helps identify edge cases that need fixing.
+
+## Excluded APWorlds
+
+These community APWorlds are excluded from UT fuzz testing due to incompatible rule patterns or APWorld bugs:
+
+| APWorld | Reason |
+|---------|--------|
+| Air Delivery.yaml | Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue. |
+| Astalon.yaml | Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules. |
+| Corn Kidz 64.yaml | Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture. |
+| Frogmonster.yaml | Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld. |
+| Rabi-Ribi.yaml | Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis. |
+| Soul Blazer.yaml | Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context. |
+| XCOM 2 War of the Chosen.yaml | Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline. |
