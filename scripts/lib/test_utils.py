@@ -43,7 +43,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
     - 'exclude_list': Permanent exclusions that apply to all tests
     - 'main_test_exclude_list': Games excluded from spoiler-minimal and multiclient tests
     - 'worldgen_test_exclude_list': Games excluded from world-generator tests
-    - 'ut_fuzz_apworld_exclude_list': Community apworlds excluded from UT fuzz testing
+    - 'ut_fuzz_apworld_exclude_list': APWorlds excluded from UT fuzz testing
 
     By default, automatically includes WorldGen versions of each excluded template.
     For example, if "Blasphemous.yaml" is excluded, "Blasphemous WorldGen.yaml"
@@ -126,6 +126,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                 combined_list = permanent_list + worldgen_list
             elif test_type == 'ut_fuzz_apworld':
                 # Return UT fuzz apworld list without adding WorldGen variants
+                # (apworlds don't have WorldGen variants like templates do)
                 if include_reasons:
                     return ut_fuzz_apworld_list
                 else:

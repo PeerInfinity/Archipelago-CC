@@ -40,6 +40,7 @@ from lib.test_utils import (
     get_world_directory_name_from_game_name,
     build_and_load_world_mapping
 )
+from setup.update_host_settings import update_host_yaml
 
 # Global variable to cache apworld download URLs
 _apworld_download_urls: Dict[str, str] = {}
@@ -427,7 +428,29 @@ def main():
         help='World source for output filename: bundled (default) or apworlds'
     )
 
+    # Add mutually exclusive group for native UT preference
+    native_ut_group = parser.add_mutually_exclusive_group()
+    native_ut_group.add_argument(
+        '--prefer-native-ut',
+        dest='prefer_native_ut',
+        action='store_true',
+        default=True,
+        help='Prefer native UT support for compatible worlds (default: enabled)'
+    )
+    native_ut_group.add_argument(
+        '--no-prefer-native-ut',
+        dest='prefer_native_ut',
+        action='store_false',
+        help='Disable native UT preference, use worldgen-based tracking for all worlds'
+    )
+
     args = parser.parse_args()
+
+    # Configure host settings for UT fuzz testing
+    # Set skip_export_for_native_ut based on --prefer-native-ut flag
+    print("Configuring host settings for UT fuzz testing...")
+    print(f"  prefer_native_ut: {args.prefer_native_ut}")
+    update_host_yaml({'skip_export_for_native_ut': args.prefer_native_ut})
 
     # Clean up empty worldgen directories before loading worlds
     cleanup_empty_worldgen_dirs()
@@ -435,7 +458,17 @@ def main():
     # Determine seed mode and UT version
     is_random_seed_mode = args.seed is None
     seed_type = "random" if is_random_seed_mode else "fixed"
-    ut_version = args.ut_version  # 'modified' or 'original'
+
+    # Determine UT version label for output files
+    # - "original" = original UT from FarisTheAncient
+    # - "modified" = modified UT using worldgen-based tracking for all worlds
+    # - "hybrid" = modified UT with native support (prefers native UT for compatible worlds)
+    if args.ut_version == "original":
+        ut_version = "original"
+    elif args.prefer_native_ut:
+        ut_version = "hybrid"
+    else:
+        ut_version = "modified"
 
     # Determine world source (for output filename)
     # If --world-source is specified, use it; otherwise infer from --custom-worlds-only
@@ -548,6 +581,7 @@ def main():
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
             "ut_version": ut_version,
+            "prefer_native_ut": args.prefer_native_ut if args.ut_version != "original" else None,
             "world_source": world_source,
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
