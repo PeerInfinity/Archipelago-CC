@@ -428,12 +428,29 @@ def main():
         help='World source for output filename: bundled (default) or apworlds'
     )
 
+    # Add mutually exclusive group for native UT preference
+    native_ut_group = parser.add_mutually_exclusive_group()
+    native_ut_group.add_argument(
+        '--prefer-native-ut',
+        dest='prefer_native_ut',
+        action='store_true',
+        default=True,
+        help='Prefer native UT support for compatible worlds (default: enabled)'
+    )
+    native_ut_group.add_argument(
+        '--no-prefer-native-ut',
+        dest='prefer_native_ut',
+        action='store_false',
+        help='Disable native UT preference, use worldgen-based tracking for all worlds'
+    )
+
     args = parser.parse_args()
 
     # Configure host settings for UT fuzz testing
-    # Enable skip_export_for_native_ut to speed up testing for worlds with native UT support
+    # Set skip_export_for_native_ut based on --prefer-native-ut flag
     print("Configuring host settings for UT fuzz testing...")
-    update_host_yaml({'skip_export_for_native_ut': True})
+    print(f"  prefer_native_ut: {args.prefer_native_ut}")
+    update_host_yaml({'skip_export_for_native_ut': args.prefer_native_ut})
 
     # Clean up empty worldgen directories before loading worlds
     cleanup_empty_worldgen_dirs()

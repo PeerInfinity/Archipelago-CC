@@ -42,6 +42,11 @@ on:
         type: boolean
         default: false
 
+      prefer_native_ut:
+        description: 'Prefer native UT support for compatible worlds (skips slow rule export). Only applies to modified UT.'
+        type: boolean
+        default: true
+
       test_apworlds:
         description: 'Test stable APWorlds from community index instead of bundled worlds'
         type: boolean
@@ -234,6 +239,7 @@ jobs:
           source .venv/bin/activate
           echo "Using seed: ${{ inputs.seed || 'random' }}"
           echo "UT version: ${{ inputs.test_original_ut && 'original' || 'modified' }}"
+          echo "Prefer native UT: ${{ inputs.prefer_native_ut }}"
           echo "World source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}"
 
           # Determine debug mode include list
@@ -255,6 +261,7 @@ jobs:
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --ut-version ${{ inputs.test_original_ut && 'original' || 'modified' }} \
+            ${{ inputs.prefer_native_ut && '--prefer-native-ut' || '--no-prefer-native-ut' }} \
             ${{ inputs.test_apworlds && '--custom-worlds-only --world-source apworlds' || '' }} \
             $DEBUG_INCLUDE
 
