@@ -175,11 +175,13 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     # Add link to comparison docs
     if world_source == "apworlds":
-        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md) | "
-        md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-hybrid-comparison.md)\n\n"
+        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | "
+        md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | "
+        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)\n\n"
     else:
-        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md) | "
-        md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-hybrid-comparison.md)\n\n"
+        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | "
+        md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | "
+        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)\n\n"
 
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -499,57 +501,72 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     return md_content
 
 
-def generate_comparison_markdown(original_data: List[Dict[str, Any]],
-                                  modified_data: List[Dict[str, Any]],
+def generate_comparison_markdown(data1: List[Dict[str, Any]],
+                                  data2: List[Dict[str, Any]],
                                   world_mapping: Dict[str, Dict[str, Any]],
                                   project_root: str = None,
                                   world_source: str = "bundled",
-                                  compare_version: str = "modified") -> str:
+                                  version1: str = "original",
+                                  version2: str = "modified") -> str:
     """
-    Generate a markdown comparison between original and another UT fuzz test results.
+    Generate a markdown comparison between two UT fuzz test results.
 
     Args:
-        original_data: Chart data from original UT tests
-        modified_data: Chart data from the comparison UT tests (modified or hybrid)
+        data1: Chart data from the first UT tests
+        data2: Chart data from the second UT tests
         world_mapping: Full world mapping dict with game info
         project_root: Project root path for looking up rules.json sizes
         world_source: Source of worlds being tested (bundled or apworlds)
-        compare_version: Version being compared to original ('modified' or 'hybrid')
+        version1: First version being compared ('original', 'modified', or 'hybrid')
+        version2: Second version being compared ('original', 'modified', or 'hybrid')
     """
     # Build lookup dicts by game name
-    original_by_game = {d['game_name']: d for d in original_data}
-    modified_by_game = {d['game_name']: d for d in modified_data}
+    data1_by_game = {d['game_name']: d for d in data1}
+    data2_by_game = {d['game_name']: d for d in data2}
 
-    # Determine display names based on compare_version
-    if compare_version == 'hybrid':
-        compare_display = "Hybrid"
-        compare_description = "Hybrid Universal Tracker (modified with native UT preference)"
-    else:
-        compare_display = "Modified"
-        compare_description = "Modified Universal Tracker (worldgen-based tracking)"
+    # Define display names and descriptions for each version
+    version_info = {
+        'original': {
+            'display': 'Original',
+            'description': 'Original Universal Tracker (FarisTheAncient)'
+        },
+        'modified': {
+            'display': 'Modified',
+            'description': 'Modified Universal Tracker (worldgen-based tracking)'
+        },
+        'hybrid': {
+            'display': 'Hybrid',
+            'description': 'Hybrid Universal Tracker (modified with native UT preference)'
+        }
+    }
+
+    version1_display = version_info[version1]['display']
+    version1_description = version_info[version1]['description']
+    version2_display = version_info[version2]['display']
+    version2_description = version_info[version2]['description']
 
     # Get all unique game names
-    all_games = sorted(set(original_by_game.keys()) | set(modified_by_game.keys()))
+    all_games = sorted(set(data1_by_game.keys()) | set(data2_by_game.keys()))
 
     # Categorize games
     passing_both = []
-    passing_original_only = []
-    passing_compare_only = []  # Renamed from passing_modified_only
+    passing_version1_only = []
+    passing_version2_only = []
     passing_neither = []
 
     for game in all_games:
-        orig = original_by_game.get(game)
-        mod = modified_by_game.get(game)
+        d1 = data1_by_game.get(game)
+        d2 = data2_by_game.get(game)
 
-        orig_passed = orig['passed'] if orig else False
-        mod_passed = mod['passed'] if mod else False
+        d1_passed = d1['passed'] if d1 else False
+        d2_passed = d2['passed'] if d2 else False
 
-        if orig_passed and mod_passed:
+        if d1_passed and d2_passed:
             passing_both.append(game)
-        elif orig_passed and not mod_passed:
-            passing_original_only.append(game)
-        elif not orig_passed and mod_passed:
-            passing_compare_only.append(game)
+        elif d1_passed and not d2_passed:
+            passing_version1_only.append(game)
+        elif not d1_passed and d2_passed:
+            passing_version2_only.append(game)
         else:
             passing_neither.append(game)
 
@@ -583,18 +600,18 @@ def generate_comparison_markdown(original_data: List[Dict[str, Any]],
         game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
         return exporter_size == 0 and game_logic_size == 0
 
-    # Calculate games passing compare version (both + compare only) with no custom code
-    passing_compare = passing_both + passing_compare_only
-    passing_compare_no_custom = [g for g in passing_compare if has_no_custom_code(g)]
-    passing_compare_only_no_custom = [g for g in passing_compare_only if has_no_custom_code(g)]
+    # Calculate games passing version2 (both + version2 only) with no custom code
+    passing_version2 = passing_both + passing_version2_only
+    passing_version2_no_custom = [g for g in passing_version2 if has_no_custom_code(g)]
+    passing_version2_only_no_custom = [g for g in passing_version2_only if has_no_custom_code(g)]
 
     # Start building markdown
     title_suffix = " (APWorlds)" if world_source == "apworlds" else ""
-    md_content = f"# Universal Tracker Fuzz Test Comparison: Original vs {compare_display}{title_suffix}\n\n"
+    md_content = f"# Universal Tracker Fuzz Test Comparison: {version1_display} vs {version2_display}{title_suffix}\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
-    md_content += "This report compares fuzz test results between the Original Universal Tracker "
-    md_content += f"(FarisTheAncient) and the {compare_description}.\n\n"
+    md_content += f"This report compares fuzz test results between the {version1_description} "
+    md_content += f"and the {version2_description}.\n\n"
 
     # Add navigation links
     md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
@@ -602,59 +619,59 @@ def generate_comparison_markdown(original_data: List[Dict[str, Any]],
     # Add links to individual result docs
     md_content += "### Individual Test Results\n\n"
     if world_source == "apworlds":
-        md_content += "- [Original UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-original.md)\n"
-        md_content += f"- [{compare_display} UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-{compare_version}.md)\n\n"
+        md_content += f"- [{version1_display} UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-{version1}.md)\n"
+        md_content += f"- [{version2_display} UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-{version2}.md)\n\n"
     else:
-        md_content += "- [Original UT Results](./test-results-ut-fuzz-original.md)\n"
-        md_content += f"- [{compare_display} UT Results](./test-results-ut-fuzz-{compare_version}.md)\n\n"
+        md_content += f"- [{version1_display} UT Results](./test-results-ut-fuzz-{version1}.md)\n"
+        md_content += f"- [{version2_display} UT Results](./test-results-ut-fuzz-{version2}.md)\n\n"
 
     # Summary statistics
     md_content += "## Summary\n\n"
     md_content += f"- **Total Games Tested:** {len(all_games)}\n"
     md_content += f"- **Passing Both:** {len(passing_both)} ({len(passing_both)/len(all_games)*100:.1f}%)\n"
-    md_content += f"- **Passing Original Only:** {len(passing_original_only)} ({len(passing_original_only)/len(all_games)*100:.1f}%)\n"
-    md_content += f"- **Passing {compare_display} Only:** {len(passing_compare_only)} ({len(passing_compare_only)/len(all_games)*100:.1f}%)\n"
+    md_content += f"- **Passing {version1_display} Only:** {len(passing_version1_only)} ({len(passing_version1_only)/len(all_games)*100:.1f}%)\n"
+    md_content += f"- **Passing {version2_display} Only:** {len(passing_version2_only)} ({len(passing_version2_only)/len(all_games)*100:.1f}%)\n"
     md_content += f"- **Passing Neither:** {len(passing_neither)} ({len(passing_neither)/len(all_games)*100:.1f}%)\n"
     # Only show custom code stats for bundled worlds (not apworlds)
     if world_source != "apworlds":
-        md_content += f"- **Passing {compare_display} with no custom code:** {len(passing_compare_no_custom)} ({len(passing_compare_no_custom)/len(all_games)*100:.1f}%)\n"
-        md_content += f"- **Passing {compare_display} Only with no custom code:** {len(passing_compare_only_no_custom)} ({len(passing_compare_only_no_custom)/len(all_games)*100:.1f}%)\n"
+        md_content += f"- **Passing {version2_display} with no custom code:** {len(passing_version2_no_custom)} ({len(passing_version2_no_custom)/len(all_games)*100:.1f}%)\n"
+        md_content += f"- **Passing {version2_display} Only with no custom code:** {len(passing_version2_only_no_custom)} ({len(passing_version2_only_no_custom)/len(all_games)*100:.1f}%)\n"
     md_content += "\n"
 
     # Main comparison table
     md_content += "## Full Comparison\n\n"
-    md_content += f"| Game Name | Original Success Rate | {compare_display} Success Rate | Exporter | GameLogic | Rules Size |\n"
+    md_content += f"| Game Name | {version1_display} Success Rate | {version2_display} Success Rate | Exporter | GameLogic | Rules Size |\n"
     md_content += "|-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|\n"
 
     for game in all_games:
-        orig = original_by_game.get(game)
-        mod = modified_by_game.get(game)
+        d1 = data1_by_game.get(game)
+        d2 = data2_by_game.get(game)
 
         # Format success rates
-        if orig:
-            orig_rate = orig['success_rate']
-            if orig['passed']:
-                orig_display = f"✅ {orig_rate:.1f}%"
-            elif orig_rate >= 50:
-                orig_display = f"⚠️ {orig_rate:.1f}%"
+        if d1:
+            d1_rate = d1['success_rate']
+            if d1['passed']:
+                d1_display = f"✅ {d1_rate:.1f}%"
+            elif d1_rate >= 50:
+                d1_display = f"⚠️ {d1_rate:.1f}%"
             else:
-                orig_display = f"❌ {orig_rate:.1f}%"
+                d1_display = f"❌ {d1_rate:.1f}%"
         else:
-            orig_display = "N/A"
+            d1_display = "N/A"
 
-        if mod:
-            mod_rate = mod['success_rate']
-            if mod['passed']:
-                mod_display = f"✅ {mod_rate:.1f}%"
-            elif mod_rate >= 50:
-                mod_display = f"⚠️ {mod_rate:.1f}%"
+        if d2:
+            d2_rate = d2['success_rate']
+            if d2['passed']:
+                d2_display = f"✅ {d2_rate:.1f}%"
+            elif d2_rate >= 50:
+                d2_display = f"⚠️ {d2_rate:.1f}%"
             else:
-                mod_display = f"❌ {mod_rate:.1f}%"
+                d2_display = f"❌ {d2_rate:.1f}%"
         else:
-            mod_display = "N/A"
+            d2_display = "N/A"
 
         exporter, logic, rules_size = get_game_info(game)
-        md_content += f"| {game} | {orig_display} | {mod_display} | {exporter} | {logic} | {rules_size} |\n"
+        md_content += f"| {game} | {d1_display} | {d2_display} | {exporter} | {logic} | {rules_size} |\n"
 
     # Games passing both
     if passing_both:
@@ -666,23 +683,23 @@ def generate_comparison_markdown(original_data: List[Dict[str, Any]],
             exporter, logic, rules_size = get_game_info(game)
             md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
 
-    # Games passing original only
-    if passing_original_only:
-        md_content += f"\n## Games Passing Original Only ({len(passing_original_only)})\n\n"
-        md_content += f"These games pass in the Original UT but fail in the {compare_display} UT.\n\n"
+    # Games passing version1 only
+    if passing_version1_only:
+        md_content += f"\n## Games Passing {version1_display} Only ({len(passing_version1_only)})\n\n"
+        md_content += f"These games pass in the {version1_display} UT but fail in the {version2_display} UT.\n\n"
         md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
         md_content += "|-----------|:--------:|:---------:|:----------:|\n"
-        for game in passing_original_only:
+        for game in passing_version1_only:
             exporter, logic, rules_size = get_game_info(game)
             md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
 
-    # Games passing compare version only
-    if passing_compare_only:
-        md_content += f"\n## Games Passing {compare_display} Only ({len(passing_compare_only)})\n\n"
-        md_content += f"These games pass in the {compare_display} UT but fail in the Original UT.\n\n"
+    # Games passing version2 only
+    if passing_version2_only:
+        md_content += f"\n## Games Passing {version2_display} Only ({len(passing_version2_only)})\n\n"
+        md_content += f"These games pass in the {version2_display} UT but fail in the {version1_display} UT.\n\n"
         md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
         md_content += "|-----------|:--------:|:---------:|:----------:|\n"
-        for game in passing_compare_only:
+        for game in passing_version2_only:
             exporter, logic, rules_size = get_game_info(game)
             md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
 
@@ -698,8 +715,8 @@ def generate_comparison_markdown(original_data: List[Dict[str, Any]],
 
     # Notes section
     md_content += "\n## Notes\n\n"
-    md_content += "- **Original Success Rate:** Percentage of fuzz runs that passed in the Original Universal Tracker\n"
-    md_content += f"- **{compare_display} Success Rate:** Percentage of fuzz runs that passed in the {compare_display} Universal Tracker\n"
+    md_content += f"- **{version1_display} Success Rate:** Percentage of fuzz runs that passed in the {version1_display} Universal Tracker\n"
+    md_content += f"- **{version2_display} Success Rate:** Percentage of fuzz runs that passed in the {version2_display} Universal Tracker\n"
     md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
     md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
     md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
@@ -856,41 +873,62 @@ def main():
 
         print(f"Chart saved to: {output_path} (from {os.path.basename(results_path)})")
 
-    # Generate comparison files if we have both original and another version for a world source
+    # Generate comparison files if we have both versions for a world source
     for world_source in ['bundled', 'apworlds']:
         original_key = f"{world_source}-original"
+        modified_key = f"{world_source}-modified"
+        hybrid_key = f"{world_source}-hybrid"
 
-        # Generate comparisons for both modified and hybrid versions
-        for compare_version in ['modified', 'hybrid']:
-            compare_key = f"{world_source}-{compare_version}"
+        # Generate comparisons: original vs modified, original vs hybrid
+        for version2 in ['modified', 'hybrid']:
+            version2_key = f"{world_source}-{version2}"
 
-            if original_key in chart_data_by_type and compare_key in chart_data_by_type:
+            if original_key in chart_data_by_type and version2_key in chart_data_by_type:
                 comparison_md = generate_comparison_markdown(
                     chart_data_by_type[original_key],
-                    chart_data_by_type[compare_key],
+                    chart_data_by_type[version2_key],
                     world_mapping,
                     project_root,
                     world_source,
-                    compare_version
+                    version1='original',
+                    version2=version2
                 )
 
                 # Determine output filename
                 if world_source == 'bundled':
-                    if compare_version == 'modified':
-                        comparison_filename = 'test-results-ut-fuzz-comparison.md'
-                    else:
-                        comparison_filename = f'test-results-ut-fuzz-{compare_version}-comparison.md'
+                    comparison_filename = f'test-results-ut-fuzz-comparison-original-{version2}.md'
                 else:
-                    if compare_version == 'modified':
-                        comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison.md'
-                    else:
-                        comparison_filename = f'test-results-ut-fuzz-{world_source}-{compare_version}-comparison.md'
+                    comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-original-{version2}.md'
 
                 comparison_path = os.path.join(output_dir, comparison_filename)
                 with open(comparison_path, 'w') as f:
                     f.write(comparison_md)
 
                 print(f"Comparison saved to: {comparison_path}")
+
+        # Generate comparison: modified vs hybrid
+        if modified_key in chart_data_by_type and hybrid_key in chart_data_by_type:
+            comparison_md = generate_comparison_markdown(
+                chart_data_by_type[modified_key],
+                chart_data_by_type[hybrid_key],
+                world_mapping,
+                project_root,
+                world_source,
+                version1='modified',
+                version2='hybrid'
+            )
+
+            # Determine output filename
+            if world_source == 'bundled':
+                comparison_filename = 'test-results-ut-fuzz-comparison-modified-hybrid.md'
+            else:
+                comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-modified-hybrid.md'
+
+            comparison_path = os.path.join(output_dir, comparison_filename)
+            with open(comparison_path, 'w') as f:
+                f.write(comparison_md)
+
+            print(f"Comparison saved to: {comparison_path}")
 
     return 0
 
