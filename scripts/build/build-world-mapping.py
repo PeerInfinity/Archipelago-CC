@@ -633,6 +633,33 @@ def get_directory_total_size(dir_path: Path) -> int:
     return total
 
 
+# Exporter handler subdirectories to search (in priority order)
+EXPORTER_SUBDIRS = ['official', 'unofficial']
+
+
+def find_exporter_path(world_name: str) -> tuple[Path | None, str | None]:
+    """
+    Find the exporter file for a world in the new directory structure.
+
+    Searches in exporter/games/official/ and exporter/games/unofficial/
+    in that order, returning the first match found.
+
+    Args:
+        world_name: The world directory name (e.g., 'alttp', 'minit')
+
+    Returns:
+        Tuple of (Path object, relative path string) if found, or (None, None) if not found
+    """
+    base_path = Path('exporter/games')
+
+    for subdir in EXPORTER_SUBDIRS:
+        exporter_path = base_path / subdir / f'{world_name}.py'
+        if exporter_path.exists():
+            return exporter_path, f'exporter/games/{subdir}/{world_name}.py'
+
+    return None, None
+
+
 def build_world_mapping(worlds_dir: str) -> Dict[str, Dict[str, any]]:
     """
     Build a mapping from game names to world information.
@@ -665,9 +692,9 @@ def build_world_mapping(worlds_dir: str) -> Dict[str, Dict[str, any]]:
             world_name = world_dir.name
 
             # Check for custom exporter and get file size
-            exporter_path = Path('exporter/games') / f'{world_name}.py'
-            has_custom_exporter = exporter_path.exists()
-            exporter_size = get_file_size(exporter_path)
+            exporter_path, exporter_path_str = find_exporter_path(world_name)
+            has_custom_exporter = exporter_path is not None
+            exporter_size = get_file_size(exporter_path) if exporter_path else 0
 
             # Check for custom gameLogic directory and get total size of all files
             game_logic_dir = Path('frontend/modules/shared/gameLogic') / world_name
@@ -679,7 +706,7 @@ def build_world_mapping(worlds_dir: str) -> Dict[str, Dict[str, any]]:
                 'world_directory': world_name,
                 'has_custom_exporter': has_custom_exporter,
                 'has_custom_game_logic': has_custom_game_logic,
-                'exporter_path': f'exporter/games/{world_name}.py' if has_custom_exporter else None,
+                'exporter_path': exporter_path_str,
                 'exporter_size': exporter_size,
                 'game_logic_path': f'frontend/modules/shared/gameLogic/{world_name}/{world_name}Logic.js' if has_custom_game_logic else None,
                 'game_logic_size': game_logic_size
@@ -709,9 +736,9 @@ def build_apworld_mapping(custom_worlds_dir: str) -> Dict[str, Dict[str, any]]:
             game_name, world_name = result
 
             # Check for custom exporter and get file size
-            exporter_path = Path('exporter/games') / f'{world_name}.py'
-            has_custom_exporter = exporter_path.exists()
-            exporter_size = get_file_size(exporter_path)
+            exporter_path, exporter_path_str = find_exporter_path(world_name)
+            has_custom_exporter = exporter_path is not None
+            exporter_size = get_file_size(exporter_path) if exporter_path else 0
 
             # Check for custom gameLogic directory and get total size of all files
             game_logic_dir = Path('frontend/modules/shared/gameLogic') / world_name
@@ -723,7 +750,7 @@ def build_apworld_mapping(custom_worlds_dir: str) -> Dict[str, Dict[str, any]]:
                 'world_directory': world_name,
                 'has_custom_exporter': has_custom_exporter,
                 'has_custom_game_logic': has_custom_game_logic,
-                'exporter_path': f'exporter/games/{world_name}.py' if has_custom_exporter else None,
+                'exporter_path': exporter_path_str,
                 'exporter_size': exporter_size,
                 'game_logic_path': f'frontend/modules/shared/gameLogic/{world_name}/{world_name}Logic.js' if has_custom_game_logic else None,
                 'game_logic_size': game_logic_size,

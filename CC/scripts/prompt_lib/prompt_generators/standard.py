@@ -234,16 +234,16 @@ now work with auto-detection. No configuration needed.
 Review these simplified exporters as examples:
 
 ```bash
-cat exporter/games/alttp.py      # ~60 lines - auto-discovery flags only
-cat exporter/games/dark_souls_3.py  # ~20 lines - HELPER_TO_RULE_MAPPINGS only
+cat exporter/games/official/tunic.py     # ~80 lines - HELPERS_TO_PRESERVE and post_process_data only
+cat exporter/games/official/yachtdice.py # ~22 lines - minimal config only
 ```
 
 **Note:** If an exporter class does nothing but `pass`, it should be **deleted entirely**.
 The exporter registry auto-discovers handlers and falls back to `GenericGameExportHandler`
 when no custom handler exists. Empty exporters just add unnecessary files.
 
-**Example: TWW has no custom exporter** - All LogicMixin methods (like `_tww_can_defeat_all_required_bosses`)
-are auto-detected by the base class, so no `exporter/games/tww.py` file is needed.
+**Example: Many games have no custom exporter** - All LogicMixin methods are
+auto-detected by the base class, so no exporter file is needed for simple games.
 
 ## Simplification Patterns
 

@@ -59,7 +59,7 @@ The export process creates the critical data file:
    - Template file name (e.g., "A Hat in Time.yaml")
    - Python directory (e.g., "worlds/ahit")
 
-2. **Create Game-Specific Exporter:** In `exporter/games/`, create a new file for your game if it doesn't exist (e.g., `exporter/games/ahit.py`). Base it on `exporter/games/generic.py`.
+2. **Create Game-Specific Exporter:** In `exporter/games/official/` (for official games) or `exporter/games/unofficial/` (for apworlds), create a new file for your game if it doesn't exist (e.g., `exporter/games/official/ahit.py`). Base it on `exporter/games/base/generic.py`.
 
 3. **Generate and Check Export:** Run Generate.py for your chosen game:
    ```bash

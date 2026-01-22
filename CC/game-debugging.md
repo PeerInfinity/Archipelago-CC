@@ -74,7 +74,9 @@ The **Test Spoilers** panel in the web client validates the implementation:
 
 2. **Create Game-Specific Exporter (if needed):**
 
-   In `exporter/games/`, create a new file for your game if it doesn't exist (e.g., `exporter/games/ahit.py`).
+   Create a new file in one of the exporter directories:
+   - `exporter/games/official/` - For official Archipelago games (e.g., `exporter/games/official/ahit.py`)
+   - `exporter/games/unofficial/` - For community .apworld packages
 
    **Recommended Approach:** Inherit from `GenericGameExportHandler`:
 
@@ -82,7 +84,7 @@ The **Test Spoilers** panel in the web client validates the implementation:
    """A Hat in Time game-specific export handler."""
 
    from typing import Dict, Any
-   from .generic import GenericGameExportHandler
+   from ..base import GenericGameExportHandler
    import logging
 
    logger = logging.getLogger(__name__)
@@ -106,7 +108,7 @@ The **Test Spoilers** panel in the web client validates the implementation:
    - The class inherits from `BaseGameExportHandler` or `GenericGameExportHandler`
    - The class has a `GAME_NAME` attribute matching the game's name exactly
 
-   **When to use BaseGameExportHandler directly:** Only inherit from `BaseGameExportHandler` if you need complete control over all export methods and don't want the intelligent defaults from `GenericGameExportHandler`. See `exporter/games/base.py` and `exporter/games/generic.py` for details.
+   **When to use BaseGameExportHandler directly:** Only inherit from `BaseGameExportHandler` if you need complete control over all export methods and don't want the intelligent defaults from `GenericGameExportHandler`. See `exporter/games/base/handler.py` and `exporter/games/base/generic.py` for details.
 
 3. **Generate Test Data:** Run Generate.py for your chosen game:
    ```bash
