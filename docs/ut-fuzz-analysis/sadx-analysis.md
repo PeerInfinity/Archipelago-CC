@@ -103,23 +103,40 @@ Based on test failures:
 - Sub-Levels: Twinkle Circuit (Sonic), and likely others
 - Chao: Silver Chao Egg, and likely others
 
-## Recommendations
+## Implementation Status
 
-### Option A: Custom SADX Exporter (Medium Effort)
+### Custom SADX Exporter (Implemented)
 
-Create `exporter/games/unofficial/sadx.py` that:
-1. Pre-computes character/upgrade combinations for each location
+Created `exporter/games/unofficial/sadx.py` that:
+1. Pre-computes character/upgrade combinations for each location type
 2. Generates static rules based on known emblem/sub-level data
 3. Resolves option-dependent logic at export time
 
-### Option B: APWorld Maintainer Updates (Preferred)
+**What was implemented:**
+- Field emblem location rules (12 locations)
+- Sub-level location rules (Twinkle Circuit, Sand Hill, Sky Chase)
+- Chao egg location rules (Gold, Silver, Black eggs)
+- Logic level support (0-4) for different character requirements
+- Playable character filtering based on options
+
+**Current status:**
+The exporter correctly generates expanded rules in the rules JSON, but the UT fuzzer still reports mismatches. The generated Rules.py in the worldgen world shows correct rule structures, but there appears to be a deeper issue with how the tracker evaluates compound rules with `CanReachRegion` checks.
+
+**Possible remaining issues:**
+1. The worldgen world's regions may have different connectivity than expected
+2. The Rule Builder's `CanReachRegion` evaluation may not work correctly with dynamically generated regions
+3. The tracker's region accessibility computation may differ from the server's
+
+### Alternative Options
+
+#### Option B: APWorld Maintainer Updates (Preferred long-term)
 
 Request the SADX apworld maintainer to refactor rules to use simpler patterns:
 1. Store character requirements as static data, not method calls
 2. Use item groups for character requirements instead of dynamic iteration
 3. Avoid `isinstance()` checks in rule lambdas
 
-### Option C: Add to Incompatible List (Least Effort)
+#### Option C: Add to Incompatible List (Fallback)
 
 Document SADX as incompatible with UT tracking due to fundamental architecture differences.
 
