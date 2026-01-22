@@ -4,17 +4,17 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison.md)
 
-**Generated:** 2026-01-22 02:42:11
+**Generated:** 2026-01-21 18:23:03
 
-**Source Data Created:** 2026-01-22T02:42:11.262729
+**Source Data Created:** 2026-01-22T02:19:22.899344
 
-**Source Data Last Updated:** 2026-01-22T02:42:11.262734
+**Source Data Last Updated:** 2026-01-22T02:19:22.899349
 
 **Universal Tracker Version:** Modified (this repository)
 
 **Seed Mode:** Fixed (seed=1)
 
-**Runs Per Game:** 1
+**Runs Per Game:** 10
 
 **Parallel Jobs:** 2
 
@@ -22,32 +22,32 @@
 
 ## Summary
 
-- **Total Games:** 1
-- **Games with 100% Pass Rate:** 1 (100.0%)
-- **Games with Failures:** 0 (0.0%)
-- **Total Fuzz Runs:** 1
-- **Successful Runs:** 1 (100.0%)
-- **Failed Runs:** 0
-- **Timed Out Runs:** 0
-- **Ignored Runs:** 0
+- **Total Games:** 124
+- **Games with 100% Pass Rate:** 34 (27.4%)
+- **Games with Failures:** 90 (72.6%)
+- **Total Fuzz Runs:** 1240
+- **Successful Runs:** 408 (32.9%)
+- **Failed Runs:** 680
+- **Timed Out Runs:** 12
+- **Ignored Runs:** 140
 
 ### Explain Support Summary
 
-- **Games with Explain Stats:** 1
-- **Games with 100% Explain Coverage:** 1
-- **Games with No Explain Support:** 0
-- **Locations with Explain Support:** 0
-- **Locations without Explain Support:** 0
-- **Locations with Default Rule:** 1
-- **Overall Explain Coverage:** 100.0%
+- **Games with Explain Stats:** 112
+- **Games with 100% Explain Coverage:** 92
+- **Games with No Explain Support:** 11
+- **Locations with Explain Support:** 15,112
+- **Locations without Explain Support:** 3,915
+- **Locations with Default Rule:** 16,981
+- **Overall Explain Coverage:** 79.4%
 
 ### Generic Exporter/Logic Statistics
 
-Of the 1 games with 100% pass rate:
+Of the 34 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 1/1 (100.0%)
-- **Passing with Generic Logic:** 1/1 (100.0%)
-- **Passing with Both Generic:** 1/1 (100.0%)
+- **Passing with Generic Exporter:** 34/34 (100.0%)
+- **Passing with Generic Logic:** 34/34 (100.0%)
+- **Passing with Both Generic:** 34/34 (100.0%)
 
 **Combined Custom Code Size:**
 
@@ -59,7 +59,518 @@ Of the 1 games with 100% pass rate:
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| Clique | ✅ | 1 | 1 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| A Dance of Fire and Ice | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| A Difficult Game About Climbing | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | N/A | N/A | N/A |
+| A Link Between Worlds | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| ANIMAL WELL | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | N/A | N/A | N/A |
+| Actraiser | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | N/A | N/A | N/A |
+| Against the Storm | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Air Delivery | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | N/A | N/A | N/A |
+| An Untitled Story | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Anodyne | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Another Crabs Treasure | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | N/A | N/A | N/A |
+| Ape Escape | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | N/A | N/A | N/A |
+| Ape Escape 3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Astalon | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | N/A | N/A | N/A |
+| Autopelago | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Axiom Verge | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Balatro | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | N/A | N/A | N/A |
+| Brotato | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% | N/A | N/A | N/A |
+| Castlevania: Dawn of Sorrow | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Cavern of Dreams | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | N/A | N/A | N/A |
+| ChecksMate | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Chrono Trigger Jets of Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| ClusterTruck | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | N/A | N/A | N/A |
+| Corn Kidz 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| CrossCode | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Crystal Project | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Crystalis | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% | N/A | N/A | N/A |
+| Cuphead | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | N/A | N/A | N/A |
+| DORONKO WANKO | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Deep Rock Galactic | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | N/A | N/A | N/A |
+| Diddy Kong Racing | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Digimon World | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | N/A | N/A | N/A |
+| Dome Keeper | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Duke Nukem 3D | ❌ | 10 | 1 | 8 | 0 | 1 | ❌ 10.0% | N/A | N/A | N/A |
+| Final Fantasy Tactics A2 | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% | N/A | N/A | N/A |
+| Final Fantasy Tactics Advance | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | N/A | N/A | N/A |
+| Fire Emblem Sacred Stones | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Frogmonster | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| GZDoom | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | N/A | N/A | N/A |
+| Garfield Kart - Furious Racing | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Golden Sun The Lost Age | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Grim Dawn | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% | N/A | N/A | N/A |
+| Hammerwatch | ❌ | 10 | 5 | 4 | 0 | 1 | ⚠️ 50.0% | N/A | N/A | N/A |
+| Hatsune Miku Project Diva Mega Mix+ | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Here Comes Niko! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Iji | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Into the Breach | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Isles Of Sea And Sky | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Ittle Dew 2 | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | N/A | N/A | N/A |
+| Jigsaw | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| K-On! After School Live!! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Keep Talking and Nobody Explodes | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% | N/A | N/A | N/A |
+| Kingdom Hearts Birth by Sleep | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Kingdom Hearts Chain of Memories | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Kingdom Hearts RE Chain of Memories | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Kirby Super Star | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | N/A | N/A | N/A |
+| League of Legends | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Lego Star Wars: The Complete Saga | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% | N/A | N/A | N/A |
+| Lil Gator Game | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Lingo 2 | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Little Witch Nobeta | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Luigi's Mansion | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% | N/A | N/A | N/A |
+| Lunacid | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | N/A | N/A | N/A |
+| Majora's Mask Recompiled | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Mario Kart Double Dash | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Metroid Zero Mission | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Minishoot Adventures | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Minit | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Monster Sanctuary | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Nine Sols | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | N/A | N/A | N/A |
+| Ori and the Blind Forest | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | N/A | N/A | N/A |
+| Ori and the Will of the Wisps | ❌ | 10 | 0 | 1 | 6 | 3 | ❌ 0.0% | N/A | N/A | N/A |
+| Oxygen Not Included | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% | N/A | N/A | N/A |
+| Pizza Tower | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | N/A | N/A | N/A |
+| Pokemon FireRed and LeafGreen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Pokemon Mystery Dungeon Explorers of Sky | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Pseudoregalia | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Rabi-Ribi | ❌ | 10 | 0 | 1 | 0 | 9 | ❌ 0.0% | N/A | N/A | N/A |
+| Rain World | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% | N/A | N/A | N/A |
+| Ratchet & Clank 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Reventure | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Rift Wizard | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | N/A | N/A | N/A |
+| Rift of the Necrodancer | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% | N/A | N/A | N/A |
+| Rusted Moss | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Sentinels of the Multiverse | ❌ | 10 | 0 | 7 | 3 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Shadow The Hedgehog | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% | N/A | N/A | N/A |
+| Ship of Harkinian | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Simon Tatham's Portable Puzzle Collection | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Sly 2: Band of Thieves | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | N/A | N/A | N/A |
+| Sly Cooper and the Thievius Raccoonus | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | N/A | N/A | N/A |
+| Sonic Adventure DX | ❌ | 10 | 0 | 4 | 0 | 6 | ❌ 0.0% | N/A | N/A | N/A |
+| Sonic Heroes | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | N/A | N/A | N/A |
+| Sonic Rush | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | N/A | N/A | N/A |
+| Sonic the Hedgehog 1 | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | N/A | N/A | N/A |
+| Soul Blazer | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | N/A | N/A | N/A |
+| Spinball | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Spyro 3 | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | N/A | N/A | N/A |
+| Stacklands | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Star Fox 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Star Wars Episode I Racer | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | N/A | N/A | N/A |
+| Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| System Shock 2 | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | N/A | N/A | N/A |
+| TCG Card Shop Simulator | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| TOEM: A Photo Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| Tetris Attack | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | N/A | N/A | N/A |
+| Tevi | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| The Legend of Zelda - Oracle of Seasons | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| The Legend of Zelda - Phantom Hourglass | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| The Sims 4 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| ToeJam and Earl | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | N/A | N/A | N/A |
+| TurnipBoy | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Tyrian | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% | N/A | N/A | N/A |
+| Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | N/A | N/A | N/A |
+| Wario Land | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Watery Words | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Wordipelago | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | N/A | N/A | N/A |
+| XCOM 2 War of the Chosen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | N/A | N/A | N/A |
+| Yu-Gi-Oh! Forbidden Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
+| Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
+| plateup | ❌ | 10 | 8 | 1 | 1 | 0 | ⚠️ 80.0% | N/A | N/A | N/A |
+
+## Error Details
+
+### A Difficult Game About Climbing
+
+- **None**: 9 occurrence(s)
+
+### A Link Between Worlds
+
+- **None**: 10 occurrence(s)
+
+### ANIMAL WELL
+
+- **None**: 9 occurrence(s)
+
+### Against the Storm
+
+- **FillError**: 4 occurrence(s)
+- **None**: 5 occurrence(s)
+- **<class 'TimeoutError'>**: 1 occurrence(s)
+
+### Air Delivery
+
+- **None**: 6 occurrence(s)
+
+### Anodyne
+
+- **None**: 10 occurrence(s)
+
+### Another Crabs Treasure
+
+- **None**: 5 occurrence(s)
+
+### Ape Escape
+
+- **None**: 4 occurrence(s)
+
+### Ape Escape 3
+
+- **None**: 9 occurrence(s)
+- **('AE3 > GoalTarget: There are no goal locations available to check. They might have been explicitly excluded. Please reduce the excluded locations.', 'Actual: Specter, ', 'Excluded: Spork - Hide-n-Seek Forest | SAL-1000 - Saru-mon\'s Castle | Shimmy - Winterville | Pipotron Yellow - Winterville | Piptron Red - Toytown | Pipotron Blue - Airplane Squadron | Dark Master - Kung-Fu Alley | SAL-3000 - Space-TV Fortress | Scorpi-mon - Mirage Town | Minimon - Mirage Town | Moontero - Mirage Town | Ukki Son - Mirage Town | Ukki Jeff - Mirage Town | Ukki Saru Maru - Mirage Town | Genghis Mon - Mirage Town | Cup-o-mon - Mirage Town | Nijal - Mirage Town | Apey Jones - Mirage Town | Golden Mon - Mirage Town | Ukki Mamba - Mirage Town | Crazy \'ol Mon - Mirage Town | Shamila - Mirage Town | Tamiyanya - Mirage Town | Salteenz - Mirage Town | Dancing Mia - Mirage Town | Miccho - Mirage Town | Kisha - Mirage Town | Gimuccho - Mirage Town | Wojin - Mirage Town | Princess Judy - Mirage Town | Pipo Camera - Mirage Town | Red Cellphone "Genie Dancer Reminder" - Mirage Town | Blue Cellphone "Genie Dancer Reminder - Special Ability" - Mirage Town | Blue Cellphone "Long Horizontal Rods Tutorial" - Mirage Town | Blue Cellphone "Jars that only the Genie can enter" - Mirage Town | Specter |  | Monkey Yellow |  | Pincher-mon - Eversummer Island | Salumani - Eversummer Island | Salulu - Eversummer Island | Baku - Eversummer Island | Ukki Mat - Eversummer Island | Salunch - Eversummer Island | Mong Popo - Eversummer Island | Mohcha - Eversummer Island | Kamcha - Eversummer Island | Bimocha - Eversummer Island | Gimchin - Eversummer Island | Kamaccha - Eversummer Island | Gyamu - Eversummer Island | Tartan - Eversummer Island | Takumon - Eversummer Island | Ukki Ether - Eversummer Island | Molzone - Eversummer Island | Chappio - Eversummer Island | Pomoah - Eversummer Island | Gucchai - Eversummer Island | Makaccho - Eversummer Island | Gamaran - Eversummer Island | Larry - Eversummer Island | Pipo Camera - Eversummer Island | Blue Cellphone "Gadget Fetch and Spinning Air Attack Tutorial" - Eversummer Island | Blue Cellphone "Water Net Reminder - Redux" - Eversummer Island | Pipo Tobi - The Emperor\'s Castle | Masan - The Emperor\'s Castle | Mohachi - The Emperor\'s Castle | Mon Ninpo - The Emperor\'s Castle | Yosi - The Emperor\'s Castleo | Fatty Mcfats - The Emperor\'s Castle | Tomoku-chan - The Emperor\'s Castle | Kikimaru - The Emperor\'s Castle | Uziko - The Emperor\'s Castle | GP - The Emperor\'s Castle | Walter - The Emperor\'s Castle | Monkibeth - The Emperor\'s Castle | Babuzo - The Emperor\'s Castle | Fishy Feet - The Emperor\'s Castle | Pipo Torin - The Emperor\'s Castle | Tomi - The Emperor\'s Castle | Master Pan - The Emperor\'s Castle | Monchin Chi - The Emperor\'s Castle | Masachi - The Emperor\'s Castle | Golota - The Emperor\'s Castle | Kinsuke - The Emperor\'s Castle | Pipo Camera - The Emperor\'s Castle | Red Cellphone "Miracle Ninja Reminder" - The Emperor\'s Castle | Blue Cellphone "Walking on Tightropes" - The Emperor\'s Castle | Blue Cellphone"What does the Insignia mean?" - The Emperor\'s Castle | Blue Cellphone "Tiptoe Tutorial" - The Emperor\'s Castle | Monkey Pink |  | Dr. Tomoki |  | Ukkichi - Mount Amazing | Chomon - Mount Amazing | Ukkido - Mount Amazing | Kyamio - Mount Amazing | Talupon - Mount Amazing | Bokitan - Mount Amazing | Tami - Mount Amazing | Micchino - Mount Amazing | Talurin - Mount Amazing | Occhimon - Mount Amazing | Mikkurin - Mount Amazing | Kicchino - Mount Amazing | Kimurin - Mount Amazing | Sakkano - Mount Amazing | Camino - Mount Amazing | Valuccha - Mount Amazing | Pisuke - Mount Amazing | Kansuke - Mount Amazing | Pohta - Mount Amazing | Keisuke - Mount Amazing | Pipo Camera - Mount Amazing | Red Cellphone "Sky Flyer Reminder" - Mount Amazing | ')**: 1 occurrence(s)
+
+### Astalon
+
+- **None**: 8 occurrence(s)
+
+### Autopelago
+
+- **None**: 10 occurrence(s)
+
+### Axiom Verge
+
+- **None**: 10 occurrence(s)
+
+### Balatro
+
+- **list index out of range**: 3 occurrence(s)
+- **None**: 3 occurrence(s)
+
+### Cavern of Dreams
+
+- **None**: 8 occurrence(s)
+
+### ChecksMate
+
+- **None**: 10 occurrence(s)
+
+### Chrono Trigger Jets of Time
+
+- **CTJoT YAML files must be generated from https://www.multiworld.ctjot.com**: 10 occurrence(s)
+
+### ClusterTruck
+
+- **FillError**: 7 occurrence(s)
+
+### Corn Kidz 64
+
+- **None**: 10 occurrence(s)
+
+### CrossCode
+
+- **None**: 10 occurrence(s)
+
+### Crystal Project
+
+- **None**: 8 occurrence(s)
+- **For player 4-0: YAML settings were contradictory. Regionsanity Starter Level Min Value 60 is higher than Regionsanity Starter Level Max Value 31. Change settings and regenerate.**: 1 occurrence(s)
+- **For player 9-0: YAML settings were contradictory. Regionsanity Starter Level Min Value 41 is higher than Regionsanity Starter Level Max Value 9. Change settings and regenerate.**: 1 occurrence(s)
+
+### Crystalis
+
+- **None**: 7 occurrence(s)
+
+### Deep Rock Galactic
+
+- **Sample larger than population or is negative**: 5 occurrence(s)
+
+### Diddy Kong Racing
+
+- **None**: 10 occurrence(s)
+
+### Digimon World
+
+- **None**: 6 occurrence(s)
+
+### Duke Nukem 3D
+
+- **None**: 8 occurrence(s)
+
+### Final Fantasy Tactics A2
+
+- **Too many non-special starting units to randomize**: 7 occurrence(s)
+
+### Final Fantasy Tactics Advance
+
+- **'B' format requires 0 <= number <= 255**: 3 occurrence(s)
+- **None**: 1 occurrence(s)
+
+### Fire Emblem Sacred Stones
+
+- **None**: 10 occurrence(s)
+
+### Frogmonster
+
+- **None**: 10 occurrence(s)
+
+### Garfield Kart - Furious Racing
+
+- **compared against a str that could never be equal. RandomizeSpoilers(Off) == on**: 7 occurrence(s)
+- **compared against a str that could never be equal. RandomizeSpoilers(Progressive) == on**: 3 occurrence(s)
+
+### Golden Sun The Lost Age
+
+- **None**: 10 occurrence(s)
+
+### Grim Dawn
+
+- **None**: 1 occurrence(s)
+- **list index out of range**: 2 occurrence(s)
+
+### Hammerwatch
+
+- **None**: 4 occurrence(s)
+
+### Iji
+
+- **None**: 10 occurrence(s)
+
+### Into the Breach
+
+- **No module named 'pysat'**: 8 occurrence(s)
+- **None**: 2 occurrence(s)
+
+### Jigsaw
+
+- **None**: 10 occurrence(s)
+
+### Keep Talking and Nobody Explodes
+
+- **None**: 7 occurrence(s)
+
+### Lego Star Wars: The Complete Saga
+
+- **None**: 1 occurrence(s)
+
+### Lil Gator Game
+
+- **'CollectionState' object has no attribute 'rule_cache'**: 10 occurrence(s)
+
+### Lingo 2
+
+- **None**: 9 occurrence(s)
+- **<class 'TimeoutError'>**: 1 occurrence(s)
+
+### Lunacid
+
+- **None**: 9 occurrence(s)
+
+### Majora's Mask Recompiled
+
+- **list index out of range**: 10 occurrence(s)
+
+### Mario Kart Double Dash
+
+- **None**: 10 occurrence(s)
+
+### Metroid Zero Mission
+
+- **None**: 10 occurrence(s)
+
+### Minishoot Adventures
+
+- **None**: 10 occurrence(s)
+
+### Minit
+
+- **None**: 10 occurrence(s)
+
+### Monster Sanctuary
+
+- **None**: 10 occurrence(s)
+
+### Nine Sols
+
+- **None**: 8 occurrence(s)
+
+### Ori and the Blind Forest
+
+- **None**: 8 occurrence(s)
+
+### Ori and the Will of the Wisps
+
+- **<class 'TimeoutError'>**: 6 occurrence(s)
+- **None of the available entrances are valid targets for the available exits.
+Randomization stage is placing dead ends and requires new region/exit access by default
+Placeable entrances: {0: [GladesTown.MotayHutInside (Door) (Player 1), GladesTown.StorageHut (Door) (Player 1)]}
+Placeable exits: []
+All unplaced entrances: [GladesTown.MotayHutInside (Door) (Player 1), GladesTown.StorageHut (Door) (Player 1)]
+All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Door)]**: 1 occurrence(s)
+
+### Oxygen Not Included
+
+- ** - 1 already exists in the location cache.**: 1 occurrence(s)
+
+### Pizza Tower
+
+- **None**: 9 occurrence(s)
+
+### Pokemon FireRed and LeafGreen
+
+- **None**: 10 occurrence(s)
+
+### Pokemon Mystery Dungeon Explorers of Sky
+
+- **None**: 8 occurrence(s)
+- **'Team Name Location'**: 2 occurrence(s)
+
+### Pseudoregalia
+
+- **None**: 10 occurrence(s)
+
+### Rabi-Ribi
+
+- **None**: 1 occurrence(s)
+
+### Rain World
+
+- **None**: 3 occurrence(s)
+
+### Reventure
+
+- **None**: 10 occurrence(s)
+
+### Rift Wizard
+
+- **None**: 3 occurrence(s)
+
+### Rift of the Necrodancer
+
+- **None**: 3 occurrence(s)
+
+### Rusted Moss
+
+- **Rusted Moss character Ameli is not available with this AP World. Valid options are `fern` or `gimmick`.**: 2 occurrence(s)
+- **Rusted Moss character Maya is not available with this AP World. Valid options are `fern` or `gimmick`.**: 2 occurrence(s)
+- **None**: 6 occurrence(s)
+
+### Sentinels of the Multiverse
+
+- **FillError**: 7 occurrence(s)
+- **<class 'TimeoutError'>**: 3 occurrence(s)
+
+### Shadow The Hedgehog
+
+- **None**: 3 occurrence(s)
+
+### Ship of Harkinian
+
+- **None**: 10 occurrence(s)
+
+### Sly 2: Band of Thieves
+
+- **None**: 8 occurrence(s)
+
+### Sly Cooper and the Thievius Raccoonus
+
+- **FillError**: 1 occurrence(s)
+- **None**: 2 occurrence(s)
+
+### Sonic Adventure DX
+
+- **None**: 4 occurrence(s)
+
+### Sonic Rush
+
+- **None**: 6 occurrence(s)
+
+### Sonic the Hedgehog 1
+
+- **None**: 1 occurrence(s)
+
+### Soul Blazer
+
+- **None**: 2 occurrence(s)
+
+### Spyro 3
+
+- **None**: 8 occurrence(s)
+
+### Stacklands
+
+- **None**: 10 occurrence(s)
+
+### Star Fox 64
+
+- **None**: 10 occurrence(s)
+
+### Star Wars Episode I Racer
+
+- **None**: 2 occurrence(s)
+
+### System Shock 2
+
+- **FillError**: 6 occurrence(s)
+- **None**: 3 occurrence(s)
+
+### TCG Card Shop Simulator
+
+- **None**: 10 occurrence(s)
+
+### Tetris Attack
+
+- **None**: 8 occurrence(s)
+
+### The Legend of Zelda - Oracle of Seasons
+
+- **None**: 10 occurrence(s)
+
+### The Legend of Zelda - Phantom Hourglass
+
+- **None**: 8 occurrence(s)
+- **Phantom Hourglass: failed GER after 10 attempts.**: 2 occurrence(s)
+
+### The Sims 4
+
+- **None**: 10 occurrence(s)
+
+### ToeJam and Earl
+
+- **None**: 5 occurrence(s)
+
+### TurnipBoy
+
+- **None**: 10 occurrence(s)
+
+### Tyrian
+
+- **None**: 3 occurrence(s)
+
+### Wario Land
+
+- **/home/runner/work/Archipelago-CC/Archipelago-CC/Wario Land - Super Mario Land 3 (World).gb**: 10 occurrence(s)
+
+### Watery Words
+
+- **None**: 10 occurrence(s)
+
+### Wordipelago
+
+- **None**: 8 occurrence(s)
+
+### XCOM 2 War of the Chosen
+
+- **None**: 10 occurrence(s)
+
+### Yu-Gi-Oh! Dungeon Dice Monsters
+
+- **None**: 4 occurrence(s)
+
+### Yu-Gi-Oh! Forbidden Memories
+
+- **None**: 10 occurrence(s)
+
+### plateup
+
+- **FillError**: 1 occurrence(s)
+- **<class 'TimeoutError'>**: 1 occurrence(s)
+
 
 ## Explain Support Details
 
@@ -67,7 +578,118 @@ This section shows which games have rules that support the `explain_json()` meth
 
 | Game Name | Total Locs | With Explain | Without Explain | Default Rule | Coverage |
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
-| Clique | 1 | 0 | 0 | 1 | ✅ 100% |
+| A Link Between Worlds | 257 | 0 | 257 | 0 | ❌ 0% |
+| Axiom Verge | 125 | 0 | 125 | 0 | ❌ 0% |
+| Duke Nukem 3D | 148 | 0 | 23 | 125 | ❌ 0% |
+| Into the Breach | 21 | 0 | 21 | 0 | ❌ 0% |
+| Kingdom Hearts RE Chain of Memories | 247 | 0 | 101 | 146 | ❌ 0% |
+| Lego Star Wars: The Complete Saga | 74 | 0 | 3 | 71 | ❌ 0% |
+| Mario Kart Double Dash | 182 | 0 | 1 | 181 | ❌ 0% |
+| Metroid Fusion | 126 | 0 | 126 | 0 | ❌ 0% |
+| Monster Sanctuary | 572 | 0 | 572 | 0 | ❌ 0% |
+| Super Cat Planet | 81 | 0 | 50 | 31 | ❌ 0% |
+| Tevi | 1339 | 0 | 1339 | 0 | ❌ 0% |
+| XCOM 2 War of the Chosen | 147 | 1 | 146 | 0 | 🔶 1% |
+| Diddy Kong Racing | 59 | 11 | 20 | 28 | 🔶 35% |
+| Crystal Project | 1264 | 235 | 366 | 663 | 🔶 39% |
+| Lunacid | 1238 | 154 | 212 | 872 | 🔶 42% |
+| Balatro | 966 | 441 | 525 | 0 | 🔶 46% |
+| Minit | 50 | 43 | 5 | 2 | ⚠️ 90% |
+| Pokemon FireRed and LeafGreen | 1026 | 436 | 20 | 570 | ⚠️ 96% |
+| ChecksMate | 71 | 65 | 2 | 4 | ⚠️ 97% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 92 | 91 | 1 | 0 | ⚠️ 99% |
+| A Dance of Fire and Ice | 142 | 135 | 0 | 7 | ✅ 100% |
+| A Difficult Game About Climbing | 16 | 0 | 0 | 16 | ✅ 100% |
+| ANIMAL WELL | 120 | 120 | 0 | 0 | ✅ 100% |
+| Actraiser | 175 | 57 | 0 | 118 | ✅ 100% |
+| Against the Storm | 161 | 161 | 0 | 0 | ✅ 100% |
+| Air Delivery | 27 | 17 | 0 | 10 | ✅ 100% |
+| An Untitled Story | 166 | 100 | 0 | 66 | ✅ 100% |
+| Anodyne | 364 | 0 | 0 | 364 | ✅ 100% |
+| Another Crabs Treasure | 614 | 181 | 0 | 433 | ✅ 100% |
+| Ape Escape | 331 | 0 | 0 | 331 | ✅ 100% |
+| Ape Escape 3 | 320 | 271 | 0 | 49 | ✅ 100% |
+| Astalon | 290 | 131 | 0 | 159 | ✅ 100% |
+| Autopelago | 246 | 0 | 0 | 246 | ✅ 100% |
+| Brotato | 153 | 0 | 0 | 153 | ✅ 100% |
+| Castlevania: Dawn of Sorrow | 226 | 90 | 0 | 136 | ✅ 100% |
+| Cavern of Dreams | 478 | 0 | 0 | 478 | ✅ 100% |
+| ClusterTruck | 109 | 94 | 0 | 15 | ✅ 100% |
+| Corn Kidz 64 | 187 | 187 | 0 | 0 | ✅ 100% |
+| CrossCode | 432 | 408 | 0 | 24 | ✅ 100% |
+| Crystalis | 101 | 46 | 0 | 55 | ✅ 100% |
+| DORONKO WANKO | 95 | 4 | 0 | 91 | ✅ 100% |
+| Deep Rock Galactic | 441 | 0 | 0 | 441 | ✅ 100% |
+| Digimon World | 217 | 215 | 0 | 2 | ✅ 100% |
+| Dome Keeper | 94 | 0 | 0 | 94 | ✅ 100% |
+| Final Fantasy Tactics Advance | 552 | 0 | 0 | 552 | ✅ 100% |
+| Fire Emblem Sacred Stones | 52 | 0 | 0 | 52 | ✅ 100% |
+| Frogmonster | 120 | 4 | 0 | 116 | ✅ 100% |
+| Golden Sun The Lost Age | 319 | 216 | 0 | 103 | ✅ 100% |
+| Grim Dawn | 46 | 4 | 0 | 42 | ✅ 100% |
+| Hammerwatch | 1276 | 0 | 0 | 1276 | ✅ 100% |
+| Hatsune Miku Project Diva Mega Mix+ | 500 | 500 | 0 | 0 | ✅ 100% |
+| Here Comes Niko! | 944 | 265 | 0 | 679 | ✅ 100% |
+| Iji | 177 | 0 | 0 | 177 | ✅ 100% |
+| Isles Of Sea And Sky | 586 | 345 | 0 | 241 | ✅ 100% |
+| Ittle Dew 2 | 143 | 143 | 0 | 0 | ✅ 100% |
+| Jigsaw | 287 | 287 | 0 | 0 | ✅ 100% |
+| K-On! After School Live!! | 589 | 589 | 0 | 0 | ✅ 100% |
+| Keep Talking and Nobody Explodes | 116 | 72 | 0 | 44 | ✅ 100% |
+| Kingdom Hearts Birth by Sleep | 223 | 56 | 0 | 167 | ✅ 100% |
+| Kingdom Hearts Chain of Memories | 151 | 29 | 0 | 122 | ✅ 100% |
+| League of Legends | 510 | 506 | 0 | 4 | ✅ 100% |
+| Lingo 2 | 501 | 501 | 0 | 0 | ✅ 100% |
+| Little Witch Nobeta | 55 | 15 | 0 | 40 | ✅ 100% |
+| Luigi's Mansion | 431 | 132 | 0 | 299 | ✅ 100% |
+| MetroCUBEvania | 9 | 2 | 0 | 7 | ✅ 100% |
+| Metroid Zero Mission | 100 | 0 | 0 | 100 | ✅ 100% |
+| Minishoot Adventures | 194 | 194 | 0 | 0 | ✅ 100% |
+| Nine Sols | 318 | 1 | 0 | 317 | ✅ 100% |
+| Ori and the Blind Forest | 254 | 212 | 0 | 42 | ✅ 100% |
+| Oxygen Not Included | 352 | 0 | 0 | 352 | ✅ 100% |
+| Pizza Tower | 224 | 206 | 0 | 18 | ✅ 100% |
+| Pokemon Mystery Dungeon Explorers of Sky | 2523 | 2448 | 0 | 75 | ✅ 100% |
+| Pseudoregalia | 93 | 55 | 0 | 38 | ✅ 100% |
+| Rabi-Ribi | 207 | 0 | 0 | 207 | ✅ 100% |
+| Rain World | 192 | 17 | 0 | 175 | ✅ 100% |
+| Ratchet & Clank 2 | 123 | 74 | 0 | 49 | ✅ 100% |
+| Reventure | 99 | 77 | 0 | 22 | ✅ 100% |
+| Rift Wizard | 83 | 80 | 0 | 3 | ✅ 100% |
+| Rift of the Necrodancer | 294 | 294 | 0 | 0 | ✅ 100% |
+| Rusted Moss | 100 | 0 | 0 | 100 | ✅ 100% |
+| Shadow The Hedgehog | 935 | 72 | 0 | 863 | ✅ 100% |
+| Ship of Harkinian | 566 | 566 | 0 | 0 | ✅ 100% |
+| Simon Tatham's Portable Puzzle Collection | 523 | 523 | 0 | 0 | ✅ 100% |
+| Sly 2: Band of Thieves | 170 | 39 | 0 | 131 | ✅ 100% |
+| Sly Cooper and the Thievius Raccoonus | 203 | 45 | 0 | 158 | ✅ 100% |
+| Sonic Adventure DX | 205 | 21 | 0 | 184 | ✅ 100% |
+| Sonic Rush | 67 | 0 | 0 | 67 | ✅ 100% |
+| Sonic the Hedgehog 1 | 208 | 0 | 0 | 208 | ✅ 100% |
+| Soul Blazer | 300 | 94 | 0 | 206 | ✅ 100% |
+| Spinball | 2 | 1 | 0 | 1 | ✅ 100% |
+| Spyro 3 | 308 | 0 | 0 | 308 | ✅ 100% |
+| Stacklands | 118 | 100 | 0 | 18 | ✅ 100% |
+| Star Fox 64 | 107 | 0 | 0 | 107 | ✅ 100% |
+| Star Wars Episode I Racer | 101 | 91 | 0 | 10 | ✅ 100% |
+| Symphony of the Night | 187 | 20 | 0 | 167 | ✅ 100% |
+| System Shock 2 | 708 | 147 | 0 | 561 | ✅ 100% |
+| TCG Card Shop Simulator | 794 | 644 | 0 | 150 | ✅ 100% |
+| TOEM: A Photo Adventure | 191 | 4 | 0 | 187 | ✅ 100% |
+| Tetris Attack | 300 | 0 | 0 | 300 | ✅ 100% |
+| The Legend of Zelda - Oracle of Seasons | 233 | 0 | 0 | 233 | ✅ 100% |
+| The Legend of Zelda - Phantom Hourglass | 291 | 0 | 0 | 291 | ✅ 100% |
+| The Sims 4 | 333 | 290 | 0 | 43 | ✅ 100% |
+| ToeJam and Earl | 605 | 8 | 0 | 597 | ✅ 100% |
+| TurnipBoy | 45 | 22 | 0 | 23 | ✅ 100% |
+| Tyrian | 135 | 0 | 0 | 135 | ✅ 100% |
+| Vampire Survivors | 242 | 98 | 0 | 144 | ✅ 100% |
+| Watery Words | 150 | 150 | 0 | 0 | ✅ 100% |
+| Wordipelago | 169 | 19 | 0 | 150 | ✅ 100% |
+| Yu-Gi-Oh! Forbidden Memories | 678 | 678 | 0 | 0 | ✅ 100% |
+| Zelda II: The Adventure of Link | 106 | 80 | 0 | 26 | ✅ 100% |
+| osu! | 310 | 0 | 0 | 310 | ✅ 100% |
+| plateup | 385 | 382 | 0 | 3 | ✅ 100% |
 
 ## Notes
 
