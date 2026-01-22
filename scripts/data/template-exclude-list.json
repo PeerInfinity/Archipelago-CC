@@ -168,6 +168,10 @@
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
     {
+      "name": "Sly 2 Band of Thieves.yaml",
+      "reason": "APWorld bug: uses generation_is_fake to apply different rules during tracking vs generation. ThiefNet locations skip Episode requirements and Pickpocket locations get wrong region assignments during tracking."
+    },
+    {
       "name": "Soul Blazer.yaml",
       "reason": "Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context."
     },
