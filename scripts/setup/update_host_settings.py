@@ -104,6 +104,9 @@ def update_host_yaml(settings=None):
 
     # Update settings if provided
     if settings:
+        # Ensure general_options section exists
+        if 'general_options' not in data:
+            data['general_options'] = {}
         for key, value in settings.items():
             data['general_options'][key] = value
             print(f"Set {key} = {value}")
