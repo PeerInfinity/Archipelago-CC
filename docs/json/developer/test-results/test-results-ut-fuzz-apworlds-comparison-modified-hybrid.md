@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-22 13:25:41
+**Generated:** 2026-01-22 21:49:04
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -14,9 +14,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 32 (25.8%)
+- **Passing Both:** 33 (26.6%)
 - **Passing Modified Only:** 2 (1.6%)
-- **Passing Hybrid Only:** 12 (9.7%)
+- **Passing Hybrid Only:** 11 (8.9%)
 - **Passing Neither:** 78 (62.9%)
 
 ## Full Comparison
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Ship of Harkinian | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 70.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sonic Heroes | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ 40.0% | ❌ 40.0% | ✅ | ✅ | N/A |
@@ -133,9 +133,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Tevi | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 0.0% | ❌ 20.0% | ✅ | ✅ | N/A |
-| The Sims 4 | ❌ 0.0% | ❌ 0.0% | 5.5KB | ✅ | N/A |
+| The Sims 4 | ⚠️ 80.0% | ❌ 0.0% | 5.5KB | ✅ | N/A |
 | ToeJam and Earl | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| TurnipBoy | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
+| TurnipBoy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Tyrian | ❌ 30.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | osu! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (32)
+## Games Passing Both (33)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -183,6 +183,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Symphony of the Night | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | N/A |
 | Tevi | ✅ | ✅ | N/A |
+| TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
@@ -196,7 +197,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | Here Comes Niko! | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
 
-## Games Passing Hybrid Only (12)
+## Games Passing Hybrid Only (11)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
@@ -212,7 +213,6 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
-| TurnipBoy | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
 ## Games Passing Neither (78)

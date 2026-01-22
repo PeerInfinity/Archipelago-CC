@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
 
-**Generated:** 2026-01-22 13:25:41
+**Generated:** 2026-01-22 21:49:04
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -14,8 +14,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 22 (17.7%)
-- **Passing Original Only:** 20 (16.1%)
+- **Passing Both:** 23 (18.5%)
+- **Passing Original Only:** 19 (15.3%)
 - **Passing Modified Only:** 12 (9.7%)
 - **Passing Neither:** 70 (56.5%)
 
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sonic Heroes | ❌ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ✅ 100.0% | ❌ 40.0% | ✅ | ✅ | N/A |
@@ -133,9 +133,9 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Tevi | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| The Sims 4 | ❌ 0.0% | ❌ 0.0% | 5.5KB | ✅ | N/A |
+| The Sims 4 | ❌ 0.0% | ⚠️ 80.0% | 5.5KB | ✅ | N/A |
 | ToeJam and Earl | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| TurnipBoy | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| TurnipBoy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Tyrian | ❌ 40.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | osu! | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ❌ 0.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (22)
+## Games Passing Both (23)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -175,9 +175,10 @@ These games have 100% success rate in both Universal Tracker versions.
 | Symphony of the Night | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | N/A |
 | Tevi | ✅ | ✅ | N/A |
+| TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
 
-## Games Passing Original Only (20)
+## Games Passing Original Only (19)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -200,7 +201,6 @@ These games pass in the Original UT but fail in the Modified UT.
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |
 | Star Fox 64 | ✅ | ✅ | N/A |
-| TurnipBoy | ✅ | ✅ | N/A |
 | Wordipelago | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
