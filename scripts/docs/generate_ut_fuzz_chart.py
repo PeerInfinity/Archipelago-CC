@@ -35,18 +35,38 @@ def load_test_results(results_file: str) -> Dict[str, Any]:
 
 def load_world_mapping(project_root: str) -> Dict[str, Dict[str, Any]]:
     """
-    Load the world mapping from JSON file.
+    Load the world mapping from JSON files.
+
+    Loads both world-mapping.json (official/bundled worlds) and
+    world-mapping-unofficial.json (apworlds) if they exist.
+    Unofficial mapping takes precedence for any conflicts.
 
     Returns the full world mapping dict with all game info including
     world_directory, exporter_size, game_logic_size, etc.
     """
-    mapping_file = os.path.join(project_root, 'scripts/data/world-mapping.json')
+    mapping = {}
+
+    # Load official world mapping
+    official_file = os.path.join(project_root, 'scripts/data/world-mapping.json')
     try:
-        with open(mapping_file, 'r') as f:
-            return json.load(f)
+        with open(official_file, 'r') as f:
+            mapping = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"Warning: Could not load world mapping file {mapping_file}: {e}")
-        return {}
+        print(f"Warning: Could not load official world mapping file {official_file}: {e}")
+
+    # Load unofficial world mapping (apworlds) and merge
+    unofficial_file = os.path.join(project_root, 'scripts/data/world-mapping-unofficial.json')
+    try:
+        with open(unofficial_file, 'r') as f:
+            unofficial_mapping = json.load(f)
+            mapping.update(unofficial_mapping)
+            print(f"Loaded {len(unofficial_mapping)} entries from unofficial world mapping")
+    except FileNotFoundError:
+        pass  # Unofficial mapping is optional
+    except json.JSONDecodeError as e:
+        print(f"Warning: Could not parse unofficial world mapping file {unofficial_file}: {e}")
+
+    return mapping
 
 
 def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
