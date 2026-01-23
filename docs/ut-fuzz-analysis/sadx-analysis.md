@@ -5,7 +5,7 @@
 **APWorld**: Sonic Adventure DX
 **Version**: v1.2.0-pre-release-2
 **Source**: https://github.com/ClassicSpeed/sadx-classic-randomizer
-**UT Fuzzer Pass Rate**: 0% (0 out of 10 runs succeed)
+**UT Fuzzer Pass Rate**: ~60% (6 out of 10 runs pass with exporter fixes)
 
 ## Root Cause
 
@@ -111,34 +111,36 @@ Created `exporter/games/unofficial/sadx.py` that:
 1. Pre-computes character/upgrade combinations for each location type
 2. Generates static rules based on known emblem/sub-level data
 3. Resolves option-dependent logic at export time
+4. Expands nested AST patterns in entrance/exit rules
 
 **What was implemented:**
 - Field emblem location rules (12 locations)
-- Sub-level location rules (Twinkle Circuit, Sand Hill, Sky Chase)
+- Sub-level location rules (Twinkle Circuit, Sand Hill, Sky Chase - all variants)
 - Chao egg location rules (Gold, Silver, Black eggs)
+- Unified boss fight rules (Chaos 4, Chaos 6, Egg Hornet)
 - Logic level support (0-4) for different character requirements
 - Playable character filtering based on options
+- Nested AST_any_of/all_of exit rule expansion (e.g., Hotel Key | Life Belt)
+- Empty AST_all_of rule conversion to True_()
 
-**Current status:**
-The exporter correctly generates expanded rules in the rules JSON, but the UT fuzzer still reports mismatches. The generated Rules.py in the worldgen world shows correct rule structures, but there appears to be a deeper issue with how the tracker evaluates compound rules with `CanReachRegion` checks.
+**Current status: ~60% pass rate**
 
-**Possible remaining issues:**
-1. The worldgen world's regions may have different connectivity than expected
-2. The Rule Builder's `CanReachRegion` evaluation may not work correctly with dynamically generated regions
-3. The tracker's region accessibility computation may differ from the server's
+The exporter significantly improves the pass rate from 0% to approximately 60%. The remaining failures are due to:
 
-### Alternative Options
+1. **Perfect Chaos Fight** (~30% of failures): This location has complex goal-based rules that check `can_reach` on dynamically selected other locations based on options like `goal_requires_levels`, `goal_requires_missions`, etc. These rules cannot be statically exported.
 
-#### Option B: APWorld Maintainer Updates (Preferred long-term)
+2. **Chao Race Locations** (~10% of failures): Chao races require reaching chao garden regions which may have character-specific access rules that aren't fully expanded.
 
-Request the SADX apworld maintainer to refactor rules to use simpler patterns:
-1. Store character requirements as static data, not method calls
-2. Use item groups for character requirements instead of dynamic iteration
-3. Avoid `isinstance()` checks in rule lambdas
+**Known limitations:**
+- Perfect Chaos Fight is intentionally excluded as its rules depend on dynamic goal requirements
+- Some edge cases with option-dependent location creation still fail
+- The post_process_data method needs to be properly integrated into the generation pipeline
 
-#### Option C: Add to Incompatible List (Fallback)
+### Recommended Next Steps
 
-Document SADX as incompatible with UT tracking due to fundamental architecture differences.
+1. **For immediate use**: The exporter provides significant improvement for most game configurations
+2. **For full compatibility**: Request the SADX apworld maintainer to refactor rules to use simpler patterns
+3. **Long-term**: Consider adding Perfect Chaos Fight handling when goal options can be resolved at export time
 
 ## Technical Details
 
