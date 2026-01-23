@@ -20,6 +20,7 @@ BOOLEAN_SETTINGS = [
     'filter_event_items',
     'update_frontend_presets',
     'skip_export_for_native_ut',
+    'skip_export_from_list',
 ]
 
 STRING_SETTINGS = {
@@ -42,6 +43,7 @@ PRESETS = {
         'filter_event_items': False,
         'update_frontend_presets': False,
         'skip_export_for_native_ut': False,
+        'skip_export_from_list': False,
     },
     'minimal-spoilers': {
         'skip_required_files': True,
@@ -57,6 +59,7 @@ PRESETS = {
         'filter_event_items': False,
         'update_frontend_presets': True,
         'skip_export_for_native_ut': False,
+        'skip_export_from_list': False,
     },
     'full-spoilers': {
         'skip_required_files': True,
@@ -72,6 +75,7 @@ PRESETS = {
         'filter_event_items': False,
         'update_frontend_presets': True,
         'skip_export_for_native_ut': False,
+        'skip_export_from_list': False,
     },
     'ut-comparison': {
         'skip_required_files': True,
@@ -87,6 +91,7 @@ PRESETS = {
         'filter_event_items': True,  # Filter out event locations/items to match UT output
         'update_frontend_presets': True,
         'skip_export_for_native_ut': False,
+        'skip_export_from_list': False,
     },
     'ut-fuzz': {
         'skip_required_files': True,
@@ -101,7 +106,8 @@ PRESETS = {
         'auto_collect_events': True,  # Enable event auto-collection to match UT behavior
         'filter_event_items': True,  # Filter out event locations/items to match UT output
         'update_frontend_presets': True,
-        'skip_export_for_native_ut': True,  # Skip slow rule export for worlds with native UT support
+        'skip_export_for_native_ut': True,  # Skip rule export for games in the skip list
+        'skip_export_from_list': True,  # Use skip-export-games.json instead of checking ut_can_gen_without_yaml
     },
 }
 

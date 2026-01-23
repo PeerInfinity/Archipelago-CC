@@ -105,6 +105,50 @@ def clear_rule_cache():
     _rule_analysis_cache.clear()
 
 
+# Cache for skip-export-games list to avoid repeated file reads
+_skip_export_games_cache: Optional[Set[str]] = None
+
+
+def _load_skip_export_games_list() -> Set[str]:
+    """Load the list of games to skip export for from skip-export-games.json.
+
+    The file is expected to be in the same directory as this module.
+    Returns a set of game names that should skip rule export.
+    """
+    global _skip_export_games_cache
+    if _skip_export_games_cache is not None:
+        return _skip_export_games_cache
+
+    skip_list_path = os.path.join(os.path.dirname(__file__), 'skip-export-games.json')
+    games = set()
+
+    if os.path.exists(skip_list_path):
+        try:
+            with open(skip_list_path, 'r') as f:
+                data = json.load(f)
+                # Support both flat list and categorized format
+                if isinstance(data, list):
+                    games = set(data)
+                elif isinstance(data, dict):
+                    # Combine all categories (bundled, apworlds, etc.)
+                    if 'games' in data:
+                        for category_games in data['games'].values():
+                            games.update(category_games)
+                    else:
+                        # Direct category keys
+                        for key, value in data.items():
+                            if isinstance(value, list):
+                                games.update(value)
+            logger.debug(f"Loaded {len(games)} games from skip-export-games.json")
+        except (json.JSONDecodeError, IOError) as e:
+            logger.warning(f"Failed to load skip-export-games.json: {e}")
+    else:
+        logger.warning(f"skip-export-games.json not found at {skip_list_path}")
+
+    _skip_export_games_cache = games
+    return games
+
+
 def _insert_hint_text(item_data: dict, hint_text: str) -> None:
     """Insert hint_text immediately after 'name' key in item_data dict.
 
@@ -2313,15 +2357,24 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         Dict containing paths to generated files
     """
 
-    # For single-world multiworlds, optionally skip rule export for worlds with native UT support.
+    # For single-world multiworlds, optionally skip rule export.
     # This is controlled by the skip_export_for_native_ut setting (default: False).
-    # When enabled, this avoids slow rule analysis for games with incompatible rule patterns (e.g., Nine Sols).
+    # When skip_export_from_list is also True, use a list of games from skip-export-games.json
+    # instead of checking ut_can_gen_without_yaml.
     from settings import get_settings
     settings = get_settings()
     if getattr(settings.general_options, 'skip_export_for_native_ut', False):
         if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
             world = list(multiworld.worlds.values())[0]
-            if getattr(world.__class__, "ut_can_gen_without_yaml", False):
+
+            if getattr(settings.general_options, 'skip_export_from_list', False):
+                # Use the skip list instead of checking ut_can_gen_without_yaml
+                skip_list = _load_skip_export_games_list()
+                if world.game in skip_list:
+                    logger.info(f"Skipping rule export for {world.game}: game is in skip-export-games.json list")
+                    return {}
+            elif getattr(world.__class__, "ut_can_gen_without_yaml", False):
+                # Fall back to checking ut_can_gen_without_yaml
                 logger.info(f"Skipping rule export for {world.game}: world has native UT support (ut_can_gen_without_yaml)")
                 return {}
 
