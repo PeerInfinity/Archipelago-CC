@@ -156,12 +156,28 @@
       "reason": "Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture."
     },
     {
+      "name": "CrossCode.yaml",
+      "reason": "Uses custom Condition class system (ItemCondition, QuestCondition, etc.) with c.satisfied() method calls. Exporter serializes condition objects as string representations instead of extracting item requirements. Progressive item replacements in cond_args dict are not processed."
+    },
+    {
+      "name": "Crystal Project.yaml",
+      "reason": "Uses class-level helper methods (can_fight_gran, can_push_ice_block_and_goat, is_area_in_level_range) that combine item checks with game-specific level calculations. Exporter converts these to AST_capability/AST_generic_helper rules, but worldgen generates function calls without defining the functions, causing NameError at runtime."
+    },
+    {
       "name": "Digimon World.yaml",
       "reason": "Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format."
     },
     {
+      "name": "Final Fantasy Tactics A2.yaml",
+      "reason": "APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options."
+    },
+    {
       "name": "Frogmonster.yaml",
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
+    },
+    {
+      "name": "Iji.yaml",
+      "reason": "Uses module-level constant lists (EventNames.Levels, ItemNames.Sector_Access) with subscript access in rules. Exporter captures AST instead of resolved values. Chained helper functions cause rule expansion to hit size limits, falling back to True_()."
     },
     {
       "name": "Keep Talking and Nobody Explodes.yaml",
@@ -188,6 +204,10 @@
       "reason": "Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context."
     },
     {
+      "name": "System Shock 2.yaml",
+      "reason": "Uses custom cyb_mod_count helper that calculates weighted sums of multiple Cyber Module item types. Also uses walrus operator (:=) in lambdas which cannot be analyzed. Would require WeightedSum rule support in worldgen."
+    },
+    {
       "name": "The Legend of Zelda - Phantom Hourglass.yaml",
       "reason": "Entrance randomization fails frequently with complex option combinations. GER algorithm fails after 10 attempts with mixed pool settings."
     },
@@ -206,6 +226,10 @@
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
+    },
+    {
+      "name": "Axiom Verge.yaml",
+      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
     }
   ],
   "requires_javascript_helpers_list": [

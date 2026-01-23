@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 01:31:26
+**Generated:** 2026-01-22 18:20:58
 
 **Source Data Created:** 2026-01-23T01:31:25.818220
 
@@ -35,8 +35,8 @@
 
 - **Expected Passes:** 38 (not excluded, passed)
 - **Unexpected Passes:** 0 (excluded, but passed)
-- **Expected Failures:** 20 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 64 (not excluded, logic mismatch)
+- **Expected Failures:** 26 (excluded, failed as expected)
+- **Unexpected Failures (logic):** 58 (not excluded, logic mismatch)
 - **Unexpected Failures (timeout only):** 2 (not excluded, only timeouts)
 
 ### Explain Support Summary
@@ -191,375 +191,6 @@ Of the 38 games with 100% pass rate:
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | plateup | ❌ | 10 | 8 | 1 | 1 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
-
-## Error Details
-
-### A Link Between Worlds
-
-- **None**: 10 occurrence(s)
-
-### ANIMAL WELL
-
-- **None**: 5 occurrence(s)
-
-### Against the Storm
-
-- **FillError**: 4 occurrence(s)
-- **None**: 5 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
-
-### Air Delivery
-
-- **None**: 6 occurrence(s)
-
-### Anodyne
-
-- **None**: 10 occurrence(s)
-
-### Another Crabs Treasure
-
-- **None**: 5 occurrence(s)
-
-### Ape Escape
-
-- **None**: 4 occurrence(s)
-
-### Ape Escape 3
-
-- **None**: 7 occurrence(s)
-- **('AE3 > GoalTarget: There are no goal locations available to check. They might have been explicitly excluded. Please reduce the excluded locations.', 'Actual: Specter, ', 'Excluded: Seaside Resort - Break Room, Hide-n-Seek Forest - Break Room, Saru-Mon\'s Castle - Break Room, The Big City - Break Room, Specter TV Studio - Break Room, Bootown - Break Room, Wild West Town - Break Room, The Hot Springs - Break Room, Winterville - Break Room, The Emperor\'s Castle - Break Room, Mount Amazing - Break Room, Toytown - Break Room, Arctic Wonderland - Break Room, Mirage Town - Break Room, Eversummer Island - Break Room, Airplane Squadron - Break Room, Kung-Fu Alley - Break Room, Midnight Bay - Break Room, Tomoki City - Break Room, Space-TV Fortress - Break Room, Seaside Resort - Break Room, Hide-n-Seek Forest - Break Room, Saru-Mon\'s Castle - Break Room, The Big City - Break Room, Specter TV Studio - Break Room, Bootown - Break Room, Wild West Town - Break Room, The Hot Springs - Break Room, Winterville - Break Room, The Emperor\'s Castle - Break Room, Mount Amazing - Break Room, Toytown - Break Room, Arctic Wonderland - Break Room, Mirage Town - Break Room, Eversummer Island - Break Room, Airplane Squadron - Break Room, Kung-Fu Alley - Break Room, Midnight Bay - Break Room, Tomoki City - Break Room, Space-TV Fortress - Break Room, Spork - Hide-n-Seek Forest | SAL-1000 - Saru-mon\'s Castle | Shimmy - Winterville | Pipotron Yellow - Winterville | Piptron Red - Toytown | Pipotron Blue - Airplane Squadron | Dark Master - Kung-Fu Alley | SAL-3000 - Space-TV Fortress | Monkichiro - Bootown | Leomon - Bootown | Uikkun - Bootown | Take Ukita - Bootown | Bonbon - Bootown | ChiChi - Bootown | Ukkisuke - Bootown | Chibi Sally - Bootown | Ukkison - Bootown | Saruhotep - Bootown | Ukkito - Bootown | Monzally - Bootown | Ukkiami - Bootown | Monjan - Bootown | Nattchan - Bootown | Kabochin - Bootown | Ukki Mon - Bootown | Mumpkin - Bootown | Pipo Camera - Bootown | Blue Cellphone "Morph Energy Tutorial - Racking Up Duration" - Bootown | Red Cellphone "Water Net Reminder" - Bootown | Blue Cellphone "Morph Gauge and Water Tutorial" - Bootown | Red Cellphone "Climbing Tutorial" - Bootown | Scorpi-mon - Mirage Town | Minimon - Mirage Town | Moontero - Mirage Town | Ukki Son - Mirage Town | Ukki Jeff - Mirage Town | Ukki Saru Maru - Mirage Town | Genghis Mon - Mirage Town | Cup-o-mon - Mirage Town | Nijal - Mirage Town | Apey Jones - Mirage Town | Golden Mon - Mirage Town | Ukki Mamba - Mirage Town | Crazy \'ol Mon - Mirage Town | Shamila - Mirage Town | Tamiyanya - Mirage Town | Salteenz - Mirage Town | Dancing Mia - Mirage Town | Miccho - Mirage Town | Kisha - Mirage Town | Gimuccho - Mirage Town | Wojin - Mirage Town | Princess Judy - Mirage Town | Pipo Camera - Mirage Town | Red Cellphone "Genie Dancer Reminder" - Mirage Town | Blue Cellphone "Genie Dancer Reminder - Special Ability" - Mirage Town | Blue Cellphone "Long Horizontal Rods Tutorial" - Mirage Town | Blue Cellphone "Jars that only the Genie can enter" - Mirage Town | Pincher-mon - Eversummer Island | Salumani - Eversummer Island | Salulu - Eversummer Island | Baku - Eversummer Island | Ukki Mat - Eversummer Island | Salunch - Eversummer Island | Mong Popo - Eversummer Island | Mohcha - Eversummer Island | Kamcha - Eversummer Island | Bimocha - Eversummer Island | Gimchin - Eversummer Island | Kamaccha - Eversummer Island | Gyamu - Eversummer Island | Tartan - Eversummer Island | Takumon - Eversummer Island | Ukki Ether - Eversummer Island | Molzone - Eversummer Island | Chappio - Eversummer Island | Pomoah - Eversummer Island | Gucchai - Eversummer Island | Makaccho - Eversummer Island | Gamaran - Eversummer Island | Larry - Eversummer Island | Pipo Camera - Eversummer Island | Blue Cellphone "Gadget Fetch and Spinning Air Attack Tutorial" - Eversummer Island | Blue Cellphone "Water Net Reminder - Redux" - Eversummer Island | Nak Nayo - Kung-Fu Alley | Donto Koi - Kung-Fu Alley | Po Kin Ki - Kung-Fu Alley | Dally - Kung-Fu Alley | Shinchi - Kung-Fu Alley | Doh Tsuitaro - Kung-Fu Alley | Ukki Chan - Kung-Fu Alley | Uki Uki - Kung-Fu Alley | Muki Muki - Kung-Fu Alley | Hi Uchi Ishi - Kung-Fu Alley | Bassili Ukki - Kung-Fu Alley | Pikon - Kung-Fu Alley | Bankan - Kung-Fu Alley | Sukei - Kung-Fu Alley | Giyan - Kung-Fu Alley | Danchi - Kung-Fu Alley | Gala Waruo - Kung-Fu Alley | Muchaki - Kung-Fu Alley | Yoh Kitana - Kung-Fu Alley | Goshi Andos - Kung-Fu Alley | Pukuman - Kung-Fu Alley | Block Master - Kung-Fu Alley | Tompo - Kung-Fu Alley | Wootan - Kung-Fu Alley | Chechin - Kung-Fu Alley | Hapcho - Kung-Fu Alley | Bonmos - Kung-Fu Alley | Dark Master - Kung-Fu Alley | Teh Isu - Kung-Fu Alley | Ponja - Kung-Fu Alley | Pipo Camera - Kung-Fu Alley | Red Cellphone "Dragon Kung-Fu Fighter Reminder" - Kung-Fu Alley | Blue Cellphone "Finding the Way Forward" - Kung-Fu Alley | Blue Cellphone "The Dragon Mark" - Kung-Fu Alley | Blue Cellphone "Long Horizontal Rods Tutorial - Redux" - Kung-Fu Alley | Nadamon - Midnight Bay | Patoya - Midnight Bay | Gumbo - Midnight Bay | Pehyan - Midnight Bay | Mokito - Midnight Bay | Pipo Kate - Midnight Bay | Samtan - Midnight Bay | Pokkine - Midnight Bay | Daban - Midnight Bay | Keiichi - Midnight Bay | McBreezy - Midnight Bay | Shiny Pete - Midnight Bay | Landon - Midnight Bay | Ronson - Midnight Bay | Gimo - Midnight Bay | Hiroshi - Midnight Bay | Mibon - Midnight Bay | Bololon - Midnight Bay | Nakabi - Midnight Bay | Doemos - Midnight Bay | Kazuo - Midnight Bay | Gimi Gimi - Midnight Bay | Pokkini - Midnight Bay | Bokino - Midnight Bay | Jimo - Midnight Bay | Makidon - Midnight Bay | Dogy - Midnight Bay | Gibdon - Midnight Bay | Buligie - Midnight Bay | Pipo Camera - Midnight Bay | Blue Cellphone "Laser Sensors Tutorial" - Midnight Bay | Specter |  | Nessal - Seaside Resort | Ukki Pia - Seaside Resort | Sarubo - Seaside Resort | Salurin - Seaside Resort | Ukkitan - Seaside Resort | Morella - Seaside Resort | Ukki Ben - Seaside Resort | Kankichi - Seaside Resort | Tomezo - Seaside Resort | Kamayan - Seaside Resort | Taizo - Seaside Resort | Pipo Camera - Seaside Resort | Red Cellphone "Cellphones and Gadgets Tutorials" - Seaside Resort | Blue Cellphone "Cookies Tutorial" - Seaside Resort | Red Cellphone "Switches Tutorial" - Seaside Resort | Blue Cellphone "Pipo Camera Tutorial" - Seaside Resort | Dr. Tomoki |  | Kankichi - Seaside Resort | Tomezo - Seaside Resort | Kamayan - Seaside Resort | Taizo - Seaside Resort | King Goat - Hide-n-Seek Forest | Marukichi - Hide-n-Seek Forest | Kikimon - Hide-n-Seek Forest | Kominato - Hide-n-Seek Forest | King\'s Double - Saru-mon\'s Castle | Mattsun - Saru-mon\'s Castle | Miya - Saru-mon\'s Castle | Mon San - Saru-mon\'s Castle | Sally Kokoroe - The Big City | Monkey Manager - The Big City | Supervisor Chimp - The Big City | Boss Ape - The Big City | Ukki Paul - Specter TV Studio | Sally Mon - Specter TV Studio | Bonly - Specter TV Studio | Monly - Specter TV Studio | Monjan - Bootown | Nattchan - Bootown | Kabochin - Bootown | Ukki Mon - Bootown | Lucky Woo - Wild West Town | Pamela - Wild West Town | Ukki Monber - Wild West Town | Gaukichi - Wild West Town | Sam-san - The Hot Springs | Donkichi - The Hot Springs | Minokichi - The Hot Springs | Tatabo - The Hot Springs | Kimi-chan - Winterville | Sae-chan - Winterville | Tassan - Winterville | Tomokun - Winterville | Monchin Chi - The Emperor\'s Castle | Masachi - The Emperor\'s Castle | Golota - The Emperor\'s Castle | Kinsuke - The Emperor\'s Castle | Pisuke - Mount Amazing | Kansuke - Mount Amazing | Pohta - Mount Amazing | Keisuke - Mount Amazing | Tam Konta - Toytown | Tam Mimiko - Toytown | Tam Papa - Toytown | Tam Mama - Toytown | Monkino - Arctic Wonderland | Kyam - Arctic Wonderland | Kappino - Arctic Wonderland | Kris Krimon - Arctic Wonderland | Miccho - Mirage Town | Kisha - Mirage Town | Gimuccho - Mirage Town | Wojin - Mirage Town | Gucchai - Eversummer Island | Makaccho - Eversummer Island | Gamaran - Eversummer Island | Larry - Eversummer Island | Samuel - Airplane Squadron | Coril - Airplane Squadron | Bont - Airplane Squadron | Delly - Airplane Squadron | Tompo - Kung-Fu Alley | Wootan - Kung-Fu Alley | Chechin - Kung-Fu Alley | Hapcho - Kung-Fu Alley | Makidon - Midnight Bay | Dogy - Midnight Bay | Gibdon - Midnight Bay | Buligie - Midnight Bay | Tomu - Tomoki City | Breadacus - Tomoki City | Ukkigoro - Tomoki City | Ukiji - Tomoki City | Upis - Space-TV Fortress | Mondatta - Space-TV Fortress | Gicchom - Space-TV Fortress | Barire - Space-TV Fortress | Kankichi - Seaside Resort | Tomezo - Seaside Resort | Kamayan - Seaside Resort | Taizo - Seaside Resort | King Goat - Hide-n-Seek Forest | Marukichi - Hide-n-Seek Forest | Kikimon - Hide-n-Seek Forest | Kominato - Hide-n-Seek Forest | King\'s Double - Saru-mon\'s Castle | Mattsun - Saru-mon\'s Castle | Miya - Saru-mon\'s Castle | Mon San - Saru-mon\'s Castle | Sally Kokoroe - The Big City | Monkey Manager - The Big City | Supervisor Chimp - The Big City | Boss Ape - The Big City | Ukki Paul - Specter TV Studio | Sally Mon - Specter TV Studio | Bonly - Specter TV Studio | Monly - Specter TV Studio | Monjan - Bootown | Nattchan - Bootown | Kabochin - Bootown | Ukki Mon - Bootown | Lucky Woo - Wild West Town | Pamela - Wild West Town | Ukki Monber - Wild West Town | Gaukichi - Wild West Town | Sam-san - The Hot Springs | Donkichi - The Hot Springs | Minokichi - The Hot Springs | Tatabo - The Hot Springs | Kimi-chan - Winterville | Sae-chan - Winterville | Tassan - Winterville | Tomokun - Winterville | Monchin Chi - The Emperor\'s Castle | Masachi - The Emperor\'s Castle | Golota - The Emperor\'s Castle | Kinsuke - The Emperor\'s Castle | Pisuke - Mount Amazing | Kansuke - Mount Amazing | Pohta - Mount Amazing | Keisuke - Mount Amazing | Tam Konta - Toytown | Tam Mimiko - Toytown | Tam Papa - Toytown | Tam Mama - Toytown | Monkino - Arctic Wonderland | Kyam - Arctic Wonderland | Kappino - Arctic Wonderland | Kris Krimon - Arctic Wonderland | Miccho - Mirage Town | Kisha - Mirage Town | Gimuccho - Mirage Town | Wojin - Mirage Town | Gucchai - Eversummer Island | Makaccho - Eversummer Island | Gamaran - Eversummer Island | Larry - Eversummer Island | Samuel - Airplane Squadron | Coril - Airplane Squadron | Bont - Airplane Squadron | Delly - Airplane Squadron | Tompo - Kung-Fu Alley | Wootan - Kung-Fu Alley | Chechin - Kung-Fu Alley | Hapcho - Kung-Fu Alley | Makidon - Midnight Bay | Dogy - Midnight Bay | Gibdon - Midnight Bay | Buligie - Midnight Bay | Tomu - Tomoki City | Breadacus - Tomoki City | Ukkigoro - Tomoki City | Ukiji - Tomoki City | Upis - Space-TV Fortress | Mondatta - Space-TV Fortress | Gicchom - Space-TV Fortress | Barire - Space-TV Fortress | ')**: 1 occurrence(s)
-- **('AE3 > GoalTarget: There are no goal locations available to check. They might have been explicitly excluded. Please reduce the excluded locations.', 'Actual: Specter, ', 'Excluded: Spork - Hide-n-Seek Forest | SAL-1000 - Saru-mon\'s Castle | Shimmy - Winterville | Pipotron Yellow - Winterville | Piptron Red - Toytown | Pipotron Blue - Airplane Squadron | Dark Master - Kung-Fu Alley | SAL-3000 - Space-TV Fortress | Ukkichi - Mount Amazing | Chomon - Mount Amazing | Ukkido - Mount Amazing | Kyamio - Mount Amazing | Talupon - Mount Amazing | Bokitan - Mount Amazing | Tami - Mount Amazing | Micchino - Mount Amazing | Talurin - Mount Amazing | Occhimon - Mount Amazing | Mikkurin - Mount Amazing | Kicchino - Mount Amazing | Kimurin - Mount Amazing | Sakkano - Mount Amazing | Camino - Mount Amazing | Valuccha - Mount Amazing | Pisuke - Mount Amazing | Kansuke - Mount Amazing | Pohta - Mount Amazing | Keisuke - Mount Amazing | Pipo Camera - Mount Amazing | Red Cellphone "Sky Flyer Reminder" - Mount Amazing | Ukkido - Saru-mon\'s Castle | Pipo Guard - Saru-mon\'s Castle | Ukkinee - Saru-mon\'s Castle | Monderella - Saru-mon\'s Castle | Ukki-ichi - Saru-mon\'s Castle | Saru-mon - Saru-mon\'s Castle | Monga - Saru-mon\'s Castle | Ukkiton - Saru-mon\'s Castle | King Leo - Saru-mon\'s Castle | Ukkii - Saru-mon\'s Castle | Saluto - Saru-mon\'s Castle | King\'s Double - Saru-mon\'s Castle | Mattsun - Saru-mon\'s Castle | Miya - Saru-mon\'s Castle | Mon San - Saru-mon\'s Castle | SAL-1000 - Saru-mon\'s Castle | Pipo Camera - Saru-mon\'s Castle | Blue Cellphone "Block Shoving Tutorial" - Saru-mon\'s Castle | Red Cellphone "Morph Energy Tutorial" - Saru-mon\'s Castle | Blue Cellphone "Morph Jumping Reminder" - Saru-mon\'s Castle | Blue Cellphone "How can we avoid the flames?" - Saru-mon\'s Castle | Monkey Yellow |  | Monkichiro - Bootown | Leomon - Bootown | Uikkun - Bootown | Take Ukita - Bootown | Bonbon - Bootown | ChiChi - Bootown | Ukkisuke - Bootown | Chibi Sally - Bootown | Ukkison - Bootown | Saruhotep - Bootown | Ukkito - Bootown | Monzally - Bootown | Ukkiami - Bootown | Monjan - Bootown | Nattchan - Bootown | Kabochin - Bootown | Ukki Mon - Bootown | Mumpkin - Bootown | Pipo Camera - Bootown | Blue Cellphone "Morph Energy Tutorial - Racking Up Duration" - Bootown | Red Cellphone "Water Net Reminder" - Bootown | Blue Cellphone "Morph Gauge and Water Tutorial" - Bootown | Red Cellphone "Climbing Tutorial" - Bootown | Nak Nayo - Kung-Fu Alley | Donto Koi - Kung-Fu Alley | Po Kin Ki - Kung-Fu Alley | Dally - Kung-Fu Alley | Shinchi - Kung-Fu Alley | Doh Tsuitaro - Kung-Fu Alley | Ukki Chan - Kung-Fu Alley | Uki Uki - Kung-Fu Alley | Muki Muki - Kung-Fu Alley | Hi Uchi Ishi - Kung-Fu Alley | Bassili Ukki - Kung-Fu Alley | Pikon - Kung-Fu Alley | Bankan - Kung-Fu Alley | Sukei - Kung-Fu Alley | Giyan - Kung-Fu Alley | Danchi - Kung-Fu Alley | Gala Waruo - Kung-Fu Alley | Muchaki - Kung-Fu Alley | Yoh Kitana - Kung-Fu Alley | Goshi Andos - Kung-Fu Alley | Pukuman - Kung-Fu Alley | Block Master - Kung-Fu Alley | Tompo - Kung-Fu Alley | Wootan - Kung-Fu Alley | Chechin - Kung-Fu Alley | Hapcho - Kung-Fu Alley | Bonmos - Kung-Fu Alley | Dark Master - Kung-Fu Alley | Teh Isu - Kung-Fu Alley | Ponja - Kung-Fu Alley | Pipo Camera - Kung-Fu Alley | Red Cellphone "Dragon Kung-Fu Fighter Reminder" - Kung-Fu Alley | Blue Cellphone "Finding the Way Forward" - Kung-Fu Alley | Blue Cellphone "The Dragon Mark" - Kung-Fu Alley | Blue Cellphone "Long Horizontal Rods Tutorial - Redux" - Kung-Fu Alley | Specter |  | ')**: 1 occurrence(s)
-- **('AE3 > GoalTarget: There are no goal locations available to check. They might have been explicitly excluded. Please reduce the excluded locations.', 'Actual: Specter Finale, ', 'Excluded: Spork - Hide-n-Seek Forest | SAL-1000 - Saru-mon\'s Castle | Shimmy - Winterville | Pipotron Yellow - Winterville | Piptron Red - Toytown | Pipotron Blue - Airplane Squadron | Dark Master - Kung-Fu Alley | SAL-3000 - Space-TV Fortress | Specter Finale |  | Morrey - Wild West Town | Jomi - Wild West Town | Tammy - Wild West Town | Ukki Gigolo - Wild West Town | Monboron - Wild West Town | West Ukki - Wild West Town | Lucky Woo - Wild West Town | Pamela - Wild West Town | Ukki Monber - Wild West Town | Gaukichi - Wild West Town | Shaluron - Wild West Town | Jay Mohn - Wild West Town | Monkee Joe - Wild West Town | Saru Chison - Wild West Town | Jaja Jamo - Wild West Town | Chammy Mo - Wild West Town | Golozo - Wild West Town | Golon Moe - Wild West Town | Ukkia Munbo - Wild West Town | Mon Johny - Wild West Town | Pipo Camera - Wild West Town | Red Cellphone "Wild West Kid Reminder" - Wild West Town | Blue Cellphone "Quick Morph Tutorial" - Wild West Town | Blue Cellphone "Rotating Handle Tutorial - Ranged Activation" - Wild West Town | Pikkori - Toytown | TalUkki - Toytown | Pinkino - Toytown | Bon Mota - Toytown | Bon Verna - Toytown | Bon Papa - Toytown | Bon Mama - Toytown | Kalkin - Toytown | Pakun - Toytown | Ukki X - Toytown | Mon Gareji - Toytown | Shouji - Toytown | Woo Makka - Toytown | Monto - Toytown | Mokitani - Toytown | Namigo - Toytown | Piptron Red - Toytown | Master Loafy - Toytown | Golonero - Toytown | Kocho - Toytown | Tam Konta - Toytown | Tam Mimiko - Toytown | Tam Papa - Toytown | Tam Mama - Toytown | Pipo Camera - Toytown | Blue Cellphone "Sports Car Tutorial - Redux" - Toytown | Blue Cellphone "Robot Tutorial - Redux" - Toytown | Romo - Airplane Squadron | Temko - Airplane Squadron | Ukkigawa - Airplane Squadron | Mokkido - Airplane Squadron | Pont - Airplane Squadron | Gamish - Airplane Squadron | Takmon - Airplane Squadron | Mukita - Airplane Squadron | Prince Bertus - Airplane Squadron | Chai Bunny - Airplane Squadron | Tamrai - Airplane Squadron | Pipotron Blue - Airplane Squadron | Kemunpa - Airplane Squadron | Mabaras - Airplane Squadron | Tamoos - Airplane Squadron | Kimoto - Airplane Squadron | Octavian - Airplane Squadron | Samuel - Airplane Squadron | Coril - Airplane Squadron | Bont - Airplane Squadron | Delly - Airplane Squadron | Jeloh - Airplane Squadron | Bongo - Airplane Squadron | Pipo Camera - Airplane Squadron | Blue Cellphone "Tank Tutorial - Redux" - Airplane Squadron | Monkey Yellow |  | Ukki Pon - Hide-n-Seek Forest | Ukkian - Hide-n-Seek Forest | Ukki Red - Hide-n-Seek Forest | Rosalin - Hide-n-Seek Forest | Salubon - Hide-n-Seek Forest | Wolfmon - Hide-n-Seek Forest | Ukiko - Hide-n-Seek Forest | Lambymon - Hide-n-Seek Forest | Kreemon - Hide-n-Seek Forest | Ukkilei - Hide-n-Seek Forest | Spork - Hide-n-Seek Forest | King Goat - Hide-n-Seek Forest | Marukichi - Hide-n-Seek Forest | Kikimon - Hide-n-Seek Forest | Kominato - Hide-n-Seek Forest | Pipo Camera - Hide-n-Seek Forest | Red Cellphone "Jump Tutorial" - Hide-n-Seek Forest | Red Cellphone "Assigning Gadgets and Monkey Radar Reminder" - Hide-n-Seek Forest | Blue Cellphone "Double-Jump Tutorial" - Hide-n-Seek Forest | Blue Cellphone "Pipo Camera Tutorial - Redux" - Hide-n-Seek Forest | Blue Cellphone "Jacket Tutorial" - Hide-n-Seek Forest | Pincher-mon - Eversummer Island | Salumani - Eversummer Island | Salulu - Eversummer Island | Baku - Eversummer Island | Ukki Mat - Eversummer Island | Salunch - Eversummer Island | Mong Popo - Eversummer Island | Mohcha - Eversummer Island | Kamcha - Eversummer Island | Bimocha - Eversummer Island | Gimchin - Eversummer Island | Kamaccha - Eversummer Island | Gyamu - Eversummer Island | Tartan - Eversummer Island | Takumon - Eversummer Island | Ukki Ether - Eversummer Island | Molzone - Eversummer Island | Chappio - Eversummer Island | Pomoah - Eversummer Island | Gucchai - Eversummer Island | Makaccho - Eversummer Island | Gamaran - Eversummer Island | Larry - Eversummer Island | Pipo Camera - Eversummer Island | Blue Cellphone "Gadget Fetch and Spinning Air Attack Tutorial" - Eversummer Island | Blue Cellphone "Water Net Reminder - Redux" - Eversummer Island | Nessal - Seaside Resort | Ukki Pia - Seaside Resort | Sarubo - Seaside Resort | Salurin - Seaside Resort | Ukkitan - Seaside Resort | Morella - Seaside Resort | Ukki Ben - Seaside Resort | Kankichi - Seaside Resort | Tomezo - Seaside Resort | Kamayan - Seaside Resort | Taizo - Seaside Resort | Pipo Camera - Seaside Resort | Red Cellphone "Cellphones and Gadgets Tutorials" - Seaside Resort | Blue Cellphone "Cookies Tutorial" - Seaside Resort | Red Cellphone "Switches Tutorial" - Seaside Resort | Blue Cellphone "Pipo Camera Tutorial" - Seaside Resort | ')**: 1 occurrence(s)
-
-### Astalon
-
-- **None**: 8 occurrence(s)
-
-### Axiom Verge
-
-- **None**: 10 occurrence(s)
-
-### Balatro
-
-- **list index out of range**: 3 occurrence(s)
-- **None**: 3 occurrence(s)
-
-### Cavern of Dreams
-
-- **None**: 8 occurrence(s)
-
-### ChecksMate
-
-- **None**: 10 occurrence(s)
-
-### Chrono Trigger Jets of Time
-
-- **CTJoT YAML files must be generated from https://www.multiworld.ctjot.com**: 10 occurrence(s)
-
-### ClusterTruck
-
-- **FillError**: 7 occurrence(s)
-
-### Corn Kidz 64
-
-- **None**: 10 occurrence(s)
-
-### CrossCode
-
-- **None**: 10 occurrence(s)
-
-### Crystal Project
-
-- **None**: 8 occurrence(s)
-- **For player 4-0: YAML settings were contradictory. Regionsanity Starter Level Min Value 60 is higher than Regionsanity Starter Level Max Value 31. Change settings and regenerate.**: 1 occurrence(s)
-- **For player 9-0: YAML settings were contradictory. Regionsanity Starter Level Min Value 41 is higher than Regionsanity Starter Level Max Value 9. Change settings and regenerate.**: 1 occurrence(s)
-
-### Crystalis
-
-- **None**: 7 occurrence(s)
-
-### Deep Rock Galactic
-
-- **Sample larger than population or is negative**: 5 occurrence(s)
-
-### Digimon World
-
-- **None**: 6 occurrence(s)
-
-### Duke Nukem 3D
-
-- **None**: 7 occurrence(s)
-
-### Final Fantasy Tactics A2
-
-- **Too many non-special starting units to randomize**: 7 occurrence(s)
-
-### Final Fantasy Tactics Advance
-
-- **None**: 1 occurrence(s)
-
-### Fire Emblem Sacred Stones
-
-- **None**: 10 occurrence(s)
-
-### Frogmonster
-
-- **None**: 10 occurrence(s)
-
-### GZDoom
-
-- **<class 'AttributeError'>**: 10 occurrence(s)
-
-### Garfield Kart - Furious Racing
-
-- **compared against a str that could never be equal. RandomizeSpoilers(Off) == on**: 7 occurrence(s)
-- **compared against a str that could never be equal. RandomizeSpoilers(Progressive) == on**: 3 occurrence(s)
-
-### Golden Sun The Lost Age
-
-- **None**: 7 occurrence(s)
-
-### Grim Dawn
-
-- **None**: 1 occurrence(s)
-- **list index out of range**: 2 occurrence(s)
-
-### Hammerwatch
-
-- **None**: 4 occurrence(s)
-
-### Iji
-
-- **None**: 10 occurrence(s)
-
-### Into the Breach
-
-- **No module named 'pysat'**: 8 occurrence(s)
-- **None**: 2 occurrence(s)
-
-### Jigsaw
-
-- **None**: 10 occurrence(s)
-
-### Keep Talking and Nobody Explodes
-
-- **None**: 7 occurrence(s)
-
-### Lego Star Wars: The Complete Saga
-
-- **None**: 1 occurrence(s)
-
-### Lil Gator Game
-
-- **'CollectionState' object has no attribute 'rule_cache'**: 10 occurrence(s)
-
-### Lingo 2
-
-- **None**: 9 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
-
-### Lunacid
-
-- **None**: 9 occurrence(s)
-
-### Majora's Mask Recompiled
-
-- **None**: 6 occurrence(s)
-
-### Mario Kart Double Dash
-
-- **<class 'TimeoutError'>**: 10 occurrence(s)
-
-### Metroid Zero Mission
-
-- **None**: 10 occurrence(s)
-
-### Minishoot Adventures
-
-- **None**: 10 occurrence(s)
-
-### Minit
-
-- **None**: 10 occurrence(s)
-
-### Monster Sanctuary
-
-- **None**: 10 occurrence(s)
-
-### Nine Sols
-
-- **None**: 8 occurrence(s)
-
-### Ori and the Blind Forest
-
-- **None**: 8 occurrence(s)
-
-### Ori and the Will of the Wisps
-
-- **<class 'TimeoutError'>**: 6 occurrence(s)
-- **None of the available entrances are valid targets for the available exits.
-Randomization stage is placing dead ends and requires new region/exit access by default
-Placeable entrances: {0: [GladesTown.MotayHutInside (Door) (Player 1), GladesTown.StorageHut (Door) (Player 1)]}
-Placeable exits: []
-All unplaced entrances: [GladesTown.MotayHutInside (Door) (Player 1), GladesTown.StorageHut (Door) (Player 1)]
-All unplaced exits: [GladesTown.MotayHutInside (Door), GladesTown.StorageHut (Door)]**: 1 occurrence(s)
-
-### Oxygen Not Included
-
-- ** - 1 already exists in the location cache.**: 1 occurrence(s)
-
-### Pizza Tower
-
-- **None**: 9 occurrence(s)
-
-### Pokemon FireRed and LeafGreen
-
-- **None**: 10 occurrence(s)
-
-### Pokemon Mystery Dungeon Explorers of Sky
-
-- **None**: 8 occurrence(s)
-- **'Team Name Location'**: 2 occurrence(s)
-
-### Pseudoregalia
-
-- **None**: 10 occurrence(s)
-
-### Rabi-Ribi
-
-- **None**: 1 occurrence(s)
-
-### Reventure
-
-- **None**: 10 occurrence(s)
-
-### Rift Wizard
-
-- **None**: 3 occurrence(s)
-
-### Rift of the Necrodancer
-
-- **None**: 3 occurrence(s)
-
-### Rusted Moss
-
-- **Rusted Moss character Ameli is not available with this AP World. Valid options are `fern` or `gimmick`.**: 2 occurrence(s)
-- **Rusted Moss character Maya is not available with this AP World. Valid options are `fern` or `gimmick`.**: 2 occurrence(s)
-- **None**: 6 occurrence(s)
-
-### Sentinels of the Multiverse
-
-- **FillError**: 8 occurrence(s)
-- **<class 'TimeoutError'>**: 2 occurrence(s)
-
-### Shadow The Hedgehog
-
-- **None**: 3 occurrence(s)
-
-### Ship of Harkinian
-
-- **None**: 10 occurrence(s)
-
-### Sly 2: Band of Thieves
-
-- **None**: 8 occurrence(s)
-
-### Sly Cooper and the Thievius Raccoonus
-
-- **FillError**: 1 occurrence(s)
-- **None**: 2 occurrence(s)
-
-### Sonic Adventure DX
-
-- **None**: 4 occurrence(s)
-
-### Sonic Rush
-
-- **None**: 6 occurrence(s)
-
-### Sonic the Hedgehog 1
-
-- **None**: 1 occurrence(s)
-
-### Soul Blazer
-
-- **None**: 2 occurrence(s)
-
-### Spyro 3
-
-- **None**: 8 occurrence(s)
-
-### Stacklands
-
-- **None**: 10 occurrence(s)
-
-### Star Wars Episode I Racer
-
-- **None**: 2 occurrence(s)
-
-### System Shock 2
-
-- **FillError**: 6 occurrence(s)
-- **None**: 3 occurrence(s)
-
-### TCG Card Shop Simulator
-
-- **None**: 10 occurrence(s)
-
-### Tetris Attack
-
-- **None**: 8 occurrence(s)
-
-### The Legend of Zelda - Oracle of Seasons
-
-- **None**: 10 occurrence(s)
-
-### The Legend of Zelda - Phantom Hourglass
-
-- **None**: 8 occurrence(s)
-- **Phantom Hourglass: failed GER after 10 attempts.**: 2 occurrence(s)
-
-### The Sims 4
-
-- **None**: 2 occurrence(s)
-
-### ToeJam and Earl
-
-- **None**: 5 occurrence(s)
-
-### Tyrian
-
-- **None**: 3 occurrence(s)
-
-### Wario Land
-
-- **/home/runner/work/Archipelago-CC/Archipelago-CC/Wario Land - Super Mario Land 3 (World).gb**: 10 occurrence(s)
-
-### Watery Words
-
-- **None**: 10 occurrence(s)
-
-### Wordipelago
-
-- **None**: 8 occurrence(s)
-
-### XCOM 2 War of the Chosen
-
-- **None**: 10 occurrence(s)
-
-### Yu-Gi-Oh! Dungeon Dice Monsters
-
-- **None**: 4 occurrence(s)
-
-### Yu-Gi-Oh! Forbidden Memories
-
-- **None**: 10 occurrence(s)
-
-### plateup
-
-- **FillError**: 1 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
-
 
 ## Explain Support Details
 
@@ -721,17 +352,23 @@ These community APWorlds are excluded from UT fuzz testing due to incompatible r
 | Air Delivery.yaml | Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue. |
 | Ape Escape 3.yaml | Uses Rulesets class with condense() method that returns closure (lambda state: self.check(state, player)). Exporter cannot trace through closure to extract actual rules stored in self.critical/self.rules lists. Rules export as unknown 'check' helper which defaults to True. |
 | Astalon.yaml | Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules. |
+| Axiom Verge.yaml | Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError. |
 | ChecksMate.yaml | Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties. |
 | Chrono Trigger Jets of Time.yaml | Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations. |
 | Corn Kidz 64.yaml | Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture. |
+| CrossCode.yaml | Uses custom Condition class system (ItemCondition, QuestCondition, etc.) with c.satisfied() method calls. Exporter serializes condition objects as string representations instead of extracting item requirements. Progressive item replacements in cond_args dict are not processed. |
+| Crystal Project.yaml | Uses class-level helper methods (can_fight_gran, can_push_ice_block_and_goat, is_area_in_level_range) that combine item checks with game-specific level calculations. Exporter converts these to AST_capability/AST_generic_helper rules, but worldgen generates function calls without defining the functions, causing NameError at runtime. |
 | Digimon World.yaml | Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format. |
+| Final Fantasy Tactics A2.yaml | APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options. |
 | Frogmonster.yaml | Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld. |
+| Iji.yaml | Uses module-level constant lists (EventNames.Levels, ItemNames.Sector_Access) with subscript access in rules. Exporter captures AST instead of resolved values. Chained helper functions cause rule expansion to hit size limits, falling back to True_(). |
 | Keep Talking and Nobody Explodes.yaml | Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible. |
 | Monster Sanctuary.yaml | Uses custom AccessCondition class with data-driven rule evaluation. Exporter sees lambda calling rules.has_access() but cannot introspect the AccessCondition tree structure. |
 | Ori and the Will of the Wisps.yaml | Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns. |
 | Rabi-Ribi.yaml | Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis. |
 | Sly 2 Band of Thieves.yaml | APWorld bug: uses generation_is_fake to apply different rules during tracking vs generation. ThiefNet locations skip Episode requirements and Pickpocket locations get wrong region assignments during tracking. |
 | Soul Blazer.yaml | Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context. |
+| System Shock 2.yaml | Uses custom cyb_mod_count helper that calculates weighted sums of multiple Cyber Module item types. Also uses walrus operator (:=) in lambdas which cannot be analyzed. Would require WeightedSum rule support in worldgen. |
 | The Legend of Zelda - Phantom Hourglass.yaml | Entrance randomization fails frequently with complex option combinations. GER algorithm fails after 10 attempts with mixed pool settings. |
 | The Sims 4.yaml | APWorld bug: fill_slot_data() returns keys like 'goal' but generate_early() expects 'goal_value'. Key mismatch causes KeyError during worldgen regeneration. |
 | ToeJam and Earl.yaml | Uses custom collect method with point-based rank progression. Rules check pseudo-item 'ranks' which only exists via custom state tracking, not exportable. |
@@ -747,16 +384,12 @@ These games have actual logic mismatches between UT and Python:
 - Anodyne
 - Another Crabs Treasure
 - Ape Escape
-- Axiom Verge
 - Balatro
 - Cavern of Dreams
 - ClusterTruck
-- CrossCode
-- Crystal Project
 - Crystalis
 - Deep Rock Galactic
 - Duke Nukem 3D
-- Final Fantasy Tactics A2
 - Final Fantasy Tactics Advance
 - Fire Emblem Sacred Stones
 - GZDoom
@@ -764,7 +397,6 @@ These games have actual logic mismatches between UT and Python:
 - Golden Sun The Lost Age
 - Grim Dawn
 - Hammerwatch
-- Iji
 - Into the Breach
 - Jigsaw
 - Lego Star Wars: The Complete Saga
@@ -796,7 +428,6 @@ These games have actual logic mismatches between UT and Python:
 - Spyro 3
 - Stacklands
 - Star Wars Episode I Racer
-- System Shock 2
 - TCG Card Shop Simulator
 - Tetris Attack
 - The Legend of Zelda - Oracle of Seasons

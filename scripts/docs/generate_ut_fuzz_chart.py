@@ -384,22 +384,6 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
 
-    # Add error details section if there are any failures
-    games_with_errors = [d for d in chart_data if d['failure'] > 0 or d.get('errors')]
-    if games_with_errors:
-        md_content += "\n## Error Details\n\n"
-        for data in games_with_errors:
-            game_name = data['game_name']
-            errors = data.get('errors', {})
-            if errors:
-                md_content += f"### {game_name}\n\n"
-                for error_type, occurrences in errors.items():
-                    if isinstance(occurrences, list):
-                        md_content += f"- **{error_type}**: {len(occurrences)} occurrence(s)\n"
-                    else:
-                        md_content += f"- **{error_type}**: {occurrences}\n"
-                md_content += "\n"
-
     # Add explain support section if data is available
     games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
     if games_with_explain_stats:

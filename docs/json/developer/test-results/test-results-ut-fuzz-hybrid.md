@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 01:31:26
+**Generated:** 2026-01-22 18:20:58
 
 **Source Data Created:** 2026-01-22T20:59:24.837945
 
@@ -144,118 +144,6 @@ Of the 61 games with 100% pass rate:
 | Yu-Gi-Oh! 2006 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% | ✅ | ✅ | 155.5KB |
-
-## Error Details
-
-### A Hat in Time
-
-- **None**: 10 occurrence(s)
-
-### A Link to the Past
-
-- **None**: 2 occurrence(s)
-
-### Blasphemous
-
-- **None**: 4 occurrence(s)
-
-### Bomb Rush Cyberfunk
-
-- **None**: 10 occurrence(s)
-
-### Celeste (Open World)
-
-- **None**: 10 occurrence(s)
-
-### Final Fantasy Mystic Quest
-
-- **None**: 7 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
-
-### Hollow Knight
-
-- **None**: 10 occurrence(s)
-
-### Jak and Daxter: The Precursor Legacy
-
-- **None**: 10 occurrence(s)
-
-### Kingdom Hearts
-
-- **None**: 9 occurrence(s)
-
-### Kingdom Hearts 2
-
-- **FillError**: 9 occurrence(s)
-- **None**: 1 occurrence(s)
-
-### Lingo
-
-- **None**: 3 occurrence(s)
-
-### Ocarina of Time
-
-- **<class 'AttributeError'>**: 9 occurrence(s)
-
-### Pokemon Emerald
-
-- **None**: 6 occurrence(s)
-
-### Pokemon Red and Blue
-
-- **None**: 9 occurrence(s)
-
-### SMZ3
-
-- **None**: 10 occurrence(s)
-
-### Secret of Evermore
-
-- **None**: 10 occurrence(s)
-
-### Starcraft 2
-
-- **File 0-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 1-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 2-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-
-### Stardew Valley
-
-- **None**: 10 occurrence(s)
-
-### Super Metroid
-
-- **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **None**: 6 occurrence(s)
-
-### The Witness
-
-- **None**: 7 occurrence(s)
-
-### Timespinner
-
-- **None**: 10 occurrence(s)
-
-### Yacht Dice
-
-- **None**: 10 occurrence(s)
-
-### Yu-Gi-Oh! 2006
-
-- **None**: 10 occurrence(s)
-
-### Zillion
-
-- **None**: 8 occurrence(s)
-- **<class 'AssertionError'>**: 1 occurrence(s)
-
 
 ## Explain Support Details
 
