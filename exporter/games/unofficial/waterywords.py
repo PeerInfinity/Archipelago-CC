@@ -7,12 +7,6 @@ This helper doesn't follow the standard (state, player, ...) signature -
 it takes pre-computed values as parameters. The exporter expands these
 helper calls inline with the arguments substituted into the body.
 
-NOTE: This handler successfully expands the helper, but UT fuzzer testing
-still fails due to a world generator limitation - the AST_group_count rules
-(state.count_group("Letters", player)) are converted to True_() instead of
-proper CountGroup rules. This causes the score calculation to use incorrect
-values (1 instead of actual letter counts).
-
 See: https://github.com/spineraks-org/ArchipelagoWateryWords
 """
 

@@ -1210,6 +1210,8 @@ class RuleCodeGenerator:
             'count_true': self._convert_count_true,
             'block': self._convert_ast_block,
             'bunny_accessibility_check': self._convert_bunny_accessibility_check,
+            'AST_group_count': self._convert_ast_group_count,
+            'group_count': self._convert_ast_group_count,
         }
 
         converter = converters.get(rule_type)
@@ -1626,6 +1628,13 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_count_item':
             item_name = args.get('item', '')
             return self._make_count_item(item_name)
+
+        # Handle AST_group_count rule (from AST format, counts items in a group)
+        # This comes from state.count_group() calls in access rules
+        if rb_rule == 'AST_group_count':
+            group = args.get('group', '')
+            self.required_imports.add('CountGroup')
+            return f'CountGroup({repr(group)})'
 
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
@@ -2174,6 +2183,23 @@ class RuleCodeGenerator:
             return f'HasGroup("{group_escaped}")'
         else:
             return f'HasGroup("{group_escaped}", {count})'
+
+    def _convert_ast_group_count(self, rule: Dict[str, Any]) -> str:
+        """Convert AST_group_count to CountGroup().
+
+        This handles state.count_group() calls from access rules, converting
+        them to CountGroup rules that return the count of items in a group.
+        Used in arithmetic expressions like score calculations.
+        """
+        self.required_imports.add('CountGroup')
+
+        # Handle both AST format and Rule Builder format
+        args = rule.get('args', {})
+        group = args.get('group', '') if args else rule.get('group', '')
+        group = self._extract_constant_value(group, '')
+
+        group_escaped = self._escape_string(group)
+        return f'CountGroup("{group_escaped}")'
 
     def _convert_bunny_accessibility_check(self, rule: Dict[str, Any]) -> str:
         """Convert bunny_accessibility_check to a HelperCall.

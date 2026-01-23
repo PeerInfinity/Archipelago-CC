@@ -2430,6 +2430,80 @@ class CountItem(Rule[TWorld], game="Archipelago"):
 
 
 @dataclasses.dataclass()
+class CountGroup(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the count of items in a named group.
+
+    When used as a boolean (in _evaluate), returns True if count > 0.
+    Also provides get_count() for use in comparisons and arithmetic.
+
+    This rule is used to count items that belong to a named item group,
+    as defined by the world's item_name_groups.
+
+    Usage:
+        rule = CountGroup("Letters")  # True if player has at least 1 item from "Letters" group
+        rule = Compare(CountGroup("Keys"), ">=", 3)  # True if player has 3+ items from "Keys"
+    """
+    group_name: str = ""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.group_name,
+            player=world.player,
+            caching_enabled=False,  # Count can change frequently
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"CountGroup({self.group_name})"
+
+    class Resolved(Rule.Resolved):
+        group_name: str
+        skip_cache: ClassVar[bool] = True
+
+        def get_count(self, state: CollectionState) -> int:
+            """Get the count of items in this group."""
+            return state.count_group(self.group_name, self.player)
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if count > 0
+            return self.get_count(state) > 0
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            # Group dependencies are complex - items in the group may vary
+            # Return empty as we can't easily determine item names from group
+            return {}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is not None:
+                count = self.get_count(state)
+                return [
+                    {"type": "text", "text": f"CountGroup({self.group_name}): {count}"},
+                ]
+            return [
+                {"type": "text", "text": f"CountGroup({self.group_name})"},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is not None:
+                return f"CountGroup({self.group_name}): {self.get_count(state)}"
+            return f"CountGroup({self.group_name})"
+
+        @override
+        def __str__(self) -> str:
+            return f"CountGroup({self.group_name})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"group_name": self.group_name}
+
+
+@dataclasses.dataclass()
 class Compare(Rule[TWorld], game="Archipelago"):
     """
     Comparison between two values/rules.
