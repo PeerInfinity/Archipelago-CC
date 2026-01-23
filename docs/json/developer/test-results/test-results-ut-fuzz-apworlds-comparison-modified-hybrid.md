@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-22 22:11:56
+**Generated:** 2026-01-23 01:31:26
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -14,9 +14,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 33 (26.6%)
+- **Passing Both:** 32 (25.8%)
 - **Passing Modified Only:** 6 (4.8%)
-- **Passing Hybrid Only:** 11 (8.9%)
+- **Passing Hybrid Only:** 12 (9.7%)
 - **Passing Neither:** 74 (59.7%)
 
 ## Full Comparison
@@ -26,7 +26,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | A Dance of Fire and Ice | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ✅ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | A Link Between Worlds | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| ANIMAL WELL | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| ANIMAL WELL | ❌ 40.0% | ❌ 0.0% | 1.5KB | ✅ | N/A |
 | Actraiser | ✅ 80.0% | ✅ 80.0% | ✅ | ✅ | N/A |
 | Against the Storm | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ❌ 40.0% | ✅ 100.0% | 6.6KB | ✅ | N/A |
@@ -36,7 +36,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Ape Escape | ⚠️ 60.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Astalon | ❌ 0.0% | ✅ 80.0% | ✅ | ✅ | N/A |
-| Autopelago | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Autopelago | ❌ 0.0% | ❌ 0.0% | 9.2KB | ✅ | N/A |
 | Axiom Verge | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Balatro | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Brotato | ✅ 70.0% | ✅ 70.0% | ✅ | ✅ | N/A |
@@ -55,12 +55,12 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Diddy Kong Racing | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Digimon World | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 20.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Final Fantasy Tactics Advance | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Final Fantasy Tactics Advance | ⚠️ 90.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Frogmonster | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| GZDoom | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
+| GZDoom | ❌ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Golden Sun The Lost Age | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Grim Dawn | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
@@ -85,7 +85,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ 70.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Lunacid | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
-| Majora's Mask Recompiled | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Majora's Mask Recompiled | ❌ 40.0% | ❌ 0.0% | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -113,8 +113,8 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Ship of Harkinian | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
-| Sonic Adventure DX | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 70.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Sonic Adventure DX | ❌ 0.0% | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ 40.0% | ❌ 40.0% | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | ⚠️ 90.0% | ⚠️ 90.0% | 9.4KB | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | osu! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (33)
+## Games Passing Both (32)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -162,7 +162,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | Cuphead | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ | ✅ | N/A |
-| GZDoom | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ | ✅ | N/A |
 | Isles Of Sea And Sky | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ | ✅ | N/A |
@@ -201,7 +200,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | Rain World | 11.7KB | ✅ | N/A |
 | Star Fox 64 | 17.1KB | ✅ | N/A |
 
-## Games Passing Hybrid Only (11)
+## Games Passing Hybrid Only (12)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
@@ -213,6 +212,7 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Astalon | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ✅ | ✅ | N/A |
 | Crystalis | ✅ | ✅ | N/A |
+| GZDoom | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
@@ -226,11 +226,11 @@ These games fail in both Universal Tracker versions.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Link Between Worlds | ✅ | ✅ | N/A |
-| ANIMAL WELL | ✅ | ✅ | N/A |
+| ANIMAL WELL | 1.5KB | ✅ | N/A |
 | Against the Storm | ✅ | ✅ | N/A |
 | Another Crabs Treasure | ✅ | ✅ | N/A |
 | Ape Escape 3 | ✅ | ✅ | N/A |
-| Autopelago | ✅ | ✅ | N/A |
+| Autopelago | 9.2KB | ✅ | N/A |
 | Axiom Verge | ✅ | ✅ | N/A |
 | Balatro | ✅ | ✅ | N/A |
 | Cavern of Dreams | ✅ | ✅ | N/A |
@@ -256,7 +256,7 @@ These games fail in both Universal Tracker versions.
 | Lil Gator Game | ✅ | ✅ | N/A |
 | Lingo 2 | ✅ | ✅ | N/A |
 | Lunacid | ✅ | ✅ | N/A |
-| Majora's Mask Recompiled | ✅ | ✅ | N/A |
+| Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Metroid Zero Mission | ✅ | ✅ | N/A |
 | Minishoot Adventures | ✅ | ✅ | N/A |
 | Minit | 15.1KB | ✅ | N/A |
@@ -278,7 +278,7 @@ These games fail in both Universal Tracker versions.
 | Ship of Harkinian | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ✅ | ✅ | N/A |
 | Sly Cooper and the Thievius Raccoonus | ✅ | ✅ | N/A |
-| Sonic Adventure DX | ✅ | ✅ | N/A |
+| Sonic Adventure DX | 29.9KB | ✅ | N/A |
 | Sonic Rush | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |

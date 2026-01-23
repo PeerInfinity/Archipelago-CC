@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-22 22:11:56
+**Generated:** 2026-01-23 01:31:26
 
 **Source Data Created:** 2026-01-10T22:45:14.627157
 
@@ -41,9 +41,9 @@ Of the 42 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 108.4KB
+- **Total Exporter Code:** 159.3KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 108.4KB
+- **Combined Total:** 159.3KB
 
 ## Test Results
 
@@ -51,7 +51,7 @@ Of the 42 games with 100% pass rate:
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Dance of Fire and Ice | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | N/A |
-| ANIMAL WELL | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | N/A |
+| ANIMAL WELL | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 1.5KB | ✅ | N/A |
 | Actraiser | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Against the Storm | ❌ | 10 | 0 | 4 | 6 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 6.6KB | ✅ | N/A |
@@ -61,7 +61,7 @@ Of the 42 games with 100% pass rate:
 | Ape Escape | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Astalon | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | ✅ | ✅ | N/A |
-| Autopelago | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | ✅ | ✅ | N/A |
+| Autopelago | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 9.2KB | ✅ | N/A |
 | Axiom Verge | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Balatro | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Brotato | ❌ | 10 | 3 | 4 | 0 | 3 | ❌ 30.0% | ✅ | ✅ | N/A |
@@ -110,7 +110,7 @@ Of the 42 games with 100% pass rate:
 | Little Witch Nobeta | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Luigi's Mansion | ❌ | 10 | 2 | 5 | 0 | 3 | ❌ 20.0% | ✅ | ✅ | N/A |
 | Lunacid | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Majora's Mask Recompiled | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Majora's Mask Recompiled | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Fusion | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
@@ -139,7 +139,7 @@ Of the 42 games with 100% pass rate:
 | Simon Tatham's Portable Puzzle Collection | ❌ | 10 | 8 | 0 | 2 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sly Cooper and the Thievius Raccoonus | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
-| Sonic Adventure DX | ❌ | 10 | 1 | 4 | 0 | 5 | ❌ 10.0% | ✅ | ✅ | N/A |
+| Sonic Adventure DX | ❌ | 10 | 1 | 4 | 0 | 5 | ❌ 10.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ❌ | 10 | 0 | 0 | 6 | 4 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.4KB | ✅ | N/A |
