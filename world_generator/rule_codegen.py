@@ -2572,9 +2572,82 @@ class RuleCodeGenerator:
                 return f'{class_name}({items_repr})'
             # If extraction failed or returned empty, fall through to True_()
 
+        # Handle generator expressions like [m.name for m in match]
+        # where match is a constant list of objects with a 'name' attribute
+        if first_arg.get('type') == 'generator_expression':
+            items = self._evaluate_generator_expression(first_arg)
+            if items is not None and items:
+                items_repr = ', '.join(repr(item) for item in items)
+                return f'{class_name}({items_repr})'
+            # If evaluation failed or returned empty, fall through to True_()
+
         # Unknown format - return True_ as safe fallback
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _evaluate_generator_expression(self, gen_expr: Dict[str, Any]) -> Optional[List[str]]:
+        """
+        Evaluate a generator expression with a constant iterator.
+
+        Handles patterns like [m.name for m in match] where match is a constant
+        list of objects with a 'name' attribute. This is common in has_any/has_all
+        calls with pre-resolved item lists (e.g., Vehicle rules in Shadow The Hedgehog).
+
+        Args:
+            gen_expr: A generator_expression dict with 'element' and 'comprehension' keys
+
+        Returns:
+            A list of extracted string values if evaluation succeeds, None otherwise.
+        """
+        element = gen_expr.get('element', {})
+        comprehension = gen_expr.get('comprehension', {})
+
+        # Check if this is a simple attribute access pattern: m.name for m in items
+        if element.get('type') != 'attribute':
+            return None
+
+        attr_name = element.get('attr')
+        target_obj = element.get('object', {})
+
+        # The target should be a name reference (e.g., 'm')
+        if target_obj.get('type') != 'name':
+            return None
+
+        target_name = target_obj.get('name')
+
+        # Check comprehension structure
+        comp_details = comprehension
+        if comp_details.get('type') != 'comprehension_details':
+            return None
+
+        # Check that the comprehension target matches the attribute object
+        comp_target = comp_details.get('target', {})
+        if comp_target.get('type') != 'name' or comp_target.get('name') != target_name:
+            return None
+
+        # Get the iterator value
+        iterator = comp_details.get('iterator', {})
+        if iterator.get('type') != 'constant':
+            return None
+
+        iterator_value = iterator.get('value', [])
+        if not isinstance(iterator_value, list):
+            return None
+
+        # Evaluate the element expression for each item in the iterator
+        result = []
+        for item in iterator_value:
+            # Get the attribute from the item
+            if hasattr(item, attr_name):
+                value = getattr(item, attr_name)
+                result.append(str(value))
+            elif isinstance(item, dict) and attr_name in item:
+                result.append(str(item[attr_name]))
+            else:
+                # Can't evaluate this expression
+                return None
+
+        return result
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
