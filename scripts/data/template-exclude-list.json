@@ -132,6 +132,10 @@
       "reason": "Uses compiled Rust extension (albwrandomizer) for game logic. Rules reference self.seed_info.can_traverse() and self.seed_info.can_reach() which evaluate dynamically randomized crack/portal connections (Cracksanity). These methods live in the external library and cannot be exported to static rules - worldgen generates lambdas with 'self' references that fail with NameError."
     },
     {
+      "name": "Against the Storm.yaml",
+      "reason": "APWorld issue: Recursive satisfies_recipe() function causes timeouts, and complex can_goal() completion logic makes certain option combinations unbeatable (FillError). Fails during seed generation before UT testing can occur."
+    },
+    {
       "name": "Air Delivery.yaml",
       "reason": "Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue."
     },
