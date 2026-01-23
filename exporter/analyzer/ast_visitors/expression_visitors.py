@@ -813,3 +813,32 @@ class ExpressionVisitorMixin:
             'type': 'starred',
             'value': value_result
         }
+
+    def visit_NamedExpr(self, node: ast.NamedExpr):
+        """
+        Handle named expressions (walrus operator := ).
+
+        The walrus operator `x := expr` evaluates `expr`, assigns it to `x`,
+        and returns the value of `expr`. For rule analysis purposes, we only
+        care about the value, not the assignment.
+
+        Example patterns:
+            - lambda state: (total := self.cyb_mod_count(state)) >= 6
+            - lambda state: func(x, y, result := helper(state))
+
+        We simply evaluate and return the value expression.
+        """
+        logging.debug(f"\nvisit_NamedExpr called:")
+        logging.debug(f"Target: {node.target.id if hasattr(node.target, 'id') else node.target}")
+        logging.debug(f"Value: {ast.dump(node.value)}")
+
+        # Visit the value expression - this is what the walrus operator returns
+        value_result = self.visit(node.value)
+
+        if value_result is None:
+            logging.warning(f"Failed to analyze walrus operator value: {ast.dump(node.value)}")
+            # Return None to signal that analysis failed
+            return None
+
+        logging.debug(f"NamedExpr value result: {value_result}")
+        return value_result
