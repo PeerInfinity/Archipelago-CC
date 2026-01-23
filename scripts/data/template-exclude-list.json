@@ -260,7 +260,135 @@
   ],
   "exporter_fully_simplified_list": [
     {
+      "name": "A Hat in Time.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
       "name": "A Link to the Past.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Aquaria.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Bomb Rush Cyberfunk.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Castlevania - Circle of the Moon.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Celeste 64.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "DLCQuest.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Factorio.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Inscryption.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Kingdom Hearts 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Kirby's Dream Land 3.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Landstalker - The Treasures of King Nole.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Lingo.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Links Awakening DX.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Old School Runescape.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Overcooked! 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Paint.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Raft.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Secret of Evermore.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Starcraft 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Stardew Valley.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Subnautica.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Super Mario 64.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Super Mario Land 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Super Metroid.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "TUNIC.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Terraria.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "The Messenger.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "The Wind Waker.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "The Witness.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Timespinner.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "VVVVVV.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Yoshi's Island.yaml",
       "reason": "Exporter is already as simplified as it can get."
     }
   ]
