@@ -246,6 +246,10 @@
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
+    },
+    {
+      "name": "Ship of Harkinian.yaml",
+      "reason": "Uses rule_wrapper class pattern that wraps lambda rules in closures. Access rules are wrapped via rule_wrapper.wrap(parent_region, rule, world).evaluate, where 'rule' is a Callable[[tuple[state, region, world]], bool]. Exporter extracts AST from evaluate() method which only shows wrapper call, not the actual rule logic stored in the closure. APWorld has native UT support (ut_can_gen_without_yaml=True) but the fuzzer's sphere comparison validation has minor edge-case mismatches with Fire Temple locations."
     }
   ],
   "requires_javascript_helpers_list": [
