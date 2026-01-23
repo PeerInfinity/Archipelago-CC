@@ -160,6 +160,10 @@
       "reason": "Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations."
     },
     {
+      "name": "ClusterTruck.yaml",
+      "reason": "APWorld bug: Unconditional filler item addition in create_items() causes item/location imbalance when start_level is also in skipped_levels. Results in FillError with ~30-60% of randomized configurations."
+    },
+    {
       "name": "Corn Kidz 64.yaml",
       "reason": "Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture."
     },
