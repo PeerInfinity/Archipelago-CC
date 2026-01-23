@@ -5174,9 +5174,14 @@ class RuleCodeGenerator:
             self.required_imports.add('HelperCall')
             func_name = self.get_function_name(helper_name)
 
+            # Pre-process args to resolve Name references that can be inferred from adjacent dict args
+            # This handles patterns like: helper(keys, data, ...) where keys=data.keys()
+            # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
+            processed_args = self._infer_keys_from_dict_args(args)
+
             # Convert arguments to Python code
             arg_strs = []
-            for arg in args:
+            for arg in processed_args:
                 arg_strs.append(self._convert_helper_arg(arg))
 
             # Convert keyword arguments to Python code
@@ -5216,6 +5221,83 @@ class RuleCodeGenerator:
         # under default/normal game settings
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _infer_keys_from_dict_args(self, args: List[Any]) -> List[Any]:
+        """Infer 'keys' parameter values from adjacent dict arguments.
+
+        Some apworlds use patterns like:
+            lambda state, keys=some_dict.keys(), data=some_dict: helper(state, keys, data, ...)
+
+        When the analyzer exports this, it captures 'keys' as a Name reference instead of
+        evaluating some_dict.keys(). This method detects such patterns and replaces the
+        Name reference with the actual keys from the adjacent dict constant.
+
+        Pattern detected:
+            - arg[i] is a Name reference with name 'keys'
+            - arg[i+1] is a dict constant (the 'data' parameter)
+            => Replace arg[i] with a constant containing data.keys()
+
+        Handles both AST format and Rule Builder format:
+            AST format: {"type": "name", "name": "keys"}
+            Rule Builder format: {"rule": "Name", "args": {"name": "keys"}}
+
+        Args:
+            args: List of arguments to the helper function
+
+        Returns:
+            Processed list of arguments with inferred keys
+        """
+        if len(args) < 2:
+            return args
+
+        def get_name_value(arg: Any) -> Optional[str]:
+            """Extract name from either AST or Rule Builder format Name node."""
+            if not isinstance(arg, dict):
+                return None
+            # AST format: {"type": "name", "name": "keys"}
+            if arg.get('type') == 'name':
+                return arg.get('name')
+            # Rule Builder format: {"rule": "Name", "args": {"name": "keys"}}
+            if arg.get('rule') == 'Name':
+                return arg.get('args', {}).get('name')
+            return None
+
+        def get_dict_value(arg: Any) -> Optional[dict]:
+            """Extract dict value from either AST or Rule Builder format Constant node."""
+            if not isinstance(arg, dict):
+                return None
+            # AST format: {"type": "constant", "value": {...}}
+            if arg.get('type') == 'constant':
+                val = arg.get('value')
+                if isinstance(val, dict):
+                    return val
+            # Rule Builder format: {"rule": "Constant", "args": {"value": {...}}}
+            if arg.get('rule') == 'Constant':
+                val = arg.get('args', {}).get('value')
+                if isinstance(val, dict):
+                    return val
+            return None
+
+        result = []
+        i = 0
+        while i < len(args):
+            arg = args[i]
+            name_value = get_name_value(arg)
+
+            # Check if this is a Name reference to 'keys' followed by a dict constant
+            if name_value == 'keys' and i + 1 < len(args):
+                dict_value = get_dict_value(args[i + 1])
+                if dict_value is not None:
+                    # Replace the Name reference with the dict keys
+                    result.append({'type': 'constant', 'value': list(dict_value.keys())})
+                else:
+                    # Keep original if we couldn't extract dict keys
+                    result.append(arg)
+            else:
+                result.append(arg)
+            i += 1
+
+        return result
 
     def _convert_helper_arg(self, arg: Any) -> str:
         """Convert a single helper argument to Python code string.
@@ -5345,6 +5427,11 @@ class RuleCodeGenerator:
         """
         args = rule.get('args', [])
         kwargs = rule.get('kwargs', {})
+
+        # Pre-process args to resolve Name references that can be inferred from adjacent dict args
+        # This handles patterns like: helper(keys, data, ...) where keys=data.keys()
+        # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
+        args = self._infer_keys_from_dict_args(args)
 
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
