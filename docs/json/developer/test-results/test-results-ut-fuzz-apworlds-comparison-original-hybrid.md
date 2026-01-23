@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 07:32:44
+**Generated:** 2026-01-23 20:58:54
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -81,7 +81,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | League of Legends | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Lingo 2 | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Lingo 2 | ⚠️ 90.0% | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Luigi's Mansion | ❌ 20.0% | ✅ 70.0% | ✅ | ✅ | N/A |
 | Lunacid | ❌ 0.0% | ❌ 10.0% | 8.2KB | ✅ | N/A |
@@ -91,13 +91,13 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Metroid Fusion | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ❌ 0.0% | ❌ 40.0% | 25.9KB | ✅ | N/A |
-| Minit | ✅ 100.0% | ✅ 100.0% | 19.6KB | ✅ | N/A |
+| Minit | ✅ 100.0% | ✅ 100.0% | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Ori and the Blind Forest | ❌ 0.0% | ❌ 20.0% | ✅ | ✅ | N/A |
+| Ori and the Blind Forest | ❌ 0.0% | ❌ 20.0% | 23.2KB | ✅ | N/A |
 | Ori and the Will of the Wisps | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Oxygen Not Included | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
-| Pizza Tower | ⚠️ 60.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Pizza Tower | ⚠️ 60.0% | ❌ 10.0% | 7.0KB | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ⚠️ 80.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pokemon Mystery Dungeon Explorers of Sky | ⚠️ 80.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pseudoregalia | ✅ 100.0% | ✅ 100.0% | 17.1KB | ✅ | N/A |
@@ -174,7 +174,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
-| Minit | 19.6KB | ✅ | N/A |
+| Minit | 23.9KB | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | Rain World | 11.7KB | ✅ | N/A |
@@ -262,7 +262,7 @@ These games fail in both Universal Tracker versions.
 | Into the Breach | ✅ | ✅ | N/A |
 | Jigsaw | 1.6KB | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ✅ | ✅ | N/A |
-| Lingo 2 | ✅ | ✅ | N/A |
+| Lingo 2 | 17.1KB | ✅ | N/A |
 | Lunacid | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
@@ -270,10 +270,10 @@ These games fail in both Universal Tracker versions.
 | Minishoot Adventures | 25.9KB | ✅ | N/A |
 | Monster Sanctuary | ✅ | ✅ | N/A |
 | Nine Sols | ✅ | ✅ | N/A |
-| Ori and the Blind Forest | ✅ | ✅ | N/A |
+| Ori and the Blind Forest | 23.2KB | ✅ | N/A |
 | Ori and the Will of the Wisps | ✅ | ✅ | N/A |
 | Oxygen Not Included | ✅ | ✅ | N/A |
-| Pizza Tower | ✅ | ✅ | N/A |
+| Pizza Tower | 7.0KB | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ✅ | ✅ | N/A |
 | Pokemon Mystery Dungeon Explorers of Sky | ✅ | ✅ | N/A |
 | Rift of the Necrodancer | ✅ | ✅ | N/A |

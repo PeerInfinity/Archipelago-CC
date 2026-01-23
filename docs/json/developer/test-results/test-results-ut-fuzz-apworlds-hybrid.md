@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 07:32:44
+**Generated:** 2026-01-23 20:58:54
 
 **Source Data Created:** 2026-01-23T07:07:32.793827
 
@@ -51,9 +51,9 @@ Of the 56 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 315.9KB
+- **Total Exporter Code:** 367.4KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 315.9KB
+- **Combined Total:** 367.4KB
 
 ## Test Results
 
@@ -117,7 +117,7 @@ Of the 56 games with 100% pass rate:
 | League of Legends | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Lingo 2 | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Lingo 2 | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Little Witch Nobeta | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Lunacid | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 8.2KB | ✅ | N/A |
@@ -127,13 +127,13 @@ Of the 56 games with 100% pass rate:
 | Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 25.9KB | ✅ | N/A |
-| Minit | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 19.6KB | ✅ | N/A |
+| Minit | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Ori and the Blind Forest | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | N/A |
+| Ori and the Blind Forest | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 23.2KB | ✅ | N/A |
 | Ori and the Will of the Wisps | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Oxygen Not Included | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% | ✅ | ✅ | N/A |
-| Pizza Tower | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | N/A |
+| Pizza Tower | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 7.0KB | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pseudoregalia | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.1KB | ✅ | N/A |
