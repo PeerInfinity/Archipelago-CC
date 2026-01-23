@@ -205,6 +205,25 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     def sanitize(value):
         if isinstance(value, frozenset):
             return list(value)
+        # Handle custom option default objects that aren't YAML-serializable
+        # (e.g., autopelago's RatChatMessagesHack which has an 'items' attribute)
+        if hasattr(value, 'items') and callable(getattr(value.__class__, 'items', None)) is False:
+            # Object has an 'items' attribute (not a dict's items method)
+            items = value.items
+            if isinstance(items, list):
+                # Convert list of tuples to YAML-safe format
+                # e.g., [("message", 1), ("other", 2)] -> ["message", {"other": 2}]
+                result = []
+                for item in items:
+                    if isinstance(item, tuple) and len(item) == 2:
+                        text, weight = item
+                        if weight == 1:
+                            result.append(text)
+                        else:
+                            result.append({text: weight})
+                    else:
+                        result.append(item)
+                return result
         return value
 
     if default_options is None:
