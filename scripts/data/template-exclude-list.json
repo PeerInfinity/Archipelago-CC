@@ -144,6 +144,10 @@
       "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
     },
     {
+      "name": "Axiom Verge.yaml",
+      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
+    },
+    {
       "name": "ChecksMate.yaml",
       "reason": "Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties."
     },
@@ -174,6 +178,10 @@
     {
       "name": "Frogmonster.yaml",
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
+    },
+    {
+      "name": "GZDoom.yaml",
+      "reason": "Base framework apworld with hidden=True. Not a standalone game - requires WAD-specific apworlds (e.g., zdoom_doom_2.apworld) that extend GZDoomWorld and provide wad_logic. Accessing wad_logic on base class raises AttributeError because the attribute is only declared, not initialized."
     },
     {
       "name": "Iji.yaml",
@@ -234,10 +242,6 @@
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
-    },
-    {
-      "name": "Axiom Verge.yaml",
-      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
     }
   ],
   "requires_javascript_helpers_list": [
