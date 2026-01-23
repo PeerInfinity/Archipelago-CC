@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 07:07:33
+**Generated:** 2026-01-23 07:32:44
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -71,7 +71,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Into the Breach | ❌ 20.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Isles Of Sea And Sky | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
-| Jigsaw | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Jigsaw | ❌ 30.0% | ❌ 0.0% | 1.6KB | ✅ | N/A |
 | K-On! After School Live!! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ⚠️ 70.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Kingdom Hearts Birth by Sleep | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -84,14 +84,14 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Lingo 2 | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Luigi's Mansion | ❌ 20.0% | ✅ 70.0% | ✅ | ✅ | N/A |
-| Lunacid | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Lunacid | ❌ 0.0% | ❌ 10.0% | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | ❌ 0.0% | ❌ 20.0% | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ❌ 0.0% | ❌ 40.0% | 25.9KB | ✅ | N/A |
-| Minit | ✅ 100.0% | ✅ 100.0% | 15.1KB | ✅ | N/A |
+| Minit | ✅ 100.0% | ✅ 100.0% | 19.6KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ori and the Blind Forest | ❌ 0.0% | ❌ 20.0% | ✅ | ✅ | N/A |
@@ -121,7 +121,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Soul Blazer | ✅ 100.0% | ✅ 100.0% | 10.6KB | ✅ | N/A |
 | Spinball | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ 20.0% | ❌ 0.0% | 15.2KB | ✅ | N/A |
-| Stacklands | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Stacklands | ⚠️ 90.0% | ❌ 0.0% | 12.7KB | ✅ | N/A |
 | Star Fox 64 | ✅ 100.0% | ✅ 100.0% | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -174,7 +174,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
-| Minit | 15.1KB | ✅ | N/A |
+| Minit | 19.6KB | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | Rain World | 11.7KB | ✅ | N/A |
@@ -260,10 +260,10 @@ These games fail in both Universal Tracker versions.
 | Here Comes Niko! | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
 | Into the Breach | ✅ | ✅ | N/A |
-| Jigsaw | ✅ | ✅ | N/A |
+| Jigsaw | 1.6KB | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ✅ | ✅ | N/A |
 | Lingo 2 | ✅ | ✅ | N/A |
-| Lunacid | ✅ | ✅ | N/A |
+| Lunacid | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Metroid Zero Mission | 9.7KB | ✅ | N/A |
@@ -285,7 +285,7 @@ These games fail in both Universal Tracker versions.
 | Sly Cooper and the Thievius Raccoonus | ✅ | ✅ | N/A |
 | Sonic Adventure DX | 29.9KB | ✅ | N/A |
 | Spyro 3 | 15.2KB | ✅ | N/A |
-| Stacklands | ✅ | ✅ | N/A |
+| Stacklands | 12.7KB | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |

@@ -481,11 +481,11 @@
   },
   "Jigsaw": {
     "apworld_path": "custom_worlds/jigsaw.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/jigsaw.py",
+    "exporter_size": 1632,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "jigsaw"
   },
@@ -611,11 +611,11 @@
   },
   "Lunacid": {
     "apworld_path": "custom_worlds/lunacid.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/lunacid.py",
+    "exporter_size": 8359,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "lunacid"
   },
@@ -682,7 +682,7 @@
   "Minit": {
     "apworld_path": "custom_worlds/minit.apworld",
     "exporter_path": "exporter/games/unofficial/minit.py",
-    "exporter_size": 15444,
+    "exporter_size": 20092,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -981,11 +981,11 @@
   },
   "Stacklands": {
     "apworld_path": "custom_worlds/stacklands.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/stacklands.py",
+    "exporter_size": 13032,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "stacklands"
   },

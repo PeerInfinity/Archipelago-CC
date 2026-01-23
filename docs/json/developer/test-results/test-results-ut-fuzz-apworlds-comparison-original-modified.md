@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
 
-**Generated:** 2026-01-23 07:07:33
+**Generated:** 2026-01-23 07:32:44
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -14,8 +14,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 24 (19.4%)
-- **Passing Original Only:** 18 (14.5%)
+- **Passing Both:** 23 (18.5%)
+- **Passing Original Only:** 19 (15.3%)
 - **Passing Modified Only:** 16 (12.9%)
 - **Passing Neither:** 66 (53.2%)
 
@@ -31,7 +31,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Against the Storm | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ✅ 100.0% | ❌ 40.0% | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ 100.0% | ✅ 100.0% | 8.7KB | ✅ | N/A |
-| Anodyne | ✅ 100.0% | ❌ 0.0% | 10.7KB | ✅ | N/A |
+| Anodyne | ✅ 100.0% | ❌ 10.0% | 10.7KB | ✅ | N/A |
 | Another Crabs Treasure | ⚠️ 60.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Ape Escape | ❌ 0.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ⚠️ 70.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -47,7 +47,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | ClusterTruck | ❌ 30.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | CrossCode | ⚠️ 50.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Crystal Project | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Crystal Project | ❌ 30.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Crystalis | ⚠️ 70.0% | ❌ 0.0% | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -55,23 +55,23 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Diddy Kong Racing | ⚠️ 50.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Digimon World | ⚠️ 60.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 20.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 70.0% | ⚠️ 90.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ 40.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Frogmonster | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | GZDoom | ✅ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Golden Sun The Lost Age | ⚠️ 80.0% | ❌ 30.0% | ✅ | ✅ | N/A |
+| Golden Sun The Lost Age | ⚠️ 80.0% | ❌ 20.0% | ✅ | ✅ | N/A |
 | Grim Dawn | ⚠️ 70.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Hammerwatch | ❌ 40.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ❌ 10.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Here Comes Niko! | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
+| Here Comes Niko! | ⚠️ 80.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Iji | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Into the Breach | ❌ 20.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Isles Of Sea And Sky | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
+| Isles Of Sea And Sky | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
-| Jigsaw | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Jigsaw | ❌ 30.0% | ✅ 100.0% | 1.6KB | ✅ | N/A |
 | K-On! After School Live!! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ⚠️ 70.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Kingdom Hearts Birth by Sleep | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -80,18 +80,18 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Kirby Super Star | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | League of Legends | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ 90.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
-| Lil Gator Game | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Lil Gator Game | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Lingo 2 | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Luigi's Mansion | ❌ 20.0% | ✅ 70.0% | ✅ | ✅ | N/A |
-| Lunacid | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
-| Majora's Mask Recompiled | ❌ 0.0% | ❌ 40.0% | 10.4KB | ✅ | N/A |
+| Lunacid | ❌ 0.0% | ❌ 30.0% | 8.2KB | ✅ | N/A |
+| Majora's Mask Recompiled | ❌ 0.0% | ❌ 20.0% | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | 9.7KB | ✅ | N/A |
-| Minishoot Adventures | ❌ 0.0% | ❌ 0.0% | 25.9KB | ✅ | N/A |
-| Minit | ✅ 100.0% | ❌ 0.0% | 15.1KB | ✅ | N/A |
+| Minishoot Adventures | ❌ 0.0% | ❌ 40.0% | 25.9KB | ✅ | N/A |
+| Minit | ✅ 100.0% | ❌ 30.0% | 19.6KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ori and the Blind Forest | ❌ 0.0% | ❌ 20.0% | ✅ | ✅ | N/A |
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ❌ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ✅ 100.0% | ❌ 40.0% | ✅ | ✅ | N/A |
@@ -121,7 +121,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Soul Blazer | ✅ 100.0% | ⚠️ 80.0% | 10.6KB | ✅ | N/A |
 | Spinball | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ 20.0% | ❌ 0.0% | 15.2KB | ✅ | N/A |
-| Stacklands | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Stacklands | ⚠️ 90.0% | ❌ 0.0% | 12.7KB | ✅ | N/A |
 | Star Fox 64 | ✅ 100.0% | ✅ 100.0% | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -129,7 +129,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | System Shock 2 | ❌ 30.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Tetris Attack | ⚠️ 80.0% | ✅ 80.0% | 23.1KB | ✅ | N/A |
+| Tetris Attack | ⚠️ 80.0% | ❌ 0.0% | 23.1KB | ✅ | N/A |
 | Tevi | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -140,7 +140,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ⚠️ 90.0% | ❌ 0.0% | 9.1KB | ✅ | N/A |
-| Wordipelago | ✅ 90.0% | ❌ 0.0% | 11.6KB | ✅ | N/A |
+| Wordipelago | ✅ 90.0% | ⚠️ 60.0% | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | osu! | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ❌ 0.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (24)
+## Games Passing Both (23)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -159,7 +159,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | Cuphead | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ | ✅ | N/A |
-| Isles Of Sea And Sky | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ | ✅ | N/A |
 | K-On! After School Live!! | ✅ | ✅ | N/A |
 | Kingdom Hearts Birth by Sleep | ✅ | ✅ | N/A |
@@ -179,7 +178,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
 
-## Games Passing Original Only (18)
+## Games Passing Original Only (19)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -192,8 +191,9 @@ These games pass in the Original UT but fail in the Modified UT.
 | Corn Kidz 64 | ✅ | ✅ | N/A |
 | Frogmonster | ✅ | ✅ | N/A |
 | GZDoom | ✅ | ✅ | N/A |
+| Isles Of Sea And Sky | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
-| Minit | 15.1KB | ✅ | N/A |
+| Minit | 19.6KB | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | Reventure | ✅ | ✅ | N/A |
@@ -217,13 +217,13 @@ These games pass in the Modified UT but fail in the Original UT.
 | Brotato | ✅ | ✅ | N/A |
 | Diddy Kong Racing | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ | ✅ | N/A |
-| Here Comes Niko! | ✅ | ✅ | N/A |
+| Jigsaw | 1.6KB | ✅ | N/A |
 | League of Legends | ✅ | ✅ | N/A |
+| Lil Gator Game | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ | N/A |
 | Sonic Heroes | ✅ | ✅ | N/A |
-| Tetris Attack | 23.1KB | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
@@ -257,13 +257,12 @@ These games fail in both Universal Tracker versions.
 | Golden Sun The Lost Age | ✅ | ✅ | N/A |
 | Grim Dawn | ✅ | ✅ | N/A |
 | Hammerwatch | ✅ | ✅ | N/A |
+| Here Comes Niko! | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
 | Into the Breach | ✅ | ✅ | N/A |
-| Jigsaw | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ✅ | ✅ | N/A |
-| Lil Gator Game | ✅ | ✅ | N/A |
 | Lingo 2 | ✅ | ✅ | N/A |
-| Lunacid | ✅ | ✅ | N/A |
+| Lunacid | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Metroid Zero Mission | 9.7KB | ✅ | N/A |
@@ -285,10 +284,11 @@ These games fail in both Universal Tracker versions.
 | Sly Cooper and the Thievius Raccoonus | ✅ | ✅ | N/A |
 | Sonic Adventure DX | 29.9KB | ✅ | N/A |
 | Spyro 3 | 15.2KB | ✅ | N/A |
-| Stacklands | ✅ | ✅ | N/A |
+| Stacklands | 12.7KB | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
+| Tetris Attack | 23.1KB | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ✅ | ✅ | N/A |
 | The Sims 4 | 5.5KB | ✅ | N/A |
