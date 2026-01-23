@@ -113,6 +113,87 @@ class MinitExportHandler(GenericGameExportHandler):
             if item_name == 'has_sword':
                 return self._expand_has_sword()
 
+        # Handle AST format: state_method has_all with has_sword in set elements
+        # Structure: {type: "state_method", method: "has_all", args: [{type: "set", elements: [...]}, player]}
+        if rule_type == 'state_method' and rule.get('method') == 'has_all':
+            rule_args = rule.get('args', [])
+            if rule_args and isinstance(rule_args, list) and len(rule_args) >= 1:
+                first_arg = rule_args[0]
+                if isinstance(first_arg, dict) and first_arg.get('type') == 'set':
+                    elements = first_arg.get('elements', [])
+                    # Extract item names from constant elements
+                    item_names = []
+                    has_sword_found = False
+                    for elem in elements:
+                        if isinstance(elem, dict) and elem.get('type') == 'constant':
+                            value = elem.get('value', '')
+                            if value == 'has_sword':
+                                has_sword_found = True
+                            else:
+                                item_names.append(value)
+
+                    if has_sword_found:
+                        if not item_names:
+                            # Only has_sword in the set
+                            return self._expand_has_sword()
+                        elif len(item_names) == 1:
+                            # One other item - And(HasAny(swords), item_check)
+                            return {
+                                'type': 'and',
+                                'conditions': [
+                                    self._expand_has_sword(),
+                                    {'type': 'item_check', 'item': item_names[0]}
+                                ]
+                            }
+                        else:
+                            # Multiple other items - And(HasAny(swords), state_method(has_all))
+                            return {
+                                'type': 'and',
+                                'conditions': [
+                                    self._expand_has_sword(),
+                                    {
+                                        'type': 'state_method',
+                                        'method': 'has_all',
+                                        'args': [
+                                            {
+                                                'type': 'set',
+                                                'elements': [
+                                                    {'type': 'constant', 'value': name}
+                                                    for name in item_names
+                                                ]
+                                            },
+                                            rule_args[1] if len(rule_args) > 1 else {'type': 'constant', 'value': 1}
+                                        ]
+                                    }
+                                ]
+                            }
+
+        # Handle AST format: state_method has_any with has_sword in set elements
+        if rule_type == 'state_method' and rule.get('method') == 'has_any':
+            rule_args = rule.get('args', [])
+            if rule_args and isinstance(rule_args, list) and len(rule_args) >= 1:
+                first_arg = rule_args[0]
+                if isinstance(first_arg, dict) and first_arg.get('type') == 'set':
+                    elements = first_arg.get('elements', [])
+                    # Extract item names from constant elements
+                    item_names = []
+                    has_sword_found = False
+                    for elem in elements:
+                        if isinstance(elem, dict) and elem.get('type') == 'constant':
+                            value = elem.get('value', '')
+                            if value == 'has_sword':
+                                has_sword_found = True
+                            else:
+                                item_names.append(value)
+
+                    if has_sword_found:
+                        # Combine sword items with other items
+                        expanded_items = self.SWORD_ITEMS.copy() + item_names
+                        return {
+                            'rule': 'HasAny',
+                            'args': {'items': expanded_items}
+                        }
+
         # Handle RB format: Has rule with has_sword
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
