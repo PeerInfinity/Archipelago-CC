@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 07:32:44
+**Generated:** 2026-01-23 20:58:54
 
-**Source Data Created:** 2026-01-23T07:32:44.497336
+**Source Data Created:** 2026-01-23T20:58:54.763743
 
-**Source Data Last Updated:** 2026-01-23T07:32:44.497342
+**Source Data Last Updated:** 2026-01-23T20:58:54.763749
 
 **Universal Tracker Version:** Modified (worldgen-based tracking)
 
@@ -23,45 +23,45 @@
 ## Summary
 
 - **Total Games:** 124
-- **Games with 100% Pass Rate:** 39 (31.5%)
-- **Games with Failures:** 85 (68.5%)
+- **Games with 100% Pass Rate:** 44 (35.5%)
+- **Games with Failures:** 80 (64.5%)
 - **Total Fuzz Runs:** 1240
-- **Successful Runs:** 497 (40.1%)
-- **Failed Runs:** 610
-- **Timed Out Runs:** 4
-- **Ignored Runs:** 129
+- **Successful Runs:** 549 (44.3%)
+- **Failed Runs:** 537
+- **Timed Out Runs:** 23
+- **Ignored Runs:** 131
 
 ### Expected vs Unexpected Results
 
-- **Expected Passes:** 39 (not excluded, passed)
-- **Unexpected Passes:** 0 (excluded, but passed)
-- **Expected Failures:** 39 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 46 (not excluded, logic mismatch)
-- **Unexpected Failures (timeout only):** 0 (not excluded, only timeouts)
+- **Expected Passes:** 43 (not excluded, passed)
+- **Unexpected Passes:** 1 (excluded, but passed)
+- **Expected Failures:** 42 (excluded, failed as expected)
+- **Unexpected Failures (logic):** 36 (not excluded, logic mismatch)
+- **Unexpected Failures (timeout only):** 2 (not excluded, only timeouts)
 
 ### Explain Support Summary
 
-- **Games with Explain Stats:** 115
-- **Games with 100% Explain Coverage:** 93
-- **Games with No Explain Support:** 14
-- **Locations with Explain Support:** 16,656
-- **Locations without Explain Support:** 4,077
-- **Locations with Default Rule:** 17,418
-- **Overall Explain Coverage:** 80.3%
+- **Games with Explain Stats:** 113
+- **Games with 100% Explain Coverage:** 92
+- **Games with No Explain Support:** 13
+- **Locations with Explain Support:** 15,940
+- **Locations without Explain Support:** 3,834
+- **Locations with Default Rule:** 16,865
+- **Overall Explain Coverage:** 80.6%
 
 ### Generic Exporter/Logic Statistics
 
-Of the 39 games with 100% pass rate:
+Of the 44 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 34/39 (87.2%)
-- **Passing with Generic Logic:** 39/39 (100.0%)
-- **Passing with Both Generic:** 34/39 (87.2%)
+- **Passing with Generic Exporter:** 37/44 (84.1%)
+- **Passing with Generic Logic:** 44/44 (100.0%)
+- **Passing with Both Generic:** 37/44 (84.1%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 315.9KB
+- **Total Exporter Code:** 367.4KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 315.9KB
+- **Combined Total:** 367.4KB
 
 ## Test Results
 
@@ -70,7 +70,7 @@ Of the 39 games with 100% pass rate:
 | A Dance of Fire and Ice | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | N/A |
 | A Link Between Worlds | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| ANIMAL WELL | ❌ | 10 | 4 | 5 | 0 | 1 | ❌ 40.0% | 1.5KB | ✅ | N/A |
+| ANIMAL WELL | ❌ | 10 | 3 | 6 | 0 | 1 | ❌ 30.0% | 1.5KB | ✅ | N/A |
 | Actraiser | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Against the Storm | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 6.6KB | ✅ | N/A |
@@ -91,29 +91,29 @@ Of the 39 games with 100% pass rate:
 | ClusterTruck | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | CrossCode | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Crystal Project | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | N/A |
-| Crystalis | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% | 9.2KB | ✅ | N/A |
+| Crystal Project | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Crystalis | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Diddy Kong Racing | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Digimon World | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ | 10 | 1 | 8 | 0 | 1 | ❌ 10.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Frogmonster | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | GZDoom | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Golden Sun The Lost Age | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | N/A |
+| Golden Sun The Lost Age | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Grim Dawn | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Hammerwatch | ❌ | 10 | 5 | 4 | 0 | 1 | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Here Comes Niko! | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Here Comes Niko! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Iji | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Into the Breach | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Isles Of Sea And Sky | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Isles Of Sea And Sky | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | N/A |
 | Jigsaw | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.6KB | ✅ | N/A |
 | K-On! After School Live!! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
@@ -125,23 +125,23 @@ Of the 39 games with 100% pass rate:
 | League of Legends | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Lingo 2 | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Lingo 2 | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | 17.1KB | ✅ | N/A |
 | Little Witch Nobeta | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Lunacid | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 8.2KB | ✅ | N/A |
-| Majora's Mask Recompiled | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 10.4KB | ✅ | N/A |
-| Mario Kart Double Dash | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Majora's Mask Recompiled | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 10.4KB | ✅ | N/A |
+| Mario Kart Double Dash | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 25.9KB | ✅ | N/A |
-| Minit | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 19.6KB | ✅ | N/A |
+| Minit | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Ori and the Blind Forest | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | N/A |
-| Ori and the Will of the Wisps | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Ori and the Blind Forest | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 23.2KB | ✅ | N/A |
+| Ori and the Will of the Wisps | ❌ | 10 | 0 | 1 | 6 | 3 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Oxygen Not Included | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% | ✅ | ✅ | N/A |
-| Pizza Tower | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | N/A |
+| Pizza Tower | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | 7.0KB | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Pseudoregalia | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 17.1KB | ✅ | N/A |
@@ -177,13 +177,13 @@ Of the 39 games with 100% pass rate:
 | Tevi | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| The Sims 4 | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | 5.5KB | ✅ | N/A |
+| The Sims 4 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.5KB | ✅ | N/A |
 | ToeJam and Earl | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Tyrian | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Watery Words | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 9.1KB | ✅ | N/A |
+| Watery Words | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.1KB | ✅ | N/A |
 | Wordipelago | ❌ | 10 | 6 | 2 | 0 | 2 | ⚠️ 60.0% | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | N/A |
@@ -200,23 +200,22 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | A Link Between Worlds | 257 | 0 | 257 | 0 | ❌ 0% |
 | Axiom Verge | 125 | 0 | 125 | 0 | ❌ 0% |
-| Crystal Project | 1188 | 0 | 601 | 587 | ❌ 0% |
-| Duke Nukem 3D | 86 | 0 | 20 | 66 | ❌ 0% |
+| Duke Nukem 3D | 83 | 0 | 18 | 65 | ❌ 0% |
 | Into the Breach | 21 | 0 | 21 | 0 | ❌ 0% |
 | Kingdom Hearts RE Chain of Memories | 247 | 0 | 101 | 146 | ❌ 0% |
 | Lego Star Wars: The Complete Saga | 74 | 0 | 3 | 71 | ❌ 0% |
-| Mario Kart Double Dash | 182 | 0 | 1 | 181 | ❌ 0% |
 | Metroid Fusion | 126 | 0 | 126 | 0 | ❌ 0% |
 | Monster Sanctuary | 572 | 0 | 572 | 0 | ❌ 0% |
 | Rain World | 192 | 0 | 34 | 158 | ❌ 0% |
 | Star Fox 64 | 107 | 0 | 107 | 0 | ❌ 0% |
 | Super Cat Planet | 81 | 0 | 50 | 31 | ❌ 0% |
 | Tevi | 1339 | 0 | 1339 | 0 | ❌ 0% |
-| XCOM 2 War of the Chosen | 147 | 1 | 146 | 0 | 🔶 1% |
+| XCOM 2 War of the Chosen | 141 | 0 | 141 | 0 | ❌ 0% |
 | Diddy Kong Racing | 59 | 11 | 20 | 28 | 🔶 35% |
+| Crystal Project | 1264 | 235 | 366 | 663 | 🔶 39% |
 | Balatro | 966 | 441 | 525 | 0 | 🔶 46% |
 | Minit | 50 | 43 | 5 | 2 | ⚠️ 90% |
-| Pokemon FireRed and LeafGreen | 1026 | 424 | 20 | 582 | ⚠️ 96% |
+| Pokemon FireRed and LeafGreen | 1026 | 436 | 20 | 570 | ⚠️ 96% |
 | ChecksMate | 71 | 65 | 2 | 4 | ⚠️ 97% |
 | Lunacid | 1238 | 36 | 1 | 1201 | ⚠️ 97% |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 92 | 91 | 1 | 0 | ⚠️ 99% |
@@ -251,9 +250,9 @@ This section shows which games have rules that support the `explain_json()` meth
 | Grim Dawn | 46 | 4 | 0 | 42 | ✅ 100% |
 | Hammerwatch | 1276 | 0 | 0 | 1276 | ✅ 100% |
 | Hatsune Miku Project Diva Mega Mix+ | 500 | 500 | 0 | 0 | ✅ 100% |
-| Here Comes Niko! | 944 | 292 | 0 | 652 | ✅ 100% |
+| Here Comes Niko! | 944 | 265 | 0 | 679 | ✅ 100% |
 | Iji | 177 | 0 | 0 | 177 | ✅ 100% |
-| Isles Of Sea And Sky | 586 | 345 | 0 | 241 | ✅ 100% |
+| Isles Of Sea And Sky | 610 | 361 | 0 | 249 | ✅ 100% |
 | Ittle Dew 2 | 143 | 143 | 0 | 0 | ✅ 100% |
 | Jigsaw | 93 | 93 | 0 | 0 | ✅ 100% |
 | K-On! After School Live!! | 589 | 589 | 0 | 0 | ✅ 100% |
@@ -262,18 +261,17 @@ This section shows which games have rules that support the `explain_json()` meth
 | Kingdom Hearts Chain of Memories | 151 | 29 | 0 | 122 | ✅ 100% |
 | League of Legends | 510 | 506 | 0 | 4 | ✅ 100% |
 | Lil Gator Game | 219 | 178 | 0 | 41 | ✅ 100% |
-| Lingo 2 | 501 | 501 | 0 | 0 | ✅ 100% |
+| Lingo 2 | 501 | 399 | 0 | 102 | ✅ 100% |
 | Little Witch Nobeta | 55 | 15 | 0 | 40 | ✅ 100% |
-| Luigi's Mansion | 742 | 438 | 0 | 304 | ✅ 100% |
-| Majora's Mask Recompiled | 372 | 371 | 0 | 1 | ✅ 100% |
+| Luigi's Mansion | 543 | 244 | 0 | 299 | ✅ 100% |
+| Majora's Mask Recompiled | 372 | 319 | 0 | 53 | ✅ 100% |
 | MetroCUBEvania | 9 | 2 | 0 | 7 | ✅ 100% |
 | Metroid Zero Mission | 100 | 80 | 0 | 20 | ✅ 100% |
 | Minishoot Adventures | 194 | 109 | 0 | 85 | ✅ 100% |
 | Nine Sols | 318 | 1 | 0 | 317 | ✅ 100% |
-| Ori and the Blind Forest | 254 | 212 | 0 | 42 | ✅ 100% |
-| Ori and the Will of the Wisps | 390 | 0 | 0 | 390 | ✅ 100% |
+| Ori and the Blind Forest | 254 | 188 | 0 | 66 | ✅ 100% |
 | Oxygen Not Included | 352 | 0 | 0 | 352 | ✅ 100% |
-| Pizza Tower | 224 | 206 | 0 | 18 | ✅ 100% |
+| Pizza Tower | 238 | 220 | 0 | 18 | ✅ 100% |
 | Pokemon Mystery Dungeon Explorers of Sky | 2523 | 2448 | 0 | 75 | ✅ 100% |
 | Pseudoregalia | 93 | 55 | 0 | 38 | ✅ 100% |
 | Rabi-Ribi | 207 | 0 | 0 | 207 | ✅ 100% |
@@ -286,14 +284,14 @@ This section shows which games have rules that support the `explain_json()` meth
 | Ship of Harkinian | 745 | 745 | 0 | 0 | ✅ 100% |
 | Simon Tatham's Portable Puzzle Collection | 523 | 523 | 0 | 0 | ✅ 100% |
 | Sly 2: Band of Thieves | 170 | 39 | 0 | 131 | ✅ 100% |
-| Sly Cooper and the Thievius Raccoonus | 203 | 45 | 0 | 158 | ✅ 100% |
+| Sly Cooper and the Thievius Raccoonus | 196 | 45 | 0 | 151 | ✅ 100% |
 | Sonic Adventure DX | 205 | 21 | 0 | 184 | ✅ 100% |
 | Sonic Rush | 67 | 0 | 0 | 67 | ✅ 100% |
 | Sonic the Hedgehog 1 | 208 | 0 | 0 | 208 | ✅ 100% |
 | Soul Blazer | 300 | 94 | 0 | 206 | ✅ 100% |
 | Spinball | 2 | 1 | 0 | 1 | ✅ 100% |
 | Spyro 3 | 308 | 0 | 0 | 308 | ✅ 100% |
-| Stacklands | 118 | 0 | 0 | 118 | ✅ 100% |
+| Stacklands | 118 | 100 | 0 | 18 | ✅ 100% |
 | Star Wars Episode I Racer | 101 | 91 | 0 | 10 | ✅ 100% |
 | Symphony of the Night | 187 | 0 | 0 | 187 | ✅ 100% |
 | System Shock 2 | 708 | 147 | 0 | 561 | ✅ 100% |
@@ -302,17 +300,17 @@ This section shows which games have rules that support the `explain_json()` meth
 | Tetris Attack | 300 | 300 | 0 | 0 | ✅ 100% |
 | The Legend of Zelda - Oracle of Seasons | 233 | 0 | 0 | 233 | ✅ 100% |
 | The Legend of Zelda - Phantom Hourglass | 291 | 0 | 0 | 291 | ✅ 100% |
-| The Sims 4 | 706 | 272 | 0 | 434 | ✅ 100% |
+| The Sims 4 | 706 | 363 | 0 | 343 | ✅ 100% |
 | ToeJam and Earl | 605 | 8 | 0 | 597 | ✅ 100% |
 | TurnipBoy | 45 | 22 | 0 | 23 | ✅ 100% |
 | Tyrian | 135 | 0 | 0 | 135 | ✅ 100% |
-| Vampire Survivors | 300 | 90 | 0 | 210 | ✅ 100% |
+| Vampire Survivors | 252 | 97 | 0 | 155 | ✅ 100% |
 | Watery Words | 150 | 150 | 0 | 0 | ✅ 100% |
 | Wordipelago | 169 | 19 | 0 | 150 | ✅ 100% |
 | Yu-Gi-Oh! Forbidden Memories | 678 | 678 | 0 | 0 | ✅ 100% |
 | Zelda II: The Adventure of Link | 106 | 80 | 0 | 26 | ✅ 100% |
 | osu! | 310 | 0 | 0 | 310 | ✅ 100% |
-| plateup | 900 | 897 | 0 | 3 | ✅ 100% |
+| plateup | 109 | 106 | 0 | 3 | ✅ 100% |
 
 ## Notes
 
@@ -360,6 +358,7 @@ These community APWorlds are excluded from UT fuzz testing due to incompatible r
 | Cavern of Dreams.yaml | Uses custom carryable system with CavernOfDreamsLocation/CavernOfDreamsEntrance classes. Rules stored in carryable_access_rules, inverse_carryable_access_rules, and dont_care_access_rule dictionaries instead of standard access_rule lambdas. Fixed @final class method dispatches to check_any_access() which evaluates carryable-specific rules. Exporter gets IndentationError parsing class method and exports null rules. |
 | ChecksMate.yaml | Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties. |
 | Chrono Trigger Jets of Time.yaml | Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations. |
+| ClusterTruck.yaml | APWorld bug: Unconditional filler item addition in create_items() causes item/location imbalance when start_level is also in skipped_levels. Results in FillError with ~30-60% of randomized configurations. |
 | Corn Kidz 64.yaml | Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture. |
 | CrossCode.yaml | Uses custom Condition class system (ItemCondition, QuestCondition, etc.) with c.satisfied() method calls. Exporter serializes condition objects as string representations instead of extracting item requirements. Progressive item replacements in cond_args dict are not processed. |
 | Crystal Project.yaml | Uses class-level helper methods (can_fight_gran, can_push_ice_block_and_goat, is_area_in_level_range) that combine item checks with game-specific level calculations. Exporter converts these to AST_capability/AST_generic_helper rules, but worldgen generates function calls without defining the functions, causing NameError at runtime. |
@@ -372,11 +371,14 @@ These community APWorlds are excluded from UT fuzz testing due to incompatible r
 | Iji.yaml | Uses module-level constant lists (EventNames.Levels, ItemNames.Sector_Access) with subscript access in rules. Exporter captures AST instead of resolved values. Chained helper functions cause rule expansion to hit size limits, falling back to True_(). |
 | Keep Talking and Nobody Explodes.yaml | Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible. |
 | Lingo 2.yaml | Uses closure-captured AccessRequirements objects in make_location_lambda(). Exporter captures variable name 'new_reqs' but cannot serialize the object, resulting in None passed to lingo2_can_satisfy_requirements helper causing AttributeError. Would need custom handler like original Lingo. |
+| Majora's Mask Recompiled.yaml | Shop price randomization incompatible with tracker: (1) Rules.json path discovery fails due to apostrophe in directory name. (2) Randomized prices not exported to game_info. (3) Prices are non-deterministic - regenerating world creates different prices causing wallet requirement mismatches. |
 | Monster Sanctuary.yaml | Uses custom AccessCondition class with data-driven rule evaluation. Exporter sees lambda calling rules.has_access() but cannot introspect the AccessCondition tree structure. |
+| Ori and the Blind Forest.yaml | Uses oribf_has helper with special keywords ('Free', 'Lure', 'DoubleBash', etc.) and item tuples. Exporter hits infinite loop analyzing helper. Custom exporter improves to 30-60% success but glitched logic settings still fail due to complex option-dependent rules in RulesData.py. |
 | Ori and the Will of the Wisps.yaml | Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns. |
 | Pokemon Mystery Dungeon Explorers of Sky.yaml | APWorld bug: 'Team Name' classification not handled in create_regions(), causing KeyError when subx_rules() tries to access 'Team Name Location'. Also has logic mismatches from complex rule patterns. |
 | Pseudoregalia.yaml | Uses virtual items ('Kick Count', 'Cling Count') managed through custom collect/remove hooks. Collecting physical items like 'Air Kick' adds virtual counters via state.add_item(). Rules check virtual item counts but worldgen can't replicate collect hooks, so virtual items are never in collection state. |
 | Rabi-Ribi.yaml | Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis. |
+| Rift of the NecroDancer.yaml | APWorld bugs: (1) Option validation allows empty song pool causing ValueError in randrange(). (2) Duplicate item IDs - Medium and Hard variants share same ID (e.g., both 'Take a Breather (Medium)' and 'Take a Breather (Hard)' use ID 2013), causing item_id_to_name mismatches and logic errors. |
 | Sentinels of the Multiverse.yaml | APWorld issue: Option combinations create more items than locations (required_scions can be 10000+, location_density.hero can be 0). Fails with FillError during seed generation before UT tracking runs. Not a UT compatibility issue. |
 | Ship of Harkinian.yaml | Uses rule_wrapper class pattern that wraps lambda rules in closures. Access rules are wrapped via rule_wrapper.wrap(parent_region, rule, world).evaluate, where 'rule' is a Callable[[tuple[state, region, world]], bool]. Exporter extracts AST from evaluate() method which only shows wrapper call, not the actual rule logic stored in the closure. APWorld has native UT support (ut_can_gen_without_yaml=True) but the fuzzer's sphere comparison validation has minor edge-case mismatches with Fire Temple locations. |
 | Sly 2 Band of Thieves.yaml | APWorld bug: uses generation_is_fake to apply different rules during tracking vs generation. ThiefNet locations skip Episode requirements and Pickpocket locations get wrong region assignments during tracking. |
@@ -388,9 +390,14 @@ These community APWorlds are excluded from UT fuzz testing due to incompatible r
 | The Legend of Zelda - Phantom Hourglass.yaml | Entrance randomization fails frequently with complex option combinations. GER algorithm fails after 10 attempts with mixed pool settings. |
 | The Sims 4.yaml | APWorld bug: fill_slot_data() returns keys like 'goal' but generate_early() expects 'goal_value'. Key mismatch causes KeyError during worldgen regeneration. |
 | ToeJam and Earl.yaml | Uses custom collect method with point-based rank progression. Rules check pseudo-item 'ranks' which only exists via custom state tracking, not exportable. |
+| Tyrian.yaml | Uses DPS dataclass objects captured in lambda closures via default parameters (lambda state, dps1=dps_active: can_deal_damage(state, player, dps1)). Exporter captures variable name 'dps1' but cannot serialize the DPS dataclass value, resulting in None passed to helpers. get_front_weapon_state() fails with AttributeError: 'NoneType' object has no attribute '_type_piercing'. DamageTables system requires complex runtime calculations that cannot be exported to static rules. |
 | Wario Land.yaml | Requires ROM file (Wario Land - Super Mario Land 3 (World).gb) for seed generation. APWorld doesn't check skip_required_files setting, causing FileNotFoundError in headless testing environments. |
 | XCOM 2 War of the Chosen.yaml | Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline. |
 | Yu-Gi-Oh! Forbidden Memories.yaml | Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules. |
+
+### Unexpected Passes
+
+- The Sims 4
 
 ### Unexpected Failures (Logic Mismatch)
 
@@ -402,28 +409,20 @@ These games have actual logic mismatches between UT and Python:
 - Another Crabs Treasure
 - Ape Escape
 - Balatro
-- ClusterTruck
 - Crystalis
 - Deep Rock Galactic
 - Final Fantasy Tactics Advance
 - Fire Emblem Sacred Stones
-- Golden Sun The Lost Age
 - Grim Dawn
 - Hammerwatch
-- Here Comes Niko!
 - Into the Breach
-- Isles Of Sea And Sky
 - Lego Star Wars: The Complete Saga
 - Lunacid
-- Majora's Mask Recompiled
-- Mario Kart Double Dash
 - Metroid Zero Mission
 - Minishoot Adventures
 - Minit
 - Nine Sols
-- Ori and the Blind Forest
 - Oxygen Not Included
-- Pizza Tower
 - Pokemon FireRed and LeafGreen
 - Reventure
 - Rift Wizard
@@ -437,8 +436,13 @@ These games have actual logic mismatches between UT and Python:
 - Star Wars Episode I Racer
 - TCG Card Shop Simulator
 - Tetris Attack
-- Tyrian
-- Watery Words
 - Wordipelago
 - Yu-Gi-Oh! Dungeon Dice Monsters
 - plateup
+
+### Unexpected Failures (Timeout Only)
+
+These games failed only due to timeouts, not logic mismatches:
+
+- Mario Kart Double Dash
+- Pizza Tower
