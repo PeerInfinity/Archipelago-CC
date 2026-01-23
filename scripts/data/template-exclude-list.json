@@ -144,6 +144,10 @@
       "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
     },
     {
+      "name": "Axiom Verge.yaml",
+      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
+    },
+    {
       "name": "Balatro.yaml",
       "reason": "Uses complex lambda expressions with list(dict.values()) patterns for item lists. World generator receives dict structure instead of item list, producing broken HasFromList rules with dict keys ('type', 'name', 'args') instead of items."
     },
@@ -200,6 +204,10 @@
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
     {
+      "name": "Rusted Moss.yaml",
+      "reason": "Two issues: (1) Character option defines 4 values (fern, maya, ameli, gimmick) but only fern and gimmick are supported - selecting maya or ameli raises ValueError. (2) Rules are created using eval() from dynamically built lambda strings in convert_to_rule(). The exporter cannot analyze these rules because inspect.getfile() returns '<string>' instead of a readable source file. All rules export as 'error' type, causing UT to incorrectly evaluate accessibility."
+    },
+    {
       "name": "Sly 2 Band of Thieves.yaml",
       "reason": "APWorld bug: uses generation_is_fake to apply different rules during tracking vs generation. ThiefNet locations skip Episode requirements and Pickpocket locations get wrong region assignments during tracking."
     },
@@ -230,10 +238,6 @@
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
-    },
-    {
-      "name": "Axiom Verge.yaml",
-      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
     }
   ],
   "requires_javascript_helpers_list": [
