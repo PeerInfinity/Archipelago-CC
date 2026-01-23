@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
 
-**Generated:** 2026-01-22 18:20:58
+**Generated:** 2026-01-23 02:42:11
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -14,8 +14,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 24 (19.4%)
-- **Passing Original Only:** 18 (14.5%)
+- **Passing Both:** 25 (20.2%)
+- **Passing Original Only:** 17 (13.7%)
 - **Passing Modified Only:** 14 (11.3%)
 - **Passing Neither:** 68 (54.8%)
 
@@ -79,7 +79,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Kingdom Hearts RE Chain of Memories | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | League of Legends | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Lego Star Wars: The Complete Saga | ✅ 90.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
+| Lego Star Wars: The Complete Saga | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Lingo 2 | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 10.0% | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ❌ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ✅ 100.0% | ❌ 40.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | osu! | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ❌ 0.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (24)
+## Games Passing Both (25)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -166,6 +166,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Kingdom Hearts Chain of Memories | ✅ | ✅ | N/A |
 | Kingdom Hearts RE Chain of Memories | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ | ✅ | N/A |
+| Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
 | Rain World | 11.7KB | ✅ | N/A |
@@ -179,7 +180,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
 
-## Games Passing Original Only (18)
+## Games Passing Original Only (17)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -192,7 +193,6 @@ These games pass in the Original UT but fail in the Modified UT.
 | Corn Kidz 64 | ✅ | ✅ | N/A |
 | Frogmonster | ✅ | ✅ | N/A |
 | GZDoom | ✅ | ✅ | N/A |
-| Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Minit | 15.1KB | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
