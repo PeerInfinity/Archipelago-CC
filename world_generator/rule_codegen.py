@@ -1070,6 +1070,8 @@ class RuleCodeGenerator:
                     'CountItem': 'count_item',  # Item count for arithmetic/comparisons
                     'AST_min': 'min',  # Min operation from AST export
                     'List': 'list',  # Rule Builder format list for comparisons
+                    'AST_group_count': 'AST_group_count',  # Group count for comparisons (state.count_group)
+                    'group_count': 'group_count',  # Group count for comparisons
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
