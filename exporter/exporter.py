@@ -1184,6 +1184,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     rb_dict = rule_func.to_dict()
                     # Recursively convert nested Resolved objects to their dict form
                     rb_dict = _make_rule_dict_serializable(rb_dict)
+                    # Allow game handlers to transform Rule Builder format rules
+                    # This enables handlers to resolve unresolved references (e.g., variable names)
+                    if game_handler and hasattr(game_handler, 'expand_rule'):
+                        rb_dict = game_handler.expand_rule(rb_dict)
                     # Cache and return Rule Builder format directly
                     _rule_analysis_cache[cache_key] = rb_dict
                     logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
