@@ -232,6 +232,10 @@
       "reason": "Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context."
     },
     {
+      "name": "Spyro 3.yaml",
+      "reason": "All 40+ helper functions nested inside set_rules() cause RecursionError during AST parsing. Complex gem counting logic (has_all_gems, get_gems_accessible_in_level) cannot be serialized. 4329 locations cause export timeout even with custom handler."
+    },
+    {
       "name": "System Shock 2.yaml",
       "reason": "Uses custom cyb_mod_count helper that calculates weighted sums of multiple Cyber Module item types. Also uses walrus operator (:=) in lambdas which cannot be analyzed. Would require WeightedSum rule support in worldgen."
     },
