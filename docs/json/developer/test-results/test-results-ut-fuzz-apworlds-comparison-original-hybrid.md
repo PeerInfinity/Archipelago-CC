@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 03:46:48
+**Generated:** 2026-01-23 05:19:57
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -89,7 +89,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Mario Kart Double Dash | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Minit | ✅ 100.0% | ❌ 0.0% | 15.1KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -129,7 +129,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | System Shock 2 | ❌ 30.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Tetris Attack | ⚠️ 80.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Tetris Attack | ⚠️ 80.0% | ❌ 0.0% | 23.1KB | ✅ | N/A |
 | Tevi | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 0.0% | ❌ 20.0% | ✅ | ✅ | N/A |
@@ -139,7 +139,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Tyrian | ❌ 40.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Watery Words | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Watery Words | ⚠️ 90.0% | ❌ 0.0% | 9.1KB | ✅ | N/A |
 | Wordipelago | ✅ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
@@ -265,7 +265,7 @@ These games fail in both Universal Tracker versions.
 | Luigi's Mansion | ✅ | ✅ | N/A |
 | Lunacid | ✅ | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
-| Metroid Zero Mission | ✅ | ✅ | N/A |
+| Metroid Zero Mission | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ✅ | ✅ | N/A |
 | Monster Sanctuary | ✅ | ✅ | N/A |
 | Nine Sols | ✅ | ✅ | N/A |
@@ -288,14 +288,14 @@ These games fail in both Universal Tracker versions.
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
-| Tetris Attack | ✅ | ✅ | N/A |
+| Tetris Attack | 23.1KB | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ✅ | ✅ | N/A |
 | The Sims 4 | 5.5KB | ✅ | N/A |
 | ToeJam and Earl | ✅ | ✅ | N/A |
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
-| Watery Words | ✅ | ✅ | N/A |
+| Watery Words | 9.1KB | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
 | plateup | ✅ | ✅ | N/A |

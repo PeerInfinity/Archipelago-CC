@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 03:46:48
+**Generated:** 2026-01-23 05:19:57
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -15,9 +15,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 - **Total Games Tested:** 124
 - **Passing Both:** 32 (25.8%)
-- **Passing Modified Only:** 7 (5.6%)
+- **Passing Modified Only:** 8 (6.5%)
 - **Passing Hybrid Only:** 12 (9.7%)
-- **Passing Neither:** 73 (58.9%)
+- **Passing Neither:** 72 (58.1%)
 
 ## Full Comparison
 
@@ -62,7 +62,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Frogmonster | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | GZDoom | ❌ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Golden Sun The Lost Age | ❌ 20.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Golden Sun The Lost Age | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Grim Dawn | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Hammerwatch | ⚠️ 50.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -89,7 +89,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Mario Kart Double Dash | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Minit | ❌ 0.0% | ❌ 0.0% | 15.1KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -129,7 +129,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | System Shock 2 | ❌ 0.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Tetris Attack | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Tetris Attack | ✅ 80.0% | ❌ 0.0% | 23.1KB | ✅ | N/A |
 | Tevi | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 0.0% | ❌ 20.0% | ✅ | ✅ | N/A |
@@ -139,14 +139,14 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Tyrian | ❌ 30.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Watery Words | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Watery Words | ❌ 0.0% | ❌ 0.0% | 9.1KB | ✅ | N/A |
 | Wordipelago | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | osu! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| plateup | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
+| plateup | ⚠️ 70.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
 ## Games Passing Both (32)
 
@@ -187,7 +187,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (7)
+## Games Passing Modified Only (8)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
@@ -200,6 +200,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | Luigi's Mansion | ✅ | ✅ | N/A |
 | Rain World | 11.7KB | ✅ | N/A |
 | Star Fox 64 | 17.1KB | ✅ | N/A |
+| Tetris Attack | 23.1KB | ✅ | N/A |
 
 ## Games Passing Hybrid Only (12)
 
@@ -220,7 +221,7 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
-## Games Passing Neither (73)
+## Games Passing Neither (72)
 
 These games fail in both Universal Tracker versions.
 
@@ -257,7 +258,7 @@ These games fail in both Universal Tracker versions.
 | Lingo 2 | ✅ | ✅ | N/A |
 | Lunacid | ✅ | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
-| Metroid Zero Mission | ✅ | ✅ | N/A |
+| Metroid Zero Mission | 9.7KB | ✅ | N/A |
 | Minishoot Adventures | ✅ | ✅ | N/A |
 | Minit | 15.1KB | ✅ | N/A |
 | Monster Sanctuary | ✅ | ✅ | N/A |
@@ -287,14 +288,13 @@ These games fail in both Universal Tracker versions.
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
-| Tetris Attack | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ✅ | ✅ | N/A |
 | The Sims 4 | 5.5KB | ✅ | N/A |
 | ToeJam and Earl | ✅ | ✅ | N/A |
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
-| Watery Words | ✅ | ✅ | N/A |
+| Watery Words | 9.1KB | ✅ | N/A |
 | Wordipelago | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
