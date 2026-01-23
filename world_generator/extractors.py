@@ -5,9 +5,12 @@ These functions extract structured data from the JSON rules file format
 and prepare it for code generation.
 """
 
+import logging
 import re
 from typing import Any, Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass, field
+
+logger = logging.getLogger(__name__)
 
 from .constants import INTERNAL_SETTINGS
 
@@ -1132,6 +1135,17 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(
         items, original_placements, settings=metadata.resolved_values
     )
+
+    # If no accumulator rules were auto-detected, check game_info for explicitly provided rules.
+    # This is needed for games like Jigsaw that use non-standard patterns (e.g., "17 Puzzle Pieces" -> "pcs")
+    # that can't be auto-detected but are explicitly defined in the game's export handler.
+    game_info = json_data.get('game_info', {}).get(player_id, {})
+    if not accumulator_rules and 'accumulator_rules' in game_info:
+        accumulator_rules = game_info['accumulator_rules']
+        logger.info(f"Using accumulator_rules from game_info: {accumulator_rules}")
+    if not prog_items_init and 'prog_items_init' in game_info:
+        prog_items_init = game_info['prog_items_init']
+        logger.info(f"Using prog_items_init from game_info: {prog_items_init}")
 
     # For games with state counters, we need to precollect the counter items
     # for generation to work (rules check Has(" coins", X) which needs items in inventory).
