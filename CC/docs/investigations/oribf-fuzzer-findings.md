@@ -130,16 +130,49 @@ Mark oribf as incompatible with UT tracking.
 **Pros:** Quick, documents the limitation
 **Cons:** No actual fix
 
+## Implementation Status
+
+A custom exporter has been implemented at `exporter/games/unofficial/oribf.py`.
+
+### What the Exporter Handles
+
+1. **Combined rule pattern**: Rules created via `add_rule(location, lambda, "or")` are expanded by extracting the `old_rule` and `rule` closure variables.
+
+2. **access_set extraction**: The `access_set` closure variable is extracted from oribf rule lambdas.
+
+3. **Keyword conversion**:
+   - `"Free"` → `True_` (always accessible)
+   - `"Open"` → `True_` (dungeons not implemented)
+   - `"OpenWorld"` → `False` (not implemented)
+   - `"Lure"`, `"Rekindle"` → option-dependent
+   - `"DoubleBash"`, `"GrenadeJump"`, `"ChargeFlameBurn"`, etc. → option + item requirements
+
+4. **Item tuple conversion**: `("HealthCell", 3)` → `Has("HealthCell", count=3)`
+
+### Results
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Export time (10 runs) | ~400s (timeouts) | ~12s |
+| Timeouts | 30%+ | 0% |
+| Success rate | ~20-30% | ~30-60% (variable) |
+
+### Remaining Issues
+
+The remaining failures occur with:
+- `logic_difficulty: glitched` settings that have additional rule requirements
+- Complex option combinations where rules evaluate differently
+
+These would require deeper analysis of the RulesData.py to handle all edge cases.
+
 ## Recommendation
 
-**Short term:** Add to known-incompatible list with documentation
+The exporter provides significant improvements:
+1. Eliminates timeouts completely
+2. Fixes the "Free" keyword conversion
+3. Handles basic to intermediate logic
 
-**Medium term:** Create an oribf exporter (Option 1) that handles the `oribf_has` helper function by:
-- Converting `"Free"` to `True_`
-- Expanding option-dependent keywords appropriately
-- Converting tuple patterns to `HasCount`
-
-This is similar to the existing `lunacid.py` handler which handles the `LunacidRules` helper class.
+For full compatibility, additional work would be needed to handle glitched logic rules.
 
 ## APWorld Metadata
 
