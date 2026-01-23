@@ -1,0 +1,1768 @@
+{
+  "game": "Majora's Mask Recompiled",
+  "total_locations": 404,
+  "locations_with_explain": 0,
+  "locations_default_rule": 0,
+  "locations_without_explain": 404,
+  "explain_coverage_percent": 0.0,
+  "locations_without_explain_list": [
+    {
+      "name": "Link's Inventory (Kokiri Sword)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Link's Inventory (Hero's Shield)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Link's Inventory (Heart Item #1)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Link's Inventory (Heart Item #2)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Link's Inventory (Heart Item #3)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Link's Inventory (Heart Item #4)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Link's Inventory (Heart Item #5)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Keaton Quiz",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Tower Happy Mask Salesman #1",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Tower Happy Mask Salesman #2",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Before Clock Town Chest",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Postbox",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Hide-and-Seek",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 1",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 2",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 3",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 4",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 5",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 6",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 7",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop Item 8",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 1",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 2",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 3",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 4",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 5",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 6",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 7",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Trading Post Shop (Night) Item 8",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Bomb Shop Item 1",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Bomb Shop Item 2",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Bomb Shop Item 3",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Bomb Shop Item 3 (Stop Thief)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Clock Town Bomb Shop Powder Keg Goron",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Curiosity Shop Night 3 (Stop Thief)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Curiosity Shop Night 3 Thief Stolen Item",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Laundry Pool Stray Fairy (Clock Town)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Laundry Pool Musician",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Laundry Pool Kafei's Request",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Laundry Pool Curiosity Shop Salesman #1",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Laundry Pool Curiosity Shop Salesman #2",
+      "region": "Clock Town"
+    },
+    {
+      "name": "South Clock Town Moon's Tear Trade",
+      "region": "Clock Town"
+    },
+    {
+      "name": "South Clock Town Clock Tower Freestanding HP",
+      "region": "Clock Town"
+    },
+    {
+      "name": "South Clock Town Corner Chest",
+      "region": "Clock Town"
+    },
+    {
+      "name": "South Clock Town Final Day Tower Chest",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Archery Roof Chest",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Mayors Wife",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Couples Mask on Mayor",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Shooting Gallery 40-49 Points",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Shooting Gallery Perfect 50 Points",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Honey and Darling Any Day",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Honey and Darling All Days",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Treasure Game Chest (Human)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Treasure Game Chest (Deku)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Treasure Game Chest (Goron)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Treasure Game Chest (Zora)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Bomber's Hideout Chest",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Bomber's Hideout Astral Observatory",
+      "region": "Clock Town"
+    },
+    {
+      "name": "North Clock Town Tree HP",
+      "region": "Clock Town"
+    },
+    {
+      "name": "North Clock Town Deku Playground Any Day",
+      "region": "Clock Town"
+    },
+    {
+      "name": "North Clock Town Deku Playground All Days",
+      "region": "Clock Town"
+    },
+    {
+      "name": "North Clock Town Save Old Lady",
+      "region": "Clock Town"
+    },
+    {
+      "name": "North Clock Town Great Fairy Reward",
+      "region": "Clock Town"
+    },
+    {
+      "name": "North Clock Town Great Fairy Reward (Has Transformation Mask)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Lottery Any Day",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Swordsman Expert Course",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Postman Counting",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Dancing Sisters",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Bank 200 Rupees",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Bank 500 Rupees",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Bank 1000 Rupees",
+      "region": "Clock Town"
+    },
+    {
+      "name": "West Clock Town Priority Mail to Postman",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Top of Clock Tower (Ocarina of Time)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Top of Clock Tower (Song of Time)",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Reservation",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Midnight Meeting",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Locked Room Chest",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Employee Room Chest",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Midnight Toilet Hand",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Granny Story #1",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Granny Story #2",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Stock Pot Inn Anju and Kafei",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Milk Bar Show",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Milk Bar Priority Mail to Aroma",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Milk Bar Milk Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "East Clock Town Milk Bar Chateau Romani Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Tingle Clock Town Map Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Tingle Woodfall Map Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Tingle Snowhead Map Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Tingle Romani Ranch Map Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Tingle Great Bay Map Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Tingle Stone Tower Map Purchase",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Oath to Order",
+      "region": "Clock Town"
+    },
+    {
+      "name": "Moon Deku Trial HP",
+      "region": "The Moon"
+    },
+    {
+      "name": "Moon Goron Trial HP",
+      "region": "The Moon"
+    },
+    {
+      "name": "Moon Zora Trial HP",
+      "region": "The Moon"
+    },
+    {
+      "name": "Moon Link Trial Garo Master Chest",
+      "region": "The Moon"
+    },
+    {
+      "name": "Moon Link Trial Iron Knuckle Chest",
+      "region": "The Moon"
+    },
+    {
+      "name": "Moon Link Trial HP",
+      "region": "The Moon"
+    },
+    {
+      "name": "Moon Trade All Masks",
+      "region": "The Moon"
+    },
+    {
+      "name": "Termina Stump Chest",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Grass Chest",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Underwater Chest",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Grass Grotto Chest",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Peahat Grotto Chest",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Dodongo Grotto Chest",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Ikana Pillar Grotto Chest",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Healing Kamaro",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Bio Baba Grotto HP",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Gossip Stones HP",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Termina Scrub Grotto HP",
+      "region": "Termina Field"
+    },
+    {
+      "name": "Road to Swamp Tree HP",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Road to Swamp Grotto Chest",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Swamp Shooting Gallery 2120 Points",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Swamp Shooting Gallery 2180 Points",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Deku Trade",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Deku Scrub Purchase",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Freestanding HP",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Kotake Item",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Day 2 Grotto Chest",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Healing Koume",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Winning Picture",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Good Picture",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Okay Picture",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Witch Shop Item 1",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Witch Shop Item 2",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Witch Shop Item 3",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Boat Archery",
+      "region": "Southern Swamp"
+    },
+    {
+      "name": "Southern Swamp Grotto Chest",
+      "region": "Southern Swamp (Deku Palace)"
+    },
+    {
+      "name": "Southern Swamp Song Tablet",
+      "region": "Southern Swamp (Deku Palace)"
+    },
+    {
+      "name": "Deku Palace Butler Race",
+      "region": "Southern Swamp (Deku Palace)"
+    },
+    {
+      "name": "Swamp Spider House First Room Pot Near Entrance Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House First Room Crawling In Water Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House First Room Crawling Right Column Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House First Room Crawling Left Column Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House First Room Against Far Wall Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House First Room Lower Left Bugpatch Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House First Room Lower Right Bugpatch Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House First Room Upper Right Bugpatch Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Monument Room Left Crate Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Monument Room Right Crate Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Monument Room Crawling Wall Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Monument Room Crawling On Monument Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Monument Room Behind Torch Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Pottery Room Beehive #1 Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Pottery Room Beehive #2 Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Pottery Room Small Pot Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Pottery Room Left Large Pot Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Pottery Room Right Large Pot Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Pottery Room Behind Vines Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Pottery Room Upper Wall Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Golden Room Crawling Left Wall Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Golden Room Crawling Right Column Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Golden Room Against Far Wall Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Golden Room Beehive Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Tree Room Tall Grass #1 Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Tree Room Tall Grass #2 Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Tree Room Tree #1 Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Tree Room Tree #2 Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Tree Room Tree #3 Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Tree Room Beehive Token",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Swamp Spider House Reward",
+      "region": "Swamp Spider House"
+    },
+    {
+      "name": "Deku Palace HP",
+      "region": "Deku Palace"
+    },
+    {
+      "name": "Deku Palace Bean Seller",
+      "region": "Deku Palace"
+    },
+    {
+      "name": "Deku Palace Bean Grotto Chest",
+      "region": "Deku Palace"
+    },
+    {
+      "name": "Deku Palace Monkey Song",
+      "region": "Deku Palace"
+    },
+    {
+      "name": "Woodfall Owl Statue Chest",
+      "region": "Woodfall"
+    },
+    {
+      "name": "Woodfall Bridge Chest",
+      "region": "Woodfall"
+    },
+    {
+      "name": "Woodfall Entrance Chest",
+      "region": "Woodfall"
+    },
+    {
+      "name": "Woodfall Great Fairy Reward",
+      "region": "Woodfall"
+    },
+    {
+      "name": "Woodfall Temple Entrance Chest SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Ledge Chest",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Turtle Chest",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Dragonfly Chest",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Dark Room Chest SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Switch Chest SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Dinolfos Chest",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Gekko Chest",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Entrance Freestanding SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Deku Baba SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Pot SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Platform Hive SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Main Room Bubble SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Skulltula SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Bridge Room Bubble SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Bridge Room Hive SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Pre-Boss Lower Right Bubble SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Pre-Boss Upper Right Bubble SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Pre-Boss Upper Left Bubble SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Pre-Boss Pillar Bubble SF",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Heart Container",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Woodfall Temple Odolwa's Remains",
+      "region": "Woodfall Temple"
+    },
+    {
+      "name": "Milk Road Gorman Ranch Race",
+      "region": "Gorman Brothers Track"
+    },
+    {
+      "name": "Milk Road Gorman Ranch Purchase",
+      "region": "Gorman Brothers Track"
+    },
+    {
+      "name": "Romani Ranch Baby Cuccos March",
+      "region": "Romani Ranch"
+    },
+    {
+      "name": "Romani Ranch Doggy Racetrack Rooftop Chest",
+      "region": "Romani Ranch"
+    },
+    {
+      "name": "Romani Ranch Doggy Race",
+      "region": "Romani Ranch"
+    },
+    {
+      "name": "Romani Ranch Romani Game",
+      "region": "Romani Ranch"
+    },
+    {
+      "name": "Romani Ranch Aliens",
+      "region": "Romani Ranch"
+    },
+    {
+      "name": "Romani Ranch Helping Cremia",
+      "region": "Romani Ranch"
+    },
+    {
+      "name": "Mountain Village Spring Waterfall Chest",
+      "region": "Mountain Village"
+    },
+    {
+      "name": "Mountain Village Spring Ramp Grotto",
+      "region": "Mountain Village"
+    },
+    {
+      "name": "Mountain Village Healing Darmani",
+      "region": "Mountain Village"
+    },
+    {
+      "name": "Mountain Village Hungry Goron",
+      "region": "Mountain Village"
+    },
+    {
+      "name": "Mountain Village Smithy Upgrade",
+      "region": "Mountain Village"
+    },
+    {
+      "name": "Mountain Village Smithy Gold Dust Upgrade",
+      "region": "Mountain Village"
+    },
+    {
+      "name": "Mountain Village Spring Frog Choir HP",
+      "region": "Mountain Village"
+    },
+    {
+      "name": "Twin Islands Spring Underwater Cave Chest",
+      "region": "Twin Islands"
+    },
+    {
+      "name": "Twin Islands Spring Underwater Ramp Chest",
+      "region": "Twin Islands"
+    },
+    {
+      "name": "Twin Islands Ramp Grotto Chest",
+      "region": "Twin Islands"
+    },
+    {
+      "name": "Twin Islands Goron Elder Request",
+      "region": "Twin Islands"
+    },
+    {
+      "name": "Twin Islands Hot Water Grotto Chest",
+      "region": "Twin Islands"
+    },
+    {
+      "name": "Goron Racetrack Prize",
+      "region": "Twin Islands"
+    },
+    {
+      "name": "Goron Village Lens Cave Rock Chest",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Lens Cave Invisible Chest",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Lens Cave Center Chest",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Baby Goron Lullaby",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Shop Item 1",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Shop Item 2",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Shop Item 3",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Shop (Spring) Item 1",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Shop (Spring) Item 2",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Shop (Spring) Item 3",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Scrub Purchase",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Deku Trade",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Goron Village Freestanding HP",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Powder Keg Goron Reward",
+      "region": "Goron Village"
+    },
+    {
+      "name": "Path to Snowhead Grotto Chest",
+      "region": "Path to Snowhead"
+    },
+    {
+      "name": "Path to Snowhead Scarecrow Pillar HP",
+      "region": "Path to Snowhead"
+    },
+    {
+      "name": "Snowhead Great Fairy Reward",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Elevator Room Invisible Platform Chest SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Lower Wizzrobe Chest",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Bridge Room Under Platform Bubble SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Bridge Room Pillar Bubble SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Elevator Freestanding SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Bombable Stairs Crate SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Timed Switch Room Bubble SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Snowmen Bubble SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Dinolfos Room First SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Dinolfos Room Second SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Bridge Room Freezard Chest",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Elevator Room Lower Chest",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Basement Switch Chest SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Freezard Torch Room Chest SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Behind Stacked Block Chest",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Stacked Block Upper Chest SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Frozen Block Chest",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Frozen Block Upper Chest SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Icicle Room Hidden Chest SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Icicle Room Snowball Chest",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Upper Wizzrobe Chest",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Main Room Wall Chest SF",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Heart Container",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Snowhead Temple Goht's Remains",
+      "region": "Snowhead Temple"
+    },
+    {
+      "name": "Great Bay Healing Zora",
+      "region": "Great Bay"
+    },
+    {
+      "name": "Great Bay Fisherman's Grotto Chest",
+      "region": "Great Bay"
+    },
+    {
+      "name": "Great Bay Baby Zora Song",
+      "region": "Great Bay"
+    },
+    {
+      "name": "Great Bay Feeding Lab Fish",
+      "region": "Great Bay"
+    },
+    {
+      "name": "Great Bay Scarecrow Ledge HP",
+      "region": "Great Bay"
+    },
+    {
+      "name": "Great Bay Fisherman Game",
+      "region": "Great Bay"
+    },
+    {
+      "name": "Ocean Spider House Ramp Upper Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Ramp Lower Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Lobby Ceiling Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Rafter Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Open Pot #1 Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Open Pot #2 Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Wall Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Library Top Bookcase Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Library Passage Behind Bookcase Front Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Library Passage Behind Bookcase Rear Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Libary Painting #1 Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Library Painting #2 Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Library Rafter Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Library Bookshelf Hole Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Downstairs Rafter Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Downstairs Open Pot Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Downstairs Behind Staircase Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Downstairs Crate Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House First Room Downstairs Wall Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Dining Room Open Pot Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Dining Room Painting Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Dining Room Ceiling Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Dining Room Chandelier #1 Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Dining Room Chandelier #2 Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Dining Room Chandelier #3 Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Storage Room Web Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Storage Room North Wall Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Storage Room Crate Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Storage Room Hidden Hole Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Storage Room Ceiling Pot Token",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Coloured Mask Sequence HP",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Ocean Spider House Reward",
+      "region": "Ocean Spider House"
+    },
+    {
+      "name": "Pirates' Fortress Exterior Underwater Log Chest",
+      "region": "Pirates' Fortress"
+    },
+    {
+      "name": "Pirates' Fortress Exterior Underwater Near Entrance Chest",
+      "region": "Pirates' Fortress"
+    },
+    {
+      "name": "Pirates' Fortress Exterior Underwater Corner Chest",
+      "region": "Pirates' Fortress"
+    },
+    {
+      "name": "Pirates' Fortress Sewers Cage HP",
+      "region": "Pirates' Fortress Sewers"
+    },
+    {
+      "name": "Pirates' Fortress Sewers Maze Chest",
+      "region": "Pirates' Fortress Sewers"
+    },
+    {
+      "name": "Pirates' Fortress Sewers Underwater Lower Chest",
+      "region": "Pirates' Fortress Sewers"
+    },
+    {
+      "name": "Pirates' Fortress Sewers Underwater Upper Chest",
+      "region": "Pirates' Fortress Sewers"
+    },
+    {
+      "name": "Pirates' Fortress Interior Tank Chest",
+      "region": "Pirates' Fortress (Interior)"
+    },
+    {
+      "name": "Pirates' Fortress Interior Guarded Chest",
+      "region": "Pirates' Fortress (Interior)"
+    },
+    {
+      "name": "Pirates' Fortress Hub Lower Chest",
+      "region": "Pirates' Fortress (Interior)"
+    },
+    {
+      "name": "Pirates' Fortress Hub Upper Chest",
+      "region": "Pirates' Fortress (Interior)"
+    },
+    {
+      "name": "Pirates' Fortress Leader's Room Chest",
+      "region": "Pirates' Fortress (Interior)"
+    },
+    {
+      "name": "Pinnacle Rock Upper Eel Chest",
+      "region": "Pinnacle Rock"
+    },
+    {
+      "name": "Pinnacle Rock Lower Eel Chest",
+      "region": "Pinnacle Rock"
+    },
+    {
+      "name": "Pinnacle Rock Seahorse HP",
+      "region": "Pinnacle Rock"
+    },
+    {
+      "name": "Zora Cape Underwater Like-Like HP",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Zora Cape Underwater Chest",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Zora Cape Pot Game",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Zora Cape Deku Flower Chest",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Zora Cape Scarecrow Chest",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Zora Cape Grotto Chest",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Beaver Bros. Race 1",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Beaver Bros. Race 2 HP",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Great Bay Great Fairy Reward",
+      "region": "Zora Cape"
+    },
+    {
+      "name": "Zora Hall Shop Item 1",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Shop Item 2",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Shop Item 3",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Deku Scrub Purchase",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Goron Scrub Trade",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Goron Scrub Trade Freestanding HP",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Evan's Song",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Torches Reward",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Good Picture of Lulu",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Zora Hall Bad Picture of Lulu",
+      "region": "Zora Hall"
+    },
+    {
+      "name": "Great Bay Temple Blender Pot SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Waterwheel Room Skulltula SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Waterwheel Room Bubble SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Blender Room Barrel SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Before Red Valve Room Pot SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Caged Chest Room Pot SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Seesaw Room Underwater Barrel SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Entrance Torches Chest SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Behind Locked Door Chest",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Before Red Valve Room Chest",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Bio-Baba Hall Chest SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Caged Chest Room Upper Chest",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Caged Chest Room Underwater Chest",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Mad Jellied Gekko Chest",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Room Behind Waterfall Ceiling Chest SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Freezable Waterwheel Upper Chest SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Freezable Waterwheel Lower Chest SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Seesaw Room Chest SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Pre-Boss Room Platform Bubble SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Pre-Boss Room Tunnel Bubble SF",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Heart Container",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Great Bay Temple Gyorg's Remains",
+      "region": "Great Bay Temple"
+    },
+    {
+      "name": "Road to Ikana Pillar Chest",
+      "region": "Road to Ikana"
+    },
+    {
+      "name": "Road to Ikana Rock Grotto Chest",
+      "region": "Road to Ikana"
+    },
+    {
+      "name": "Road to Ikana Invisible Soldier",
+      "region": "Road to Ikana"
+    },
+    {
+      "name": "Ikana Graveyard Bombable Grotto Chest",
+      "region": "Ikana Graveyard"
+    },
+    {
+      "name": "Graveyard Day 1 Bats Chest",
+      "region": "Ikana Graveyard"
+    },
+    {
+      "name": "Graveyard Day 1 Iron Knuckle Song",
+      "region": "Ikana Graveyard"
+    },
+    {
+      "name": "Graveyard Day 2 Dampe Bats",
+      "region": "Ikana Graveyard"
+    },
+    {
+      "name": "Graveyard Day 2 Iron Knuckle Chest",
+      "region": "Ikana Graveyard"
+    },
+    {
+      "name": "Graveyard Day 3 Dampe Big Poe Chest",
+      "region": "Ikana Graveyard"
+    },
+    {
+      "name": "Graveyard Captain Keeta Chest",
+      "region": "Ikana Graveyard"
+    },
+    {
+      "name": "Ikana Canyon Grotto Chest",
+      "region": "Ikana Canyon"
+    },
+    {
+      "name": "Ikana Canyon Scrub Purchase",
+      "region": "Ikana Canyon"
+    },
+    {
+      "name": "Ikana Canyon Zora Scrub Trade",
+      "region": "Ikana Canyon"
+    },
+    {
+      "name": "Ikana Canyon Zora Trade Freestanding HP",
+      "region": "Ikana Canyon"
+    },
+    {
+      "name": "Ikana Canyon Healing Pamela's Father",
+      "region": "Ikana Canyon"
+    },
+    {
+      "name": "Ikana Canyon Spirit House",
+      "region": "Ikana Canyon"
+    },
+    {
+      "name": "Stone Tower Great Fairy Reward",
+      "region": "Ikana Canyon"
+    },
+    {
+      "name": "Secret Shrine Dinolfos Chest",
+      "region": "Secret Shrine"
+    },
+    {
+      "name": "Secret Shrine Wizzrobe Chest",
+      "region": "Secret Shrine"
+    },
+    {
+      "name": "Secret Shrine Wart Chest",
+      "region": "Secret Shrine"
+    },
+    {
+      "name": "Secret Shrine Garo Master Chest",
+      "region": "Secret Shrine"
+    },
+    {
+      "name": "Secret Shrine Completion Chest",
+      "region": "Secret Shrine"
+    },
+    {
+      "name": "Ikana Well Final Chest",
+      "region": "Beneath the Well"
+    },
+    {
+      "name": "Ikana Well Invisible Chest",
+      "region": "Beneath the Well"
+    },
+    {
+      "name": "Ikana Well Rightside Torch Chest",
+      "region": "Beneath the Well"
+    },
+    {
+      "name": "Ikana Castle Pillar Freestanding HP",
+      "region": "Ikana Castle"
+    },
+    {
+      "name": "Ikana Castle King Song",
+      "region": "Ikana Castle"
+    },
+    {
+      "name": "Stone Tower Temple Entrance Room Eye Switch Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Entrance Room Lower Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Armos Room Lava Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Armos Room Back Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Armos Room Upper Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Eyegore Room Switch Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Eastern Water Room Sun Block Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Eastern Water Room Underwater Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Eyegore Room Dexi Hand Ledge Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Mirror Room Sun Block Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Mirror Room Sun Face Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Air Gust Room Side Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Air Gust Room Goron Switch Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Garo Master Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple After Garo Upside Down Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Temple Eyegore Chest",
+      "region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower Inverted Left Chest",
+      "region": "Stone Tower (Inverted)"
+    },
+    {
+      "name": "Stone Tower Inverted Middle Chest",
+      "region": "Stone Tower (Inverted)"
+    },
+    {
+      "name": "Stone Tower Inverted Right Chest",
+      "region": "Stone Tower (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Entrance Room Sun Face Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Eastern Air Gust Room Fire Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Eastern Air Gust Room Frozen Switch Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Eastern Air Gust Room Switch Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Wizzrobe Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Death Armos Maze Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Gomess Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Eyegore Chest",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Heart Container",
+      "region": "Stone Tower Temple (Inverted)"
+    },
+    {
+      "name": "Stone Tower Temple Inverted Twinmold's Remains",
+      "region": "Stone Tower Temple (Inverted)"
+    }
+  ],
+  "total_entrances": 49,
+  "entrances_with_explain": 0,
+  "entrances_default_rule": 22,
+  "entrances_without_explain": 27,
+  "entrance_explain_coverage_percent": 0.0,
+  "entrances_without_explain_list": [
+    {
+      "name": "Clock Town -> The Moon",
+      "from_region": "Clock Town",
+      "to_region": "The Moon"
+    },
+    {
+      "name": "Termina Field -> Path to Mountain Village",
+      "from_region": "Termina Field",
+      "to_region": "Path to Mountain Village"
+    },
+    {
+      "name": "Termina Field -> Great Bay",
+      "from_region": "Termina Field",
+      "to_region": "Great Bay"
+    },
+    {
+      "name": "Southern Swamp -> Southern Swamp (Deku Palace)",
+      "from_region": "Southern Swamp",
+      "to_region": "Southern Swamp (Deku Palace)"
+    },
+    {
+      "name": "Southern Swamp (Deku Palace) -> Swamp Spider House",
+      "from_region": "Southern Swamp (Deku Palace)",
+      "to_region": "Swamp Spider House"
+    },
+    {
+      "name": "Southern Swamp (Deku Palace) -> Deku Palace",
+      "from_region": "Southern Swamp (Deku Palace)",
+      "to_region": "Deku Palace"
+    },
+    {
+      "name": "Southern Swamp (Deku Palace) -> Woodfall",
+      "from_region": "Southern Swamp (Deku Palace)",
+      "to_region": "Woodfall"
+    },
+    {
+      "name": "Woodfall -> Woodfall Temple",
+      "from_region": "Woodfall",
+      "to_region": "Woodfall Temple"
+    },
+    {
+      "name": "Path to Mountain Village -> Mountain Village",
+      "from_region": "Path to Mountain Village",
+      "to_region": "Mountain Village"
+    },
+    {
+      "name": "Path to Snowhead -> Snowhead",
+      "from_region": "Path to Snowhead",
+      "to_region": "Snowhead"
+    },
+    {
+      "name": "Snowhead -> Snowhead Temple",
+      "from_region": "Snowhead",
+      "to_region": "Snowhead Temple"
+    },
+    {
+      "name": "Great Bay -> Ocean Spider House",
+      "from_region": "Great Bay",
+      "to_region": "Ocean Spider House"
+    },
+    {
+      "name": "Great Bay -> Pirates' Fortress",
+      "from_region": "Great Bay",
+      "to_region": "Pirates' Fortress"
+    },
+    {
+      "name": "Pirates' Fortress -> Pirates' Fortress Sewers",
+      "from_region": "Pirates' Fortress",
+      "to_region": "Pirates' Fortress Sewers"
+    },
+    {
+      "name": "Pirates' Fortress -> Pirates' Fortress (Interior)",
+      "from_region": "Pirates' Fortress",
+      "to_region": "Pirates' Fortress (Interior)"
+    },
+    {
+      "name": "Pirates' Fortress Sewers -> Pirates' Fortress (Interior)",
+      "from_region": "Pirates' Fortress Sewers",
+      "to_region": "Pirates' Fortress (Interior)"
+    },
+    {
+      "name": "Zora Cape -> Zora Hall",
+      "from_region": "Zora Cape",
+      "to_region": "Zora Hall"
+    },
+    {
+      "name": "Zora Cape -> Great Bay Temple",
+      "from_region": "Zora Cape",
+      "to_region": "Great Bay Temple"
+    },
+    {
+      "name": "Road to Ikana -> Ikana Graveyard",
+      "from_region": "Road to Ikana",
+      "to_region": "Ikana Graveyard"
+    },
+    {
+      "name": "Road to Ikana -> Ikana Canyon",
+      "from_region": "Road to Ikana",
+      "to_region": "Ikana Canyon"
+    },
+    {
+      "name": "Ikana Canyon -> Secret Shrine",
+      "from_region": "Ikana Canyon",
+      "to_region": "Secret Shrine"
+    },
+    {
+      "name": "Ikana Canyon -> Beneath the Well",
+      "from_region": "Ikana Canyon",
+      "to_region": "Beneath the Well"
+    },
+    {
+      "name": "Ikana Canyon -> Ikana Castle",
+      "from_region": "Ikana Canyon",
+      "to_region": "Ikana Castle"
+    },
+    {
+      "name": "Beneath the Well -> Ikana Castle",
+      "from_region": "Beneath the Well",
+      "to_region": "Ikana Castle"
+    },
+    {
+      "name": "Stone Tower -> Stone Tower Temple",
+      "from_region": "Stone Tower",
+      "to_region": "Stone Tower Temple"
+    },
+    {
+      "name": "Stone Tower -> Stone Tower (Inverted)",
+      "from_region": "Stone Tower",
+      "to_region": "Stone Tower (Inverted)"
+    },
+    {
+      "name": "Stone Tower (Inverted) -> Stone Tower Temple (Inverted)",
+      "from_region": "Stone Tower (Inverted)",
+      "to_region": "Stone Tower Temple (Inverted)"
+    }
+  ]
+}

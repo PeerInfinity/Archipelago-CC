@@ -1,0 +1,55 @@
+description: Majora's Mask Recompiled Template, generated with https://github.com/Eijebong/Archipelago-fuzzer/tree/0.4.2
+game: Majora's Mask Recompiled
+requires:
+  version: 0.6.5
+Majora's Mask Recompiled:
+  progression_balancing: 49
+  accessibility: minimal
+  logic_difficulty: normal
+  majora_remains_required: 2
+  moon_remains_required: 4
+  camc: 'true'
+  swordless: 'true'
+  shieldless: 'true'
+  start_with_soaring: 'true'
+  starting_hearts: 9
+  starting_hearts_are_containers_or_pieces: containers
+  shuffle_regional_maps: anywhere
+  shuffle_boss_remains: vanilla
+  remains_allow_boss_warps: 'true'
+  shuffle_spiderhouse_reward: 'false'
+  required_skull_tokens: 24
+  skullsanity: vanilla
+  shopsanity: advanced
+  scrubsanity: 'true'
+  shop_prices: offensive
+  cowsanity: 'false'
+  shuffle_great_fairy_rewards: 'true'
+  required_stray_fairies: 3
+  fairysanity: 'false'
+  keysanity: 'true'
+  bosskeysanity: 'true'
+  curiostity_shop_trades: 'false'
+  intro_checks: 'true'
+  start_with_consumables: 'true'
+  permanent_chateau_romani: 'true'
+  start_with_inverted_time: 'false'
+  receive_filled_wallets: 'true'
+  magic_is_a_trap: 'true'
+  damage_multiplier: ohko
+  death_behavior: instant
+  death_link: 'false'
+  link_tunic_color:
+  - 30
+  - 105
+  - 27
+  local_items: []
+  non_local_items: []
+  start_inventory: {}
+  start_inventory_from_pool: {}
+  start_hints: []
+  start_location_hints: []
+  exclude_locations: []
+  priority_locations: []
+  item_links: []
+  plando_items: []

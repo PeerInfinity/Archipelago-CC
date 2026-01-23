@@ -1,0 +1,729 @@
+Archipelago (0.6.5) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 running Python 3.11.14
+P1 Weights: 0-0.yaml >> Majora's Mask Recompiled Template, generated with https://github.com/Eijebong/Archipelago-fuzzer/tree/0.4.2
+Generating for 1 player, 26063239915724749420 Seed 91368992466640706630 with plando: connections, texts, bosses
+Archipelago (0.6.5) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 running Python 3.11.14
+P1 Weights: 0-0.yaml >> Majora's Mask Recompiled Template, generated with https://github.com/Eijebong/Archipelago-fuzzer/tree/0.4.2
+Generating for 1 player, 89879469403067454848 Seed 906691059 with plando: items, connections, texts, bosses
+Archipelago Version 0.6.5  -  Seed: 906691059
+
+Found 168 World Types:
+ Adventure                                        : v0.0.0  | Items:   15 | Locations:    24
+ Adventure WorldGen                               : v1.0.0  | Items:   15 | Locations:    24
+ Adventure WorldGen2                              : v1.0.0  | Items:   15 | Locations:    24
+ A Hat in Time                                    : v0.0.0  | Items:   58 | Locations:   455
+ A Hat in Time WorldGen                           : v1.0.0  | Items:   58 | Locations:   223
+ A Hat in Time WorldGen2                          : v1.0.0  | Items:   58 | Locations:   223
+ A Link to the Past                               : v0.0.0  | Items:  146 | Locations:   286
+ A Link to the Past WorldGen                      : v1.0.0  | Items:  146 | Locations:   249
+ A Link to the Past WorldGen2                     : v1.0.0  | Items:  146 | Locations:   249
+ APQuest                                          : v1.0.1  | Items:    7 | Locations:     7
+ APQuest WorldGen                                 : v1.0.0  | Items:    7 | Locations:     6
+ Aquaria                                          : v0.0.0  | Items:  134 | Locations:   218
+ Aquaria WorldGen                                 : v1.0.0  | Items:  134 | Locations:   218
+ Baking Adventure                                 : v1.0.0  | Items:   15 | Locations:    15
+ Baking Adventure WorldGen                        : v1.0.0  | Items:   15 | Locations:    15
+ Blasphemous                                      : v0.0.0  | Items:  204 | Locations:   306
+ Bomb Rush Cyberfunk                              : v0.0.0  | Items:  165 | Locations:   247
+ Bomb Rush Cyberfunk WorldGen                     : v0.0.0  | Items:  165 | Locations:   247
+ Bumper Stickers                                  : v1.0.0  | Items:   12 | Locations:   100
+ Bumper Stickers WorldGen                         : v1.0.0  | Items:   12 | Locations:   100
+ Choo-Choo Charles                                : v0.0.0  | Items:   43 | Locations:   691
+ Choo-Choo Charles WorldGen                       : v1.0.0  | Items:   43 | Locations:   691
+ Celeste 64                                       : v1.3.1  | Items:   24 | Locations:    56
+ Celeste 64 WorldGen                              : v1.0.0  | Items:   24 | Locations:    40
+ Celeste (Open World)                             : v1.0.5  | Items:  177 | Locations:  1215
+ ChecksFinder                                     : v0.0.0  | Items:    3 | Locations:    25
+ ChecksFinder WorldGen                            : v1.0.0  | Items:    3 | Locations:    25
+ Civilization VI                                  : v0.0.0  | Items:  167 | Locations:   278
+ Civilization VI WorldGen                         : v1.0.0  | Items:  167 | Locations:   148
+ Coding Adventure                                 : v1.0.0  | Items:   51 | Locations:    61
+ Coding Adventure WorldGen                        : v1.0.0  | Items:   51 | Locations:    61
+ Castlevania 64                                   : v0.0.0  | Items:   36 | Locations:   352
+ Castlevania 64 WorldGen                          : v1.0.0  | Items:   36 | Locations:   213
+ Castlevania - Circle of the Moon                 : v0.0.0  | Items:   31 | Locations:   125
+ Castlevania - Circle of the Moon WorldGen        : v1.0.0  | Items:   31 | Locations:   124
+ Dark Souls III                                   : v0.0.0  | Items: 1204 | Locations:  1506
+ Dark Souls III WorldGen                          : v1.0.0  | Items: 1204 | Locations:  1190
+ Donkey Kong Country 3                            : v1.1.0  | Items:    8 | Locations:   230
+ Donkey Kong Country 3 WorldGen                   : v1.0.0  | Items:    8 | Locations:   180
+ DLCQuest                                         : v0.0.0  | Items:   51 | Locations: 18913
+ DLCQuest WorldGen                                : v1.0.0  | Items:   51 | Locations:    29
+ DOOM 1993                                        : v0.0.0  | Items:  195 | Locations:   474
+ DOOM 1993 WorldGen                               : v1.0.0  | Items:  195 | Locations:   348
+ DOOM II                                          : v0.0.0  | Items:  178 | Locations:   479
+ DOOM II WorldGen                                 : v1.0.0  | Items:  178 | Locations:   453
+ Factorio                                         : v0.0.0  | Items:  233 | Locations:  6993
+ Factorio WorldGen                                : v1.0.0  | Items:  233 | Locations:   179
+ Faxanadu                                         : v0.0.0  | Items:   30 | Locations:   110
+ Faxanadu WorldGen                                : v1.0.0  | Items:   30 | Locations:   110
+ Final Fantasy                                    : v0.0.0  | Items:  194 | Locations:   267
+ Final Fantasy Mystic Quest                       : v0.0.0  | Items:   67 | Locations:   266
+ Final Fantasy Mystic Quest WorldGen              : v1.0.0  | Items:   67 | Locations:   251
+ Heretic                                          : v0.0.0  | Items:  269 | Locations:  1014
+ Heretic WorldGen                                 : v1.0.0  | Items:  269 | Locations:   502
+ Hollow Knight                                    : v0.0.0  | Items:  249 | Locations:   740
+ Hylics 2                                         : v0.0.0  | Items:   70 | Locations:   166
+ Hylics 2 WorldGen                                : v1.0.0  | Items:   70 | Locations:   133
+ Inscryption                                      : v0.0.0  | Items:   42 | Locations:   100
+ Inscryption WorldGen                             : v1.0.0  | Items:   42 | Locations:   100
+ Jak and Daxter: The Precursor Legacy             : v1.0.0  | Items:   75 | Locations:  4239
+ Jak and Daxter The Precursor Legacy WorldGen     : v0.0.0  | Items:   75 | Locations:   239
+ Kirby's Dream Land 3                             : v0.0.0  | Items:   24 | Locations:   876
+ Kingdom Hearts                                   : v0.0.0  | Items:  215 | Locations:   714
+ Kingdom Hearts WorldGen                          : v0.0.0  | Items:  215 | Locations:   511
+ Kingdom Hearts 2                                 : v2.0.0  | Items:  293 | Locations:   724
+ Links Awakening DX                               : v2.0.1  | Items:  118 | Locations:   255
+ Links Awakening DX WorldGen                      : v1.0.0  | Items:  118 | Locations:   220
+ Landstalker - The Treasures of King Nole         : v1.8.7  | Items:   62 | Locations:   292
+ Landstalker - The Treasures of King Nole WorldGen: v1.0.0  | Items:   62 | Locations:   291
+ Lingo                                            : v0.0.0  | Items:  276 | Locations:   872
+ Lufia II Ancient Cave                            : v0.0.0  | Items:  415 | Locations:   123
+ Lufia II Ancient Cave WorldGen                   : v1.0.0  | Items:  415 | Locations:    35
+ Super Mario Land 2                               : v0.0.0  | Items: 2725 | Locations:  2657
+ Super Mario Land 2 WorldGen                      : v1.0.0  | Items: 2719 | Locations:    53
+ Math Adventure                                   : v1.0.0  | Items:   10 | Locations:    10
+ Math Adventure WorldGen                          : v1.0.0  | Items:   10 | Locations:    10
+ Meritous                                         : v1.0.0  | Items:   23 | Locations:   104
+ Meritous WorldGen                                : v1.0.0  | Items:   23 | Locations:   104
+ The Messenger                                    : v0.0.0  | Items:   64 | Locations:   136
+ The Messenger WorldGen                           : v1.0.0  | Items:   64 | Locations:   106
+ Metamath                                         : v1.0.0  | Items:  108 | Locations:   100
+ Metamath WorldGen                                : v1.0.0  | Items:  108 | Locations:     9
+ Mario & Luigi Superstar Saga                     : v0.0.0  | Items:  146 | Locations:   600
+ Mario & Luigi Superstar Saga WorldGen            : v1.0.0  | Items:  146 | Locations:   556
+ Mega Man 2                                       : v0.3.3  | Items:   23 | Locations:    71
+ Mega Man 2 WorldGen                              : v1.0.0  | Items:   23 | Locations:    44
+ MegaMan Battle Network 3                         : v0.0.0  | Items:  224 | Locations:   263
+ MegaMan Battle Network 3 WorldGen                : v1.0.0  | Items:  224 | Locations:   263
+ Muse Dash                                        : v1.5.26 | Items:  688 | Locations:  1346
+ Muse Dash WorldGen                               : v1.0.0  | Items:  688 | Locations:    90
+ Noita                                            : v1.4.0  | Items:   32 | Locations:   672
+ Noita WorldGen                                   : v1.0.0  | Items:   32 | Locations:   109
+ Ocarina of Time                                  : v7.0.0  | Items:  143 | Locations:  1623
+ Old School Runescape                             : v0.0.0  | Items:   86 | Locations:   169
+ Old School Runescape WorldGen                    : v1.0.0  | Items:   86 | Locations:    54
+ Overcooked! 2                                    : v0.0.0  | Items:   45 | Locations:    43
+ Overcooked! 2 WorldGen                           : v1.0.0  | Items:   45 | Locations:    43
+ Paint                                            : v0.0.0  | Items:   27 | Locations:   380
+ Paint WorldGen                                   : v1.0.0  | Items:   27 | Locations:   130
+ Pokemon Emerald                                  : v2.4.1  | Items:  291 | Locations:  1338
+ Pokemon Emerald WorldGen                         : v0.0.0  | Items:  291 | Locations:   203
+ Pokemon Red and Blue                             : v0.0.0  | Items:  207 | Locations:   709
+ Pokemon Red and Blue WorldGen                    : v0.0.0  | Items:  207 | Locations:   161
+ Raft                                             : v0.0.0  | Items:  325 | Locations:   154
+ Raft WorldGen                                    : v0.0.0  | Items:  325 | Locations:   154
+ Risk of Rain 2                                   : v0.0.0  | Items:   51 | Locations:   954
+ Risk of Rain 2 WorldGen                          : v1.0.0  | Items:   51 | Locations:   221
+ Sonic Adventure 2 Battle                         : v2.4.2  | Items:  182 | Locations:  2555
+ Sonic Adventure 2 Battle WorldGen                : v1.0.0  | Items:  182 | Locations:   206
+ Saving Princess                                  : v0.0.0  | Items:   20 | Locations:    36
+ Saving Princess WorldGen                         : v1.0.0  | Items:   20 | Locations:    36
+ Starcraft 2                                      : v4.0.0  | Items: 1716 | Locations:  3668
+ Starcraft 2 WorldGen                             : v0.0.0  | Items: 1716 | Locations:   232
+ shapez                                           : v0.0.0  | Items:   67 | Locations:  3543
+ shapez WorldGen                                  : v1.0.0  | Items:   67 | Locations:   139
+ Shivers                                          : v0.0.0  | Items:   76 | Locations:   117
+ Shivers WorldGen                                 : v1.0.0  | Items:   76 | Locations:    76
+ A Short Hike                                     : v0.0.0  | Items:   37 | Locations:   131
+ A Short Hike WorldGen                            : v1.0.0  | Items:   37 | Locations:   131
+ A Short Hike WorldGen2                           : v1.0.0  | Items:   37 | Locations:   131
+ Super Metroid                                    : v0.0.0  | Items:   24 | Locations:   101
+ Super Mario 64                                   : v0.0.0  | Items:   29 | Locations:   164
+ Super Mario 64 WorldGen                          : v1.0.0  | Items:   29 | Locations:   149
+ Super Metroid WorldGen                           : v0.0.0  | Items:   24 | Locations:   100
+ Super Mario World                                : v2.1.1  | Items:   29 | Locations:   765
+ Super Mario World WorldGen                       : v1.0.0  | Items:   29 | Locations:   108
+ SMZ3                                             : v0.0.0  | Items:  151 | Locations:   316
+ SMZ3 WorldGen                                    : v0.0.0  | Items:  151 | Locations:   316
+ Secret of Evermore                               : v0.50.1 | Items:  165 | Locations:   913
+ Secret of Evermore WorldGen                      : v0.0.0  | Items:  165 | Locations:   339
+ Stardew Valley                                   : v6.0.0  | Items:  964 | Locations:  3291
+ Stardew Valley WorldGen                          : v0.0.0  | Items:  964 | Locations:   491
+ Subnautica                                       : v0.0.0  | Items:  104 | Locations:   181
+ Subnautica WorldGen                              : v1.0.0  | Items:  104 | Locations:   131
+ Terraria                                         : v0.0.0  | Items:  188 | Locations:   159
+ Terraria WorldGen                                : v1.0.0  | Items:  188 | Locations:    63
+ Timespinner                                      : v0.0.0  | Items:  202 | Locations:   748
+ Timespinner WorldGen                             : v1.0.0  | Items:  202 | Locations:   180
+ The Legend of Zelda                              : v0.0.0  | Items:   33 | Locations:   155
+ The Legend of Zelda WorldGen                     : v1.0.0  | Items:   33 | Locations:   155
+ TOEM original                                    : v0.0.0  | Items:  137 | Locations:   253
+ TOEM original WorldGen                           : v1.0.0  | Items:  137 | Locations:   156
+ TOEM rule builder                                : v0.0.0  | Items:  137 | Locations:   253
+ TOEM rule builder WorldGen                       : v1.0.0  | Items:  137 | Locations:   156
+ TUNIC                                            : v4.1.0  | Items:  182 | Locations:  6860
+ TUNIC WorldGen                                   : v0.0.0  | Items:  182 | Locations:   302
+ The Wind Waker                                   : v0.0.0  | Items:  152 | Locations:   313
+ The Wind Waker WorldGen                          : v1.0.0  | Items:  152 | Locations:   108
+ Undertale                                        : v0.0.0  | Items:   85 | Locations:   122
+ Undertale WorldGen                               : v1.0.0  | Items:   85 | Locations:    48
+ VVVVVV                                           : v0.0.0  | Items:   20 | Locations:    20
+ VVVVVV WorldGen                                  : v1.0.0  | Items:   20 | Locations:    20
+ Wargroove                                        : v1.0.0  | Items:   31 | Locations:    38
+ Wargroove WorldGen                               : v1.0.0  | Items:   31 | Locations:    38
+ The Witness                                      : v8.0.0  | Items:  267 | Locations:  1004
+ The Witness WorldGen                             : v0.0.0  | Items:  267 | Locations:   132
+ Yacht Dice                                       : v2.1.4  | Items:   47 | Locations:  1000
+ Yacht Dice WorldGen                              : v0.0.0  | Items:   47 | Locations:    89
+ Yoshi's Island                                   : v0.0.0  | Items:   69 | Locations:   235
+ Yoshi's Island WorldGen                          : v1.0.0  | Items:   69 | Locations:   191
+ Yu-Gi-Oh! 2006                                   : v0.0.0  | Items:  172 | Locations:   165
+ Yu-Gi-Oh! 2006 WorldGen                          : v0.0.0  | Items:  172 | Locations:    84
+ Zillion                                          : v0.0.0  | Items:   12 | Locations:  1555
+ Majora's Mask Recompiled                         : v0.0.0  | Items:  111 | Locations:   419
+
+Creating MultiWorld.
+Creating Items.
+Calculating Access Rules.
+Running Item Plando.
+Running Pre Main Fill.
+Filling the multiworld with 275 items.
+Progression balancing skipped.
+Beginning output...
+Generating output files (2/2).
+[MMRecomp] Loaded 36 shop prices from world
+Source file too large (1998 lines), using getsource fallback: /home/user/Archipelago-CC/BaseClasses.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (1998 lines), using getsource fallback: /home/user/Archipelago-CC/BaseClasses.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+[MMRecomp] Clock Town Trading Post Shop Item 1: price=285, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop Item 2: price=256, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop Item 3: price=302, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop Item 4: price=165, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 1}
+[MMRecomp] Clock Town Trading Post Shop Item 5: price=475, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop Item 6: price=353, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop Item 7: price=211, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop Item 8: price=468, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 1: price=51, rule={'type': 'constant', 'value': True}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 2: price=320, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 3: price=404, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 4: price=225, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 5: price=295, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 6: price=283, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 7: price=370, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Trading Post Shop (Night) Item 8: price=295, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Bomb Shop Item 1: price=318, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Bomb Shop Item 2: price=216, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Clock Town Bomb Shop Item 3: price=335, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+[MMRecomp] Curiosity Shop Night 3 Thief Stolen Item: price=328, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+analyze_rule: SyntaxError during parse: invalid syntax (<unknown>, line 2)
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/exporter/analyzer/analysis.py", line 293, in _analyze_rule_impl
+    tree = ast.parse(cleaned_source)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<unknown>", line 2
+    return has_projectiles(state, player) or
+                                            ^
+SyntaxError: invalid syntax
+Failed to analyze or expand rule for Location 'Bomber's Hideout Astral Observatory' using runtime analysis.
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Analysis finished without errors but produced no result (None).
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+[MMRecomp] Southern Swamp Witch Shop Item 1: price=422, rule=and(3 conditions)
+[MMRecomp] Southern Swamp Witch Shop Item 2: price=483, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Southern Swamp Witch Shop Item 3: price=303, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+[MMRecomp] Goron Village Shop Item 1: price=252, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Goron Village Shop Item 2: price=390, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Goron Village Shop Item 3: price=471, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Goron Village Shop (Spring) Item 1: price=42, rule={'type': 'constant', 'value': True}
+[MMRecomp] Goron Village Shop (Spring) Item 2: price=489, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Goron Village Shop (Spring) Item 3: price=118, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 1}
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+analyze_rule: SyntaxError during parse: illegal target for annotation (<unknown>, line 1)
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/exporter/analyzer/analysis.py", line 293, in _analyze_rule_impl
+    tree = ast.parse(cleaned_source)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<unknown>", line 1
+    "Snowhead -> Snowhead Temple": lambda state: (
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: illegal target for annotation
+Failed to analyze or expand rule for Exit 'Snowhead -> Snowhead Temple' using runtime analysis.
+analyze_rule: SyntaxError during parse: illegal target for annotation (<unknown>, line 1)
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/exporter/analyzer/analysis.py", line 293, in _analyze_rule_impl
+    tree = ast.parse(cleaned_source)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<unknown>", line 1
+    "Snowhead -> Snowhead Temple": lambda state: (
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: illegal target for annotation
+Failed to analyze or expand rule for Entrance 'Snowhead -> Snowhead Temple' using runtime analysis.
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+[MMRecomp] Zora Hall Shop Item 1: price=255, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Zora Hall Shop Item 2: price=483, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+[MMRecomp] Zora Hall Shop Item 3: price=201, rule={'type': 'item_check', 'item': 'Progressive Wallet', 'count': 2}
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+analyze_rule: SyntaxError during parse: '(' was never closed (<unknown>, line 2)
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/exporter/analyzer/analysis.py", line 293, in _analyze_rule_impl
+    tree = ast.parse(cleaned_source)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<unknown>", line 2
+    return ( (
+             ^
+SyntaxError: '(' was never closed
+Failed to analyze or expand rule for Exit 'Beneath the Well -> Ikana Castle' using runtime analysis.
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+analyze_rule: SyntaxError during parse: '(' was never closed (<unknown>, line 2)
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/exporter/analyzer/analysis.py", line 293, in _analyze_rule_impl
+    tree = ast.parse(cleaned_source)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<unknown>", line 2
+    return ( (
+             ^
+SyntaxError: '(' was never closed
+Failed to analyze or expand rule for Entrance 'Beneath the Well -> Ikana Castle' using runtime analysis.
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+Source file too large (2454 lines), using getsource fallback: /home/user/Archipelago-CC/custom_worlds/mm_recomp.apworld/mm_recomp/NormalRules.py
+[MMRecomp] Using default shop prices (world prices not available)
+Successfully wrote rules to /tmp/tmpf8tzci9p/AP_89879469403067454848_rules.json
+Detected single game world (Majora's Mask Recompiled), using 'majora's_mask_recompiled' preset folder.
+Updating preset directory: /home/user/Archipelago-CC/exporter/../frontend/presets/majora's_mask_recompiled/AP_89879469403067454848
+Copied 3 files to preset directory /home/user/Archipelago-CC/exporter/../frontend/presets/majora's_mask_recompiled/AP_89879469403067454848
+Updated preset_files.json with 3 files for majora's_mask_recompiled/AP_89879469403067454848
+Creating final archive at /tmp/apfuzzq7qsl2wn/apfuzzc0bh6l5w/AP_89879469403067454848.zip
+Done. Enjoy. Total Time: 1.55365990100006
+Locations `Clock Town Trading Post Shop (Night) Item 1` were in server logic but not expected in UT
+UT logic sphere `Link's Inventory (Kokiri Sword),Link's Inventory (Hero's Shield),Link's Inventory (Heart Item #1),Link's Inventory (Heart Item #2),Link's Inventory (Heart Item #3),Link's Inventory (Heart Item #4),Link's Inventory (Heart Item #5),Clock Tower Happy Mask Salesman #1,Clock Tower Happy Mask Salesman #2,Clock Town Trading Post Shop Item 8,Clock Town Trading Post Shop (Night) Item 5,Laundry Pool Stray Fairy (Clock Town),Laundry Pool Musician,South Clock Town Clock Tower Freestanding HP,East Clock Town Archery Roof Chest,East Clock Town Mayors Wife,East Clock Town Treasure Game Chest (Human),North Clock Town Tree HP,West Clock Town Lottery Any Day,West Clock Town Bank 200 Rupees,Stock Pot Inn Reservation,Stock Pot Inn Employee Room Chest,Termina Grass Chest,Termina Grass Grotto Chest,Termina Peahat Grotto Chest,Termina Dodongo Grotto Chest,Termina Ikana Pillar Grotto Chest,Road to Swamp Grotto Chest,Southern Swamp Kotake Item,Southern Swamp Day 2 Grotto Chest,Milk Road Gorman Ranch Purchase`
+Locations that weren't created in UT = []
+Locations Clock Town Trading Post Shop Item 8,Clock Town Trading Post Shop (Night) Item 5 were expected to be in logic but weren't
+Server logic sphere `South Clock Town Clock Tower Freestanding HP,Stock Pot Inn Reservation,East Clock Town Archery Roof Chest,East Clock Town Mayors Wife,Stock Pot Inn Employee Room Chest,Southern Swamp Kotake Item,Southern Swamp Day 2 Grotto Chest,East Clock Town Treasure Game Chest (Human),Clock Town Trading Post Shop (Night) Item 1,Termina Grass Chest,Termina Grass Grotto Chest,Termina Peahat Grotto Chest,North Clock Town Tree HP,Termina Dodongo Grotto Chest,Termina Ikana Pillar Grotto Chest,Link's Inventory (Kokiri Sword),West Clock Town Lottery Any Day,Link's Inventory (Hero's Shield),Link's Inventory (Heart Item #1),Link's Inventory (Heart Item #2),Link's Inventory (Heart Item #3),Laundry Pool Stray Fairy (Clock Town),West Clock Town Bank 200 Rupees,Clock Tower Happy Mask Salesman #2,Laundry Pool Musician,Link's Inventory (Heart Item #4),Milk Road Gorman Ranch Purchase,Link's Inventory (Heart Item #5),Road to Swamp Grotto Chest,Clock Tower Happy Mask Salesman #1`
+After sphere #0
+New Inventory = [Lens of Truth,Stray Fairy (Clock Town),Progressive Bombchu Bag,Progressive Bow,Powder Keg,Deku Mask,Progressive Bombchu Bag]
+Current Inventory = [Ocarina of Time,Song of Time,Song of Soaring]
+UT accessable regions `Clock Town,Astral Observatory (Outside),Bomber's Hideout,Menu,Road to Ikana,Gorman Brothers Track,Termina Field,Astral Observatory,Trading Post,Milk Road,Romani Ranch,Southern Swamp`
+State inventory = `Ocarina of Time:1,Song of Time:1,Song of Soaring:1`
+NoneType: None
