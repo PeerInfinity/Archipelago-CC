@@ -1,0 +1,508 @@
+﻿Archipelago Version 0.6.5  -  Seed: 906691059
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  items, connections, texts, bosses
+Game:                            Majora's Mask Recompiled
+Location Count:                  404
+Progression Balancing:           49
+Accessibility:                   Minimal
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Logic Difficulty:                Normal
+Majora Boss Remains Required:    2
+Moon Boss Remains Required:      4
+CAMC:                            Yes
+Swordless:                       Yes
+Shieldless:                      Yes
+Start With Soaring:              Yes
+Starting Hearts:                 9
+Starting Hearts are Containers or Pieces:Containers
+Shuffle Regional Maps:           Anywhere
+Shuffle Boss Remains:            Vanilla
+Warp to Bosses Using Remains:    Yes
+Shuffle Spider House Rewards:    No
+Required Skulltula Tokens:       24
+Skullsanity:                     Vanilla
+Shopsanity:                      Advanced
+Shuffle Business Scrub Purchases:Yes
+Shop Prices:                     Offensive
+Shuffle Cows:                    No
+Shuffle Great Fairy Rewards:     Yes
+Required Stray Fairies:          3
+Fairysanity:                     No
+Keysanity:                       Yes
+BossKeysanity:                   Yes
+Curiostity Shop Trades:          No
+Enable Intro Checks:             Yes
+Start With Consumables:          Yes
+Permanent Chateau Romani:        Yes
+Reset With Inverted Time:        No
+Receive Filled Wallets:          Yes
+Magic Is a Trap:                 Yes
+Damage Multiplier:               Ohko
+Death Behavior:                  Instant
+Death Link:                      No
+Link Tunic Color:                30, 105, 27
+
+Shop Prices:
+
+Clock Town Trading Post Shop Item 1: 285 Rupees
+Clock Town Trading Post Shop Item 2: 256 Rupees
+Clock Town Trading Post Shop Item 3: 302 Rupees
+Clock Town Trading Post Shop Item 4: 165 Rupees
+Clock Town Trading Post Shop Item 5: 475 Rupees
+Clock Town Trading Post Shop Item 6: 353 Rupees
+Clock Town Trading Post Shop Item 7: 211 Rupees
+Clock Town Trading Post Shop Item 8: 468 Rupees
+Clock Town Trading Post Shop (Night) Item 1: 51 Rupees
+Clock Town Trading Post Shop (Night) Item 2: 320 Rupees
+Clock Town Trading Post Shop (Night) Item 3: 404 Rupees
+Clock Town Trading Post Shop (Night) Item 4: 225 Rupees
+Clock Town Trading Post Shop (Night) Item 5: 295 Rupees
+Clock Town Trading Post Shop (Night) Item 6: 283 Rupees
+Clock Town Trading Post Shop (Night) Item 7: 370 Rupees
+Clock Town Trading Post Shop (Night) Item 8: 295 Rupees
+Clock Town Bomb Shop Item 1: 318 Rupees
+Clock Town Bomb Shop Item 2: 216 Rupees
+Clock Town Bomb Shop Item 3: 335 Rupees
+Clock Town Bomb Shop Item 3 (Stop Thief): 370 Rupees
+Curiosity Shop Night 3 Thief Stolen Item: 328 Rupees
+Curiosity Shop Night 3 (Stop Thief): 491 Rupees
+Southern Swamp Witch Shop Item 1: 422 Rupees
+Southern Swamp Witch Shop Item 2: 483 Rupees
+Southern Swamp Witch Shop Item 3: 303 Rupees
+Goron Village Shop Item 1: 252 Rupees
+Goron Village Shop Item 2: 390 Rupees
+Goron Village Shop Item 3: 471 Rupees
+Goron Village Shop (Spring) Item 1: 42 Rupees
+Goron Village Shop (Spring) Item 2: 489 Rupees
+Goron Village Shop (Spring) Item 3: 118 Rupees
+Zora Hall Shop Item 1: 255 Rupees
+Zora Hall Shop Item 2: 483 Rupees
+Zora Hall Shop Item 3: 201 Rupees
+
+Starting Items:
+
+Ocarina of Time
+Song of Time
+Song of Soaring
+
+Locations:
+
+Link's Inventory (Kokiri Sword): Lens of Truth
+Link's Inventory (Hero's Shield): Heart Container
+Link's Inventory (Heart Item #1): Heart Container
+Link's Inventory (Heart Item #2): Heart Piece
+Link's Inventory (Heart Item #3): Double Defense
+Link's Inventory (Heart Item #4): Silver Rupee
+Link's Inventory (Heart Item #5): Red Rupee
+Keaton Quiz: Compass (Snowhead)
+Clock Tower Happy Mask Salesman #1: Blue Rupee
+Clock Tower Happy Mask Salesman #2: Silver Rupee
+Before Clock Town Chest: Heart Piece
+Clock Town Postbox: Heart Piece
+Clock Town Hide-and-Seek: Gold Rupee
+Clock Town Trading Post Shop Item 1: Blue Rupee
+Clock Town Trading Post Shop Item 2: Great Fairy Mask
+Clock Town Trading Post Shop Item 3: Light Arrow
+Clock Town Trading Post Shop Item 4: Silver Rupee
+Clock Town Trading Post Shop Item 5: Woodfall Map
+Clock Town Trading Post Shop Item 6: Heart Piece
+Clock Town Trading Post Shop Item 7: Blue Rupee
+Clock Town Trading Post Shop Item 8: Heart Piece
+Clock Town Trading Post Shop (Night) Item 1: Heart Piece
+Clock Town Trading Post Shop (Night) Item 2: Red Rupee
+Clock Town Trading Post Shop (Night) Item 3: Gold Rupee
+Clock Town Trading Post Shop (Night) Item 4: Bundle of 30 Arrows
+Clock Town Trading Post Shop (Night) Item 5: Red Rupee
+Clock Town Trading Post Shop (Night) Item 6: Silver Rupee
+Clock Town Trading Post Shop (Night) Item 7: Heart Piece
+Clock Town Trading Post Shop (Night) Item 8: Silver Rupee
+Clock Town Bomb Shop Item 1: Heart Container
+Clock Town Bomb Shop Item 2: Fierce Deity's Mask
+Clock Town Bomb Shop Item 3: Heart Piece
+Clock Town Bomb Shop Item 3 (Stop Thief): Red Rupee
+Clock Town Bomb Shop Powder Keg Goron: Heart Piece
+Curiosity Shop Night 3 (Stop Thief): Blue Rupee
+Curiosity Shop Night 3 Thief Stolen Item: Progressive Magic
+Laundry Pool Stray Fairy (Clock Town): Stray Fairy (Clock Town)
+Laundry Pool Musician: Blue Rupee
+Laundry Pool Kafei's Request: Epona's Song
+Laundry Pool Curiosity Shop Salesman #1: Red Rupee
+Laundry Pool Curiosity Shop Salesman #2: Bremen Mask
+South Clock Town Moon's Tear Trade: Blue Rupee
+South Clock Town Clock Tower Freestanding HP: Heart Piece
+South Clock Town Corner Chest: Progressive Bomb Bag
+South Clock Town Final Day Tower Chest: Heart Piece
+East Clock Town Archery Roof Chest: Progressive Bombchu Bag
+East Clock Town Mayors Wife: Blue Rupee
+East Clock Town Couples Mask on Mayor: Heart Container
+East Clock Town Shooting Gallery 40-49 Points: Dungeon Map (Snowhead)
+East Clock Town Shooting Gallery Perfect 50 Points: Red Rupee
+East Clock Town Honey and Darling Any Day: Small Key (Woodfall)
+East Clock Town Honey and Darling All Days: Red Rupee
+East Clock Town Treasure Game Chest (Human): Progressive Bow
+East Clock Town Treasure Game Chest (Deku): Purple Rupee
+East Clock Town Treasure Game Chest (Goron): Gold Rupee
+East Clock Town Treasure Game Chest (Zora): Heart Piece
+Bomber's Hideout Chest: Magic Bean
+Bomber's Hideout Astral Observatory: Silver Rupee
+North Clock Town Tree HP: Gold Rupee
+North Clock Town Deku Playground Any Day: Heart Container
+North Clock Town Deku Playground All Days: Purple Rupee
+North Clock Town Save Old Lady: Red Rupee
+North Clock Town Great Fairy Reward: Silver Rupee
+North Clock Town Great Fairy Reward (Has Transformation Mask): Fire Arrow
+West Clock Town Lottery Any Day: Heart Container
+West Clock Town Swordsman Expert Course: Red Rupee
+West Clock Town Postman Counting: Purple Rupee
+West Clock Town Dancing Sisters: Boss Key (Stone Tower)
+West Clock Town Bank 200 Rupees: Powder Keg
+West Clock Town Bank 500 Rupees: Great Spin Attack
+West Clock Town Bank 1000 Rupees: Gold Rupee
+West Clock Town Priority Mail to Postman: Song of Storms
+Top of Clock Tower (Ocarina of Time): Small Key (Snowhead)
+Top of Clock Tower (Song of Time): Small Key (Stone Tower)
+Stock Pot Inn Reservation: Deku Mask
+Stock Pot Inn Midnight Meeting: Blue Rupee
+Stock Pot Inn Locked Room Chest: Blue Rupee
+Stock Pot Inn Employee Room Chest: Heart Piece
+Stock Pot Inn Midnight Toilet Hand: Small Key (Stone Tower)
+Stock Pot Inn Granny Story #1: Red Rupee
+Stock Pot Inn Granny Story #2: Red Rupee
+Stock Pot Inn Anju and Kafei: Red Rupee
+Milk Bar Show: Blue Rupee
+Milk Bar Priority Mail to Aroma: Blue Rupee
+East Clock Town Milk Bar Milk Purchase: Stone Tower Map
+East Clock Town Milk Bar Chateau Romani Purchase: Compass (Woodfall)
+Tingle Clock Town Map Purchase: Heart Piece
+Tingle Woodfall Map Purchase: Red Rupee
+Tingle Snowhead Map Purchase: Red Rupee
+Tingle Romani Ranch Map Purchase: Priority Mail
+Tingle Great Bay Map Purchase: Purple Rupee
+Tingle Stone Tower Map Purchase: Red Rupee
+Oath to Order: Heart Container
+Moon Deku Trial HP: Red Rupee
+Moon Goron Trial HP: Purple Rupee
+Moon Zora Trial HP: Don Gero Mask
+Moon Link Trial Garo Master Chest: Romani Mask
+Moon Link Trial Iron Knuckle Chest: Red Rupee
+Moon Link Trial HP: Silver Rupee
+Moon Trade All Masks: Heart Piece
+Defeat Majora: Victory
+Termina Stump Chest: Couple's Mask
+Termina Grass Chest: Progressive Bombchu Bag
+Termina Underwater Chest: Red Rupee
+Termina Grass Grotto Chest: Red Rupee
+Termina Peahat Grotto Chest: Red Rupee
+Termina Dodongo Grotto Chest: Red Rupee
+Termina Ikana Pillar Grotto Chest: Purple Rupee
+Termina Healing Kamaro: Red Rupee
+Termina Bio Baba Grotto HP: Silver Rupee
+Termina Gossip Stones HP: Heart Piece
+Termina Scrub Grotto HP: Red Rupee
+Road to Swamp Tree HP: Bottle of Milk
+Road to Swamp Grotto Chest: Heart Piece
+Swamp Shooting Gallery 2120 Points: Heart Piece
+Swamp Shooting Gallery 2180 Points: Heart Piece
+Southern Swamp Deku Trade: Dungeon Map (Woodfall)
+Southern Swamp Deku Scrub Purchase: Blue Rupee
+Southern Swamp Freestanding HP: Progressive Bomb Bag
+Southern Swamp Kotake Item: Red Rupee
+Southern Swamp Day 2 Grotto Chest: Blue Rupee
+Southern Swamp Healing Koume: Purple Rupee
+Southern Swamp Winning Picture: Heart Piece
+Southern Swamp Good Picture: Blue Rupee
+Southern Swamp Okay Picture: Garo Mask
+Southern Swamp Witch Shop Item 1: Heart Piece
+Southern Swamp Witch Shop Item 2: Purple Rupee
+Southern Swamp Witch Shop Item 3: Purple Rupee
+Southern Swamp Boat Archery: Heart Piece
+Southern Swamp Grotto Chest: Heart Container
+Southern Swamp Song Tablet: Dungeon Map (Stone Tower)
+Deku Palace Butler Race: Purple Rupee
+Swamp Spider House First Room Pot Near Entrance Token: Swamp Skulltula Token
+Swamp Spider House First Room Crawling In Water Token: Swamp Skulltula Token
+Swamp Spider House First Room Crawling Right Column Token: Swamp Skulltula Token
+Swamp Spider House First Room Crawling Left Column Token: Swamp Skulltula Token
+Swamp Spider House First Room Against Far Wall Token: Swamp Skulltula Token
+Swamp Spider House First Room Lower Left Bugpatch Token: Swamp Skulltula Token
+Swamp Spider House First Room Lower Right Bugpatch Token: Swamp Skulltula Token
+Swamp Spider House First Room Upper Right Bugpatch Token: Swamp Skulltula Token
+Swamp Spider House Monument Room Left Crate Token: Swamp Skulltula Token
+Swamp Spider House Monument Room Right Crate Token: Swamp Skulltula Token
+Swamp Spider House Monument Room Crawling Wall Token: Swamp Skulltula Token
+Swamp Spider House Monument Room Crawling On Monument Token: Swamp Skulltula Token
+Swamp Spider House Monument Room Behind Torch Token: Swamp Skulltula Token
+Swamp Spider House Pottery Room Beehive #1 Token: Swamp Skulltula Token
+Swamp Spider House Pottery Room Beehive #2 Token: Swamp Skulltula Token
+Swamp Spider House Pottery Room Small Pot Token: Swamp Skulltula Token
+Swamp Spider House Pottery Room Left Large Pot Token: Swamp Skulltula Token
+Swamp Spider House Pottery Room Right Large Pot Token: Swamp Skulltula Token
+Swamp Spider House Pottery Room Behind Vines Token: Swamp Skulltula Token
+Swamp Spider House Pottery Room Upper Wall Token: Swamp Skulltula Token
+Swamp Spider House Golden Room Crawling Left Wall Token: Swamp Skulltula Token
+Swamp Spider House Golden Room Crawling Right Column Token: Swamp Skulltula Token
+Swamp Spider House Golden Room Against Far Wall Token: Swamp Skulltula Token
+Swamp Spider House Golden Room Beehive Token: Swamp Skulltula Token
+Swamp Spider House Tree Room Tall Grass #1 Token: Swamp Skulltula Token
+Swamp Spider House Tree Room Tall Grass #2 Token: Swamp Skulltula Token
+Swamp Spider House Tree Room Tree #1 Token: Swamp Skulltula Token
+Swamp Spider House Tree Room Tree #2 Token: Swamp Skulltula Token
+Swamp Spider House Tree Room Tree #3 Token: Swamp Skulltula Token
+Swamp Spider House Tree Room Beehive Token: Swamp Skulltula Token
+Swamp Spider House Reward: Mask of Truth
+Deku Palace HP: Red Rupee
+Deku Palace Bean Seller: Purple Rupee
+Deku Palace Bean Grotto Chest: Blue Rupee
+Deku Palace Monkey Song: Progressive Wallet
+Woodfall Owl Statue Chest: Blue Rupee
+Woodfall Bridge Chest: Snowhead Map
+Woodfall Entrance Chest: Song of Healing
+Woodfall Great Fairy Reward: Goron Lullaby
+Woodfall Temple Entrance Chest SF: Stray Fairy (Woodfall)
+Woodfall Temple Ledge Chest: Blast Mask
+Woodfall Temple Turtle Chest: Heart Piece
+Woodfall Temple Dragonfly Chest: Bunny Hood
+Woodfall Temple Dark Room Chest SF: Stray Fairy (Woodfall)
+Woodfall Temple Switch Chest SF: Stray Fairy (Woodfall)
+Woodfall Temple Dinolfos Chest: Oath to Order
+Woodfall Temple Gekko Chest: Small Key (Stone Tower)
+Woodfall Temple Entrance Freestanding SF: Stray Fairy (Woodfall)
+Woodfall Temple Deku Baba SF: Stray Fairy (Woodfall)
+Woodfall Temple Pot SF: Stray Fairy (Woodfall)
+Woodfall Temple Platform Hive SF: Stray Fairy (Woodfall)
+Woodfall Temple Main Room Bubble SF: Stray Fairy (Woodfall)
+Woodfall Temple Skulltula SF: Stray Fairy (Woodfall)
+Woodfall Temple Bridge Room Bubble SF: Stray Fairy (Woodfall)
+Woodfall Temple Bridge Room Hive SF: Stray Fairy (Woodfall)
+Woodfall Temple Pre-Boss Lower Right Bubble SF: Stray Fairy (Woodfall)
+Woodfall Temple Pre-Boss Upper Right Bubble SF: Stray Fairy (Woodfall)
+Woodfall Temple Pre-Boss Upper Left Bubble SF: Stray Fairy (Woodfall)
+Woodfall Temple Pre-Boss Pillar Bubble SF: Stray Fairy (Woodfall)
+Woodfall Temple Heart Container: Red Rupee
+Woodfall Temple Odolwa's Remains: Odolwa's Remains
+Milk Road Gorman Ranch Race: Heart Piece
+Milk Road Gorman Ranch Purchase: Red Rupee
+Romani Ranch Baby Cuccos March: Bomber's Notebook
+Romani Ranch Doggy Racetrack Rooftop Chest: Purple Rupee
+Romani Ranch Doggy Race: Kamaro Mask
+Romani Ranch Romani Game: Blue Rupee
+Romani Ranch Aliens: Red Rupee
+Romani Ranch Helping Cremia: Red Rupee
+Mountain Village Spring Waterfall Chest: Room Key
+Mountain Village Spring Ramp Grotto: Silver Rupee
+Mountain Village Healing Darmani: Red Rupee
+Mountain Village Hungry Goron: Purple Rupee
+Mountain Village Smithy Upgrade: Red Rupee
+Mountain Village Smithy Gold Dust Upgrade: Heart Piece
+Mountain Village Spring Frog Choir HP: All-Night Mask
+Twin Islands Spring Underwater Cave Chest: Heart Piece
+Twin Islands Spring Underwater Ramp Chest: Progressive Bow
+Twin Islands Ramp Grotto Chest: Letter to Kafei
+Twin Islands Goron Elder Request: Blue Rupee
+Twin Islands Hot Water Grotto Chest: Sonata of Awakening
+Goron Racetrack Prize: Great Bay Map
+Goron Village Lens Cave Rock Chest: Blue Rupee
+Goron Village Lens Cave Invisible Chest: Hookshot
+Goron Village Lens Cave Center Chest: Blue Rupee
+Goron Village Baby Goron Lullaby: Gold Rupee
+Goron Village Shop Item 1: Red Rupee
+Goron Village Shop Item 2: Silver Rupee
+Goron Village Shop Item 3: Progressive Bow
+Goron Village Shop (Spring) Item 1: Pendant of Memories
+Goron Village Shop (Spring) Item 2: Red Rupee
+Goron Village Shop (Spring) Item 3: Blue Rupee
+Goron Village Scrub Purchase: Bottle of Red Potion
+Goron Village Deku Trade: Heart Piece
+Goron Village Freestanding HP: Red Rupee
+Powder Keg Goron Reward: Red Rupee
+Path to Snowhead Grotto Chest: Heart Piece
+Path to Snowhead Scarecrow Pillar HP: Red Rupee
+Snowhead Great Fairy Reward: Red Rupee
+Snowhead Temple Elevator Room Invisible Platform Chest SF: Stray Fairy (Snowhead)
+Snowhead Temple Lower Wizzrobe Chest: Ocean Title Deed
+Snowhead Temple Bridge Room Under Platform Bubble SF: Stray Fairy (Snowhead)
+Snowhead Temple Bridge Room Pillar Bubble SF: Stray Fairy (Snowhead)
+Snowhead Temple Elevator Freestanding SF: Stray Fairy (Snowhead)
+Snowhead Temple Bombable Stairs Crate SF: Stray Fairy (Snowhead)
+Snowhead Temple Timed Switch Room Bubble SF: Stray Fairy (Snowhead)
+Snowhead Temple Snowmen Bubble SF: Stray Fairy (Snowhead)
+Snowhead Temple Dinolfos Room First SF: Stray Fairy (Snowhead)
+Snowhead Temple Dinolfos Room Second SF: Stray Fairy (Snowhead)
+Snowhead Temple Bridge Room Freezard Chest: Small Key (Snowhead)
+Snowhead Temple Elevator Room Lower Chest: Zora Mask
+Snowhead Temple Basement Switch Chest SF: Stray Fairy (Snowhead)
+Snowhead Temple Freezard Torch Room Chest SF: Stray Fairy (Snowhead)
+Snowhead Temple Behind Stacked Block Chest: Ice Arrow
+Snowhead Temple Stacked Block Upper Chest SF: Stray Fairy (Snowhead)
+Snowhead Temple Frozen Block Chest: Progressive Sword
+Snowhead Temple Frozen Block Upper Chest SF: Stray Fairy (Snowhead)
+Snowhead Temple Icicle Room Hidden Chest SF: Stray Fairy (Snowhead)
+Snowhead Temple Icicle Room Snowball Chest: Land Title Deed
+Snowhead Temple Upper Wizzrobe Chest: Red Rupee
+Snowhead Temple Main Room Wall Chest SF: Stray Fairy (Snowhead)
+Snowhead Temple Heart Container: Giant's Mask
+Snowhead Temple Goht's Remains: Goht's Remains
+Great Bay Healing Zora: Red Rupee
+Great Bay Fisherman's Grotto Chest: Red Rupee
+Great Bay Baby Zora Song: Gold Rupee
+Great Bay Feeding Lab Fish: Silver Rupee
+Great Bay Scarecrow Ledge HP: Boss Key (Snowhead)
+Great Bay Fisherman Game: Red Rupee
+Ocean Spider House Ramp Upper Token: Ocean Skulltula Token
+Ocean Spider House Ramp Lower Token: Ocean Skulltula Token
+Ocean Spider House Lobby Ceiling Token: Ocean Skulltula Token
+Ocean Spider House First Room Rafter Token: Ocean Skulltula Token
+Ocean Spider House First Room Open Pot #1 Token: Ocean Skulltula Token
+Ocean Spider House First Room Open Pot #2 Token: Ocean Skulltula Token
+Ocean Spider House First Room Wall Token: Ocean Skulltula Token
+Ocean Spider House Library Top Bookcase Token: Ocean Skulltula Token
+Ocean Spider House Library Passage Behind Bookcase Front Token: Ocean Skulltula Token
+Ocean Spider House Library Passage Behind Bookcase Rear Token: Ocean Skulltula Token
+Ocean Spider House Libary Painting #1 Token: Ocean Skulltula Token
+Ocean Spider House Library Painting #2 Token: Ocean Skulltula Token
+Ocean Spider House Library Rafter Token: Ocean Skulltula Token
+Ocean Spider House Library Bookshelf Hole Token: Ocean Skulltula Token
+Ocean Spider House First Room Downstairs Rafter Token: Ocean Skulltula Token
+Ocean Spider House First Room Downstairs Open Pot Token: Ocean Skulltula Token
+Ocean Spider House First Room Downstairs Behind Staircase Token: Ocean Skulltula Token
+Ocean Spider House First Room Downstairs Crate Token: Ocean Skulltula Token
+Ocean Spider House First Room Downstairs Wall Token: Ocean Skulltula Token
+Ocean Spider House Dining Room Open Pot Token: Ocean Skulltula Token
+Ocean Spider House Dining Room Painting Token: Ocean Skulltula Token
+Ocean Spider House Dining Room Ceiling Token: Ocean Skulltula Token
+Ocean Spider House Dining Room Chandelier #1 Token: Ocean Skulltula Token
+Ocean Spider House Dining Room Chandelier #2 Token: Ocean Skulltula Token
+Ocean Spider House Dining Room Chandelier #3 Token: Ocean Skulltula Token
+Ocean Spider House Storage Room Web Token: Ocean Skulltula Token
+Ocean Spider House Storage Room North Wall Token: Ocean Skulltula Token
+Ocean Spider House Storage Room Crate Token: Ocean Skulltula Token
+Ocean Spider House Storage Room Hidden Hole Token: Ocean Skulltula Token
+Ocean Spider House Storage Room Ceiling Pot Token: Ocean Skulltula Token
+Ocean Spider House Coloured Mask Sequence HP: Heart Piece
+Ocean Spider House Reward: Progressive Wallet
+Pirates' Fortress Exterior Underwater Log Chest: Gold Rupee
+Pirates' Fortress Exterior Underwater Near Entrance Chest: Progressive Magic
+Pirates' Fortress Exterior Underwater Corner Chest: Elegy of Emptiness
+Pirates' Fortress Sewers Cage HP: Silver Rupee
+Pirates' Fortress Sewers Maze Chest: Clock Town Map
+Pirates' Fortress Sewers Underwater Lower Chest: Red Rupee
+Pirates' Fortress Sewers Underwater Upper Chest: Heart Piece
+Pirates' Fortress Interior Tank Chest: Swamp Title Deed
+Pirates' Fortress Interior Guarded Chest: Bottle
+Pirates' Fortress Hub Lower Chest: Mask of Scents
+Pirates' Fortress Hub Upper Chest: Small Key (Great Bay)
+Pirates' Fortress Leader's Room Chest: Boss Key (Woodfall)
+Pinnacle Rock Upper Eel Chest: Red Rupee
+Pinnacle Rock Lower Eel Chest: Blue Rupee
+Pinnacle Rock Seahorse HP: Heart Container
+Zora Cape Underwater Like-Like HP: Red Rupee
+Zora Cape Underwater Chest: Boss Key (Great Bay)
+Zora Cape Pot Game: Red Rupee
+Zora Cape Deku Flower Chest: Red Rupee
+Zora Cape Scarecrow Chest: Bottle
+Zora Cape Grotto Chest: Goron Mask
+Beaver Bros. Race 1: Pictograph Box
+Beaver Bros. Race 2 HP: Blue Rupee
+Great Bay Great Fairy Reward: Purple Rupee
+Zora Hall Shop Item 1: Captain's Hat
+Zora Hall Shop Item 2: Blue Rupee
+Zora Hall Shop Item 3: Heart Piece
+Zora Hall Deku Scrub Purchase: Moon's Tear
+Zora Hall Goron Scrub Trade: Heart Piece
+Zora Hall Goron Scrub Trade Freestanding HP: Silver Rupee
+Zora Hall Evan's Song: Postman's Hat
+Zora Hall Torches Reward: Heart Piece
+Zora Hall Good Picture of Lulu: Blue Rupee
+Zora Hall Bad Picture of Lulu: Red Rupee
+Great Bay Temple Blender Pot SF: Stray Fairy (Great Bay)
+Great Bay Temple Waterwheel Room Skulltula SF: Stray Fairy (Great Bay)
+Great Bay Temple Waterwheel Room Bubble SF: Stray Fairy (Great Bay)
+Great Bay Temple Blender Room Barrel SF: Stray Fairy (Great Bay)
+Great Bay Temple Before Red Valve Room Pot SF: Stray Fairy (Great Bay)
+Great Bay Temple Caged Chest Room Pot SF: Stray Fairy (Great Bay)
+Great Bay Temple Seesaw Room Underwater Barrel SF: Stray Fairy (Great Bay)
+Great Bay Temple Entrance Torches Chest SF: Stray Fairy (Great Bay)
+Great Bay Temple Behind Locked Door Chest: Heart Piece
+Great Bay Temple Before Red Valve Room Chest: Heart Piece
+Great Bay Temple Bio-Baba Hall Chest SF: Stray Fairy (Great Bay)
+Great Bay Temple Caged Chest Room Upper Chest: Heart Piece
+Great Bay Temple Caged Chest Room Underwater Chest: Dungeon Map (Great Bay)
+Great Bay Temple Mad Jellied Gekko Chest: Bottle of Chateau Romani
+Great Bay Temple Room Behind Waterfall Ceiling Chest SF: Stray Fairy (Great Bay)
+Great Bay Temple Freezable Waterwheel Upper Chest SF: Stray Fairy (Great Bay)
+Great Bay Temple Freezable Waterwheel Lower Chest SF: Stray Fairy (Great Bay)
+Great Bay Temple Seesaw Room Chest SF: Stray Fairy (Great Bay)
+Great Bay Temple Pre-Boss Room Platform Bubble SF: Stray Fairy (Great Bay)
+Great Bay Temple Pre-Boss Room Tunnel Bubble SF: Stray Fairy (Great Bay)
+Great Bay Temple Heart Container: Red Rupee
+Great Bay Temple Gyorg's Remains: Gyorg's Remains
+Road to Ikana Pillar Chest: Blue Rupee
+Road to Ikana Rock Grotto Chest: Great Fairy Sword
+Road to Ikana Invisible Soldier: Blue Rupee
+Ikana Graveyard Bombable Grotto Chest: Progressive Bombchu Bag
+Graveyard Day 1 Bats Chest: Stone Mask
+Graveyard Day 1 Iron Knuckle Song: Progressive Shield
+Graveyard Day 2 Dampe Bats: Small Key (Snowhead)
+Graveyard Day 2 Iron Knuckle Chest: Silver Rupee
+Graveyard Day 3 Dampe Big Poe Chest: Gibdo Mask
+Graveyard Captain Keeta Chest: Red Rupee
+Ikana Canyon Grotto Chest: Progressive Shield
+Ikana Canyon Scrub Purchase: Silver Rupee
+Ikana Canyon Zora Scrub Trade: New Wave Bossa Nova
+Ikana Canyon Zora Trade Freestanding HP: Mountain Title Deed
+Ikana Canyon Healing Pamela's Father: Blue Rupee
+Ikana Canyon Spirit House: Circus Leader's Mask
+Stone Tower Great Fairy Reward: Heart Piece
+Secret Shrine Dinolfos Chest: Red Rupee
+Secret Shrine Wizzrobe Chest: Small Key (Stone Tower)
+Secret Shrine Wart Chest: Red Rupee
+Secret Shrine Garo Master Chest: Heart Piece
+Secret Shrine Completion Chest: Red Rupee
+Ikana Well Final Chest: Progressive Sword
+Ikana Well Invisible Chest: Purple Rupee
+Ikana Well Rightside Torch Chest: Red Rupee
+Ikana Castle Pillar Freestanding HP: Red Rupee
+Ikana Castle King Song: Red Rupee
+Stone Tower Temple Entrance Room Eye Switch Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Entrance Room Lower Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Armos Room Lava Chest: Keaton Mask
+Stone Tower Temple Armos Room Back Chest: Blue Rupee
+Stone Tower Temple Armos Room Upper Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Eyegore Room Switch Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Eastern Water Room Sun Block Chest: Purple Rupee
+Stone Tower Temple Eastern Water Room Underwater Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Eyegore Room Dexi Hand Ledge Chest: Purple Rupee
+Stone Tower Temple Mirror Room Sun Block Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Mirror Room Sun Face Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Air Gust Room Side Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Air Gust Room Goron Switch Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Garo Master Chest: Heart Piece
+Stone Tower Temple After Garo Upside Down Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Eyegore Chest: Stray Fairy (Stone Tower)
+Stone Tower Inverted Left Chest: Gold Rupee
+Stone Tower Inverted Middle Chest: Kafei's Mask
+Stone Tower Inverted Right Chest: Heart Piece
+Stone Tower Temple Inverted Entrance Room Sun Face Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Inverted Eastern Air Gust Room Fire Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Inverted Eastern Air Gust Room Frozen Switch Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Inverted Eastern Air Gust Room Switch Chest: Progressive Bomb Bag
+Stone Tower Temple Inverted Wizzrobe Chest: Stray Fairy (Stone Tower)
+Stone Tower Temple Inverted Death Armos Maze Chest: Progressive Sword
+Stone Tower Temple Inverted Gomess Chest: Romani Ranch Map
+Stone Tower Temple Inverted Eyegore Chest: Compass (Great Bay)
+Stone Tower Temple Inverted Heart Container: Compass (Stone Tower)
+Stone Tower Temple Inverted Twinmold's Remains: Twinmold's Remains
+
+Playthrough:
+
