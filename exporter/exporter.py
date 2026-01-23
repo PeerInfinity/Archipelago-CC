@@ -8,7 +8,7 @@ import json
 import os
 import inspect
 import shutil
-from functools import lru_cache
+from functools import lru_cache, partial
 from typing import Any, Dict, List, Set, Optional, Tuple
 from collections import defaultdict
 
@@ -1209,8 +1209,34 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     _rule_analysis_cache[cache_key] = override_result
                     return override_result
 
+            # Unwrap functools.partial objects to get the underlying function
+            # Many apworlds (e.g., Metroid Zero Mission) use partial to bind parameters
+            partial_bound_vars = {}
+            if isinstance(rule_func, partial):
+                inner_func = rule_func.func
+                bound_args = rule_func.args
+                bound_keywords = rule_func.keywords or {}
+
+                # Map positional bound args to parameter names
+                if hasattr(inner_func, '__code__'):
+                    param_names = inner_func.__code__.co_varnames[:inner_func.__code__.co_argcount]
+                    for i, value in enumerate(bound_args):
+                        if i < len(param_names):
+                            partial_bound_vars[param_names[i]] = value
+                            logger.debug(f"Partial unwrap: bound {param_names[i]} = {value}")
+
+                # Add keyword bound args
+                partial_bound_vars.update(bound_keywords)
+
+                # Use the inner function for analysis
+                rule_func = inner_func
+                logger.debug(f"Unwrapped functools.partial: inner_func={inner_func}, bound_vars={list(partial_bound_vars.keys())}")
+
             # Extract closure variables from the rule function
             closure_vars = {}
+
+            # Add partial-bound variables first (may be overridden by closure vars)
+            closure_vars.update(partial_bound_vars)
 
             # Add globals from the function (for module-level imports like ChapterIndex)
             if hasattr(rule_func, '__globals__'):
