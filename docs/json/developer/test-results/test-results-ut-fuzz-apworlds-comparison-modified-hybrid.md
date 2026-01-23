@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-22 18:20:58
+**Generated:** 2026-01-23 02:42:11
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -14,9 +14,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 32 (25.8%)
+- **Passing Both:** 33 (26.6%)
 - **Passing Modified Only:** 6 (4.8%)
-- **Passing Hybrid Only:** 12 (9.7%)
+- **Passing Hybrid Only:** 11 (8.9%)
 - **Passing Neither:** 74 (59.7%)
 
 ## Full Comparison
@@ -79,7 +79,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Kingdom Hearts RE Chain of Memories | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | League of Legends | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Lego Star Wars: The Complete Saga | ⚠️ 80.0% | ✅ 90.0% | ✅ | ✅ | N/A |
+| Lego Star Wars: The Complete Saga | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Lingo 2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Ship of Harkinian | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 70.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 0.0% | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ 40.0% | ❌ 40.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | osu! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (32)
+## Games Passing Both (33)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -171,6 +171,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Kingdom Hearts RE Chain of Memories | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ | ✅ | N/A |
 | League of Legends | ✅ | ✅ | N/A |
+| Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | N/A |
@@ -200,7 +201,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | Rain World | 11.7KB | ✅ | N/A |
 | Star Fox 64 | 17.1KB | ✅ | N/A |
 
-## Games Passing Hybrid Only (12)
+## Games Passing Hybrid Only (11)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
@@ -214,7 +215,6 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Crystalis | ✅ | ✅ | N/A |
 | GZDoom | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
-| Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |

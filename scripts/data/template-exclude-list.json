@@ -132,10 +132,6 @@
       "reason": "Uses compiled Rust extension (albwrandomizer) for game logic. Rules reference self.seed_info.can_traverse() and self.seed_info.can_reach() which evaluate dynamically randomized crack/portal connections (Cracksanity). These methods live in the external library and cannot be exported to static rules - worldgen generates lambdas with 'self' references that fail with NameError."
     },
     {
-      "name": "Against the Storm.yaml",
-      "reason": "APWorld issue: Recursive satisfies_recipe() function causes timeouts, and complex can_goal() completion logic makes certain option combinations unbeatable (FillError). Fails during seed generation before UT testing can occur."
-    },
-    {
       "name": "Air Delivery.yaml",
       "reason": "Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue."
     },
@@ -146,14 +142,6 @@
     {
       "name": "Astalon.yaml",
       "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
-    },
-    {
-      "name": "Axiom Verge.yaml",
-      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
-    },
-    {
-      "name": "Balatro.yaml",
-      "reason": "Uses complex lambda expressions with list(dict.values()) patterns for item lists. World generator receives dict structure instead of item list, producing broken HasFromList rules with dict keys ('type', 'name', 'args') instead of items."
     },
     {
       "name": "ChecksMate.yaml",
@@ -184,20 +172,12 @@
       "reason": "APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options."
     },
     {
-      "name": "Fire Emblem Sacred Stones.yaml",
-      "reason": "Complex finalboss_rule uses for_iter loops, set comprehensions, and closure helpers (level_cap_at_least). World generator cannot convert AST_block with for_iter, falls back to True_() making FinalBoss/Lagdou Ruins always accessible."
-    },
-    {
       "name": "Frogmonster.yaml",
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
     },
     {
       "name": "Iji.yaml",
       "reason": "Uses module-level constant lists (EventNames.Levels, ItemNames.Sector_Access) with subscript access in rules. Exporter captures AST instead of resolved values. Chained helper functions cause rule expansion to hit size limits, falling back to True_()."
-    },
-    {
-      "name": "Into the Breach.yaml",
-      "reason": "Two issues: (1) Requires python-sat package for squad randomization which isn't auto-installed. (2) Rules use Achievement.is_doable_by_tags() but exporter incorrectly assumes 'self' is Location, generating invalid Location.is_doable_by_tags() calls."
     },
     {
       "name": "Keep Talking and Nobody Explodes.yaml",
@@ -212,16 +192,8 @@
       "reason": "Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns."
     },
     {
-      "name": "Pokemon FireRed and LeafGreen.yaml",
-      "reason": "Exporter creates AST_capability markers for HM helpers (can_fly, can_surf, etc.) but doesn't export helper definitions. World generator creates undefined function references causing NameError at runtime."
-    },
-    {
       "name": "Rabi-Ribi.yaml",
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
-    },
-    {
-      "name": "Rusted Moss.yaml",
-      "reason": "Two issues: (1) Character option defines 4 values (fern, maya, ameli, gimmick) but only fern and gimmick are supported - selecting maya or ameli raises ValueError. (2) Rules are created using eval() from dynamically built lambda strings in convert_to_rule(). The exporter cannot analyze these rules because inspect.getfile() returns '<string>' instead of a readable source file. All rules export as 'error' type, causing UT to incorrectly evaluate accessibility."
     },
     {
       "name": "Sly 2 Band of Thieves.yaml",
@@ -234,10 +206,6 @@
     {
       "name": "System Shock 2.yaml",
       "reason": "Uses custom cyb_mod_count helper that calculates weighted sums of multiple Cyber Module item types. Also uses walrus operator (:=) in lambdas which cannot be analyzed. Would require WeightedSum rule support in worldgen."
-    },
-    {
-      "name": "TCG Card Shop Simulator.yaml",
-      "reason": "Uses dynamic license dictionaries (pg1_licenses, pg2_licenses) populated during world setup. Rule evaluation iterates over these structures to count items from lower levels. Exported hardcoded dictionaries don't evaluate the same way as server logic."
     },
     {
       "name": "The Legend of Zelda - Phantom Hourglass.yaml",
@@ -258,6 +226,10 @@
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
+    },
+    {
+      "name": "Axiom Verge.yaml",
+      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
     }
   ],
   "requires_javascript_helpers_list": [
