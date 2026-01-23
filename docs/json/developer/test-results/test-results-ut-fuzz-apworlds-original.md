@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 05:43:21
+**Generated:** 2026-01-23 05:57:00
 
 **Source Data Created:** 2026-01-10T22:45:14.627157
 
@@ -35,15 +35,15 @@
 
 Of the 42 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 33/42 (78.6%)
+- **Passing with Generic Exporter:** 31/42 (73.8%)
 - **Passing with Generic Logic:** 42/42 (100.0%)
-- **Passing with Both Generic:** 33/42 (78.6%)
+- **Passing with Both Generic:** 31/42 (73.8%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 225.5KB
+- **Total Exporter Code:** 288.9KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 225.5KB
+- **Combined Total:** 288.9KB
 
 ## Test Results
 
@@ -56,7 +56,7 @@ Of the 42 games with 100% pass rate:
 | Against the Storm | ❌ | 10 | 0 | 4 | 6 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.7KB | ✅ | N/A |
-| Anodyne | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Anodyne | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.7KB | ✅ | N/A |
 | Another Crabs Treasure | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Ape Escape | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | N/A |
@@ -115,7 +115,7 @@ Of the 42 games with 100% pass rate:
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Fusion | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 9.7KB | ✅ | N/A |
-| Minishoot Adventures | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Minishoot Adventures | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 25.9KB | ✅ | N/A |
 | Minit | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 15.1KB | ✅ | N/A |
 | Monster Sanctuary | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ | 10 | 0 | 0 | 8 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -145,7 +145,7 @@ Of the 42 games with 100% pass rate:
 | Sonic the Hedgehog 1 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.4KB | ✅ | N/A |
 | Soul Blazer | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.6KB | ✅ | N/A |
 | Spinball | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Spyro 3 | ❌ | 10 | 2 | 3 | 3 | 2 | ❌ 20.0% | ✅ | ✅ | N/A |
+| Spyro 3 | ❌ | 10 | 2 | 3 | 3 | 2 | ❌ 20.0% | 15.2KB | ✅ | N/A |
 | Stacklands | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | N/A |
 | Star Fox 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -165,7 +165,7 @@ Of the 42 games with 100% pass rate:
 | Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 9.1KB | ✅ | N/A |
-| Wordipelago | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | N/A |
+| Wordipelago | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |

@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
 
-**Generated:** 2026-01-23 05:43:21
+**Generated:** 2026-01-23 05:57:00
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -31,7 +31,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Against the Storm | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ✅ 100.0% | ❌ 40.0% | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ 100.0% | ✅ 100.0% | 8.7KB | ✅ | N/A |
-| Anodyne | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Anodyne | ✅ 100.0% | ❌ 0.0% | 10.7KB | ✅ | N/A |
 | Another Crabs Treasure | ⚠️ 60.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Ape Escape | ❌ 0.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ⚠️ 70.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -90,7 +90,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | MetroCUBEvania | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 80.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | 9.7KB | ✅ | N/A |
-| Minishoot Adventures | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Minishoot Adventures | ❌ 0.0% | ❌ 0.0% | 25.9KB | ✅ | N/A |
 | Minit | ✅ 100.0% | ❌ 0.0% | 15.1KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -120,7 +120,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Sonic the Hedgehog 1 | ✅ 100.0% | ⚠️ 90.0% | 9.4KB | ✅ | N/A |
 | Soul Blazer | ✅ 100.0% | ⚠️ 80.0% | 10.6KB | ✅ | N/A |
 | Spinball | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Spyro 3 | ❌ 20.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Spyro 3 | ❌ 20.0% | ❌ 0.0% | 15.2KB | ✅ | N/A |
 | Stacklands | ⚠️ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Star Fox 64 | ✅ 100.0% | ✅ 100.0% | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
@@ -140,7 +140,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ⚠️ 90.0% | ❌ 0.0% | 9.1KB | ✅ | N/A |
-| Wordipelago | ✅ 90.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Wordipelago | ✅ 90.0% | ❌ 0.0% | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -186,7 +186,7 @@ These games pass in the Original UT but fail in the Modified UT.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | Air Delivery | 6.6KB | ✅ | N/A |
-| Anodyne | ✅ | ✅ | N/A |
+| Anodyne | 10.7KB | ✅ | N/A |
 | Astalon | ✅ | ✅ | N/A |
 | ChecksMate | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ✅ | ✅ | N/A |
@@ -201,7 +201,7 @@ These games pass in the Original UT but fail in the Modified UT.
 | Sonic Rush | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |
-| Wordipelago | ✅ | ✅ | N/A |
+| Wordipelago | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
 ## Games Passing Modified Only (16)
@@ -267,7 +267,7 @@ These games fail in both Universal Tracker versions.
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Metroid Zero Mission | 9.7KB | ✅ | N/A |
-| Minishoot Adventures | ✅ | ✅ | N/A |
+| Minishoot Adventures | 25.9KB | ✅ | N/A |
 | Monster Sanctuary | ✅ | ✅ | N/A |
 | Nine Sols | ✅ | ✅ | N/A |
 | Ori and the Blind Forest | ✅ | ✅ | N/A |
@@ -284,7 +284,7 @@ These games fail in both Universal Tracker versions.
 | Sly 2: Band of Thieves | ✅ | ✅ | N/A |
 | Sly Cooper and the Thievius Raccoonus | ✅ | ✅ | N/A |
 | Sonic Adventure DX | 29.9KB | ✅ | N/A |
-| Spyro 3 | ✅ | ✅ | N/A |
+| Spyro 3 | 15.2KB | ✅ | N/A |
 | Stacklands | ✅ | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |

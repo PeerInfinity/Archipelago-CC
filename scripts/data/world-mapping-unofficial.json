@@ -81,11 +81,11 @@
   },
   "Anodyne": {
     "apworld_path": "custom_worlds/anodyne.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/anodyne.py",
+    "exporter_size": 10946,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "anodyne"
   },
@@ -671,11 +671,11 @@
   },
   "Minishoot Adventures": {
     "apworld_path": "custom_worlds/minishoot.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/minishoot.py",
+    "exporter_size": 26561,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "minishoot"
   },
@@ -971,11 +971,11 @@
   },
   "Spyro 3": {
     "apworld_path": "custom_worlds/spyro3.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/spyro3.py",
+    "exporter_size": 15584,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "spyro3"
   },
@@ -1171,11 +1171,11 @@
   },
   "Wordipelago": {
     "apworld_path": "custom_worlds/wordipelago.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/wordipelago.py",
+    "exporter_size": 11893,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "wordipelago"
   },
