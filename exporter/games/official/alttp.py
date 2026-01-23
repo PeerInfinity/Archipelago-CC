@@ -1165,6 +1165,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         1. Lambdas referencing dungeon_entrance closure variable
         2. Dicts with lambda values (rule_map) that get serialized as strings
         3. Nested lambdas (like mirrorless_moat_rule -> hera_rule -> rule_map)
+        4. Combined rules from add_rule(..., combine='or') that wrap glitch rules
+
+        For combined rules (from add_rule with combine='or'), the rule looks like:
+            lambda state: glitch_rule(state) or old_rule(state)
+        The source won't contain 'can_bomb_clip' directly - it's in the 'rule' closure.
+        We need to check the closure's 'rule' variable for glitch patterns.
 
         Args:
             rule_func: The rule function to analyze
@@ -1179,6 +1185,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         closure_vars = {}
         has_problematic_closure = False
         problematic_reason = None
+        is_combined_or_rule = False  # True if this is a combined rule from add_rule(..., combine='or')
+        glitch_rule_source = None  # Source code of the glitch rule if it's in closure
 
         if hasattr(rule_func, '__closure__') and rule_func.__closure__:
             free_vars = rule_func.__code__.co_freevars
@@ -1201,12 +1209,29 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     elif callable(value) and 'underworld_glitches_rules' in getattr(value, '__qualname__', ''):
                         has_problematic_closure = True
                         problematic_reason = f"nested lambda {var_name}"
+                        # If this is named 'rule', it's likely from add_rule(spot, rule, combine='or')
+                        if var_name == 'rule':
+                            is_combined_or_rule = 'old_rule' in free_vars
+                            # Try to get the source of the glitch rule
+                            try:
+                                glitch_rule_source = inspect.getsource(value)
+                            except (OSError, TypeError):
+                                pass
 
                     # Check for mire_clip, hera_clip (lambda functions)
                     elif var_name in ('mire_clip', 'hera_clip', 'mirrorless_moat_rule', 'hera_rule', 'gt_rule'):
                         if callable(value):
                             has_problematic_closure = True
                             problematic_reason = f"glitch helper lambda {var_name}"
+                            # Try to get the source of the glitch helper
+                            try:
+                                helper_source = inspect.getsource(value)
+                                if glitch_rule_source:
+                                    glitch_rule_source += '\n' + helper_source
+                                else:
+                                    glitch_rule_source = helper_source
+                            except (OSError, TypeError):
+                                pass
                 except ValueError:
                     pass
 
@@ -1221,19 +1246,24 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         try:
             source = inspect.getsource(rule_func)
 
+            # For combined rules, also check the glitch rule's source
+            combined_source = source
+            if glitch_rule_source:
+                combined_source = source + '\n' + glitch_rule_source
+
             # Rules with access_rule(fake_pearl_state) need Moon Pearl
-            if 'access_rule' in source and 'fake_pearl_state' in source:
+            if 'access_rule' in combined_source and 'fake_pearl_state' in combined_source:
                 logger.debug(f"ALttP: Replacing with Moon Pearl requirement")
                 return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
 
             # Rules with Magic Mirror as alternative should use Magic Mirror
             # Example: state.has('Magic Mirror', player) or mirrorless_moat_rule(state)
-            if 'Magic Mirror' in source:
+            if 'Magic Mirror' in combined_source:
                 logger.debug(f"ALttP: Rule has Magic Mirror alternative - using Magic Mirror OR True_")
                 return {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
 
             # Rules that only check can_reach are permissive
-            if 'can_reach' in source and 'access_rule' not in source:
+            if 'can_reach' in combined_source and 'access_rule' not in combined_source:
                 logger.debug(f"ALttP: Replacing can_reach rule with True_")
                 return {'rule': 'True_'}
 
@@ -1243,7 +1273,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             # We can't export region reachability, but we can export item requirements.
             # This is more permissive than the real rule (skips region check) but more
             # accurate than True_ (checks items) or False_ (always fails).
-            if 'mire_clip' in source and 'hera_clip' not in source:
+            # Also check problematic_reason for the closure variable name
+            check_source = combined_source + ' ' + (problematic_reason or '')
+            if 'mire_clip' in check_source and 'hera_clip' not in check_source:
                 # Pure mire_clip: Pegasus Boots AND (Fire Rod OR Lamp)
                 logger.debug(f"ALttP: Replacing mire_clip rule with item requirements")
                 return {
@@ -1258,11 +1290,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         ]
                     }
                 }
-            elif 'hera_clip' in source and 'mire_clip' not in source:
+            elif 'hera_clip' in check_source and 'mire_clip' not in check_source:
                 # Pure hera_clip: just Pegasus Boots
                 logger.debug(f"ALttP: Replacing hera_clip rule with item requirements")
                 return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
-            elif 'mire_clip' in source and 'hera_clip' in source:
+            elif 'mire_clip' in check_source and 'hera_clip' in check_source:
                 # Both clips as alternatives: Pegasus Boots (common requirement)
                 logger.debug(f"ALttP: Replacing mire_clip/hera_clip rule with Pegasus Boots")
                 return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
@@ -1270,12 +1302,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             # Direct can_bomb_clip usage (e.g., Ice Palace rules, Kiki Skip)
             # can_bomb_clip requires: can_use_bombs (always available) + is_not_bunny + Pegasus Boots
             # We approximate with Pegasus Boots since bombs are common and bunny state is edge case
-            if 'can_bomb_clip' in source:
+            if 'can_bomb_clip' in combined_source:
                 logger.debug(f"ALttP: Replacing can_bomb_clip rule with Pegasus Boots")
                 return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
 
         except (OSError, TypeError) as e:
             logger.debug(f"ALttP: Could not inspect source: {e}")
+
+        # For combined rules (from add_rule with combine='or'), use True_ as fallback
+        # The original rule should still work, and using False_ would make the location
+        # always inaccessible which is incorrect.
+        if is_combined_or_rule:
+            logger.debug(f"ALttP: Combined or-rule - using permissive True_ fallback")
+            return {'rule': 'True_'}
 
         # Default: use conservative False_ for unknown glitch rules
         # This disables the glitch alternative, falling back to original rules.
