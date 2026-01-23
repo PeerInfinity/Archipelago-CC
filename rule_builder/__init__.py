@@ -29,7 +29,8 @@ See docs/json/developer/guides/format-converter.md for format details.
 """
 
 from .rules import (
-    # World mixin
+    # Logic and World mixins
+    RuleBuilderLogicMixin,
     RuleWorldMixin,
     # Option filtering
     OptionFilter,
@@ -99,7 +100,8 @@ from .pathfinding import (
 )
 
 __all__ = [
-    # World mixin
+    # Logic and World mixins
+    'RuleBuilderLogicMixin',
     'RuleWorldMixin',
     # Option filtering
     'OptionFilter',

@@ -16,6 +16,32 @@ if TYPE_CHECKING:
 else:
     World = object
 
+from worlds.AutoWorld import LogicMixin
+
+
+class RuleBuilderLogicMixin(LogicMixin):
+    """A LogicMixin that adds rule caching support to CollectionState.
+
+    This mixin is required for worlds that use the Rule Builder's caching system.
+    It adds a `rule_cache` attribute to CollectionState that stores the results
+    of rule evaluations, keyed by player and rule id.
+
+    Based on PR #5048 (https://github.com/ArchipelagoMW/Archipelago/pull/5048).
+    """
+
+    multiworld: MultiWorld
+    rule_cache: dict[int, dict[int, bool]]
+
+    def init_mixin(self, multiworld: MultiWorld) -> None:
+        players = multiworld.get_all_ids()
+        self.rule_cache = {player: {} for player in players}
+
+    def copy_mixin(self, new_state: "RuleBuilderLogicMixin") -> "RuleBuilderLogicMixin":
+        new_state.rule_cache = {
+            player: rule_results.copy() for player, rule_results in self.rule_cache.items()
+        }
+        return new_state
+
 
 class RuleWorldMixin(World):
     """A World mixin that provides helpers for interacting with the rule builder"""
