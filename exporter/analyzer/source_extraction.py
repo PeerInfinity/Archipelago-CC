@@ -321,8 +321,160 @@ def _clean_source_impl(func: Callable) -> Optional[str]:
     if match:
         params = match.group(1).strip()
         body = match.group(2).strip()
+
+        # When using inspect.getsource() fallback on lambdas inside function calls
+        # (e.g., set_rule(..., lambda state: body)), the body may include trailing
+        # closing parentheses from the outer call. Strip unbalanced trailing parens.
+        body = _strip_unbalanced_trailing_parens(body)
+
+        # For multiline lambda bodies from inspect.getsource() fallback,
+        # normalize indentation to prevent SyntaxError when wrapped in def.
+        # The continuation lines may have extra indentation from the original source.
+        body = _normalize_multiline_body(body)
+
         logging.debug(f"_clean_source: Final body for lambda = {repr(body)}")
         return f"def __analyzed_func__({params}):\n    return {body}"
     else:
         # If it's not a lambda (e.g., a regular 'def' function), return as is
         return source
+
+
+def _strip_unbalanced_trailing_parens(body: str) -> str:
+    """
+    Strip trailing unbalanced closing parentheses from lambda body.
+
+    When inspect.getsource() extracts a lambda from inside a function call like:
+        set_rule(loc, lambda state: state.has('Item', player))
+
+    The regex may capture the trailing ')' from set_rule(), resulting in:
+        state.has('Item', player))
+
+    This function removes such trailing unbalanced parens while preserving
+    valid parentheses in the expression.
+
+    Also handles cases where there's a trailing comment after the parens:
+        state.has('Item', player))  # some comment
+
+    Args:
+        body: The lambda body string, possibly with trailing unbalanced parens
+
+    Returns:
+        The body with trailing unbalanced closing parens removed
+    """
+    result = body.rstrip()
+
+    # First, strip trailing comments (outside of strings)
+    # Comments can appear after the lambda body and confuse paren matching
+    result = _strip_trailing_comment(result)
+
+    while result.endswith(')'):
+        # Count balance in the expression (excluding the last char)
+        balance = 0
+        in_string = None  # None, '"', or "'"
+        escaped = False
+
+        for char in result[:-1]:
+            if escaped:
+                escaped = False
+                continue
+            if char == '\\':
+                escaped = True
+                continue
+            if in_string:
+                if char == in_string:
+                    in_string = None
+                continue
+            if char in ('"', "'"):
+                in_string = char
+                continue
+            if char == '(':
+                balance += 1
+            elif char == ')':
+                balance -= 1
+
+        # If balance is 0 or negative, the trailing ')' is unbalanced
+        if balance <= 0:
+            result = result[:-1].rstrip()
+            logging.debug(f"_strip_unbalanced_trailing_parens: Stripped trailing ')': {repr(result)}")
+        else:
+            # The trailing ')' is balanced, stop stripping
+            break
+
+    return result
+
+
+def _strip_trailing_comment(body: str) -> str:
+    """
+    Strip a trailing Python comment from the body, if present.
+
+    Only strips comments that are outside of strings.
+
+    Args:
+        body: The expression string
+
+    Returns:
+        The expression with trailing comment removed
+    """
+    in_string = None
+    escaped = False
+    last_hash_pos = None
+
+    for i, char in enumerate(body):
+        if escaped:
+            escaped = False
+            continue
+        if char == '\\':
+            escaped = True
+            continue
+        if in_string:
+            if char == in_string:
+                in_string = None
+            continue
+        if char in ('"', "'"):
+            in_string = char
+            continue
+        if char == '#':
+            last_hash_pos = i
+            break  # Found start of comment
+
+    if last_hash_pos is not None:
+        result = body[:last_hash_pos].rstrip()
+        logging.debug(f"_strip_trailing_comment: Removed comment: {repr(body)} -> {repr(result)}")
+        return result
+
+    return body
+
+
+def _normalize_multiline_body(body: str) -> str:
+    """
+    Normalize a multiline lambda body to a single line.
+
+    When inspect.getsource() extracts a multiline lambda, continuation lines
+    have extra indentation from the original source. This causes parsing issues.
+
+    The simplest fix is to join all lines into a single line, replacing
+    newlines and excess whitespace with single spaces. This is valid Python
+    since lambda bodies can span multiple lines but must be a single expression.
+
+    Args:
+        body: The lambda body, possibly multiline
+
+    Returns:
+        The body as a single line with normalized whitespace
+    """
+    if '\n' not in body:
+        # Single line, nothing to normalize
+        return body
+
+    # Join lines and normalize whitespace
+    # Replace newlines with spaces, then collapse multiple spaces
+    lines = body.split('\n')
+    normalized_lines = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped:
+            normalized_lines.append(stripped)
+
+    result = ' '.join(normalized_lines)
+    logging.debug(f"_normalize_multiline_body: Converted to single line: {repr(result[:100])}...")
+    return result
