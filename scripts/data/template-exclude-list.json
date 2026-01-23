@@ -196,6 +196,10 @@
       "reason": "Uses closure-based data-driven rule pattern with RuleFlag enum dispatch. Cannot reconstruct rules without original closure context."
     },
     {
+      "name": "System Shock 2.yaml",
+      "reason": "Uses custom cyb_mod_count helper that calculates weighted sums of multiple Cyber Module item types. Also uses walrus operator (:=) in lambdas which cannot be analyzed. Would require WeightedSum rule support in worldgen."
+    },
+    {
       "name": "The Legend of Zelda - Phantom Hourglass.yaml",
       "reason": "Entrance randomization fails frequently with complex option combinations. GER algorithm fails after 10 attempts with mixed pool settings."
     },
