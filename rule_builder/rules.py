@@ -2429,6 +2429,169 @@ class CountItem(Rule[TWorld], game="Archipelago"):
             return {"item_name": self.item_name}
 
 
+@dataclasses.dataclass(init=False)
+class CountFromList(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the cumulative count of items from a list.
+
+    This is the Rule Builder equivalent of state.count_from_list().
+    For a list like ["Key", "Key", "Door"], if the player has 2 Keys and 1 Door,
+    the count would be 2 + 2 + 1 = 5 (each occurrence in the list is counted).
+
+    When used as a boolean (in _evaluate), returns True if count > 0.
+    Also provides get_count() for use in comparisons.
+
+    Usage:
+        rule = CountFromList("Key", "Door", "Key")  # counts Key twice, Door once
+    """
+    item_names: tuple[str, ...] = ()
+
+    def __init__(self, *item_names: str, options: OptionFilter | tuple[OptionFilter, ...] = ()):
+        super().__init__(options=options)
+        self.item_names = item_names
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.item_names,
+            player=world.player,
+            caching_enabled=False,  # Count can change frequently
+        )
+
+    @override
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any], world_cls: type[RuleWorldMixin]) -> Self:
+        args = {**data.get("args", {})}
+        item_names = args.pop("item_names", ())
+        options = OptionFilter.multiple_from_dict(data.get("options", ()))
+        return cls(*item_names, **args, options=options)
+
+    @override
+    def __str__(self) -> str:
+        items = ", ".join(self.item_names)
+        return f"CountFromList({items})"
+
+    class Resolved(Rule.Resolved):
+        item_names: tuple[str, ...]
+        skip_cache: ClassVar[bool] = True
+
+        def get_count(self, state: CollectionState) -> int:
+            """Get the cumulative count of all items in the list."""
+            return state.count_from_list(self.item_names, self.player)
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if count > 0
+            return self.get_count(state) > 0
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            return {item: {id(self)} for item in self.item_names}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "CountFromList("}]
+            for i, item in enumerate(self.item_names):
+                if i > 0:
+                    messages.append({"type": "text", "text": ", "})
+                messages.append({"type": "item_name", "text": item, "player": self.player, "flags": 0})
+            messages.append({"type": "text", "text": ")"})
+            if state is not None:
+                count = self.get_count(state)
+                messages.append({"type": "text", "text": f": {count}"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            items = ", ".join(self.item_names)
+            if state is not None:
+                return f"CountFromList({items}): {self.get_count(state)}"
+            return f"CountFromList({items})"
+
+        @override
+        def __str__(self) -> str:
+            items = ", ".join(self.item_names)
+            return f"CountFromList({items})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"item_names": self.item_names}
+
+
+@dataclasses.dataclass()
+class CountGroup(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the count of items in a named group.
+
+    When used as a boolean (in _evaluate), returns True if count > 0.
+    Also provides get_count() for use in comparisons and arithmetic.
+
+    This rule is used to count items that belong to a named item group,
+    as defined by the world's item_name_groups.
+
+    Usage:
+        rule = CountGroup("Letters")  # True if player has at least 1 item from "Letters" group
+        rule = Compare(CountGroup("Keys"), ">=", 3)  # True if player has 3+ items from "Keys"
+    """
+    group_name: str = ""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.group_name,
+            player=world.player,
+            caching_enabled=False,  # Count can change frequently
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"CountGroup({self.group_name})"
+
+    class Resolved(Rule.Resolved):
+        group_name: str
+        skip_cache: ClassVar[bool] = True
+
+        def get_count(self, state: CollectionState) -> int:
+            """Get the count of items in this group."""
+            return state.count_group(self.group_name, self.player)
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if count > 0
+            return self.get_count(state) > 0
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            # Group dependencies are complex - items in the group may vary
+            # Return empty as we can't easily determine item names from group
+            return {}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is not None:
+                count = self.get_count(state)
+                return [
+                    {"type": "text", "text": f"CountGroup({self.group_name}): {count}"},
+                ]
+            return [
+                {"type": "text", "text": f"CountGroup({self.group_name})"},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is not None:
+                return f"CountGroup({self.group_name}): {self.get_count(state)}"
+            return f"CountGroup({self.group_name})"
+
+        @override
+        def __str__(self) -> str:
+            return f"CountGroup({self.group_name})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"group_name": self.group_name}
+
+
 @dataclasses.dataclass()
 class Compare(Rule[TWorld], game="Archipelago"):
     """

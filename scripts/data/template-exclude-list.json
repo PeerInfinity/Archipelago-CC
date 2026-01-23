@@ -144,6 +144,10 @@
       "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
     },
     {
+      "name": "Axiom Verge.yaml",
+      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
+    },
+    {
       "name": "ChecksMate.yaml",
       "reason": "Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties."
     },
@@ -176,6 +180,10 @@
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
     },
     {
+      "name": "GZDoom.yaml",
+      "reason": "Base framework apworld with hidden=True. Not a standalone game - requires WAD-specific apworlds (e.g., zdoom_doom_2.apworld) that extend GZDoomWorld and provide wad_logic. Accessing wad_logic on base class raises AttributeError because the attribute is only declared, not initialized."
+    },
+    {
       "name": "Iji.yaml",
       "reason": "Uses module-level constant lists (EventNames.Levels, ItemNames.Sector_Access) with subscript access in rules. Exporter captures AST instead of resolved values. Chained helper functions cause rule expansion to hit size limits, falling back to True_()."
     },
@@ -192,8 +200,16 @@
       "reason": "Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns."
     },
     {
+      "name": "Pokemon Mystery Dungeon Explorers of Sky.yaml",
+      "reason": "APWorld bug: 'Team Name' classification not handled in create_regions(), causing KeyError when subx_rules() tries to access 'Team Name Location'. Also has logic mismatches from complex rule patterns."
+    },
+    {
       "name": "Rabi-Ribi.yaml",
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
+    },
+    {
+      "name": "Sentinels of the Multiverse.yaml",
+      "reason": "APWorld issue: Option combinations create more items than locations (required_scions can be 10000+, location_density.hero can be 0). Fails with FillError during seed generation before UT tracking runs. Not a UT compatibility issue."
     },
     {
       "name": "Sly 2 Band of Thieves.yaml",
@@ -220,16 +236,16 @@
       "reason": "Uses custom collect method with point-based rank progression. Rules check pseudo-item 'ranks' which only exists via custom state tracking, not exportable."
     },
     {
+      "name": "Wario Land.yaml",
+      "reason": "Requires ROM file (Wario Land - Super Mario Land 3 (World).gb) for seed generation. APWorld doesn't check skip_required_files setting, causing FileNotFoundError in headless testing environments."
+    },
+    {
       "name": "XCOM 2 War of the Chosen.yaml",
       "reason": "Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline."
     },
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
-    },
-    {
-      "name": "Axiom Verge.yaml",
-      "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
     }
   ],
   "requires_javascript_helpers_list": [
@@ -260,7 +276,135 @@
   ],
   "exporter_fully_simplified_list": [
     {
+      "name": "A Hat in Time.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
       "name": "A Link to the Past.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Aquaria.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Bomb Rush Cyberfunk.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Castlevania - Circle of the Moon.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Celeste 64.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "DLCQuest.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Factorio.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Inscryption.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Kingdom Hearts 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Kirby's Dream Land 3.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Landstalker - The Treasures of King Nole.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Lingo.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Links Awakening DX.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Old School Runescape.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Overcooked! 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Paint.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Raft.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Secret of Evermore.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Starcraft 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Stardew Valley.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Subnautica.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Super Mario 64.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Super Mario Land 2.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Super Metroid.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "TUNIC.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Terraria.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "The Messenger.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "The Wind Waker.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "The Witness.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Timespinner.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "VVVVVV.yaml",
+      "reason": "Exporter is already as simplified as it can get."
+    },
+    {
+      "name": "Yoshi's Island.yaml",
       "reason": "Exporter is already as simplified as it can get."
     }
   ]

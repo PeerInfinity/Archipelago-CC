@@ -1210,6 +1210,8 @@ class RuleCodeGenerator:
             'count_true': self._convert_count_true,
             'block': self._convert_ast_block,
             'bunny_accessibility_check': self._convert_bunny_accessibility_check,
+            'AST_group_count': self._convert_ast_group_count,
+            'group_count': self._convert_ast_group_count,
         }
 
         converter = converters.get(rule_type)
@@ -1626,6 +1628,13 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_count_item':
             item_name = args.get('item', '')
             return self._make_count_item(item_name)
+
+        # Handle AST_group_count rule (from AST format, counts items in a group)
+        # This comes from state.count_group() calls in access rules
+        if rb_rule == 'AST_group_count':
+            group = args.get('group', '')
+            self.required_imports.add('CountGroup')
+            return f'CountGroup({repr(group)})'
 
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
@@ -2175,6 +2184,23 @@ class RuleCodeGenerator:
         else:
             return f'HasGroup("{group_escaped}", {count})'
 
+    def _convert_ast_group_count(self, rule: Dict[str, Any]) -> str:
+        """Convert AST_group_count to CountGroup().
+
+        This handles state.count_group() calls from access rules, converting
+        them to CountGroup rules that return the count of items in a group.
+        Used in arithmetic expressions like score calculations.
+        """
+        self.required_imports.add('CountGroup')
+
+        # Handle both AST format and Rule Builder format
+        args = rule.get('args', {})
+        group = args.get('group', '') if args else rule.get('group', '')
+        group = self._extract_constant_value(group, '')
+
+        group_escaped = self._escape_string(group)
+        return f'CountGroup("{group_escaped}")'
+
     def _convert_bunny_accessibility_check(self, rule: Dict[str, Any]) -> str:
         """Convert bunny_accessibility_check to a HelperCall.
 
@@ -2448,8 +2474,51 @@ class RuleCodeGenerator:
             self.required_imports.add(class_name)
             return extractor(class_name, args)
 
+        # Handle count_from_list - returns a count, used in arithmetic expressions
+        # count_from_list([]) returns 0, count_from_list([items]) returns CountFromList(*items)
+        if method == 'count_from_list':
+            items = self._extract_items_from_args(args)
+            if not items:
+                # Empty list means count is always 0
+                return '0'
+            # For non-empty lists, use CountFromList which returns the count
+            self.required_imports.add('CountFromList')
+            items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+            return f'CountFromList({items_str})'
+
         # Unknown state method - return True_() as placeholder
         return 'True_()'
+
+    def _extract_items_from_args(self, args: List[Any]) -> List[str]:
+        """Extract item list from state method arguments.
+
+        Handles various formats:
+        - {"type": "constant", "value": ["item1", "item2"]}
+        - {"rule": "Constant", "args": {"value": ["item1", "item2"]}}
+        - [{"type": "constant", "value": "item1"}, ...]
+
+        Returns an empty list if items cannot be extracted.
+        """
+        if not args:
+            return []
+
+        first_arg = args[0]
+        if not isinstance(first_arg, dict):
+            return []
+
+        # Handle AST format constant: {"type": "constant", "value": [...]}
+        if first_arg.get('type') == 'constant':
+            value = first_arg.get('value', [])
+            if isinstance(value, list):
+                return [str(item) for item in value]
+
+        # Handle Rule Builder format: {"rule": "Constant", "args": {"value": [...]}}
+        if first_arg.get('rule') == 'Constant':
+            value = first_arg.get('args', {}).get('value', [])
+            if isinstance(value, list):
+                return [str(item) for item in value]
+
+        return []
 
     def _extract_item_list(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list for HasAll/HasAny.
@@ -2571,6 +2640,14 @@ class RuleCodeGenerator:
         # state.count_from_list_unique(items, player) >= count
         # Converts to: HasFromListUnique(*items, count=count)
         result = self._try_convert_count_from_list_unique_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Try to recognize count_from_list pattern:
+        # state.count_from_list(items, player) >= count
+        # Also handles: state.count_from_list(items, player) + 0 >= count
+        # Converts to: HasFromList(*items, count=count)
+        result = self._try_convert_count_from_list_compare(left, op, right)
         if result is not None:
             return result
 
@@ -5108,6 +5185,116 @@ class RuleCodeGenerator:
         items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
         return f'HasFromListUnique({items_str}, count={count})'
 
+    def _try_convert_count_from_list_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert a count_from_list comparison to HasFromList().
+
+        Pattern: state.count_from_list(items, player) >= count
+        Also handles: state.count_from_list(items, player) + 0 >= count (Arithmetic wrapper)
+        Converts to: HasFromList(*items, count=count)
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Get the count from the right side
+        count = self._extract_numeric_constant(right)
+        if count is None:
+            return None
+
+        # Check if left side is a StateMethod with count_from_list
+        # or an Arithmetic wrapping a StateMethod (e.g., count_from_list + 0)
+        method = None
+        args = []
+
+        # Direct StateMethod case
+        if left.get('rule') == 'StateMethod':
+            rb_args = left.get('args', {})
+            method = rb_args.get('method', '')
+            args = rb_args.get('args', [])
+        elif left.get('type') == 'state_method':
+            method = left.get('method', '')
+            args = left.get('args', [])
+        # Arithmetic wrapper case: Arithmetic(StateMethod, "+", 0)
+        elif left.get('rule') == 'Arithmetic':
+            arith_args = left.get('args', {})
+            arith_left = arith_args.get('left', {})
+            arith_op = arith_args.get('op', '')
+            arith_right = arith_args.get('right')
+
+            # Check if it's StateMethod + 0 or StateMethod + some constant
+            if arith_op == '+' and self._extract_numeric_constant({'type': 'constant', 'value': arith_right}) == 0:
+                if isinstance(arith_left, dict):
+                    if arith_left.get('rule') == 'StateMethod':
+                        rb_args = arith_left.get('args', {})
+                        method = rb_args.get('method', '')
+                        args = rb_args.get('args', [])
+                    elif arith_left.get('type') == 'state_method':
+                        method = arith_left.get('method', '')
+                        args = arith_left.get('args', [])
+
+        if method != 'count_from_list':
+            return None
+
+        # Extract item list from args
+        items = []
+        if args and isinstance(args[0], dict):
+            if args[0].get('type') == 'constant':
+                items = args[0].get('value', [])
+            elif args[0].get('rule') == 'Constant':
+                items = args[0].get('args', {}).get('value', [])
+
+        if not items:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        else:
+            return None
+
+        # Generate HasFromList with the items and count
+        self.required_imports.add('HasFromList')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromList({items_str}, count={count})'
+
+    def _extract_numeric_constant(self, value: Any) -> Optional[int]:
+        """Extract a numeric constant from various formats."""
+        if isinstance(value, (int, float)):
+            return int(value)
+        if isinstance(value, dict):
+            if value.get('type') == 'constant':
+                val = value.get('value')
+                if isinstance(val, (int, float)):
+                    return int(val)
+            elif value.get('rule') == 'Constant':
+                val = value.get('args', {}).get('value')
+                if isinstance(val, (int, float)):
+                    return int(val)
+            elif value.get('rule') == 'Arithmetic':
+                # Handle simple arithmetic with constants
+                arith_args = value.get('args', {})
+                left_val = self._extract_numeric_constant(arith_args.get('left'))
+                right_val = self._extract_numeric_constant(arith_args.get('right'))
+                op = arith_args.get('op', '')
+                if left_val is not None and right_val is not None:
+                    if op == '*':
+                        return int(left_val * right_val)
+                    elif op == '+':
+                        return int(left_val + right_val)
+                    elif op == '-':
+                        return int(left_val - right_val)
+                    elif op == '/' and right_val != 0:
+                        return int(left_val / right_val)
+        return None
+
     def _extract_prog_items_item_name(self, expr: Any) -> Optional[str]:
         """
         Extract the item name from a prog_items subscript expression.
@@ -5174,9 +5361,14 @@ class RuleCodeGenerator:
             self.required_imports.add('HelperCall')
             func_name = self.get_function_name(helper_name)
 
+            # Pre-process args to resolve Name references that can be inferred from adjacent dict args
+            # This handles patterns like: helper(keys, data, ...) where keys=data.keys()
+            # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
+            processed_args = self._infer_keys_from_dict_args(args)
+
             # Convert arguments to Python code
             arg_strs = []
-            for arg in args:
+            for arg in processed_args:
                 arg_strs.append(self._convert_helper_arg(arg))
 
             # Convert keyword arguments to Python code
@@ -5216,6 +5408,83 @@ class RuleCodeGenerator:
         # under default/normal game settings
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _infer_keys_from_dict_args(self, args: List[Any]) -> List[Any]:
+        """Infer 'keys' parameter values from adjacent dict arguments.
+
+        Some apworlds use patterns like:
+            lambda state, keys=some_dict.keys(), data=some_dict: helper(state, keys, data, ...)
+
+        When the analyzer exports this, it captures 'keys' as a Name reference instead of
+        evaluating some_dict.keys(). This method detects such patterns and replaces the
+        Name reference with the actual keys from the adjacent dict constant.
+
+        Pattern detected:
+            - arg[i] is a Name reference with name 'keys'
+            - arg[i+1] is a dict constant (the 'data' parameter)
+            => Replace arg[i] with a constant containing data.keys()
+
+        Handles both AST format and Rule Builder format:
+            AST format: {"type": "name", "name": "keys"}
+            Rule Builder format: {"rule": "Name", "args": {"name": "keys"}}
+
+        Args:
+            args: List of arguments to the helper function
+
+        Returns:
+            Processed list of arguments with inferred keys
+        """
+        if len(args) < 2:
+            return args
+
+        def get_name_value(arg: Any) -> Optional[str]:
+            """Extract name from either AST or Rule Builder format Name node."""
+            if not isinstance(arg, dict):
+                return None
+            # AST format: {"type": "name", "name": "keys"}
+            if arg.get('type') == 'name':
+                return arg.get('name')
+            # Rule Builder format: {"rule": "Name", "args": {"name": "keys"}}
+            if arg.get('rule') == 'Name':
+                return arg.get('args', {}).get('name')
+            return None
+
+        def get_dict_value(arg: Any) -> Optional[dict]:
+            """Extract dict value from either AST or Rule Builder format Constant node."""
+            if not isinstance(arg, dict):
+                return None
+            # AST format: {"type": "constant", "value": {...}}
+            if arg.get('type') == 'constant':
+                val = arg.get('value')
+                if isinstance(val, dict):
+                    return val
+            # Rule Builder format: {"rule": "Constant", "args": {"value": {...}}}
+            if arg.get('rule') == 'Constant':
+                val = arg.get('args', {}).get('value')
+                if isinstance(val, dict):
+                    return val
+            return None
+
+        result = []
+        i = 0
+        while i < len(args):
+            arg = args[i]
+            name_value = get_name_value(arg)
+
+            # Check if this is a Name reference to 'keys' followed by a dict constant
+            if name_value == 'keys' and i + 1 < len(args):
+                dict_value = get_dict_value(args[i + 1])
+                if dict_value is not None:
+                    # Replace the Name reference with the dict keys
+                    result.append({'type': 'constant', 'value': list(dict_value.keys())})
+                else:
+                    # Keep original if we couldn't extract dict keys
+                    result.append(arg)
+            else:
+                result.append(arg)
+            i += 1
+
+        return result
 
     def _convert_helper_arg(self, arg: Any) -> str:
         """Convert a single helper argument to Python code string.
@@ -5345,6 +5614,11 @@ class RuleCodeGenerator:
         """
         args = rule.get('args', [])
         kwargs = rule.get('kwargs', {})
+
+        # Pre-process args to resolve Name references that can be inferred from adjacent dict args
+        # This handles patterns like: helper(keys, data, ...) where keys=data.keys()
+        # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
+        args = self._infer_keys_from_dict_args(args)
 
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
