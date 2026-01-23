@@ -2448,8 +2448,51 @@ class RuleCodeGenerator:
             self.required_imports.add(class_name)
             return extractor(class_name, args)
 
+        # Handle count_from_list - returns a count, used in arithmetic expressions
+        # count_from_list([]) returns 0, count_from_list([items]) returns CountFromList(*items)
+        if method == 'count_from_list':
+            items = self._extract_items_from_args(args)
+            if not items:
+                # Empty list means count is always 0
+                return '0'
+            # For non-empty lists, use CountFromList which returns the count
+            self.required_imports.add('CountFromList')
+            items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+            return f'CountFromList({items_str})'
+
         # Unknown state method - return True_() as placeholder
         return 'True_()'
+
+    def _extract_items_from_args(self, args: List[Any]) -> List[str]:
+        """Extract item list from state method arguments.
+
+        Handles various formats:
+        - {"type": "constant", "value": ["item1", "item2"]}
+        - {"rule": "Constant", "args": {"value": ["item1", "item2"]}}
+        - [{"type": "constant", "value": "item1"}, ...]
+
+        Returns an empty list if items cannot be extracted.
+        """
+        if not args:
+            return []
+
+        first_arg = args[0]
+        if not isinstance(first_arg, dict):
+            return []
+
+        # Handle AST format constant: {"type": "constant", "value": [...]}
+        if first_arg.get('type') == 'constant':
+            value = first_arg.get('value', [])
+            if isinstance(value, list):
+                return [str(item) for item in value]
+
+        # Handle Rule Builder format: {"rule": "Constant", "args": {"value": [...]}}
+        if first_arg.get('rule') == 'Constant':
+            value = first_arg.get('args', {}).get('value', [])
+            if isinstance(value, list):
+                return [str(item) for item in value]
+
+        return []
 
     def _extract_item_list(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list for HasAll/HasAny.
@@ -2571,6 +2614,14 @@ class RuleCodeGenerator:
         # state.count_from_list_unique(items, player) >= count
         # Converts to: HasFromListUnique(*items, count=count)
         result = self._try_convert_count_from_list_unique_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Try to recognize count_from_list pattern:
+        # state.count_from_list(items, player) >= count
+        # Also handles: state.count_from_list(items, player) + 0 >= count
+        # Converts to: HasFromList(*items, count=count)
+        result = self._try_convert_count_from_list_compare(left, op, right)
         if result is not None:
             return result
 
@@ -5107,6 +5158,116 @@ class RuleCodeGenerator:
         self.required_imports.add('HasFromListUnique')
         items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
         return f'HasFromListUnique({items_str}, count={count})'
+
+    def _try_convert_count_from_list_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert a count_from_list comparison to HasFromList().
+
+        Pattern: state.count_from_list(items, player) >= count
+        Also handles: state.count_from_list(items, player) + 0 >= count (Arithmetic wrapper)
+        Converts to: HasFromList(*items, count=count)
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Get the count from the right side
+        count = self._extract_numeric_constant(right)
+        if count is None:
+            return None
+
+        # Check if left side is a StateMethod with count_from_list
+        # or an Arithmetic wrapping a StateMethod (e.g., count_from_list + 0)
+        method = None
+        args = []
+
+        # Direct StateMethod case
+        if left.get('rule') == 'StateMethod':
+            rb_args = left.get('args', {})
+            method = rb_args.get('method', '')
+            args = rb_args.get('args', [])
+        elif left.get('type') == 'state_method':
+            method = left.get('method', '')
+            args = left.get('args', [])
+        # Arithmetic wrapper case: Arithmetic(StateMethod, "+", 0)
+        elif left.get('rule') == 'Arithmetic':
+            arith_args = left.get('args', {})
+            arith_left = arith_args.get('left', {})
+            arith_op = arith_args.get('op', '')
+            arith_right = arith_args.get('right')
+
+            # Check if it's StateMethod + 0 or StateMethod + some constant
+            if arith_op == '+' and self._extract_numeric_constant({'type': 'constant', 'value': arith_right}) == 0:
+                if isinstance(arith_left, dict):
+                    if arith_left.get('rule') == 'StateMethod':
+                        rb_args = arith_left.get('args', {})
+                        method = rb_args.get('method', '')
+                        args = rb_args.get('args', [])
+                    elif arith_left.get('type') == 'state_method':
+                        method = arith_left.get('method', '')
+                        args = arith_left.get('args', [])
+
+        if method != 'count_from_list':
+            return None
+
+        # Extract item list from args
+        items = []
+        if args and isinstance(args[0], dict):
+            if args[0].get('type') == 'constant':
+                items = args[0].get('value', [])
+            elif args[0].get('rule') == 'Constant':
+                items = args[0].get('args', {}).get('value', [])
+
+        if not items:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        else:
+            return None
+
+        # Generate HasFromList with the items and count
+        self.required_imports.add('HasFromList')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromList({items_str}, count={count})'
+
+    def _extract_numeric_constant(self, value: Any) -> Optional[int]:
+        """Extract a numeric constant from various formats."""
+        if isinstance(value, (int, float)):
+            return int(value)
+        if isinstance(value, dict):
+            if value.get('type') == 'constant':
+                val = value.get('value')
+                if isinstance(val, (int, float)):
+                    return int(val)
+            elif value.get('rule') == 'Constant':
+                val = value.get('args', {}).get('value')
+                if isinstance(val, (int, float)):
+                    return int(val)
+            elif value.get('rule') == 'Arithmetic':
+                # Handle simple arithmetic with constants
+                arith_args = value.get('args', {})
+                left_val = self._extract_numeric_constant(arith_args.get('left'))
+                right_val = self._extract_numeric_constant(arith_args.get('right'))
+                op = arith_args.get('op', '')
+                if left_val is not None and right_val is not None:
+                    if op == '*':
+                        return int(left_val * right_val)
+                    elif op == '+':
+                        return int(left_val + right_val)
+                    elif op == '-':
+                        return int(left_val - right_val)
+                    elif op == '/' and right_val != 0:
+                        return int(left_val / right_val)
+        return None
 
     def _extract_prog_items_item_name(self, expr: Any) -> Optional[str]:
         """
