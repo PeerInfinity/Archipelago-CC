@@ -1237,20 +1237,51 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 logger.debug(f"ALttP: Replacing can_reach rule with True_")
                 return {'rule': 'True_'}
 
-            # Rules with mire_clip, hera_clip typically require specific items
-            # These are glitch rules that allow alternate access paths
-            if 'mire_clip' in source or 'hera_clip' in source:
-                logger.debug(f"ALttP: Replacing clip-based rule with True_ (permissive for glitch rules)")
-                return {'rule': 'True_'}
+            # Rules with mire_clip, hera_clip require complex conditions:
+            # - mire_clip: can_reach('Misery Mire (West)') AND can_bomb_clip AND has_fire_source
+            # - hera_clip: can_reach('Tower of Hera (Top)') AND can_bomb_clip
+            # We can't export region reachability, but we can export item requirements.
+            # This is more permissive than the real rule (skips region check) but more
+            # accurate than True_ (checks items) or False_ (always fails).
+            if 'mire_clip' in source and 'hera_clip' not in source:
+                # Pure mire_clip: Pegasus Boots AND (Fire Rod OR Lamp)
+                logger.debug(f"ALttP: Replacing mire_clip rule with item requirements")
+                return {
+                    'rule': 'And',
+                    'args': {
+                        'rules': [
+                            {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}},
+                            {'rule': 'Or', 'args': {'rules': [
+                                {'rule': 'Has', 'args': {'item_name': 'Fire Rod'}},
+                                {'rule': 'Has', 'args': {'item_name': 'Lamp'}}
+                            ]}}
+                        ]
+                    }
+                }
+            elif 'hera_clip' in source and 'mire_clip' not in source:
+                # Pure hera_clip: just Pegasus Boots
+                logger.debug(f"ALttP: Replacing hera_clip rule with item requirements")
+                return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
+            elif 'mire_clip' in source and 'hera_clip' in source:
+                # Both clips as alternatives: Pegasus Boots (common requirement)
+                logger.debug(f"ALttP: Replacing mire_clip/hera_clip rule with Pegasus Boots")
+                return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
+
+            # Direct can_bomb_clip usage (e.g., Ice Palace rules, Kiki Skip)
+            # can_bomb_clip requires: can_use_bombs (always available) + is_not_bunny + Pegasus Boots
+            # We approximate with Pegasus Boots since bombs are common and bunny state is edge case
+            if 'can_bomb_clip' in source:
+                logger.debug(f"ALttP: Replacing can_bomb_clip rule with Pegasus Boots")
+                return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
 
         except (OSError, TypeError) as e:
             logger.debug(f"ALttP: Could not inspect source: {e}")
 
-        # Default: use permissive True_ for glitch rules
-        # This is safe because glitch rules represent alternate access paths;
-        # being permissive means the tracker won't incorrectly block progress
-        logger.debug(f"ALttP: Using permissive True_ for unknown underworld_glitch rule")
-        return {'rule': 'True_'}
+        # Default: use conservative False_ for unknown glitch rules
+        # This disables the glitch alternative, falling back to original rules.
+        # Being conservative ensures UT matches server when glitch conditions aren't met.
+        logger.debug(f"ALttP: Using conservative False_ for unknown underworld_glitch rule")
+        return {'rule': 'False_'}
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.
