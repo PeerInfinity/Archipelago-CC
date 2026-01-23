@@ -1111,7 +1111,8 @@ King's Tomb
 Lake Hylia Island
         Links House -> Links House Exit
    =>   Light World -> Top of Pyramid
-   =>   East Dark World -> Dark Lake Hylia Drop (East)
+   =>   East Dark World -> Northeast Dark World Broken Bridge Pass
+   =>   Northeast Dark World -> Dark Lake Hylia Teleporter
    =>   Dark Lake Hylia -> Lake Hylia Island Mirror Spot
    =>   Lake Hylia Island
 Link's House

@@ -776,7 +776,9 @@ Frog
    =>   West Dark World
 Ganon
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Pyramid Hole
    =>   Pyramid
 Ganons Tower - Bob's Torch
@@ -1148,7 +1150,9 @@ Missing Smith
    =>   Blacksmiths Hut
 Palace of Darkness - Big Key Chest
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
@@ -1156,7 +1160,9 @@ Palace of Darkness - Big Key Chest
    =>   Palace of Darkness (Big Key Chest)
 Palace of Darkness - Boss
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
@@ -1164,7 +1170,9 @@ Palace of Darkness - Boss
    =>   Palace of Darkness (Final Section)
 Palace of Darkness - Compass Chest
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
@@ -1172,7 +1180,9 @@ Palace of Darkness - Compass Chest
    =>   Palace of Darkness (North)
 Palace of Darkness - Dark Basement - Left
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
@@ -1180,7 +1190,9 @@ Palace of Darkness - Dark Basement - Left
    =>   Palace of Darkness (North)
 Palace of Darkness - Harmless Hellway
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
@@ -1189,7 +1201,9 @@ Palace of Darkness - Harmless Hellway
    =>   Palace of Darkness (Harmless Hellway)
 Palace of Darkness - Prize
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
@@ -1197,26 +1211,34 @@ Palace of Darkness - Prize
    =>   Palace of Darkness (Final Section)
 Palace of Darkness - Shooter Room
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance)
 Palace of Darkness - Stalfos Basement
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
    =>   Palace of Darkness (Center)
 Palace of Darkness - The Arena - Bridge
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section) -> Palace of Darkness Hammer Peg Drop
    =>   Palace of Darkness (Center)
 Palace of Darkness - The Arena - Ledge
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World -> Palace of Darkness
    =>   Palace of Darkness (Entrance) -> Palace of Darkness Bonk Wall
    =>   Palace of Darkness (Bonk Section)
@@ -1261,7 +1283,9 @@ Purple Chest
    =>   Light World
 Pyramid
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> East Dark World Bridge
    =>   East Dark World
 Sahasrahla's Hut - Left
         Links House -> Links House Exit
