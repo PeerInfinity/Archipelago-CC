@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 02:42:11
+**Generated:** 2026-01-23 03:46:48
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -48,7 +48,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Corn Kidz 64 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | CrossCode | ⚠️ 50.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Crystal Project | ❌ 30.0% | ❌ 30.0% | ✅ | ✅ | N/A |
-| Crystalis | ⚠️ 70.0% | ✅ 60.0% | ✅ | ✅ | N/A |
+| Crystalis | ⚠️ 70.0% | ✅ 60.0% | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ❌ 0.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
@@ -126,7 +126,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| System Shock 2 | ❌ 30.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Tetris Attack | ⚠️ 80.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -214,7 +214,7 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Actraiser | ✅ | ✅ | N/A |
 | Ape Escape | ✅ | ✅ | N/A |
 | Brotato | ✅ | ✅ | N/A |
-| Crystalis | ✅ | ✅ | N/A |
+| Crystalis | 9.2KB | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
 | League of Legends | ✅ | ✅ | N/A |
@@ -286,7 +286,7 @@ These games fail in both Universal Tracker versions.
 | Spyro 3 | ✅ | ✅ | N/A |
 | Stacklands | ✅ | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
-| System Shock 2 | ✅ | ✅ | N/A |
+| System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
 | Tetris Attack | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
