@@ -3251,8 +3251,10 @@ class RuleCodeGenerator:
         # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
         # They are blacklisted from normal helper export but need to be converted to CountItem
         if operand.get('_original_ast_type') == 'helper':
-            # Get the helper's first argument which is typically the item name
+            helper_name = operand.get('rule', '')
             args = operand.get('args', [])
+
+            # First, try to convert simple item-counting helpers to CountItem
             if args and isinstance(args[0], dict):
                 arg = args[0]
                 # Extract item name from Constant or constant format
@@ -3263,9 +3265,40 @@ class RuleCodeGenerator:
                 else:
                     item_name = ''
 
-                if item_name:
+                if item_name and isinstance(item_name, str):
                     # Convert helper call to CountItem for the item
                     return self._make_count_item(item_name)
+
+            # For other helpers (like get_item_perc_amount), generate a HelperCall
+            # These are integer-returning helpers used as count arguments
+            if helper_name and helper_name in self.known_helpers:
+                self.required_imports.add('HelperCall')
+                func_name = self.get_function_name(helper_name)
+
+                # Convert arguments to Python code
+                arg_strs = []
+                for arg in args:
+                    if arg is None:
+                        arg_strs.append('None')
+                    elif isinstance(arg, dict):
+                        if arg.get('rule') == 'Constant':
+                            arg_strs.append(repr(arg.get('args', {}).get('value')))
+                        elif arg.get('type') == 'constant':
+                            arg_strs.append(repr(arg.get('value')))
+                        elif arg.get('rule') == 'SettingValue':
+                            setting = arg.get('args', {}).get('setting', '')
+                            if setting in self.settings:
+                                arg_strs.append(repr(self.settings[setting]))
+                            else:
+                                arg_strs.append('None')
+                        else:
+                            # For other complex expressions, try to convert
+                            arg_strs.append(self._convert_arithmetic_operand(arg))
+                    else:
+                        arg_strs.append(repr(arg))
+
+                args_tuple = f"({', '.join(arg_strs)},)" if arg_strs else "()"
+                return f'HelperCall(helper_func={func_name}, helper_name="{helper_name}", args={args_tuple})'
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
@@ -3322,6 +3355,17 @@ class RuleCodeGenerator:
                 'right': rb_args.get('right', {})
             }
             return self._convert_binary_op(binary_op_rule)
+
+        # Handle Name expressions (e.g., multiworld reference)
+        # When a helper function expects multiworld as a parameter, it's passed as None
+        # at worldgen time because we don't have access to the actual multiworld object
+        if rb_rule == 'Name':
+            name = operand.get('args', {}).get('name', '')
+            # multiworld, state, player are runtime values - return None or appropriate default
+            if name in ('multiworld', 'state', 'player', 'world'):
+                return 'None'
+            # For other names, return as variable reference
+            return name
 
         # Handle Rule Builder format SettingValue in arithmetic operand
         if rb_rule == 'SettingValue':
@@ -8158,7 +8202,7 @@ class HelperCodeGenerator:
             return f'{name}(state)'
 
         # Built-in Python functions
-        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float'):
+        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float', 'getattr', 'hasattr', 'isinstance', 'type'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 

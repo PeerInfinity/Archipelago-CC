@@ -799,6 +799,28 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           break;
         }
 
+        if (rule.name === 'floor') {
+          // Python's math.floor() function - floor division
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (typeof value === 'number') {
+            result = Math.floor(value);
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+
+        if (rule.name === 'ceil') {
+          // Python's math.ceil() function - ceiling
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (typeof value === 'number') {
+            result = Math.ceil(value);
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+
         if (rule.name === 'len') {
           // Python's len() function - get length of a sequence or collection
           const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
@@ -827,6 +849,48 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             // Python bool() rules: false for 0, None, empty collections, empty string
             // true for everything else
             result = Boolean(value);
+          }
+          break;
+        }
+
+        if (rule.name === 'getattr') {
+          // Python's getattr(obj, name, default) - get attribute from object
+          // In Universal Tracker context, we don't have actual Python objects,
+          // so we handle this specially:
+          // - getattr(multiworld, 're_gen_passthrough', {}) should return falsy
+          //   to trigger calculation mode rather than passthrough mode
+          // Note: In Python {} is falsy, in JS {} is truthy, so we return null
+          const obj = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          const attrName = rule.args?.[1] ? evaluateRule(rule.args[1], context, depth + 1, localScope) : undefined;
+          const defaultVal = rule.args?.[2] ? evaluateRule(rule.args[2], context, depth + 1, localScope) : undefined;
+
+          // Try to get attribute from object if it exists
+          if (obj !== undefined && obj !== null && typeof obj === 'object' && attrName in obj) {
+            result = obj[attrName];
+          } else {
+            // Return the default value, but handle empty object case
+            // In Python, {} is falsy; in JS it's truthy
+            // Return null for empty objects to preserve Python's falsy semantics
+            if (defaultVal !== undefined && typeof defaultVal === 'object' &&
+                defaultVal !== null && Object.keys(defaultVal).length === 0) {
+              result = null; // Empty object -> null (falsy)
+            } else {
+              result = defaultVal;
+            }
+          }
+          break;
+        }
+
+        if (rule.name === 'hasattr') {
+          // Python's hasattr(obj, name) - check if object has attribute
+          const obj = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          const attrName = rule.args?.[1] ? evaluateRule(rule.args[1], context, depth + 1, localScope) : undefined;
+
+          // Check if attribute exists on object
+          if (obj !== undefined && obj !== null && typeof obj === 'object') {
+            result = attrName in obj;
+          } else {
+            result = false;
           }
           break;
         }

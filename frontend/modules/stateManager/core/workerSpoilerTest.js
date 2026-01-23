@@ -533,6 +533,12 @@ export class WorkerSpoilerTest {
 
       this.log('error', `[WorkerSpoilerTest] Region mismatch at sphere ${sphereIndex}: ` +
         `missing=${missingFromState.length}, extra=${extraInState.length}`);
+      if (extraInState.length > 0) {
+        this.log('error', `[WorkerSpoilerTest] Extra regions: ${extraInState.join(', ')}`);
+      }
+      if (missingFromState.length > 0) {
+        this.log('error', `[WorkerSpoilerTest] Missing regions: ${missingFromState.join(', ')}`);
+      }
     }
 
     return result;

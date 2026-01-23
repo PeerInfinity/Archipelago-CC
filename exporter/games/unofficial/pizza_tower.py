@@ -29,9 +29,12 @@ This is converted to Rule Builder format:
             ]}
         ]
     }
+
+The `get_item_perc_amount` helper calculates item counts based on percentages and is
+exported as a definition so the frontend can evaluate it directly.
 """
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Set
 from ..base import GenericGameExportHandler
 import logging
 
@@ -42,9 +45,21 @@ class PizzaTowerGameExportHandler(GenericGameExportHandler):
     """Export handler for Pizza Tower.
 
     Expands rule_from_itemset helper calls to Rule Builder Any/All expressions.
+    Exports get_item_perc_amount helper so the frontend can evaluate item percentage calculations.
     """
 
     GAME_NAME = 'Pizza Tower'
+
+    # Export get_item_perc_amount helper as a definition
+    # This helper calculates required item counts based on percentages and settings
+    # The frontend needs the definition to properly evaluate entrance rules
+    HELPERS_TO_EXPORT_WHITELIST: Set[str] = {'get_item_perc_amount'}
+
+    # Specify the module where helpers are defined
+    HELPER_MODULES: List[str] = ['worlds.pizza_tower.Rules']
+
+    # Auto-discover helpers from the world's Rules module
+    AUTO_DISCOVER_WORLD_HELPER_MODULES = True
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Pizza Tower-specific rules.

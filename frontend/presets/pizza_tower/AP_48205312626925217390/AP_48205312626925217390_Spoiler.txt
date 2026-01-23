@@ -1,0 +1,1103 @@
+﻿Archipelago Version 0.6.5  -  Seed: 9
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Pizza Tower
+Location Count:                  204
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Character:                       Peppino
+Toppin Count:                    95
+Floor 1 Boss Toppins:            11
+Floor 2 Boss Toppins:            27
+Floor 3 Boss Toppins:            48
+Floor 4 Boss Toppins:            69
+Floor 5 Boss Toppins:            91
+Treasures Award Checks:          Yes
+Secrets Award Checks:            Yes
+S Ranks Award Checks:            No
+P Ranks Award Checks:            No
+Chef Tasks Award Checks:         No
+Shuffle Boss Keys:               No
+Shuffle Level Gates:             No
+Shuffle Boss Gates:              No
+Shuffle Secrets:                 No
+Open World:                      No
+Bonus Ladders:                   3
+Trap Percentage:                 10
+Replace Oktoberfest with Jumpscare:No
+Fairly Random:                   Yes
+Difficulty:                      Normal
+Randomize Moves:                 Yes
+Randomize These Moves:           Bodyslam, Bomb, Breakdance, Crusher, Double Jump, Grab, Mach 4, Rat Kick, Spin Attack, Superjump, Supertaunt, Taunt, Tornado, Uppercut, Wallbounce, Wallclimb
+Randomize Transformations:       No
+Randomize These Transformations: Ball, Barrel, Firemouth, Ghost, Knight, Mort, Olive Bubble, Pizzabox, Revolver, Rocket, Satan's Choice, Shotgun, Sticky Cheese, Weenie
+Death Link:                      No
+Ring Link:                       No
+Shuffle Clothes:                 No
+Shuffle Lap 2 Portals:           No
+Trap Weights:                    Clown Trap: 20, Fake Santa Trap: 20, Ghost Trap: 10, Granny Trap: 20, Oktoberfest!: 20, Timer Trap: 10
+Filler Weights:                  Cross Buff: 20, Nothing: 5, Permanent 10 Points: 40, Permanent 100 Points: 3, Permanent 50 Points: 7, Pizza Shield: 10, Primo Burg: 15
+Pumpkin Checks:                  No
+Pumpkin Count:                   30
+Tricky Treat Door Pumpkins:      67
+Randomize Music:                 No
+APWorld Version:                 1.2.5
+
+Starting Items:
+
+Lap 2 Portals
+Ball
+Knight
+Firemouth
+Ghost
+Mort
+Weenie
+Barrel
+Olive Bubble
+Rocket
+Pizzabox
+Sticky Cheese
+Satan's Choice
+Shotgun
+Revolver
+
+Locations:
+
+Tutorial Complete: Cross Buff
+Tutorial Complete in under 2 minutes: Toppin
+Tutorial Mushroom Toppin: Permanent 10 Points
+Tutorial Cheese Toppin: Permanent 10 Points
+Tutorial Tomato Toppin: Nothing
+Tutorial Sausage Toppin: Toppin
+Tutorial Pineapple Toppin: Spin Attack
+John Gutter Mushroom Toppin: Toppin
+John Gutter Cheese Toppin: Toppin
+John Gutter Tomato Toppin: Primo Burg
+John Gutter Sausage Toppin: Toppin
+John Gutter Pineapple Toppin: Toppin
+John Gutter Complete: Permanent 10 Points
+John Gutter Secret 1: Cross Buff
+John Gutter Secret 2: Toppin
+John Gutter Secret 3: Primo Burg
+John Gutter Treasure: Cross Buff
+Pizzascape Mushroom Toppin: Permanent 10 Points
+Pizzascape Cheese Toppin: Permanent 10 Points
+Pizzascape Tomato Toppin: Cross Buff
+Pizzascape Sausage Toppin: Toppin
+Pizzascape Pineapple Toppin: Toppin
+Pizzascape Complete: Primo Burg
+Pizzascape Secret 1: Bodyslam
+Pizzascape Secret 2: Wallclimb
+Pizzascape Secret 3: Toppin
+Pizzascape Treasure: Toppin
+Ancient Cheese Mushroom Toppin: Permanent 10 Points
+Ancient Cheese Cheese Toppin: Pizza Shield
+Ancient Cheese Tomato Toppin: Double Jump
+Ancient Cheese Sausage Toppin: Granny Trap
+Ancient Cheese Pineapple Toppin: Toppin
+Ancient Cheese Complete: Primo Burg
+Ancient Cheese Secret 1: Pizza Shield
+Ancient Cheese Secret 2: Primo Burg
+Ancient Cheese Secret 3: Toppin
+Ancient Cheese Treasure: Toppin
+Bloodsauce Dungeon Mushroom Toppin: Toppin
+Bloodsauce Dungeon Cheese Toppin: Permanent 10 Points
+Bloodsauce Dungeon Tomato Toppin: Toppin
+Bloodsauce Dungeon Sausage Toppin: Cross Buff
+Bloodsauce Dungeon Pineapple Toppin: Permanent 10 Points
+Bloodsauce Dungeon Complete: Permanent 100 Points
+Bloodsauce Dungeon Secret 1: Grab
+Bloodsauce Dungeon Secret 2: Permanent 10 Points
+Bloodsauce Dungeon Secret 3: Permanent 10 Points
+Bloodsauce Dungeon Treasure: Permanent 10 Points
+Oregano Desert Mushroom Toppin: Cross Buff
+Oregano Desert Cheese Toppin: Permanent 10 Points
+Oregano Desert Tomato Toppin: Permanent 10 Points
+Oregano Desert Sausage Toppin: Permanent 10 Points
+Oregano Desert Pineapple Toppin: Toppin
+Oregano Desert Complete: Toppin
+Oregano Desert Secret 1: Nothing
+Oregano Desert Secret 2: Toppin
+Oregano Desert Secret 3: Cross Buff
+Oregano Desert Treasure: Primo Burg
+Wasteyard Mushroom Toppin: Primo Burg
+Wasteyard Cheese Toppin: Toppin
+Wasteyard Tomato Toppin: Permanent 50 Points
+Wasteyard Sausage Toppin: Primo Burg
+Wasteyard Pineapple Toppin: Toppin
+Wasteyard Complete: Toppin
+Wasteyard Secret 1: Toppin
+Wasteyard Secret 2: Toppin
+Wasteyard Secret 3: Oktoberfest!
+Wasteyard Treasure: Permanent 10 Points
+Fun Farm Mushroom Toppin: Toppin
+Fun Farm Cheese Toppin: Toppin
+Fun Farm Tomato Toppin: Toppin
+Fun Farm Sausage Toppin: Primo Burg
+Fun Farm Pineapple Toppin: Permanent 10 Points
+Fun Farm Complete: Primo Burg
+Fun Farm Secret 1: Toppin
+Fun Farm Secret 2: Superjump
+Fun Farm Secret 3: Permanent 10 Points
+Fun Farm Treasure: Toppin
+Fastfood Saloon Mushroom Toppin: Primo Burg
+Fastfood Saloon Cheese Toppin: Permanent 10 Points
+Fastfood Saloon Tomato Toppin: Toppin
+Fastfood Saloon Sausage Toppin: Mach 4
+Fastfood Saloon Pineapple Toppin: Pizza Shield
+Fastfood Saloon Complete: Permanent 10 Points
+Fastfood Saloon Secret 1: Rat Kick
+Fastfood Saloon Secret 2: Uppercut
+Fastfood Saloon Secret 3: Permanent 10 Points
+Fastfood Saloon Treasure: Toppin
+Crust Cove Mushroom Toppin: Clown Trap
+Crust Cove Cheese Toppin: Cross Buff
+Crust Cove Tomato Toppin: Pizza Shield
+Crust Cove Sausage Toppin: Toppin
+Crust Cove Pineapple Toppin: Cross Buff
+Crust Cove Complete: Cross Buff
+Crust Cove Secret 1: Toppin
+Crust Cove Secret 2: Pizza Shield
+Crust Cove Secret 3: Toppin
+Crust Cove Treasure: Toppin
+Gnome Forest Mushroom Toppin: Pizza Shield
+Gnome Forest Cheese Toppin: Nothing
+Gnome Forest Tomato Toppin: Permanent 10 Points
+Gnome Forest Sausage Toppin: Permanent 10 Points
+Gnome Forest Pineapple Toppin: Toppin
+Gnome Forest Complete: Toppin
+Gnome Forest Secret 1: Permanent 10 Points
+Gnome Forest Secret 2: Primo Burg
+Gnome Forest Secret 3: Permanent 10 Points
+Gnome Forest Treasure: Toppin
+Deep-Dish 9 Mushroom Toppin: Toppin
+Deep-Dish 9 Cheese Toppin: Permanent 50 Points
+Deep-Dish 9 Tomato Toppin: Toppin
+Deep-Dish 9 Sausage Toppin: Cross Buff
+Deep-Dish 9 Pineapple Toppin: Permanent 10 Points
+Deep-Dish 9 Complete: Breakdance
+Deep-Dish 9 Secret 1: Primo Burg
+Deep-Dish 9 Secret 2: Toppin
+Deep-Dish 9 Secret 3: Cross Buff
+Deep-Dish 9 Treasure: Toppin
+GOLF Mushroom Toppin: Toppin
+GOLF Cheese Toppin: Toppin
+GOLF Tomato Toppin: Toppin
+GOLF Sausage Toppin: Permanent 50 Points
+GOLF Pineapple Toppin: Toppin
+GOLF Complete: Toppin
+GOLF Secret 1: Permanent 10 Points
+GOLF Secret 2: Permanent 10 Points
+GOLF Secret 3: Primo Burg
+GOLF Treasure: Toppin
+The Pig City Mushroom Toppin: Toppin
+The Pig City Cheese Toppin: Nothing
+The Pig City Tomato Toppin: Toppin
+The Pig City Sausage Toppin: Toppin
+The Pig City Pineapple Toppin: Toppin
+The Pig City Complete: Cross Buff
+The Pig City Secret 1: Toppin
+The Pig City Secret 2: Toppin
+The Pig City Secret 3: Toppin
+The Pig City Treasure: Toppin
+Peppibot Factory Mushroom Toppin: Toppin
+Peppibot Factory Cheese Toppin: Toppin
+Peppibot Factory Tomato Toppin: Cross Buff
+Peppibot Factory Sausage Toppin: Toppin
+Peppibot Factory Pineapple Toppin: Toppin
+Peppibot Factory Complete: Toppin
+Peppibot Factory Secret 1: Toppin
+Peppibot Factory Secret 2: Toppin
+Peppibot Factory Secret 3: Cross Buff
+Peppibot Factory Treasure: Pizza Shield
+Oh Shit! Mushroom Toppin: Toppin
+Oh Shit! Cheese Toppin: Toppin
+Oh Shit! Tomato Toppin: Cross Buff
+Oh Shit! Sausage Toppin: Toppin
+Oh Shit! Pineapple Toppin: Toppin
+Oh Shit! Complete: Toppin
+Oh Shit! Secret 1: Permanent 50 Points
+Oh Shit! Secret 2: Toppin
+Oh Shit! Secret 3: Toppin
+Oh Shit! Treasure: Fake Santa Trap
+Freezerator Mushroom Toppin: Toppin
+Freezerator Cheese Toppin: Permanent 50 Points
+Freezerator Tomato Toppin: Permanent 10 Points
+Freezerator Sausage Toppin: Toppin
+Freezerator Pineapple Toppin: Toppin
+Freezerator Complete: Toppin
+Freezerator Secret 1: Toppin
+Freezerator Secret 2: Toppin
+Freezerator Secret 3: Toppin
+Freezerator Treasure: Toppin
+Pizzascare Mushroom Toppin: Toppin
+Pizzascare Cheese Toppin: Permanent 10 Points
+Pizzascare Tomato Toppin: Permanent 50 Points
+Pizzascare Sausage Toppin: Toppin
+Pizzascare Pineapple Toppin: Permanent 10 Points
+Pizzascare Complete: Toppin
+Pizzascare Secret 1: Primo Burg
+Pizzascare Secret 2: Permanent 100 Points
+Pizzascare Secret 3: Permanent 10 Points
+Pizzascare Treasure: Permanent 10 Points
+Don't Make A Sound Mushroom Toppin: Supertaunt
+Don't Make A Sound Cheese Toppin: Pizza Shield
+Don't Make A Sound Tomato Toppin: Toppin
+Don't Make A Sound Sausage Toppin: Toppin
+Don't Make A Sound Pineapple Toppin: Primo Burg
+Don't Make A Sound Complete: Toppin
+Don't Make A Sound Secret 1: Toppin
+Don't Make A Sound Secret 2: Toppin
+Don't Make A Sound Secret 3: Permanent 10 Points
+Don't Make A Sound Treasure: Primo Burg
+WAR Mushroom Toppin: Cross Buff
+WAR Cheese Toppin: Permanent 10 Points
+WAR Tomato Toppin: Toppin
+WAR Sausage Toppin: Toppin
+WAR Pineapple Toppin: Toppin
+WAR Complete: Toppin
+WAR Secret 1: Permanent 10 Points
+WAR Secret 2: Taunt
+WAR Secret 3: Toppin
+WAR Treasure: Toppin
+Pepperman Defeated: Boss Key
+The Vigilante Defeated: Boss Key
+The Noise Defeated: Boss Key
+Fake Peppino Defeated: Boss Key
+Pizzaface Defeated: Toppin
+The Crumbling Tower of Pizza Complete: Toppin
+Snotty Murdered: Toppin
+
+Playthrough:
+
+0: {
+  Ball
+  Barrel
+  Firemouth
+  Ghost
+  Knight
+  Lap 2 Portals
+  Mort
+  Olive Bubble
+  Pizzabox
+  Revolver
+  Rocket
+  Satan's Choice
+  Shotgun
+  Sticky Cheese
+  Weenie
+}
+1: {
+  Bloodsauce Dungeon Secret 1: Grab
+}
+2: {
+  Pizzascape Pineapple Toppin: Toppin
+  Pizzascape Sausage Toppin: Toppin
+  Pizzascape Secret 1: Bodyslam
+  Pizzascape Secret 2: Wallclimb
+}
+3: {
+  Ancient Cheese Pineapple Toppin: Toppin
+  Ancient Cheese Secret 3: Toppin
+  Ancient Cheese Tomato Toppin: Double Jump
+  Ancient Cheese Treasure: Toppin
+  Bloodsauce Dungeon Mushroom Toppin: Toppin
+  Bloodsauce Dungeon Tomato Toppin: Toppin
+  John Gutter Cheese Toppin: Toppin
+  John Gutter Mushroom Toppin: Toppin
+  Pizzascape Treasure: Toppin
+}
+4: {
+  Pepperman Defeated: Boss Key
+}
+5: {
+  Fun Farm Cheese Toppin: Toppin
+  Fun Farm Mushroom Toppin: Toppin
+  Fun Farm Secret 1: Toppin
+  Fun Farm Secret 2: Superjump
+  Fun Farm Tomato Toppin: Toppin
+  Fun Farm Treasure: Toppin
+  Oregano Desert Complete: Toppin
+  Oregano Desert Pineapple Toppin: Toppin
+  Oregano Desert Secret 2: Toppin
+  Wasteyard Cheese Toppin: Toppin
+  Wasteyard Complete: Toppin
+  Wasteyard Pineapple Toppin: Toppin
+  Wasteyard Secret 1: Toppin
+  Wasteyard Secret 2: Toppin
+}
+6: {
+  Fastfood Saloon Sausage Toppin: Mach 4
+  Fastfood Saloon Secret 1: Rat Kick
+  Fastfood Saloon Secret 2: Uppercut
+  Fastfood Saloon Tomato Toppin: Toppin
+  Fastfood Saloon Treasure: Toppin
+  John Gutter Pineapple Toppin: Toppin
+  John Gutter Sausage Toppin: Toppin
+  John Gutter Secret 2: Toppin
+  Pizzascape Secret 3: Toppin
+  Tutorial Complete in under 2 minutes: Toppin
+  Tutorial Pineapple Toppin: Spin Attack
+  Tutorial Sausage Toppin: Toppin
+}
+7: {
+  The Vigilante Defeated: Boss Key
+}
+8: {
+  Crust Cove Sausage Toppin: Toppin
+  Crust Cove Secret 1: Toppin
+  Crust Cove Treasure: Toppin
+  Deep-Dish 9 Mushroom Toppin: Toppin
+  Deep-Dish 9 Secret 2: Toppin
+  Deep-Dish 9 Tomato Toppin: Toppin
+  Deep-Dish 9 Treasure: Toppin
+  GOLF Cheese Toppin: Toppin
+  GOLF Complete: Toppin
+  GOLF Mushroom Toppin: Toppin
+  GOLF Pineapple Toppin: Toppin
+  GOLF Tomato Toppin: Toppin
+  GOLF Treasure: Toppin
+  Gnome Forest Complete: Toppin
+  Gnome Forest Pineapple Toppin: Toppin
+  Gnome Forest Treasure: Toppin
+}
+9: {
+  The Noise Defeated: Boss Key
+}
+10: {
+  Freezerator Complete: Toppin
+  Freezerator Mushroom Toppin: Toppin
+  Freezerator Pineapple Toppin: Toppin
+  Freezerator Sausage Toppin: Toppin
+  Freezerator Secret 1: Toppin
+  Freezerator Secret 2: Toppin
+  Freezerator Secret 3: Toppin
+  Freezerator Treasure: Toppin
+  Oh Shit! Cheese Toppin: Toppin
+  Oh Shit! Complete: Toppin
+  Oh Shit! Mushroom Toppin: Toppin
+  Oh Shit! Pineapple Toppin: Toppin
+  Oh Shit! Sausage Toppin: Toppin
+  Oh Shit! Secret 2: Toppin
+  Oh Shit! Secret 3: Toppin
+  Peppibot Factory Cheese Toppin: Toppin
+  Peppibot Factory Complete: Toppin
+  Peppibot Factory Mushroom Toppin: Toppin
+  Peppibot Factory Pineapple Toppin: Toppin
+  Peppibot Factory Sausage Toppin: Toppin
+  Peppibot Factory Secret 1: Toppin
+  Peppibot Factory Secret 2: Toppin
+  Snotty Murdered: Toppin
+  The Pig City Mushroom Toppin: Toppin
+  The Pig City Pineapple Toppin: Toppin
+  The Pig City Sausage Toppin: Toppin
+  The Pig City Secret 1: Toppin
+  The Pig City Secret 2: Toppin
+  The Pig City Secret 3: Toppin
+  The Pig City Tomato Toppin: Toppin
+  The Pig City Treasure: Toppin
+}
+11: {
+  Fake Peppino Defeated: Boss Key
+}
+12: {
+  Don't Make A Sound Complete: Toppin
+  Don't Make A Sound Mushroom Toppin: Supertaunt
+  Don't Make A Sound Sausage Toppin: Toppin
+  Don't Make A Sound Secret 1: Toppin
+  Don't Make A Sound Secret 2: Toppin
+  Don't Make A Sound Tomato Toppin: Toppin
+  Pizzascare Complete: Toppin
+  Pizzascare Mushroom Toppin: Toppin
+  Pizzascare Sausage Toppin: Toppin
+  WAR Complete: Toppin
+  WAR Pineapple Toppin: Toppin
+  WAR Sausage Toppin: Toppin
+  WAR Secret 2: Taunt
+  WAR Secret 3: Toppin
+  WAR Tomato Toppin: Toppin
+  WAR Treasure: Toppin
+}
+13: {
+  Crust Cove Secret 3: Toppin
+  Pizzaface Defeated: Toppin
+  The Crumbling Tower of Pizza Complete: Toppin
+}
+
+Paths:
+
+Ancient Cheese Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Ancient Cheese
+   =>   Ancient Cheese
+Ancient Cheese Secret 3
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Ancient Cheese
+   =>   Ancient Cheese
+Ancient Cheese Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Ancient Cheese
+   =>   Ancient Cheese
+Ancient Cheese Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Ancient Cheese
+   =>   Ancient Cheese
+Bloodsauce Dungeon Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Bloodsauce Dungeon
+   =>   Bloodsauce Dungeon
+Bloodsauce Dungeon Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Bloodsauce Dungeon
+   =>   Bloodsauce Dungeon
+Bloodsauce Dungeon Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Bloodsauce Dungeon
+   =>   Bloodsauce Dungeon
+Crust Cove Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Crust Cove
+   =>   Crust Cove
+Crust Cove Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Crust Cove
+   =>   Crust Cove
+Crust Cove Secret 3
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Crust Cove
+   =>   Crust Cove
+Crust Cove Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Crust Cove
+   =>   Crust Cove
+Deep-Dish 9 Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Deep-Dish 9
+   =>   Deep-Dish 9
+Deep-Dish 9 Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Deep-Dish 9
+   =>   Deep-Dish 9
+Deep-Dish 9 Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Deep-Dish 9
+   =>   Deep-Dish 9
+Deep-Dish 9 Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Deep-Dish 9
+   =>   Deep-Dish 9
+Don't Make A Sound Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Don't Make A Sound
+   =>   Don't Make A Sound
+Don't Make A Sound Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Don't Make A Sound
+   =>   Don't Make A Sound
+Don't Make A Sound Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Don't Make A Sound
+   =>   Don't Make A Sound
+Don't Make A Sound Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Don't Make A Sound
+   =>   Don't Make A Sound
+Don't Make A Sound Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Don't Make A Sound
+   =>   Don't Make A Sound
+Don't Make A Sound Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Don't Make A Sound
+   =>   Don't Make A Sound
+Fake Peppino Defeated
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Fake Peppino
+   =>   Fake Peppino
+Fastfood Saloon Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fastfood Saloon
+   =>   Fastfood Saloon
+Fastfood Saloon Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fastfood Saloon
+   =>   Fastfood Saloon
+Fastfood Saloon Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fastfood Saloon
+   =>   Fastfood Saloon
+Fastfood Saloon Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fastfood Saloon
+   =>   Fastfood Saloon
+Fastfood Saloon Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fastfood Saloon
+   =>   Fastfood Saloon
+Freezerator Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Freezerator Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Freezerator Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Freezerator Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Freezerator Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Freezerator Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Freezerator Secret 3
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Freezerator Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Freezerator
+   =>   Freezerator
+Fun Farm Cheese Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fun Farm
+   =>   Fun Farm
+Fun Farm Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fun Farm
+   =>   Fun Farm
+Fun Farm Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fun Farm
+   =>   Fun Farm
+Fun Farm Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fun Farm
+   =>   Fun Farm
+Fun Farm Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fun Farm
+   =>   Fun Farm
+Fun Farm Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Fun Farm
+   =>   Fun Farm
+GOLF Cheese Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to GOLF
+   =>   GOLF
+GOLF Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to GOLF
+   =>   GOLF
+GOLF Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to GOLF
+   =>   GOLF
+GOLF Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to GOLF
+   =>   GOLF
+GOLF Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to GOLF
+   =>   GOLF
+GOLF Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to GOLF
+   =>   GOLF
+Gnome Forest Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Gnome Forest
+   =>   Gnome Forest
+Gnome Forest Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Gnome Forest
+   =>   Gnome Forest
+Gnome Forest Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Gnome Forest
+   =>   Gnome Forest
+John Gutter Cheese Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to John Gutter
+   =>   John Gutter
+John Gutter Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to John Gutter
+   =>   John Gutter
+John Gutter Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to John Gutter
+   =>   John Gutter
+John Gutter Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to John Gutter
+   =>   John Gutter
+John Gutter Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to John Gutter
+   =>   John Gutter
+Oh Shit! Cheese Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Oh Shit!
+   =>   Oh Shit!
+Oh Shit! Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Oh Shit!
+   =>   Oh Shit!
+Oh Shit! Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Oh Shit!
+   =>   Oh Shit!
+Oh Shit! Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Oh Shit!
+   =>   Oh Shit!
+Oh Shit! Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Oh Shit!
+   =>   Oh Shit!
+Oh Shit! Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Oh Shit!
+   =>   Oh Shit!
+Oh Shit! Secret 3
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Oh Shit!
+   =>   Oh Shit!
+Oregano Desert Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Oregano Desert
+   =>   Oregano Desert
+Oregano Desert Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Oregano Desert
+   =>   Oregano Desert
+Oregano Desert Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Oregano Desert
+   =>   Oregano Desert
+Pepperman Defeated
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Pepperman
+   =>   Pepperman
+Peppibot Factory Cheese Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Peppibot Factory
+   =>   Peppibot Factory
+Peppibot Factory Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Peppibot Factory
+   =>   Peppibot Factory
+Peppibot Factory Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Peppibot Factory
+   =>   Peppibot Factory
+Peppibot Factory Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Peppibot Factory
+   =>   Peppibot Factory
+Peppibot Factory Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Peppibot Factory
+   =>   Peppibot Factory
+Peppibot Factory Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Peppibot Factory
+   =>   Peppibot Factory
+Peppibot Factory Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Peppibot Factory
+   =>   Peppibot Factory
+Pizzaface Defeated
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Pizzaface
+   =>   Pizzaface
+Pizzascape Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Pizzascape
+   =>   Pizzascape
+Pizzascape Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Pizzascape
+   =>   Pizzascape
+Pizzascape Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Pizzascape
+   =>   Pizzascape
+Pizzascape Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Pizzascape
+   =>   Pizzascape
+Pizzascape Secret 3
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Pizzascape
+   =>   Pizzascape
+Pizzascape Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Pizzascape
+   =>   Pizzascape
+Pizzascare Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Pizzascare
+   =>   Pizzascare
+Pizzascare Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Pizzascare
+   =>   Pizzascare
+Pizzascare Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Pizzascare
+   =>   Pizzascare
+Snotty Murdered
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum
+The Crumbling Tower of Pizza Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to Pizzaface
+   =>   Pizzaface -> Pizzaface to The Crumbling Tower of Pizza
+   =>   The Crumbling Tower of Pizza
+The Noise Defeated
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to The Noise
+   =>   The Noise
+The Pig City Mushroom Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Pig City Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Pig City Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Pig City Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Pig City Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Pig City Secret 3
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Pig City Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Pig City Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to The Pig City
+   =>   The Pig City
+The Vigilante Defeated
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to The Vigilante
+   =>   The Vigilante
+Tutorial Complete in under 2 minutes
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Tutorial
+   =>   Tutorial
+Tutorial Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Tutorial
+   =>   Tutorial
+Tutorial Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Tutorial
+   =>   Tutorial
+WAR Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to WAR
+   =>   WAR
+WAR Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to WAR
+   =>   WAR
+WAR Sausage Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to WAR
+   =>   WAR
+WAR Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to WAR
+   =>   WAR
+WAR Secret 3
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to WAR
+   =>   WAR
+WAR Tomato Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to WAR
+   =>   WAR
+WAR Treasure
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Floor 3 Vacation Resort
+   =>   Floor 3 Vacation Resort -> Floor 3 Vacation Resort to Floor 4 Slum
+   =>   Floor 4 Slum -> Floor 4 Slum to Floor 5 Staff Only
+   =>   Floor 5 Staff Only -> Floor 5 Staff Only to WAR
+   =>   WAR
+Wasteyard Cheese Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Wasteyard
+   =>   Wasteyard
+Wasteyard Complete
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Wasteyard
+   =>   Wasteyard
+Wasteyard Pineapple Toppin
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Wasteyard
+   =>   Wasteyard
+Wasteyard Secret 1
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Wasteyard
+   =>   Wasteyard
+Wasteyard Secret 2
+        Menu -> Menu to Floor 1 Tower Lobby
+   =>   Floor 1 Tower Lobby -> Floor 1 Tower Lobby to Floor 2 Western District
+   =>   Floor 2 Western District -> Floor 2 Western District to Wasteyard
+   =>   Wasteyard
