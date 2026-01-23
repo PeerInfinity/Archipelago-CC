@@ -508,8 +508,13 @@ def main():
         print(f"Error: Templates directory not found: {templates_dir}")
         return 1
 
-    # Get skip list (use only permanent exclusions - not main_test_exclude_list)
-    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='permanent')
+    # Get skip list: combine permanent exclusions with UT fuzz apworld exclusions
+    if args.skip_list:
+        skip_list = args.skip_list
+    else:
+        permanent_excludes = load_template_exclude_list(test_type='permanent')
+        ut_fuzz_excludes = load_template_exclude_list(test_type='ut_fuzz_apworld')
+        skip_list = permanent_excludes + ut_fuzz_excludes
 
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)

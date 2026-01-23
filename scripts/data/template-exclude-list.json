@@ -230,6 +230,10 @@
     {
       "name": "Axiom Verge.yaml",
       "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
+    },
+    {
+      "name": "GZDoom.yaml",
+      "reason": "Base framework apworld with hidden=True. Not a standalone game - requires WAD-specific apworlds (e.g., zdoom_doom_2.apworld) that extend GZDoomWorld and provide wad_logic. Accessing wad_logic on base class raises AttributeError because the attribute is only declared, not initialized."
     }
   ],
   "requires_javascript_helpers_list": [
