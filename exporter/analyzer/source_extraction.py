@@ -308,24 +308,6 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
                     return None
                 file_content_cache[filename] = source_code
 
-            # Skip AST parsing for very large files to avoid recursion issues
-            # (e.g., Spyro 3's 2265-line __init__.py)
-            line_count = source_code.count('\n')
-            if line_count > 1500:
-                logging.warning(f"Source file too large ({line_count} lines), using multiline extraction fallback: {filename}")
-                # Use manual multiline extraction instead of inspect.getsource()
-                # because getsource() doesn't handle multiline lambdas correctly
-                result = _extract_multiline_lambda(source_code, start_line)
-                if result:
-                    logging.debug(f"Multiline extraction succeeded for line {start_line}: {repr(result)[:200]}")
-                    unparsed_lambda_cache[cache_key] = result
-                    return result
-                # Fall back to getsource if our extraction fails
-                logging.warning(f"Multiline extraction failed, using inspect.getsource fallback: {filename}:{start_line}")
-                result = inspect.getsource(func)
-                unparsed_lambda_cache[cache_key] = result
-                return result
-
             # 4. Parse the source and populate the AST cache
             tree = ast.parse(source_code, filename=filename)
             ast_cache[filename] = tree
@@ -342,10 +324,20 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
             try:
                 result = astunparse.unparse(lambda_node).strip()
             except RecursionError:
-                logging.warning(f"RecursionError unparsing lambda at {filename}:{start_line}, using fallback")
-                result = inspect.getsource(func)
+                logging.warning(f"RecursionError unparsing lambda at {filename}:{start_line}, using multiline extraction fallback")
+                # Use multiline extraction which handles multiline lambdas correctly
+                source_code = file_content_cache.get(filename)
+                if source_code:
+                    result = _extract_multiline_lambda(source_code, start_line)
+                if not result:
+                    result = inspect.getsource(func)  # Last resort fallback
         else:
-            result = inspect.getsource(func)  # Fallback
+            # No lambda node found - try multiline extraction first
+            source_code = file_content_cache.get(filename)
+            if source_code:
+                result = _extract_multiline_lambda(source_code, start_line)
+            if not result:
+                result = inspect.getsource(func)  # Last resort fallback
 
         # Cache the result
         unparsed_lambda_cache[cache_key] = result
@@ -353,17 +345,33 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
 
     except RecursionError as e:
         logging.error(f"RecursionError getting lambda source for {func}: {e}")
+        # Try multiline extraction as fallback
         try:
-            return inspect.getsource(func)  # Fallback
+            filename = inspect.getfile(func)
+            start_line = func.__code__.co_firstlineno
+            source_code = file_content_cache.get(filename)
+            if source_code:
+                result = _extract_multiline_lambda(source_code, start_line)
+                if result:
+                    return result
+            return inspect.getsource(func)  # Last resort fallback
         except Exception as fallback_e:
-            logging.error(f"Fallback getsource also failed: {fallback_e}")
+            logging.error(f"Fallback also failed: {fallback_e}")
             return None
     except Exception as e:
         logging.error(f"Failed to get multiline lambda source for {func}: {e}")
+        # Try multiline extraction as fallback
         try:
-            return inspect.getsource(func)  # Fallback
+            filename = inspect.getfile(func)
+            start_line = func.__code__.co_firstlineno
+            source_code = file_content_cache.get(filename)
+            if source_code:
+                result = _extract_multiline_lambda(source_code, start_line)
+                if result:
+                    return result
+            return inspect.getsource(func)  # Last resort fallback
         except Exception as fallback_e:
-            logging.error(f"Fallback getsource also failed: {fallback_e}")
+            logging.error(f"Fallback also failed: {fallback_e}")
             return None
 
 
