@@ -192,6 +192,10 @@
       "reason": "Uses module-level constant lists (EventNames.Levels, ItemNames.Sector_Access) with subscript access in rules. Exporter captures AST instead of resolved values. Chained helper functions cause rule expansion to hit size limits, falling back to True_()."
     },
     {
+      "name": "Into the Breach.yaml",
+      "reason": "Two issues: (1) Requires python-sat package for squad randomization which isn't auto-installed. (2) Rules use Achievement.is_doable_by_tags() but exporter incorrectly assumes 'self' is Location, generating invalid Location.is_doable_by_tags() calls."
+    },
+    {
       "name": "Keep Talking and Nobody Explodes.yaml",
       "reason": "Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible."
     },
