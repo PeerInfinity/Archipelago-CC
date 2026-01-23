@@ -230,6 +230,10 @@
     {
       "name": "Axiom Verge.yaml",
       "reason": "Uses non-standard (state, context) helper signature where context is a LogicContext object containing player and options. Lambda rules use (s, c) parameters mapping to (state, context). Exporter misidentifies these as separate params, creating helpers with inconsistent signatures. Generated worldgen calls like has_trenchcoat(state, player, s, c) pass 4 args to functions expecting 3, causing TypeError."
+    },
+    {
+      "name": "Rusted Moss.yaml",
+      "reason": "Two issues: (1) Character option defines 4 values (fern, maya, ameli, gimmick) but only fern and gimmick are supported - selecting maya or ameli raises ValueError. (2) Rules are created using eval() from dynamically built lambda strings in convert_to_rule(). The exporter cannot analyze these rules because inspect.getfile() returns '<string>' instead of a readable source file. All rules export as 'error' type, causing UT to incorrectly evaluate accessibility."
     }
   ],
   "requires_javascript_helpers_list": [
