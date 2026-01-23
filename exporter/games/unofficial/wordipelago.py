@@ -1,17 +1,22 @@
 """Wordipelago game-specific export handler.
 
-Wordipelago uses starred argument unpacking with option-dependent lookups
-in its rule definitions:
+Wordipelago has two types of complex rules that the base exporter can't handle:
 
+1. Starred argument unpacking with option-dependent lookups:
     lambda state: needed_for_words(state, player, *(rule_logic[logic_difficulty]["green"][str(point_shop_logic_level)]))
 
-The base exporter can't resolve this because:
-1. The index depends on str(option.value) which involves a helper call
-2. The expression resolver can't evaluate str() with option_value args
+   The index depends on str(option.value) which involves a helper call that
+   the expression resolver can't evaluate.
 
-This handler intercepts the problematic entrance rule and constructs a
-properly formed helper call rule directly, bypassing the normal analysis
-that can't handle starred argument unpacking with option-dependent indices.
+2. Chunk transition rules with dynamically computed item names:
+    lambda state: state.has(str((world.options.word_checks // 5 + (world.options.word_checks % 5 > 0)) * 1) + ' Words', player)
+
+   The world_generator's HelperCodeGenerator cannot convert these complex
+   expressions, falling back to True which causes UT fuzzer failures.
+
+This handler intercepts these patterns and constructs properly formed rules:
+- For starred rule_logic: builds a helper call with resolved arguments
+- For chunk transitions: builds a simple ItemCheck with the pre-computed item name
 """
 
 from typing import Any, Dict, List, Set, Optional, Callable, TYPE_CHECKING
@@ -141,6 +146,8 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
         super().__init__(*args, **kwargs)
         self._logic_difficulty = None
         self._point_shop_logic_level = None
+        self._word_checks = None
+        self._word_streak_checks = None
         self._world = None
 
     def _get_option_values_from_world(self, world) -> None:
@@ -151,9 +158,14 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
                 self._logic_difficulty = world.options.logic_difficulty.value
             if hasattr(world.options, 'point_shop_logic_level'):
                 self._point_shop_logic_level = world.options.point_shop_logic_level.value
+            if hasattr(world.options, 'word_checks'):
+                self._word_checks = world.options.word_checks.value
+            if hasattr(world.options, 'word_streak_checks'):
+                self._word_streak_checks = world.options.word_streak_checks.value
 
         logger.info(f"Wordipelago options extracted: logic_difficulty={self._logic_difficulty}, "
-                    f"point_shop_logic_level={self._point_shop_logic_level}")
+                    f"point_shop_logic_level={self._point_shop_logic_level}, "
+                    f"word_checks={self._word_checks}, word_streak_checks={self._word_streak_checks}")
 
     def _extract_world_from_lambda(self, access_rule: Callable) -> Optional[Any]:
         """Extract the world object from a lambda's closure."""
@@ -243,19 +255,26 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
 
     def handle_complex_entrance_rule(self, entrance_name: str, access_rule_method) -> Optional[Dict[str, Any]]:
         """
-        Intercept entrance rules that use starred rule_logic unpacking.
+        Intercept entrance rules that use starred rule_logic unpacking or chunk transitions.
 
-        The Letters -> Point Shop entrance has:
+        Handles two patterns:
+        1. The Letters -> Point Shop entrance with starred rule_logic unpacking:
             lambda state: needed_for_words(state, world.player,
                 *(rules_for_difficulty["green"][str(world.options.point_shop_logic_level.value)]))
 
-        We detect this pattern and construct the helper call rule directly
-        with the args resolved from RULE_LOGIC.
+        2. Chunk transition rules with option-dependent item names:
+            lambda state: state.has(str((world.options.word_checks // 5 + ...) * N) + ' Words', player)
         """
         # Check if this is a lambda with the starred rule_logic pattern
         if not callable(access_rule_method):
             return None
 
+        # First, check for chunk transition rules (Words/Streaks Chunk X -> Y)
+        chunk_result = self.handle_chunk_transition_rule(entrance_name, access_rule_method)
+        if chunk_result is not None:
+            return chunk_result
+
+        # Then check for starred rule_logic pattern
         if not self._has_starred_rule_logic_pattern(access_rule_method):
             return None
 
@@ -304,3 +323,166 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
     def handle_complex_exit_rule(self, exit_name: str, access_rule_method) -> Optional[Dict[str, Any]]:
         """Handle complex exit rules the same way as entrance rules."""
         return self.handle_complex_entrance_rule(exit_name, access_rule_method)
+
+    def _is_chunk_transition_rule(self, entrance_name: str, access_rule: Callable) -> Optional[tuple]:
+        """
+        Check if this is a Words/Streaks chunk transition rule.
+
+        Returns (chunk_type, chunk_number) if it matches, None otherwise.
+        chunk_type is 'words' or 'streaks', chunk_number is 1-4 (the target chunk minus 1).
+        """
+        import re
+
+        # Check entrance name pattern: "Words Chunk X -> Words Chunk Y" or "Streaks Chunk X -> Streaks Chunk Y"
+        words_match = re.match(r'Words Chunk (\d+) -> Words Chunk (\d+)', entrance_name)
+        if words_match:
+            source_chunk = int(words_match.group(1))
+            target_chunk = int(words_match.group(2))
+            if target_chunk == source_chunk + 1 and 2 <= target_chunk <= 5:
+                return ('words', source_chunk)
+
+        streaks_match = re.match(r'Streaks Chunk (\d+) -> Streaks Chunk (\d+)', entrance_name)
+        if streaks_match:
+            source_chunk = int(streaks_match.group(1))
+            target_chunk = int(streaks_match.group(2))
+            if target_chunk == source_chunk + 1 and 2 <= target_chunk <= 5:
+                return ('streaks', source_chunk)
+
+        return None
+
+    def _compute_chunk_item_name(self, chunk_type: str, chunk_number: int) -> Optional[str]:
+        """
+        Compute the item name required for a chunk transition.
+
+        Uses the same formula as the apworld:
+            str((option_value // 5 + (option_value % 5 > 0)) * chunk_number) + ' Words/Streaks'
+
+        Args:
+            chunk_type: 'words' or 'streaks'
+            chunk_number: The source chunk number (1-4)
+
+        Returns:
+            The item name like "5 Words" or "3 Streaks", or None if options not available
+        """
+        if chunk_type == 'words':
+            if self._word_checks is None:
+                return None
+            option_value = self._word_checks
+            suffix = ' Words'
+        elif chunk_type == 'streaks':
+            if self._word_streak_checks is None:
+                return None
+            option_value = self._word_streak_checks
+            suffix = ' Streaks'
+        else:
+            return None
+
+        # Formula from apworld: (option_value // 5 + (option_value % 5 > 0)) * chunk_number
+        threshold = (option_value // 5 + (1 if option_value % 5 > 0 else 0)) * chunk_number
+        item_name = str(threshold) + suffix
+
+        logger.info(f"Computed chunk item name: {chunk_type} chunk {chunk_number} -> '{item_name}' "
+                    f"(option_value={option_value})")
+
+        return item_name
+
+    def _build_item_check_rule(self, item_name: str) -> Dict[str, Any]:
+        """Build a simple ItemCheck rule for a given item name."""
+        return {
+            'rule': 'ItemCheck',
+            'args': {
+                'item': item_name,
+                'count': 1
+            },
+            '_converted_from_ast': True,
+            '_original_ast_type': 'item_check'
+        }
+
+    def handle_chunk_transition_rule(self, entrance_name: str, access_rule_method) -> Optional[Dict[str, Any]]:
+        """
+        Handle chunk transition rules that use option-dependent item names.
+
+        The apworld has rules like:
+            lambda state: state.has(str((world.options.word_checks // 5 + (world.options.word_checks % 5 > 0)) * 1) + ' Words', player)
+
+        We detect these patterns and generate a simple ItemCheck with the pre-computed item name.
+        """
+        if not callable(access_rule_method):
+            return None
+
+        # Check if this is a chunk transition
+        chunk_info = self._is_chunk_transition_rule(entrance_name, access_rule_method)
+        if chunk_info is None:
+            return None
+
+        chunk_type, chunk_number = chunk_info
+
+        # Try to extract world from lambda closure if we don't have option values yet
+        if (chunk_type == 'words' and self._word_checks is None) or \
+           (chunk_type == 'streaks' and self._word_streak_checks is None):
+            world = self._extract_world_from_lambda(access_rule_method)
+            if world:
+                self._get_option_values_from_world(world)
+
+        # Compute the required item name
+        item_name = self._compute_chunk_item_name(chunk_type, chunk_number)
+        if item_name is None:
+            logger.warning(f"Cannot compute item name for '{entrance_name}': options not available")
+            return None
+
+        logger.info(f"Resolved chunk transition '{entrance_name}' -> ItemCheck('{item_name}')")
+
+        return self._build_item_check_rule(item_name)
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """
+        Get helper definitions with fix for the guesses parameter in needed_for_words.
+
+        The base analyzer incorrectly resolves the 'guesses' parameter to its default
+        value (1) instead of keeping it as a parameter reference. This override fixes
+        that issue by patching the exported helper body.
+        """
+        # Get the base helper definitions
+        helper_definitions = super().get_helper_definitions(world)
+
+        # Fix the needed_for_words helper if present
+        if 'needed_for_words' in helper_definitions:
+            helper_def = helper_definitions['needed_for_words']
+            body = helper_def.get('body') if isinstance(helper_def, dict) else helper_def
+
+            if body:
+                # Recursively fix item_check nodes for 'Guess' to use guesses parameter
+                self._fix_guesses_parameter(body)
+
+        return helper_definitions
+
+    def _fix_guesses_parameter(self, node: Any) -> None:
+        """
+        Recursively fix item_check nodes for 'Guess' to use guesses parameter reference.
+
+        The analyzer incorrectly exports:
+            {"type": "item_check", "item": "Guess", "count": {"type": "constant", "value": 1}}
+
+        This should be:
+            {"type": "item_check", "item": "Guess", "count": {"type": "name", "name": "guesses"}}
+        """
+        if not isinstance(node, dict):
+            return
+
+        # Check if this is an item_check for 'Guess' with constant count=1
+        if node.get('type') == 'item_check' and node.get('item') == 'Guess':
+            count = node.get('count')
+            if isinstance(count, dict) and count.get('type') == 'constant' and count.get('value') == 1:
+                # Replace with parameter reference
+                node['count'] = {'type': 'name', 'name': 'guesses'}
+                logger.info("Fixed needed_for_words: 'Guess' count now uses 'guesses' parameter")
+                return
+
+        # Recursively process nested structures
+        for key, value in node.items():
+            if isinstance(value, dict):
+                self._fix_guesses_parameter(value)
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        self._fix_guesses_parameter(item)

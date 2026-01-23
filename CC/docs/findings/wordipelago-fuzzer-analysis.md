@@ -2,7 +2,9 @@
 
 ## Summary
 
-The Wordipelago apworld fails the UT (Universal Tracker) fuzz test approximately 40% of the time with "None" type errors (logic mismatches). The root cause is that the world_generator cannot properly convert complex option-dependent entrance rules to Python code.
+The Wordipelago apworld was failing the UT (Universal Tracker) fuzz test approximately 40% of the time with "None" type errors (logic mismatches). The root cause was that the world_generator could not properly convert complex option-dependent entrance rules to Python code.
+
+**Status: FIXED** - The exporter handler has been updated to handle these cases.
 
 ## Test Results
 
@@ -123,22 +125,35 @@ If the apworld cannot be fixed:
 2. Skip it during UT fuzzer testing
 3. Document the specific incompatibility
 
-## Recommendation
+## Solution Implemented
 
-**Option 3 (Custom Exporter Handler)** is the most practical approach:
-- The existing `wordipelago.py` handler already handles some complex patterns
-- We can add logic to pre-evaluate the chunk transition rules
-- This fixes the issue without requiring changes to the core world_generator
+The fix was implemented in `exporter/games/unofficial/wordipelago.py`:
 
-The handler would:
-1. Intercept exit rules for "Words Chunk X -> Words Chunk Y" and "Streaks Chunk X -> Streaks Chunk Y"
-2. Read the relevant options from the world
-3. Compute the actual item name needed
-4. Return a simple `ItemCheck` rule with the resolved item name
+### Fix 1: Chunk Transition Rules
 
-## Files Involved
+Added handling for "Words Chunk X -> Words Chunk Y" and "Streaks Chunk X -> Streaks Chunk Y" entrances:
+- `_is_chunk_transition_rule()` - Detects chunk transition patterns by entrance name
+- `_compute_chunk_item_name()` - Computes item name using the apworld's formula
+- `handle_chunk_transition_rule()` - Returns simple ItemCheck with resolved item name
 
-- `custom_worlds/wordipelago.apworld` - The apworld package
-- `exporter/games/unofficial/wordipelago.py` - Existing handler (to be extended)
-- `world_generator/rule_codegen.py` - Core conversion logic (limitation source)
-- `world_generator/templates.py` - Rules.py generation
+### Fix 2: Guesses Parameter
+
+The base analyzer was incorrectly resolving the `guesses` parameter to its default value (1).
+Added override of `get_helper_definitions()` to patch the exported helper:
+- `_fix_guesses_parameter()` - Recursively fixes item_check nodes for 'Guess' to use the `guesses` parameter reference
+
+## Test Results After Fix
+
+```
+Success: 47
+Failures: 0
+Timeouts: 0
+Ignored: 3
+```
+
+100% success rate (0 failures in 50 runs)!
+
+## Files Modified
+
+- `exporter/games/unofficial/wordipelago.py` - Extended handler with chunk transition and guesses fixes
+- `CC/docs/findings/wordipelago-fuzzer-analysis.md` - This document
