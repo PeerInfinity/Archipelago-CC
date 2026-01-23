@@ -26,6 +26,9 @@ class MinitExportHandler(GenericGameExportHandler):
 
     GAME_NAME = 'Minit'
 
+    # All items that grant "has_sword" when collected (from item_groups["swords"])
+    SWORD_ITEMS = ['ItemBrokenSword', 'ItemSword', 'ItemMegaSword', 'Progressive Sword', 'Reverse Progressive Sword']
+
     def __init__(self, world=None):
         super().__init__(world)
         self._darkrooms_option = None
@@ -45,6 +48,7 @@ class MinitExportHandler(GenericGameExportHandler):
         """Expand Minit-specific rules.
 
         Converts RuleUtils helper function calls to Rule Builder format.
+        Also expands 'has_sword' pseudo-item references to actual sword items.
         """
         # Handle non-dict inputs (lists, primitives, None)
         if not isinstance(rule, dict):
@@ -77,8 +81,85 @@ class MinitExportHandler(GenericGameExportHandler):
             if result is not None:
                 return result
 
+        # Expand has_sword pseudo-item to actual sword items
+        # This catches state.has("has_sword", player) rules that weren't handled by the above
+        expanded = self._expand_has_sword_references(rule)
+        if expanded is not None:
+            return expanded
+
         # Let parent handle other expansions
         return super().expand_rule(rule, _depth)
+
+    def _expand_has_sword_references(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Expand references to 'has_sword' pseudo-item in rules.
+
+        The Minit world dynamically adds 'has_sword' to state via collect() callback
+        when any sword is collected. Since worldgen worlds don't have this callback,
+        we need to expand all references to 'has_sword' into checks for actual sword items.
+
+        Handles both AST format (type: 'item_check') and RB format (rule: 'Has'):
+        - item_check(item='has_sword') -> HasAny(SWORD_ITEMS)
+        - Has(item_name='has_sword') -> HasAny(SWORD_ITEMS)
+        - HasAll(['has_sword', ...]) -> And(HasAny(SWORD_ITEMS), HasAll(...))
+        - HasAny(['has_sword', ...]) -> HasAny(SWORD_ITEMS + ...)
+        """
+        rule_type = rule.get('type', '')
+        rb_rule = rule.get('rule', '')
+        args = rule.get('args', {})
+
+        # Handle AST format: item_check with has_sword
+        if rule_type == 'item_check':
+            item_name = rule.get('item', '')
+            if item_name == 'has_sword':
+                return self._expand_has_sword()
+
+        # Handle RB format: Has rule with has_sword
+        if rb_rule == 'Has':
+            item_name = args.get('item_name', '')
+            if item_name == 'has_sword':
+                return self._expand_has_sword()
+
+        # Handle RB format: HasAll with has_sword in the items list
+        if rb_rule == 'HasAll':
+            items = args.get('items', [])
+            if 'has_sword' in items:
+                # Replace has_sword with an And of HasAny(SWORD_ITEMS) and HasAll(other items)
+                other_items = [i for i in items if i != 'has_sword']
+                if not other_items:
+                    # Only has_sword in the list
+                    return self._expand_has_sword()
+                elif len(other_items) == 1:
+                    # One other item - And(HasAny(swords), Has(item))
+                    return {
+                        'rule': 'And',
+                        'children': [
+                            self._expand_has_sword(),
+                            {'rule': 'Has', 'args': {'item_name': other_items[0]}}
+                        ]
+                    }
+                else:
+                    # Multiple other items - And(HasAny(swords), HasAll(other items))
+                    return {
+                        'rule': 'And',
+                        'children': [
+                            self._expand_has_sword(),
+                            {'rule': 'HasAll', 'args': {'items': other_items}}
+                        ]
+                    }
+
+        # Handle RB format: HasAny with has_sword in the items list
+        if rb_rule == 'HasAny':
+            items = args.get('items', [])
+            if 'has_sword' in items:
+                # Replace has_sword with the actual sword items
+                other_items = [i for i in items if i != 'has_sword']
+                expanded_items = self.SWORD_ITEMS.copy() + other_items
+                return {
+                    'rule': 'HasAny',
+                    'args': {'items': expanded_items}
+                }
+
+        return None
 
     def _expand_ruleutils_from_call(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Expand RuleUtils calls from 'call' AST type (alternative format)."""
@@ -165,13 +246,27 @@ class MinitExportHandler(GenericGameExportHandler):
 
         return None
 
+    def _expand_has_sword(self) -> Dict[str, Any]:
+        """Expand 'has_sword' check to actual sword items.
+
+        The Minit world adds a synthetic 'has_sword' event to state when any
+        sword is collected. Since worldgen worlds don't have the collect()
+        callback that does this, we need to check for the actual sword items.
+
+        Logic: HasAny(ItemBrokenSword, ItemSword, ItemMegaSword, Progressive Sword, Reverse Progressive Sword)
+        """
+        return {
+            'rule': 'HasAny',
+            'args': {'items': self.SWORD_ITEMS.copy()}
+        }
+
     def _expand_helpers_subscript(self, function: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Expand self.helpers['name']() calls to Rule Builder format.
 
         In ER mode, Minit uses self.helpers dictionary with helper lambdas:
         - swim: state.has("ItemSwim", player)
         - darkroom1/2/3: RuleUtils.has_darkroom(player, state, 1/2/3, darkrooms)
-        - sword: state.has("has_sword", player)
+        - sword: has any of the sword items (ItemBrokenSword, ItemSword, etc.)
         - wateringcan: state.has("ItemWateringCan", player)
         - presspass: state.has("ItemPressPass", player)
         - basement: state.has("ItemBasement", player)
@@ -201,7 +296,8 @@ class MinitExportHandler(GenericGameExportHandler):
         if helper_name == 'swim':
             return {'rule': 'Has', 'args': {'item_name': 'ItemSwim'}}
         elif helper_name == 'sword':
-            return {'rule': 'Has', 'args': {'item_name': 'has_sword'}}
+            # Expand to check for any actual sword item
+            return self._expand_has_sword()
         elif helper_name == 'wateringcan':
             return {'rule': 'Has', 'args': {'item_name': 'ItemWateringCan'}}
         elif helper_name == 'presspass':
@@ -215,10 +311,13 @@ class MinitExportHandler(GenericGameExportHandler):
         elif helper_name == 'darkroom3':
             return self._expand_has_darkroom([{'type': 'constant', 'value': 3}])
         elif helper_name == 'tree':
-            # tree: state.has("has_sword", player) and state.has("ItemGlove", player)
+            # tree: has_sword AND ItemGlove - need composite rule
             return {
-                'rule': 'HasAll',
-                'args': {'items': ['has_sword', 'ItemGlove']}
+                'rule': 'And',
+                'children': [
+                    self._expand_has_sword(),
+                    {'rule': 'Has', 'args': {'item_name': 'ItemGlove'}}
+                ]
             }
         elif helper_name == 'chest':
             return self._expand_can_open_chest()
@@ -305,8 +404,11 @@ class MinitExportHandler(GenericGameExportHandler):
             'rule': 'Or',
             'children': [
                 {
-                    'rule': 'HasAll',
-                    'args': {'items': ['has_sword', 'ItemGrinder']}
+                    'rule': 'And',
+                    'children': [
+                        self._expand_has_sword(),
+                        {'rule': 'Has', 'args': {'item_name': 'ItemGrinder'}}
+                    ]
                 },
                 {
                     'rule': 'Has',
@@ -321,8 +423,11 @@ class MinitExportHandler(GenericGameExportHandler):
         Logic: has_sword OR ItemWateringCan
         """
         return {
-            'rule': 'HasAny',
-            'args': {'items': ['has_sword', 'ItemWateringCan']}
+            'rule': 'Or',
+            'children': [
+                self._expand_has_sword(),
+                {'rule': 'Has', 'args': {'item_name': 'ItemWateringCan'}}
+            ]
         }
 
     def _expand_has_megasword(self) -> Dict[str, Any]:

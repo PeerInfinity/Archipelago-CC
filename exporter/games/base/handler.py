@@ -1751,10 +1751,14 @@ class BaseGameExportHandler(
                                         )
                                     break  # Only match first pattern
 
-            # Step 3: Merge accumulator items into data
+            # Step 3: Merge accumulator items into data (only add items that don't already exist)
             if accumulator_items:
                 data.setdefault('items', {})
                 for player_id, player_items in accumulator_items.items():
-                    data['items'].setdefault(player_id, {}).update(player_items)
+                    existing_items = data['items'].setdefault(player_id, {})
+                    for item_name, item_data in player_items.items():
+                        # Only add if item doesn't already exist (preserve existing items with proper IDs)
+                        if item_name not in existing_items:
+                            existing_items[item_name] = item_data
 
         return data
