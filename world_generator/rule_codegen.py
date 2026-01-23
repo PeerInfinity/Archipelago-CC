@@ -7642,6 +7642,15 @@ class HelperCodeGenerator:
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
 
+        # Special case: when accessing param.value where param is a helper function parameter
+        # (e.g., card_region.value), return just the parameter name since enum values are
+        # passed as integers to helpers. This handles cases like CardRegion.DESTINY_BASIC
+        # being passed as integer 4 - the .value access is no longer needed.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and attr == 'value':
+            param_name = obj_expr.get('name', '')
+            if param_name in self._current_helper_params:
+                return param_name
+
         # Special case: when accessing self.multiworld, convert to state.multiworld
         # In original world code, 'self' refers to the World instance which has a multiworld attribute.
         # In worldgen standalone functions, we access multiworld via state.multiworld instead.
