@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 05:19:57
+**Generated:** 2026-01-23 05:43:21
 
-**Source Data Created:** 2026-01-23T05:19:57.365442
+**Source Data Created:** 2026-01-23T05:43:21.741069
 
-**Source Data Last Updated:** 2026-01-23T05:19:57.365448
+**Source Data Last Updated:** 2026-01-23T05:43:21.741077
 
 **Universal Tracker Version:** Modified (worldgen-based tracking)
 
@@ -28,8 +28,8 @@
 - **Total Fuzz Runs:** 1240
 - **Successful Runs:** 488 (39.4%)
 - **Failed Runs:** 602
-- **Timed Out Runs:** 21
-- **Ignored Runs:** 129
+- **Timed Out Runs:** 20
+- **Ignored Runs:** 130
 
 ### Expected vs Unexpected Results
 
@@ -41,13 +41,13 @@
 
 ### Explain Support Summary
 
-- **Games with Explain Stats:** 112
+- **Games with Explain Stats:** 111
 - **Games with 100% Explain Coverage:** 91
-- **Games with No Explain Support:** 12
-- **Locations with Explain Support:** 16,194
-- **Locations without Explain Support:** 4,048
-- **Locations with Default Rule:** 16,750
-- **Overall Explain Coverage:** 80.0%
+- **Games with No Explain Support:** 11
+- **Locations with Explain Support:** 15,948
+- **Locations without Explain Support:** 4,032
+- **Locations with Default Rule:** 16,578
+- **Overall Explain Coverage:** 79.8%
 
 ### Generic Exporter/Logic Statistics
 
@@ -99,7 +99,7 @@ Of the 40 games with 100% pass rate:
 | Diddy Kong Racing | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Digimon World | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ | 10 | 1 | 8 | 0 | 1 | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -158,7 +158,7 @@ Of the 40 games with 100% pass rate:
 | Simon Tatham's Portable Puzzle Collection | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sly Cooper and the Thievius Raccoonus | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | N/A |
-| Sonic Adventure DX | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 29.9KB | ✅ | N/A |
+| Sonic Adventure DX | ❌ | 10 | 0 | 4 | 0 | 6 | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 9.4KB | ✅ | N/A |
@@ -190,7 +190,7 @@ Of the 40 games with 100% pass rate:
 | Yu-Gi-Oh! Forbidden Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| plateup | ❌ | 10 | 7 | 1 | 2 | 0 | ⚠️ 70.0% | ✅ | ✅ | N/A |
+| plateup | ❌ | 10 | 8 | 1 | 1 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
 ## Explain Support Details
 
@@ -200,8 +200,7 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | A Link Between Worlds | 257 | 0 | 257 | 0 | ❌ 0% |
 | Axiom Verge | 125 | 0 | 125 | 0 | ❌ 0% |
-| Duke Nukem 3D | 103 | 0 | 25 | 78 | ❌ 0% |
-| Into the Breach | 12 | 0 | 12 | 0 | ❌ 0% |
+| Into the Breach | 21 | 0 | 21 | 0 | ❌ 0% |
 | Kingdom Hearts RE Chain of Memories | 247 | 0 | 101 | 146 | ❌ 0% |
 | Lego Star Wars: The Complete Saga | 74 | 0 | 3 | 71 | ❌ 0% |
 | Metroid Fusion | 126 | 0 | 126 | 0 | ❌ 0% |
@@ -254,7 +253,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Iji | 177 | 0 | 0 | 177 | ✅ 100% |
 | Isles Of Sea And Sky | 586 | 345 | 0 | 241 | ✅ 100% |
 | Ittle Dew 2 | 143 | 143 | 0 | 0 | ✅ 100% |
-| Jigsaw | 287 | 287 | 0 | 0 | ✅ 100% |
+| Jigsaw | 93 | 93 | 0 | 0 | ✅ 100% |
 | K-On! After School Live!! | 589 | 589 | 0 | 0 | ✅ 100% |
 | Keep Talking and Nobody Explodes | 116 | 72 | 0 | 44 | ✅ 100% |
 | Kingdom Hearts Birth by Sleep | 223 | 56 | 0 | 167 | ✅ 100% |
@@ -262,7 +261,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | League of Legends | 510 | 506 | 0 | 4 | ✅ 100% |
 | Lingo 2 | 501 | 501 | 0 | 0 | ✅ 100% |
 | Little Witch Nobeta | 55 | 15 | 0 | 40 | ✅ 100% |
-| Luigi's Mansion | 489 | 190 | 0 | 299 | ✅ 100% |
+| Luigi's Mansion | 466 | 167 | 0 | 299 | ✅ 100% |
 | Majora's Mask Recompiled | 372 | 319 | 0 | 53 | ✅ 100% |
 | MetroCUBEvania | 9 | 2 | 0 | 7 | ✅ 100% |
 | Metroid Zero Mission | 100 | 80 | 0 | 20 | ✅ 100% |
@@ -284,7 +283,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Simon Tatham's Portable Puzzle Collection | 523 | 523 | 0 | 0 | ✅ 100% |
 | Sly 2: Band of Thieves | 170 | 39 | 0 | 131 | ✅ 100% |
 | Sly Cooper and the Thievius Raccoonus | 196 | 45 | 0 | 151 | ✅ 100% |
-| Sonic Adventure DX | 397 | 48 | 0 | 349 | ✅ 100% |
+| Sonic Adventure DX | 205 | 21 | 0 | 184 | ✅ 100% |
 | Sonic Rush | 67 | 0 | 0 | 67 | ✅ 100% |
 | Sonic the Hedgehog 1 | 208 | 0 | 0 | 208 | ✅ 100% |
 | Soul Blazer | 300 | 94 | 0 | 206 | ✅ 100% |
@@ -299,11 +298,11 @@ This section shows which games have rules that support the `explain_json()` meth
 | Tetris Attack | 300 | 300 | 0 | 0 | ✅ 100% |
 | The Legend of Zelda - Oracle of Seasons | 233 | 0 | 0 | 233 | ✅ 100% |
 | The Legend of Zelda - Phantom Hourglass | 291 | 0 | 0 | 291 | ✅ 100% |
-| The Sims 4 | 706 | 290 | 0 | 416 | ✅ 100% |
+| The Sims 4 | 706 | 285 | 0 | 421 | ✅ 100% |
 | ToeJam and Earl | 605 | 8 | 0 | 597 | ✅ 100% |
 | TurnipBoy | 45 | 22 | 0 | 23 | ✅ 100% |
 | Tyrian | 135 | 0 | 0 | 135 | ✅ 100% |
-| Vampire Survivors | 237 | 82 | 0 | 155 | ✅ 100% |
+| Vampire Survivors | 306 | 85 | 0 | 221 | ✅ 100% |
 | Watery Words | 150 | 150 | 0 | 0 | ✅ 100% |
 | Wordipelago | 169 | 19 | 0 | 150 | ✅ 100% |
 | Yu-Gi-Oh! Forbidden Memories | 678 | 678 | 0 | 0 | ✅ 100% |
