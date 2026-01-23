@@ -1187,6 +1187,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         problematic_reason = None
         is_combined_or_rule = False  # True if this is a combined rule from add_rule(..., combine='or')
         glitch_rule_source = None  # Source code of the glitch rule if it's in closure
+        old_rule_func = None  # The original rule from a combined or-rule
 
         if hasattr(rule_func, '__closure__') and rule_func.__closure__:
             free_vars = rule_func.__code__.co_freevars
@@ -1217,6 +1218,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                                 glitch_rule_source = inspect.getsource(value)
                             except (OSError, TypeError):
                                 pass
+
+                    # Store old_rule for later analysis if this is a combined or-rule
+                    elif var_name == 'old_rule' and callable(value):
+                        old_rule_func = value
 
                     # Check for mire_clip, hera_clip (lambda functions)
                     elif var_name in ('mire_clip', 'hera_clip', 'mirrorless_moat_rule', 'hera_rule', 'gt_rule'):
@@ -1309,18 +1314,120 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         except (OSError, TypeError) as e:
             logger.debug(f"ALttP: Could not inspect source: {e}")
 
-        # For combined rules (from add_rule with combine='or'), use True_ as fallback
-        # The original rule should still work, and using False_ would make the location
-        # always inaccessible which is incorrect.
-        if is_combined_or_rule:
-            logger.debug(f"ALttP: Combined or-rule - using permissive True_ fallback")
-            return {'rule': 'True_'}
+        # For combined rules (from add_rule with combine='or'), try to analyze old_rule
+        # instead of using True_ which is too permissive.
+        # The combined rule is: glitch_rule OR old_rule
+        # Since we can't serialize glitch_rule, we drop it and just use old_rule.
+        if is_combined_or_rule and old_rule_func is not None:
+            logger.debug(f"ALttP: Combined or-rule - analyzing old_rule instead of using True_")
+            old_rule_result = self._analyze_old_rule(old_rule_func, target_name)
+            if old_rule_result is not None:
+                return old_rule_result
+            # If old_rule analysis fails, fall through to default behavior
+            logger.debug(f"ALttP: Failed to analyze old_rule, using conservative False_")
+        elif is_combined_or_rule:
+            # old_rule not found in closure, use conservative approach
+            logger.debug(f"ALttP: Combined or-rule without old_rule in closure, using False_")
 
         # Default: use conservative False_ for unknown glitch rules
         # This disables the glitch alternative, falling back to original rules.
         # Being conservative ensures UT matches server when glitch conditions aren't met.
         logger.debug(f"ALttP: Using conservative False_ for unknown underworld_glitch rule")
         return {'rule': 'False_'}
+
+    def _analyze_old_rule(self, old_rule_func, target_name: str) -> Optional[Dict[str, Any]]:
+        """Analyze the original (non-glitch) rule from a combined or-rule.
+
+        When add_rule(..., combine='or') creates a combined rule, the old_rule
+        closure variable contains the original rule. This method attempts to
+        analyze that original rule and serialize it.
+
+        Args:
+            old_rule_func: The original rule function from the closure
+            target_name: The name of the entrance/location this rule applies to
+
+        Returns:
+            A serialized rule dict, or None if analysis fails
+        """
+        import inspect
+        import re
+
+        # First, check if old_rule_func itself has problematic closures
+        # If so, recursively handle it
+        old_rule_qualname = getattr(old_rule_func, '__qualname__', '')
+
+        # If old_rule is also from underworld_glitches_rules or dungeon_reentry_rules,
+        # it may be a chained combined rule. Check its closure.
+        if 'underworld_glitches_rules' in old_rule_qualname or 'dungeon_reentry_rules' in old_rule_qualname:
+            # This is another problematic rule - use conservative approach
+            logger.debug(f"ALttP: old_rule is also a glitch rule, using False_")
+            return None
+
+        # Check if old_rule has its own problematic closure (nested combined rules)
+        if self._has_problematic_closure(old_rule_func):
+            logger.debug(f"ALttP: old_rule has problematic closure, using False_")
+            return None
+
+        try:
+            source = inspect.getsource(old_rule_func)
+
+            # Parse common patterns in ALttP rules
+
+            # Pattern: state.has('Item Name', player)
+            has_pattern = r"state\.has\(['\"]([^'\"]+)['\"],\s*player\)"
+            has_matches = re.findall(has_pattern, source)
+
+            # Pattern: state._lttp_has_key('Key Name', player)
+            key_pattern = r"state\._lttp_has_key\(['\"]([^'\"]+)['\"],\s*player\)"
+            key_matches = re.findall(key_pattern, source)
+
+            # Pattern: helper function calls like can_activate_crystal_switch(state, player)
+            helper_pattern = r"(can_\w+|has_\w+|defeat_\w+)\(state,\s*player\)"
+            helper_matches = re.findall(helper_pattern, source)
+
+            # Build rule components
+            components = []
+
+            for item in has_matches:
+                components.append({'rule': 'Has', 'args': {'item_name': item}})
+
+            for key in key_matches:
+                components.append({'rule': 'Has', 'args': {'item_name': key}})
+
+            for helper in helper_matches:
+                components.append({'rule': helper, '_original_ast_type': 'helper', '_converted_from_ast': True})
+
+            if not components:
+                # No recognizable patterns - can't serialize
+                logger.debug(f"ALttP: No recognizable patterns in old_rule source")
+                return None
+
+            # Determine if it's an AND or OR combination based on source
+            if ' and ' in source and ' or ' not in source:
+                # All components ANDed together
+                if len(components) == 1:
+                    result = components[0]
+                else:
+                    result = {'rule': 'And', 'children': components}
+            elif ' or ' in source and ' and ' not in source:
+                # All components ORed together
+                if len(components) == 1:
+                    result = components[0]
+                else:
+                    result = {'rule': 'Or', 'children': components}
+            else:
+                # Mixed or complex - just AND all components for safety
+                if len(components) == 1:
+                    result = components[0]
+                else:
+                    result = {'rule': 'And', 'children': components}
+
+            logger.debug(f"ALttP: Successfully analyzed old_rule for '{target_name}': {result.get('rule', 'unknown')}")
+            return result
+
+        except (OSError, TypeError) as e:
+            logger.debug(f"ALttP: Could not analyze old_rule source: {e}")
+            return None
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.
