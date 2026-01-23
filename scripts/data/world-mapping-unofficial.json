@@ -31,11 +31,11 @@
   },
   "ANIMAL WELL": {
     "apworld_path": "custom_worlds/animal_well.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/animal_well.py",
+    "exporter_size": 1501,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "animal_well"
   },
@@ -131,11 +131,11 @@
   },
   "Autopelago": {
     "apworld_path": "custom_worlds/autopelago.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/autopelago.py",
+    "exporter_size": 9399,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "autopelago"
   },
@@ -621,11 +621,11 @@
   },
   "Majora's Mask Recompiled": {
     "apworld_path": "custom_worlds/mm_recomp.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/mm_recomp.py",
+    "exporter_size": 10657,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "mm_recomp"
   },
@@ -911,11 +911,11 @@
   },
   "Sonic Adventure DX": {
     "apworld_path": "custom_worlds/sadx.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/sadx.py",
+    "exporter_size": 30625,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "sadx"
   },
