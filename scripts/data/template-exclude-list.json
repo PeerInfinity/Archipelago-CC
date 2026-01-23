@@ -260,6 +260,10 @@
       "reason": "Entrance randomization fails frequently with complex option combinations. GER algorithm fails after 10 attempts with mixed pool settings."
     },
     {
+      "name": "The Legend of Zelda - Oracle of Seasons.yaml",
+      "reason": "Uses parameterized helper functions with extra parameters beyond (state, player) such as oos_can_jump_1_wide_liquid(state, player, can_summon_companion), oos_self_locking_item(state, player, region_name, item_name). Exporter hits infinite loop limit (10000+ calls) analyzing these helpers due to complex interdependencies and runtime option access. Results in undefined helpers in worldgen Rules.py causing NameError."
+    },
+    {
       "name": "The Sims 4.yaml",
       "reason": "APWorld bug: fill_slot_data() returns keys like 'goal' but generate_early() expects 'goal_value'. Key mismatch causes KeyError during worldgen regeneration."
     },
