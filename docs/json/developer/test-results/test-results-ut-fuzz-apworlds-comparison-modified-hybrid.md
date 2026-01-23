@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 05:19:57
+**Generated:** 2026-01-23 05:43:21
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -55,7 +55,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Diddy Kong Racing | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Digimon World | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 90.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -146,7 +146,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | osu! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| plateup | ⚠️ 70.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
+| plateup | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
 ## Games Passing Both (32)
 
