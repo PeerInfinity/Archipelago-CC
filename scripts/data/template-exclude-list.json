@@ -168,6 +168,10 @@
       "reason": "Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format."
     },
     {
+      "name": "Final Fantasy Tactics A2.yaml",
+      "reason": "APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options."
+    },
+    {
       "name": "Frogmonster.yaml",
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
     },
