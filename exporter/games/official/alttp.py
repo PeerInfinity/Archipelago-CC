@@ -110,6 +110,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     # Pattern to detect serialized bunny rule lambdas
     BUNNY_RULE_PATTERN = re.compile(r'<function set_bunny_rules\.')
 
+    # World attributes that need to be exported for rule evaluation
+    # These values are computed at runtime based on item_pool option
+    WORLD_ATTRIBUTES = {
+        'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
+        'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 36),
+    }
+
     def __init__(self, world=None):
         """Initialize with optional world reference."""
         super().__init__(world)
@@ -119,7 +126,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
         self._entrance_shuffle_mode = self._check_entrance_shuffle_mode(world)
-        self._is_no_logic = self._check_no_logic_mode(world)
         self._item_placements: Dict[str, str] = {}
 
     def _check_glitch_mode(self, world) -> bool:
@@ -190,23 +196,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if mode in ('full', 'dungeons_full'):
             logger.info(f"ALttP: Entrance shuffle mode '{mode}' detected - will intercept glitch rules")
         return mode
-
-    def _check_no_logic_mode(self, world) -> bool:
-        """Check if the world is in no_logic mode.
-
-        In no_logic mode, accessibility rules are not enforced by the server.
-        Everything is considered accessible, so we should not generate
-        restrictive rules like shop price requirements.
-        """
-        if world is None or not hasattr(world, 'options'):
-            return False
-        if not hasattr(world.options, 'glitches_required'):
-            return False
-        glitches_mode = world.options.glitches_required.current_key
-        is_no_logic = glitches_mode == 'no_logic'
-        if is_no_logic:
-            logger.info(f"ALttP: no_logic mode detected - shop price rules will be skipped")
-        return is_no_logic
 
     def _get_option_value(self, option_name: str) -> Any:
         """Get the value of an option from the world.
@@ -1700,15 +1689,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         Returns None for other price types (Rupees, etc.) which have no requirements.
 
-        Note: In no_logic mode for single-player worlds, set_rules() returns early
-        without setting any rules. While shop rules are added in create_shops(),
-        they are not enforced in no_logic mode. We skip generating shop price
-        rules to match server behavior.
+        Note: Shop price rules are added in create_shops() via add_rule(), not in
+        set_rules(). This means they ARE enforced even in no_logic mode, since
+        the no_logic early return in set_rules() doesn't affect rules added elsewhere.
         """
-        # In no_logic mode, rules are not enforced - skip shop price requirements
-        if self._is_no_logic:
-            return None
-
         shop_price_type = location_data.get('shop_price_type')
         shop_price = location_data.get('shop_price', 0)
 
