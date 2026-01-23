@@ -1,0 +1,565 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Sentinels of the Multiverse
+Location Count:                  271
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Enabled Sets:                    Official
+Required Villains:               0
+Villain Points:                  advanced: 0, challenge: 0, normal: 1, ultimate: 0
+Required Variants:               0
+Required Scions:                 10
+Scions are Relative:             No
+Pool Size:                       contenders: 100%, environments: 100%, gladiators: 100%, heroes: 100%, variants: 100%, villains: 100%
+Include in Pool:                 
+Include Variants in Pool:        
+Exclude from Pool:               
+Filler Weights:                  {'name': 'HeroHp', 'weight': 5}, {'name': 'StartHandsize', 'weight': 4, 'variant': 'pos', 'specificity': 1}, {'name': 'StartHandsize', 'weight': 2, 'variant': 'neg', 'specificity': 1, 'max': 3}, {'name': 'Mulligan', 'weight': 1, 'variant': 'pos', 'specificity': 1}, {'name': 'HeroDamageDealt', 'weight': 2, 'variant': 'pos', 'specificity': 1, 'max': 3}, {'name': 'HeroDamageDealt', 'weight': 1, 'variant': 'neg', 'specificity': 1, 'max': 3}, {'name': 'HeroDamageTaken', 'weight': 1, 'variant': 'pos', 'specificity': 1, 'max': 3}, {'name': 'HeroDamageTaken', 'weight': 2, 'variant': 'neg', 'specificity': 1, 'max': 3}, {'name': 'HeroPower', 'weight': 2, 'variant': 'pos', 'specificity': 1, 'max': 2}, {'name': 'HeroPower', 'weight': 1, 'variant': 'neg', 'specificity': 1, 'max': 1}, {'name': 'HeroCardDraw', 'weight': 3, 'variant': 'pos', 'specificity': 1, 'max': 2}, {'name': 'HeroCardDraw', 'weight': 1, 'variant': 'neg', 'specificity': 1, 'max': 1}, {'name': 'VillainHp', 'weight': 5}, {'name': 'VillainDamageTaken', 'weight': 2, 'variant': 'pos', 'max': 2}, {'name': 'VillainDamageTaken', 'weight': 1, 'variant': 'neg', 'max': 2}, {'name': 'VillainDamageDealt', 'weight': 2, 'max': 3}, {'name': 'VillainCardPlays', 'weight': 1, 'variant': 'neg', 'max': 1}, {'name': 'VillainStartCardPlays', 'weight': 3, 'variant': 'neg', 'max': 3}
+Filler Duration:                 5
+Location Density:                environment: 1, hero: 0, variant_unlock: 1, villain: {'advanced': 1, 'challenge': 1, 'normal': 1, 'ultimate': 1}
+Starting Items:                  contenders: 0, environments: 2, gladiators: 0, heroes: 5, villains: 2
+Villain Difficulties:            Advanced: 3, Challenge: 3, Normal: 3, Oblivaeon: 20, Ultimate: 8, Iron Legacy: {'Advanced': 9, 'Challenge': 9, 'Normal': 8, 'Ultimate': 10}, Progeny: {'Advanced': 7, 'Challenge': 7, 'Normal': 6, 'Ultimate': 8}, The Chairman: {'Advanced': 6, 'Challenge': 8, 'Normal': 6, 'Ultimate': 12}, The Matriarch: {'Advanced': 7, 'Challenge': 7, 'Normal': 5, 'Ultimate': 10}
+Death Link:                      False
+
+
+Starting Items:
+
+La Comodora
+Termi-Nation Unity
+Parse
+Termi-Nation Absolute Zero
+Dr. Medico Malpractice
+Infinitor
+Apostate
+Maerynian Refuge
+Dok'Thorath Capital
+
+Locations:
+
+Sergeant Steel - Normal #1: Power use -1 (Any Tachyon)
+Sergeant Steel - Advanced #1: Ingenuity (Any Luminary)
+Sergeant Steel - Challenge #1: Ambuscade
+Sergeant Steel - Ultimate #1: The Operative
+Plague Rat (Team) - Normal #1: Villain Fragility
+Plague Rat (Team) - Advanced #1: Villain Toughness
+Plague Rat (Team) - Challenge #1: Hero Toughness
+Plague Rat (Team) - Ultimate #1: Hero Toughness
+The Operative - Normal #1: Setback
+The Operative - Advanced #1: Rapid Deployment
+The Operative - Challenge #1: Haka
+The Operative - Ultimate #1: Villain Strength
+Miss Information (Team) - Normal #1: Baron Blade (Team)
+Miss Information (Team) - Advanced #1: Prime Wardens Fanatic
+Miss Information (Team) - Challenge #1: Heroic Infinitor
+Miss Information (Team) - Ultimate #1: Friction
+Greazer - Normal #1: Hero Toughness
+Greazer - Advanced #1: La Capitan
+Greazer - Challenge #1: Scion of Oblivaeon
+Greazer - Ultimate #1: Freedom Five Wraith
+Citizens Hammer and Anvil - Normal #1: Hero Toughness
+Citizens Hammer and Anvil - Advanced #1: Chokepoint
+Citizens Hammer and Anvil - Challenge #1: Hero Toughness
+Citizens Hammer and Anvil - Ultimate #1: Plague Rat (Team)
+La Capitan (Team) - Normal #1: Hero Toughness
+La Capitan (Team) - Advanced #1: 1 Mulligan (Any Luminary)
+La Capitan (Team) - Challenge #1: Hero Fragility
+La Capitan (Team) - Ultimate #1: Power use +1 (Any Bunker)
+Bugbear - Normal #1: Scion of Oblivaeon
+Bugbear - Advanced #1: Super Sentai Idealist
+Bugbear - Challenge #1: Hero Fragility
+Bugbear - Ultimate #1: Omnitron IV
+Biomancer - Normal #1: The Enclave of the Endlings
+Biomancer - Advanced #1: Power use -1 (Any Captain Cosmic)
+Biomancer - Challenge #1: Rook City Wraith
+Biomancer - Ultimate #1: Power use +1 (Any Akash'Thriya)
+Ambuscade (Team) - Normal #1: Villain Weakness
+Ambuscade (Team) - Advanced #1: Hero Toughness
+Ambuscade (Team) - Challenge #1: Hero Vulnerability (Any Setback)
+Ambuscade (Team) - Ultimate #1: Villain Strength
+Proletariat - Normal #1: Ra: Setting Sun
+Proletariat - Advanced #1: Tempest
+Proletariat - Challenge #1: G.I. Bunker
+Proletariat - Ultimate #1: The Matriarch
+Fright Train - Normal #1: Time Cataclysm
+Fright Train - Advanced #1: Power use -1 (Any Benchmark)
+Fright Train - Challenge #1: Dr. Medico
+Fright Train - Ultimate #1: Hero Fortification (Any Wraith)
+Friction - Normal #1: Mad Bomber Baron Blade
+Friction - Advanced #1: Villain Toughness
+Friction - Challenge #1: Ruins of Atlantis
+Friction - Ultimate #1: Spite
+Ermine - Normal #1: Omnitron II
+Ermine - Advanced #1: Kaargra Warfang
+Ermine - Challenge #1: Xtreme Prime Wardens Haka
+Ermine - Ultimate #1: Absolute Zero
+Baron Blade (Team) - Normal #1: Dark Visionary
+Baron Blade (Team) - Advanced #1: Omnitron-X
+Baron Blade (Team) - Challenge #1: Ermine
+Baron Blade (Team) - Ultimate #1: Hero Strength (Any Parse)
+Chokepoint - Normal #1: Proletariat
+Chokepoint - Advanced #1: Scion of Oblivaeon
+Chokepoint - Challenge #1: Cosmic Inventor Writhe
+Chokepoint - Ultimate #1: Skinwalker GloomWeaver
+Wager Master - Normal #1: Bunker
+Wager Master - Advanced #1: Tachyon
+Wager Master - Challenge #1: Hero Fragility
+Wager Master - Ultimate #1: Rapid Deployment
+Progeny - Normal #1: Villain Weakness
+Progeny - Advanced #1: Ingenuity (Any Benchmark)
+Progeny - Challenge #1: The Naturalist
+Progeny - Ultimate #1: Hero Toughness
+Kaargra Warfang - Normal #1: The Hunted Naturalist
+Kaargra Warfang - Advanced #1: The Adamant Sentinels
+Kaargra Warfang - Challenge #1: Kismet
+Kaargra Warfang - Ultimate #1: Nightmist
+Heroic Infinitor - Normal #1: Argent Adept
+Heroic Infinitor - Advanced #1: K.N.Y.F.E.
+Heroic Infinitor - Challenge #1: Villain Fragility
+Heroic Infinitor - Ultimate #1: Baron Blade
+Infinitor - Normal #1: Freedom Six Tachyon
+Infinitor - Advanced #1: Power use +1 (Any Benchmark)
+Infinitor - Challenge #1: Freedom Five Absolute Zero
+Infinitor - Ultimate #1: Scion of Oblivaeon
+Deadline - Normal #1: Villain Strength
+Deadline - Advanced #1: Horde +1
+Deadline - Challenge #1: Hero Toughness
+Deadline - Ultimate #1: Extremist Sky-Scraper
+Trickster Kismet - Normal #1: Prime Wardens Captain Cosmic
+Trickster Kismet - Advanced #1: Fright Train
+Trickster Kismet - Challenge #1: Benchmark
+Trickster Kismet - Ultimate #1: Freedom Six Unity
+Kismet - Normal #1: Wagner Mars Base
+Kismet - Advanced #1: Villain Fragility
+Kismet - Challenge #1: Silver Gulch 1883
+Kismet - Ultimate #1: Akash'Thriya: Spirit of the Void
+Iron Legacy - Normal #1: Citizens Hammer and Anvil
+Iron Legacy - Advanced #1: Insula Primalis
+Iron Legacy - Challenge #1: The Ennead
+Iron Legacy - Ultimate #1: The Eternal Haka
+The Dreamer - Normal #1: Dark Watch Harpy
+The Dreamer - Advanced #1: Hero Fragility
+The Dreamer - Challenge #1: Ingenuity (Any Wraith)
+The Dreamer - Ultimate #1: Madame Mittermeier's Fantastical Festival of Conundrums and Curiosities
+La Capitan - Normal #1: Magmaria
+La Capitan - Advanced #1: Villain Fragility
+La Capitan - Challenge #1: Dark Conductor Argent Adept
+La Capitan - Ultimate #1: Villain Toughness
+Miss Information - Normal #1: Starting Handsize +1 (Any Benchmark)
+Miss Information - Advanced #1: Miss Information (Team)
+Miss Information - Challenge #1: Hero Toughness
+Miss Information - Ultimate #1: America's Greatest Legacy
+Skinwalker GloomWeaver - Normal #1: Bugbear
+Skinwalker GloomWeaver - Advanced #1: The Scholar
+Skinwalker GloomWeaver - Challenge #1: Hero Fragility
+Skinwalker GloomWeaver - Ultimate #1: Captain Cosmic Requital
+GloomWeaver - Normal #1: Nexus of the Void
+GloomWeaver - Advanced #1: Biomancer
+GloomWeaver - Challenge #1: Xtreme Prime Wardens Tempest
+GloomWeaver - Ultimate #1: Hero Vulnerability (Any Haka)
+The Ennead - Normal #1: America's Newest Legacy
+The Ennead - Advanced #1: Starting Handsize -1 (Any The Harpy)
+The Ennead - Challenge #1: Expatriette
+The Ennead - Ultimate #1: K.N.Y.F.E. Rogue Agent
+Apostate - Normal #1: Benchmark Supply & Demand
+Apostate - Advanced #1: Freedom Six Wraith
+Apostate - Challenge #1: Realm of Discord
+Apostate - Ultimate #1: Dark Watch Mister Fixer
+Akash'Bhuta - Normal #1: Villain Fragility
+Akash'Bhuta - Advanced #1: Pike Industrial Complex
+Akash'Bhuta - Challenge #1: Ingenuity (Any Expatriette)
+Akash'Bhuta - Ultimate #1: Legacy
+Spite: Agent of Gloom - Normal #1: The Dreamer
+Spite: Agent of Gloom - Advanced #1: Greazer
+Spite: Agent of Gloom - Challenge #1: Hero Fragility
+Spite: Agent of Gloom - Ultimate #1: Freedom Six Tempest
+Spite - Normal #1: Freedom Six Bunker
+Spite - Advanced #1: Redeemer Fanatic
+Spite - Challenge #1: Dark Watch Nightmist
+Spite - Ultimate #1: Prime Wardens Haka
+Plague Rat - Normal #1: Hero Toughness
+Plague Rat - Advanced #1: Starting Handsize +1 (Any Chrono-Ranger)
+Plague Rat - Challenge #1: Completionist Guise
+Plague Rat - Ultimate #1: Dark Watch Expatriette
+The Matriarch - Normal #1: Luminary
+The Matriarch - Advanced #1: Dark Watch Setback
+The Matriarch - Challenge #1: Unity
+The Matriarch - Ultimate #1: Stupidity (Any Captain Cosmic)
+The Chairman - Normal #1: Writhe
+The Chairman - Advanced #1: Power use +1 (Any Nightmist)
+The Chairman - Challenge #1: Villain Fragility
+The Chairman - Ultimate #1: Hero Toughness
+Ambuscade - Normal #1: Tomb of Anubis
+Ambuscade - Advanced #1: Santa Guise
+Ambuscade - Challenge #1: The Celestial Tribunal
+Ambuscade - Ultimate #1: Plague Rat
+Omnitron II - Normal #1: Sergeant Steel
+Omnitron II - Advanced #1: Akash'Thriya
+Omnitron II - Challenge #1: Villain Fragility
+Omnitron II - Ultimate #1: Omnitron
+Omnitron - Normal #1: The Idealist
+Omnitron - Advanced #1: La Capitan (Team)
+Omnitron - Challenge #1: Freedom Five Tachyon
+Omnitron - Ultimate #1: La Comodora: Curse of the Black Spot
+Grand Warlord Voss - Normal #1: Ra
+Grand Warlord Voss - Advanced #1: Scion of Oblivaeon
+Grand Warlord Voss - Challenge #1: Hero Fragility
+Grand Warlord Voss - Ultimate #1: Hero Fragility
+Citizen Dawn - Normal #1: Villain Fragility
+Citizen Dawn - Advanced #1: Champion Studios
+Citizen Dawn - Challenge #1: Lifeline Blood Mage
+Citizen Dawn - Ultimate #1: The Scholar of the Infinite
+Mad Bomber Baron Blade - Normal #1: Hero Strength (Any K.N.Y.F.E.)
+Mad Bomber Baron Blade - Advanced #1: Hero Toughness
+Mad Bomber Baron Blade - Challenge #1: Sky-Scraper
+Mad Bomber Baron Blade - Ultimate #1: The Visionary
+Baron Blade - Normal #1: Hero Fragility
+Baron Blade - Advanced #1: The Block
+Baron Blade - Challenge #1: Chrono-Ranger the Best of Times
+Baron Blade - Ultimate #1: 1 Mulligan (Any Luminary)
+Nexus of the Void - Any Difficulty #1: Heroic Luminary
+Mordengrad - Any Difficulty #1: Action Hero Stuntman
+Maerynian Refuge - Any Difficulty #1: Starting Handsize +1 (Any Ra)
+Fort Adamant - Any Difficulty #1: Mordengrad
+Champion Studios - Any Difficulty #1: Deadline
+The Celestial Tribunal - Any Difficulty #1: Scion of Oblivaeon
+The Temple of Zhu Long - Any Difficulty #1: The Harpy
+Magmaria - Any Difficulty #1: Xtreme Prime Wardens Captain Cosmic
+Madame Mittermeier's Fantastical Festival of Conundrums and Curiosities - Any Difficulty #1: Villain Toughness
+The Court of Blood - Any Difficulty #1: Rapid Deployment
+Mobile Defense Platform - Any Difficulty #1: The Final Wasteland
+Freedom Tower - Any Difficulty #1: Chrono-Ranger
+Omnitron IV - Any Difficulty #1: Miss Information
+The Enclave of the Endlings - Any Difficulty #1: Villain Weakness
+Dok'Thorath Capital - Any Difficulty #1: Starting Handsize -1 (Any Sky-Scraper)
+Time Cataclysm - Any Difficulty #1: Villain Fragility
+The Block - Any Difficulty #1: Rook City
+The Final Wasteland - Any Difficulty #1: Villain Fragility
+Tomb of Anubis - Any Difficulty #1: Scion of Oblivaeon
+Realm of Discord - Any Difficulty #1: Spite: Agent of Gloom
+Rook City - Any Difficulty #1: Hero Vulnerability (Any The Sentinels)
+Pike Industrial Complex - Any Difficulty #1: Freedom Tower
+Silver Gulch 1883 - Any Difficulty #1: The Court of Blood
+Wagner Mars Base - Any Difficulty #1: Starting Handsize -1 (Any The Scholar)
+Ruins of Atlantis - Any Difficulty #1: Trickster Kismet
+Megalopolis - Any Difficulty #1: Freedom Six Absolute Zero
+Insula Primalis - Any Difficulty #1: Power use -1 (Any Omnitron-X)
+Spite: Agent of Gloom - Unlock #1: Villain Fortification
+Omnitron II - Unlock #1: Villain Fragility
+Mad Bomber Baron Blade - Unlock #1: Hero Fragility
+Skinwalker GloomWeaver - Unlock #1: Megalopolis
+America's Greatest Legacy - Unlock #1: Lifeline
+Lifeline Blood Mage - Unlock #1: Villain Fragility
+Dark Watch Harpy - Unlock #1: Ambuscade (Team)
+La Comodora: Curse of the Black Spot - Unlock #1: Fort Adamant
+Akash'Thriya: Spirit of the Void - Unlock #1: Mainstay
+Cosmic Inventor Writhe - Unlock #1: Omnitron-U
+Road Warrior Mainstay - Unlock #1: 1 Mulligan (Any Argent Adept)
+Super Sentai Idealist - Unlock #1: Fanatic
+The Adamant Sentinels - Unlock #1: Prime Wardens Argent Adept
+Parse: Fugue State - Unlock #1: Parse: Fugue State
+The Hunted Naturalist - Unlock #1: Ingenuity (Any Setback)
+K.N.Y.F.E. Rogue Agent - Unlock #1: Ingenuity (Any Haka)
+Santa Guise - Unlock #1: Grand Warlord Voss
+Extremist Sky-Scraper - Unlock #1: Wraith
+Heroic Infinitor - Unlock #1: Ingenuity (Any Expatriette)
+Captain Cosmic Requital - Unlock #1: The Visionary Unleashed
+Xtreme Prime Wardens Captain Cosmic - Unlock #1: The Temple of Zhu Long
+The Scholar of the Infinite - Unlock #1: Akash'Bhuta
+Dark Conductor Argent Adept - Unlock #1: Iron Legacy
+Xtreme Prime Wardens Argent Adept - Unlock #1: Villain Fragility
+Dark Watch Mister Fixer - Unlock #1: Stupidity (Any Argent Adept)
+Dark Watch Expatriette - Unlock #1: Xtreme Prime Wardens Fanatic
+Omnitron-U - Unlock #1: Hero Fragility
+Termi-Nation Unity - Unlock #1: Hero Toughness
+Freedom Six Unity - Unlock #1: Guise
+Rook City Wraith - Unlock #1: Starting Handsize +1 (Any Luminary)
+Freedom Six Wraith - Unlock #1: Stuntman
+Dark Visionary - Unlock #1: The Super-Scientific Tachyon
+Dark Watch Nightmist - Unlock #1: Villain Vulnerability
+Freedom Six Tempest - Unlock #1: Hero Toughness
+Xtreme Prime Wardens Tempest - Unlock #1: Progeny
+The Super-Scientific Tachyon - Unlock #1: GloomWeaver
+Chrono-Ranger the Best of Times - Unlock #1: Starting Handsize -1 (Any Writhe)
+Freedom Six Tachyon - Unlock #1: Mobile Defense Platform
+Ra: Horus of Two Horizons - Unlock #1: Hero Vulnerability (Any Expatriette)
+America's Newest Legacy - Unlock #1: Hero Fragility
+The Eternal Haka - Unlock #1: Termi-Nation Bunker
+Xtreme Prime Wardens Haka - Unlock #1: Villain Vulnerability
+Trickster Kismet - Unlock #1: Mister Fixer
+Redeemer Fanatic - Unlock #1: Hero Vulnerability (Any The Naturalist)
+Xtreme Prime Wardens Fanatic - Unlock #1: Xtreme Prime Wardens Argent Adept
+G.I. Bunker - Unlock #1: Captain Cosmic
+Termi-Nation Bunker - Unlock #1: Prime Wardens Tempest
+Freedom Six Bunker - Unlock #1: Villain Fragility
+Heroic Luminary - Unlock #1: Hero Fragility
+Freedom Six Absolute Zero - Unlock #1: Starting Handsize +1 (Any Guise)
+Termi-Nation Absolute Zero - Unlock #1: Scion of Oblivaeon
+Prime Wardens Captain Cosmic - Unlock #1: Citizen Dawn
+Prime Wardens Haka - Unlock #1: Scion of Oblivaeon
+Prime Wardens Fanatic - Unlock #1: Ingenuity (Any Mainstay)
+Prime Wardens Tempest - Unlock #1: Wager Master
+Dark Watch Setback - Unlock #1: Ra: Horus of Two Horizons
+Freedom Five Absolute Zero - Unlock #1: Road Warrior Mainstay
+Freedom Five Wraith - Unlock #1: Scion of Oblivaeon
+Freedom Five Legacy - Unlock #1: The Chairman
+Freedom Five Bunker - Unlock #1: Freedom Five Bunker
+Freedom Five Tachyon - Unlock #1: Villain Toughness
+Prime Wardens Argent Adept - Unlock #1: The Sentinels
+Ra: Setting Sun - Unlock #1: Freedom Five Legacy
+The Visionary Unleashed - Unlock #1: Hero Strength (Any Lifeline)
+
+Playthrough:
+
+0: {
+  Apostate
+  Dok'Thorath Capital
+  Dr. Medico Malpractice
+  Infinitor
+  La Comodora
+  Maerynian Refuge
+  Parse
+  Termi-Nation Absolute Zero
+  Termi-Nation Unity
+}
+1: {
+  Apostate - Advanced #1: Freedom Six Wraith
+  Apostate - Challenge #1: Realm of Discord
+  Apostate - Normal #1: Benchmark Supply & Demand
+  Infinitor - Challenge #1: Freedom Five Absolute Zero
+  Infinitor - Normal #1: Freedom Six Tachyon
+}
+2: {
+  Apostate - Ultimate #1: Dark Watch Mister Fixer
+  Infinitor - Ultimate #1: Scion of Oblivaeon
+  Realm of Discord - Any Difficulty #1: Spite: Agent of Gloom
+  The Super-Scientific Tachyon - Unlock #1: GloomWeaver
+}
+3: {
+  GloomWeaver - Advanced #1: Biomancer
+  GloomWeaver - Challenge #1: Xtreme Prime Wardens Tempest
+  GloomWeaver - Normal #1: Nexus of the Void
+  Spite: Agent of Gloom - Advanced #1: Greazer
+  Spite: Agent of Gloom - Normal #1: The Dreamer
+}
+4: {
+  Nexus of the Void - Any Difficulty #1: Heroic Luminary
+  The Dreamer - Normal #1: Dark Watch Harpy
+  The Dreamer - Ultimate #1: Madame Mittermeier's Fantastical Festival of Conundrums and Curiosities
+}
+5: {
+  Dark Watch Harpy - Unlock #1: Ambuscade (Team)
+}
+6: {
+  Biomancer - Challenge #1: Rook City Wraith
+  Biomancer - Normal #1: The Enclave of the Endlings
+  Greazer - Advanced #1: La Capitan
+  Greazer - Challenge #1: Scion of Oblivaeon
+  Greazer - Ultimate #1: Freedom Five Wraith
+}
+7: {
+  La Capitan - Challenge #1: Dark Conductor Argent Adept
+  La Capitan - Normal #1: Magmaria
+}
+8: {
+  Dark Conductor Argent Adept - Unlock #1: Iron Legacy
+  Magmaria - Any Difficulty #1: Xtreme Prime Wardens Captain Cosmic
+}
+9: {
+  Iron Legacy - Advanced #1: Insula Primalis
+  Iron Legacy - Challenge #1: The Ennead
+  Iron Legacy - Normal #1: Citizens Hammer and Anvil
+  Iron Legacy - Ultimate #1: The Eternal Haka
+}
+10: {
+  Citizens Hammer and Anvil - Advanced #1: Chokepoint
+  Citizens Hammer and Anvil - Ultimate #1: Plague Rat (Team)
+  The Ennead - Challenge #1: Expatriette
+  The Ennead - Normal #1: America's Newest Legacy
+  The Ennead - Ultimate #1: K.N.Y.F.E. Rogue Agent
+}
+11: {
+  Chokepoint - Advanced #1: Scion of Oblivaeon
+  Chokepoint - Challenge #1: Cosmic Inventor Writhe
+  Chokepoint - Normal #1: Proletariat
+  Chokepoint - Ultimate #1: Skinwalker GloomWeaver
+}
+12: {
+  Cosmic Inventor Writhe - Unlock #1: Omnitron-U
+  Proletariat - Advanced #1: Tempest
+  Proletariat - Challenge #1: G.I. Bunker
+  Proletariat - Normal #1: Ra: Setting Sun
+  Proletariat - Ultimate #1: The Matriarch
+  Skinwalker GloomWeaver - Advanced #1: The Scholar
+  Skinwalker GloomWeaver - Normal #1: Bugbear
+  Skinwalker GloomWeaver - Ultimate #1: Captain Cosmic Requital
+  Spite: Agent of Gloom - Ultimate #1: Freedom Six Tempest
+}
+13: {
+  Bugbear - Advanced #1: Super Sentai Idealist
+  Bugbear - Normal #1: Scion of Oblivaeon
+  Bugbear - Ultimate #1: Omnitron IV
+  G.I. Bunker - Unlock #1: Captain Cosmic
+  The Matriarch - Advanced #1: Dark Watch Setback
+  The Matriarch - Challenge #1: Unity
+  The Matriarch - Normal #1: Luminary
+  The Scholar of the Infinite - Unlock #1: Akash'Bhuta
+  Xtreme Prime Wardens Tempest - Unlock #1: Progeny
+}
+14: {
+  Akash'Bhuta - Advanced #1: Pike Industrial Complex
+  Akash'Bhuta - Ultimate #1: Legacy
+  Captain Cosmic Requital - Unlock #1: The Visionary Unleashed
+  Freedom Six Unity - Unlock #1: Guise
+  Omnitron IV - Any Difficulty #1: Miss Information
+  Parse: Fugue State - Unlock #1: Parse: Fugue State
+  Progeny - Challenge #1: The Naturalist
+  Super Sentai Idealist - Unlock #1: Fanatic
+  Xtreme Prime Wardens Captain Cosmic - Unlock #1: The Temple of Zhu Long
+}
+15: {
+  Dark Visionary - Unlock #1: The Super-Scientific Tachyon
+  Miss Information - Advanced #1: Miss Information (Team)
+  Miss Information - Ultimate #1: America's Greatest Legacy
+  Pike Industrial Complex - Any Difficulty #1: Freedom Tower
+  Santa Guise - Unlock #1: Grand Warlord Voss
+  The Temple of Zhu Long - Any Difficulty #1: The Harpy
+}
+16: {
+  Freedom Tower - Any Difficulty #1: Chrono-Ranger
+  Grand Warlord Voss - Advanced #1: Scion of Oblivaeon
+  Grand Warlord Voss - Normal #1: Ra
+  Miss Information (Team) - Advanced #1: Prime Wardens Fanatic
+  Miss Information (Team) - Challenge #1: Heroic Infinitor
+  Miss Information (Team) - Normal #1: Baron Blade (Team)
+  Miss Information (Team) - Ultimate #1: Friction
+}
+17: {
+  Baron Blade (Team) - Advanced #1: Omnitron-X
+  Baron Blade (Team) - Challenge #1: Ermine
+  Baron Blade (Team) - Normal #1: Dark Visionary
+  Friction - Challenge #1: Ruins of Atlantis
+  Friction - Normal #1: Mad Bomber Baron Blade
+  Friction - Ultimate #1: Spite
+  Heroic Infinitor - Advanced #1: K.N.Y.F.E.
+  Heroic Infinitor - Normal #1: Argent Adept
+  Heroic Infinitor - Ultimate #1: Baron Blade
+}
+18: {
+  Baron Blade - Advanced #1: The Block
+  Baron Blade - Challenge #1: Chrono-Ranger the Best of Times
+  Ermine - Advanced #1: Kaargra Warfang
+  Ermine - Challenge #1: Xtreme Prime Wardens Haka
+  Ermine - Normal #1: Omnitron II
+  Ermine - Ultimate #1: Absolute Zero
+  Mad Bomber Baron Blade - Challenge #1: Sky-Scraper
+  Mad Bomber Baron Blade - Ultimate #1: The Visionary
+  Ruins of Atlantis - Any Difficulty #1: Trickster Kismet
+  Spite - Advanced #1: Redeemer Fanatic
+  Spite - Challenge #1: Dark Watch Nightmist
+  Spite - Normal #1: Freedom Six Bunker
+  Spite - Ultimate #1: Prime Wardens Haka
+}
+19: {
+  Extremist Sky-Scraper - Unlock #1: Wraith
+  Kaargra Warfang - Advanced #1: The Adamant Sentinels
+  Kaargra Warfang - Challenge #1: Kismet
+  Kaargra Warfang - Normal #1: The Hunted Naturalist
+  Kaargra Warfang - Ultimate #1: Nightmist
+  Omnitron II - Advanced #1: Akash'Thriya
+  Omnitron II - Normal #1: Sergeant Steel
+  Omnitron II - Ultimate #1: Omnitron
+  Termi-Nation Absolute Zero - Unlock #1: Scion of Oblivaeon
+  The Block - Any Difficulty #1: Rook City
+  Trickster Kismet - Advanced #1: Fright Train
+  Trickster Kismet - Challenge #1: Benchmark
+  Trickster Kismet - Normal #1: Prime Wardens Captain Cosmic
+  Trickster Kismet - Ultimate #1: Freedom Six Unity
+}
+20: {
+  Akash'Thriya: Spirit of the Void - Unlock #1: Mainstay
+  Dark Watch Expatriette - Unlock #1: Xtreme Prime Wardens Fanatic
+  Fright Train - Challenge #1: Dr. Medico
+  Fright Train - Normal #1: Time Cataclysm
+  Kismet - Challenge #1: Silver Gulch 1883
+  Kismet - Normal #1: Wagner Mars Base
+  Kismet - Ultimate #1: Akash'Thriya: Spirit of the Void
+  Omnitron - Advanced #1: La Capitan (Team)
+  Omnitron - Challenge #1: Freedom Five Tachyon
+  Omnitron - Normal #1: The Idealist
+  Omnitron - Ultimate #1: La Comodora: Curse of the Black Spot
+  Sergeant Steel - Challenge #1: Ambuscade
+  Sergeant Steel - Ultimate #1: The Operative
+  Skinwalker GloomWeaver - Unlock #1: Megalopolis
+  Trickster Kismet - Unlock #1: Mister Fixer
+}
+21: {
+  Ambuscade - Advanced #1: Santa Guise
+  Ambuscade - Challenge #1: The Celestial Tribunal
+  Ambuscade - Normal #1: Tomb of Anubis
+  Ambuscade - Ultimate #1: Plague Rat
+  America's Greatest Legacy - Unlock #1: Lifeline
+  La Comodora: Curse of the Black Spot - Unlock #1: Fort Adamant
+  Megalopolis - Any Difficulty #1: Freedom Six Absolute Zero
+  Silver Gulch 1883 - Any Difficulty #1: The Court of Blood
+  The Operative - Challenge #1: Haka
+  The Operative - Normal #1: Setback
+}
+22: {
+  Fort Adamant - Any Difficulty #1: Mordengrad
+  Plague Rat - Challenge #1: Completionist Guise
+  Plague Rat - Ultimate #1: Dark Watch Expatriette
+  Prime Wardens Argent Adept - Unlock #1: The Sentinels
+  The Celestial Tribunal - Any Difficulty #1: Scion of Oblivaeon
+  Tomb of Anubis - Any Difficulty #1: Scion of Oblivaeon
+  Xtreme Prime Wardens Fanatic - Unlock #1: Xtreme Prime Wardens Argent Adept
+}
+23: {
+  Mordengrad - Any Difficulty #1: Action Hero Stuntman
+  The Adamant Sentinels - Unlock #1: Prime Wardens Argent Adept
+}
+24: {
+  Prime Wardens Captain Cosmic - Unlock #1: Citizen Dawn
+  Prime Wardens Haka - Unlock #1: Scion of Oblivaeon
+  Prime Wardens Tempest - Unlock #1: Wager Master
+}
+25: {
+  Citizen Dawn - Advanced #1: Champion Studios
+  Citizen Dawn - Challenge #1: Lifeline Blood Mage
+  Citizen Dawn - Ultimate #1: The Scholar of the Infinite
+  Wager Master - Advanced #1: Tachyon
+  Wager Master - Normal #1: Bunker
+}
+26: {
+  Champion Studios - Any Difficulty #1: Deadline
+  Freedom Six Tachyon - Unlock #1: Mobile Defense Platform
+  Termi-Nation Bunker - Unlock #1: Prime Wardens Tempest
+}
+27: {
+  Deadline - Ultimate #1: Extremist Sky-Scraper
+  Freedom Five Absolute Zero - Unlock #1: Road Warrior Mainstay
+  Freedom Five Bunker - Unlock #1: Freedom Five Bunker
+  Freedom Five Legacy - Unlock #1: The Chairman
+  Freedom Five Wraith - Unlock #1: Scion of Oblivaeon
+  Mobile Defense Platform - Any Difficulty #1: The Final Wasteland
+}
+28: {
+  Dark Watch Setback - Unlock #1: Ra: Horus of Two Horizons
+  Freedom Six Wraith - Unlock #1: Stuntman
+  The Chairman - Normal #1: Writhe
+  The Eternal Haka - Unlock #1: Termi-Nation Bunker
+}
+29: {
+  Ra: Setting Sun - Unlock #1: Freedom Five Legacy
+}
