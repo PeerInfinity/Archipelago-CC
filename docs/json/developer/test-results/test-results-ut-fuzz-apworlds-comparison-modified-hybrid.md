@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 02:42:11
+**Generated:** 2026-01-23 03:46:48
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -14,10 +14,10 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 33 (26.6%)
-- **Passing Modified Only:** 6 (4.8%)
-- **Passing Hybrid Only:** 11 (8.9%)
-- **Passing Neither:** 74 (59.7%)
+- **Passing Both:** 32 (25.8%)
+- **Passing Modified Only:** 7 (5.6%)
+- **Passing Hybrid Only:** 12 (9.7%)
+- **Passing Neither:** 73 (58.9%)
 
 ## Full Comparison
 
@@ -36,7 +36,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Ape Escape | ⚠️ 60.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Astalon | ❌ 0.0% | ✅ 80.0% | ✅ | ✅ | N/A |
-| Autopelago | ❌ 0.0% | ❌ 0.0% | 9.2KB | ✅ | N/A |
+| Autopelago | ✅ 100.0% | ❌ 0.0% | 9.2KB | ✅ | N/A |
 | Axiom Verge | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Balatro | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Brotato | ✅ 70.0% | ✅ 70.0% | ✅ | ✅ | N/A |
@@ -48,21 +48,21 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Corn Kidz 64 | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | CrossCode | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Crystal Project | ❌ 0.0% | ❌ 30.0% | ✅ | ✅ | N/A |
-| Crystalis | ❌ 0.0% | ✅ 60.0% | ✅ | ✅ | N/A |
+| Crystalis | ❌ 0.0% | ✅ 60.0% | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ⚠️ 50.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Diddy Kong Racing | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Digimon World | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 20.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 90.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Frogmonster | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | GZDoom | ❌ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Golden Sun The Lost Age | ❌ 30.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Golden Sun The Lost Age | ❌ 20.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Grim Dawn | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Hammerwatch | ⚠️ 50.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -79,7 +79,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Kingdom Hearts RE Chain of Memories | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | League of Legends | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Lego Star Wars: The Complete Saga | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
+| Lego Star Wars: The Complete Saga | ⚠️ 80.0% | ✅ 90.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Lingo 2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -126,7 +126,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Star Wars Episode I Racer | ⚠️ 70.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| System Shock 2 | ❌ 0.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Tetris Attack | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | osu! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (33)
+## Games Passing Both (32)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -171,7 +171,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | Kingdom Hearts RE Chain of Memories | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ | ✅ | N/A |
 | League of Legends | ✅ | ✅ | N/A |
-| Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | N/A |
@@ -188,20 +187,21 @@ These games have 100% success rate in both Universal Tracker versions.
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (6)
+## Games Passing Modified Only (7)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Difficult Game About Climbing | ✅ | ✅ | N/A |
+| Autopelago | 9.2KB | ✅ | N/A |
 | Diddy Kong Racing | ✅ | ✅ | N/A |
 | Here Comes Niko! | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
 | Rain World | 11.7KB | ✅ | N/A |
 | Star Fox 64 | 17.1KB | ✅ | N/A |
 
-## Games Passing Hybrid Only (11)
+## Games Passing Hybrid Only (12)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
@@ -212,14 +212,15 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Ape Escape | ✅ | ✅ | N/A |
 | Astalon | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ✅ | ✅ | N/A |
-| Crystalis | ✅ | ✅ | N/A |
+| Crystalis | 9.2KB | ✅ | N/A |
 | GZDoom | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
+| Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
-## Games Passing Neither (74)
+## Games Passing Neither (73)
 
 These games fail in both Universal Tracker versions.
 
@@ -230,7 +231,6 @@ These games fail in both Universal Tracker versions.
 | Against the Storm | ✅ | ✅ | N/A |
 | Another Crabs Treasure | ✅ | ✅ | N/A |
 | Ape Escape 3 | ✅ | ✅ | N/A |
-| Autopelago | 9.2KB | ✅ | N/A |
 | Axiom Verge | ✅ | ✅ | N/A |
 | Balatro | ✅ | ✅ | N/A |
 | Cavern of Dreams | ✅ | ✅ | N/A |
@@ -285,7 +285,7 @@ These games fail in both Universal Tracker versions.
 | Spyro 3 | ✅ | ✅ | N/A |
 | Stacklands | ✅ | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
-| System Shock 2 | ✅ | ✅ | N/A |
+| System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
 | Tetris Attack | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |

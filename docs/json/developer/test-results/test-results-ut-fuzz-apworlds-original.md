@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 02:42:11
+**Generated:** 2026-01-23 03:46:48
 
 **Source Data Created:** 2026-01-10T22:45:14.627157
 
@@ -41,9 +41,9 @@ Of the 42 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 159.3KB
+- **Total Exporter Code:** 183.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 159.3KB
+- **Combined Total:** 183.6KB
 
 ## Test Results
 
@@ -73,7 +73,7 @@ Of the 42 games with 100% pass rate:
 | Corn Kidz 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | CrossCode | ❌ | 10 | 5 | 0 | 5 | 0 | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Crystal Project | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | N/A |
-| Crystalis | ❌ | 10 | 7 | 1 | 0 | 2 | ⚠️ 70.0% | ✅ | ✅ | N/A |
+| Crystalis | ❌ | 10 | 7 | 1 | 0 | 2 | ⚠️ 70.0% | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -151,7 +151,7 @@ Of the 42 games with 100% pass rate:
 | Star Wars Episode I Racer | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | N/A |
+| System Shock 2 | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Tetris Attack | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% | ✅ | ✅ | N/A |

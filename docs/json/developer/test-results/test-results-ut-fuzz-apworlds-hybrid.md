@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 02:42:11
+**Generated:** 2026-01-23 03:46:48
 
 **Source Data Created:** 2026-01-22T21:21:59.389653
 
@@ -45,15 +45,15 @@
 
 Of the 44 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 42/44 (95.5%)
+- **Passing with Generic Exporter:** 41/44 (93.2%)
 - **Passing with Generic Logic:** 44/44 (100.0%)
-- **Passing with Both Generic:** 42/44 (95.5%)
+- **Passing with Both Generic:** 41/44 (93.2%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 159.3KB
+- **Total Exporter Code:** 183.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 159.3KB
+- **Combined Total:** 183.6KB
 
 ## Test Results
 
@@ -84,7 +84,7 @@ Of the 44 games with 100% pass rate:
 | Corn Kidz 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | CrossCode | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Crystal Project | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | N/A |
-| Crystalis | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Crystalis | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | ✅ | ✅ | N/A |
@@ -162,7 +162,7 @@ Of the 44 games with 100% pass rate:
 | Star Wars Episode I Racer | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
+| System Shock 2 | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Tetris Attack | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
