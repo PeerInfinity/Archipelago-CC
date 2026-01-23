@@ -7635,17 +7635,24 @@ class HelperCodeGenerator:
             # Check if this is a state method that needs player
             state_methods_needing_player = {'has', 'has_all', 'has_any', 'has_group', 'count', 'count_group'}
             if attr in state_methods_needing_player:
-                # Check if the object is a simple name (like 's' from a lambda)
+                # Check if the object is a state-like variable (like 'state' or 's' from a lambda)
                 # and we have at least one argument (the item name) but no player
+                # NOTE: Only add player for known state variables, not arbitrary objects
+                # like 'shop' which has a .has() method but doesn't take player.
                 if isinstance(obj, dict) and obj.get('type') == 'name':
-                    # These methods need player as the second argument
-                    # has(item, player), has_all(items, player), etc.
-                    if attr in ('has', 'count') and len(arg_exprs) == 1:
-                        # has(item) -> has(item, player)
-                        arg_exprs.append('player')
-                    elif attr in ('has_all', 'has_any', 'has_group', 'count_group') and len(arg_exprs) == 1:
-                        # has_all(items) -> has_all(items, player)
-                        arg_exprs.append('player')
+                    obj_name = obj.get('name', '')
+                    # Only state-like variable names should get player appended
+                    # 'state' is the standard name, 's' is commonly used in lambdas
+                    state_like_names = {'state', 's'}
+                    if obj_name in state_like_names:
+                        # These methods need player as the second argument
+                        # has(item, player), has_all(items, player), etc.
+                        if attr in ('has', 'count') and len(arg_exprs) == 1:
+                            # has(item) -> has(item, player)
+                            arg_exprs.append('player')
+                        elif attr in ('has_all', 'has_any', 'has_group', 'count_group') and len(arg_exprs) == 1:
+                            # has_all(items) -> has_all(items, player)
+                            arg_exprs.append('player')
 
         # Special handling for .can_reach() method calls - needs state argument
         # Location and Region objects have can_reach(state) but exported code may call it without args
