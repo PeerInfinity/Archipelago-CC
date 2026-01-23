@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-21 19:42:35
+**Generated:** 2026-01-23 11:04:26
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,7 +10,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 342.2s | 568.5s | 899.7s | 1602.6s |
+| Total | 349.7s | 578.3s | 899.7s | 1602.6s |
 | Average | 4.7s | 7.8s | 12.3s | 22.0s |
 | Max | 11.9s | 34.7s | 151.9s | 159.5s |
 | Min | 3.5s | 5.6s | 5.6s | 12.3s |
@@ -72,6 +72,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Old School Runescape | 4.9s | 5.6s | 5.7s | 13.8s |
 | Overcooked! 2 | 4.1s | 7.6s | 7.7s | 14.8s |
 | Paint | 3.7s | 5.6s | 6.7s | 15.8s |
+| Pizza Tower | 7.5s | 9.8s | - | - |
 | Raft | 3.7s | 10.6s | 24.7s | 42.0s |
 | Risk of Rain 2 | 4.1s | 5.6s | 6.7s | 16.4s |
 | Saving Princess | 3.7s | 5.6s | 5.6s | 12.8s |

@@ -64,7 +64,7 @@
       ],
       "last_updated": "2026-01-14T21:37:24.211075"
     },
-    "last_updated": "2026-01-14T21:37:24.211073",
+    "last_updated": "2026-01-23T11:04:26.994181",
     "script_version": "1.0.0"
   },
   "results": {
@@ -34705,6 +34705,985 @@
         "has_custom_game_logic": false,
         "world_directory": "paint"
       }
+    },
+    "Pizza Tower.yaml": {
+      "consecutive_passes_before_failure": 20,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
+      "individual_results": {
+        "0": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.47,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_07758176404715800194/AP_07758176404715800194_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "0",
+          "seed_id": "AP_07758176404715800194",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.81,
+            "return_code": 0,
+            "sphere_reached": 13.8,
+            "success": true,
+            "total_spheres": 13.8,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T10:58:26.633510",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.95,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.76,
+            "return_code": 0,
+            "sphere_reached": 13.1,
+            "success": true,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T10:58:44.372239",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.52,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.96,
+            "return_code": 0,
+            "sphere_reached": 9.2,
+            "success": true,
+            "total_spheres": 9.2,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:01:25.012347",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "11": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.91,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_89757102641179993453/AP_89757102641179993453_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "11",
+          "seed_id": "AP_89757102641179993453",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.08,
+            "return_code": 0,
+            "sphere_reached": 12.1,
+            "success": true,
+            "total_spheres": 12.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:01:43.020192",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "12": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.74,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_97195801408842856158/AP_97195801408842856158_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "12",
+          "seed_id": "AP_97195801408842856158",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.86,
+            "return_code": 0,
+            "sphere_reached": 12.11,
+            "success": true,
+            "total_spheres": 12.11,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:02:01.490488",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "13": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.49,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_97597253031866294651/AP_97597253031866294651_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "13",
+          "seed_id": "AP_97597253031866294651",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.07,
+            "return_code": 0,
+            "sphere_reached": 11.4,
+            "success": true,
+            "total_spheres": 11.4,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:02:19.553878",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "14": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.76,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_85815028503973011889/AP_85815028503973011889_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "14",
+          "seed_id": "AP_85815028503973011889",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.84,
+            "return_code": 0,
+            "sphere_reached": 12.4,
+            "success": true,
+            "total_spheres": 12.4,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:02:37.585045",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "15": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.86,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_03855006904931195900/AP_03855006904931195900_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "15",
+          "seed_id": "AP_03855006904931195900",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.75,
+            "return_code": 0,
+            "sphere_reached": 12.2,
+            "success": true,
+            "total_spheres": 12.2,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:02:55.665366",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "16": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.61,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_63995860912159113643/AP_63995860912159113643_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "16",
+          "seed_id": "AP_63995860912159113643",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.79,
+            "return_code": 0,
+            "sphere_reached": 13.1,
+            "success": true,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:03:13.760778",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "17": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.52,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_54611489483343604102/AP_54611489483343604102_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "17",
+          "seed_id": "AP_54611489483343604102",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.98,
+            "return_code": 0,
+            "sphere_reached": 12.1,
+            "success": true,
+            "total_spheres": 12.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:03:31.674338",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "18": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.76,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_94499266122763165639/AP_94499266122763165639_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "18",
+          "seed_id": "AP_94499266122763165639",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.81,
+            "return_code": 0,
+            "sphere_reached": 13.1,
+            "success": true,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:03:49.675367",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "19": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.66,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_09600906052635305867/AP_09600906052635305867_rules.json",
+            "size_bytes": 307393,
+            "size_mb": 0.29
+          },
+          "seed": "19",
+          "seed_id": "AP_09600906052635305867",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.76,
+            "return_code": 0,
+            "sphere_reached": 13.1,
+            "success": true,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:04:07.709559",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.68,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.68,
+            "return_code": 0,
+            "sphere_reached": 11.2,
+            "success": true,
+            "total_spheres": 11.2,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T10:59:02.567723",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.8,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.64,
+            "return_code": 0,
+            "sphere_reached": 13.26,
+            "success": true,
+            "total_spheres": 13.26,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T10:59:20.401718",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.5,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.83,
+            "return_code": 0,
+            "sphere_reached": 12.12,
+            "success": true,
+            "total_spheres": 12.12,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T10:59:38.313441",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.42,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.8,
+            "return_code": 0,
+            "sphere_reached": 11.1,
+            "success": true,
+            "total_spheres": 11.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T10:59:56.142482",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.65,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.98,
+            "return_code": 0,
+            "sphere_reached": 12.17,
+            "success": true,
+            "total_spheres": 12.17,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:00:13.865027",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.49,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.84,
+            "return_code": 0,
+            "sphere_reached": 14.1,
+            "success": true,
+            "total_spheres": 14.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:00:31.962318",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.6,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.75,
+            "return_code": 0,
+            "sphere_reached": 11.1,
+            "success": true,
+            "total_spheres": 11.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:00:49.804869",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pizza_tower",
+          "game_name_from_yaml": "Pizza Tower",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.38,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pizza_tower/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 307392,
+            "size_mb": 0.29
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.53,
+            "return_code": 0,
+            "sphere_reached": 12.3,
+            "success": true,
+            "total_spheres": 12.3,
+            "warning_count": 0
+          },
+          "template_filename": "Pizza Tower.yaml",
+          "timestamp": "2026-01-23T11:01:07.640846",
+          "world_info": {
+            "apworld_path": "custom_worlds/pizza_tower.apworld",
+            "exporter_path": "exporter/games/unofficial/pizza_tower.py",
+            "exporter_size": 7134,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "pizza_tower",
+            "game_name_from_yaml": "Pizza Tower",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "pizza_tower"
+          }
+        }
+      },
+      "seed_range": "0-19",
+      "seeds_failed": 0,
+      "seeds_passed": 20,
+      "stop_on_failure": true,
+      "summary": {
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
+      },
+      "template_filename": "Pizza Tower.yaml",
+      "timestamp": "2026-01-23T10:58:26.617413",
+      "total_seeds_tested": 20
     },
     "Raft.yaml": {
       "analysis": {

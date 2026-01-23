@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-21 19:42:35
+**Generated:** 2026-01-23 11:04:26
 
 **Source Data Created:** 2026-01-14T21:37:24.211068
 
-**Source Data Last Updated:** 2026-01-14T21:37:24.211073
+**Source Data Last Updated:** 2026-01-23T11:04:25.577226
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 73 (100.0%)
+- **Total Games:** 74
+- **Passed:** 74 (100.0%)
 - **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 7
 - **Total Intermittent Failures:** 7
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
-- **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 40/73 (54.8% of passed)
+- **Passing with Generic Exporter:** 40/74 (54.1% of passed)
+- **Passing with Generic Logic:** 68/74 (91.9% of passed)
+- **Passing with Both Generic:** 40/74 (54.1% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.11 | 5.11 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 100.1KB | ✅ |
+| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 108.7KB | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -76,6 +76,7 @@
 | Old School Runescape | ✅ Passed seeds 1-10 | 0 | 7.5 | 7.5 | 🟢 Complete | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | 28.5KB | ✅ |
 | Paint | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | 2.7KB | ✅ |
+| Pizza Tower | ✅ Passed seeds 0-19 | 0 | 13.8 | 13.8 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
