@@ -160,6 +160,10 @@
       "reason": "Requires YAML generated from external web tool (multiworld.ctjot.com). World validates seed_share_link and raises InvalidYamlException for standard YAML configurations."
     },
     {
+      "name": "ClusterTruck.yaml",
+      "reason": "APWorld bug: Unconditional filler item addition in create_items() causes item/location imbalance when start_level is also in skipped_levels. Results in FillError with ~30-60% of randomized configurations."
+    },
+    {
       "name": "Corn Kidz 64.yaml",
       "reason": "Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture."
     },
@@ -208,8 +212,16 @@
       "reason": "Uses closure-captured AccessRequirements objects in make_location_lambda(). Exporter captures variable name 'new_reqs' but cannot serialize the object, resulting in None passed to lingo2_can_satisfy_requirements helper causing AttributeError. Would need custom handler like original Lingo."
     },
     {
+      "name": "Majora's Mask Recompiled.yaml",
+      "reason": "Shop price randomization incompatible with tracker: (1) Rules.json path discovery fails due to apostrophe in directory name. (2) Randomized prices not exported to game_info. (3) Prices are non-deterministic - regenerating world creates different prices causing wallet requirement mismatches."
+    },
+    {
       "name": "Monster Sanctuary.yaml",
       "reason": "Uses custom AccessCondition class with data-driven rule evaluation. Exporter sees lambda calling rules.has_access() but cannot introspect the AccessCondition tree structure."
+    },
+    {
+      "name": "Ori and the Blind Forest.yaml",
+      "reason": "Uses oribf_has helper with special keywords ('Free', 'Lure', 'DoubleBash', etc.) and item tuples. Exporter hits infinite loop analyzing helper. Custom exporter improves to 30-60% success but glitched logic settings still fail due to complex option-dependent rules in RulesData.py."
     },
     {
       "name": "Ori and the Will of the Wisps.yaml",
@@ -226,6 +238,10 @@
     {
       "name": "Rabi-Ribi.yaml",
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
+    },
+    {
+      "name": "Rift of the NecroDancer.yaml",
+      "reason": "APWorld bugs: (1) Option validation allows empty song pool causing ValueError in randrange(). (2) Duplicate item IDs - Medium and Hard variants share same ID (e.g., both 'Take a Breather (Medium)' and 'Take a Breather (Hard)' use ID 2013), causing item_id_to_name mismatches and logic errors."
     },
     {
       "name": "Sentinels of the Multiverse.yaml",
@@ -270,6 +286,10 @@
     {
       "name": "ToeJam and Earl.yaml",
       "reason": "Uses custom collect method with point-based rank progression. Rules check pseudo-item 'ranks' which only exists via custom state tracking, not exportable."
+    },
+    {
+      "name": "Tyrian.yaml",
+      "reason": "Uses DPS dataclass objects captured in lambda closures via default parameters (lambda state, dps1=dps_active: can_deal_damage(state, player, dps1)). Exporter captures variable name 'dps1' but cannot serialize the DPS dataclass value, resulting in None passed to helpers. get_front_weapon_state() fails with AttributeError: 'NoneType' object has no attribute '_type_piercing'. DamageTables system requires complex runtime calculations that cannot be exported to static rules."
     },
     {
       "name": "Wario Land.yaml",
