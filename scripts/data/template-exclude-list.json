@@ -144,6 +144,10 @@
       "reason": "Uses custom RuleInstance pattern with caching that serializes incorrectly. Exporter captures caching logic instead of actual rules."
     },
     {
+      "name": "Balatro.yaml",
+      "reason": "Uses complex lambda expressions with list(dict.values()) patterns for item lists. World generator receives dict structure instead of item list, producing broken HasFromList rules with dict keys ('type', 'name', 'args') instead of items."
+    },
+    {
       "name": "ChecksMate.yaml",
       "reason": "Uses custom Material accumulator system. Items add numeric material values to state.prog_items[player]['Material'], and rules use meets_material_expectations() to check accumulated totals. Rule Builder cannot track computed properties."
     },
