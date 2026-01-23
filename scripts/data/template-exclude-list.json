@@ -236,6 +236,10 @@
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
     {
+      "name": "Rift of the NecroDancer.yaml",
+      "reason": "APWorld bugs: (1) Option validation allows empty song pool causing ValueError in randrange(). (2) Duplicate item IDs - Medium and Hard variants share same ID (e.g., both 'Take a Breather (Medium)' and 'Take a Breather (Hard)' use ID 2013), causing item_id_to_name mismatches and logic errors."
+    },
+    {
       "name": "Sentinels of the Multiverse.yaml",
       "reason": "APWorld issue: Option combinations create more items than locations (required_scions can be 10000+, location_density.hero can be 0). Fails with FillError during seed generation before UT tracking runs. Not a UT compatibility issue."
     },
