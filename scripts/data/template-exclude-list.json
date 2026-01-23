@@ -200,6 +200,10 @@
       "reason": "Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns."
     },
     {
+      "name": "Pokemon FireRed and LeafGreen.yaml",
+      "reason": "Exporter creates AST_capability markers for HM helpers (can_fly, can_surf, etc.) but doesn't export helper definitions. World generator creates undefined function references causing NameError at runtime."
+    },
+    {
       "name": "Rabi-Ribi.yaml",
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
