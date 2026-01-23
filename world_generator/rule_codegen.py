@@ -1266,7 +1266,13 @@ class RuleCodeGenerator:
             if not children:
                 return self._make_bool_constant(True)
             if len(children) == 1:
-                return self._convert_rule(children[0])
+                # Handle single Constant child with integer value in boolean context
+                single_child = children[0]
+                if single_child.get('rule') == 'Constant':
+                    const_val = single_child.get('args', {}).get('value')
+                    if isinstance(const_val, (int, float)) and not isinstance(const_val, bool):
+                        return self._make_bool_constant(const_val != 0)
+                return self._convert_rule(single_child)
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAll instead of And(Has(...), Has(...), ...)
             # This matches the Rule Builder's _simplify_and behavior
@@ -1275,6 +1281,22 @@ class RuleCodeGenerator:
             for child in children:
                 child_rule = child.get('rule', '')
                 child_args = child.get('args', {})
+                # Handle Constant children specially - these come from option checks like
+                # `options.wheel_tricks` that resolve to integers at export time.
+                # In boolean context: non-zero = True (skip in And), zero = False (whole And is False)
+                if child_rule == 'Constant':
+                    const_value = child_args.get('value')
+                    if isinstance(const_value, (int, float)) and not isinstance(const_value, bool):
+                        if const_value == 0:
+                            # And with False = False
+                            return self._make_bool_constant(False)
+                        else:
+                            # And with True = skip (no effect)
+                            continue
+                    elif const_value is False:
+                        return self._make_bool_constant(False)
+                    elif const_value is True:
+                        continue  # True in And has no effect
                 if child_rule == 'Has' and child_args.get('count', 1) == 1:
                     item_name = child_args.get('item_name', '')
                     if item_name:
@@ -1309,7 +1331,13 @@ class RuleCodeGenerator:
             if not children:
                 return self._make_bool_constant(False)
             if len(children) == 1:
-                return self._convert_rule(children[0])
+                # Handle single Constant child with integer value in boolean context
+                single_child = children[0]
+                if single_child.get('rule') == 'Constant':
+                    const_val = single_child.get('args', {}).get('value')
+                    if isinstance(const_val, (int, float)) and not isinstance(const_val, bool):
+                        return self._make_bool_constant(const_val != 0)
+                return self._convert_rule(single_child)
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAny instead of Or(Has(...), Has(...), ...)
             # This matches the Rule Builder's _simplify_or behavior
@@ -1318,6 +1346,22 @@ class RuleCodeGenerator:
             for child in children:
                 child_rule = child.get('rule', '')
                 child_args = child.get('args', {})
+                # Handle Constant children specially - these come from option checks like
+                # `options.wheel_tricks` that resolve to integers at export time.
+                # In boolean context: non-zero = True (whole Or is True), zero = False (skip in Or)
+                if child_rule == 'Constant':
+                    const_value = child_args.get('value')
+                    if isinstance(const_value, (int, float)) and not isinstance(const_value, bool):
+                        if const_value == 0:
+                            # Or with False = skip (no effect)
+                            continue
+                        else:
+                            # Or with True = True
+                            return self._make_bool_constant(True)
+                    elif const_value is True:
+                        return self._make_bool_constant(True)
+                    elif const_value is False:
+                        continue  # False in Or has no effect
                 if child_rule == 'Has' and child_args.get('count', 1) == 1:
                     item_name = child_args.get('item_name', '')
                     if item_name:
