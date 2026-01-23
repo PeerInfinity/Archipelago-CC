@@ -120,6 +120,15 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
                     return None
                 file_content_cache[filename] = source_code
 
+            # Skip AST parsing for very large files to avoid recursion issues
+            # (e.g., Spyro 3's 2265-line __init__.py)
+            line_count = source_code.count('\n')
+            if line_count > 1500:
+                logging.warning(f"Source file too large ({line_count} lines), using getsource fallback: {filename}")
+                result = inspect.getsource(func)
+                unparsed_lambda_cache[cache_key] = result
+                return result
+
             # 4. Parse the source and populate the AST cache
             tree = ast.parse(source_code, filename=filename)
             ast_cache[filename] = tree
@@ -132,7 +141,12 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
 
         if lambda_node:
             # "Un-parse" the found AST node back into a source string
-            result = astunparse.unparse(lambda_node).strip()
+            # Wrap in try/except for RecursionError on very complex lambdas
+            try:
+                result = astunparse.unparse(lambda_node).strip()
+            except RecursionError:
+                logging.warning(f"RecursionError unparsing lambda at {filename}:{start_line}, using fallback")
+                result = inspect.getsource(func)
         else:
             result = inspect.getsource(func)  # Fallback
 
@@ -140,6 +154,13 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
         unparsed_lambda_cache[cache_key] = result
         return result
 
+    except RecursionError as e:
+        logging.error(f"RecursionError getting lambda source for {func}: {e}")
+        try:
+            return inspect.getsource(func)  # Fallback
+        except Exception as fallback_e:
+            logging.error(f"Fallback getsource also failed: {fallback_e}")
+            return None
     except Exception as e:
         logging.error(f"Failed to get multiline lambda source for {func}: {e}")
         try:
