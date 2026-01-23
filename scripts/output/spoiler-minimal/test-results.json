@@ -64,7 +64,7 @@
       ],
       "last_updated": "2026-01-14T21:37:24.211075"
     },
-    "last_updated": "2026-01-14T21:37:24.211073",
+    "last_updated": "2026-01-23T07:36:25.255340",
     "script_version": "1.0.0"
   },
   "results": {
@@ -827,7 +827,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 10,
+      "consecutive_passes_before_failure": 13,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "727b4051e0b5500d782213ab070b93fe385804e5706397f7cb46067143a81691",
@@ -943,33 +943,68 @@
         "warning_count": 3
       },
       "individual_results": {
-        "1": {
+        "0": {
           "analysis": {
             "error_count": 0,
             "success": true,
             "warning_count": 0
-          },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "727b4051e0b5500d782213ab070b93fe385804e5706397f7cb46067143a81691",
-              "new_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-              "original_rules_hash": "727b4051e0b5500d782213ab070b93fe385804e5706397f7cb46067143a81691",
-              "original_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:27.795281"
-            }
           },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 8.87,
+            "processing_time_seconds": 15.66,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/alttp/AP_07758176404715800194/AP_07758176404715800194_rules.json",
+            "size_bytes": 662271,
+            "size_mb": 0.63
+          },
+          "seed": "0",
+          "seed_id": "AP_07758176404715800194",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.78,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_filename": "A Link to the Past.yaml",
+          "timestamp": "2026-01-23T07:30:41.718064",
+          "world_info": {
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "alttp",
+            "game_name_from_yaml": "A Link to the Past",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "alttp"
+          }
+        },
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "alttp",
+          "game_name_from_yaml": "A Link to the Past",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 15.82,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -981,7 +1016,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.66,
+            "processing_time_seconds": 15.68,
             "return_code": 0,
             "sphere_reached": 22.1,
             "success": true,
@@ -989,10 +1024,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:54.788988",
+          "timestamp": "2026-01-23T07:31:07.706393",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1008,27 +1043,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "63545cb229ad3f3b1fef213b28ce360ade501242be63869826735b343ae66b0c",
-              "new_sphere_log_hash": "6b5253e680f0e1cd5af38a7d3e239c9147c8f9302d3536790ef84aa9ef84d906",
-              "original_rules_hash": "63545cb229ad3f3b1fef213b28ce360ade501242be63869826735b343ae66b0c",
-              "original_sphere_log_hash": "6b5253e680f0e1cd5af38a7d3e239c9147c8f9302d3536790ef84aa9ef84d906",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:31:18.009379"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.17,
+            "processing_time_seconds": 15.43,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_55941320597534372051/AP_55941320597534372051_rules.json",
@@ -1040,7 +1063,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.75,
+            "processing_time_seconds": 15.87,
             "return_code": 0,
             "sphere_reached": 27.1,
             "success": true,
@@ -1048,10 +1071,57 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:51.303201",
+          "timestamp": "2026-01-23T07:35:51.947316",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "alttp",
+            "game_name_from_yaml": "A Link to the Past",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "alttp"
+          }
+        },
+        "15": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "alttp",
+          "game_name_from_yaml": "A Link to the Past",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 15.53,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/alttp/AP_03855006904931195900/AP_03855006904931195900_rules.json",
+            "size_bytes": 662237,
+            "size_mb": 0.63
+          },
+          "seed": "15",
+          "seed_id": "AP_03855006904931195900",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 15.93,
+            "return_code": 0,
+            "sphere_reached": 26.1,
+            "success": true,
+            "total_spheres": 26.1,
+            "warning_count": 0
+          },
+          "template_filename": "A Link to the Past.yaml",
+          "timestamp": "2026-01-23T07:29:21.142776",
+          "world_info": {
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1067,27 +1137,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "2": {
-              "new_rules_hash": "d2d31b646ed97ff4664b8ac302e8318b9ccea7a569f61d58506a234293abc0e7",
-              "new_sphere_log_hash": "12bf4fce8281faafa0a0e14bfa0b112c3119fde4bc267dc43d3c4759ca713bd4",
-              "original_rules_hash": "d2d31b646ed97ff4664b8ac302e8318b9ccea7a569f61d58506a234293abc0e7",
-              "original_sphere_log_hash": "12bf4fce8281faafa0a0e14bfa0b112c3119fde4bc267dc43d3c4759ca713bd4",
-              "rules_identical": true,
-              "seed": "2",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:39.113829"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 8.92,
+            "processing_time_seconds": 15.31,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_01043188731678011336/AP_01043188731678011336_rules.json",
@@ -1099,7 +1157,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.69,
+            "processing_time_seconds": 16.66,
             "return_code": 0,
             "sphere_reached": 23.1,
             "success": true,
@@ -1107,10 +1165,57 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:42.655277",
+          "timestamp": "2026-01-23T07:31:39.708993",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
+            "game_logic_path": null,
+            "game_logic_size": 0,
+            "game_name_from_filename": "alttp",
+            "game_name_from_yaml": "A Link to the Past",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "world_directory": "alttp"
+          }
+        },
+        "20": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "alttp",
+          "game_name_from_yaml": "A Link to the Past",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 15.05,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/alttp/AP_39682733307390651924/AP_39682733307390651924_rules.json",
+            "size_bytes": 662237,
+            "size_mb": 0.63
+          },
+          "seed": "20",
+          "seed_id": "AP_39682733307390651924",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 16.84,
+            "return_code": 0,
+            "sphere_reached": 22.1,
+            "success": true,
+            "total_spheres": 22.1,
+            "warning_count": 0
+          },
+          "template_filename": "A Link to the Past.yaml",
+          "timestamp": "2026-01-23T07:29:56.283144",
+          "world_info": {
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1126,27 +1231,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "3": {
-              "new_rules_hash": "86fb2c7c1d7d1b93da478d9701ee69e61b0e4e4ade59e0b6792affae2fcc6709",
-              "new_sphere_log_hash": "bcc512ee3078cb6e37d5c53e55d8748a249ee3ba6d4dabbc717fca0d74398207",
-              "original_rules_hash": "86fb2c7c1d7d1b93da478d9701ee69e61b0e4e4ade59e0b6792affae2fcc6709",
-              "original_sphere_log_hash": "bcc512ee3078cb6e37d5c53e55d8748a249ee3ba6d4dabbc717fca0d74398207",
-              "rules_identical": true,
-              "seed": "3",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:43.800822"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 8.93,
+            "processing_time_seconds": 14.66,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_84719271504320872445/AP_84719271504320872445_rules.json",
@@ -1158,7 +1251,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.68,
+            "processing_time_seconds": 15.99,
             "return_code": 0,
             "sphere_reached": 22.1,
             "success": true,
@@ -1166,10 +1259,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:48.130137",
+          "timestamp": "2026-01-23T07:32:12.151393",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1185,27 +1278,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "70bae1a261ee8d7c1d9b72d54dfaae6cdc2c234bd5473e1772bd032d3ecbf748",
-              "new_sphere_log_hash": "c79d5b8703a1f028e01e62bc003713c03a12034e1ff30a62b36b3c8a026a9ddb",
-              "original_rules_hash": "70bae1a261ee8d7c1d9b72d54dfaae6cdc2c234bd5473e1772bd032d3ecbf748",
-              "original_sphere_log_hash": "c79d5b8703a1f028e01e62bc003713c03a12034e1ff30a62b36b3c8a026a9ddb",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:50.857656"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.55,
+            "processing_time_seconds": 15.58,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_05594871498841892311/AP_05594871498841892311_rules.json",
@@ -1217,7 +1298,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.8,
+            "processing_time_seconds": 15.62,
             "return_code": 0,
             "sphere_reached": 31.1,
             "success": true,
@@ -1225,10 +1306,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:49.272982",
+          "timestamp": "2026-01-23T07:32:43.328735",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1244,27 +1325,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "0c557c249cc6bd67de1701d1e041bdb5cbe8590d284034d3a447b7e52d8b641a",
-              "new_sphere_log_hash": "4f31c6e364758a218d43a633313546c54d440989d736ecf3061f6e16113e87cf",
-              "original_rules_hash": "0c557c249cc6bd67de1701d1e041bdb5cbe8590d284034d3a447b7e52d8b641a",
-              "original_sphere_log_hash": "4f31c6e364758a218d43a633313546c54d440989d736ecf3061f6e16113e87cf",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:12.093936"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 8.88,
+            "processing_time_seconds": 15.35,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_96945849220684217413/AP_96945849220684217413_rules.json",
@@ -1276,7 +1345,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.67,
+            "processing_time_seconds": 15.96,
             "return_code": 0,
             "sphere_reached": 31.1,
             "success": true,
@@ -1284,10 +1353,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:43.963274",
+          "timestamp": "2026-01-23T07:33:15.093618",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1303,27 +1372,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "6": {
-              "new_rules_hash": "a4e636b424768a018345760e062640a6b54878fce2384efa76fb45ce5a96966f",
-              "new_sphere_log_hash": "23d17e31615c8a884c018e940e3226496fd0f09b37aea3e50ae118fd59c28d1e",
-              "original_rules_hash": "a4e636b424768a018345760e062640a6b54878fce2384efa76fb45ce5a96966f",
-              "original_sphere_log_hash": "23d17e31615c8a884c018e940e3226496fd0f09b37aea3e50ae118fd59c28d1e",
-              "rules_identical": true,
-              "seed": "6",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:28.835019"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.22,
+            "processing_time_seconds": 15.17,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_00679259829289197625/AP_00679259829289197625_rules.json",
@@ -1335,7 +1392,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.7,
+            "processing_time_seconds": 15.78,
             "return_code": 0,
             "sphere_reached": 18.3,
             "success": true,
@@ -1343,10 +1400,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:54.999142",
+          "timestamp": "2026-01-23T07:33:46.931254",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1362,27 +1419,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "7": {
-              "new_rules_hash": "31ed4f96ca1cbb97bd811977504ed286cd4c7823908f03760063deadbda858e6",
-              "new_sphere_log_hash": "2cd7a8716d30d847ae29b0110917331913581a446f69c42a612bc48180ce387a",
-              "original_rules_hash": "31ed4f96ca1cbb97bd811977504ed286cd4c7823908f03760063deadbda858e6",
-              "original_sphere_log_hash": "2cd7a8716d30d847ae29b0110917331913581a446f69c42a612bc48180ce387a",
-              "rules_identical": true,
-              "seed": "7",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:45.078389"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.05,
+            "processing_time_seconds": 14.94,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_35931773795037525048/AP_35931773795037525048_rules.json",
@@ -1394,7 +1439,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.67,
+            "processing_time_seconds": 15.0,
             "return_code": 0,
             "sphere_reached": 22.1,
             "success": true,
@@ -1402,10 +1447,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:43.888471",
+          "timestamp": "2026-01-23T07:34:18.397961",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1421,27 +1466,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "8": {
-              "new_rules_hash": "973a57bfd5e1b8e1a59a7fe228b068bed48a76b320ad24bf532c1f8b0f20c471",
-              "new_sphere_log_hash": "9ad7b68ed06777867d9ea3bde4e1e6422127f0e90f147fd6b934b9d55d376e40",
-              "original_rules_hash": "973a57bfd5e1b8e1a59a7fe228b068bed48a76b320ad24bf532c1f8b0f20c471",
-              "original_sphere_log_hash": "9ad7b68ed06777867d9ea3bde4e1e6422127f0e90f147fd6b934b9d55d376e40",
-              "rules_identical": true,
-              "seed": "8",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:31:02.256978"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.22,
+            "processing_time_seconds": 15.36,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_20777137877808592492/AP_20777137877808592492_rules.json",
@@ -1453,7 +1486,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.71,
+            "processing_time_seconds": 15.73,
             "return_code": 0,
             "sphere_reached": 24.1,
             "success": true,
@@ -1461,10 +1494,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:59.116959",
+          "timestamp": "2026-01-23T07:34:48.846209",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1480,27 +1513,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "1abd1d1a397dba36b6749804459e79c242bfb158dff0bdf6f8d0ee60e8a74202",
-              "new_sphere_log_hash": "23a18a8cc0d7a8556092e4de6ecba9e6b61f364cd2e1e0f5857b613be7f45f41",
-              "original_rules_hash": "1abd1d1a397dba36b6749804459e79c242bfb158dff0bdf6f8d0ee60e8a74202",
-              "original_sphere_log_hash": "23a18a8cc0d7a8556092e4de6ecba9e6b61f364cd2e1e0f5857b613be7f45f41",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2026-01-14T21:30:49.323565"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.26,
+            "processing_time_seconds": 15.29,
             "return_code": 0,
             "success": true,
-            "warning_count": 3
+            "warning_count": 2
           },
           "rules_file": {
             "path": "frontend/presets/alttp/AP_48205312626925217390/AP_48205312626925217390_rules.json",
@@ -1512,7 +1533,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 8.68,
+            "processing_time_seconds": 15.69,
             "return_code": 0,
             "sphere_reached": 23.1,
             "success": true,
@@ -1520,10 +1541,10 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2026-01-14T21:13:45.724113",
+          "timestamp": "2026-01-23T07:35:20.442381",
           "world_info": {
-            "exporter_path": "exporter/games/alttp.py",
-            "exporter_size": 74114,
+            "exporter_path": "exporter/games/official/alttp.py",
+            "exporter_size": 111947,
             "game_logic_path": null,
             "game_logic_size": 0,
             "game_name_from_filename": "alttp",
@@ -1541,9 +1562,9 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "seed_range": "1-10",
+      "seed_range": "0-20",
       "seeds_failed": 0,
-      "seeds_passed": 10,
+      "seeds_passed": 13,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -1560,8 +1581,8 @@
         "failure_rate": 0.0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2026-01-14T21:13:54.788988",
-      "total_seeds_tested": 10,
+      "timestamp": "2026-01-23T07:30:41.686145",
+      "total_seeds_tested": 13,
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "exporter_size": 74114,

@@ -3,8 +3,8 @@
   "game_name": "A Link to the Past",
   "game_directory": "alttp",
   "archipelago_version": "0.6.5",
-  "generation_seed": 3,
-  "seed_name": "84719271504320872445",
+  "generation_seed": 9,
+  "seed_name": "48205312626925217390",
   "player_names": {
     "1": "Player1"
   },
@@ -664,7 +664,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Rupees (300)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -681,7 +681,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -701,9 +701,9 @@
               }
             },
             "item": {
-              "name": "Bottle (Good Bee)",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -721,9 +721,9 @@
               }
             },
             "item": {
-              "name": "Lamp",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -741,9 +741,9 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Bug Catching Net",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -857,9 +857,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Progressive Shield",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -874,7 +874,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -891,9 +891,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Magic Mirror",
+              "name": "Arrows (10)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -908,7 +908,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Rupees (300)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -943,9 +943,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Bow",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -960,7 +960,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Arrows (10)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -987,9 +987,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cane of Somaria",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1007,7 +1007,7 @@
               }
             },
             "item": {
-              "name": "Rupees (5)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1034,10 +1034,10 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Sword",
+              "name": "Moon Pearl",
               "player": 1,
               "advancement": true,
-              "type": "Sword"
+              "type": "None"
             },
             "locked": false,
             "crystal": false,
@@ -1051,9 +1051,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Fire Rod",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1168,9 +1168,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Magic Mirror",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1203,9 +1203,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Progressive Shield",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1509,7 +1509,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Boss Heart Container",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1538,7 +1538,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Rupees (50)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1567,10 +1567,10 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "Sword"
             },
             "locked": false,
             "crystal": false,
@@ -1586,7 +1586,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Single Arrow",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1605,9 +1605,9 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Flute",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1625,9 +1625,9 @@
               }
             },
             "item": {
-              "name": "Rupees (300)",
+              "name": "Ice Rod",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1662,7 +1662,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1679,7 +1679,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1696,10 +1696,10 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "Sword"
             },
             "locked": false,
             "crystal": false,
@@ -1713,9 +1713,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Shield",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1730,7 +1730,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (5)",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1777,7 +1777,7 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1863,7 +1863,7 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1910,7 +1910,7 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Progressive Mail",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1937,9 +1937,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Cape",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1972,7 +1972,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (300)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2024,7 +2024,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Bow",
+              "name": "Quake",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2085,7 +2085,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Rupees (100)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2158,9 +2158,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hookshot",
+              "name": "Arrows (10)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2206,7 +2206,7 @@
               ]
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2234,9 +2234,9 @@
               ]
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Hookshot",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2262,7 +2262,7 @@
               ]
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Rupees (50)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2290,7 +2290,7 @@
               ]
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2318,9 +2318,9 @@
               ]
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Mushroom",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2345,9 +2345,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Moon Pearl",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2470,10 +2470,10 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "Sword"
             },
             "locked": false,
             "crystal": false,
@@ -2500,7 +2500,7 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2540,10 +2540,10 @@
               }
             },
             "item": {
-              "name": "Progressive Sword",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
-              "type": "Sword"
+              "advancement": false,
+              "type": "None"
             },
             "locked": false,
             "crystal": false,
@@ -2596,7 +2596,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2715,9 +2715,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hammer",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2769,7 +2769,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Rupee (1)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2918,12 +2918,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Desert Palace)",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597795,
             "shop_slot_disabled": false
@@ -2938,10 +2938,10 @@
               }
             },
             "item": {
-              "name": "Small Key (Desert Palace)",
+              "name": "Map (Desert Palace)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "Map"
             },
             "locked": true,
             "crystal": false,
@@ -3008,12 +3008,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Big Key (Desert Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "BigKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597855,
             "shop_slot_disabled": false
@@ -3036,12 +3036,12 @@
               ]
             },
             "item": {
-              "name": "Compass (Desert Palace)",
+              "name": "Boss Heart Container",
               "player": 1,
               "advancement": false,
-              "type": "Compass"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597846,
             "shop_slot_disabled": false
@@ -3072,12 +3072,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bug Catching Net",
+              "name": "Small Key (Desert Palace)",
               "player": 1,
               "advancement": true,
-              "type": "None"
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1310768,
             "shop_slot_disabled": false
@@ -3152,10 +3152,10 @@
               ]
             },
             "item": {
-              "name": "Big Key (Desert Palace)",
+              "name": "Small Key (Desert Palace)",
               "player": 1,
               "advancement": true,
-              "type": "BigKey"
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -3233,10 +3233,10 @@
               ]
             },
             "item": {
-              "name": "Map (Desert Palace)",
+              "name": "Compass (Desert Palace)",
               "player": 1,
               "advancement": false,
-              "type": "Map"
+              "type": "Compass"
             },
             "locked": true,
             "crystal": false,
@@ -3329,7 +3329,7 @@
               ]
             },
             "item": {
-              "name": "Crystal 6",
+              "name": "Blue Pendant",
               "player": 1,
               "advancement": true,
               "type": "Crystal"
@@ -3364,12 +3364,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Map (Eastern Palace)",
               "player": 1,
               "advancement": false,
-              "type": "None"
+              "type": "Map"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597771,
             "shop_slot_disabled": false
@@ -3384,12 +3384,12 @@
               }
             },
             "item": {
-              "name": "Rupee (1)",
+              "name": "Small Key (Eastern Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597777,
             "shop_slot_disabled": false
@@ -3401,12 +3401,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Big Key (Eastern Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "BigKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597831,
             "shop_slot_disabled": false
@@ -3421,12 +3421,12 @@
               }
             },
             "item": {
-              "name": "Big Key (Eastern Palace)",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
-              "type": "BigKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310810,
             "shop_slot_disabled": false
@@ -3562,12 +3562,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Key (Eastern Palace)",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597897,
             "shop_slot_disabled": false
@@ -3629,12 +3629,12 @@
               ]
             },
             "item": {
-              "name": "Map (Eastern Palace)",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
-              "type": "Map"
+              "advancement": true,
+              "type": "Sword"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598270,
             "shop_slot_disabled": false
@@ -3696,7 +3696,7 @@
               ]
             },
             "item": {
-              "name": "Crystal 3",
+              "name": "Crystal 1",
               "player": 1,
               "advancement": true,
               "type": "Crystal"
@@ -3731,9 +3731,9 @@
               }
             },
             "item": {
-              "name": "Ice Rod",
+              "name": "Arrows (10)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3915,10 +3915,10 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Big Key (Hyrule Castle)",
+              "name": "Small Key (Hyrule Castle)",
               "player": 1,
               "advancement": true,
-              "type": "BigKey"
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -3984,12 +3984,12 @@
               ]
             },
             "item": {
-              "name": "Map (Hyrule Castle)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
-              "type": "Map"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598173,
             "shop_slot_disabled": false
@@ -4012,12 +4012,12 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Small Key (Hyrule Castle)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1310774,
             "shop_slot_disabled": false
@@ -4050,7 +4050,7 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4090,12 +4090,12 @@
               ]
             },
             "item": {
-              "name": "Fire Rod",
+              "name": "Map (Hyrule Castle)",
               "player": 1,
-              "advancement": true,
-              "type": "None"
+              "advancement": false,
+              "type": "Map"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1310780,
             "shop_slot_disabled": false
@@ -4231,12 +4231,12 @@
               ]
             },
             "item": {
-              "name": "Small Key (Hyrule Castle)",
+              "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310732,
             "shop_slot_disabled": false
@@ -4308,9 +4308,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Progressive Bow",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4325,7 +4325,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Glove",
+              "name": "Magic Upgrade (1/2)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4342,9 +4342,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Lamp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4377,10 +4377,10 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Key (Hyrule Castle)",
+              "name": "Big Key (Hyrule Castle)",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "BigKey"
             },
             "locked": true,
             "crystal": false,
@@ -4686,7 +4686,7 @@
               }
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4912,7 +4912,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sanctuary Heart Container",
+              "name": "Boss Heart Container",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5130,9 +5130,9 @@
               ]
             },
             "item": {
-              "name": "Quake",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5173,7 +5173,7 @@
               ]
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5216,10 +5216,10 @@
               ]
             },
             "item": {
-              "name": "Progressive Sword",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
-              "type": "Sword"
+              "advancement": false,
+              "type": "None"
             },
             "locked": false,
             "crystal": false,
@@ -5259,9 +5259,9 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Cane of Somaria",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5302,9 +5302,9 @@
               ]
             },
             "item": {
-              "name": "Rupees (300)",
+              "name": "Progressive Glove",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5321,7 +5321,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Arrows (10)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5340,9 +5340,9 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Flippers",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5544,9 +5544,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cape",
+              "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5728,7 +5728,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Bombs (3)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5763,7 +5763,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Boomerang",
+              "name": "Pegasus Boots",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5900,10 +5900,10 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Small Key (Tower of Hera)",
+              "name": "Compass (Tower of Hera)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "Compass"
             },
             "locked": true,
             "crystal": false,
@@ -5919,10 +5919,10 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Map (Tower of Hera)",
+              "name": "Big Key (Tower of Hera)",
               "player": 1,
-              "advancement": false,
-              "type": "Map"
+              "advancement": true,
+              "type": "BigKey"
             },
             "locked": true,
             "crystal": false,
@@ -5949,12 +5949,12 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Big Key (Tower of Hera)",
+              "name": "Cane of Byrna",
               "player": 1,
               "advancement": true,
-              "type": "BigKey"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597882,
             "shop_slot_disabled": false
@@ -5977,12 +5977,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Map (Tower of Hera)",
               "player": 1,
               "advancement": false,
-              "type": "None"
+              "type": "Map"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597903,
             "shop_slot_disabled": false
@@ -5997,12 +5997,12 @@
               }
             },
             "item": {
-              "name": "Bottle (Bee)",
+              "name": "Small Key (Tower of Hera)",
               "player": 1,
               "advancement": true,
-              "type": "None"
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597900,
             "shop_slot_disabled": false
@@ -6038,12 +6038,12 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Compass (Tower of Hera)",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
-              "type": "Compass"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598272,
             "shop_slot_disabled": false
@@ -6268,9 +6268,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bombs (10)",
+              "name": "Magic Powder",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6579,7 +6579,7 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6599,7 +6599,7 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Rupees (50)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6843,9 +6843,9 @@
               ]
             },
             "item": {
-              "name": "Magic Powder",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6903,7 +6903,7 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6933,9 +6933,9 @@
               ]
             },
             "item": {
-              "name": "Pegasus Boots",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6950,7 +6950,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7500,7 +7500,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7530,9 +7530,9 @@
               }
             },
             "item": {
-              "name": "Magic Upgrade (1/2)",
+              "name": "Arrows (10)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -7550,7 +7550,7 @@
               }
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7580,7 +7580,7 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Rupees (300)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7610,9 +7610,9 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Bottle (Green Potion)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7640,7 +7640,7 @@
               }
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7788,9 +7788,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Flippers",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8002,9 +8002,9 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Bombos",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -8022,7 +8022,7 @@
               }
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Arrows (10)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8321,7 +8321,7 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Boss Heart Container",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8341,9 +8341,9 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Hammer",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -8493,7 +8493,7 @@
               ]
             },
             "item": {
-              "name": "Mushroom",
+              "name": "Bottle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8557,9 +8557,9 @@
               }
             },
             "item": {
-              "name": "Cane of Byrna",
+              "name": "Progressive Mail",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8580,7 +8580,7 @@
               }
             },
             "item": {
-              "name": "Single Arrow",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8614,7 +8614,7 @@
               ]
             },
             "item": {
-              "name": "Rupees (300)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8637,7 +8637,7 @@
               }
             },
             "item": {
-              "name": "Book of Mudora",
+              "name": "Bottle (Good Bee)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8724,9 +8724,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Ether",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8850,9 +8850,9 @@
               ]
             },
             "item": {
-              "name": "Flute",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8988,10 +8988,10 @@
               ]
             },
             "item": {
-              "name": "Map (Swamp Palace)",
+              "name": "Small Key (Swamp Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "Map"
+              "advancement": true,
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -9040,12 +9040,12 @@
               ]
             },
             "item": {
-              "name": "Small Key (Swamp Palace)",
+              "name": "Progressive Glove",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310741,
             "shop_slot_disabled": false
@@ -9141,12 +9141,12 @@
               ]
             },
             "item": {
-              "name": "Big Key (Swamp Palace)",
+              "name": "Rupee (1)",
               "player": 1,
-              "advancement": true,
-              "type": "BigKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597789,
             "shop_slot_disabled": false
@@ -9161,10 +9161,10 @@
               }
             },
             "item": {
-              "name": "Small Key (Swamp Palace)",
+              "name": "Map (Swamp Palace)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "Map"
             },
             "locked": true,
             "crystal": false,
@@ -9184,12 +9184,12 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Small Key (Swamp Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1310738,
             "shop_slot_disabled": false
@@ -9235,7 +9235,7 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Arrows (10)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9255,9 +9255,9 @@
               }
             },
             "item": {
-              "name": "Bombos",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -9286,12 +9286,12 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Compass (Swamp Palace)",
               "player": 1,
               "advancement": false,
-              "type": "None"
+              "type": "Compass"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598077,
             "shop_slot_disabled": false
@@ -9306,12 +9306,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Swamp Palace)",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598080,
             "shop_slot_disabled": false
@@ -9326,12 +9326,12 @@
               }
             },
             "item": {
-              "name": "Shovel",
+              "name": "Big Key (Swamp Palace)",
               "player": 1,
               "advancement": true,
-              "type": "None"
+              "type": "BigKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1310729,
             "shop_slot_disabled": false
@@ -9346,12 +9346,12 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Small Key (Swamp Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598083,
             "shop_slot_disabled": false
@@ -9405,12 +9405,12 @@
               ]
             },
             "item": {
-              "name": "Compass (Swamp Palace)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
-              "type": "Compass"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598274,
             "shop_slot_disabled": false
@@ -9513,12 +9513,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Thieves Town)",
+              "name": "Rupees (5)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597912,
             "shop_slot_disabled": false
@@ -9533,9 +9533,9 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Ether",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -9553,12 +9553,12 @@
               }
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Big Key (Thieves Town)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "BigKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597915,
             "shop_slot_disabled": false
@@ -9573,10 +9573,10 @@
               }
             },
             "item": {
-              "name": "Big Key (Thieves Town)",
+              "name": "Small Key (Thieves Town)",
               "player": 1,
               "advancement": true,
-              "type": "BigKey"
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -9710,12 +9710,12 @@
               ]
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Compass (Thieves Town)",
               "player": 1,
               "advancement": false,
-              "type": "None"
+              "type": "Compass"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597924,
             "shop_slot_disabled": false
@@ -9753,10 +9753,10 @@
               }
             },
             "item": {
-              "name": "Compass (Thieves Town)",
+              "name": "Small Key (Thieves Town)",
               "player": 1,
-              "advancement": false,
-              "type": "Compass"
+              "advancement": true,
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -9776,12 +9776,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Thieves Town)",
+              "name": "Bottle (Bee)",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597927,
             "shop_slot_disabled": false
@@ -9839,7 +9839,7 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9891,7 +9891,7 @@
               ]
             },
             "item": {
-              "name": "Crystal 2",
+              "name": "Green Pendant",
               "player": 1,
               "advancement": true,
               "type": "Crystal"
@@ -9959,12 +9959,12 @@
               }
             },
             "item": {
-              "name": "Progressive Shield",
+              "name": "Small Key (Skull Woods)",
               "player": 1,
               "advancement": true,
-              "type": "None"
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597807,
             "shop_slot_disabled": false
@@ -10013,12 +10013,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Skull Woods)",
+              "name": "Blue Boomerang",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597852,
             "shop_slot_disabled": false
@@ -10097,12 +10097,12 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Small Key (Skull Woods)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597813,
             "shop_slot_disabled": false
@@ -10252,10 +10252,10 @@
               }
             },
             "item": {
-              "name": "Map (Skull Woods)",
+              "name": "Small Key (Skull Woods)",
               "player": 1,
-              "advancement": false,
-              "type": "Map"
+              "advancement": true,
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -10272,12 +10272,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Skull Woods)",
+              "name": "Arrows (10)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310765,
             "shop_slot_disabled": false
@@ -10369,10 +10369,10 @@
               }
             },
             "item": {
-              "name": "Small Key (Skull Woods)",
+              "name": "Map (Skull Woods)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "Map"
             },
             "locked": true,
             "crystal": false,
@@ -10594,10 +10594,10 @@
               ]
             },
             "item": {
-              "name": "Map (Ice Palace)",
+              "name": "Small Key (Ice Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "Map"
+              "advancement": true,
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -10637,10 +10637,10 @@
               }
             },
             "item": {
-              "name": "Small Key (Ice Palace)",
+              "name": "Compass (Ice Palace)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "Compass"
             },
             "locked": true,
             "crystal": false,
@@ -10667,7 +10667,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ice Palace)",
-                    "count": 6
+                    "count": 4
                   }
                 },
                 {
@@ -10744,10 +10744,10 @@
               }
             },
             "item": {
-              "name": "Big Key (Ice Palace)",
+              "name": "Map (Ice Palace)",
               "player": 1,
-              "advancement": true,
-              "type": "BigKey"
+              "advancement": false,
+              "type": "Map"
             },
             "locked": true,
             "crystal": false,
@@ -10787,12 +10787,12 @@
               }
             },
             "item": {
-              "name": "Compass (Ice Palace)",
+              "name": "Boss Heart Container",
               "player": 1,
               "advancement": false,
-              "type": "Compass"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597822,
             "shop_slot_disabled": false
@@ -10807,7 +10807,7 @@
               }
             },
             "item": {
-              "name": "Progressive Mail",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10859,12 +10859,12 @@
               }
             },
             "item": {
-              "name": "Progressive Shield",
+              "name": "Small Key (Ice Palace)",
               "player": 1,
               "advancement": true,
-              "type": "None"
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597876,
             "shop_slot_disabled": false
@@ -10890,12 +10890,12 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Small Key (Ice Palace)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597816,
             "shop_slot_disabled": false
@@ -10910,10 +10910,10 @@
               }
             },
             "item": {
-              "name": "Small Key (Ice Palace)",
+              "name": "Big Key (Ice Palace)",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "BigKey"
             },
             "locked": true,
             "crystal": false,
@@ -10930,12 +10930,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Ice Palace)",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310756,
             "shop_slot_disabled": false
@@ -11045,7 +11045,7 @@
               ]
             },
             "item": {
-              "name": "Green Pendant",
+              "name": "Crystal 6",
               "player": 1,
               "advancement": true,
               "type": "Crystal"
@@ -11163,12 +11163,12 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Small Key (Misery Mire)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598011,
             "shop_slot_disabled": false
@@ -11271,10 +11271,10 @@
               ]
             },
             "item": {
-              "name": "Small Key (Misery Mire)",
+              "name": "Map (Misery Mire)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "Map"
             },
             "locked": true,
             "crystal": false,
@@ -11344,10 +11344,10 @@
               ]
             },
             "item": {
-              "name": "Small Key (Misery Mire)",
+              "name": "Big Key (Misery Mire)",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "BigKey"
             },
             "locked": true,
             "crystal": false,
@@ -11364,12 +11364,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Misery Mire)",
+              "name": "Boss Heart Container",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310804,
             "shop_slot_disabled": false
@@ -11407,10 +11407,10 @@
               ]
             },
             "item": {
-              "name": "Big Key (Misery Mire)",
+              "name": "Small Key (Misery Mire)",
               "player": 1,
               "advancement": true,
-              "type": "BigKey"
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -11480,12 +11480,12 @@
               ]
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Compass (Misery Mire)",
               "player": 1,
               "advancement": false,
-              "type": "None"
+              "type": "Compass"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598008,
             "shop_slot_disabled": false
@@ -11510,12 +11510,12 @@
               ]
             },
             "item": {
-              "name": "Compass (Misery Mire)",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
-              "type": "Compass"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598017,
             "shop_slot_disabled": false
@@ -11607,10 +11607,10 @@
               ]
             },
             "item": {
-              "name": "Map (Misery Mire)",
+              "name": "Small Key (Misery Mire)",
               "player": 1,
-              "advancement": false,
-              "type": "Map"
+              "advancement": true,
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -11659,7 +11659,7 @@
               ]
             },
             "item": {
-              "name": "Blue Pendant",
+              "name": "Crystal 2",
               "player": 1,
               "advancement": true,
               "type": "Crystal"
@@ -11749,12 +11749,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Turtle Rock)",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597942,
             "shop_slot_disabled": false
@@ -11773,12 +11773,12 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Small Key (Turtle Rock)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597936,
             "shop_slot_disabled": false
@@ -11870,12 +11870,12 @@
               ]
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Small Key (Turtle Rock)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1310807,
             "shop_slot_disabled": false
@@ -11962,12 +11962,12 @@
               ]
             },
             "item": {
-              "name": "Small Key (Turtle Rock)",
+              "name": "Sanctuary Heart Container",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597930,
             "shop_slot_disabled": false
@@ -12091,10 +12091,10 @@
               ]
             },
             "item": {
-              "name": "Small Key (Turtle Rock)",
+              "name": "Big Key (Turtle Rock)",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "BigKey"
             },
             "locked": true,
             "crystal": false,
@@ -12130,10 +12130,10 @@
               ]
             },
             "item": {
-              "name": "Big Key (Turtle Rock)",
+              "name": "Small Key (Turtle Rock)",
               "player": 1,
               "advancement": true,
-              "type": "BigKey"
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -12239,12 +12239,12 @@
               ]
             },
             "item": {
-              "name": "Progressive Mail",
+              "name": "Small Key (Turtle Rock)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597933,
             "shop_slot_disabled": false
@@ -12289,12 +12289,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Turtle Rock)",
+              "name": "Rupees (5)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597960,
             "shop_slot_disabled": false
@@ -12455,10 +12455,10 @@
               ]
             },
             "item": {
-              "name": "Small Key (Turtle Rock)",
+              "name": "Map (Turtle Rock)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "Map"
             },
             "locked": true,
             "crystal": false,
@@ -12490,7 +12490,7 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Arrows (10)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12525,12 +12525,12 @@
               ]
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Small Key (Turtle Rock)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597951,
             "shop_slot_disabled": false
@@ -12560,12 +12560,12 @@
               ]
             },
             "item": {
-              "name": "Map (Turtle Rock)",
+              "name": "Rupees (50)",
               "player": 1,
               "advancement": false,
-              "type": "Map"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597948,
             "shop_slot_disabled": false
@@ -12878,12 +12878,12 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Big Key (Palace of Darkness)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "BigKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597969,
             "shop_slot_disabled": false
@@ -12929,10 +12929,10 @@
               }
             },
             "item": {
-              "name": "Big Key (Palace of Darkness)",
+              "name": "Small Key (Palace of Darkness)",
               "player": 1,
               "advancement": true,
-              "type": "BigKey"
+              "type": "SmallKey"
             },
             "locked": true,
             "crystal": false,
@@ -13105,12 +13105,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Palace of Darkness)",
+              "name": "Rupees (50)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597975,
             "shop_slot_disabled": false
@@ -13128,7 +13128,7 @@
               }
             },
             "item": {
-              "name": "Progressive Glove",
+              "name": "Book of Mudora",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -13151,12 +13151,12 @@
               }
             },
             "item": {
-              "name": "Rupees (5)",
+              "name": "Small Key (Palace of Darkness)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597987,
             "shop_slot_disabled": false
@@ -13182,12 +13182,12 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Map (Palace of Darkness)",
               "player": 1,
               "advancement": false,
-              "type": "None"
+              "type": "Map"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1597993,
             "shop_slot_disabled": false
@@ -13202,12 +13202,12 @@
               }
             },
             "item": {
-              "name": "Compass (Palace of Darkness)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
-              "type": "Compass"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597996,
             "shop_slot_disabled": false
@@ -13235,7 +13235,7 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13266,12 +13266,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Palace of Darkness)",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597978,
             "shop_slot_disabled": false
@@ -13329,10 +13329,10 @@
               ]
             },
             "item": {
-              "name": "Map (Palace of Darkness)",
+              "name": "Compass (Palace of Darkness)",
               "player": 1,
               "advancement": false,
-              "type": "Map"
+              "type": "Compass"
             },
             "locked": true,
             "crystal": false,
@@ -13381,7 +13381,7 @@
               ]
             },
             "item": {
-              "name": "Crystal 1",
+              "name": "Crystal 3",
               "player": 1,
               "advancement": true,
               "type": "Crystal"
@@ -13477,12 +13477,12 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Small Key (Ganons Tower)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598307,
             "shop_slot_disabled": false
@@ -13497,12 +13497,12 @@
               }
             },
             "item": {
-              "name": "Bottle (Red Potion)",
+              "name": "Small Key (Ganons Tower)",
               "player": 1,
               "advancement": true,
-              "type": "None"
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598125,
             "shop_slot_disabled": false
@@ -13517,12 +13517,12 @@
               }
             },
             "item": {
-              "name": "Small Key (Ganons Tower)",
+              "name": "Progressive Shield",
               "player": 1,
               "advancement": true,
-              "type": "SmallKey"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598128,
             "shop_slot_disabled": false
@@ -13809,12 +13809,12 @@
               ]
             },
             "item": {
-              "name": "Small Key (Ganons Tower)",
+              "name": "Rupees (5)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598137,
             "shop_slot_disabled": false
@@ -13908,9 +13908,9 @@
               ]
             },
             "item": {
-              "name": "Bottle",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -14007,12 +14007,12 @@
               ]
             },
             "item": {
-              "name": "Big Key (Ganons Tower)",
+              "name": "Bombs (3)",
               "player": 1,
-              "advancement": true,
-              "type": "BigKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598143,
             "shop_slot_disabled": false
@@ -14106,12 +14106,12 @@
               ]
             },
             "item": {
-              "name": "Small Key (Ganons Tower)",
+              "name": "Arrows (10)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598146,
             "shop_slot_disabled": false
@@ -14205,7 +14205,7 @@
               ]
             },
             "item": {
-              "name": "Rupee (1)",
+              "name": "Rupees (300)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14335,7 +14335,7 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Bombs (10)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14358,12 +14358,12 @@
               }
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Small Key (Ganons Tower)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598098,
             "shop_slot_disabled": false
@@ -14381,7 +14381,7 @@
               }
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (50)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14422,12 +14422,12 @@
               ]
             },
             "item": {
-              "name": "Small Key (Ganons Tower)",
+              "name": "Rupees (20)",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310786,
             "shop_slot_disabled": false
@@ -14636,9 +14636,9 @@
               ]
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Red Boomerang",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -14736,9 +14736,9 @@
               ]
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Progressive Bow",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -14817,12 +14817,12 @@
               ]
             },
             "item": {
-              "name": "Rupees (300)",
+              "name": "Compass (Ganons Tower)",
               "player": 1,
               "advancement": false,
-              "type": "None"
+              "type": "Compass"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598107,
             "shop_slot_disabled": false
@@ -14898,12 +14898,12 @@
               ]
             },
             "item": {
-              "name": "Progressive Sword",
+              "name": "Map (Ganons Tower)",
               "player": 1,
-              "advancement": true,
-              "type": "Sword"
+              "advancement": false,
+              "type": "Map"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598110,
             "shop_slot_disabled": false
@@ -14979,12 +14979,12 @@
               ]
             },
             "item": {
-              "name": "Compass (Ganons Tower)",
+              "name": "Rupees (5)",
               "player": 1,
               "advancement": false,
-              "type": "Compass"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598113,
             "shop_slot_disabled": false
@@ -15010,7 +15010,7 @@
               }
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15033,9 +15033,9 @@
               }
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Shovel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -15114,7 +15114,7 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15195,7 +15195,7 @@
               ]
             },
             "item": {
-              "name": "Rupees (5)",
+              "name": "Rupees (50)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15276,12 +15276,12 @@
               ]
             },
             "item": {
-              "name": "Blue Boomerang",
+              "name": "Big Key (Ganons Tower)",
               "player": 1,
               "advancement": true,
-              "type": "None"
+              "type": "BigKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598149,
             "shop_slot_disabled": false
@@ -15419,12 +15419,12 @@
               }
             },
             "item": {
-              "name": "Rupees (300)",
+              "name": "Small Key (Ganons Tower)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598161,
             "shop_slot_disabled": false
@@ -15439,12 +15439,12 @@
               }
             },
             "item": {
-              "name": "Rupees (100)",
+              "name": "Small Key (Ganons Tower)",
               "player": 1,
-              "advancement": false,
-              "type": "None"
+              "advancement": true,
+              "type": "SmallKey"
             },
-            "locked": false,
+            "locked": true,
             "crystal": false,
             "player_address": 1598164,
             "shop_slot_disabled": false
@@ -15476,12 +15476,12 @@
               ]
             },
             "item": {
-              "name": "Map (Ganons Tower)",
+              "name": "Piece of Heart",
               "player": 1,
               "advancement": false,
-              "type": "Map"
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598167,
             "shop_slot_disabled": false
@@ -15515,12 +15515,12 @@
               ]
             },
             "item": {
-              "name": "Small Key (Ganons Tower)",
+              "name": "Piece of Heart",
               "player": 1,
-              "advancement": true,
-              "type": "SmallKey"
+              "advancement": false,
+              "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310750,
             "shop_slot_disabled": false
@@ -15623,7 +15623,7 @@
               }
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17440,7 +17440,7 @@
           "Potions",
           "Progression Items"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17455,7 +17455,7 @@
           "Potions",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -17628,8 +17628,8 @@
         "max_count": 10,
         "hint_text": "a heart",
         "classification_counts": {
-          "useful": 9,
-          "progression": 1
+          "progression": 1,
+          "useful": 9
         }
       },
       "Sanctuary Heart Container": {
@@ -19019,34 +19019,34 @@
         "type": "Event",
         "max_count": 1
       },
-      "Crystal 6": {
-        "name": "Crystal 6",
-        "hint_text": "a red crystal",
+      "Blue Pendant": {
+        "name": "Blue Pendant",
+        "hint_text": "the blue pendant",
         "id": [
-          1,
-          50,
-          100,
-          64,
-          111,
-          6
+          2,
+          52,
+          96,
+          0,
+          105,
+          2
         ],
         "groups": [
-          "Crystals"
+          "Pendants"
         ],
         "classification": "progression",
         "event": false,
         "type": "Crystal",
         "max_count": 1
       },
-      "Crystal 3": {
-        "name": "Crystal 3",
+      "Crystal 1": {
+        "name": "Crystal 1",
         "hint_text": "a blue crystal",
         "id": [
-          64,
+          2,
           52,
           100,
           64,
-          108,
+          127,
           6
         ],
         "groups": [
@@ -19095,19 +19095,19 @@
         "type": "Crystal",
         "max_count": 1
       },
-      "Crystal 2": {
-        "name": "Crystal 2",
-        "hint_text": "a blue crystal",
+      "Green Pendant": {
+        "name": "Green Pendant",
+        "hint_text": "the green pendant",
         "id": [
-          16,
-          52,
-          100,
-          64,
-          121,
-          6
+          4,
+          56,
+          98,
+          0,
+          105,
+          1
         ],
         "groups": [
-          "Crystals"
+          "Pendants"
         ],
         "classification": "progression",
         "event": false,
@@ -19133,38 +19133,38 @@
         "type": "Crystal",
         "max_count": 1
       },
-      "Green Pendant": {
-        "name": "Green Pendant",
-        "hint_text": "the green pendant",
+      "Crystal 6": {
+        "name": "Crystal 6",
+        "hint_text": "a red crystal",
         "id": [
-          4,
-          56,
-          98,
-          0,
-          105,
-          1
+          1,
+          50,
+          100,
+          64,
+          111,
+          6
         ],
         "groups": [
-          "Pendants"
+          "Crystals"
         ],
         "classification": "progression",
         "event": false,
         "type": "Crystal",
         "max_count": 1
       },
-      "Blue Pendant": {
-        "name": "Blue Pendant",
-        "hint_text": "the blue pendant",
+      "Crystal 2": {
+        "name": "Crystal 2",
+        "hint_text": "a blue crystal",
         "id": [
-          2,
+          16,
           52,
-          96,
-          0,
-          105,
-          2
+          100,
+          64,
+          121,
+          6
         ],
         "groups": [
-          "Pendants"
+          "Crystals"
         ],
         "classification": "progression",
         "event": false,
@@ -19190,15 +19190,15 @@
         "type": "Crystal",
         "max_count": 1
       },
-      "Crystal 1": {
-        "name": "Crystal 1",
+      "Crystal 3": {
+        "name": "Crystal 3",
         "hint_text": "a blue crystal",
         "id": [
-          2,
+          64,
           52,
           100,
           64,
-          127,
+          108,
           6
         ],
         "groups": [
@@ -19266,7 +19266,7 @@
       "Bottle": 1,
       "Bottle (Bee)": 1,
       "Bottle (Good Bee)": 1,
-      "Bottle (Red Potion)": 1,
+      "Bottle (Green Potion)": 1,
       "Bug Catching Net": 1,
       "Cane of Byrna": 1,
       "Cane of Somaria": 1,
@@ -20235,8 +20235,8 @@
         "Turtle Rock": "Turtle Rock",
         "Ganons Tower": "Ganons Tower"
       },
-      "waterfall_fairy_bottle_fill": "Bottle (Blue Potion)",
-      "pyramid_fairy_bottle_fill": "Bottle (Blue Potion)",
+      "waterfall_fairy_bottle_fill": "Bottle (Good Bee)",
+      "pyramid_fairy_bottle_fill": "Bottle (Bee)",
       "fix_trock_doors": false,
       "fix_skullwoods_exit": false,
       "fix_palaceofdarkness_exit": false,
@@ -21376,7 +21376,7 @@
         "item": "Small Key (Hyrule Castle)",
         "count": {
           "type": "constant",
-          "value": 2
+          "value": 3
         }
       },
       "bottle_count": {
