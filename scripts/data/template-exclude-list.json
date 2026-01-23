@@ -176,6 +176,10 @@
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
     },
     {
+      "name": "Iji.yaml",
+      "reason": "Uses module-level constant lists (EventNames.Levels, ItemNames.Sector_Access) with subscript access in rules. Exporter captures AST instead of resolved values. Chained helper functions cause rule expansion to hit size limits, falling back to True_()."
+    },
+    {
       "name": "Keep Talking and Nobody Explodes.yaml",
       "reason": "Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible."
     },
