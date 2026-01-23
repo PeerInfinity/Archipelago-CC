@@ -220,6 +220,10 @@
       "reason": "Uses custom cyb_mod_count helper that calculates weighted sums of multiple Cyber Module item types. Also uses walrus operator (:=) in lambdas which cannot be analyzed. Would require WeightedSum rule support in worldgen."
     },
     {
+      "name": "TCG Card Shop Simulator.yaml",
+      "reason": "Uses dynamic license dictionaries (pg1_licenses, pg2_licenses) populated during world setup. Rule evaluation iterates over these structures to count items from lower levels. Exported hardcoded dictionaries don't evaluate the same way as server logic."
+    },
+    {
       "name": "The Legend of Zelda - Phantom Hourglass.yaml",
       "reason": "Entrance randomization fails frequently with complex option combinations. GER algorithm fails after 10 attempts with mixed pool settings."
     },
