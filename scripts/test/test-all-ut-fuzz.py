@@ -447,10 +447,17 @@ def main():
     args = parser.parse_args()
 
     # Configure host settings for UT fuzz testing
-    # Set skip_export_for_native_ut based on --prefer-native-ut flag
+    # Set skip_export_for_native_ut and skip_export_from_list based on --prefer-native-ut flag
+    # When prefer_native_ut is True, we use the skip-export-games.json list to determine
+    # which games should skip rule export (games that pass Original UT but fail Modified UT)
     print("Configuring host settings for UT fuzz testing...")
     print(f"  prefer_native_ut: {args.prefer_native_ut}")
-    update_host_yaml({'skip_export_for_native_ut': args.prefer_native_ut})
+    print(f"  skip_export_for_native_ut: {args.prefer_native_ut}")
+    print(f"  skip_export_from_list: {args.prefer_native_ut}")
+    update_host_yaml({
+        'skip_export_for_native_ut': args.prefer_native_ut,
+        'skip_export_from_list': args.prefer_native_ut
+    })
 
     # Clean up empty worldgen directories before loading worlds
     cleanup_empty_worldgen_dirs()
