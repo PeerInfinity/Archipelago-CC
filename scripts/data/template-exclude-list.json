@@ -204,6 +204,10 @@
       "reason": "Uses custom getModuleCounts() helper function with nested list counting logic. Exporter cannot translate this to Rule Builder - falls back to True_() making UT think all locations are accessible."
     },
     {
+      "name": "Lingo 2.yaml",
+      "reason": "Uses closure-captured AccessRequirements objects in make_location_lambda(). Exporter captures variable name 'new_reqs' but cannot serialize the object, resulting in None passed to lingo2_can_satisfy_requirements helper causing AttributeError. Would need custom handler like original Lingo."
+    },
+    {
       "name": "Monster Sanctuary.yaml",
       "reason": "Uses custom AccessCondition class with data-driven rule evaluation. Exporter sees lambda calling rules.has_access() but cannot introspect the AccessCondition tree structure."
     },
