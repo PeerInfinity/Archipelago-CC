@@ -2,18 +2,23 @@
 
 ## Summary
 
-The Balatro apworld (v0.1.9 from BurndiL/BalatroAP) fails Universal Tracker fuzzer testing due to **unsupported rule patterns** in the apworld's access rules that cannot be properly converted by the world generator.
+The Balatro apworld (v0.1.9 from BurndiL/BalatroAP) fails Universal Tracker fuzzer testing due to **complex dynamic rule patterns** that are difficult to fully support in the world generator.
 
-## Test Results
+## Test Results (After Partial Fix)
 
-- **Total runs**: 10
+- **Total runs**: 30
 - **Success**: 0 (0%)
-- **Failures**: 4 (40%) - logic mismatches
-- **Ignored**: 6 (60%) - option validation errors
+- **Failures**: 8 (27%) - logic mismatches and apworld bugs
+- **Timeouts**: 3 (10%)
+- **Ignored**: 19 (63%) - option validation errors
+
+### Breakdown of Failures
+- **list index out of range**: 5 runs - Apworld bug in `generate_early` when certain options are configured
+- **None (logic mismatch)**: 3 runs - Dynamic rules with ante-based calculations can't be fully resolved
 
 ## Root Cause Analysis
 
-### 1. Complex Lambda Expressions
+### 1. Complex Lambda Expressions with Dynamic Lists
 
 The Balatro apworld uses complex Python lambda expressions with dynamic item lists:
 
@@ -24,114 +29,88 @@ add_rule(new_location, lambda state, _ante3_=ante:
     state.has_from_list(list(joker_bundles.values()), self.player, round((_ante3_ * 10) / self.options.joker_bundle_size.value)))
 ```
 
-### 2. Exporter Serialization
+### 2. Pattern Types Identified
 
-The exporter serializes these lambdas into complex AST structures:
+| Pattern | Status | Notes |
+|---------|--------|-------|
+| `list(dict.values())` | **Partially Fixed** | Extracts values from constant dicts |
+| `list(key for key, _ in dict.items())` | **Partially Fixed** | Extracts keys from generator expressions |
+| Dynamic count expressions | **Lambda mode** | Works when worldgen can use lambdas |
+| Ante-based calculations | **Partial** | Fixed ante values get resolved, dynamic ones don't |
 
-```json
-{
-  "rule": "HasFromList",
-  "args": {
-    "items": {
-      "type": "helper",
-      "name": "list",
-      "args": [
-        {
-          "type": "generator_expression",
-          "element": {...},
-          "comprehension": {...}
-        }
-      ]
-    },
-    "count": {...}
-  }
-}
-```
+## Improvements Made
 
-### 3. World Generator Failure
+### 1. RuleCodeGenerator Updates (`rule_codegen.py`)
 
-The world generator (`rule_codegen.py` line 1406-1418) processes `HasFromList` rules by iterating over the `items` field:
+Added `_resolve_items_list_expression` and `_extract_from_generator_expression` methods to handle:
+- `list(dict.values())` patterns - extracts dict values as item list
+- `list(dict.keys())` patterns - extracts dict keys as item list
+- `list(key for key, _ in dict.items())` - extracts dict keys from generator expressions
 
+### 2. HelperCodeGenerator Updates (`rule_codegen.py`)
+
+Added `HasFromList` and `HasFromListUnique` handlers in lambda mode to generate proper `state.has_from_list()` calls with resolved item lists.
+
+### 3. None Propagation Fix
+
+Updated `And` and `Or` handlers to properly propagate `None` (lambda mode signal) when child rules can't be converted.
+
+## Remaining Issues
+
+### 1. Apworld Bugs
+The Balatro apworld has bugs in option handling:
 ```python
-items = args.get('items', [])
-# ...
-items_str = ', '.join(repr(item) for item in items)
-return f'HasFromList({items_str}, count={count})'
+# In generate_early line 113
+if list(self.options.required_stake_for_goal.value)[0] in self.playable_stakes:
+    # IndexError when list is empty
 ```
 
-When `items` is a dict (helper expression) instead of a list, iterating over it yields the dict keys ('type', 'name', 'args'), resulting in broken rules like:
-
+### 2. Complex Ante-Based Rules
+Some rules depend on runtime ante values that can't be statically resolved:
 ```python
-HasFromList('type', 'name', 'args', count=1)
+state.has_from_list(list(jokers.values()), self.player, 5 + _ante3_ * 2)
 ```
+The `_ante3_` value varies per location, making it impossible to statically determine the count.
 
-### 4. Resulting Logic Mismatches
-
-The broken rules cause locations to be in logic when they shouldn't be (or vice versa):
-
-```
-Locations `Shop Item 1 at Blue Stake,Shop Item 1 at Purple Stake` were in server logic but not expected in UT
-```
-
-## Additional Issues
-
-### Option Validation Errors (Ignored Runs)
-
-The Balatro apworld has strict option validation that causes some fuzzer configurations to fail:
-
-```
-OptionError: No Custom Planets Specified. To avoid this turn off custom planet bundles
-```
-
-These are treated as "ignored" since they're option configuration issues, not logic bugs.
+### 3. Option-Dependent Logic
+Rules that depend on `self.options.joker_bundle_size.value` are resolved at worldgen time using the specific option values for that seed, which may not always match server expectations.
 
 ## Classification
 
 | Category | Status |
 |----------|--------|
-| Fundamental compatibility issue | **Yes** |
-| Fixable in exporter/tracker | Possible but complex |
-| Needs apworld maintainer update | Preferred solution |
+| Fundamental compatibility issue | **Partial** |
+| Fixable in exporter/tracker | Improved but limited |
+| Needs apworld maintainer update | Yes, for full compatibility |
 
 ## Recommended Actions
 
-### Option 1: Add to Known-Incompatible List (Recommended)
-Add Balatro to a known-incompatible apworld list until the maintainer updates the rules to use simpler patterns.
+### Short Term
+1. Keep Balatro on known-incompatible list
+2. Document the partial improvements made
 
-### Option 2: Apworld Maintainer Fix
-The apworld could be updated to use simpler rule patterns:
-
-```python
-# Instead of:
-state.has_from_list(list(jokers.values()), self.player, count)
-
-# Use:
-state.has_from_list(['Joker', 'Greedy Joker', ...], self.player, count)
-```
-
-### Option 3: Exporter Enhancement (Complex)
-Enhance the exporter to resolve `list(dict.values())` patterns at export time into actual item lists. This would require:
-1. Access to the actual item dictionaries at export time
-2. Pre-computing the item lists before serialization
-3. Handling dynamic counts based on option values
+### Long Term
+1. Apworld maintainer could simplify rules by pre-computing item lists
+2. Apworld maintainer could fix the `list index out of range` bug in option handling
 
 ## Affected Files
 
 - `custom_worlds/balatro.apworld` - The apworld with complex rules
-- `world_generator/rule_codegen.py:1406-1418` - HasFromList handler that fails on dict items
-- `exporter/exporter.py` - Serializes lambdas to AST
+- `world_generator/rule_codegen.py` - Added pattern resolution methods
+- `world_generator/templates.py` - Lambda mode detection
 
 ## Test Commands
 
 ```bash
 # Reproduce failure
 source .venv/bin/activate
-python fuzz.py -r 10 -j 4 -g balatro -n 1 --hook worlds.tracker.fuzzer_hook:Hook --dump-ignored
+python fuzz.py -r 30 -j 4 -g balatro -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 
 # Check failure log
-cat fuzz_output/error/balatro/1/1.log | tail -50
+cat fuzz_output/error/balatro/*/0.log | tail -50
 ```
 
 ## Related Issues
 
 - Similar pattern issues may affect other apworlds that use `list(dict.values())` or generator expressions in rules
+- The improvements made here will benefit any apworld using these patterns

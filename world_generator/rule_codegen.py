@@ -1282,6 +1282,9 @@ class RuleCodeGenerator:
 
             # Convert other children
             child_exprs = [self._convert_rule(child) for child in other_children]
+            # If any child returns None (needs lambda mode), propagate that signal
+            if any(expr is None for expr in child_exprs):
+                return None
 
             # Add simple Has items as HasAll (if 2+) or Has (if 1)
             if len(simple_has_items) >= 2:
@@ -1322,6 +1325,9 @@ class RuleCodeGenerator:
 
             # Convert other children
             child_exprs = [self._convert_rule(child) for child in other_children]
+            # If any child returns None (needs lambda mode), propagate that signal
+            if any(expr is None for expr in child_exprs):
+                return None
 
             # Add simple Has items as HasAny (if 2+) or Has (if 1)
             if len(simple_has_items) >= 2:
@@ -1404,28 +1410,48 @@ class RuleCodeGenerator:
                 return f'HasGroupUnique({repr(group)}, {count})'
 
         if rb_rule == 'HasFromList':
-            items = args.get('items', [])
+            items_raw = args.get('items', [])
             count = args.get('count', 1)
-            if not items:
+            if not items_raw:
                 return self._make_bool_constant(True)
             # HasFromList expects count to be an int, not a complex expression
             # If count is a dict (expression), return None to signal lambda mode needed
             if isinstance(count, dict):
                 return None  # Signal that lambda mode is needed
+            # Try to resolve items if it's a complex expression (e.g., list(dict.values()))
+            if isinstance(items_raw, dict):
+                resolved_items = self._resolve_items_list_expression(items_raw)
+                if resolved_items is None:
+                    return None  # Can't resolve, need lambda mode
+                items = resolved_items
+            else:
+                items = items_raw
+            if not items:
+                return self._make_bool_constant(True)
             self.required_imports.add('HasFromList')
             # HasFromList expects (*item_names: str, count: int = 1)
             items_str = ', '.join(repr(item) for item in items)
             return f'HasFromList({items_str}, count={count})'
 
         if rb_rule == 'HasFromListUnique':
-            items = args.get('items', [])
+            items_raw = args.get('items', [])
             count = args.get('count', 1)
-            if not items:
+            if not items_raw:
                 return self._make_bool_constant(True)
             # HasFromListUnique expects count to be an int, not a complex expression
             # If count is a dict (expression), return None to signal lambda mode needed
             if isinstance(count, dict):
                 return None  # Signal that lambda mode is needed
+            # Try to resolve items if it's a complex expression (e.g., list(dict.values()))
+            if isinstance(items_raw, dict):
+                resolved_items = self._resolve_items_list_expression(items_raw)
+                if resolved_items is None:
+                    return None  # Can't resolve, need lambda mode
+                items = resolved_items
+            else:
+                items = items_raw
+            if not items:
+                return self._make_bool_constant(True)
             self.required_imports.add('HasFromListUnique')
             # HasFromListUnique expects (*item_names: str, count: int = 1)
             items_str = ', '.join(repr(item) for item in items)
@@ -1710,6 +1736,183 @@ class RuleCodeGenerator:
                 # Raw value
                 converted_items.append(repr(item))
         return f'[{", ".join(converted_items)}]'
+
+    def _resolve_items_list_expression(self, items: Any) -> Optional[List[str]]:
+        """
+        Resolve an items expression to a list of item names.
+
+        Handles patterns like:
+        - list(dict.values()) where dict is a constant
+        - Direct list of strings
+        - Helper expressions wrapping dict.values()
+
+        Args:
+            items: The items expression (can be a list, dict, or complex expression)
+
+        Returns:
+            List of item names if resolvable, None otherwise
+        """
+        # Already a list of strings
+        if isinstance(items, list):
+            result = []
+            for item in items:
+                if isinstance(item, str):
+                    result.append(item)
+                elif isinstance(item, dict) and item.get('type') == 'constant':
+                    value = item.get('value')
+                    if value is not None and isinstance(value, str):
+                        result.append(value)
+                    # Skip None or non-string values silently
+                else:
+                    return None  # Contains non-resolvable items
+            return result
+
+        if not isinstance(items, dict):
+            return None
+
+        # Handle helper pattern: {"type": "helper", "name": "list", "args": [...]}
+        if items.get('type') == 'helper' and items.get('name') == 'list':
+            helper_args = items.get('args', [])
+            if len(helper_args) == 1:
+                inner_arg = helper_args[0]
+                # Check for function_call pattern (dict.values())
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'function_call':
+                    return self._extract_dict_values(inner_arg)
+                # Check for generator_expression pattern (list comprehension)
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'generator_expression':
+                    return self._extract_from_generator_expression(inner_arg)
+            return None
+
+        # Handle direct function_call pattern
+        if items.get('type') == 'function_call':
+            return self._extract_dict_values(items)
+
+        # Handle direct generator_expression pattern
+        if items.get('type') == 'generator_expression':
+            return self._extract_from_generator_expression(items)
+
+        return None
+
+    def _extract_from_generator_expression(self, gen_expr: dict) -> Optional[List[str]]:
+        """
+        Extract items from a generator expression pattern.
+
+        Expected patterns:
+        - list(key for key, _ in dict.items()) -> returns dict keys
+        - list(value for _, value in dict.items()) -> returns dict values
+
+        Returns:
+            List of extracted items, or None if pattern not supported
+        """
+        element = gen_expr.get('element', {})
+        comprehension = gen_expr.get('comprehension', {})
+
+        # Get the iterator (should be dict.items() or dict.keys() or dict.values())
+        iterator = comprehension.get('iterator', {})
+        if not isinstance(iterator, dict) or iterator.get('type') != 'function_call':
+            return None
+
+        function = iterator.get('function', {})
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return None
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .items(), .keys(), or .values() on a constant dict
+        if not isinstance(obj, dict) or obj.get('type') != 'constant':
+            return None
+
+        const_value = obj.get('value', {})
+        if not isinstance(const_value, dict):
+            return None
+
+        # Get the target variable(s) from the comprehension
+        target = comprehension.get('target', {})
+
+        # Determine which part of dict we need based on the element
+        if attr == 'items':
+            # For dict.items(), target is usually a tuple (key, value) or (key, _)
+            # We need to determine if element references the key or value
+            if isinstance(element, dict) and element.get('type') == 'name':
+                elem_name = element.get('name', '')
+                # Check if the target is a tuple and match the element name
+                if isinstance(target, dict) and target.get('type') == 'tuple':
+                    target_elements = target.get('elements', [])
+                    if len(target_elements) == 2:
+                        first_elem = target_elements[0]
+                        second_elem = target_elements[1]
+                        first_name = first_elem.get('name', '') if isinstance(first_elem, dict) else ''
+                        second_name = second_elem.get('name', '') if isinstance(second_elem, dict) else ''
+
+                        if elem_name == first_name:
+                            # Element is the key
+                            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                        elif elem_name == second_name:
+                            # Element is the value - but values might be NamedTuples, extract first element
+                            result = []
+                            for v in const_value.values():
+                                if isinstance(v, str):
+                                    result.append(v)
+                                elif isinstance(v, dict) and '_namedtuple_type' in v:
+                                    # NamedTuple - we want the item name (the key)
+                                    pass
+                            # If values are complex (NamedTuples), return keys instead
+                            if not result:
+                                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                            return result
+
+            # Fallback: return dict keys
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'keys':
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'values':
+            return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        return None
+
+    def _extract_dict_values(self, func_call: dict) -> Optional[List[str]]:
+        """
+        Extract values from a dict.values() function call pattern.
+
+        Expected pattern:
+        {
+            "type": "function_call",
+            "function": {
+                "type": "attribute",
+                "object": {"type": "constant", "value": {"key": "ItemName", ...}},
+                "attr": "values"
+            }
+        }
+
+        Returns:
+            List of item names (dict values) if pattern matches, None otherwise
+        """
+        function = func_call.get('function', {})
+
+        # Check for attribute access pattern
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return None
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .values() or .keys() call on a constant dict
+        if attr == 'values' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict values as a list, filtering out None values
+                return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        if attr == 'keys' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict keys as a list, filtering out None values
+                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        return None
 
     def _extract_constant_value(self, value: Any, default: Any = None) -> Any:
         """
@@ -6314,6 +6517,28 @@ class HelperCodeGenerator:
                 # Use list literal to match original ALTTP style
                 return f"state.has_any({items!r}, player)"
 
+            # Handle HasFromList rules (Rule Builder format)
+            if rule_type == 'HasFromList':
+                args = expr.get('args', {})
+                items_raw = args.get('items', [])
+                count = args.get('count', 1)
+                # Resolve items if they're a complex expression (e.g., list(dict.values()))
+                items = self._resolve_items_for_has_from_list(items_raw)
+                # Generate count expression
+                count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+                return f"state.has_from_list({items!r}, player, {count_expr})"
+
+            # Handle HasFromListUnique rules (Rule Builder format)
+            if rule_type == 'HasFromListUnique':
+                args = expr.get('args', {})
+                items_raw = args.get('items', [])
+                count = args.get('count', 1)
+                # Resolve items if they're a complex expression
+                items = self._resolve_items_for_has_from_list(items_raw)
+                # Generate count expression
+                count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+                return f"state.has_from_list_unique({items!r}, player, {count_expr})"
+
             # Handle Not rules (Rule Builder format)
             if rule_type == 'Not':
                 args = expr.get('args', {})
@@ -6738,6 +6963,177 @@ class HelperCodeGenerator:
         # Generate call to location_item_name(state, location, player)
         # This is the standard Archipelago function from worlds.generic.Rules
         return f'location_item_name(state, {location_expr}, player)'
+
+    def _resolve_items_for_has_from_list(self, items: Any) -> List[str]:
+        """
+        Resolve an items expression to a list of item names for has_from_list.
+
+        Handles patterns like:
+        - list(dict.values()) where dict is a constant
+        - Direct list of strings
+        - Helper expressions wrapping dict.values()
+
+        Args:
+            items: The items expression (can be a list, dict, or complex expression)
+
+        Returns:
+            List of item names
+        """
+        # Already a list of strings
+        if isinstance(items, list):
+            result = []
+            for item in items:
+                if isinstance(item, str):
+                    result.append(item)
+                elif isinstance(item, dict) and item.get('type') == 'constant':
+                    value = item.get('value')
+                    if value is not None and isinstance(value, str):
+                        result.append(value)
+            return result
+
+        if not isinstance(items, dict):
+            return []
+
+        # Handle helper pattern: {"type": "helper", "name": "list", "args": [...]}
+        if items.get('type') == 'helper' and items.get('name') == 'list':
+            helper_args = items.get('args', [])
+            if len(helper_args) == 1:
+                inner_arg = helper_args[0]
+                # Check for function_call pattern (dict.values())
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'function_call':
+                    return self._extract_dict_values_for_has_from_list(inner_arg)
+                # Check for generator_expression pattern (list comprehension)
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'generator_expression':
+                    return self._extract_from_generator_expression_for_has_from_list(inner_arg)
+            return []
+
+        # Handle direct function_call pattern
+        if items.get('type') == 'function_call':
+            return self._extract_dict_values_for_has_from_list(items)
+
+        # Handle direct generator_expression pattern
+        if items.get('type') == 'generator_expression':
+            return self._extract_from_generator_expression_for_has_from_list(items)
+
+        return []
+
+    def _extract_from_generator_expression_for_has_from_list(self, gen_expr: dict) -> List[str]:
+        """
+        Extract items from a generator expression pattern.
+
+        Expected patterns:
+        - list(key for key, _ in dict.items()) -> returns dict keys
+        - list(value for _, value in dict.items()) -> returns dict values
+
+        Returns:
+            List of extracted items, or empty list if pattern not supported
+        """
+        element = gen_expr.get('element', {})
+        comprehension = gen_expr.get('comprehension', {})
+
+        # Get the iterator (should be dict.items() or dict.keys() or dict.values())
+        iterator = comprehension.get('iterator', {})
+        if not isinstance(iterator, dict) or iterator.get('type') != 'function_call':
+            return []
+
+        function = iterator.get('function', {})
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return []
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .items(), .keys(), or .values() on a constant dict
+        if not isinstance(obj, dict) or obj.get('type') != 'constant':
+            return []
+
+        const_value = obj.get('value', {})
+        if not isinstance(const_value, dict):
+            return []
+
+        # Get the target variable(s) from the comprehension
+        target = comprehension.get('target', {})
+
+        # Determine which part of dict we need based on the element
+        if attr == 'items':
+            # For dict.items(), target is usually a tuple (key, value) or (key, _)
+            # We need to determine if element references the key or value
+            if isinstance(element, dict) and element.get('type') == 'name':
+                elem_name = element.get('name', '')
+                # Check if the target is a tuple and match the element name
+                if isinstance(target, dict) and target.get('type') == 'tuple':
+                    target_elements = target.get('elements', [])
+                    if len(target_elements) == 2:
+                        first_elem = target_elements[0]
+                        second_elem = target_elements[1]
+                        first_name = first_elem.get('name', '') if isinstance(first_elem, dict) else ''
+                        second_name = second_elem.get('name', '') if isinstance(second_elem, dict) else ''
+
+                        if elem_name == first_name:
+                            # Element is the key
+                            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                        elif elem_name == second_name:
+                            # Element is the value - but values might be NamedTuples, extract first element
+                            result = []
+                            for v in const_value.values():
+                                if isinstance(v, str):
+                                    result.append(v)
+                            # If values are complex (NamedTuples), return keys instead
+                            if not result:
+                                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                            return result
+
+            # Fallback: return dict keys
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'keys':
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'values':
+            return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        return []
+
+    def _extract_dict_values_for_has_from_list(self, func_call: dict) -> List[str]:
+        """
+        Extract values from a dict.values() function call pattern.
+
+        Expected pattern:
+        {
+            "type": "function_call",
+            "function": {
+                "type": "attribute",
+                "object": {"type": "constant", "value": {"key": "ItemName", ...}},
+                "attr": "values"
+            }
+        }
+
+        Returns:
+            List of item names (dict values) if pattern matches, empty list otherwise
+        """
+        function = func_call.get('function', {})
+
+        # Check for attribute access pattern
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return []
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .values() or .keys() call on a constant dict
+        if attr == 'values' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict values as a list, filtering out None values
+                return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        if attr == 'keys' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict keys as a list, filtering out None values
+                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        return []
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""
