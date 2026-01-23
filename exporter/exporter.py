@@ -1323,7 +1323,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 rule_target_name=rule_target_name,
                 target_type=target_type
             )
-            
+
             if analysis_result and analysis_result.get('type') != 'error':
 
                 # Set context for A Hat In Time telescope rule processing

@@ -17,6 +17,194 @@ import astunparse
 from .cache import file_content_cache, ast_cache, clean_source_cache, unparsed_lambda_cache
 
 
+def _extract_multiline_lambda(source_code: str, start_line: int) -> Optional[str]:
+    """
+    Extract a multiline lambda expression from source code starting at a given line.
+
+    This is used as a fallback when inspect.getsource() fails to capture the full
+    multiline lambda expression. It works by:
+    1. Finding the lambda keyword on the start line
+    2. Reading lines until the expression is syntactically complete (balanced parens)
+    3. Returning the full lambda expression
+
+    Args:
+        source_code: The full source code of the file
+        start_line: The 1-indexed line number where the lambda starts
+
+    Returns:
+        The lambda expression as a string, or None if extraction failed
+    """
+    lines = source_code.split('\n')
+    if start_line < 1 or start_line > len(lines):
+        return None
+
+    # Get the starting line (convert to 0-indexed)
+    current_line_idx = start_line - 1
+    first_line = lines[current_line_idx]
+
+    # Find 'lambda' keyword in the line
+    lambda_match = re.search(r'\blambda\b', first_line)
+    if not lambda_match:
+        logging.debug(f"_extract_multiline_lambda: No lambda keyword found on line {start_line}")
+        return None
+
+    # Extract from the lambda keyword onwards
+    lambda_start = lambda_match.start()
+    collected_lines = [first_line[lambda_start:]]
+
+    # Track whether we're inside the lambda expression
+    # We need to handle:
+    # - Parentheses: (), [], {}
+    # - String literals: '', "", ''', """
+    # - Line continuations: \
+    # - Implicit continuation: expression inside parens continues to next line
+
+    def count_brackets(text: str) -> tuple:
+        """Count unmatched opening brackets in text, handling strings."""
+        paren_count = 0
+        bracket_count = 0
+        brace_count = 0
+        in_string = None  # None, "'", '"', "'''", '"""'
+        i = 0
+        while i < len(text):
+            char = text[i]
+
+            # Handle string boundaries
+            if in_string:
+                if len(in_string) == 3:  # Triple quoted
+                    if text[i:i+3] == in_string:
+                        in_string = None
+                        i += 3
+                        continue
+                else:  # Single quoted
+                    if char == '\\' and i + 1 < len(text):
+                        i += 2  # Skip escaped char
+                        continue
+                    if char == in_string:
+                        in_string = None
+                i += 1
+                continue
+
+            # Check for string start
+            if char in ('"', "'"):
+                if text[i:i+3] in ('"""', "'''"):
+                    in_string = text[i:i+3]
+                    i += 3
+                    continue
+                else:
+                    in_string = char
+                    i += 1
+                    continue
+
+            # Check for comment
+            if char == '#':
+                break  # Rest of line is comment
+
+            # Count brackets
+            if char == '(':
+                paren_count += 1
+            elif char == ')':
+                paren_count -= 1
+            elif char == '[':
+                bracket_count += 1
+            elif char == ']':
+                bracket_count -= 1
+            elif char == '{':
+                brace_count += 1
+            elif char == '}':
+                brace_count -= 1
+
+            i += 1
+
+        return paren_count, bracket_count, brace_count, in_string
+
+    # Count initial brackets
+    total_paren, total_bracket, total_brace, in_string = count_brackets(collected_lines[0])
+
+    # Continue reading lines while expression is incomplete
+    max_lines = 50  # Safety limit
+    while current_line_idx + 1 < len(lines) and len(collected_lines) < max_lines:
+        # Check if we need to continue
+        # We're done when:
+        # - All brackets are balanced (total = 0)
+        # - We're not in a string
+        # - The line doesn't end with a line continuation character
+        last_line = collected_lines[-1].rstrip()
+
+        # Check for explicit line continuation
+        has_continuation = last_line.endswith('\\')
+
+        # Check for implicit continuation based on bracket imbalance
+        has_open_brackets = (total_paren > 0 or total_bracket > 0 or total_brace > 0 or
+                            in_string is not None)
+
+        # Check if the expression might continue on the next line
+        # Lambda bodies can span multiple lines without explicit continuation if they use
+        # boolean operators (and, or). Python allows this implicit continuation.
+        # Check if next line starts with a continuation keyword/operator
+        next_line_continues = False
+        if current_line_idx + 1 < len(lines):
+            next_line_stripped = lines[current_line_idx + 1].strip()
+            # Lines starting with 'and', 'or', 'if', 'else' continue a lambda expression
+            if next_line_stripped.startswith(('and ', 'or ', 'if ', 'else ')):
+                next_line_continues = True
+            # Also check if next line starts with 'and' or 'or' followed by '('
+            if re.match(r'^(and|or)\s*\(', next_line_stripped):
+                next_line_continues = True
+
+        needs_more = has_open_brackets or has_continuation or next_line_continues
+
+        if not needs_more:
+            break
+
+        # Get next line
+        current_line_idx += 1
+        next_line = lines[current_line_idx]
+        collected_lines.append(next_line)
+
+        # Update bracket counts
+        p, b, br, in_string = count_brackets(next_line)
+        total_paren += p
+        total_bracket += b
+        total_brace += br
+
+    # Normalize to single line to avoid indentation issues
+    # The continuation lines have extra indentation from the original source
+    lines_to_join = []
+    for line in collected_lines:
+        stripped = line.strip()
+        if stripped:
+            lines_to_join.append(stripped)
+    result_normalized = ' '.join(lines_to_join)
+
+    # Try to parse the normalized lambda to verify it's complete
+    try:
+        # Wrap in an assignment to make it parseable
+        test_source = f"__test__ = {result_normalized}"
+        ast.parse(test_source)
+        logging.debug(f"_extract_multiline_lambda: Successfully extracted {len(collected_lines)} lines")
+        return result_normalized
+    except SyntaxError as e:
+        # Try trimming trailing characters that might be from the outer call
+        # Common pattern: lambda ...) where ) closes set_rule
+        trimmed = result_normalized.rstrip()
+        for i in range(5):  # Try removing up to 5 trailing parens
+            if trimmed.endswith(')'):
+                trimmed = trimmed[:-1].rstrip()
+                try:
+                    test_source = f"__test__ = {trimmed}"
+                    ast.parse(test_source)
+                    logging.debug(f"_extract_multiline_lambda: Extracted after trimming {i+1} paren(s): {len(collected_lines)} lines")
+                    return trimmed
+                except SyntaxError:
+                    continue
+            else:
+                break
+
+        logging.debug(f"_extract_multiline_lambda: Failed to parse extracted lambda: {e}")
+        return None
+
+
 def _read_source_from_path(filename: str) -> Optional[str]:
     """
     Read source code from a file path, handling both regular files and
@@ -124,7 +312,16 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
             # (e.g., Spyro 3's 2265-line __init__.py)
             line_count = source_code.count('\n')
             if line_count > 1500:
-                logging.warning(f"Source file too large ({line_count} lines), using getsource fallback: {filename}")
+                logging.warning(f"Source file too large ({line_count} lines), using multiline extraction fallback: {filename}")
+                # Use manual multiline extraction instead of inspect.getsource()
+                # because getsource() doesn't handle multiline lambdas correctly
+                result = _extract_multiline_lambda(source_code, start_line)
+                if result:
+                    logging.debug(f"Multiline extraction succeeded for line {start_line}: {repr(result)[:200]}")
+                    unparsed_lambda_cache[cache_key] = result
+                    return result
+                # Fall back to getsource if our extraction fails
+                logging.warning(f"Multiline extraction failed, using inspect.getsource fallback: {filename}:{start_line}")
                 result = inspect.getsource(func)
                 unparsed_lambda_cache[cache_key] = result
                 return result
