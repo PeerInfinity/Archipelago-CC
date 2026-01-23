@@ -340,6 +340,10 @@ def get_random_value(name, option, disallowed=None):
         )
 
     if issubclass(option, OptionList):
+        # If valid_keys is empty (common for custom format options like RGB colors),
+        # use the default value to avoid generating invalid empty lists
+        if not option.valid_keys:
+            return option.default
         return random.sample(
             list(option.valid_keys), k=random.randint(0, len(option.valid_keys))
         )

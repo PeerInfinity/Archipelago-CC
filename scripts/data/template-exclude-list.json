@@ -128,6 +128,10 @@
   ],
   "ut_fuzz_apworld_exclude_list": [
     {
+      "name": "A Link Between Worlds.yaml",
+      "reason": "Uses compiled Rust extension (albwrandomizer) for game logic. Rules reference self.seed_info.can_traverse() and self.seed_info.can_reach() which evaluate dynamically randomized crack/portal connections (Cracksanity). These methods live in the external library and cannot be exported to static rules - worldgen generates lambdas with 'self' references that fail with NameError."
+    },
+    {
       "name": "Air Delivery.yaml",
       "reason": "Python closure bug in apworld causes OR rules to only check the last condition. APWorld bug, not exporter issue."
     },
@@ -168,6 +172,10 @@
       "reason": "Uses custom AccessCondition class with data-driven rule evaluation. Exporter sees lambda calling rules.has_access() but cannot introspect the AccessCondition tree structure."
     },
     {
+      "name": "Ori and the Will of the Wisps.yaml",
+      "reason": "Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns."
+    },
+    {
       "name": "Rabi-Ribi.yaml",
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
@@ -186,6 +194,10 @@
     {
       "name": "The Sims 4.yaml",
       "reason": "APWorld bug: fill_slot_data() returns keys like 'goal' but generate_early() expects 'goal_value'. Key mismatch causes KeyError during worldgen regeneration."
+    },
+    {
+      "name": "ToeJam and Earl.yaml",
+      "reason": "Uses custom collect method with point-based rank progression. Rules check pseudo-item 'ranks' which only exists via custom state tracking, not exportable."
     },
     {
       "name": "XCOM 2 War of the Chosen.yaml",
