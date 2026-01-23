@@ -192,6 +192,10 @@
       "reason": "Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns."
     },
     {
+      "name": "Pokemon Mystery Dungeon Explorers of Sky.yaml",
+      "reason": "APWorld bug: 'Team Name' classification not handled in create_regions(), causing KeyError when subx_rules() tries to access 'Team Name Location'. Also has logic mismatches from complex rule patterns."
+    },
+    {
       "name": "Rabi-Ribi.yaml",
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
