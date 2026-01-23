@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 07:07:33
+**Generated:** 2026-01-23 07:32:44
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -15,9 +15,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 - **Total Games Tested:** 124
 - **Passing Both:** 38 (30.6%)
-- **Passing Modified Only:** 2 (1.6%)
+- **Passing Modified Only:** 1 (0.8%)
 - **Passing Hybrid Only:** 18 (14.5%)
-- **Passing Neither:** 66 (53.2%)
+- **Passing Neither:** 67 (54.0%)
 
 ## Full Comparison
 
@@ -31,7 +31,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Against the Storm | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Air Delivery | ❌ 40.0% | ✅ 100.0% | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ 100.0% | ✅ 100.0% | 8.7KB | ✅ | N/A |
-| Anodyne | ❌ 0.0% | ✅ 100.0% | 10.7KB | ✅ | N/A |
+| Anodyne | ❌ 10.0% | ✅ 100.0% | 10.7KB | ✅ | N/A |
 | Another Crabs Treasure | ⚠️ 50.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Ape Escape | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -47,7 +47,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | ClusterTruck | ❌ 30.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | CrossCode | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Crystal Project | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Crystal Project | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Crystalis | ❌ 0.0% | ❌ 0.0% | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -55,23 +55,23 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Diddy Kong Racing | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Digimon World | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 20.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 90.0% | ⚠️ 90.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Frogmonster | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | GZDoom | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Golden Sun The Lost Age | ❌ 30.0% | ❌ 20.0% | ✅ | ✅ | N/A |
+| Golden Sun The Lost Age | ❌ 20.0% | ❌ 20.0% | ✅ | ✅ | N/A |
 | Grim Dawn | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Hammerwatch | ⚠️ 50.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
 | Hatsune Miku Project Diva Mega Mix+ | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Here Comes Niko! | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Here Comes Niko! | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Iji | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Into the Breach | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Isles Of Sea And Sky | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Isles Of Sea And Sky | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ittle Dew 2 | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
-| Jigsaw | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Jigsaw | ✅ 100.0% | ❌ 0.0% | 1.6KB | ✅ | N/A |
 | K-On! After School Live!! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Kingdom Hearts Birth by Sleep | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -80,18 +80,18 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Kirby Super Star | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | League of Legends | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ⚠️ 80.0% | ✅ 90.0% | ✅ | ✅ | N/A |
-| Lil Gator Game | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
+| Lil Gator Game | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Lingo 2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ 70.0% | ✅ 70.0% | ✅ | ✅ | N/A |
-| Lunacid | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
-| Majora's Mask Recompiled | ❌ 40.0% | ❌ 20.0% | 10.4KB | ✅ | N/A |
+| Lunacid | ❌ 30.0% | ❌ 10.0% | 8.2KB | ✅ | N/A |
+| Majora's Mask Recompiled | ❌ 20.0% | ❌ 20.0% | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Metroid Zero Mission | ❌ 0.0% | ❌ 0.0% | 9.7KB | ✅ | N/A |
-| Minishoot Adventures | ❌ 0.0% | ❌ 40.0% | 25.9KB | ✅ | N/A |
-| Minit | ❌ 0.0% | ✅ 100.0% | 15.1KB | ✅ | N/A |
+| Minishoot Adventures | ❌ 40.0% | ❌ 40.0% | 25.9KB | ✅ | N/A |
+| Minit | ❌ 30.0% | ✅ 100.0% | 19.6KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ori and the Blind Forest | ❌ 20.0% | ❌ 20.0% | ✅ | ✅ | N/A |
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Ship of Harkinian | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 70.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 0.0% | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ 40.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -121,7 +121,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Soul Blazer | ⚠️ 80.0% | ✅ 100.0% | 10.6KB | ✅ | N/A |
 | Spinball | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ 0.0% | ❌ 0.0% | 15.2KB | ✅ | N/A |
-| Stacklands | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| Stacklands | ❌ 0.0% | ❌ 0.0% | 12.7KB | ✅ | N/A |
 | Star Fox 64 | ✅ 100.0% | ✅ 100.0% | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ⚠️ 70.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -129,7 +129,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | System Shock 2 | ❌ 0.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Tetris Attack | ✅ 80.0% | ✅ 80.0% | 23.1KB | ✅ | N/A |
+| Tetris Attack | ❌ 0.0% | ✅ 80.0% | 23.1KB | ✅ | N/A |
 | Tevi | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -140,7 +140,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ❌ 0.0% | ❌ 0.0% | 9.1KB | ✅ | N/A |
-| Wordipelago | ❌ 0.0% | ✅ 80.0% | 11.6KB | ✅ | N/A |
+| Wordipelago | ⚠️ 60.0% | ✅ 80.0% | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 60.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -173,6 +173,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Kingdom Hearts RE Chain of Memories | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ | ✅ | N/A |
 | League of Legends | ✅ | ✅ | N/A |
+| Lil Gator Game | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
@@ -186,21 +187,19 @@ These games have 100% success rate in both Universal Tracker versions.
 | Super Cat Planet | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | N/A |
-| Tetris Attack | 23.1KB | ✅ | N/A |
 | Tevi | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (2)
+## Games Passing Modified Only (1)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Here Comes Niko! | ✅ | ✅ | N/A |
-| Isles Of Sea And Sky | ✅ | ✅ | N/A |
+| Jigsaw | 1.6KB | ✅ | N/A |
 
 ## Games Passing Hybrid Only (18)
 
@@ -215,8 +214,7 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Corn Kidz 64 | ✅ | ✅ | N/A |
 | Frogmonster | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
-| Lil Gator Game | ✅ | ✅ | N/A |
-| Minit | 15.1KB | ✅ | N/A |
+| Minit | 19.6KB | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | Reventure | ✅ | ✅ | N/A |
@@ -224,10 +222,11 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Sonic Rush | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |
+| Tetris Attack | 23.1KB | ✅ | N/A |
 | Wordipelago | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
-## Games Passing Neither (66)
+## Games Passing Neither (67)
 
 These games fail in both Universal Tracker versions.
 
@@ -258,12 +257,13 @@ These games fail in both Universal Tracker versions.
 | Golden Sun The Lost Age | ✅ | ✅ | N/A |
 | Grim Dawn | ✅ | ✅ | N/A |
 | Hammerwatch | ✅ | ✅ | N/A |
+| Here Comes Niko! | ✅ | ✅ | N/A |
 | Iji | ✅ | ✅ | N/A |
 | Into the Breach | ✅ | ✅ | N/A |
-| Jigsaw | ✅ | ✅ | N/A |
+| Isles Of Sea And Sky | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ✅ | ✅ | N/A |
 | Lingo 2 | ✅ | ✅ | N/A |
-| Lunacid | ✅ | ✅ | N/A |
+| Lunacid | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Metroid Zero Mission | 9.7KB | ✅ | N/A |
@@ -285,7 +285,7 @@ These games fail in both Universal Tracker versions.
 | Sly Cooper and the Thievius Raccoonus | ✅ | ✅ | N/A |
 | Sonic Adventure DX | 29.9KB | ✅ | N/A |
 | Spyro 3 | 15.2KB | ✅ | N/A |
-| Stacklands | ✅ | ✅ | N/A |
+| Stacklands | 12.7KB | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
