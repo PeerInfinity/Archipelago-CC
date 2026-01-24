@@ -1,6 +1,6 @@
 # Processing Times Chart (APWorld)
 
-**Generated:** 2026-01-24 07:47:36
+**Generated:** 2026-01-24 09:07:07
 
 [← Back to Test Results Summary](./test-results-summary-apworld.md)
 
@@ -154,8 +154,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Mario Kart Double Dash | 104.2s | 5 | A Link Between Worlds.yaml, Actraiser.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Isles Of Sea And Sky.yaml, Mario Kart Double Dash.yaml |
+| 2 | Ori and the Will of the Wisps | 94.7s | 6 | A Dance of Fire and Ice.yaml, Air Delivery.yaml, League of Legends.yaml, Luigi's Mansion.yaml, Minit.yaml (+1 more) |
+| 3 | Sonic Heroes | 71.6s | 10 | Brotato.yaml, Sonic Heroes.yaml, ClusterTruck.yaml, Dome Keeper.yaml, Final Fantasy Tactics A2.yaml (+5 more) |
+| 4 | Nine Sols | 66.1s | 4 | Ape Escape 3.yaml, Diddy Kong Racing.yaml, Hammerwatch.yaml, Nine Sols.yaml |
+| 5 | The Legend of Zelda - Phantom Hourglass | 59.2s | 5 | A Link Between Worlds.yaml, Actraiser.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Isles Of Sea And Sky.yaml, The Legend of Zelda - Phantom Hourglass.yaml |
+| 6 | Shadow The Hedgehog | 53.3s | 10 | Brotato.yaml, Shadow The Hedgehog.yaml, ClusterTruck.yaml, Dome Keeper.yaml, Final Fantasy Tactics A2.yaml (+5 more) |
+| 7 | Sentinels of the Multiverse | 51.3s | 5 | A Link Between Worlds.yaml, Actraiser.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Isles Of Sea And Sky.yaml, Sentinels of the Multiverse.yaml |
+| 8 | Frogmonster | 50.3s | 3 | Against the Storm.yaml, Autopelago.yaml, Frogmonster.yaml |
+| 9 | Sonic Adventure DX | 44.5s | 5 | A Link Between Worlds.yaml, Actraiser.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Isles Of Sea And Sky.yaml, Sonic Adventure DX.yaml |
+| 10 | The Legend of Zelda - Oracle of Seasons | 44.0s | 6 | Ape Escape 3.yaml, Diddy Kong Racing.yaml, Hammerwatch.yaml, Ratchet & Clank 2.yaml, Star Wars Episode I Racer.yaml (+1 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Lingo 2 | 363.8s | 3 | Another Crabs Treasure.yaml, Kingdom Hearts RE Chain of Memories.yaml, Lingo 2.yaml |
+| 2 | K-On! After School Live!! | 62.0s | 2 | Astalon.yaml, K-On! After School Live!!.yaml |
+| 3 | Lil Gator Game | 61.6s | 4 | ANIMAL WELL.yaml, Golden Sun The Lost Age.yaml, Kingdom Hearts Chain of Memories.yaml, Lil Gator Game.yaml |
+| 4 | Ori and the Will of the Wisps | 59.3s | 6 | A Dance of Fire and Ice.yaml, Air Delivery.yaml, League of Legends.yaml, Luigi's Mansion.yaml, Minit.yaml (+1 more) |
+| 5 | Crystal Project | 53.9s | 3 | A Difficult Game About Climbing.yaml, An Untitled Story.yaml, Crystal Project.yaml |
+| 6 | CrossCode | 49.2s | 3 | A Dance of Fire and Ice.yaml, Air Delivery.yaml, CrossCode.yaml |
+| 7 | Balatro | 47.8s | 2 | Another Crabs Treasure.yaml, Balatro.yaml |
+| 8 | Cavern of Dreams | 47.5s | 2 | Ape Escape 3.yaml, Cavern of Dreams.yaml |
+| 9 | Sonic Heroes | 46.8s | 10 | Brotato.yaml, Sonic Heroes.yaml, ClusterTruck.yaml, Dome Keeper.yaml, Final Fantasy Tactics A2.yaml (+5 more) |
+| 10 | Sentinels of the Multiverse | 46.5s | 5 | A Link Between Worlds.yaml, Actraiser.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Isles Of Sea And Sky.yaml, Sentinels of the Multiverse.yaml |
