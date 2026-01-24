@@ -2204,6 +2204,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'] = self._add_mirror_alternative_to_moon_pearl(
                                 exit_data['access_rule'], exit_name
                             )
+                        # In glitch modes, exits FROM dungeon-type regions don't require
+                        # Moon Pearl for bunny revival. The original ALttP code returns
+                        # `lambda state: True` for dungeon regions in glitch mode
+                        # (see Rules.py get_rule_to_add() line ~1700-1701).
+                        # This allows Magic Mirror bunny revival inside dungeons.
+                        if self._is_glitch_mode and region_type == 4:  # 4 = Dungeon
+                            exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                                exit_data['access_rule'], exit_name
+                            )
                         # Replace dungeon small key checks when universal keys are enabled
                         if self._is_universal_keys:
                             exit_data['access_rule'] = self._replace_small_key_checks(
