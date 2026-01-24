@@ -1212,7 +1212,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     elif var_name == 'old_rule' and callable(value):
                         old_rule_func = value
 
-                    # Check for mire_clip, hera_clip (lambda functions)
+                    # Check for mire_clip, hera_clip (lambda functions) - alternate detection
                     elif var_name in ('mire_clip', 'hera_clip', 'mirrorless_moat_rule', 'hera_rule', 'gt_rule'):
                         if callable(value):
                             has_problematic_closure = True
@@ -1269,32 +1269,20 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 logger.debug(f"ALttP: Rule has Magic Mirror alternative - using Magic Mirror OR True_")
                 return {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
 
-            # Rules that only check can_reach are permissive (but not for combined or-rules,
-            # since those should have been handled above by analyzing old_rule)
-            if 'can_reach' in combined_source and 'access_rule' not in combined_source:
-                if is_combined_or_rule:
-                    # For combined or-rules where old_rule analysis failed, use False_
-                    # to be conservative (disable glitch path, require normal path)
-                    logger.debug(f"ALttP: Combined or-rule with can_reach, old_rule analysis failed, using False_")
-                    return {'rule': 'False_'}
-                logger.debug(f"ALttP: Replacing can_reach rule with True_")
-                return {'rule': 'True_'}
-
             # Rules with mire_clip, hera_clip require complex conditions:
             # - mire_clip: can_reach('Misery Mire (West)') AND can_bomb_clip AND has_fire_source
             # - hera_clip: can_reach('Tower of Hera (Top)') AND can_bomb_clip
-            # We can't export region reachability, but we can export item requirements.
-            # This is more permissive than the real rule (skips region check) but more
-            # accurate than True_ (checks items) or False_ (always fails).
+            # Use CanReachRegion to properly check region accessibility.
             # Also check problematic_reason for the closure variable name
             check_source = combined_source + ' ' + (problematic_reason or '')
             if 'mire_clip' in check_source and 'hera_clip' not in check_source:
-                # Pure mire_clip: Pegasus Boots AND (Fire Rod OR Lamp)
-                logger.debug(f"ALttP: Replacing mire_clip rule with item requirements")
+                # Pure mire_clip: CanReachRegion('Misery Mire (West)') AND Pegasus Boots AND (Fire Rod OR Lamp)
+                logger.debug(f"ALttP: Replacing mire_clip rule with CanReachRegion + item requirements")
                 return {
                     'rule': 'And',
                     'args': {
                         'rules': [
+                            {'rule': 'CanReachRegion', 'args': {'region_name': 'Misery Mire (West)'}},
                             {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}},
                             {'rule': 'Or', 'args': {'rules': [
                                 {'rule': 'Has', 'args': {'item_name': 'Fire Rod'}},
@@ -1304,13 +1292,43 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     }
                 }
             elif 'hera_clip' in check_source and 'mire_clip' not in check_source:
-                # Pure hera_clip: just Pegasus Boots
-                logger.debug(f"ALttP: Replacing hera_clip rule with item requirements")
-                return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
+                # Pure hera_clip: CanReachRegion('Tower of Hera (Top)') AND Pegasus Boots
+                logger.debug(f"ALttP: Replacing hera_clip rule with CanReachRegion + Pegasus Boots")
+                return {
+                    'rule': 'And',
+                    'args': {
+                        'rules': [
+                            {'rule': 'CanReachRegion', 'args': {'region_name': 'Tower of Hera (Top)'}},
+                            {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
+                        ]
+                    }
+                }
             elif 'mire_clip' in check_source and 'hera_clip' in check_source:
-                # Both clips as alternatives: Pegasus Boots (common requirement)
-                logger.debug(f"ALttP: Replacing mire_clip/hera_clip rule with Pegasus Boots")
-                return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
+                # Both clips as alternatives: (mire_clip OR hera_clip)
+                # mire_clip: CanReachRegion('Misery Mire (West)') AND Pegasus Boots AND fire source
+                # hera_clip: CanReachRegion('Tower of Hera (Top)') AND Pegasus Boots
+                logger.debug(f"ALttP: Replacing mire_clip/hera_clip rule with CanReachRegion alternatives")
+                return {
+                    'rule': 'Or',
+                    'args': {
+                        'rules': [
+                            # mire_clip path
+                            {'rule': 'And', 'args': {'rules': [
+                                {'rule': 'CanReachRegion', 'args': {'region_name': 'Misery Mire (West)'}},
+                                {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}},
+                                {'rule': 'Or', 'args': {'rules': [
+                                    {'rule': 'Has', 'args': {'item_name': 'Fire Rod'}},
+                                    {'rule': 'Has', 'args': {'item_name': 'Lamp'}}
+                                ]}}
+                            ]}},
+                            # hera_clip path
+                            {'rule': 'And', 'args': {'rules': [
+                                {'rule': 'CanReachRegion', 'args': {'region_name': 'Tower of Hera (Top)'}},
+                                {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
+                            ]}}
+                        ]
+                    }
+                }
 
             # Direct can_bomb_clip usage (e.g., Ice Palace rules, Kiki Skip)
             # can_bomb_clip requires: can_use_bombs (always available) + is_not_bunny + Pegasus Boots
@@ -1318,6 +1336,18 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             if 'can_bomb_clip' in combined_source:
                 logger.debug(f"ALttP: Replacing can_bomb_clip rule with Pegasus Boots")
                 return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
+
+            # Rules that only check can_reach are permissive (but not for combined or-rules,
+            # since those should have been handled above by analyzing old_rule)
+            # This check must come AFTER mire_clip/hera_clip handling since those contain can_reach
+            if 'can_reach' in combined_source and 'access_rule' not in combined_source:
+                if is_combined_or_rule:
+                    # For combined or-rules where old_rule analysis failed, use False_
+                    # to be conservative (disable glitch path, require normal path)
+                    logger.debug(f"ALttP: Combined or-rule with can_reach, old_rule analysis failed, using False_")
+                    return {'rule': 'False_'}
+                logger.debug(f"ALttP: Replacing can_reach rule with True_")
+                return {'rule': 'True_'}
 
         except (OSError, TypeError) as e:
             logger.debug(f"ALttP: Could not inspect source: {e}")
