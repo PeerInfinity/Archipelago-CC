@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-23 20:14:19
+**Generated:** 2026-01-24 05:56:05
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -47,9 +47,9 @@ Of the 53 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 365.5KB
+- **Total Exporter Code:** 368.5KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 365.5KB
+- **Combined Total:** 368.5KB
 
 ## Test Results
 
@@ -57,7 +57,7 @@ Of the 53 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 237.9KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 110.7KB | ✅ | 666.4KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 113.7KB | ✅ | 666.4KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.4KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -139,7 +139,7 @@ Of the 53 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | A Link to the Past WorldGen | 110.7KB |
+| 1 | A Link to the Past WorldGen | 113.7KB |
 | 2 | Super Mario Land 2 WorldGen | 92.5KB |
 | 3 | Overcooked! 2 WorldGen | 28.5KB |
 | 4 | Super Mario 64 WorldGen | 21.4KB |
