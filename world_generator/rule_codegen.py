@@ -2779,6 +2779,13 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
+        # Try to recognize AST_sum_of pattern (sum comprehension counting items):
+        # sum(state.has(item, player) for item in items) >= count
+        # Converts to: HasFromListUnique(*items, count=count)
+        result = self._try_convert_ast_sum_of_compare(left, op, right)
+        if result is not None:
+            return result
+
         # Check if this is a comparison between list constants (resolved placement lookups)
         # JavaScript can't compare arrays by value, so we must statically evaluate these
         left_list_val = self._get_list_constant_value(left)
@@ -5351,6 +5358,110 @@ class RuleCodeGenerator:
             pass  # approximate as "has at least count"
         else:
             return None
+
+        # Generate HasFromListUnique with the items and count
+        self.required_imports.add('HasFromListUnique')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromListUnique({items_str}, count={count})'
+
+    def _try_convert_ast_sum_of_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert an AST_sum_of comparison to HasFromListUnique().
+
+        Pattern: sum(state.has(item, player) for item in items) >= count
+        Exported as: Compare(AST_sum_of(...), ">=", count)
+        Converts to: HasFromListUnique(*items, count=count)
+
+        This handles the common pattern of counting how many items from a list
+        the player has, used for boss gates and similar mechanics.
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Check if left side is an AST_sum_of rule
+        rb_rule = left.get('rule', '')
+        if rb_rule != 'AST_sum_of':
+            return None
+
+        args = left.get('args', {})
+
+        # Get the element_rule - should be an item_check on the iterator variable
+        element_rule = args.get('element_rule', {})
+
+        # Get the iterator_info
+        iterator_info = args.get('iterator_info', {})
+        target = iterator_info.get('target', {})
+        iterator = iterator_info.get('iterator', {})
+
+        # Verify this is a simple item counting pattern:
+        # element_rule should check state.has(variable) where variable is the iterator target
+        # We support: {"type": "item_check", "item": {"type": "name", "name": "<var>"}}
+        if element_rule.get('type') != 'item_check':
+            return None
+
+        item_spec = element_rule.get('item', {})
+        if not isinstance(item_spec, dict):
+            return None
+
+        # The item should be a reference to the iterator variable
+        if item_spec.get('type') != 'name':
+            return None
+
+        item_var_name = item_spec.get('name', '')
+        target_var_name = target.get('name', '') if isinstance(target, dict) else ''
+
+        # Verify the item check uses the iterator variable
+        if item_var_name != target_var_name:
+            return None
+
+        # Extract the list of items from the iterator
+        items = []
+        if isinstance(iterator, dict) and iterator.get('type') == 'constant':
+            items = iterator.get('value', [])
+        elif isinstance(iterator, list):
+            items = iterator
+
+        if not items or not isinstance(items, list):
+            return None
+
+        # Get the count from the right side
+        count = self._extract_numeric_constant(right)
+        if count is None:
+            # Try other formats
+            if isinstance(right, dict):
+                if right.get('type') == 'constant':
+                    count = right.get('value', 0)
+                elif right.get('rule') == 'Constant':
+                    count = right.get('args', {}).get('value', 0)
+            elif isinstance(right, (int, float)):
+                count = int(right)
+
+        if count is None:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        elif op == '<=' and count >= len(items):
+            # <= max_items is always true if you can have all items
+            self.required_imports.add('True_')
+            return 'True_()'
+        elif op == '<':
+            # < count doesn't fit the HasFromListUnique pattern well
+            return None
+        else:
+            return None
+
+        # Ensure count doesn't exceed the number of items
+        count = min(count, len(items))
 
         # Generate HasFromListUnique with the items and count
         self.required_imports.add('HasFromListUnique')
