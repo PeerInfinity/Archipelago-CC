@@ -3331,6 +3331,34 @@ class RuleCodeGenerator:
                     # Convert helper call to CountItem for the item
                     return self._make_count_item(item_name)
 
+            # Handle get_item_perc_amount helper statically
+            # This helper calculates floor(items * (perc / 100)) when multiworld is None
+            # Pizza Tower and other games use this pattern for boss entrance requirements
+            if helper_name == 'get_item_perc_amount' and len(args) >= 3:
+                # Extract constant arguments: multiworld (ignored), items, perc
+                def _extract_constant(arg):
+                    if arg is None:
+                        return None
+                    if isinstance(arg, (int, float)):
+                        return arg
+                    if isinstance(arg, dict):
+                        if arg.get('rule') == 'Constant':
+                            return arg.get('args', {}).get('value')
+                        if arg.get('type') == 'constant':
+                            return arg.get('value')
+                    return None
+
+                # Args: [multiworld (None), items (int), perc (int)]
+                items = _extract_constant(args[1])
+                perc = _extract_constant(args[2])
+
+                if items is not None and perc is not None:
+                    # Calculate: floor(items * (perc / 100))
+                    # This matches the original helper behavior when multiworld is None
+                    import math
+                    result = math.floor(items * (perc / 100))
+                    return repr(result)
+
             # For other helpers (like get_item_perc_amount), generate a HelperCall
             # These are integer-returning helpers used as count arguments
             if helper_name and helper_name in self.known_helpers:
