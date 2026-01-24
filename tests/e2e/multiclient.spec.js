@@ -77,9 +77,9 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
     // Wait for server to start
     // Note: Loading 70+ apworlds can take significant time on CI runners,
-    // so we use 60 seconds and poll for the server to be ready
+    // so we use 120 seconds and poll for the server to be ready
     const startTime = Date.now();
-    const maxWaitTime = 60000; // 60 seconds
+    const maxWaitTime = 120000; // 120 seconds
     let serverReady = false;
 
     while (Date.now() - startTime < maxWaitTime) {
