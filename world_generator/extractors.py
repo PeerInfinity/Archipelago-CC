@@ -1032,6 +1032,11 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     if 'shops' in world_data and world_data['shops']:
         world_attributes['shops'] = world_data['shops']
 
+    # Also check game_info for shops (new ALttP format with unlimited_items)
+    game_info = json_data.get('game_info', {}).get(player_id, {})
+    if 'shops' in game_info and game_info['shops'] and 'shops' not in world_attributes:
+        world_attributes['shops'] = game_info['shops']
+
     if not new_world_attrs:
         # Extract game-specific computed settings that need to be world attributes
         # These are settings that are accessed by helpers as world.X

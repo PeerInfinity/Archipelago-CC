@@ -2152,6 +2152,8 @@ class _ShopWrapper:
         self._data = shop_data
         self.region = _RegionWrapper(shop_data.get('region', ''), world)
         self.inventory = shop_data.get('inventory', [])
+        # New simplified format: list of unlimited item names
+        self.unlimited_items = shop_data.get('unlimited_items', [])
         self.room_id = shop_data.get('room_id', 0)
         self.shopkeeper_config = shop_data.get('shopkeeper_config', 0)
         self.custom = shop_data.get('custom', False)
@@ -2160,6 +2162,10 @@ class _ShopWrapper:
 
     def has_unlimited(self, item: str) -> bool:
         """Check if the shop has unlimited supply of an item."""
+        # Check simplified unlimited_items list first (new format from ALttP exporter)
+        if item in self.unlimited_items:
+            return True
+        # Fall back to legacy inventory format
         for inv in self.inventory:
             if inv is None:
                 continue

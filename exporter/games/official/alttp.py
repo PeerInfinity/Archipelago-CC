@@ -2102,6 +2102,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """
         game_info = super().get_game_info(world)
 
+        # Export glitches_required mode for worldgen handling
+        # no_logic mode requires special handling - everything is accessible
+        if hasattr(world, 'options') and hasattr(world.options, 'glitches_required'):
+            game_info['glitches_required'] = world.options.glitches_required.current_key
+
         # Add bunny rule metadata for path-based evaluation
         game_info['bunny_rules'] = {
             'bunny_impassable_caves': sorted(BUNNY_IMPASSABLE_CAVES),
@@ -2109,6 +2114,43 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             'mandatory_superbunny_locations': sorted(MANDATORY_SUPERBUNNY_LOCATIONS),
             'mirror_superbunny_locations': sorted(MIRROR_SUPERBUNNY_LOCATIONS),
         }
+
+        # Export shop data for can_buy_unlimited helper
+        # This captures which shops sell unlimited items and their region locations
+        if hasattr(world, 'shops') and world.shops:
+            shops_data = []
+            for shop in world.shops:
+                # Get the region name for this shop
+                region_name = shop.region.name if hasattr(shop, 'region') and shop.region else None
+                if not region_name:
+                    continue
+
+                # Collect unlimited items from this shop's inventory
+                unlimited_items = []
+                for inv in shop.inventory:
+                    if inv is None:
+                        continue
+                    # An item is unlimited if:
+                    # 1. max == 0 (truly unlimited) - the 'item' is unlimited
+                    # 2. max > 0 with a 'replacement' - the replacement becomes available after max purchases
+                    if inv.get('max', 0) == 0:
+                        # Truly unlimited item
+                        item_name = inv.get('item')
+                        if item_name:
+                            unlimited_items.append(item_name)
+                    elif inv.get('replacement'):
+                        # Has a replacement that becomes available after max purchases
+                        unlimited_items.append(inv.get('replacement'))
+
+                if unlimited_items:
+                    shops_data.append({
+                        'region': region_name,
+                        'unlimited_items': unlimited_items,
+                    })
+
+            if shops_data:
+                game_info['shops'] = shops_data
+                logger.debug(f"ALttP: Exported {len(shops_data)} shops with unlimited items")
 
         return game_info
 
