@@ -2385,33 +2385,42 @@ class RuleCodeGenerator:
 
         if all_item_checks:
             # Extract item names
+            # Use HasFromListUnique because count_true with item_checks means
+            # "at least N different items from this list", not "at least N total items"
             items = [c.get('item', '') for c in conditions]
             items_str = ', '.join(repr(item) for item in items)
-            self.required_imports.add('HasFromList')
-            return f'HasFromList({items_str}, count={count})'
+            self.required_imports.add('HasFromListUnique')
+            return f'HasFromListUnique({items_str}, count={count})'
 
         # For mixed conditions, we need to generate combinations
-        # To avoid combinatorial explosion, we'll generate a more compact representation
-        # using a custom approach: And(Or(combinations), Or(combinations), ...)
+        # "At least count of n conditions" = Or of all ways to choose count conditions
+        # Each way is an And of those count conditions
         #
-        # For "at least 2 of N", we need all pairs that could work.
-        # But this gets complex, so for now, fall back to Or of all And combinations
-        # Limited to small counts to avoid explosion
-        if count <= 3 and n <= 10:
-            from itertools import combinations
-            combos = list(combinations(range(n), count))
-            if len(combos) <= 50:  # Reasonable limit
-                combo_exprs = []
-                for combo in combos:
-                    combo_conditions = [conditions[i] for i in combo]
-                    converted = [self._convert_rule(c) for c in combo_conditions]
-                    and_expr = ' & '.join(f'({c})' for c in converted)
-                    combo_exprs.append(f'({and_expr})')
-                return ' | '.join(combo_exprs)
+        # Calculate the number of combinations: C(n, count)
+        from math import comb
+        from itertools import combinations
 
-        # Fallback for complex cases: generate True_() with a warning
+        num_combos = comb(n, count)
+
+        # Reasonable limit to avoid code explosion
+        # 120 covers common cases like 5-of-6 (6 combos), 4-of-6 (15), 5-of-7 (21), 6-of-8 (28)
+        if num_combos <= 120:
+            combos = list(combinations(range(n), count))
+            combo_exprs = []
+            for combo in combos:
+                combo_conditions = [conditions[i] for i in combo]
+                converted = [self._convert_rule(c) for c in combo_conditions]
+                and_expr = ' & '.join(f'({c})' for c in converted)
+                combo_exprs.append(f'({and_expr})')
+            return ' | '.join(combo_exprs)
+
+        # Fallback for truly complex cases: generate True_() with a warning
         # This is conservative - locations will be accessible earlier than they should be
-        # TODO: Implement lambda-based counting for complex cases
+        import logging
+        logging.getLogger(__name__).warning(
+            f"count_true rule with count={count} of {n} conditions ({num_combos} combinations) "
+            f"is too complex to expand, falling back to True_() - tracking may be inaccurate"
+        )
         self.required_imports.add('True_')
         return 'True_()'
 

@@ -2,15 +2,19 @@
 
 ## Summary
 
-The Sonic the Hedgehog 1 apworld fails the Universal Tracker fuzz test with a ~10% failure rate. The failure type is "logic mismatch" (error type: None), where the UT thinks locations are accessible when the server disagrees.
+The Sonic the Hedgehog 1 apworld was failing the Universal Tracker fuzz test with a ~10% failure rate. The failure type was "logic mismatch" (error type: None), where the UT thought locations were accessible when the server disagreed.
 
-## Root Cause
+**Status: FIXED** - Both bugs have been resolved. The game now passes 100% of fuzz tests.
 
-**Bug Location:** `world_generator/rule_codegen.py`, method `_convert_count_true_logic()`, lines 2400-2416
+## Root Causes
 
-**The Issue:**
+There were two bugs in `world_generator/rule_codegen.py`:
 
-When converting `count_true` rules with non-item_check conditions (like `location_check`), the codegen has a limitation:
+### Bug 1: count_true with count > 3 fell back to True_()
+
+**Location:** `_convert_count_true_logic()`, lines 2400-2416
+
+When converting `count_true` rules with non-item_check conditions (like `location_check`), the codegen had a limitation:
 
 ```python
 if count <= 3 and n <= 10:
@@ -21,96 +25,76 @@ self.required_imports.add('True_')
 return 'True_()'
 ```
 
-If `count > 3`, the codegen falls back to `True_()`, which means the rule **always passes**.
+If `count > 3`, the codegen fell back to `True_()`, which means the rule **always passed**.
 
-**In Sonic 1's case:**
+**Fix:** Removed the `count <= 3` limit and now calculate actual combination count using `math.comb(n, count)`. If combinations <= 120, generate them properly.
 
-- The `specials_goal: 5` option requires reaching 5 of 6 special stages
-- This creates a `count_true` rule with `count=5` and 6 `location_check` conditions
-- Since `count (5) > 3`, the codegen outputs `True_()` instead of the actual check
-- Result: Final Zone becomes accessible without meeting the specials requirement
+### Bug 2: HasFromList counted total items instead of unique types
 
-## Failure Pattern
+**Location:** `_convert_count_true_logic()`, lines 2386-2391
 
-All 5 observed failures have the same error:
+For count_true rules with item_check conditions (like emerald checks), the codegen used `HasFromList` which counts **total items**. But the semantic should be "at least N different item types", not "at least N total items".
+
+Example: If you have 9000 Red Emeralds, `HasFromList(emeralds, count=5)` would pass because 9000 >= 5, even though you only have 1 unique emerald type.
+
+**Fix:** Changed `HasFromList` to `HasFromListUnique` which counts unique item types.
+
+## Original Failure Pattern
+
+Failures showed this error:
 ```
 Locations Final Zone Boss were expected to be in logic but weren't
 ```
 
-This happens when:
-1. `final_zone_last` is non-zero (requiring goals to be met before Final Zone)
-2. `specials_goal` is > 3 (triggering the codegen fallback)
-3. The UT thinks Final Zone is accessible because the specials check is `True_()`
-4. The server correctly evaluates the original `common_checks()` logic and says no
+This happened when:
+1. `final_zone_last` was non-zero (requiring goals before Final Zone)
+2. `specials_goal` was > 3 (triggering the count_true fallback to True_())
+3. Or emerald_goal wasn't met but HasFromList passed due to duplicate items
 
-## Evidence
+## Fixes Applied
 
-### Exported rules.json (correct)
-```json
-{
-  "rule": "AST_count_true",
-  "args": {
-    "count": 5,
-    "conditions": [
-      {"type": "location_check", "location": "Special Stage 1"},
-      {"type": "location_check", "location": "Special Stage 2"},
-      ...
-    ]
-  }
-}
-```
-
-### Generated Rules.py (incorrect)
+### Fix 1: Handle count > 3 in count_true
 ```python
-world.set_rule(
-    multiworld.get_entrance("Final Zone", player),
-    And(
-        HasFromList(..., count=5),  # emeralds - correct
-        (CanReachLocation("Green Hill 3 Boss")) & ... & (CanReachLocation("Starlight 3 Boss")),  # bosses - correct
-        True_(),  # specials - WRONG! should check 5 of 6 special stages
-        HasGroup('rings', 114)  # rings - correct
-    )
-)
+# Before
+if count <= 3 and n <= 10:
+    ...
+return 'True_()'  # Fallback
+
+# After
+from math import comb
+num_combos = comb(n, count)
+if num_combos <= 120:  # Covers 5-of-6, 4-of-7, 6-of-8, etc.
+    # Generate proper combinations
+    ...
 ```
 
-## Potential Fixes
+### Fix 2: Use HasFromListUnique for item checks
+```python
+# Before
+self.required_imports.add('HasFromList')
+return f'HasFromList({items_str}, count={count})'
 
-### Option 1: Increase count limit
-Change `count <= 3` to `count <= 6` to handle common cases like Sonic 1's 5-of-6 specials.
-
-### Option 2: Use And for count == n-1
-When `count == n - 1`, the rule is equivalent to "all except one must be true", which can be expressed as an Or of And combinations where each And excludes one condition.
-
-### Option 3: Implement lambda-based counting
-For complex cases, generate a Python lambda that counts truthy conditions at runtime.
-
-### Option 4: Game-specific handler
-Add a Sonic 1-specific handler in the world generator to expand these rules correctly.
-
-## Workaround
-
-Until the codegen is fixed, apworlds with `count_true` rules where `count > 3` will have inaccurate tracking. This includes:
-- Games with "complete N of M goals" victory conditions where N > 3
-- Games with optional boss/dungeon requirements where the threshold is > 3
-
-## Files Involved
-
-- `world_generator/rule_codegen.py` - The bug is here
-- `exporter/games/unofficial/sonic1.py` - Correctly exports the count_true rules
-- `custom_worlds/sonic1.apworld` - The affected apworld
-- `rule_builder/rules.py` - The Rule Builder handles count correctly
-
-## Reproduction Steps
-
-```bash
-source .venv/bin/activate
-python fuzz.py -r 50 -j 8 -g sonic1 -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+# After
+self.required_imports.add('HasFromListUnique')
+return f'HasFromListUnique({items_str}, count={count})'
 ```
 
-Expect ~10% failure rate with errors about "Final Zone Boss".
+## Test Results
+
+After fixes:
+```
+Success: 200
+Failures: 0
+Timeouts: 0
+Ignored: 0
+```
+
+## Files Modified
+
+- `world_generator/rule_codegen.py` - Both fixes applied here
 
 ## Conclusion
 
-This is a bug in our codebase (world_generator), not in the Sonic 1 apworld. The apworld's `common_checks()` function is correctly exported by our handler, but the codegen incorrectly converts `count_true` rules with `count > 3` to `True_()`.
-
-The fix should be applied to `world_generator/rule_codegen.py` to properly handle count values > 3.
+Both bugs were in our codebase (world_generator), not in the Sonic 1 apworld. The fixes properly handle:
+1. count_true rules with count > 3 by generating proper combinations
+2. Item count checks by using unique item counting instead of total items
