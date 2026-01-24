@@ -2095,6 +2095,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 is_dark_world = region_data.get('is_dark_world', False)
                 is_light_world = region_data.get('is_light_world', False)
                 is_mixed_region = is_dark_world and is_light_world
+                # Region types: 1=LightWorld, 2=DarkWorld, 3=Cave, 4=Dungeon
+                region_type = region_data.get('type', 0)
 
                 # Process locations
                 for location_data in region_data.get('locations', []):
@@ -2123,10 +2125,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     # whether a pure path exists. A mixed region might only have item-gated
                     # paths from Link territory, so we can't assume Moon Pearl is optional.
                     #
-                    # Region types: 1=LightWorld, 2=DarkWorld, 3=Cave, 4=Dungeon
                     # In inverted mode, only type 2 (pure DarkWorld) guarantees Link access.
                     # In standard mode, mixed regions have Light World (Link) paths.
-                    region_type = region_data.get('type', 0)
                     is_starting_region = region_name in starting_regions
                     should_remove_moon_pearl = False
                     if access_rule and location_name not in self._bunny_accessible_locations:
