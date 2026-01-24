@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-24 05:56:05
+**Generated:** 2026-01-24 06:28:43
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
