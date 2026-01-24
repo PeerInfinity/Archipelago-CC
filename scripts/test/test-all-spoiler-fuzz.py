@@ -423,18 +423,27 @@ def main():
 
     args = parser.parse_args()
 
-    # Determine seed mode
+    # Determine seed mode and world source
     is_random_seed_mode = args.seed is None
     seed_type = "random" if is_random_seed_mode else "fixed"
+    world_source = "apworlds" if args.custom_worlds_only else "bundled"
 
     # Compute output filename if not specified
     if args.output_file is None:
         is_split_job = args.every_nth > 1
         if is_split_job:
             split_num = args.skip_first + 1
-            output_filename = f"test-results-{seed_type}-split-{split_num}.json"
+            # For bundled worlds, use backwards compatible naming (no world source prefix)
+            if world_source == "bundled":
+                output_filename = f"test-results-{seed_type}-split-{split_num}.json"
+            else:
+                output_filename = f"test-results-{world_source}-{seed_type}-split-{split_num}.json"
         else:
-            output_filename = f"test-results-{seed_type}-seed.json"
+            # For bundled worlds, use backwards compatible naming (no world source prefix)
+            if world_source == "bundled":
+                output_filename = f"test-results-{seed_type}-seed.json"
+            else:
+                output_filename = f"test-results-{world_source}-{seed_type}-seed.json"
         args.output_file = f"scripts/output/spoiler-fuzz/{output_filename}"
         print(f"Auto-computed output file: {args.output_file}")
 

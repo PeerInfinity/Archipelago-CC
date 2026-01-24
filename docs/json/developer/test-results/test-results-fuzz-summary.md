@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-01-24 14:22:23
+**Generated:** 2026-01-24 14:42:00
 
 [<- Back to Main Test Results Summary](./test-results-summary.md)
 
@@ -38,7 +38,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | A Link to the Past | ❌ 0% | ✅ | 🔶 70% | — | 654.1KB |
 | A Short Hike | ✅ | ✅ | ✅ | — | 72.4KB |
 | APQuest | ✅ | ✅ | ✅ | — | 11.0KB |
-| Adventure | ⚠️ 90% | ✅ | ✅ | ✅ | 26.0KB |
+| Adventure | ⚠️ 90% | ✅ | ✅ | ✅ | 25.6KB |
 | Aquaria | ✅ | ✅ | ✅ | — | 275.4KB |
 | Baking Adventure | ✅ | ✅ | ✅ | — | 18.2KB |
 | Blasphemous | ✅ | ❌ 0% | ❌ 0% | — | N/A |
