@@ -626,22 +626,41 @@ def get_seed_display(meta: Dict) -> str:
         return 'N/A'
 
 
-def get_timestamp_display(meta: Dict) -> str:
-    """Get formatted timestamp from metadata."""
-    timestamp = meta.get('timestamp', meta.get('created', datetime.now().isoformat()))
+def get_source_data_timestamps(meta: Dict) -> tuple:
+    """Get formatted source data timestamps from metadata.
 
-    try:
-        dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
-        return dt.strftime('%Y-%m-%d %H:%M:%S UTC')
-    except:
-        return timestamp
+    Returns:
+        Tuple of (created_display, last_updated_display) or (None, None) if not available.
+    """
+    created = meta.get('created')
+    last_updated = meta.get('last_updated')
+
+    created_display = None
+    last_updated_display = None
+
+    if created:
+        try:
+            dt = datetime.fromisoformat(created.replace('Z', '+00:00'))
+            created_display = dt.strftime('%Y-%m-%d %H:%M:%S')
+        except:
+            created_display = created
+
+    if last_updated:
+        try:
+            dt = datetime.fromisoformat(last_updated.replace('Z', '+00:00'))
+            last_updated_display = dt.strftime('%Y-%m-%d %H:%M:%S')
+        except:
+            last_updated_display = last_updated
+
+    return created_display, last_updated_display
 
 
 def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
     """Generate report for a single test mode."""
     meta = results.get('metadata', {})
 
-    timestamp_display = get_timestamp_display(meta)
+    generated_display = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    created_display, last_updated_display = get_source_data_timestamps(meta)
     seed_display = get_seed_display(meta)
 
     # Determine canonical_seed1 setting
@@ -655,8 +674,19 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         "",
         "[<- Back to Test Results Summary](./test-results-summary.md)",
         "",
-        f"**Generated:** {timestamp_display}",
+        f"**Generated:** {generated_display}",
         "",
+    ]
+
+    # Add source data timestamps if available
+    if created_display:
+        lines.append(f"**Source Data Created:** {created_display}")
+        lines.append("")
+    if last_updated_display:
+        lines.append(f"**Source Data Last Updated:** {last_updated_display}")
+        lines.append("")
+
+    lines.extend([
         f"**Seed:** {seed_display}",
         "",
         f"**Mode:** {mode_display}",
@@ -686,7 +716,7 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         "- **WorldGen Spoiler** (Stage 4): Validate the `_worldgen` world's sphere log against its rules",
         "- **Cross-Validation** (Stage 5): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)",
         "",
-    ]
+    ])
 
     lines.append(generate_summary_table(results))
     lines.append(generate_results_table(results))
@@ -705,7 +735,8 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
     canonical_meta = canonical_results.get('metadata', {})
     random_meta = random_results.get('metadata', {})
 
-    timestamp_display = get_timestamp_display(canonical_meta)
+    generated_display = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    created_display, last_updated_display = get_source_data_timestamps(canonical_meta)
     seed_display = get_seed_display(canonical_meta)
 
     lines = [
@@ -713,8 +744,19 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "",
         "[<- Back to Test Results Summary](./test-results-summary.md)",
         "",
-        f"**Generated:** {timestamp_display}",
+        f"**Generated:** {generated_display}",
         "",
+    ]
+
+    # Add source data timestamps if available
+    if created_display:
+        lines.append(f"**Source Data Created:** {created_display}")
+        lines.append("")
+    if last_updated_display:
+        lines.append(f"**Source Data Last Updated:** {last_updated_display}")
+        lines.append("")
+
+    lines.extend([
         f"**Seed:** {seed_display}",
         "",
         f"**Mode:** Both (Canonical and Random)",
@@ -754,7 +796,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "",
         "Tests run with `--canonical-seed1` (items placed in original locations).",
         "",
-    ]
+    ])
 
     lines.append(generate_summary_table(canonical_results, "Canonical Summary"))
     lines.append(generate_results_table(canonical_results, "Canonical Detailed Results"))

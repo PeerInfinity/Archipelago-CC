@@ -7,7 +7,7 @@ on:
         description: 'Number of fuzz runs per game'
         required: true
         type: number
-        default: 5
+        default: 10
 
       generation_timeout:
         description: 'Timeout per seed generation in seconds'
@@ -95,13 +95,22 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Delete spoiler-fuzz test results
-          git rm -f scripts/output/spoiler-fuzz/test-results-fixed-seed.json || true
-          git rm -f scripts/output/spoiler-fuzz/test-results-random-seed.json || true
+          # Delete spoiler-fuzz test results for the mode being run
+          if [ "${{ inputs.test_apworlds }}" = "true" ]; then
+            # APWorlds mode - delete apworlds results
+            git rm -f scripts/output/spoiler-fuzz/test-results-apworlds-fixed-seed.json || true
+            git rm -f scripts/output/spoiler-fuzz/test-results-apworlds-random-seed.json || true
+            MODE="apworlds"
+          else
+            # Bundled mode - delete bundled results
+            git rm -f scripts/output/spoiler-fuzz/test-results-fixed-seed.json || true
+            git rm -f scripts/output/spoiler-fuzz/test-results-random-seed.json || true
+            MODE="bundled"
+          fi
 
           # Commit if there are changes
           if ! git diff --staged --quiet; then
-            git commit -m "Delete existing spoiler fuzz test results before new test run"
+            git commit -m "Delete existing spoiler fuzz test results before new test run ($MODE)"
             git push origin spoiler-fuzz-test
           fi
 

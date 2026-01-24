@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-01-24 22:47:25
+**Generated:** 2026-01-24 14:52:43
 
 [<- Back to Main Test Results Summary](./test-results-summary.md)
 
@@ -20,13 +20,13 @@ This summary combines results from fuzz tests that validate game configurations 
 - **UT Fuzz Original:** 40/85 passed (47.1%)
 - **UT Fuzz Modified:** 62/85 passed (72.9%)
 - **UT Fuzz Hybrid:** 61/85 passed (71.8%)
-- **Spoiler Fuzz:** No results available
+- **Spoiler Fuzz:** 1/1 passed (100.0%)
 
 ### Combined Results
 
 - **Games passing all 4 fuzz tests:** 0/85 (0.0%)
-- **Games passing 3 fuzz tests:** 33/85 (38.8%)
-- **Games passing 2 fuzz tests:** 28/85 (32.9%)
+- **Games passing 3 fuzz tests:** 34/85 (40.0%)
+- **Games passing 2 fuzz tests:** 27/85 (31.8%)
 - **Games passing 1 fuzz test:** 8/85 (9.4%)
 - **Games passing 0 fuzz tests:** 16/85 (18.8%)
 
@@ -38,7 +38,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | A Link to the Past | ❌ 0% | ✅ | 🔶 70% | — | 654.1KB |
 | A Short Hike | ✅ | ✅ | ✅ | — | 72.4KB |
 | APQuest | ✅ | ✅ | ✅ | — | 11.0KB |
-| Adventure | ⚠️ 90% | ✅ | ✅ | — | 26.0KB |
+| Adventure | ⚠️ 90% | ✅ | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ | ✅ | ✅ | — | 275.4KB |
 | Baking Adventure | ✅ | ✅ | ✅ | — | 18.2KB |
 | Blasphemous | ✅ | ❌ 0% | ❌ 0% | — | N/A |

@@ -2,11 +2,11 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-**Generated:** 2026-01-24 14:42:00
+**Generated:** 2026-01-24 14:52:10
 
-**Source Data Created:** 2026-01-24T14:41:20.295178
+**Source Data Created:** 2026-01-24T22:06:57.714517
 
-**Source Data Last Updated:** 2026-01-24T14:41:29.945957
+**Source Data Last Updated:** 2026-01-24T22:06:57.714523
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -31,7 +31,7 @@
 
 | Game Name | Result | Total | Success | Gen Fail | Test Fail | Timeout | Success Rate | Rules Size |
 |-----------|:------:|:-----:|:-------:|:--------:|:---------:|:-------:|:------------:|:----------:|
-| Adventure | ✅ | 1 | 1 | 0 | 0 | 0 | **100.0%** | 25.6KB |
+| Adventure | ✅ | 1 | 1 | 0 | 0 | 0 | **100.0%** | 26.0KB |
 
 ## Notes
 

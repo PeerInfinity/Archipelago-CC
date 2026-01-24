@@ -329,7 +329,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate fuzz test summary chart')
     parser.add_argument('--output', type=str, help='Output markdown file path')
     parser.add_argument('--world-source', type=str, choices=['bundled', 'apworlds'],
-                        default='bundled', help='World source to generate summary for')
+                        default=None, help='World source to generate summary for (default: both)')
 
     args = parser.parse_args()
 
