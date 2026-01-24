@@ -192,6 +192,10 @@
       "reason": "APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options."
     },
     {
+      "name": "Final Fantasy Tactics Advance.yaml",
+      "reason": "APWorld bug: In create_gates() when last_gate=True with gate_paths>1 and gate_items=dispatch_gate, the dispatch_gate region is never added to multiworld.regions. Dispatch locations are orphaned, causing ~50% logic mismatch failures."
+    },
+    {
       "name": "Frogmonster.yaml",
       "reason": "Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld."
     },
@@ -230,6 +234,10 @@
     {
       "name": "Ori and the Will of the Wisps.yaml",
       "reason": "Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns."
+    },
+    {
+      "name": "Oxygen Not Included.yaml",
+      "reason": "APWorld bug: Duplicate location names created when bionic=true with base-game-only clusters (spaced_out=false). Four Bionic DLC items have empty tech_base values, causing locations named ' - 1' to collide in the global location cache."
     },
     {
       "name": "Pokemon Mystery Dungeon Explorers of Sky.yaml",

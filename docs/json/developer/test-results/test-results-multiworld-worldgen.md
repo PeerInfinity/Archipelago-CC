@@ -2,11 +2,13 @@
 
 ## Multiworld Test
 
-[← Back to Test Results Summary](./test-results-summary.md)
+[← Back to Test Results Summary](./test-results-summary-worldgen.md)
+
+[📖 Learn about this test](../tests/test-multiworld.md)
 
 [View Original Template Results](./test-results-multiworld.md)
 
-**Generated:** 2026-01-21 19:42:35
+**Generated:** 2026-01-23 20:14:19
 
 ## Summary
 

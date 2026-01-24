@@ -146,6 +146,84 @@ jobs:
             git push origin test-results-update
           fi
 
+      - name: Install system dependencies for apworld setup
+        if: inputs.template_type == 'apworld'
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment for setup
+        if: inputs.template_type == 'apworld'
+        uses: actions/cache@v4
+        id: cache-venv-setup
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies for setup
+        if: inputs.template_type == 'apworld' && steps.cache-venv-setup.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate for setup
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Download and install APWorld Manager
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          echo "Installing all Stable apworlds..."
+          python scripts/install_apworlds.py --install-all
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+      - name: Upload APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/upload-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+          retention-days: 1
+
+      - name: Upload custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/upload-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+          retention-days: 1
+
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
@@ -200,39 +278,29 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -240,7 +308,7 @@ jobs:
 
           # Update world mapping to include new apworlds
           echo "Updating world mapping..."
-          python scripts/build/build-world-mapping.py
+          python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Configure host settings
         run: |
@@ -397,6 +465,14 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
+      - name: Upload world mapping for apworlds
+        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
+          retention-days: 7
+
   # Combine minimal spoiler results
   combine-minimal-spoiler:
     name: Combine Minimal Spoiler Results (${{ inputs.template_type }})
@@ -426,6 +502,13 @@ jobs:
         with:
           path: artifacts
 
+      - name: Download world mapping for apworlds
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data
+
       - name: Combine test results
         env:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
@@ -453,12 +536,18 @@ jobs:
           git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
+          # Add world mapping for apworlds (if it exists)
+          if [ -f scripts/data/world-mapping-unofficial.json ]; then
+            git add -f scripts/data/world-mapping-unofficial.json
+          fi
+
           if ! git diff --staged --quiet; then
             git commit -m "Update minimal spoiler test results (sequential workflow)
 
             Generated by workflow run: ${{ github.run_id }}
             Spoiler mode: ${{ inputs.spoiler_mode }}
             Start seed: ${{ inputs.start_seed }}
+            Template type: ${{ inputs.template_type }}
             "
             git push origin test-results-update
           fi
@@ -519,39 +608,29 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -559,7 +638,7 @@ jobs:
 
           # Update world mapping to include new apworlds
           echo "Updating world mapping..."
-          python scripts/build/build-world-mapping.py
+          python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Configure host settings
         run: |
@@ -682,6 +761,14 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
+      - name: Upload world mapping for apworlds
+        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
+          retention-days: 7
+
   # Combine full spoiler results
   combine-full-spoiler:
     name: Combine Full Spoiler Results (${{ inputs.template_type }})
@@ -711,6 +798,13 @@ jobs:
         with:
           path: artifacts
 
+      - name: Download world mapping for apworlds
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data
+
       - name: Combine test results
         env:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
@@ -737,6 +831,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
+
+          # Add world mapping for apworlds (if it exists)
+          if [ -f scripts/data/world-mapping-unofficial.json ]; then
+            git add -f scripts/data/world-mapping-unofficial.json
+          fi
 
           if ! git diff --staged --quiet; then
             git commit -m "Update full spoiler test results (sequential workflow)
@@ -805,39 +904,29 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -845,7 +934,7 @@ jobs:
 
           # Update world mapping to include new apworlds
           echo "Updating world mapping..."
-          python scripts/build/build-world-mapping.py
+          python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Configure host settings
         run: |
@@ -928,6 +1017,14 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
+      - name: Upload world mapping for apworlds
+        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
+          retention-days: 7
+
   # Combine multiclient results
   combine-multiclient:
     name: Combine Multiclient Results (${{ inputs.template_type }})
@@ -957,6 +1054,13 @@ jobs:
         with:
           path: artifacts
 
+      - name: Download world mapping for apworlds
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data
+
       - name: Combine test results
         env:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
@@ -984,10 +1088,16 @@ jobs:
           git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
+          # Add world mapping for apworlds (if it exists)
+          if [ -f scripts/data/world-mapping-unofficial.json ]; then
+            git add -f scripts/data/world-mapping-unofficial.json
+          fi
+
           if ! git diff --staged --quiet; then
             git commit -m "Update multiclient test results (sequential workflow)
 
             Generated by workflow run: ${{ github.run_id }}
+            Template type: ${{ inputs.template_type }}
             "
             git push origin test-results-update
           fi
@@ -1042,39 +1152,29 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -1082,7 +1182,7 @@ jobs:
 
           # Update world mapping to include new apworlds
           echo "Updating world mapping..."
-          python scripts/build/build-world-mapping.py
+          python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Configure host settings
         run: |
@@ -1145,6 +1245,14 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results.json
           retention-days: 7
 
+      - name: Upload world mapping for apworlds
+        if: ${{ !cancelled() && inputs.template_type == 'apworld' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
+          retention-days: 7
+
   # Combine multiworld results (single job version)
   combine-multiworld-single:
     name: Combine Multiworld Results (Single Job) (${{ inputs.template_type }})
@@ -1175,6 +1283,13 @@ jobs:
           name: test-results-multiworld-single-${{ inputs.template_type }}
           path: artifacts
 
+      - name: Download world mapping for apworlds
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data
+
       - name: Copy results and generate documentation
         env:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
@@ -1191,6 +1306,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
+
+          # Add world mapping for apworlds (if it exists)
+          if [ -f scripts/data/world-mapping-unofficial.json ]; then
+            git add -f scripts/data/world-mapping-unofficial.json
+          fi
 
           if ! git diff --staged --quiet; then
             git commit -m "Update multiworld test results (sequential workflow - single job)
@@ -1257,39 +1377,29 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -1297,7 +1407,7 @@ jobs:
 
           # Update world mapping to include new apworlds
           echo "Updating world mapping..."
-          python scripts/build/build-world-mapping.py
+          python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Configure host settings
         run: |
@@ -1362,6 +1472,14 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
+      - name: Upload world mapping for apworlds
+        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
+          retention-days: 7
+
   # Combine multiworld results
   combine-multiworld:
     name: Combine Multiworld Results (${{ inputs.template_type }})
@@ -1391,6 +1509,13 @@ jobs:
         with:
           path: artifacts
 
+      - name: Download world mapping for apworlds
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data
+
       - name: Combine test results
         env:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
@@ -1417,6 +1542,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
+
+          # Add world mapping for apworlds (if it exists)
+          if [ -f scripts/data/world-mapping-unofficial.json ]; then
+            git add -f scripts/data/world-mapping-unofficial.json
+          fi
 
           if ! git diff --staged --quiet; then
             git commit -m "Update multiworld test results (sequential workflow)
