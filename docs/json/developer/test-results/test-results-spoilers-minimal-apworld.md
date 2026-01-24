@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-spoilers-minimal.md)
 
-**Generated:** 2026-01-23 20:14:19
+**Generated:** 2026-01-23 21:19:56
 
 **Source Data Created:** 2026-01-24T03:36:00.002396
 
@@ -112,7 +112,7 @@
 | Rain World | ❌ Failed | 0 | 0.1 | 12.2 | 🟠 0.8% | 11.7KB | ✅ |
 | Ratchet & Clank 2 | ✅ Passed | 0 | 17.3 | 17.3 | 🟢 Complete | ✅ | ✅ |
 | Reventure | ❌ Failed | 0 | 0.4 | 4.8 | 🟠 8.3% | ✅ | ✅ |
-| Rift Wizard | ✅ Passed | 0 | 25.1 | 25.1 | 🟢 Complete | 6.6KB | ✅ |
+| Rift Wizard | ✅ Passed | 0 | 25.1 | 25.1 | 🟢 Complete | 7.7KB | ✅ |
 | Rift of the Necrodancer | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Rusted Moss | ❌ Failed | 2374 | 0 | 10.1 | 🔴 0.0% | ✅ | ✅ |
 | Sentinels of the Multiverse | ❌ Failed | 0 | 0 | 28.1 | 🔴 0.0% | ✅ | ✅ |
@@ -129,7 +129,7 @@
 | Spyro 3 | ❌ Failed | 2113 | 0 | 10.2 | 🔴 0.0% | 15.2KB | ✅ |
 | Stacklands | ❌ Failed | 0 | 0.2 | 11.1 | 🟠 1.8% | 12.7KB | ✅ |
 | Star Fox 64 | ❌ Failed | 0 | 0 | 7.3 | 🔴 0.0% | 17.1KB | ✅ |
-| Star Wars Episode I Racer | ✅ Passed | 0 | 0.2 | 0.2 | 🟢 Complete | ✅ | ✅ |
+| Star Wars Episode I Racer | ✅ Passed | 0 | 0.2 | 0.2 | 🟢 Complete | 5.7KB | ✅ |
 | Super Cat Planet | ❌ Failed | 0 | 0.2 | 6.3 | 🟠 3.2% | ✅ | ✅ |
 | Symphony of the Night | ✅ Passed | 0 | 4.2 | 4.2 | 🟢 Complete | ✅ | ✅ |
 | System Shock 2 | ❌ Failed | 0 | 0.1 | 15.6 | 🟠 0.6% | 15.0KB | ✅ |

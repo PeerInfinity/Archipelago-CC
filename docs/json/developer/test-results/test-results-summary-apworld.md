@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (APWorld)
 
-**Generated:** 2026-01-23 20:14:19
+**Generated:** 2026-01-23 21:19:56
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -43,9 +43,9 @@ Of the 0 templates passing all 3 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 407.1KB
+- **Total Exporter Code:** 414.0KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 407.1KB
+- **Combined Total:** 414.0KB
 
 ## Test Results
 
@@ -131,7 +131,7 @@ Of the 0 templates passing all 3 tests:
 | Rain World | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
 | Reventure | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rift Wizard | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 6.6KB | ✅ | N/A |
+| Rift Wizard | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 7.7KB | ✅ | N/A |
 | Rift of the Necrodancer | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
 | Rusted Moss | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | N/A |
 | Sentinels of the Multiverse | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ Of the 0 templates passing all 3 tests:
 | Spyro 3 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 15.2KB | ✅ | N/A |
 | Stacklands | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 12.7KB | ✅ | N/A |
 | Star Fox 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 17.1KB | ✅ | N/A |
-| Star Wars Episode I Racer | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
 | System Shock 2 | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 15.0KB | ✅ | N/A |
@@ -199,13 +199,14 @@ Of the 0 templates passing all 3 tests:
 | 22 | Watery Words | 9.1KB |
 | 23 | An Untitled Story | 8.7KB |
 | 24 | Lunacid | 8.2KB |
-| 25 | Pizza Tower | 7.0KB |
-| 26 | Air Delivery | 6.6KB |
-| 27 | Rift Wizard | 6.6KB |
-| 28 | The Sims 4 | 5.5KB |
-| 29 | Another Crabs Treasure | 3.1KB |
-| 30 | Jigsaw | 1.6KB |
-| 31 | ANIMAL WELL | 1.5KB |
+| 25 | Rift Wizard | 7.7KB |
+| 26 | Pizza Tower | 7.0KB |
+| 27 | Air Delivery | 6.6KB |
+| 28 | Star Wars Episode I Racer | 5.7KB |
+| 29 | The Sims 4 | 5.5KB |
+| 30 | Another Crabs Treasure | 3.1KB |
+| 31 | Jigsaw | 1.6KB |
+| 32 | ANIMAL WELL | 1.5KB |
 
 ## Excluded Templates
 
@@ -229,6 +230,7 @@ These templates are excluded from testing:
 | Digimon World.yaml | Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format. |
 | Duke Nukem 3D.yaml | Uses dynamic location/region creation in interpret_slot_data() instead of static definitions. Locations are created when level.create_region() is called based on slot_data['levels']. Rules use nested classes (HasRule, LambdaRule) defined inside Rules.__init__() that cannot be serialized. Exporter captures 0 locations and null rules. Tracker fails with 'location already exists' assertion when interpret_slot_data tries to create locations that already exist. |
 | Final Fantasy Tactics A2.yaml | APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options. |
+| Final Fantasy Tactics Advance.yaml | APWorld bug: In create_gates() when last_gate=True with gate_paths>1 and gate_items=dispatch_gate, the dispatch_gate region is never added to multiworld.regions. Dispatch locations are orphaned, causing ~50% logic mismatch failures. |
 | Frogmonster.yaml | Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld. |
 | GZDoom.yaml | Base framework apworld with hidden=True. Not a standalone game - requires WAD-specific apworlds (e.g., zdoom_doom_2.apworld) that extend GZDoomWorld and provide wad_logic. Accessing wad_logic on base class raises AttributeError because the attribute is only declared, not initialized. |
 | Garfield Kart - Furious Racing.yaml | APWorld bug: Compares Choice options against invalid string 'on' (e.g., randomize_spoilers in ['on', 'progressive']). Valid option keys are 'off', 'progressive', 'combine_tiers'. Archipelago's option __eq__ asserts valid comparisons, causing AssertionError during seed generation. |
@@ -239,6 +241,7 @@ These templates are excluded from testing:
 | Monster Sanctuary.yaml | Uses custom AccessCondition class with data-driven rule evaluation. Exporter sees lambda calling rules.has_access() but cannot introspect the AccessCondition tree structure. |
 | Ori and the Blind Forest.yaml | Uses oribf_has helper with special keywords ('Free', 'Lure', 'DoubleBash', etc.) and item tuples. Exporter hits infinite loop analyzing helper. Custom exporter improves to 30-60% success but glitched logic settings still fail due to complex option-dependent rules in RulesData.py. |
 | Ori and the Will of the Wisps.yaml | Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns. |
+| Oxygen Not Included.yaml | APWorld bug: Duplicate location names created when bionic=true with base-game-only clusters (spaced_out=false). Four Bionic DLC items have empty tech_base values, causing locations named ' - 1' to collide in the global location cache. |
 | Pokemon Mystery Dungeon Explorers of Sky.yaml | APWorld bug: 'Team Name' classification not handled in create_regions(), causing KeyError when subx_rules() tries to access 'Team Name Location'. Also has logic mismatches from complex rule patterns. |
 | Pseudoregalia.yaml | Uses virtual items ('Kick Count', 'Cling Count') managed through custom collect/remove hooks. Collecting physical items like 'Air Kick' adds virtual counters via state.add_item(). Rules check virtual item counts but worldgen can't replicate collect hooks, so virtual items are never in collection state. |
 | Rabi-Ribi.yaml | Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis. |

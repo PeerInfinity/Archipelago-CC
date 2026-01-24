@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-24 05:05:20
+**Generated:** 2026-01-23 21:21:04
 
 **Source Data Created:** 2026-01-22T20:59:24.837945
 
@@ -51,16 +51,16 @@ Of the 61 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 673.4KB
+- **Total Exporter Code:** 676.3KB
 - **Total Game Logic Code:** 652.0KB
-- **Combined Total:** 1325.4KB
+- **Combined Total:** 1328.3KB
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | 110.7KB | ✅ | 654.1KB |
+| A Link to the Past | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | 113.7KB | ✅ | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |

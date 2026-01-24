@@ -285,58 +285,65 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"- **Locations with Default Rule:** {total_locs_default:,}\n"
             md_content += f"- **Overall Explain Coverage:** {overall_explain_coverage:.1f}%\n\n"
 
-        # Add Generic Exporter/Logic Statistics section
-        passed_with_generic_exporter = 0
-        passed_with_generic_logic = 0
-        passed_with_both_generic = 0
-        total_exporter_size = 0
-        total_logic_size = 0
+        # Add Generic Exporter/Logic Statistics section (skip for original UT)
+        if ut_version != 'original':
+            passed_with_generic_exporter = 0
+            passed_with_generic_logic = 0
+            passed_with_both_generic = 0
+            total_exporter_size = 0
+            total_logic_size = 0
 
-        for data in chart_data:
-            game_name = data['game_name']
-            is_passing = data['passed']
+            for data in chart_data:
+                game_name = data['game_name']
+                is_passing = data['passed']
 
-            # Get exporter and logic info from world_mapping
-            has_custom_exporter = False
-            has_custom_logic = False
-            exporter_size = 0
-            logic_size = 0
+                # Get exporter and logic info from world_mapping
+                has_custom_exporter = False
+                has_custom_logic = False
+                exporter_size = 0
+                logic_size = 0
 
-            if game_name in world_mapping:
-                exporter_size = world_mapping[game_name].get('exporter_size', 0)
-                logic_size = world_mapping[game_name].get('game_logic_size', 0)
-                has_custom_exporter = exporter_size > 0
-                has_custom_logic = logic_size > 0
-                total_exporter_size += exporter_size
-                total_logic_size += logic_size
+                if game_name in world_mapping:
+                    exporter_size = world_mapping[game_name].get('exporter_size', 0)
+                    logic_size = world_mapping[game_name].get('game_logic_size', 0)
+                    has_custom_exporter = exporter_size > 0
+                    has_custom_logic = logic_size > 0
+                    total_exporter_size += exporter_size
+                    total_logic_size += logic_size
 
-            if is_passing:
-                if not has_custom_exporter:
-                    passed_with_generic_exporter += 1
-                if not has_custom_logic:
-                    passed_with_generic_logic += 1
-                if not has_custom_exporter and not has_custom_logic:
-                    passed_with_both_generic += 1
+                if is_passing:
+                    if not has_custom_exporter:
+                        passed_with_generic_exporter += 1
+                    if not has_custom_logic:
+                        passed_with_generic_logic += 1
+                    if not has_custom_exporter and not has_custom_logic:
+                        passed_with_both_generic += 1
 
-        md_content += "### Generic Exporter/Logic Statistics\n\n"
-        md_content += f"Of the {passed} games with 100% pass rate:\n\n"
-        if passed > 0:
-            md_content += f"- **Passing with Generic Exporter:** {passed_with_generic_exporter}/{passed} ({passed_with_generic_exporter/passed*100:.1f}%)\n"
-            md_content += f"- **Passing with Generic Logic:** {passed_with_generic_logic}/{passed} ({passed_with_generic_logic/passed*100:.1f}%)\n"
-            md_content += f"- **Passing with Both Generic:** {passed_with_both_generic}/{passed} ({passed_with_both_generic/passed*100:.1f}%)\n"
-        else:
-            md_content += f"- **Passing with Generic Exporter:** 0/0\n"
-            md_content += f"- **Passing with Generic Logic:** 0/0\n"
-            md_content += f"- **Passing with Both Generic:** 0/0\n"
+            md_content += "### Generic Exporter/Logic Statistics\n\n"
+            md_content += f"Of the {passed} games with 100% pass rate:\n\n"
+            if passed > 0:
+                md_content += f"- **Passing with Generic Exporter:** {passed_with_generic_exporter}/{passed} ({passed_with_generic_exporter/passed*100:.1f}%)\n"
+                md_content += f"- **Passing with Generic Logic:** {passed_with_generic_logic}/{passed} ({passed_with_generic_logic/passed*100:.1f}%)\n"
+                md_content += f"- **Passing with Both Generic:** {passed_with_both_generic}/{passed} ({passed_with_both_generic/passed*100:.1f}%)\n"
+            else:
+                md_content += f"- **Passing with Generic Exporter:** 0/0\n"
+                md_content += f"- **Passing with Generic Logic:** 0/0\n"
+                md_content += f"- **Passing with Both Generic:** 0/0\n"
 
-        md_content += f"\n**Combined Custom Code Size:**\n\n"
-        md_content += f"- **Total Exporter Code:** {total_exporter_size / 1024:.1f}KB\n"
-        md_content += f"- **Total Game Logic Code:** {total_logic_size / 1024:.1f}KB\n"
-        md_content += f"- **Combined Total:** {(total_exporter_size + total_logic_size) / 1024:.1f}KB\n\n"
+            md_content += f"\n**Combined Custom Code Size:**\n\n"
+            md_content += f"- **Total Exporter Code:** {total_exporter_size / 1024:.1f}KB\n"
+            md_content += f"- **Total Game Logic Code:** {total_logic_size / 1024:.1f}KB\n"
+            md_content += f"- **Combined Total:** {(total_exporter_size + total_logic_size) / 1024:.1f}KB\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |\n"
-    md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|\n"
+
+    # Include Exporter/GameLogic/Rules Size columns for non-original UT versions
+    if ut_version != 'original':
+        md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|\n"
+    else:
+        md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |\n"
+        md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|\n"
 
     for data in chart_data:
         game_name = data['game_name']
@@ -363,26 +370,33 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         else:
             rate_display = f"❌ {success_rate:.1f}%"
 
-        # Get exporter and game logic sizes from world mapping
-        exporter_indicator = "N/A"
-        logic_indicator = "N/A"
-        if game_name in world_mapping:
-            exporter_size = world_mapping[game_name].get('exporter_size', 0)
-            game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
-            exporter_indicator = format_file_size(exporter_size)
-            logic_indicator = format_file_size(game_logic_size)
+        # Include Exporter/GameLogic/Rules Size columns for non-original UT versions
+        if ut_version != 'original':
+            # Get exporter and game logic sizes from world mapping
+            exporter_indicator = "N/A"
+            logic_indicator = "N/A"
+            if game_name in world_mapping:
+                exporter_size = world_mapping[game_name].get('exporter_size', 0)
+                game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+                exporter_indicator = format_file_size(exporter_size)
+                logic_indicator = format_file_size(game_logic_size)
 
-        # Get rules.json size
-        rules_size_indicator = "N/A"
-        if project_root and world_dir:
-            rules_size = get_rules_json_size(project_root, world_dir)
-            if rules_size > 0:
-                rules_size_indicator = f"{rules_size / 1024:.1f}KB"
+            # Get rules.json size
+            rules_size_indicator = "N/A"
+            if project_root and world_dir:
+                rules_size = get_rules_json_size(project_root, world_dir)
+                if rules_size > 0:
+                    rules_size_indicator = f"{rules_size / 1024:.1f}KB"
 
-        md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
+            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
+        else:
+            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
 
     if not chart_data:
-        md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
+        if ut_version != 'original':
+            md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
+        else:
+            md_content += "| No data available | - | - | - | - | - | - | - |\n"
 
     # Add explain support section if data is available
     games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
@@ -426,9 +440,10 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Timeout:** Number of runs that exceeded the time limit\n"
     md_content += "- **Ignored:** Number of runs skipped due to option errors\n"
     md_content += "- **Success Rate:** Percentage of successful runs\n"
-    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
-    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
-    md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
+    if ut_version != 'original':
+        md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+        md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
+        md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
     md_content += "\n"
 
     if games_with_explain_stats:

@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified
 
-**Generated:** 2026-01-24 05:05:20
+**Generated:** 2026-01-23 21:21:04
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -26,7 +26,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 0.0% | ✅ 100.0% | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ 0.0% | ✅ 90.0% | 110.7KB | ✅ | 654.1KB |
+| A Link to the Past | ❌ 0.0% | ✅ 90.0% | 113.7KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 90.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -172,7 +172,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | 110.7KB | ✅ | 654.1KB |
+| A Link to the Past | 113.7KB | ✅ | 654.1KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | DLCQuest | 1.2KB | ✅ | 51.3KB |
