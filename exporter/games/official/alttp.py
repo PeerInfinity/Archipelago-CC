@@ -1236,6 +1236,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         logger.info(f"ALttP: Intercepting underworld_glitch rule for '{target_name}' "
                    f"(reason: {problematic_reason})")
 
+        # For combined rules (from add_rule with combine='or'), prioritize analyzing old_rule
+        # to preserve the original (non-glitch) rule requirements.
+        # The combined rule is: glitch_rule OR old_rule
+        # Since we can't properly serialize the glitch alternative, we export just old_rule.
+        # This ensures UT matches server logic when glitches aren't being used.
+        if is_combined_or_rule and old_rule_func is not None:
+            logger.debug(f"ALttP: Combined or-rule - analyzing old_rule for '{target_name}'")
+            old_rule_result = self._analyze_old_rule(old_rule_func, target_name)
+            if old_rule_result is not None:
+                return old_rule_result
+            # If old_rule analysis fails, fall through to pattern matching
+            logger.debug(f"ALttP: Failed to analyze old_rule, trying pattern matching")
+
         # Try to determine the best replacement rule based on source code
         try:
             source = inspect.getsource(rule_func)
@@ -1256,8 +1269,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 logger.debug(f"ALttP: Rule has Magic Mirror alternative - using Magic Mirror OR True_")
                 return {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
 
-            # Rules that only check can_reach are permissive
+            # Rules that only check can_reach are permissive (but not for combined or-rules,
+            # since those should have been handled above by analyzing old_rule)
             if 'can_reach' in combined_source and 'access_rule' not in combined_source:
+                if is_combined_or_rule:
+                    # For combined or-rules where old_rule analysis failed, use False_
+                    # to be conservative (disable glitch path, require normal path)
+                    logger.debug(f"ALttP: Combined or-rule with can_reach, old_rule analysis failed, using False_")
+                    return {'rule': 'False_'}
                 logger.debug(f"ALttP: Replacing can_reach rule with True_")
                 return {'rule': 'True_'}
 
@@ -1303,20 +1322,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         except (OSError, TypeError) as e:
             logger.debug(f"ALttP: Could not inspect source: {e}")
 
-        # For combined rules (from add_rule with combine='or'), try to analyze old_rule
-        # instead of using True_ which is too permissive.
-        # The combined rule is: glitch_rule OR old_rule
-        # Since we can't serialize glitch_rule, we drop it and just use old_rule.
-        if is_combined_or_rule and old_rule_func is not None:
-            logger.debug(f"ALttP: Combined or-rule - analyzing old_rule instead of using True_")
-            old_rule_result = self._analyze_old_rule(old_rule_func, target_name)
-            if old_rule_result is not None:
-                return old_rule_result
-            # If old_rule analysis fails, fall through to default behavior
-            logger.debug(f"ALttP: Failed to analyze old_rule, using conservative False_")
-        elif is_combined_or_rule:
-            # old_rule not found in closure, use conservative approach
-            logger.debug(f"ALttP: Combined or-rule without old_rule in closure, using False_")
+        # Handle combined or-rule case where we couldn't analyze old_rule
+        if is_combined_or_rule:
+            # old_rule not found or not analyzable, use conservative approach
+            logger.debug(f"ALttP: Combined or-rule without analyzable old_rule, using False_")
 
         # Default: use conservative False_ for unknown glitch rules
         # This disables the glitch alternative, falling back to original rules.
@@ -1388,6 +1397,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
             if not components:
                 # No recognizable patterns - can't serialize
+                # Check if this is a combined lambda that wraps another combined lambda
+                # If so, we can't analyze it directly, but we can use fallback rules
+                # based on the target name
+                if 'rule(state)' in source and 'old_rule(state)' in source:
+                    # This is a nested combined lambda - can't analyze directly
+                    # Use fallback rules for known dungeon doors
+                    logger.debug(f"ALttP: Nested combined lambda for '{target_name}', using fallback")
+                    return self._get_dungeon_door_fallback_rule(target_name)
                 logger.debug(f"ALttP: No recognizable patterns in old_rule source")
                 return None
 
@@ -1417,6 +1434,49 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         except (OSError, TypeError) as e:
             logger.debug(f"ALttP: Could not analyze old_rule source: {e}")
             return None
+
+    def _get_dungeon_door_fallback_rule(self, target_name: str) -> Optional[Dict[str, Any]]:
+        """Get a fallback rule for dungeon doors when old_rule analysis fails.
+
+        When the old_rule is itself a nested combined lambda (from multiple add_rule calls),
+        we can't easily analyze it. For known dungeon doors, we use fallback rules based
+        on the original game requirements.
+
+        Big Key Doors typically require:
+        - The Big Key for that dungeon
+        - Optional: can_activate_crystal_switch (for Tower of Hera)
+
+        Args:
+            target_name: The name of the entrance
+
+        Returns:
+            A rule dict or None if no fallback is available
+        """
+        # Map of Big Key Doors to their Big Key requirements
+        # These are the baseline requirements that glitches can bypass
+        big_key_door_map = {
+            'Tower of Hera Big Key Door': {
+                'rule': 'And',
+                'children': [
+                    {'rule': 'can_activate_crystal_switch', '_original_ast_type': 'helper', '_converted_from_ast': True},
+                    {'rule': 'Has', 'args': {'item_name': 'Big Key (Tower of Hera)'}}
+                ]
+            },
+            'Swamp Palace Small Key Door': {
+                'rule': 'Has',
+                'args': {'item_name': 'Small Key (Swamp Palace)'}
+            },
+            'Ice Palace (Main)': {
+                'rule': 'Has',
+                'args': {'item_name': 'Small Key (Ice Palace)', 'count': 2}
+            },
+        }
+
+        if target_name in big_key_door_map:
+            logger.info(f"ALttP: Using fallback rule for '{target_name}'")
+            return big_key_door_map[target_name]
+
+        return None
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.

@@ -146,6 +146,84 @@ jobs:
             git push origin test-results-update
           fi
 
+      - name: Install system dependencies for apworld setup
+        if: inputs.template_type == 'apworld'
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment for setup
+        if: inputs.template_type == 'apworld'
+        uses: actions/cache@v4
+        id: cache-venv-setup
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies for setup
+        if: inputs.template_type == 'apworld' && steps.cache-venv-setup.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate for setup
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Download and install APWorld Manager
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          echo "Installing all Stable apworlds..."
+          python scripts/install_apworlds.py --install-all
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+      - name: Upload APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/upload-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+          retention-days: 1
+
+      - name: Upload custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/upload-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+          retention-days: 1
+
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
@@ -195,44 +273,34 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -535,44 +603,34 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -841,44 +899,34 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -1099,44 +1147,34 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
@@ -1334,44 +1372,34 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
+      - name: Download APWorld Manager artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.template_type == 'apworld'
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Download and install APWorld Manager
+      - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.template_type == 'apworld'
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          echo "Installing all Stable apworlds..."
-          python scripts/install_apworlds.py --install-all
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."

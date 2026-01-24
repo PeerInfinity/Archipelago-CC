@@ -100,23 +100,45 @@ def extract_multiworld_chart_data(results: Dict[str, Any], world_mapping: Option
 
 def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
                                  metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None,
-                                 is_worldgen: bool = False, other_version_link: Optional[str] = None) -> str:
-    """Generate a markdown table for multiworld test data."""
+                                 is_worldgen: bool = False, other_version_link: Optional[str] = None,
+                                 variant_type: Optional[str] = None,
+                                 version_links: Optional[Dict[str, str]] = None) -> str:
+    """Generate a markdown table for multiworld test data.
+
+    Args:
+        variant_type: None for original, "worldgen" for WorldGen, "apworld" for APWorld
+        version_links: Dict mapping variant names to links, e.g. {"worldgen": "./file.md", "apworld": "./file.md"}
+        is_worldgen: Deprecated, use variant_type="worldgen" instead
+        other_version_link: Deprecated, use version_links instead
+    """
     md_content = "# Archipelago Template Test Results Chart\n\n"
     md_content += "## Multiworld Test\n\n"
 
     # Add link to summary document
-    md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+    summary_suffix = f"-{variant_type}" if variant_type else ""
+    md_content += f"[← Back to Test Results Summary](./test-results-summary{summary_suffix}.md)\n\n"
 
     # Add link to test documentation
     md_content += "[📖 Learn about this test](../tests/test-multiworld.md)\n\n"
 
-    # Add cross-link to other version (original <-> worldgen)
-    if other_version_link:
-        if is_worldgen:
-            md_content += f"[View Original Template Results]({other_version_link})\n\n"
+    # Handle backward compatibility: convert old parameters to new format
+    if variant_type is None and is_worldgen:
+        variant_type = "worldgen"
+    if version_links is None and other_version_link:
+        if variant_type in ("worldgen", "apworld"):
+            version_links = {"original": other_version_link}
         else:
-            md_content += f"[View WorldGen Template Results]({other_version_link})\n\n"
+            version_links = {"worldgen": other_version_link}
+
+    # Add cross-links to other versions
+    if version_links:
+        for variant, link in sorted(version_links.items()):
+            if variant == "worldgen":
+                md_content += f"[View WorldGen Template Results]({link})\n\n"
+            elif variant == "apworld":
+                md_content += f"[View APWorld Template Results]({link})\n\n"
+            elif variant == "original":
+                md_content += f"[View Original Template Results]({link})\n\n"
 
     # Add generated timestamp
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"

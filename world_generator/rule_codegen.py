@@ -2385,33 +2385,42 @@ class RuleCodeGenerator:
 
         if all_item_checks:
             # Extract item names
+            # Use HasFromListUnique because count_true with item_checks means
+            # "at least N different items from this list", not "at least N total items"
             items = [c.get('item', '') for c in conditions]
             items_str = ', '.join(repr(item) for item in items)
-            self.required_imports.add('HasFromList')
-            return f'HasFromList({items_str}, count={count})'
+            self.required_imports.add('HasFromListUnique')
+            return f'HasFromListUnique({items_str}, count={count})'
 
         # For mixed conditions, we need to generate combinations
-        # To avoid combinatorial explosion, we'll generate a more compact representation
-        # using a custom approach: And(Or(combinations), Or(combinations), ...)
+        # "At least count of n conditions" = Or of all ways to choose count conditions
+        # Each way is an And of those count conditions
         #
-        # For "at least 2 of N", we need all pairs that could work.
-        # But this gets complex, so for now, fall back to Or of all And combinations
-        # Limited to small counts to avoid explosion
-        if count <= 3 and n <= 10:
-            from itertools import combinations
-            combos = list(combinations(range(n), count))
-            if len(combos) <= 50:  # Reasonable limit
-                combo_exprs = []
-                for combo in combos:
-                    combo_conditions = [conditions[i] for i in combo]
-                    converted = [self._convert_rule(c) for c in combo_conditions]
-                    and_expr = ' & '.join(f'({c})' for c in converted)
-                    combo_exprs.append(f'({and_expr})')
-                return ' | '.join(combo_exprs)
+        # Calculate the number of combinations: C(n, count)
+        from math import comb
+        from itertools import combinations
 
-        # Fallback for complex cases: generate True_() with a warning
+        num_combos = comb(n, count)
+
+        # Reasonable limit to avoid code explosion
+        # 120 covers common cases like 5-of-6 (6 combos), 4-of-6 (15), 5-of-7 (21), 6-of-8 (28)
+        if num_combos <= 120:
+            combos = list(combinations(range(n), count))
+            combo_exprs = []
+            for combo in combos:
+                combo_conditions = [conditions[i] for i in combo]
+                converted = [self._convert_rule(c) for c in combo_conditions]
+                and_expr = ' & '.join(f'({c})' for c in converted)
+                combo_exprs.append(f'({and_expr})')
+            return ' | '.join(combo_exprs)
+
+        # Fallback for truly complex cases: generate True_() with a warning
         # This is conservative - locations will be accessible earlier than they should be
-        # TODO: Implement lambda-based counting for complex cases
+        import logging
+        logging.getLogger(__name__).warning(
+            f"count_true rule with count={count} of {n} conditions ({num_combos} combinations) "
+            f"is too complex to expand, falling back to True_() - tracking may be inaccurate"
+        )
         self.required_imports.add('True_')
         return 'True_()'
 
@@ -2767,6 +2776,13 @@ class RuleCodeGenerator:
         # Also handles: state.count_from_list(items, player) + 0 >= count
         # Converts to: HasFromList(*items, count=count)
         result = self._try_convert_count_from_list_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Try to recognize AST_sum_of pattern (sum comprehension counting items):
+        # sum(state.has(item, player) for item in items) >= count
+        # Converts to: HasFromListUnique(*items, count=count)
+        result = self._try_convert_ast_sum_of_compare(left, op, right)
         if result is not None:
             return result
 
@@ -3314,6 +3330,34 @@ class RuleCodeGenerator:
                 if item_name and isinstance(item_name, str):
                     # Convert helper call to CountItem for the item
                     return self._make_count_item(item_name)
+
+            # Handle get_item_perc_amount helper statically
+            # This helper calculates floor(items * (perc / 100)) when multiworld is None
+            # Pizza Tower and other games use this pattern for boss entrance requirements
+            if helper_name == 'get_item_perc_amount' and len(args) >= 3:
+                # Extract constant arguments: multiworld (ignored), items, perc
+                def _extract_constant(arg):
+                    if arg is None:
+                        return None
+                    if isinstance(arg, (int, float)):
+                        return arg
+                    if isinstance(arg, dict):
+                        if arg.get('rule') == 'Constant':
+                            return arg.get('args', {}).get('value')
+                        if arg.get('type') == 'constant':
+                            return arg.get('value')
+                    return None
+
+                # Args: [multiworld (None), items (int), perc (int)]
+                items = _extract_constant(args[1])
+                perc = _extract_constant(args[2])
+
+                if items is not None and perc is not None:
+                    # Calculate: floor(items * (perc / 100))
+                    # This matches the original helper behavior when multiworld is None
+                    import math
+                    result = math.floor(items * (perc / 100))
+                    return repr(result)
 
             # For other helpers (like get_item_perc_amount), generate a HelperCall
             # These are integer-returning helpers used as count arguments
@@ -5342,6 +5386,110 @@ class RuleCodeGenerator:
             pass  # approximate as "has at least count"
         else:
             return None
+
+        # Generate HasFromListUnique with the items and count
+        self.required_imports.add('HasFromListUnique')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromListUnique({items_str}, count={count})'
+
+    def _try_convert_ast_sum_of_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert an AST_sum_of comparison to HasFromListUnique().
+
+        Pattern: sum(state.has(item, player) for item in items) >= count
+        Exported as: Compare(AST_sum_of(...), ">=", count)
+        Converts to: HasFromListUnique(*items, count=count)
+
+        This handles the common pattern of counting how many items from a list
+        the player has, used for boss gates and similar mechanics.
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Check if left side is an AST_sum_of rule
+        rb_rule = left.get('rule', '')
+        if rb_rule != 'AST_sum_of':
+            return None
+
+        args = left.get('args', {})
+
+        # Get the element_rule - should be an item_check on the iterator variable
+        element_rule = args.get('element_rule', {})
+
+        # Get the iterator_info
+        iterator_info = args.get('iterator_info', {})
+        target = iterator_info.get('target', {})
+        iterator = iterator_info.get('iterator', {})
+
+        # Verify this is a simple item counting pattern:
+        # element_rule should check state.has(variable) where variable is the iterator target
+        # We support: {"type": "item_check", "item": {"type": "name", "name": "<var>"}}
+        if element_rule.get('type') != 'item_check':
+            return None
+
+        item_spec = element_rule.get('item', {})
+        if not isinstance(item_spec, dict):
+            return None
+
+        # The item should be a reference to the iterator variable
+        if item_spec.get('type') != 'name':
+            return None
+
+        item_var_name = item_spec.get('name', '')
+        target_var_name = target.get('name', '') if isinstance(target, dict) else ''
+
+        # Verify the item check uses the iterator variable
+        if item_var_name != target_var_name:
+            return None
+
+        # Extract the list of items from the iterator
+        items = []
+        if isinstance(iterator, dict) and iterator.get('type') == 'constant':
+            items = iterator.get('value', [])
+        elif isinstance(iterator, list):
+            items = iterator
+
+        if not items or not isinstance(items, list):
+            return None
+
+        # Get the count from the right side
+        count = self._extract_numeric_constant(right)
+        if count is None:
+            # Try other formats
+            if isinstance(right, dict):
+                if right.get('type') == 'constant':
+                    count = right.get('value', 0)
+                elif right.get('rule') == 'Constant':
+                    count = right.get('args', {}).get('value', 0)
+            elif isinstance(right, (int, float)):
+                count = int(right)
+
+        if count is None:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        elif op == '<=' and count >= len(items):
+            # <= max_items is always true if you can have all items
+            self.required_imports.add('True_')
+            return 'True_()'
+        elif op == '<':
+            # < count doesn't fit the HasFromListUnique pattern well
+            return None
+        else:
+            return None
+
+        # Ensure count doesn't exceed the number of items
+        count = min(count, len(items))
 
         # Generate HasFromListUnique with the items and count
         self.required_imports.add('HasFromListUnique')

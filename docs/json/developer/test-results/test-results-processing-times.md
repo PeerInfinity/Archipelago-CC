@@ -1,8 +1,12 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-24 03:36:01
+**Generated:** 2026-01-23 20:14:19
 
 [← Back to Test Results Summary](./test-results-summary.md)
+
+[View APWorld Processing Times](./test-results-processing-times-apworld.md)
+
+[View WorldGen Processing Times](./test-results-processing-times-worldgen.md)
 
 This chart shows processing times for each test phase. Times are in seconds. For tests with multiple seeds, only the first seed's time is shown.
 

@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-24 02:11:34
+**Generated:** 2026-01-24 05:05:20
 
 **Source Data Created:** 2026-01-10T22:45:14.627157
 
@@ -41,9 +41,9 @@ Of the 42 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 407.1KB
+- **Total Exporter Code:** 414.0KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 407.1KB
+- **Combined Total:** 414.0KB
 
 ## Test Results
 
@@ -130,7 +130,7 @@ Of the 42 games with 100% pass rate:
 | Rain World | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Reventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Rift Wizard | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 6.6KB | ✅ | N/A |
+| Rift Wizard | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 7.7KB | ✅ | N/A |
 | Rift of the Necrodancer | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% | ✅ | ✅ | N/A |
 | Rusted Moss | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Sentinels of the Multiverse | ❌ | 10 | 0 | 8 | 2 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ Of the 42 games with 100% pass rate:
 | Spyro 3 | ❌ | 10 | 2 | 3 | 3 | 2 | ❌ 20.0% | 15.2KB | ✅ | N/A |
 | Stacklands | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 12.7KB | ✅ | N/A |
 | Star Fox 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.1KB | ✅ | N/A |
-| Star Wars Episode I Racer | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | System Shock 2 | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 15.0KB | ✅ | N/A |

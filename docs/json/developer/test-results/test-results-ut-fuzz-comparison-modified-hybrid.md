@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-24 02:11:34
+**Generated:** 2026-01-24 05:05:20
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -26,7 +26,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ 100.0% | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ 90.0% | ⚠️ 70.0% | 100.1KB | ✅ | 654.1KB |
+| A Link to the Past | ✅ 90.0% | ⚠️ 70.0% | 110.7KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -184,7 +184,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | 100.1KB | ✅ | 654.1KB |
+| A Link to the Past | 110.7KB | ✅ | 654.1KB |
 | Timespinner | 2.2KB | ✅ | 267.3KB |
 
 ## Games Passing Hybrid Only (2)
