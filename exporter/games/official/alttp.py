@@ -18,6 +18,42 @@ import re
 logger = logging.getLogger(__name__)
 
 
+# --- Dynamic imports from original ALttP code ---
+# These functions allow us to stay in sync with the original code rather than
+# maintaining duplicate hardcoded lists.
+
+def _get_invalid_bunny_revival_dungeons() -> Set[str]:
+    """Get the set of invalid bunny revival dungeons from original ALttP code."""
+    try:
+        from worlds.alttp import OverworldGlitchRules
+        return set(OverworldGlitchRules.get_invalid_bunny_revival_dungeons())
+    except ImportError:
+        logger.warning("Could not import ALttP OverworldGlitchRules, using fallback list")
+        # Fallback list if import fails
+        return {'Tower of Hera (Bottom)', 'Swamp Palace (Entrance)', 'Turtle Rock (Entrance)', 'Sanctuary'}
+
+
+def _get_superbunny_accessible_locations() -> Set[str]:
+    """Get the set of superbunny accessible locations from original ALttP code."""
+    try:
+        from worlds.alttp import OverworldGlitchRules
+        return set(OverworldGlitchRules.get_superbunny_accessible_locations())
+    except ImportError:
+        logger.warning("Could not import ALttP OverworldGlitchRules, using fallback list")
+        # Fallback - this is from get_superbunny_accessible_locations()
+        return {
+            'Waterfall of Wishing - Left', 'Waterfall of Wishing - Right', "King's Tomb",
+            'Floodgate', 'Floodgate Chest', 'Cave 45', 'Bonk Rock Cave', 'Brewery',
+            'C-Shaped House', 'Chest Game', 'Mire Shed - Left', 'Mire Shed - Right',
+            'Secret Passage', 'Ice Rod Cave', 'Pyramid Fairy - Left', 'Pyramid Fairy - Right',
+            'Superbunny Cave - Top', 'Superbunny Cave - Bottom', "Blind's Hideout - Left",
+            "Blind's Hideout - Right", "Blind's Hideout - Far Left", "Blind's Hideout - Far Right",
+            'Kakariko Well - Left', 'Kakariko Well - Middle', 'Kakariko Well - Right',
+            'Kakariko Well - Bottom', 'Kakariko Tavern', 'Library', 'Spiral Cave',
+            "Sahasrahla's Hut - Left", "Sahasrahla's Hut - Middle", "Sahasrahla's Hut - Right",
+        }
+
+
 # Locations that are accessible in bunny form (from set_bunny_rules in ALttP Rules.py)
 # These locations don't require Moon Pearl even in Dark World regions
 BUNNY_ACCESSIBLE_LOCATIONS = {
@@ -49,51 +85,37 @@ MANDATORY_SUPERBUNNY_LOCATIONS = {
     "Kakariko Well - Bottom",
 }
 
-# Other superbunny accessible locations in glitch modes that require Magic Mirror
-# (in addition to Moon Pearl as an alternative). These are from
-# OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
-# For these, the rule is: Moon Pearl OR Magic Mirror
-MIRROR_SUPERBUNNY_LOCATIONS = {
-    "Blind's Hideout - Far Left",
-    "Blind's Hideout - Far Right",
-    "Blind's Hideout - Left",
-    "Blind's Hideout - Right",
-    "Bonk Rock Cave",
-    "Brewery",
-    "C-Shaped House",
-    "Cave 45",
-    "Chest Game",
-    "Floodgate",
-    "Floodgate Chest",
-    "Ice Rod Cave",
-    "Kakariko Tavern",
-    "King's Tomb",
-    "Library",
-    "Mire Shed - Left",
-    "Mire Shed - Right",
-    "Pyramid Fairy - Left",
-    "Pyramid Fairy - Right",
-    "Sahasrahla's Hut - Left",
-    "Sahasrahla's Hut - Middle",
-    "Sahasrahla's Hut - Right",
-    "Secret Passage",
-    "Spiral Cave",
-    "Waterfall of Wishing - Left",
-    "Waterfall of Wishing - Right",
-}
 
+# --- Special case bunny revival rules ---
+# These are hardcoded because they represent special logic in Rules.py get_rule_to_add()
+# that cannot be extracted from generator functions. See Rules.py lines ~1694-1699.
+#
+# The full list from get_invalid_bunny_revival_dungeons() includes:
+#   Tower of Hera (Bottom), Swamp Palace (Entrance), Turtle Rock (Entrance), Sanctuary
+#
+# However, Rules.py applies different rules to each:
+#   1. Swamp Palace (Entrance): Moon Pearl ONLY (0hp revive not in logic)
+#   2. Tower of Hera (Bottom): (Magic Mirror AND sword) OR Moon Pearl (must hit crystal)
+#   3. Others (Turtle Rock, Sanctuary): Magic Mirror OR Moon Pearl
 
+# Swamp Palace requires 0hp revival which is not in logic, so only Moon Pearl works
+SWAMP_PALACE_ENTRANCE = 'Swamp Palace (Entrance)'
 
-# Invalid bunny revival dungeon regions (from OverworldGlitchRules.get_invalid_bunny_revival_dungeons)
-# These dungeon regions cannot be bunny revived from without superbunny state.
-# In glitch modes, entrances to these regions require Magic Mirror OR Moon Pearl.
-# The Magic Mirror allows bunny revival; Moon Pearl prevents being a bunny.
-INVALID_BUNNY_REVIVAL_DUNGEONS = {
-    'Tower of Hera (Bottom)',
-    'Swamp Palace (Entrance)',
+# Tower of Hera requires hitting a crystal switch, so needs (Mirror AND sword) OR Moon Pearl
+TOWER_OF_HERA_BOTTOM = 'Tower of Hera (Bottom)'
+
+# These are the dungeons that get the standard Magic Mirror OR Moon Pearl rule
+# (all invalid bunny revival dungeons except Swamp Palace and Tower of Hera)
+STANDARD_MIRROR_REVIVAL_DUNGEONS = {
     'Turtle Rock (Entrance)',
     'Sanctuary',
 }
+
+# Other superbunny accessible locations in glitch modes that require Magic Mirror
+# (in addition to Moon Pearl as an alternative). Computed dynamically from
+# OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
+# For these, the rule is: Moon Pearl OR Magic Mirror
+MIRROR_SUPERBUNNY_LOCATIONS = _get_superbunny_accessible_locations() - MANDATORY_SUPERBUNNY_LOCATIONS
 
 # Bunny-impassable caves (from set_bunny_rules in ALttP Rules.py)
 # These are regions where bunnies cannot pass through - if you enter as a bunny,
@@ -2197,11 +2219,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
-                        # In glitch modes, exits to invalid bunny revival dungeons
+                        # In glitch modes, exits to certain invalid bunny revival dungeons
                         # can use Magic Mirror for bunny revival instead of Moon Pearl.
-                        # Replace Moon Pearl with (Magic Mirror OR Moon Pearl) for these.
-                        if self._is_glitch_mode and connected_region_name in INVALID_BUNNY_REVIVAL_DUNGEONS:
+                        # Note: Swamp Palace is NOT included - 0hp revival isn't in logic,
+                        # so only Moon Pearl works there.
+                        # Note: Tower of Hera (Bottom) has a special case requiring sword.
+                        if self._is_glitch_mode and connected_region_name in STANDARD_MIRROR_REVIVAL_DUNGEONS:
                             exit_data['access_rule'] = self._add_mirror_alternative_to_moon_pearl(
+                                exit_data['access_rule'], exit_name
+                            )
+                        # Tower of Hera (Bottom) has a special case - requires hitting a crystal switch.
+                        # Rule is: (Magic Mirror AND sword) OR Moon Pearl
+                        if self._is_glitch_mode and connected_region_name == TOWER_OF_HERA_BOTTOM:
+                            exit_data['access_rule'] = self._add_hera_bottom_alternative_to_moon_pearl(
                                 exit_data['access_rule'], exit_name
                             )
                         # In glitch modes, exits FROM dungeon-type regions don't require
@@ -2236,11 +2266,18 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         entrance_data['access_rule'] = self._process_bunny_rules(
                             entrance_data['access_rule'], entrance_name
                         )
-                        # In glitch modes, entrances to invalid bunny revival dungeons
+                        # In glitch modes, entrances to certain invalid bunny revival dungeons
                         # can use Magic Mirror for bunny revival instead of Moon Pearl.
-                        # Replace Moon Pearl with (Magic Mirror OR Moon Pearl) for these.
-                        if self._is_glitch_mode and connected_region in INVALID_BUNNY_REVIVAL_DUNGEONS:
+                        # Note: Swamp Palace is NOT included - 0hp revival isn't in logic.
+                        # Note: Tower of Hera (Bottom) has a special case requiring sword.
+                        if self._is_glitch_mode and connected_region in STANDARD_MIRROR_REVIVAL_DUNGEONS:
                             entrance_data['access_rule'] = self._add_mirror_alternative_to_moon_pearl(
+                                entrance_data['access_rule'], entrance_name
+                            )
+                        # Tower of Hera (Bottom) has a special case - requires hitting a crystal switch.
+                        # Rule is: (Magic Mirror AND sword) OR Moon Pearl
+                        if self._is_glitch_mode and connected_region == TOWER_OF_HERA_BOTTOM:
+                            entrance_data['access_rule'] = self._add_hera_bottom_alternative_to_moon_pearl(
                                 entrance_data['access_rule'], entrance_name
                             )
                         # Replace dungeon small key checks when universal keys are enabled
@@ -2497,6 +2534,65 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 else:
                     # Keep the rest of the items as valid options (the original HasAny becomes simpler)
                     return {'rule': 'HasAny', 'args': {'items': filtered_items}}
+
+        # No changes needed
+        return rule
+
+    def _add_hera_bottom_alternative_to_moon_pearl(self, rule: Dict[str, Any], rule_name: str) -> Dict[str, Any]:
+        """Add (Magic Mirror AND sword) as an alternative to Moon Pearl for Tower of Hera (Bottom).
+
+        Tower of Hera (Bottom) requires hitting a crystal switch for bunny revival,
+        so the rule is: (Magic Mirror AND sword) OR Moon Pearl
+        This is different from other invalid bunny revival dungeons which only need Magic Mirror.
+
+        See Rules.py get_rule_to_add():
+            if region.name == 'Tower of Hera (Bottom)':
+                return lambda state: state.has('Magic Mirror', player) and has_sword(state, player) or state.has('Moon Pearl', player)
+
+        Args:
+            rule: The rule dict to process
+            rule_name: Name of the rule (for logging)
+
+        Returns:
+            The rule with (Magic Mirror AND sword) alternative added to Moon Pearl requirements
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Handle pure Moon Pearl rule - add (Magic Mirror AND sword) alternative
+        if self._is_pure_moon_pearl_rule(rule):
+            logger.debug(f"ALttP: Added (Magic Mirror AND sword) alternative for Tower of Hera (Bottom) '{rule_name}'")
+            return {
+                'rule': 'Or',
+                'children': [
+                    {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
+                    {
+                        'rule': 'And',
+                        'children': [
+                            {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}},
+                            {'rule': 'HelperCall', 'args': {'helper_name': 'has_sword'}}
+                        ]
+                    }
+                ]
+            }
+
+        # Handle Rule Builder And - recursively process children
+        if rule.get('rule') == 'And':
+            children = rule.get('children', [])
+            processed_children = [
+                self._add_hera_bottom_alternative_to_moon_pearl(child, rule_name)
+                for child in children
+            ]
+            return {'rule': 'And', 'children': processed_children}
+
+        # Handle Rule Builder Or - recursively process children
+        if rule.get('rule') == 'Or':
+            children = rule.get('children', [])
+            processed_children = [
+                self._add_hera_bottom_alternative_to_moon_pearl(child, rule_name)
+                for child in children
+            ]
+            return {'rule': 'Or', 'children': processed_children}
 
         # No changes needed
         return rule
