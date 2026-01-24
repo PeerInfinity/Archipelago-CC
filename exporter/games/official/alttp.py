@@ -982,6 +982,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Set the current location context for rule analysis."""
         self._current_location_context = location_name
 
+    # Class variable to control whether to skip glitch rule interception
+    # Set to True to let generic analysis handle glitch rules instead
+    # Testing shows generic analysis works but may have edge cases - keep False for reliability
+    SKIP_GLITCH_INTERCEPTION = False
+
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Intercept complex rules before standard analysis.
 
@@ -994,6 +999,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
            complex dict lookups with lambda values.
 
         We detect these by checking the function's qualified name and closure variables.
+
+        Set SKIP_GLITCH_INTERCEPTION = True to bypass glitch rule interception and
+        let the generic recursive closure analysis handle them instead.
         """
         if rule_func is None:
             return None
@@ -1014,12 +1022,18 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Check if this is an underworld glitch rule lambda
         # These are created in underworld_glitches_rules() and may reference dungeon_entrance
         if 'underworld_glitches_rules' in func_qualname:
+            if self.SKIP_GLITCH_INTERCEPTION:
+                logger.info(f"ALttP: SKIP_GLITCH_INTERCEPTION enabled - letting generic analysis handle '{rule_target_name}'")
+                return None  # Let generic analysis try
             target_name = rule_target_name or self._current_location_context or ''
             return self._get_underworld_glitch_replacement_rule(rule_func, target_name)
 
         # Check if closure contains underworld_glitches_rules lambdas
         # This catches rules combined via add_rule() that wrap the original lambdas
         if self._has_problematic_closure(rule_func):
+            if self.SKIP_GLITCH_INTERCEPTION:
+                logger.info(f"ALttP: SKIP_GLITCH_INTERCEPTION enabled - letting generic analysis handle closure for '{rule_target_name}'")
+                return None  # Let generic analysis try
             target_name = rule_target_name or self._current_location_context or ''
             return self._get_underworld_glitch_replacement_rule(rule_func, target_name)
 
