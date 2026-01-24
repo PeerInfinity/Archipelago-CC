@@ -91,11 +91,11 @@
   },
   "Another Crabs Treasure": {
     "apworld_path": "custom_worlds/another_crab.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/another_crab.py",
+    "exporter_size": 3153,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "another_crab"
   },
@@ -1172,7 +1172,7 @@
   "Wordipelago": {
     "apworld_path": "custom_worlds/wordipelago.apworld",
     "exporter_path": "exporter/games/unofficial/wordipelago.py",
-    "exporter_size": 11893,
+    "exporter_size": 20011,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1191,11 +1191,11 @@
   },
   "Yu-Gi-Oh! Dungeon Dice Monsters": {
     "apworld_path": "custom_worlds/yugiohddm.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/yugiohddm.py",
+    "exporter_size": 29381,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "yugiohddm"
   },

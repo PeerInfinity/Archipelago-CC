@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 20:58:54
+**Generated:** 2026-01-24 02:11:34
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -32,7 +32,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Air Delivery | ✅ 100.0% | ✅ 100.0% | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ 100.0% | ✅ 100.0% | 8.7KB | ✅ | N/A |
 | Anodyne | ✅ 100.0% | ✅ 100.0% | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ⚠️ 60.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
+| Another Crabs Treasure | ⚠️ 60.0% | ⚠️ 50.0% | 3.1KB | ✅ | N/A |
 | Ape Escape | ❌ 0.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ⚠️ 70.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Astalon | ✅ 80.0% | ✅ 80.0% | ✅ | ✅ | N/A |
@@ -140,9 +140,9 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ⚠️ 90.0% | ❌ 0.0% | 9.1KB | ✅ | N/A |
-| Wordipelago | ✅ 90.0% | ✅ 80.0% | 11.6KB | ✅ | N/A |
+| Wordipelago | ✅ 90.0% | ✅ 80.0% | 19.5KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% | 28.7KB | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | osu! | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -192,7 +192,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Tevi | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
-| Wordipelago | 11.6KB | ✅ | N/A |
+| Wordipelago | 19.5KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
 ## Games Passing Original Only (2)
@@ -236,7 +236,7 @@ These games fail in both Universal Tracker versions.
 | A Link Between Worlds | ✅ | ✅ | N/A |
 | ANIMAL WELL | 1.5KB | ✅ | N/A |
 | Against the Storm | ✅ | ✅ | N/A |
-| Another Crabs Treasure | ✅ | ✅ | N/A |
+| Another Crabs Treasure | 3.1KB | ✅ | N/A |
 | Ape Escape | ✅ | ✅ | N/A |
 | Ape Escape 3 | ✅ | ✅ | N/A |
 | Axiom Verge | ✅ | ✅ | N/A |
@@ -296,7 +296,7 @@ These games fail in both Universal Tracker versions.
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
 | Watery Words | 9.1KB | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 28.7KB | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
 | plateup | ✅ | ✅ | N/A |
 

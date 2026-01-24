@@ -4,7 +4,7 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 20:58:54
+**Generated:** 2026-01-24 02:11:34
 
 **Source Data Created:** 2026-01-10T22:45:14.627157
 
@@ -41,9 +41,9 @@ Of the 42 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 367.4KB
+- **Total Exporter Code:** 407.1KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 367.4KB
+- **Combined Total:** 407.1KB
 
 ## Test Results
 
@@ -57,7 +57,7 @@ Of the 42 games with 100% pass rate:
 | Air Delivery | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.7KB | ✅ | N/A |
 | Anodyne | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Another Crabs Treasure | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 3.1KB | ✅ | N/A |
 | Ape Escape | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | N/A |
 | Astalon | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | ✅ | ✅ | N/A |
@@ -165,9 +165,9 @@ Of the 42 games with 100% pass rate:
 | Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 9.1KB | ✅ | N/A |
-| Wordipelago | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 11.6KB | ✅ | N/A |
+| Wordipelago | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 19.5KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | 28.7KB | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | N/A |
 | osu! | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
