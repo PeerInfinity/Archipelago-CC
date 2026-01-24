@@ -46,22 +46,32 @@ python fuzz.py -r 50 -j 8 -g adventure -n 1 --hook worlds.tracker.fuzzer_hook:Ho
 python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
 
-### Testing with Specific Options Disabled
+### Testing with Specific Options
 
-To isolate issues with specific game options, use `--option-exclude`:
+Use `--default-options` to keep options at default, and `--disallow-options` to exclude specific values:
 
 ```bash
-# Exclude entrance_shuffle entirely (test other options)
+# Test with entrance_shuffle at default (test glitches only)
 python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
-    --option-exclude entrance_shuffle
+    --default-options entrance_shuffle
 
-# Exclude problematic entrance_shuffle values
+# Test with glitches_required at default (test entrance shuffle only)
 python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
-    --option-exclude entrance_shuffle:crossed entrance_shuffle:dungeons_crossed entrance_shuffle:insanity
+    --default-options glitches_required
 
-# Exclude glitches (test entrance shuffle only)
+# Test only minor_glitches (exclude other glitch values)
 python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
-    --option-exclude glitches_required
+    --default-options entrance_shuffle \
+    --disallow-options "glitches_required=no_glitches,overworld_glitches,hybrid_major_glitches,no_logic"
+
+# Test only supported entrance_shuffle values (exclude problematic ones)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --default-options glitches_required \
+    --disallow-options "entrance_shuffle=crossed,dungeons_crossed,insanity"
+
+# Maximum compatibility mode (avoid all known problematic options)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --disallow-options "entrance_shuffle=crossed,dungeons_crossed,insanity;glitches_required=hybrid_major_glitches"
 ```
 
 ## Output
@@ -151,10 +161,27 @@ rm -rf frontend/presets/*/AP_*
 | `crossed` | ~60% | Cross-world entrance tracking issues |
 | `insanity` | ~20% | Severe entrance tracking issues |
 
-**Glitch Rules:**
+**Glitches Required Compatibility:**
 
-When `glitches_required` is set to non-default values:
-- Combined or-rules (from `add_rule(..., combine='or')`) require special handling
+| Mode | Pass Rate | Notes |
+|------|-----------|-------|
+| `no_glitches` | 100% | Default, fully supported |
+| `minor_glitches` | ~89% | Mostly supported |
+| `overworld_glitches` | ~80% | Mostly supported |
+| `hybrid_major_glitches` | 0% | Cross-dungeon clips not exportable |
+| `no_logic` | ~80% | Mostly supported |
+
+**Why hybrid_major_glitches fails:**
+
+Cross-dungeon clips (`mire_clip`, `hera_clip`) require **region reachability checks** like:
+```python
+mire_clip = lambda state: state.can_reach('Misery Mire (West)', 'Region', player) and ...
+```
+
+These can't be converted to simple item checks - the exporter approximates them, making rules too permissive. The server correctly checks region accessibility while UT uses the approximated rules.
+
+**Glitch rule handling:**
+- Combined or-rules (from `add_rule(..., combine='or')`) are handled specially
 - The exporter prioritizes analyzing the original rule before glitch alternatives
 - Fallback rules are used for known dungeon doors when source analysis fails
 
