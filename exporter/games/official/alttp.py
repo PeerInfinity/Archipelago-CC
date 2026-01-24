@@ -2535,6 +2535,58 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     # Keep the rest of the items as valid options (the original HasAny becomes simpler)
                     return {'rule': 'HasAny', 'args': {'items': filtered_items}}
 
+        # Handle Rule Builder Or - recursively process children and filter out pure Moon Pearl rules
+        # This is needed for dungeon exits where _add_mirror_alternative_to_moon_pearl creates
+        # Or(Moon Pearl, Magic Mirror), and then dungeon exit processing should remove Moon Pearl.
+        if rule.get('rule') == 'Or':
+            children = rule.get('children', [])
+            # First, recursively process each child
+            processed_children = [
+                self._remove_moon_pearl_from_rule(child, rule_name)
+                for child in children
+            ]
+            # Filter out children that became True_ (pure Moon Pearl rules)
+            filtered_children = [
+                child for child in processed_children
+                if child != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(child)
+            ]
+            if len(filtered_children) != len(children):
+                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
+
+            if not filtered_children:
+                # All children were Moon Pearl - return True_ (no restriction)
+                return {'rule': 'True_'}
+            elif len(filtered_children) == 1:
+                # Single child remains - unwrap the Or
+                return filtered_children[0]
+            else:
+                return {'rule': 'Or', 'children': filtered_children}
+
+        # Handle AST-style 'or' rules
+        if rule.get('type') == 'or':
+            conditions = rule.get('conditions', [])
+            # First, recursively process each condition
+            processed_conditions = [
+                self._remove_moon_pearl_from_rule(cond, rule_name)
+                for cond in conditions
+            ]
+            # Filter out conditions that became True_ (pure Moon Pearl rules)
+            filtered_conditions = [
+                cond for cond in processed_conditions
+                if cond != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(cond)
+            ]
+            if len(filtered_conditions) != len(conditions):
+                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
+
+            if not filtered_conditions:
+                # All conditions were Moon Pearl - return True_ (no restriction)
+                return {'rule': 'True_'}
+            elif len(filtered_conditions) == 1:
+                # Single condition remains - unwrap the Or
+                return filtered_conditions[0]
+            else:
+                return {'type': 'or', 'conditions': filtered_conditions}
+
         # No changes needed
         return rule
 
