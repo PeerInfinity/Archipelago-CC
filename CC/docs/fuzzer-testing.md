@@ -46,6 +46,24 @@ python fuzz.py -r 50 -j 8 -g adventure -n 1 --hook worlds.tracker.fuzzer_hook:Ho
 python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
 
+### Testing with Specific Options Disabled
+
+To isolate issues with specific game options, use `--option-exclude`:
+
+```bash
+# Exclude entrance_shuffle entirely (test other options)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --option-exclude entrance_shuffle
+
+# Exclude problematic entrance_shuffle values
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --option-exclude entrance_shuffle:crossed entrance_shuffle:dungeons_crossed entrance_shuffle:insanity
+
+# Exclude glitches (test entrance shuffle only)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --option-exclude glitches_required
+```
+
 ## Output
 
 Results are written to `fuzz_output/`:
@@ -118,9 +136,31 @@ rm -rf frontend/presets/*/AP_*
 ## Known Limitations
 
 ### ALttP
+
+**Entrance Shuffle Compatibility:**
+
+| Mode | Pass Rate | Notes |
+|------|-----------|-------|
+| `vanilla` | 100% | Default, fully supported |
+| `dungeons_simple` | 100% | Fully supported |
+| `dungeons_full` | 100% | Fully supported |
+| `simple` | 100% | Fully supported |
+| `restricted` | 100% | Fully supported |
+| `full` | 100% | Fully supported |
+| `dungeons_crossed` | ~60% | Cross-world dungeon entrance tracking issues |
+| `crossed` | ~60% | Cross-world entrance tracking issues |
+| `insanity` | ~20% | Severe entrance tracking issues |
+
+**Glitch Rules:**
+
+When `glitches_required` is set to non-default values:
+- Combined or-rules (from `add_rule(..., combine='or')`) require special handling
+- The exporter prioritizes analyzing the original rule before glitch alternatives
+- Fallback rules are used for known dungeon doors when source analysis fails
+
+**Other Notes:**
 - Bunny rules are simplified to Moon Pearl requirements
 - Key logic rules using `location_item_name` may evaluate differently
-- ~60% failure rate due to complex dynamic systems (improved from ~90%)
 
 ### Adventure
 - ~100% pass rate with current implementation
