@@ -152,14 +152,21 @@ rm -rf frontend/presets/*/AP_*
 | Mode | Pass Rate | Notes |
 |------|-----------|-------|
 | `vanilla` | 100% | Default, fully supported |
-| `dungeons_simple` | 100% | Fully supported |
-| `dungeons_full` | 100% | Fully supported |
+| `dungeons_simple` | ~95% | Mostly supported, some inverted mode issues |
+| `dungeons_full` | ~95% | Mostly supported, some inverted mode issues |
 | `simple` | 100% | Fully supported |
 | `restricted` | 100% | Fully supported |
-| `full` | 100% | Fully supported |
+| `full` | ~95% | Mostly supported, some inverted mode issues |
 | `dungeons_crossed` | ~60% | Cross-world dungeon entrance tracking issues |
 | `crossed` | ~60% | Cross-world entrance tracking issues |
 | `insanity` | ~20% | Severe entrance tracking issues |
+
+**Mode Interactions:**
+
+| Combination | Pass Rate | Notes |
+|-------------|-----------|-------|
+| `entrance_shuffle` + `mode=inverted` | ~90% | Inverted mode may affect dungeon entrance rules |
+| `entrance_shuffle` + `glitches_required` | Varies | Combined failures stack - test separately first |
 
 **Glitches Required Compatibility:**
 
