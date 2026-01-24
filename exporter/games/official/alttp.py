@@ -84,6 +84,17 @@ MIRROR_SUPERBUNNY_LOCATIONS = {
 
 
 
+# Invalid bunny revival dungeon regions (from OverworldGlitchRules.get_invalid_bunny_revival_dungeons)
+# These dungeon regions cannot be bunny revived from without superbunny state.
+# In glitch modes, entrances to these regions require Magic Mirror OR Moon Pearl.
+# The Magic Mirror allows bunny revival; Moon Pearl prevents being a bunny.
+INVALID_BUNNY_REVIVAL_DUNGEONS = {
+    'Tower of Hera (Bottom)',
+    'Swamp Palace (Entrance)',
+    'Turtle Rock (Entrance)',
+    'Sanctuary',
+}
+
 # Bunny-impassable caves (from set_bunny_rules in ALttP Rules.py)
 # These are regions where bunnies cannot pass through - if you enter as a bunny,
 # you cannot exit. In inverted mode, these regions require Moon Pearl to exit
@@ -2186,6 +2197,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
+                        # In glitch modes, exits to invalid bunny revival dungeons
+                        # can use Magic Mirror for bunny revival instead of Moon Pearl.
+                        # Replace Moon Pearl with (Magic Mirror OR Moon Pearl) for these.
+                        if self._is_glitch_mode and connected_region_name in INVALID_BUNNY_REVIVAL_DUNGEONS:
+                            exit_data['access_rule'] = self._add_mirror_alternative_to_moon_pearl(
+                                exit_data['access_rule'], exit_name
+                            )
                         # Replace dungeon small key checks when universal keys are enabled
                         if self._is_universal_keys:
                             exit_data['access_rule'] = self._replace_small_key_checks(
@@ -2195,6 +2213,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 # Process entrances
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
+                    connected_region = entrance_data.get('connected_region', '')
                     if 'access_rule' in entrance_data and entrance_data['access_rule']:
                         # Resolve OptionValue comparisons first
                         entrance_data['access_rule'] = self._resolve_option_comparisons_in_rule(
@@ -2208,6 +2227,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         entrance_data['access_rule'] = self._process_bunny_rules(
                             entrance_data['access_rule'], entrance_name
                         )
+                        # In glitch modes, entrances to invalid bunny revival dungeons
+                        # can use Magic Mirror for bunny revival instead of Moon Pearl.
+                        # Replace Moon Pearl with (Magic Mirror OR Moon Pearl) for these.
+                        if self._is_glitch_mode and connected_region in INVALID_BUNNY_REVIVAL_DUNGEONS:
+                            entrance_data['access_rule'] = self._add_mirror_alternative_to_moon_pearl(
+                                entrance_data['access_rule'], entrance_name
+                            )
                         # Replace dungeon small key checks when universal keys are enabled
                         if self._is_universal_keys:
                             entrance_data['access_rule'] = self._replace_small_key_checks(
@@ -2462,6 +2488,108 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 else:
                     # Keep the rest of the items as valid options (the original HasAny becomes simpler)
                     return {'rule': 'HasAny', 'args': {'items': filtered_items}}
+
+        # No changes needed
+        return rule
+
+    def _add_mirror_alternative_to_moon_pearl(self, rule: Dict[str, Any], rule_name: str) -> Dict[str, Any]:
+        """Add Magic Mirror as an alternative to Moon Pearl requirements.
+
+        For entrances to invalid bunny revival dungeons in glitch modes, the player
+        can use Magic Mirror for bunny revival instead of needing Moon Pearl.
+        This transforms Has("Moon Pearl") into Or(Has("Moon Pearl"), Has("Magic Mirror")).
+
+        Args:
+            rule: The rule dict to process
+            rule_name: Name of the rule (for logging)
+
+        Returns:
+            The rule with Magic Mirror alternatives added to Moon Pearl requirements
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Handle pure Moon Pearl rule - add Magic Mirror alternative
+        if self._is_pure_moon_pearl_rule(rule):
+            logger.debug(f"ALttP: Added Magic Mirror alternative for '{rule_name}'")
+            return {
+                'rule': 'Or',
+                'children': [
+                    {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
+                    {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
+                ]
+            }
+
+        # Handle Rule Builder And - recursively process children
+        if rule.get('rule') == 'And':
+            children = rule.get('children', [])
+            processed_children = [
+                self._add_mirror_alternative_to_moon_pearl(child, rule_name)
+                for child in children
+            ]
+            return {'rule': 'And', 'children': processed_children}
+
+        # Handle AST-style 'and' rules
+        if rule.get('type') == 'and':
+            conditions = rule.get('conditions', [])
+            processed_conditions = [
+                self._add_mirror_alternative_to_moon_pearl(cond, rule_name)
+                for cond in conditions
+            ]
+            return {'type': 'and', 'conditions': processed_conditions}
+
+        # Handle Rule Builder Or - recursively process children
+        if rule.get('rule') == 'Or':
+            children = rule.get('children', [])
+            processed_children = [
+                self._add_mirror_alternative_to_moon_pearl(child, rule_name)
+                for child in children
+            ]
+            return {'rule': 'Or', 'children': processed_children}
+
+        # Handle AST-style 'or' rules
+        if rule.get('type') == 'or':
+            conditions = rule.get('conditions', [])
+            processed_conditions = [
+                self._add_mirror_alternative_to_moon_pearl(cond, rule_name)
+                for cond in conditions
+            ]
+            return {'type': 'or', 'conditions': processed_conditions}
+
+        # Handle Rule Builder HasAll - if Moon Pearl is in the items, this is complex
+        # For now, just add the alternative at this level since Moon Pearl is ANDed with others
+        if rule.get('rule') == 'HasAll':
+            args = rule.get('args', {})
+            items = args.get('items', [])
+            if 'Moon Pearl' in items:
+                # Transform HasAll([Moon Pearl, X, Y]) into
+                # And(Or(Moon Pearl, Magic Mirror), HasAll([X, Y]))
+                other_items = [item for item in items if item != 'Moon Pearl']
+                mirror_alt = {
+                    'rule': 'Or',
+                    'children': [
+                        {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
+                        {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
+                    ]
+                }
+                if not other_items:
+                    return mirror_alt
+                elif len(other_items) == 1:
+                    return {
+                        'rule': 'And',
+                        'children': [
+                            mirror_alt,
+                            {'rule': 'Has', 'args': {'item_name': other_items[0]}}
+                        ]
+                    }
+                else:
+                    return {
+                        'rule': 'And',
+                        'children': [
+                            mirror_alt,
+                            {'rule': 'HasAll', 'args': {'items': other_items}}
+                        ]
+                    }
 
         # No changes needed
         return rule
