@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-24 02:11:34
+**Generated:** 2026-01-24 05:05:20
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -105,7 +105,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Rain World | ✅ 30.0% | ✅ 30.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Reventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Rift Wizard | ✅ 100.0% | ✅ 100.0% | 6.6KB | ✅ | N/A |
+| Rift Wizard | ✅ 100.0% | ✅ 100.0% | 7.7KB | ✅ | N/A |
 | Rift of the Necrodancer | ❌ 30.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Rusted Moss | ⚠️ 60.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sentinels of the Multiverse | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -123,7 +123,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Spyro 3 | ❌ 20.0% | ❌ 0.0% | 15.2KB | ✅ | N/A |
 | Stacklands | ⚠️ 90.0% | ❌ 0.0% | 12.7KB | ✅ | N/A |
 | Star Fox 64 | ✅ 100.0% | ✅ 100.0% | 17.1KB | ✅ | N/A |
-| Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | ❌ 0.0% | ⚠️ 70.0% | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | System Shock 2 | ❌ 30.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
@@ -180,7 +180,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Rain World | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | ✅ | N/A |
 | Reventure | ✅ | ✅ | N/A |
-| Rift Wizard | 6.6KB | ✅ | N/A |
+| Rift Wizard | 7.7KB | ✅ | N/A |
 | Sonic Rush | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |
@@ -286,7 +286,7 @@ These games fail in both Universal Tracker versions.
 | Sonic Adventure DX | 29.9KB | ✅ | N/A |
 | Spyro 3 | 15.2KB | ✅ | N/A |
 | Stacklands | 12.7KB | ✅ | N/A |
-| Star Wars Episode I Racer | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | 5.7KB | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |

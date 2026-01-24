@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-24 02:11:34
+**Generated:** 2026-01-24 05:05:20
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -14,10 +14,10 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 39 (31.5%)
-- **Passing Modified Only:** 8 (6.5%)
-- **Passing Hybrid Only:** 17 (13.7%)
-- **Passing Neither:** 60 (48.4%)
+- **Passing Both:** 41 (33.1%)
+- **Passing Modified Only:** 9 (7.3%)
+- **Passing Hybrid Only:** 15 (12.1%)
+- **Passing Neither:** 59 (47.6%)
 
 ## Full Comparison
 
@@ -55,7 +55,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Diddy Kong Racing | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Digimon World | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 90.0% | ⚠️ 90.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -105,7 +105,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Rain World | ✅ 30.0% | ✅ 30.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Reventure | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Rift Wizard | ⚠️ 70.0% | ✅ 100.0% | 6.6KB | ✅ | N/A |
+| Rift Wizard | ✅ 100.0% | ✅ 100.0% | 7.7KB | ✅ | N/A |
 | Rift of the Necrodancer | ❌ 30.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Rusted Moss | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sentinels of the Multiverse | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -113,17 +113,17 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Ship of Harkinian | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 70.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 0.0% | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ✅ 0.0% | ✅ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ 40.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Sonic the Hedgehog 1 | ⚠️ 90.0% | ✅ 100.0% | 9.4KB | ✅ | N/A |
+| Sonic the Hedgehog 1 | ✅ 100.0% | ✅ 100.0% | 9.4KB | ✅ | N/A |
 | Soul Blazer | ⚠️ 80.0% | ✅ 100.0% | 10.6KB | ✅ | N/A |
 | Spinball | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Spyro 3 | ❌ 0.0% | ❌ 0.0% | 15.2KB | ✅ | N/A |
 | Stacklands | ❌ 0.0% | ❌ 0.0% | 12.7KB | ✅ | N/A |
 | Star Fox 64 | ✅ 100.0% | ✅ 100.0% | 17.1KB | ✅ | N/A |
-| Star Wars Episode I Racer | ⚠️ 70.0% | ⚠️ 70.0% | ✅ | ✅ | N/A |
+| Star Wars Episode I Racer | ✅ 90.0% | ⚠️ 70.0% | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | System Shock 2 | ❌ 0.0% | ❌ 0.0% | 15.0KB | ✅ | N/A |
@@ -148,7 +148,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | osu! | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ⚠️ 80.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (39)
+## Games Passing Both (41)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -180,8 +180,10 @@ These games have 100% success rate in both Universal Tracker versions.
 | Metroid Fusion | ✅ | ✅ | N/A |
 | Rain World | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | ✅ | N/A |
+| Rift Wizard | 7.7KB | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ | N/A |
 | Sonic Heroes | ✅ | ✅ | N/A |
+| Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Spinball | ✅ | ✅ | N/A |
 | Star Fox 64 | 17.1KB | ✅ | N/A |
 | Super Cat Planet | ✅ | ✅ | N/A |
@@ -194,7 +196,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (8)
+## Games Passing Modified Only (9)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
@@ -205,11 +207,12 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | Here Comes Niko! | ✅ | ✅ | N/A |
 | Isles Of Sea And Sky | ✅ | ✅ | N/A |
 | Jigsaw | 1.6KB | ✅ | N/A |
+| Star Wars Episode I Racer | 5.7KB | ✅ | N/A |
 | The Sims 4 | 5.5KB | ✅ | N/A |
 | Watery Words | 9.1KB | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 28.7KB | ✅ | N/A |
 
-## Games Passing Hybrid Only (17)
+## Games Passing Hybrid Only (15)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
@@ -226,14 +229,12 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Pseudoregalia | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ✅ | ✅ | N/A |
 | Reventure | ✅ | ✅ | N/A |
-| Rift Wizard | 6.6KB | ✅ | N/A |
 | Sonic Rush | ✅ | ✅ | N/A |
-| Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |
 | Tetris Attack | 23.1KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
-## Games Passing Neither (60)
+## Games Passing Neither (59)
 
 These games fail in both Universal Tracker versions.
 
@@ -289,7 +290,6 @@ These games fail in both Universal Tracker versions.
 | Sonic Adventure DX | 29.9KB | ✅ | N/A |
 | Spyro 3 | 15.2KB | ✅ | N/A |
 | Stacklands | 12.7KB | ✅ | N/A |
-| Star Wars Episode I Racer | ✅ | ✅ | N/A |
 | System Shock 2 | 15.0KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |

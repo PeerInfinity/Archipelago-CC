@@ -822,7 +822,7 @@
   "Rift Wizard": {
     "apworld_path": "custom_worlds/riftwizard.apworld",
     "exporter_path": "exporter/games/unofficial/riftwizard.py",
-    "exporter_size": 6740,
+    "exporter_size": 7891,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1001,11 +1001,11 @@
   },
   "Star Wars Episode I Racer": {
     "apworld_path": "custom_worlds/swr.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/swr.py",
+    "exporter_size": 5863,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "swr"
   },
