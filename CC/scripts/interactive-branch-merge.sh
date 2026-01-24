@@ -348,6 +348,20 @@ perform_merge() {
                 git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
             fi
 
+            # Clear contents of fuzz_output/
+            if [ -d "fuzz_output" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^fuzz_output/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
+                git reset -- fuzz_output/ 2>/dev/null || true
+                git checkout -- fuzz_output/ 2>/dev/null || true
+                git clean -fd fuzz_output/ 2>/dev/null || true
+                # Also remove any untracked files not caught by git clean
+                rm -rf fuzz_output/* 2>/dev/null || true
+            fi
+
             # Remove text and log files in project root directory
             shopt -s nullglob
             for txtfile in *.txt *.log; do

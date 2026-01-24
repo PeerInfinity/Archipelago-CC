@@ -244,6 +244,70 @@ class ASTToRuleBuilder:
         result['_converted_from_ast'] = True
         return result
 
+    def _evaluate_generator_expression(self, gen_expr: Dict[str, Any]) -> Optional[List[Any]]:
+        """
+        Evaluate a generator expression with a constant iterator.
+
+        Handles patterns like [m.name for m in match] where match is a constant
+        list of objects with a 'name' attribute. This is common in has_any/has_all
+        calls with pre-resolved item lists.
+
+        Args:
+            gen_expr: A generator_expression dict with 'element' and 'comprehension' keys
+
+        Returns:
+            A list of extracted values if evaluation succeeds, None otherwise.
+        """
+        element = gen_expr.get('element', {})
+        comprehension = gen_expr.get('comprehension', {})
+
+        # Check if this is a simple attribute access pattern: m.name for m in items
+        if element.get('type') != 'attribute':
+            return None
+
+        attr_name = element.get('attr')
+        target_obj = element.get('object', {})
+
+        # The target should be a name reference (e.g., 'm')
+        if target_obj.get('type') != 'name':
+            return None
+
+        target_name = target_obj.get('name')
+
+        # Check comprehension structure
+        comp_details = comprehension
+        if comp_details.get('type') != 'comprehension_details':
+            return None
+
+        # Check that the comprehension target matches the attribute object
+        comp_target = comp_details.get('target', {})
+        if comp_target.get('type') != 'name' or comp_target.get('name') != target_name:
+            return None
+
+        # Get the iterator value
+        iterator = comp_details.get('iterator', {})
+        if iterator.get('type') != 'constant':
+            return None
+
+        iterator_value = iterator.get('value', [])
+        if not isinstance(iterator_value, list):
+            return None
+
+        # Evaluate the element expression for each item in the iterator
+        result = []
+        for item in iterator_value:
+            # Get the attribute from the item
+            if hasattr(item, attr_name):
+                value = getattr(item, attr_name)
+                result.append(value)
+            elif isinstance(item, dict) and attr_name in item:
+                result.append(item[attr_name])
+            else:
+                # Can't evaluate this expression
+                return None
+
+        return result
+
     def _extract_constant_value(self, value: Any) -> Tuple[Any, bool]:
         """
         Extract the value from a constant wrapper if present.
@@ -440,16 +504,28 @@ class ASTToRuleBuilder:
                         v.get('value') if isinstance(v, dict) and v.get('type') == 'constant' else v
                         for v in values
                     ]
+                if arg.get('type') == 'generator_expression':
+                    # Handle generator expressions like [m.name for m in match]
+                    # where match is a constant list of objects with name attributes
+                    result = self._evaluate_generator_expression(arg)
+                    if result is not None:
+                        return result
             return default
 
         if method == 'has_all':
             items = get_items_from_arg(get_arg_value(0, []), [])
-            if isinstance(items, list) and len(items) > 0:
+            if isinstance(items, list):
+                if len(items) == 0:
+                    # has_all([]) is vacuously true
+                    return self._make_rule('True_', {})
                 return self._make_rule('HasAll', {'items': items})
 
         elif method == 'has_any':
             items = get_items_from_arg(get_arg_value(0, []), [])
-            if isinstance(items, list) and len(items) > 0:
+            if isinstance(items, list):
+                if len(items) == 0:
+                    # has_any([]) is always false - can't have any of nothing
+                    return self._make_rule('False_', {})
                 return self._make_rule('HasAny', {'items': items})
 
         elif method == 'has_all_counts':
@@ -1000,16 +1076,18 @@ class ASTToRuleBuilder:
         If the helper was originally converted from Rule Builder format,
         restore it. Otherwise, convert to Rule Builder format with flattened args.
 
-        Output format (empty 'options' and 'args' omitted):
+        Output format (empty 'options', 'args', and 'kwargs' omitted):
             {
                 "rule": "helper_name",
                 "args": [arg1, arg2, ...],  # Flattened list, not nested; omitted if empty
+                "kwargs": {"key": value, ...},  # Keyword arguments; omitted if empty
                 "_original_ast_type": "helper",
                 "_converted_from_ast": true
             }
         """
         helper_name = rule.get('name', 'Unknown')
         args = rule.get('args', [])
+        kwargs = rule.get('kwargs', {})
 
         # Check for round-trip metadata
         if rule.get('_converted_from_rule_builder'):
@@ -1021,8 +1099,14 @@ class ASTToRuleBuilder:
             for arg in args
         ]
 
+        # Convert kwargs values (they may be nested rule dicts)
+        converted_kwargs = {
+            key: (self._convert_rule(value) if isinstance(value, dict) else value)
+            for key, value in kwargs.items()
+        }
+
         # Build flattened structure - args is a list at top level, not nested in a dict
-        # Empty options and args are omitted to reduce JSON size
+        # Empty options, args, and kwargs are omitted to reduce JSON size
         result: Dict[str, Any] = {
             'rule': helper_name,
             '_original_ast_type': 'helper',
@@ -1030,6 +1114,8 @@ class ASTToRuleBuilder:
         }
         if converted_args:
             result['args'] = converted_args
+        if converted_kwargs:
+            result['kwargs'] = converted_kwargs
         return result
 
     # -------------------------------------------------------------------------

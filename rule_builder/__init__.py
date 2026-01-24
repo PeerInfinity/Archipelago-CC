@@ -29,7 +29,8 @@ See docs/json/developer/guides/format-converter.md for format details.
 """
 
 from .rules import (
-    # World mixin
+    # Logic and World mixins
+    RuleBuilderLogicMixin,
     RuleWorldMixin,
     # Option filtering
     OptionFilter,
@@ -63,6 +64,8 @@ from .rules import (
     ASTRule,
     Not,
     CountItem,
+    CountFromList,
+    CountGroup,
     Compare,
     Arithmetic,
     MinValue,
@@ -97,7 +100,8 @@ from .pathfinding import (
 )
 
 __all__ = [
-    # World mixin
+    # Logic and World mixins
+    'RuleBuilderLogicMixin',
     'RuleWorldMixin',
     # Option filtering
     'OptionFilter',
@@ -131,6 +135,8 @@ __all__ = [
     'ASTRule',
     'Not',
     'CountItem',
+    'CountFromList',
+    'CountGroup',
     'Compare',
     'Arithmetic',
     'MinValue',

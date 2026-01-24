@@ -2,9 +2,9 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
+[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-14 21:00:20
+**Generated:** 2026-01-24 02:11:34
 
 **Source Data Created:** 2026-01-11T20:29:15.868280
 
@@ -31,12 +31,26 @@
 - **Timed Out Runs:** 1
 - **Ignored Runs:** 25
 
+### Generic Exporter/Logic Statistics
+
+Of the 40 games with 100% pass rate:
+
+- **Passing with Generic Exporter:** 28/40 (70.0%)
+- **Passing with Generic Logic:** 37/40 (92.5%)
+- **Passing with Both Generic:** 28/40 (70.0%)
+
+**Combined Custom Code Size:**
+
+- **Total Exporter Code:** 662.7KB
+- **Total Game Logic Code:** 652.0KB
+- **Combined Total:** 1314.7KB
+
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 7.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 11.8KB | ✅ | 654.1KB |
+| A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
+| A Link to the Past | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 100.1KB | ✅ | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | 26.0KB |
@@ -84,7 +98,7 @@
 | Noita | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.0KB | ✅ | 308.9KB |
-| Overcooked! 2 | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 25.9KB | ✅ | 489.2KB |
+| Overcooked! 2 | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ | 10 | 3 | 5 | 0 | 2 | ❌ 30.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
@@ -95,12 +109,12 @@
 | Secret of Evermore | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 266.1KB |
-| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.5KB | 1136.1KB |
+| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
 | Stardew Valley | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.8KB | 8.0KB | 2430.1KB |
 | Subnautica | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Super Mario 64 | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 875.0KB |
+| Super Mario Land 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 92.5KB | ✅ | 875.0KB |
 | Super Mario World | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% | 60.9KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
@@ -116,217 +130,10 @@
 | VVVVVV | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
 | Yacht Dice | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
-| Yoshi's Island | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 9.3KB | ✅ | 283.2KB |
+| Yoshi's Island | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | 9.2KB | ✅ | 283.2KB |
 | Yu-Gi-Oh! 2006 | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ❌ | 10 | 5 | 1 | 0 | 4 | ⚠️ 50.0% | ✅ | ✅ | 155.5KB |
-
-## Error Details
-
-### A Hat in Time
-
-- **None**: 10 occurrence(s)
-
-### A Link to the Past
-
-- **None**: 9 occurrence(s)
-
-### Adventure
-
-- **None**: 1 occurrence(s)
-
-### Castlevania 64
-
-- **None**: 9 occurrence(s)
-
-### Celeste (Open World)
-
-- **None**: 6 occurrence(s)
-
-### DLCQuest
-
-- **None**: 8 occurrence(s)
-
-### Donkey Kong Country 3
-
-- **None**: 3 occurrence(s)
-
-### Factorio
-
-- **None**: 10 occurrence(s)
-
-### Faxanadu
-
-- **None**: 9 occurrence(s)
-
-### Final Fantasy Mystic Quest
-
-- **None**: 8 occurrence(s)
-- **Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'**: 2 occurrence(s)
-
-### Hollow Knight
-
-- **None**: 10 occurrence(s)
-
-### Jak and Daxter: The Precursor Legacy
-
-- **None**: 7 occurrence(s)
-
-### Kingdom Hearts
-
-- **None**: 6 occurrence(s)
-
-### Kingdom Hearts 2
-
-- **FillError**: 9 occurrence(s)
-
-### Kirby's Dream Land 3
-
-- **None**: 10 occurrence(s)
-
-### Landstalker - The Treasures of King Nole
-
-- **None**: 9 occurrence(s)
-
-### Links Awakening DX
-
-- **None**: 9 occurrence(s)
-
-### Metamath
-
-- **None**: 2 occurrence(s)
-
-### Muse Dash
-
-- **None**: 10 occurrence(s)
-
-### Noita
-
-- **None**: 8 occurrence(s)
-
-### Ocarina of Time
-
-- **<class 'AttributeError'>**: 9 occurrence(s)
-- **FillError**: 1 occurrence(s)
-
-### Overcooked! 2
-
-- **None**: 3 occurrence(s)
-- **Invalid OC2 settings(3-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(5-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(7-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(8-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-- **Invalid OC2 settings(9-0) Need either Level Shuffle disabled or 'Story' DLC enabled**: 1 occurrence(s)
-
-### Pokemon Emerald
-
-- **FillError**: 2 occurrence(s)
-- **None**: 3 occurrence(s)
-
-### Pokemon Red and Blue
-
-- **FillError**: 1 occurrence(s)
-- **None**: 9 occurrence(s)
-
-### SMZ3
-
-- **None**: 10 occurrence(s)
-
-### Saving Princess
-
-- **None**: 6 occurrence(s)
-
-### Shivers
-
-- **None**: 10 occurrence(s)
-
-### Sonic Adventure 2 Battle
-
-- **None**: 9 occurrence(s)
-
-### Starcraft 2
-
-- **File 0-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 1-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 2-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 3-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 4-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 5-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 6-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 7-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 8-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-- **File 9-0.yaml is invalid. Please fix your yaml.**: 1 occurrence(s)
-
-### Stardew Valley
-
-- **None**: 10 occurrence(s)
-
-### Subnautica
-
-- **None**: 9 occurrence(s)
-
-### Super Mario 64
-
-- **None**: 6 occurrence(s)
-
-### Super Mario Land 2
-
-- **None**: 9 occurrence(s)
-
-### Super Mario World
-
-- **None**: 2 occurrence(s)
-- **FillError**: 1 occurrence(s)
-
-### Super Metroid
-
-- **varia_custom was chosen but varia_custom_preset is missing.**: 2 occurrence(s)
-- **FillError**: 4 occurrence(s)
-- **None**: 3 occurrence(s)
-- **<class 'TimeoutError'>**: 1 occurrence(s)
-
-### Terraria
-
-- **FillError**: 1 occurrence(s)
-
-### The Messenger
-
-- **None**: 9 occurrence(s)
-
-### The Wind Waker
-
-- **None**: 4 occurrence(s)
-
-### Timespinner
-
-- **None**: 10 occurrence(s)
-
-### VVVVVV
-
-- **None**: 2 occurrence(s)
-
-### Yacht Dice
-
-- **None**: 10 occurrence(s)
-
-### Yoshi's Island
-
-- **None**: 8 occurrence(s)
-
-### Yu-Gi-Oh! 2006
-
-- **None**: 5 occurrence(s)
-
-### Zillion
-
-- **None**: 8 occurrence(s)
-- **<class 'AssertionError'>**: 1 occurrence(s)
-- **FillError**: 1 occurrence(s)
-
-### shapez
-
-- **None**: 1 occurrence(s)
-
 
 ## Notes
 

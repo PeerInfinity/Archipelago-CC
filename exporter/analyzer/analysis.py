@@ -291,7 +291,11 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
                 try:
                     with profiler.section("ast_parse"):
                         tree = ast.parse(cleaned_source)
-                    logging.debug(f"analyze_rule: Parsed AST = {ast.dump(tree)}")
+                    # Wrap ast.dump in try/except as it can hit recursion limit on complex ASTs
+                    try:
+                        logging.debug(f"analyze_rule: Parsed AST = {ast.dump(tree)}")
+                    except RecursionError:
+                        logging.debug("analyze_rule: Parsed AST (dump skipped - too complex)")
                     logging.debug("AST parsed successfully")
 
                     # Always visit the full parsed tree

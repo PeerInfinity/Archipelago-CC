@@ -123,6 +123,9 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     # Add link to summary document
     md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
 
+    # Add link to test documentation
+    md_content += "[📖 Learn about this test](../tests/test-spoilers.md)\n\n"
+
     # Add cross-link to other version (original <-> worldgen)
     if other_version_link:
         if is_worldgen:

@@ -80,10 +80,53 @@ class CallVisitorMixin:
                  logging.error(f"Failed to analyze argument {i} in call: {ast.dump(arg_node)}")
                  # More permissive - continue even if arg analysis fails
                  continue
+
+            # Handle starred expressions (*args unpacking)
+            # When visit_Starred returns unpacked_args, expand them into the args list
+            if arg_result.get('type') == 'starred':
+                unpacked = arg_result.get('unpacked_args')
+                if unpacked:
+                    logging.debug(f"Unpacking starred argument with {len(unpacked)} values")
+                    for unpacked_arg in unpacked:
+                        args.append(unpacked_arg)
+                        # Use the original starred node for all unpacked args (for filtering purposes)
+                        args_with_nodes.append((arg_node, unpacked_arg))
+                else:
+                    # Starred expression couldn't be resolved - log warning but try to continue
+                    logging.warning(f"Starred argument {i} could not be unpacked: {arg_result}")
+                    # Skip this argument - we can't determine its values
+                continue
+
             args.append(arg_result)
             args_with_nodes.append((arg_node, arg_result))
 
         logging.debug(f"Collected all args: {args}")
+
+        # Process keyword arguments
+        kwargs = {}  # Dict of keyword name -> analyzed value
+        kwargs_with_nodes = []  # Pairs of (ast.keyword, result) for filtering
+        for kw_node in node.keywords:
+            if kw_node.arg is None:
+                # **kwargs unpacking - skip for now (complex to handle)
+                logging.debug(f"Skipping **kwargs unpacking in call")
+                continue
+
+            kw_result = self.visit(kw_node.value)
+            if kw_result is None:
+                logging.error(f"Failed to analyze keyword argument {kw_node.arg} in call: {ast.dump(kw_node.value)}")
+                continue
+
+            kwargs[kw_node.arg] = kw_result
+            kwargs_with_nodes.append((kw_node, kw_result))
+
+        if kwargs:
+            logging.debug(f"Collected keyword args: {kwargs}")
+
+        # Filter keyword arguments early (remove state, player, world)
+        # This makes filtered_kwargs available to all code paths below
+        filtered_kwargs = self._filter_special_kwargs(kwargs_with_nodes) if kwargs_with_nodes else {}
+        if filtered_kwargs:
+            logging.debug(f"Filtered keyword args: {filtered_kwargs}")
 
         # --- Determine the type of call ---
 
@@ -165,6 +208,8 @@ class CallVisitorMixin:
 
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
+
+            # Note: filtered_kwargs is already computed above after collecting kwargs
 
             # Resolve variable references in arguments (e.g., lambda defaults)
             # Skip this when preserve_parameter_names is True - we want to keep params as name references
@@ -290,7 +335,7 @@ class CallVisitorMixin:
                             if has_dynamic_for_loops_resolved(resolved_func):
                                 logging.debug(f"Function {resolved_func_name} has dynamic for loops, preserving as helper")
                                 self._register_helper_usage(resolved_func_name, resolved_func, args_with_nodes)
-                                return self._make_helper_rule(resolved_func_name, filtered_args)
+                                return self._make_helper_rule(resolved_func_name, filtered_args, filtered_kwargs)
 
                             # Check if 'state' is passed as an argument using original AST nodes
                             has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
@@ -344,7 +389,7 @@ class CallVisitorMixin:
                                                 else:
                                                     logging.debug(f"Not caching {actual_func_name} - has params {extra_params}")
                                             # Return a helper call with original args (like manual preservation)
-                                            return self._make_helper_rule(actual_func_name, filtered_args)
+                                            return self._make_helper_rule(actual_func_name, filtered_args, filtered_kwargs)
                                     logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                                     return recursive_result
                                 else:
@@ -366,7 +411,7 @@ class CallVisitorMixin:
                  if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
                      if closure_func_name and self.game_handler.should_preserve_as_helper(closure_func_name):
                          logging.debug(f"Game handler requests preserving closure {closure_func_name} as helper, skipping recursive analysis")
-                         return self._make_helper_rule(closure_func_name, filtered_args)
+                         return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
@@ -421,7 +466,7 @@ class CallVisitorMixin:
                      if has_dynamic_for_loops(actual_func):
                          logging.debug(f"Function {closure_func_name} has dynamic for loops, preserving as helper")
                          self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
-                         return self._make_helper_rule(closure_func_name, filtered_args)
+                         return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
 
                      # Check if 'state' is passed as an argument (directly or indirectly)
                      has_state_arg = any(references_state(arg) for arg in node.args)
@@ -477,7 +522,7 @@ class CallVisitorMixin:
                                           else:
                                               logging.debug(f"Not caching {closure_func_name} - has params {extra_params}")
                                       # Return a helper call with original args (like manual preservation)
-                                      return self._make_helper_rule(closure_func_name, filtered_args)
+                                      return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
                               logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                               return recursive_result # Return the detailed analysis result
                           else:
@@ -948,8 +993,8 @@ class CallVisitorMixin:
                 logging.debug(f"Created map result: {result}")
                 return result
 
-            # Create helper result with filtered args (no state/player in JSON)
-            result = self._make_helper_rule(func_name, filtered_args)
+            # Create helper result with filtered args and kwargs (no state/player in JSON)
+            result = self._make_helper_rule(func_name, filtered_args, filtered_kwargs)
             logging.debug(f"Created helper result: {result}")
             # Register for automatic discovery
             self._register_helper_usage(func_name)
@@ -1128,23 +1173,42 @@ class CallVisitorMixin:
 
                     result = {'type': 'item_check', 'item': item_value}
                     # Check for count parameter (now in position 1 after filtering)
+                    # Also check filtered_kwargs for count passed as keyword argument
+                    count_arg = None
                     if len(filtered_args) >= 2:
-                        second_arg = filtered_args[1]
-                        if isinstance(second_arg, dict):
-                            # Try to resolve the expression to a concrete value
-                            resolved_value = self.expression_resolver.resolve_expression(second_arg)
-                            if resolved_value is not None and isinstance(resolved_value, int):
-                                # Successfully resolved to an integer value
-                                logging.debug(f"Resolved count parameter: {second_arg} -> {resolved_value}")
-                                result['count'] = {'type': 'constant', 'value': resolved_value}
-                            elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
-                                # Already a constant, use as-is
-                                logging.debug(f"Found constant count parameter: {second_arg}")
-                                result['count'] = second_arg
+                        count_arg = filtered_args[1]
+                    elif 'count' in filtered_kwargs:
+                        count_arg = filtered_kwargs['count']
+                        logging.debug(f"Found count as keyword argument: {count_arg}")
+
+                    if count_arg is not None:
+                        if isinstance(count_arg, dict):
+                            # When preserve_parameter_names is True and this is a name reference,
+                            # don't resolve to default value - keep as name reference for helper bodies
+                            should_resolve = True
+                            if getattr(self, 'preserve_parameter_names', False):
+                                if count_arg.get('type') == 'name':
+                                    should_resolve = False
+                                    logging.debug(f"Preserving parameter name reference: {count_arg}")
+
+                            if should_resolve:
+                                # Try to resolve the expression to a concrete value
+                                resolved_value = self.expression_resolver.resolve_expression(count_arg)
+                                if resolved_value is not None and isinstance(resolved_value, int):
+                                    # Successfully resolved to an integer value
+                                    logging.debug(f"Resolved count parameter: {count_arg} -> {resolved_value}")
+                                    result['count'] = {'type': 'constant', 'value': resolved_value}
+                                elif count_arg.get('type') == 'constant' and isinstance(count_arg.get('value'), int):
+                                    # Already a constant, use as-is
+                                    logging.debug(f"Found constant count parameter: {count_arg}")
+                                    result['count'] = count_arg
+                                else:
+                                    # Could not resolve to a constant value, keep as-is
+                                    logging.debug(f"Found unresolved count parameter: {count_arg}")
+                                    result['count'] = count_arg
                             else:
-                                # Could not resolve to a constant value, keep as-is
-                                logging.debug(f"Found unresolved count parameter: {second_arg}")
-                                result['count'] = second_arg
+                                # preserve_parameter_names is True and this is a name - keep as-is
+                                result['count'] = count_arg
                 elif method == 'has_group' and len(filtered_args) >= 1:
                     # Unwrap group name if it's a constant
                     group_arg = filtered_args[0]
@@ -1156,23 +1220,30 @@ class CallVisitorMixin:
                         group_value = group_arg
                     result = {'type': 'group_check', 'group': group_value}
                     # Check for count parameter (now in position 1 after filtering)
+                    # Also check filtered_kwargs for count passed as keyword argument
+                    count_arg = None
                     if len(filtered_args) >= 2:
-                        second_arg = filtered_args[1]
-                        if isinstance(second_arg, dict):
+                        count_arg = filtered_args[1]
+                    elif 'count' in filtered_kwargs:
+                        count_arg = filtered_kwargs['count']
+                        logging.debug(f"Found group count as keyword argument: {count_arg}")
+
+                    if count_arg is not None:
+                        if isinstance(count_arg, dict):
                             # Try to resolve the expression to a concrete value
-                            resolved_value = self.expression_resolver.resolve_expression(second_arg)
+                            resolved_value = self.expression_resolver.resolve_expression(count_arg)
                             if resolved_value is not None and isinstance(resolved_value, int):
                                 # Successfully resolved to an integer value
-                                logging.debug(f"Resolved group count parameter: {second_arg} -> {resolved_value}")
+                                logging.debug(f"Resolved group count parameter: {count_arg} -> {resolved_value}")
                                 result['count'] = {'type': 'constant', 'value': resolved_value}
-                            elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
+                            elif count_arg.get('type') == 'constant' and isinstance(count_arg.get('value'), int):
                                 # Already a constant, use as-is
-                                logging.debug(f"Found constant group count parameter: {second_arg}")
-                                result['count'] = second_arg
+                                logging.debug(f"Found constant group count parameter: {count_arg}")
+                                result['count'] = count_arg
                             else:
                                 # Could not resolve to a constant value, keep as-is
-                                logging.debug(f"Found unresolved group count parameter: {second_arg}")
-                                result['count'] = second_arg
+                                logging.debug(f"Found unresolved group count parameter: {count_arg}")
+                                result['count'] = count_arg
                 elif method == 'count_group' and len(filtered_args) >= 1:
                     # state.count_group(group_name, player) -> returns the count of items in a group
                     # Unwrap group name if it's a constant
@@ -1262,7 +1333,7 @@ class CallVisitorMixin:
 
                 # Create helper result with the captured arguments
                 # DO NOT recursively analyze - we want to capture the call AS IS with its arguments
-                result = self._make_helper_rule(method_name, filtered_args)
+                result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                 logging.debug(f"Created helper result for self method: {result}")
                 # Register for automatic discovery
                 self._register_helper_usage(method_name)
@@ -1330,7 +1401,7 @@ class CallVisitorMixin:
                 filtered_args = resolved_args
 
                 # Create helper result
-                result = self._make_helper_rule(method_name, filtered_args)
+                result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                 logging.debug(f"Created helper result for logic method: {result}")
                 # Register for automatic discovery
                 self._register_helper_usage(method_name)
@@ -1354,7 +1425,7 @@ class CallVisitorMixin:
                     filtered_args = self._filter_special_args(args_with_nodes)
 
                     # Create helper result
-                    result = self._make_helper_rule(method_name, filtered_args)
+                    result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                     logging.debug(f"Created helper result for module function: {result}")
 
                     # Register for automatic discovery WITH the function object
@@ -1554,7 +1625,7 @@ class CallVisitorMixin:
                     filtered_args = resolved_args
 
                     # Create helper result
-                    result = self._make_helper_rule(method_name, filtered_args)
+                    result = self._make_helper_rule(method_name, filtered_args, filtered_kwargs)
                     logging.debug(f"Created helper result for module method: {result}")
                     # Register for automatic discovery
                     self._register_helper_usage(method_name)

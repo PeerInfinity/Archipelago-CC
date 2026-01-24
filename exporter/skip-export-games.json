@@ -1,0 +1,41 @@
+{
+  "generated": "2026-01-22T21:20:14.237095",
+  "description": "Games that pass Original UT but fail Modified UT. These should skip rule export.",
+  "source_files": [
+    "test-results-original-fixed-seed.json",
+    "test-results-modified-fixed-seed.json",
+    "test-results-apworlds-original-fixed-seed.json",
+    "test-results-apworlds-modified-fixed-seed.json"
+  ],
+  "games": {
+    "bundled": [
+      "Blasphemous",
+      "Bomb Rush Cyberfunk",
+      "Lingo",
+      "Raft",
+      "Secret of Evermore",
+      "TUNIC",
+      "The Witness"
+    ],
+    "apworlds": [
+      "Air Delivery",
+      "Anodyne",
+      "Astalon",
+      "ChecksMate",
+      "Corn Kidz 64",
+      "Frogmonster",
+      "GZDoom",
+      "Lego Star Wars: The Complete Saga",
+      "Minit",
+      "Pseudoregalia",
+      "Rabi-Ribi",
+      "Reventure",
+      "Rift Wizard",
+      "Sonic Rush",
+      "Sonic the Hedgehog 1",
+      "Soul Blazer",
+      "Wordipelago",
+      "XCOM 2 War of the Chosen"
+    ]
+  }
+}

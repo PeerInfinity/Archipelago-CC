@@ -19,6 +19,7 @@ class Hook(BaseHook):
     status = None
     run_id: int = 0  # Track run ID for explain stats files
     explain_stats_collected: bool = False  # Track if we've collected explain stats for this game
+    use_fractional_spheres: bool = False  # Toggle for fractional sphere logic
 
     def before_generate(self, args):
         self.status = None
@@ -27,6 +28,7 @@ class Hook(BaseHook):
         self.ut_core.enforce_deferred_connections = DeferredEntranceMode.disabled
         self.ut_core.run_generator(None,None,args.player_files_path) #initial UT gen
         self.run_id = getattr(args, 'run_id', self.run_id)
+        self.use_fractional_spheres = getattr(args, 'fractional_spheres', False)
 
     def after_generate(self, mw:MultiWorld, output_path):
         if mw is None:
@@ -68,7 +70,7 @@ class Hook(BaseHook):
         new_items = []
         new_inventory = []
 
-        # Recalc spheres
+        # Recalc spheres - use fractional sphere logic if enabled
         for sphere_number, sphere in enumerate(mw.get_sendable_spheres()):
             current_sphere: Dict[str,Location] = {}
             for sphere_location in sphere:
@@ -78,39 +80,100 @@ class Hook(BaseHook):
             new_inventory.clear()
             new_items.clear()
             if current_sphere:
-                self.ut_core.set_missing_locations(set(remaining_locations))
-                self.ut_core.set_items_received(current_inventory)
-                update_ret = self.ut_core.updateTracker()
-                missed_locations = []
-                for in_logic_location in update_ret.in_logic_locations:
-                    if in_logic_location in current_sphere:
-                        location = current_sphere[in_logic_location]
-                        true_item = location.item
-                        # Use location.address directly instead of true_item.location.address
-                        # Some worlds set location.item without setting item.location back-reference
-                        new_items.append(NetworkItem(true_item.code, location.address, true_item.player, true_item.classification))
-                        if ItemClassification.progression in true_item.classification:
-                            new_inventory.append(true_item.name)
-                        remaining_locations.remove(location.address)
-                        del current_sphere[in_logic_location]
-                    else:
-                        missed_locations.append(in_logic_location)
-                if len(current_sphere) > 0:
-                    print(f"Locations `{','.join(current_sphere.keys())}` were in server logic but not expected in UT")
-                    print(f"UT logic sphere `{','.join(update_ret.in_logic_locations)}`")
-                    print(f"Locations that weren't created in UT = [{','.join([loc for loc in current_sphere if loc not in self.ut_core.multiworld.regions.location_cache[self.ut_core.player_id]])}]")
-                if len(missed_locations) > 0:
-                    print(f"Locations {','.join(missed_locations)} were expected to be in logic but weren't")
-                    print(f"Server logic sphere `{','.join([location.name for location in sphere if location.address is not None])}`")
-                if len(current_sphere)>0 or len(missed_locations)>0:
-                    print(f"After sphere #{sphere_number}")
-                    item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
-                    print(f"New Inventory = [{','.join(new_inventory)}]")
-                    print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
-                    print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
-                    print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
-                    self.status = GenOutcome.Failure
-                    return
+                if self.use_fractional_spheres:
+                    # Fractional sphere logic: iterate within each integer sphere
+                    # until all locations are collected or no progress can be made
+                    fractional_sphere = 0
+                    server_sphere_locations = set(current_sphere.keys())  # Track original server sphere
+                    while current_sphere:
+                        self.ut_core.set_missing_locations(set(remaining_locations))
+                        self.ut_core.set_items_received(current_inventory)
+                        update_ret = self.ut_core.updateTracker()
+
+                        # On first pass, check for UT locations not in server sphere
+                        # (detect UT being too permissive with pre-sphere inventory)
+                        if fractional_sphere == 0:
+                            missed_locations = [loc for loc in update_ret.in_logic_locations
+                                               if loc not in server_sphere_locations]
+                            if missed_locations:
+                                print(f"Locations {','.join(missed_locations)} were expected to be in logic but weren't in server sphere")
+                                print(f"Server logic sphere `{','.join(server_sphere_locations)}`")
+                                print(f"After sphere #{sphere_number}")
+                                item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
+                                print(f"New Inventory = [{','.join(new_inventory)}]")
+                                print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
+                                print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
+                                print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
+                                self.status = GenOutcome.Failure
+                                return
+
+                        # Find locations in BOTH server sphere AND UT logic
+                        collected_this_pass = []
+                        for loc_name in list(current_sphere.keys()):
+                            if loc_name in update_ret.in_logic_locations:
+                                location = current_sphere[loc_name]
+                                true_item = location.item
+                                # Collect the item immediately for next iteration
+                                new_item = NetworkItem(true_item.code, location.address, true_item.player, true_item.classification)
+                                new_items.append(new_item)
+                                current_inventory.append(new_item)  # Add to current for next fractional sphere
+                                if ItemClassification.progression in true_item.classification:
+                                    new_inventory.append(true_item.name)
+                                remaining_locations.remove(location.address)
+                                del current_sphere[loc_name]
+                                collected_this_pass.append(loc_name)
+
+                        if not collected_this_pass:
+                            # No progress made - remaining locations in current_sphere are unreachable
+                            print(f"Sphere {sphere_number}.{fractional_sphere}: No progress - {len(current_sphere)} locations remain unreachable")
+                            print(f"Locations `{','.join(current_sphere.keys())}` were in server logic but not expected in UT")
+                            print(f"UT logic sphere `{','.join(update_ret.in_logic_locations)}`")
+                            print(f"Locations that weren't created in UT = [{','.join([loc for loc in current_sphere if loc not in self.ut_core.multiworld.regions.location_cache[self.ut_core.player_id]])}]")
+                            item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
+                            print(f"New Inventory = [{','.join(new_inventory)}]")
+                            print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
+                            print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
+                            print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
+                            self.status = GenOutcome.Failure
+                            return
+
+                        fractional_sphere += 1
+                    # All locations in this integer sphere collected successfully
+                else:
+                    # Original logic: single pass per integer sphere
+                    self.ut_core.set_missing_locations(set(remaining_locations))
+                    self.ut_core.set_items_received(current_inventory)
+                    update_ret = self.ut_core.updateTracker()
+                    missed_locations = []
+                    for in_logic_location in update_ret.in_logic_locations:
+                        if in_logic_location in current_sphere:
+                            location = current_sphere[in_logic_location]
+                            true_item = location.item
+                            # Use location.address directly instead of true_item.location.address
+                            # Some worlds set location.item without setting item.location back-reference
+                            new_items.append(NetworkItem(true_item.code, location.address, true_item.player, true_item.classification))
+                            if ItemClassification.progression in true_item.classification:
+                                new_inventory.append(true_item.name)
+                            remaining_locations.remove(location.address)
+                            del current_sphere[in_logic_location]
+                        else:
+                            missed_locations.append(in_logic_location)
+                    if len(current_sphere) > 0:
+                        print(f"Locations `{','.join(current_sphere.keys())}` were in server logic but not expected in UT")
+                        print(f"UT logic sphere `{','.join(update_ret.in_logic_locations)}`")
+                        print(f"Locations that weren't created in UT = [{','.join([loc for loc in current_sphere if loc not in self.ut_core.multiworld.regions.location_cache[self.ut_core.player_id]])}]")
+                    if len(missed_locations) > 0:
+                        print(f"Locations {','.join(missed_locations)} were expected to be in logic but weren't")
+                        print(f"Server logic sphere `{','.join([location.name for location in sphere if location.address is not None])}`")
+                    if len(current_sphere)>0 or len(missed_locations)>0:
+                        print(f"After sphere #{sphere_number}")
+                        item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
+                        print(f"New Inventory = [{','.join(new_inventory)}]")
+                        print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
+                        print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
+                        print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
+                        self.status = GenOutcome.Failure
+                        return
             else:
                 return #if get_sendable_spheres returns an empty sphere that means we're done, the next sphere will be any unreachable locations... which aren't reachable...
 

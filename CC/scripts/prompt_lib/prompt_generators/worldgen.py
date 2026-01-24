@@ -847,12 +847,8 @@ grep -n "options\\|self\\.multiworld" worlds/{world_dir}/Rules.py | head -30
 
 ### Option-dependent rules not exported
 
-If a rule behaves differently based on options, ensure the exporter handles all cases:
-
-```python
-# In exporter/games/{world_dir}.py (if it exists)
-# Check if option-specific logic is being exported
-```
+If a rule behaves differently based on options, ensure the exporter handles all cases.
+Check `exporter/games/official/` or `exporter/games/unofficial/` for game-specific exporters.
 
 ### Helper function with unhandled options
 
@@ -894,7 +890,7 @@ The rules must produce the **same accessibility determinations** regardless of w
 - `worlds/{world_dir}/Rules.py` - Original rule definitions
 - `worlds/{world_dir}/Options.py` - Game options that affect rules
 - `exporter/exporter.py` - Rules export logic
-- `exporter/games/{world_dir}.py` - Game-specific exporter (if exists)
+- `exporter/games/official/` or `exporter/games/unofficial/` - Game-specific exporters (check for {world_dir}.py)
 - `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
 """
 
@@ -1130,7 +1126,7 @@ This shows the exact option values that caused the failure.
 Unlike bundled worlds, apworlds:
 1. **May target a different AP version** - Check the apworld's metadata for version requirements
 2. **May have unreviewed code** - The Rules.py and other files haven't been vetted for UT compatibility
-3. **May lack exporter support** - Check if `exporter/games/{world_dir}.py` exists
+3. **May lack exporter support** - Check `exporter/games/unofficial/` for a {world_dir}.py exporter
 4. **May use custom logic patterns** - Not all world patterns are supported by the tracker
 
 ### Check apworld metadata
@@ -1186,7 +1182,7 @@ Document your findings so we can either:
 
 - `custom_worlds/{world_dir}.apworld` - The apworld package (ZIP file)
 - `exporter/exporter.py` - Rules export logic
-- `exporter/games/{world_dir}.py` - Game-specific exporter (if exists)
+- `exporter/games/unofficial/` - Unofficial game exporters (check for {world_dir}.py)
 - `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
 - `scripts/data/apworld-combined-data.json` - APWorld metadata
 """

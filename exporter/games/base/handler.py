@@ -1064,12 +1064,17 @@ class BaseGameExportHandler(
                                 'max_count': 1
                             }
                         else:
-                            # Item exists but was placed as an event - update it
+                            # Item exists but was placed as an event - mark as event but preserve ID
+                            # Some items have valid IDs in item_name_to_id but may be placed as events
+                            # in certain configurations. We preserve the ID so the worldgen world
+                            # knows all possible item IDs, even for items that may sometimes be events.
                             if not item_data[item_name]['event']:
-                                logger.debug(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
+                                logger.debug(f"Marking {item_name} as event based on runtime placement (item.code=None), preserving original ID")
                                 item_data[item_name]['event'] = True
                                 item_data[item_name]['type'] = 'Event'
-                                item_data[item_name]['id'] = None
+                                # NOTE: We intentionally do NOT set id=None here.
+                                # The item's ID from item_name_to_id should be preserved so the
+                                # worldgen world knows all possible item IDs for UT compatibility.
                                 item_data[item_name]['classification'] = self._classification_to_string(item_classification)
                                 item_data[item_name]['advancement'] = ItemClassification.progression in item_classification
                                 item_data[item_name]['useful'] = ItemClassification.useful in item_classification
@@ -1746,10 +1751,14 @@ class BaseGameExportHandler(
                                         )
                                     break  # Only match first pattern
 
-            # Step 3: Merge accumulator items into data
+            # Step 3: Merge accumulator items into data (only add items that don't already exist)
             if accumulator_items:
                 data.setdefault('items', {})
                 for player_id, player_items in accumulator_items.items():
-                    data['items'].setdefault(player_id, {}).update(player_items)
+                    existing_items = data['items'].setdefault(player_id, {})
+                    for item_name, item_data in player_items.items():
+                        # Only add if item doesn't already exist (preserve existing items with proper IDs)
+                        if item_name not in existing_items:
+                            existing_items[item_name] = item_data
 
         return data

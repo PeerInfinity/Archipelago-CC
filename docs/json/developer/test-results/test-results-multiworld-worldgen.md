@@ -4,9 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
+[📖 Learn about this test](../tests/test-multiworld.md)
+
 [View Original Template Results](./test-results-multiworld.md)
 
-**Generated:** 2026-01-14 22:17:06
+**Generated:** 2026-01-23 18:31:18
 
 ## Summary
 
