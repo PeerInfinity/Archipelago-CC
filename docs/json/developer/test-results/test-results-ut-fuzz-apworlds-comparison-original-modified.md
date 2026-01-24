@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
 
-**Generated:** 2026-01-24 05:05:20
+**Generated:** 2026-01-24 12:58:42
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -17,6 +17,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Passing Both:** 27 (21.8%)
 - **Passing Original Only:** 15 (12.1%)
 - **Passing Modified Only:** 23 (18.5%)
+- **Passing Modified Only with Generic Exporter:** 16 (12.9%)
 - **Passing Neither:** 59 (47.6%)
 
 ## Full Comparison
