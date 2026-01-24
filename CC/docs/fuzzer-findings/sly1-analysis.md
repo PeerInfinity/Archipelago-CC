@@ -3,21 +3,35 @@
 **APWorld**: sly1.apworld v0.3.3-alpha
 **Source**: https://github.com/hoppel16/ArchipelagoBranchSly1
 **Date**: 2026-01-24
-**Failure Rate**: ~40% (varies by option combinations)
+**Status**: ✅ FIXED (logic mismatch), ⚠️ REMAINING (FillError - apworld issue)
 
 ## Summary
 
-The sly1 apworld has two distinct failure modes in UT fuzzer testing:
+The sly1 apworld had two distinct failure modes in UT fuzzer testing:
 
-1. **AST_sum_of Rule Conversion Bug** (~30% of failures): The world generator cannot convert `AST_sum_of` patterns, causing incorrect logic for the Clockwerk boss fight access rule.
+1. **AST_sum_of Rule Conversion Bug** - **FIXED**: The world generator now correctly converts `AST_sum_of` patterns to `HasFromListUnique`.
 
-2. **FillError** (~10% of failures): Certain option combinations cause more progression items than available locations, which is an apworld design issue.
+2. **FillError** (~12% of runs): Certain option combinations cause more progression items than available locations. This is an inherent apworld design issue.
 
-## Issue 1: AST_sum_of Rule Not Supported
+### Test Results
+
+| Metric | Before Fix | After Fix |
+|--------|------------|-----------|
+| Success Rate | ~60% | ~88% |
+| Logic Mismatches | ~30% | 0% |
+| FillError | ~10% | ~12% |
+
+## Issue 1: AST_sum_of Rule Not Supported (FIXED)
 
 ### Root Cause
 
-The world generator (`world_generator/rule_codegen.py`) doesn't have a converter for `AST_sum_of` rules. When encountered, it falls back to `True_()` (line 1232-1234).
+The world generator (`world_generator/rule_codegen.py`) didn't have a converter for `AST_sum_of` rules. When encountered, it fell back to `True_()`.
+
+### Fix Applied
+
+Added `_try_convert_ast_sum_of_compare()` method in `rule_codegen.py` that:
+1. Detects the pattern: `sum(state.has(item) for item in items) >= count`
+2. Converts to: `HasFromListUnique(*items, count=count)`
 
 ### Affected Code
 
@@ -30,48 +44,7 @@ if options.UnlockClockwerk.value == 1:  # boss_victories mode
 
 Where `bosses = ["Beat Raleigh", "Beat Muggshot", "Beat Mz. Ruby", "Beat Panda King"]`.
 
-### Exported JSON (from rules export)
-
-```json
-{
-  "name": "Hideout -> Cold Heart of Hate",
-  "connected_region": "Cold Heart of Hate",
-  "access_rule": {
-    "rule": "Compare",
-    "args": {
-      "left": {
-        "rule": "AST_sum_of",
-        "args": {
-          "element_rule": {
-            "type": "item_check",
-            "item": {"type": "name", "name": "boss"}
-          },
-          "iterator_info": {
-            "target": {"type": "name", "name": "boss"},
-            "iterator": {
-              "type": "constant",
-              "value": ["Beat Raleigh", "Beat Muggshot", "Beat Mz. Ruby", "Beat Panda King"]
-            }
-          }
-        }
-      },
-      "op": ">=",
-      "right": 2
-    }
-  }
-}
-```
-
-### Generated Code (Incorrect)
-
-```python
-world.set_rule(
-    multiworld.get_entrance("Hideout -> Cold Heart of Hate", player),
-    Compare(True_(), ">=", 2)  # BUG: True_() instead of boss count!
-)
-```
-
-### Correct Conversion Should Be
+### Generated Code (After Fix)
 
 ```python
 world.set_rule(
@@ -80,20 +53,14 @@ world.set_rule(
 )
 ```
 
-### Impact
-
-The incorrect rule causes both false positives and false negatives:
-- **False positive**: UT thinks Clockwerk is accessible when no bosses are defeated (Compare(True_(), ">=", X) where X <= 1)
-- **False negative**: UT thinks Clockwerk is NOT accessible when enough bosses ARE defeated
-
-## Issue 2: FillError
+## Issue 2: FillError (APWorld Design Issue)
 
 ### Root Cause
 
 The apworld can generate more progression items than available locations for certain option combinations. This manifests as:
 
 ```
-FillError: Not enough locations for progression items. There are 11 more
+FillError: Not enough locations for progression items. There are N more
 progression items than there are available locations.
 ```
 
@@ -104,24 +71,7 @@ Likely related to:
 - Certain `ExcludeMinigames` combinations reducing available locations
 - Bundle size options affecting item/location balance
 
-This is an inherent design issue with the apworld, not a tracker/exporter bug.
-
-## Recommendations
-
-### Fix Option A: Add AST_sum_of Support (Recommended)
-
-Add support for `AST_sum_of` in `world_generator/rule_codegen.py`:
-
-1. Add mapping: `'AST_sum_of': 'ast_sum_of'` to `rb_to_type` dict
-2. Implement `_convert_ast_sum_of()` that detects the boolean-counting pattern:
-   - When element_rule is `item_check` on the iterator variable
-   - Convert to `HasFromListUnique(*items, count=threshold)`
-
-### Fix Option B: Create Custom Exporter
-
-Create `exporter/games/unofficial/sly1.py` with a rule handler that intercepts the sum comprehension during export and converts it to a simpler format.
-
-### For FillError Issue
+### Recommendation
 
 Report to the apworld maintainer at https://github.com/hoppel16/ArchipelagoBranchSly1/issues
 
@@ -132,22 +82,51 @@ Report to the apworld maintainer at https://github.com/hoppel16/ArchipelagoBranc
 python fuzz.py -r 1 -j 1 -g sly1 -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed 2
 
 # Multiple runs to check failure rate
-python fuzz.py -r 10 -j 4 -g sly1 -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+python fuzz.py -r 50 -j 8 -g sly1 -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 
 # Full test via test runner
 python scripts/test/test-all-ut-fuzz.py --runs 10 --include-list "Sly Cooper and the Thievius Raccoonus.yaml" --custom-worlds-only
 ```
 
-## Files Involved
+## Files Changed
 
-- `custom_worlds/sly1.apworld` - The apworld package
-- `world_generator/rule_codegen.py` - Rule conversion logic (needs AST_sum_of support)
-- `rule_builder/rules.py` - HasFromListUnique class (already exists, can be used)
-- `exporter/games/unofficial/` - Location for potential custom exporter
+- `world_generator/rule_codegen.py` - Added `_try_convert_ast_sum_of_compare()` method
+  - Lines ~2771-2777: Call to the new method from `_convert_compare()`
+  - Lines ~5357-5456: Implementation of `_try_convert_ast_sum_of_compare()`
 
-## Related Code Locations
+## Technical Details
 
-- `rule_codegen.py:1061-1075` - `rb_to_type` mapping (missing AST_sum_of)
-- `rule_codegen.py:1182-1217` - `converters` dict (missing ast_sum_of handler)
-- `rule_codegen.py:1232-1234` - Fallback to `True_()` for unknown rules
-- `rule_builder/rules.py:1795` - HasFromListUnique class definition
+### AST_sum_of Pattern Recognition
+
+The fix recognizes this JSON pattern from the exporter:
+```json
+{
+  "rule": "Compare",
+  "args": {
+    "left": {
+      "rule": "AST_sum_of",
+      "args": {
+        "element_rule": {
+          "type": "item_check",
+          "item": {"type": "name", "name": "boss"}
+        },
+        "iterator_info": {
+          "target": {"type": "name", "name": "boss"},
+          "iterator": {
+            "type": "constant",
+            "value": ["Beat Raleigh", "Beat Muggshot", "Beat Mz. Ruby", "Beat Panda King"]
+          }
+        }
+      }
+    },
+    "op": ">=",
+    "right": 2
+  }
+}
+```
+
+The converter:
+1. Validates the `element_rule` is an `item_check` on the iterator variable
+2. Extracts the item list from `iterator_info.iterator`
+3. Extracts the threshold from the right operand
+4. Generates `HasFromListUnique(*items, count=threshold)`
