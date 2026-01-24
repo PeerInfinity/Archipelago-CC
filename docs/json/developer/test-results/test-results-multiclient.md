@@ -10,28 +10,28 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-01-24 09:07:07
+**Generated:** 2026-01-24 20:19:07
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 71 (97.3%)
+- **Failed:** 2 (2.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
-- **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 40/73 (54.8% of passed)
+- **Passing with Generic Exporter:** 39/71 (54.9% of passed)
+- **Passing with Generic Logic:** 65/71 (91.5% of passed)
+- **Passing with Both Generic:** 39/71 (54.9% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 7/7 | ✅ | 268/268 | 113.7KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 7/7 | ✅ | 268/268 | 130.7KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
@@ -47,14 +47,14 @@
 | Choo-Choo Charles | ✅ Passed | 0 | ✅ | 692/692 | 691/691 | 1/1 | ✅ | 692/692 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | ✅ | 149/149 | 148/148 | 1/1 | ✅ | 149/149 | ✅ | ✅ |
 | Coding Adventure | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
-| DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 1/1 | ✅ | 42/42 | 1.2KB | ✅ |
+| DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 13/13 | ✅ | 42/42 | 1.2KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | ✅ | 348/348 | 348/348 | 0/0 | ✅ | 348/348 | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | ✅ | ✅ |
+| Final Fantasy Mystic Quest | ❌ Failed | 0 | ❌ | 14/299 | 11/251 | 3/48 | ❌ | 10/299 | ✅ | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.0KB | ✅ |
@@ -76,7 +76,7 @@
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
-| Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 5.4KB | ✅ |
+| Raft | ❌ Failed | 2 | ❌ | 53/155 | 53/154 | 0/1 | ❌ | 50/155 | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.3KB | 6.9KB |
