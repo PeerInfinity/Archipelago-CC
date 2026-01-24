@@ -1,10 +1,10 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
 
-**Generated:** 2026-01-24 12:58:42
+**Generated:** 2026-01-24 14:22:28
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
-[<- Back to Test Results Summary](./test-results-summary.md)
+[<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 
 ### Individual Test Results
 

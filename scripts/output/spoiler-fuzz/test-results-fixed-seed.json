@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-24T22:30:55.473483",
-    "last_updated": "2026-01-24T22:30:55.473491",
+    "created": "2026-01-24T22:06:57.714517",
+    "last_updated": "2026-01-24T22:06:57.714523",
     "script_version": "1.0.0",
     "combined_from": 1,
     "test_type": "spoiler_fuzz",
@@ -13,7 +13,7 @@
     "total_templates": 1
   },
   "results": {
-    "Clique.yaml": {
+    "Adventure.yaml": {
       "spoiler_fuzz": {
         "passed": true,
         "total": 1,
@@ -24,10 +24,10 @@
         "errors": []
       },
       "world_info": {
-        "game_name": "Clique",
-        "world_directory": "clique"
+        "game_name": "Adventure",
+        "world_directory": "adventure"
       },
-      "timestamp": "2026-01-24T22:30:36.330508"
+      "timestamp": "2026-01-24T22:06:40.949574"
     }
   }
 }

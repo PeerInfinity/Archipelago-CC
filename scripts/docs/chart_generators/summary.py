@@ -408,13 +408,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         if has_ut_fixed:
             md_content += "- [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)\n"
 
-    # Add UT Fuzz Test section (only for original, not variants)
+    # Add Fuzz Tests section (only for original, not variants)
     if variant_type is None:
-        md_content += "\n## Universal Tracker Fuzz Tests\n\n"
-        md_content += "These tests validate Universal Tracker compatibility across random option configurations.\n\n"
-        md_content += "- [UT Fuzz Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)\n"
+        md_content += "\n## Fuzz Tests\n\n"
+        md_content += "Fuzz tests validate game configurations across randomized option combinations.\n\n"
+        md_content += "- **[Fuzz Test Summary](./test-results-fuzz-summary.md)** - Combined view of all fuzz test results\n\n"
+        md_content += "Individual fuzz test results:\n"
         md_content += "- [UT Fuzz Results - Original](./test-results-ut-fuzz-original.md)\n"
         md_content += "- [UT Fuzz Results - Modified](./test-results-ut-fuzz-modified.md)\n"
+        md_content += "- [UT Fuzz Results - Hybrid](./test-results-ut-fuzz-hybrid.md)\n"
+        md_content += "- [Spoiler Fuzz Results](./test-results-spoiler-fuzz.md)\n"
 
     # Add Excluded Templates section if data exists
     if excluded_games:

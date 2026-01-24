@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-24 09:07:07
+**Generated:** 2026-01-24 14:22:35
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
@@ -50,16 +50,16 @@ Of the 73 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 573.8KB
+- **Total Exporter Code:** 590.9KB
 - **Total Game Logic Code:** 267.8KB
-- **Combined Total:** 841.7KB
+- **Combined Total:** 858.7KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 113.7KB | ✅ | 654.1KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 130.7KB | ✅ | 654.1KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
@@ -151,7 +151,7 @@ Of the 73 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | A Link to the Past | 113.7KB |
+| 1 | A Link to the Past | 130.7KB |
 | 2 | Super Mario Land 2 | 92.5KB |
 | 3 | Super Metroid | 60.9KB |
 | 4 | Lingo | 38.0KB |
@@ -203,13 +203,17 @@ These tests compare Universal Tracker results with our spoiler test results.
 - [UT Comparison - Random Seed](./test-results-ut-comparison-random-seed.md)
 - [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)
 
-## Universal Tracker Fuzz Tests
+## Fuzz Tests
 
-These tests validate Universal Tracker compatibility across random option configurations.
+Fuzz tests validate game configurations across randomized option combinations.
 
-- [UT Fuzz Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)
+- **[Fuzz Test Summary](./test-results-fuzz-summary.md)** - Combined view of all fuzz test results
+
+Individual fuzz test results:
 - [UT Fuzz Results - Original](./test-results-ut-fuzz-original.md)
 - [UT Fuzz Results - Modified](./test-results-ut-fuzz-modified.md)
+- [UT Fuzz Results - Hybrid](./test-results-ut-fuzz-hybrid.md)
+- [Spoiler Fuzz Results](./test-results-spoiler-fuzz.md)
 
 ## Excluded Templates
 
