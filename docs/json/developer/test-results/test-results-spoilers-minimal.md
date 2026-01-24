@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-24 06:28:43
+**Generated:** 2026-01-24 07:47:36
 
 **Source Data Created:** 2026-01-14T21:37:24.211068
 
