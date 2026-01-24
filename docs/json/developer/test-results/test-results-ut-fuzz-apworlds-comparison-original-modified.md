@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
 
-**Generated:** 2026-01-23 20:58:54
+**Generated:** 2026-01-24 02:11:34
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -14,10 +14,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 124
-- **Passing Both:** 24 (19.4%)
-- **Passing Original Only:** 18 (14.5%)
-- **Passing Modified Only:** 20 (16.1%)
-- **Passing Neither:** 62 (50.0%)
+- **Passing Both:** 25 (20.2%)
+- **Passing Original Only:** 17 (13.7%)
+- **Passing Modified Only:** 22 (17.7%)
+- **Passing Neither:** 60 (48.4%)
 
 ## Full Comparison
 
@@ -32,7 +32,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Air Delivery | ✅ 100.0% | ❌ 40.0% | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ 100.0% | ✅ 100.0% | 8.7KB | ✅ | N/A |
 | Anodyne | ✅ 100.0% | ❌ 10.0% | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ⚠️ 60.0% | ⚠️ 50.0% | ✅ | ✅ | N/A |
+| Another Crabs Treasure | ⚠️ 60.0% | ✅ 100.0% | 3.1KB | ✅ | N/A |
 | Ape Escape | ❌ 0.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ⚠️ 70.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Astalon | ✅ 80.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -55,7 +55,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Diddy Kong Racing | ⚠️ 50.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Digimon World | ⚠️ 60.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 10.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 70.0% | ⚠️ 90.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ 40.0% | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -140,15 +140,15 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Vampire Survivors | ✅ 40.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ⚠️ 90.0% | ✅ 100.0% | 9.1KB | ✅ | N/A |
-| Wordipelago | ✅ 90.0% | ⚠️ 60.0% | 11.6KB | ✅ | N/A |
+| Wordipelago | ✅ 90.0% | ✅ 80.0% | 19.5KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 80.0% | ✅ 100.0% | 28.7KB | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | osu! | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | plateup | ❌ 0.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
-## Games Passing Both (24)
+## Games Passing Both (25)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -178,8 +178,9 @@ These games have 100% success rate in both Universal Tracker versions.
 | Tevi | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | N/A |
+| Wordipelago | 19.5KB | ✅ | N/A |
 
-## Games Passing Original Only (18)
+## Games Passing Original Only (17)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -201,10 +202,9 @@ These games pass in the Original UT but fail in the Modified UT.
 | Sonic Rush | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
 | Soul Blazer | 10.6KB | ✅ | N/A |
-| Wordipelago | 11.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (20)
+## Games Passing Modified Only (22)
 
 These games pass in the Modified UT but fail in the Original UT.
 
@@ -213,6 +213,7 @@ These games pass in the Modified UT but fail in the Original UT.
 | A Dance of Fire and Ice | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ✅ | ✅ | N/A |
 | Actraiser | ✅ | ✅ | N/A |
+| Another Crabs Treasure | 3.1KB | ✅ | N/A |
 | Autopelago | 9.2KB | ✅ | N/A |
 | Brotato | ✅ | ✅ | N/A |
 | Diddy Kong Racing | ✅ | ✅ | N/A |
@@ -228,10 +229,11 @@ These games pass in the Modified UT but fail in the Original UT.
 | Sonic Heroes | ✅ | ✅ | N/A |
 | The Sims 4 | 5.5KB | ✅ | N/A |
 | Watery Words | 9.1KB | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 28.7KB | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
-## Games Passing Neither (62)
+## Games Passing Neither (60)
 
 These games fail in both Universal Tracker versions.
 
@@ -240,7 +242,6 @@ These games fail in both Universal Tracker versions.
 | A Link Between Worlds | ✅ | ✅ | N/A |
 | ANIMAL WELL | 1.5KB | ✅ | N/A |
 | Against the Storm | ✅ | ✅ | N/A |
-| Another Crabs Treasure | ✅ | ✅ | N/A |
 | Ape Escape | ✅ | ✅ | N/A |
 | Ape Escape 3 | ✅ | ✅ | N/A |
 | Axiom Verge | ✅ | ✅ | N/A |
@@ -296,7 +297,6 @@ These games fail in both Universal Tracker versions.
 | ToeJam and Earl | ✅ | ✅ | N/A |
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
 | plateup | ✅ | ✅ | N/A |
 

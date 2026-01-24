@@ -4,11 +4,11 @@
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-23 20:58:54
+**Generated:** 2026-01-24 02:11:34
 
-**Source Data Created:** 2026-01-23T20:58:54.763743
+**Source Data Created:** 2026-01-24T02:11:34.159712
 
-**Source Data Last Updated:** 2026-01-23T20:58:54.763749
+**Source Data Last Updated:** 2026-01-24T02:11:34.159720
 
 **Universal Tracker Version:** Modified (worldgen-based tracking)
 
@@ -23,45 +23,45 @@
 ## Summary
 
 - **Total Games:** 124
-- **Games with 100% Pass Rate:** 44 (35.5%)
-- **Games with Failures:** 80 (64.5%)
+- **Games with 100% Pass Rate:** 47 (37.9%)
+- **Games with Failures:** 77 (62.1%)
 - **Total Fuzz Runs:** 1240
-- **Successful Runs:** 549 (44.3%)
-- **Failed Runs:** 537
-- **Timed Out Runs:** 23
-- **Ignored Runs:** 131
+- **Successful Runs:** 559 (45.1%)
+- **Failed Runs:** 528
+- **Timed Out Runs:** 24
+- **Ignored Runs:** 129
 
 ### Expected vs Unexpected Results
 
-- **Expected Passes:** 43 (not excluded, passed)
+- **Expected Passes:** 46 (not excluded, passed)
 - **Unexpected Passes:** 1 (excluded, but passed)
-- **Expected Failures:** 42 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 36 (not excluded, logic mismatch)
+- **Expected Failures:** 43 (excluded, failed as expected)
+- **Unexpected Failures (logic):** 32 (not excluded, logic mismatch)
 - **Unexpected Failures (timeout only):** 2 (not excluded, only timeouts)
 
 ### Explain Support Summary
 
-- **Games with Explain Stats:** 113
+- **Games with Explain Stats:** 112
 - **Games with 100% Explain Coverage:** 92
-- **Games with No Explain Support:** 13
-- **Locations with Explain Support:** 15,940
-- **Locations without Explain Support:** 3,834
-- **Locations with Default Rule:** 16,865
-- **Overall Explain Coverage:** 80.6%
+- **Games with No Explain Support:** 11
+- **Locations with Explain Support:** 16,263
+- **Locations without Explain Support:** 3,766
+- **Locations with Default Rule:** 17,142
+- **Overall Explain Coverage:** 81.2%
 
 ### Generic Exporter/Logic Statistics
 
-Of the 44 games with 100% pass rate:
+Of the 47 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 37/44 (84.1%)
-- **Passing with Generic Logic:** 44/44 (100.0%)
-- **Passing with Both Generic:** 37/44 (84.1%)
+- **Passing with Generic Exporter:** 37/47 (78.7%)
+- **Passing with Generic Logic:** 47/47 (100.0%)
+- **Passing with Both Generic:** 37/47 (78.7%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 367.4KB
+- **Total Exporter Code:** 407.1KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 367.4KB
+- **Combined Total:** 407.1KB
 
 ## Test Results
 
@@ -76,7 +76,7 @@ Of the 44 games with 100% pass rate:
 | Air Delivery | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.7KB | ✅ | N/A |
 | Anodyne | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% | ✅ | ✅ | N/A |
+| Another Crabs Treasure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.1KB | ✅ | N/A |
 | Ape Escape | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | N/A |
 | Ape Escape 3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Astalon | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -99,7 +99,7 @@ Of the 44 games with 100% pass rate:
 | Diddy Kong Racing | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Digimon World | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ | 10 | 1 | 8 | 0 | 1 | ❌ 10.0% | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | ✅ | ✅ | N/A |
 | Fire Emblem Sacred Stones | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -139,7 +139,7 @@ Of the 44 games with 100% pass rate:
 | Monster Sanctuary | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Nine Sols | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Ori and the Blind Forest | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 23.2KB | ✅ | N/A |
-| Ori and the Will of the Wisps | ❌ | 10 | 0 | 1 | 6 | 3 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Ori and the Will of the Wisps | ❌ | 10 | 0 | 1 | 7 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Oxygen Not Included | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | Pizza Tower | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | 7.0KB | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -158,7 +158,7 @@ Of the 44 games with 100% pass rate:
 | Simon Tatham's Portable Puzzle Collection | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sly Cooper and the Thievius Raccoonus | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | ✅ | ✅ | N/A |
-| Sonic Adventure DX | ❌ | 10 | 0 | 4 | 0 | 6 | ❌ 0.0% | 29.9KB | ✅ | N/A |
+| Sonic Adventure DX | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 9.4KB | ✅ | N/A |
@@ -184,9 +184,9 @@ Of the 44 games with 100% pass rate:
 | Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |
 | Wario Land | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.1KB | ✅ | N/A |
-| Wordipelago | ❌ | 10 | 6 | 2 | 0 | 2 | ⚠️ 60.0% | 11.6KB | ✅ | N/A |
+| Wordipelago | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | 19.5KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 28.7KB | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
@@ -200,8 +200,7 @@ This section shows which games have rules that support the `explain_json()` meth
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | A Link Between Worlds | 257 | 0 | 257 | 0 | ❌ 0% |
 | Axiom Verge | 125 | 0 | 125 | 0 | ❌ 0% |
-| Duke Nukem 3D | 83 | 0 | 18 | 65 | ❌ 0% |
-| Into the Breach | 21 | 0 | 21 | 0 | ❌ 0% |
+| Into the Breach | 12 | 0 | 12 | 0 | ❌ 0% |
 | Kingdom Hearts RE Chain of Memories | 247 | 0 | 101 | 146 | ❌ 0% |
 | Lego Star Wars: The Complete Saga | 74 | 0 | 3 | 71 | ❌ 0% |
 | Metroid Fusion | 126 | 0 | 126 | 0 | ❌ 0% |
@@ -210,15 +209,15 @@ This section shows which games have rules that support the `explain_json()` meth
 | Star Fox 64 | 107 | 0 | 107 | 0 | ❌ 0% |
 | Super Cat Planet | 81 | 0 | 50 | 31 | ❌ 0% |
 | Tevi | 1339 | 0 | 1339 | 0 | ❌ 0% |
-| XCOM 2 War of the Chosen | 141 | 0 | 141 | 0 | ❌ 0% |
+| XCOM 2 War of the Chosen | 101 | 1 | 100 | 0 | 🔶 1% |
 | Diddy Kong Racing | 59 | 11 | 20 | 28 | 🔶 35% |
 | Crystal Project | 1264 | 235 | 366 | 663 | 🔶 39% |
 | Balatro | 966 | 441 | 525 | 0 | 🔶 46% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 92 | 5 | 1 | 86 | ⚠️ 83% |
 | Minit | 50 | 43 | 5 | 2 | ⚠️ 90% |
 | Pokemon FireRed and LeafGreen | 1026 | 436 | 20 | 570 | ⚠️ 96% |
 | ChecksMate | 71 | 65 | 2 | 4 | ⚠️ 97% |
 | Lunacid | 1238 | 36 | 1 | 1201 | ⚠️ 97% |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 92 | 91 | 1 | 0 | ⚠️ 99% |
 | A Dance of Fire and Ice | 142 | 135 | 0 | 7 | ✅ 100% |
 | A Difficult Game About Climbing | 16 | 0 | 0 | 16 | ✅ 100% |
 | ANIMAL WELL | 120 | 120 | 0 | 0 | ✅ 100% |
@@ -252,9 +251,9 @@ This section shows which games have rules that support the `explain_json()` meth
 | Hatsune Miku Project Diva Mega Mix+ | 500 | 500 | 0 | 0 | ✅ 100% |
 | Here Comes Niko! | 944 | 265 | 0 | 679 | ✅ 100% |
 | Iji | 177 | 0 | 0 | 177 | ✅ 100% |
-| Isles Of Sea And Sky | 610 | 361 | 0 | 249 | ✅ 100% |
+| Isles Of Sea And Sky | 586 | 345 | 0 | 241 | ✅ 100% |
 | Ittle Dew 2 | 143 | 143 | 0 | 0 | ✅ 100% |
-| Jigsaw | 93 | 93 | 0 | 0 | ✅ 100% |
+| Jigsaw | 287 | 287 | 0 | 0 | ✅ 100% |
 | K-On! After School Live!! | 589 | 589 | 0 | 0 | ✅ 100% |
 | Keep Talking and Nobody Explodes | 116 | 72 | 0 | 44 | ✅ 100% |
 | Kingdom Hearts Birth by Sleep | 223 | 56 | 0 | 167 | ✅ 100% |
@@ -263,7 +262,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Lil Gator Game | 219 | 178 | 0 | 41 | ✅ 100% |
 | Lingo 2 | 501 | 399 | 0 | 102 | ✅ 100% |
 | Little Witch Nobeta | 55 | 15 | 0 | 40 | ✅ 100% |
-| Luigi's Mansion | 543 | 244 | 0 | 299 | ✅ 100% |
+| Luigi's Mansion | 562 | 263 | 0 | 299 | ✅ 100% |
 | Majora's Mask Recompiled | 372 | 319 | 0 | 53 | ✅ 100% |
 | MetroCUBEvania | 9 | 2 | 0 | 7 | ✅ 100% |
 | Metroid Zero Mission | 100 | 80 | 0 | 20 | ✅ 100% |
@@ -284,8 +283,8 @@ This section shows which games have rules that support the `explain_json()` meth
 | Ship of Harkinian | 745 | 745 | 0 | 0 | ✅ 100% |
 | Simon Tatham's Portable Puzzle Collection | 523 | 523 | 0 | 0 | ✅ 100% |
 | Sly 2: Band of Thieves | 170 | 39 | 0 | 131 | ✅ 100% |
-| Sly Cooper and the Thievius Raccoonus | 196 | 45 | 0 | 151 | ✅ 100% |
-| Sonic Adventure DX | 205 | 21 | 0 | 184 | ✅ 100% |
+| Sly Cooper and the Thievius Raccoonus | 210 | 45 | 0 | 165 | ✅ 100% |
+| Sonic Adventure DX | 397 | 48 | 0 | 349 | ✅ 100% |
 | Sonic Rush | 67 | 0 | 0 | 67 | ✅ 100% |
 | Sonic the Hedgehog 1 | 208 | 0 | 0 | 208 | ✅ 100% |
 | Soul Blazer | 300 | 94 | 0 | 206 | ✅ 100% |
@@ -300,17 +299,17 @@ This section shows which games have rules that support the `explain_json()` meth
 | Tetris Attack | 300 | 300 | 0 | 0 | ✅ 100% |
 | The Legend of Zelda - Oracle of Seasons | 233 | 0 | 0 | 233 | ✅ 100% |
 | The Legend of Zelda - Phantom Hourglass | 291 | 0 | 0 | 291 | ✅ 100% |
-| The Sims 4 | 706 | 363 | 0 | 343 | ✅ 100% |
+| The Sims 4 | 706 | 289 | 0 | 417 | ✅ 100% |
 | ToeJam and Earl | 605 | 8 | 0 | 597 | ✅ 100% |
 | TurnipBoy | 45 | 22 | 0 | 23 | ✅ 100% |
 | Tyrian | 135 | 0 | 0 | 135 | ✅ 100% |
-| Vampire Survivors | 252 | 97 | 0 | 155 | ✅ 100% |
+| Vampire Survivors | 245 | 79 | 0 | 166 | ✅ 100% |
 | Watery Words | 150 | 150 | 0 | 0 | ✅ 100% |
 | Wordipelago | 169 | 19 | 0 | 150 | ✅ 100% |
 | Yu-Gi-Oh! Forbidden Memories | 678 | 678 | 0 | 0 | ✅ 100% |
 | Zelda II: The Adventure of Link | 106 | 80 | 0 | 26 | ✅ 100% |
 | osu! | 310 | 0 | 0 | 310 | ✅ 100% |
-| plateup | 109 | 106 | 0 | 3 | ✅ 100% |
+| plateup | 385 | 382 | 0 | 3 | ✅ 100% |
 
 ## Notes
 
@@ -362,6 +361,7 @@ These community APWorlds are excluded from UT fuzz testing due to incompatible r
 | Corn Kidz 64.yaml | Uses custom CK64Rule enum system with data-driven rule evaluation. Incompatible with rule exporter architecture. |
 | CrossCode.yaml | Uses custom Condition class system (ItemCondition, QuestCondition, etc.) with c.satisfied() method calls. Exporter serializes condition objects as string representations instead of extracting item requirements. Progressive item replacements in cond_args dict are not processed. |
 | Crystal Project.yaml | Uses class-level helper methods (can_fight_gran, can_push_ice_block_and_goat, is_area_in_level_range) that combine item checks with game-specific level calculations. Exporter converts these to AST_capability/AST_generic_helper rules, but worldgen generates function calls without defining the functions, causing NameError at runtime. |
+| Deep Rock Galactic.yaml | APWorld bug: remove_locations() uses random.sample() with locations_to_remove option (0-150 range), but for goal_mode 2/3 only ~64 locations are available, causing ValueError. Also has logic mismatches from has_from_list rules that don't export correctly. |
 | Digimon World.yaml | Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format. |
 | Duke Nukem 3D.yaml | Uses dynamic location/region creation in interpret_slot_data() instead of static definitions. Locations are created when level.create_region() is called based on slot_data['levels']. Rules use nested classes (HasRule, LambdaRule) defined inside Rules.__init__() that cannot be serialized. Exporter captures 0 locations and null rules. Tracker fails with 'location already exists' assertion when interpret_slot_data tries to create locations that already exist. |
 | Final Fantasy Tactics A2.yaml | APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options. |
@@ -406,11 +406,9 @@ These games have actual logic mismatches between UT and Python:
 - ANIMAL WELL
 - Against the Storm
 - Anodyne
-- Another Crabs Treasure
 - Ape Escape
 - Balatro
 - Crystalis
-- Deep Rock Galactic
 - Final Fantasy Tactics Advance
 - Fire Emblem Sacred Stones
 - Grim Dawn
@@ -436,8 +434,6 @@ These games have actual logic mismatches between UT and Python:
 - Star Wars Episode I Racer
 - TCG Card Shop Simulator
 - Tetris Attack
-- Wordipelago
-- Yu-Gi-Oh! Dungeon Dice Monsters
 - plateup
 
 ### Unexpected Failures (Timeout Only)
