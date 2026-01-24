@@ -273,11 +273,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -291,6 +286,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -603,11 +603,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -621,6 +616,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -899,11 +899,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -917,6 +912,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -1147,11 +1147,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -1165,6 +1160,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -1372,11 +1372,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -1390,6 +1385,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
