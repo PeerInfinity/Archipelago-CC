@@ -112,7 +112,7 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
     def _is_state_or_player_or_world_arg(self, arg_node, arg_result):
         """
-        Check if an argument is the 'state', 'player', or 'world' parameter.
+        Check if an argument is the 'state', 'player', 'world', or 'self' parameter.
 
         Args:
             arg_node: The AST node for the argument
@@ -120,11 +120,13 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
         Returns:
             Tuple of (is_state, is_player, is_world) booleans
+            Note: 'self' is treated the same as 'world' since both represent the world instance
         """
-        # Check for direct 'state', 'player', or 'world' names
+        # Check for direct 'state', 'player', 'world', or 'self' names
         if isinstance(arg_node, ast.Name):
             name = arg_node.id
-            return (name == 'state', name == 'player', name == 'world')
+            # 'self' represents the world object in methods, treat it same as 'world'
+            return (name == 'state', name == 'player', name in ('world', 'self'))
 
         # Check for attribute access like 'world.player', 'self.player', etc.
         if isinstance(arg_node, ast.Attribute) and arg_node.attr == 'player':
