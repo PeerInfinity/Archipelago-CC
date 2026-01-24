@@ -74,13 +74,6 @@ GENERATORS: List[Tuple[str, str, str, List[str], bool]] = [
         ["worldgen"],
         False
     ),
-    (
-        "world-generator-stability",
-        "generate-world-generator-stability-report.py",
-        "World generator stability report",
-        ["worldgen", "stability"],
-        True  # May not have data
-    ),
 ]
 
 
