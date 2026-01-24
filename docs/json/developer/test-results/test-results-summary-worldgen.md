@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-24 03:36:01
+**Generated:** 2026-01-23 20:14:19
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -9,6 +9,9 @@ This summary combines results from 4 types of tests:
 - **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full-worldgen.md)
 - **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient-worldgen.md)
 - **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld-worldgen.md)
+
+Additional test results:
+- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-worldgen.md)
 
 ## Summary Statistics
 

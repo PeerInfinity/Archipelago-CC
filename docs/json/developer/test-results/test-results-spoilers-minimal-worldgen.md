@@ -2,13 +2,13 @@
 
 ## Spoiler Test - Advancement Items Only (WorldGen)
 
-[← Back to Test Results Summary](./test-results-summary.md)
+[← Back to Test Results Summary](./test-results-summary-worldgen.md)
 
 [📖 Learn about this test](../tests/test-spoilers.md)
 
 [View Original Template Results](./test-results-spoilers-minimal.md)
 
-**Generated:** 2026-01-24 03:36:00
+**Generated:** 2026-01-23 20:14:19
 
 **Source Data Created:** 2026-01-08T05:55:22.366254
 
