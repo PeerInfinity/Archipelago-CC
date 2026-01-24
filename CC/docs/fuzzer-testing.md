@@ -46,6 +46,34 @@ python fuzz.py -r 50 -j 8 -g adventure -n 1 --hook worlds.tracker.fuzzer_hook:Ho
 python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
 
+### Testing with Specific Options
+
+Use `--default-options` to keep options at default, and `--disallow-options` to exclude specific values:
+
+```bash
+# Test with entrance_shuffle at default (test glitches only)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --default-options entrance_shuffle
+
+# Test with glitches_required at default (test entrance shuffle only)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --default-options glitches_required
+
+# Test only minor_glitches (exclude other glitch values)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --default-options entrance_shuffle \
+    --disallow-options "glitches_required=no_glitches,overworld_glitches,hybrid_major_glitches,no_logic"
+
+# Test only supported entrance_shuffle values (exclude problematic ones)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --default-options glitches_required \
+    --disallow-options "entrance_shuffle=crossed,dungeons_crossed,insanity"
+
+# Maximum compatibility mode (avoid all known problematic options)
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --disallow-options "entrance_shuffle=crossed,dungeons_crossed,insanity;glitches_required=hybrid_major_glitches"
+```
+
 ## Output
 
 Results are written to `fuzz_output/`:
@@ -118,9 +146,67 @@ rm -rf frontend/presets/*/AP_*
 ## Known Limitations
 
 ### ALttP
+
+**Entrance Shuffle Compatibility:**
+
+| Mode | Pass Rate | Notes |
+|------|-----------|-------|
+| `vanilla` | 100% | Default, fully supported |
+| `dungeons_simple` | 100% | Fully supported |
+| `dungeons_full` | 100% | Fully supported |
+| `simple` | 100% | Fully supported |
+| `restricted` | 100% | Fully supported |
+| `full` | 100% | Fully supported |
+| `dungeons_crossed` | ~60% | Cross-world dungeon entrance tracking issues |
+| `crossed` | ~60% | Cross-world entrance tracking issues |
+| `insanity` | ~20% | Severe entrance tracking issues |
+
+**Glitches Required Compatibility:**
+
+| Mode | Pass Rate | Notes |
+|------|-----------|-------|
+| `no_glitches` | 100% | Default, fully supported |
+| `minor_glitches` | ~90% | Fully supported (uses CanReachRegion) |
+| `overworld_glitches` | ~75% | Mostly supported |
+| `hybrid_major_glitches` | ~70% | Dict lambda lookup + bunny revival fixes |
+| `no_logic` | ~70% | Mostly supported |
+
+**Why hybrid_major_glitches still has ~30% failures:**
+
+Cross-dungeon clips (`mire_clip`, `hera_clip`) now export with `CanReachRegion` checks:
+```python
+# mire_clip exports as:
+CanReachRegion('Misery Mire (West)') AND Pegasus Boots AND (Fire Rod OR Lamp)
+```
+
+The `rule_map.get(key, default)(state)` pattern is now supported via `dict_lambda_lookup`:
+- Each lambda in the dict is analyzed recursively
+- Results are OR'd together since we don't know which key matches at export time
+- This permissive approach allows any matching rule path
+
+Bunny revival rules are now correctly exported using dynamic imports from ALttP:
+- Swamp Palace: Moon Pearl only (0hp revival not in logic)
+- Tower of Hera: (Magic Mirror AND sword) OR Moon Pearl
+- Other invalid dungeons (Turtle Rock, Sanctuary): Magic Mirror OR Moon Pearl
+
+However, some failures remain due to:
+- Dynamic entrance shuffle affecting which regions connect
+- Complex nested closures beyond the `rule_map` pattern
+- Server using specific glitch paths that UT doesn't know about
+
+Previously, hybrid_major_glitches used `add_rule(..., combine='or')` which was difficult to export.
+The new approach analyzes the combined rules and exports both paths, improving compatibility
+from ~10% to ~45%, then to ~70% with the bunny revival fixes.
+
+**Glitch rule handling:**
+- `dict_lambda_lookup`: Dicts with lambda values are analyzed and OR'd together
+- `CanReachRegion`: Direct glitch rules (mire_clip, hera_clip) use region reachability
+- Combined or-rules now export both the original and glitch alternative paths
+- Fallback rules are used for dungeon entrance patterns when analysis fails
+
+**Other Notes:**
 - Bunny rules are simplified to Moon Pearl requirements
 - Key logic rules using `location_item_name` may evaluate differently
-- ~60% failure rate due to complex dynamic systems (improved from ~90%)
 
 ### Adventure
 - ~100% pass rate with current implementation
