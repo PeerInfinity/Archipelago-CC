@@ -119,9 +119,37 @@ class RiftWizardGameExportHandler(GenericGameExportHandler):
         - {"type": "helper", "name": "int", "args": [...]}
         - {"type": "binary_op", ...}
         - Literal integers
+
+        Note: Uses _extract_as_float internally to preserve floating point precision
+        during intermediate calculations, only converting to int at the end.
+        """
+        # Handle int() helper wrapping - apply int() after evaluating inner expression
+        if isinstance(arg, dict):
+            arg_type = arg.get('type')
+            if arg_type == 'helper' and arg.get('name') == 'int':
+                inner_args = arg.get('args', [])
+                if inner_args:
+                    # Evaluate inner expression as float, then convert to int
+                    result = self._extract_as_float(inner_args[0])
+                    return int(result) if result is not None else None
+
+        # For all other cases, evaluate as float and convert to int
+        result = self._extract_as_float(arg)
+        return int(result) if result is not None else None
+
+    def _extract_as_float(self, arg: Any) -> Optional[float]:
+        """Extract a value from an argument as a float, preserving precision.
+
+        This is used internally to evaluate complex expressions without
+        premature truncation from int() conversion.
+
+        Handles:
+        - {"type": "constant", "value": 5}
+        - {"type": "binary_op", ...}
+        - Literal integers/floats
         """
         if isinstance(arg, (int, float)):
-            return int(arg)
+            return float(arg)
 
         if not isinstance(arg, dict):
             return None
@@ -129,31 +157,27 @@ class RiftWizardGameExportHandler(GenericGameExportHandler):
         arg_type = arg.get('type')
 
         if arg_type == 'constant':
-            return int(arg.get('value', 0))
+            value = arg.get('value', 0)
+            return float(value) if isinstance(value, (int, float)) else None
 
-        # Handle int() helper wrapping
-        if arg_type == 'helper' and arg.get('name') == 'int':
-            inner_args = arg.get('args', [])
-            if inner_args:
-                return self._extract_constant_or_evaluate(inner_args[0])
-
-        # Handle binary operations (e.g., 1 * 25)
+        # Handle binary operations (e.g., 3 * 25 / 8 * 3 - 3)
+        # Keep intermediate values as floats to avoid premature truncation
         if arg_type == 'binary_op':
-            left = self._extract_constant_or_evaluate(arg.get('left'))
-            right = self._extract_constant_or_evaluate(arg.get('right'))
+            left = self._extract_as_float(arg.get('left'))
+            right = self._extract_as_float(arg.get('right'))
             op = arg.get('op', '')
 
             if left is not None and right is not None:
                 if op == '*':
-                    return int(left * right)
+                    return left * right
                 elif op == '+':
-                    return int(left + right)
+                    return left + right
                 elif op == '-':
-                    return int(left - right)
+                    return left - right
                 elif op == '/':
-                    return int(left / right) if right != 0 else None
+                    return left / right if right != 0 else None
                 elif op == '//':
-                    return int(left // right) if right != 0 else None
+                    return float(int(left) // int(right)) if right != 0 else None
 
         return None
 
