@@ -166,23 +166,29 @@ rm -rf frontend/presets/*/AP_*
 | Mode | Pass Rate | Notes |
 |------|-----------|-------|
 | `no_glitches` | 100% | Default, fully supported |
-| `minor_glitches` | ~89% | Mostly supported |
-| `overworld_glitches` | ~80% | Mostly supported |
-| `hybrid_major_glitches` | 0% | Cross-dungeon clips not exportable |
-| `no_logic` | ~80% | Mostly supported |
+| `minor_glitches` | 100% | Fully supported (uses CanReachRegion) |
+| `overworld_glitches` | ~70% | Mostly supported |
+| `hybrid_major_glitches` | ~10% | Combined or-rules partially exportable |
+| `no_logic` | ~70% | Mostly supported |
 
-**Why hybrid_major_glitches fails:**
+**Why hybrid_major_glitches partially fails:**
 
-Cross-dungeon clips (`mire_clip`, `hera_clip`) require **region reachability checks** like:
+Cross-dungeon clips (`mire_clip`, `hera_clip`) now export with `CanReachRegion` checks:
 ```python
-mire_clip = lambda state: state.can_reach('Misery Mire (West)', 'Region', player) and ...
+# mire_clip exports as:
+CanReachRegion('Misery Mire (West)') AND Pegasus Boots AND (Fire Rod OR Lamp)
 ```
 
-These can't be converted to simple item checks - the exporter approximates them, making rules too permissive. The server correctly checks region accessibility while UT uses the approximated rules.
+However, hybrid_major_glitches uses `add_rule(..., combine='or')` to add glitch alternatives
+to existing rules. The exporter prioritizes exporting the original (non-glitch) rule to ensure
+UT matches server behavior when glitches aren't being used. This means:
+- The glitch alternative path (mire_clip/hera_clip) is not exported
+- Server allows either path; UT only knows the original path
+- When the server uses the glitch path, UT can't match
 
 **Glitch rule handling:**
-- Combined or-rules (from `add_rule(..., combine='or')`) are handled specially
-- The exporter prioritizes analyzing the original rule before glitch alternatives
+- Combined or-rules export the original rule, not the glitch alternative
+- Direct glitch rules (not combined) export with CanReachRegion
 - Fallback rules are used for known dungeon doors when source analysis fails
 
 **Other Notes:**
