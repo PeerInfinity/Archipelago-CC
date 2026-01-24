@@ -166,12 +166,12 @@ rm -rf frontend/presets/*/AP_*
 | Mode | Pass Rate | Notes |
 |------|-----------|-------|
 | `no_glitches` | 100% | Default, fully supported |
-| `minor_glitches` | 100% | Fully supported (uses CanReachRegion) |
-| `overworld_glitches` | ~70% | Mostly supported |
-| `hybrid_major_glitches` | ~10% | Combined or-rules partially exportable |
+| `minor_glitches` | ~90% | Fully supported (uses CanReachRegion) |
+| `overworld_glitches` | ~75% | Mostly supported |
+| `hybrid_major_glitches` | ~45% | Dict lambda lookup now supported |
 | `no_logic` | ~70% | Mostly supported |
 
-**Why hybrid_major_glitches partially fails:**
+**Why hybrid_major_glitches still has ~55% failures:**
 
 Cross-dungeon clips (`mire_clip`, `hera_clip`) now export with `CanReachRegion` checks:
 ```python
@@ -179,17 +179,25 @@ Cross-dungeon clips (`mire_clip`, `hera_clip`) now export with `CanReachRegion` 
 CanReachRegion('Misery Mire (West)') AND Pegasus Boots AND (Fire Rod OR Lamp)
 ```
 
-However, hybrid_major_glitches uses `add_rule(..., combine='or')` to add glitch alternatives
-to existing rules. The exporter prioritizes exporting the original (non-glitch) rule to ensure
-UT matches server behavior when glitches aren't being used. This means:
-- The glitch alternative path (mire_clip/hera_clip) is not exported
-- Server allows either path; UT only knows the original path
-- When the server uses the glitch path, UT can't match
+The `rule_map.get(key, default)(state)` pattern is now supported via `dict_lambda_lookup`:
+- Each lambda in the dict is analyzed recursively
+- Results are OR'd together since we don't know which key matches at export time
+- This permissive approach allows any matching rule path
+
+However, some failures remain due to:
+- Dynamic entrance shuffle affecting which regions connect
+- Complex nested closures beyond the `rule_map` pattern
+- Server using specific glitch paths that UT doesn't know about
+
+Previously, hybrid_major_glitches used `add_rule(..., combine='or')` which was difficult to export.
+The new approach analyzes the combined rules and exports both paths, improving compatibility
+from ~10% to ~45%.
 
 **Glitch rule handling:**
-- Combined or-rules export the original rule, not the glitch alternative
-- Direct glitch rules (not combined) export with CanReachRegion
-- Fallback rules are used for known dungeon doors when source analysis fails
+- `dict_lambda_lookup`: Dicts with lambda values are analyzed and OR'd together
+- `CanReachRegion`: Direct glitch rules (mire_clip, hera_clip) use region reachability
+- Combined or-rules now export both the original and glitch alternative paths
+- Fallback rules are used for dungeon entrance patterns when analysis fails
 
 **Other Notes:**
 - Bunny rules are simplified to Moon Pearl requirements

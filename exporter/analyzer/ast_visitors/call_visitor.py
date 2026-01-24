@@ -67,6 +67,14 @@ class CallVisitorMixin:
         if namedtuple_callable is not None:
             return namedtuple_callable
 
+        # *** Special handling for dict.get(key, default)(state) where dict contains lambdas ***
+        # Pattern: rule_map.get(entrance.connected_region.name, lambda: False)(state)
+        # Check this early to properly analyze each lambda in the dict
+        dict_lambda_result = self._try_handle_dict_lambda_lookup(node)
+        if dict_lambda_result is not None:
+            logging.debug(f"Detected dict lambda lookup pattern, returning analyzed result")
+            return dict_lambda_result
+
         # Visit the function node to obtain its details.
         func_info = self.visit(node.func) # Get returned result
         logging.debug(f"Function info after visit: {func_info}")

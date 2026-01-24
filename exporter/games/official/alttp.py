@@ -983,9 +983,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._current_location_context = location_name
 
     # Class variable to control whether to skip glitch rule interception
-    # Set to True to let generic analysis handle glitch rules instead
-    # Testing shows generic analysis works but may have edge cases - keep False for reliability
-    SKIP_GLITCH_INTERCEPTION = False
+    # Set to True to let generic analysis handle simpler glitch rules (not rule_map patterns)
+    # When True: generic analyzer handles rules without unanalyzable closures (rule_map, etc.)
+    # When False: all glitch rules use hardcoded replacement rules
+    SKIP_GLITCH_INTERCEPTION = True
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Intercept complex rules before standard analysis.
@@ -1022,7 +1023,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Check if this is an underworld glitch rule lambda
         # These are created in underworld_glitches_rules() and may reference dungeon_entrance
         if 'underworld_glitches_rules' in func_qualname:
-            if self.SKIP_GLITCH_INTERCEPTION:
+            # Check if SKIP_GLITCH_INTERCEPTION is enabled AND the rule can be handled generically
+            if self.SKIP_GLITCH_INTERCEPTION and not self._has_unanalyzable_closure(rule_func):
                 logger.info(f"ALttP: SKIP_GLITCH_INTERCEPTION enabled - letting generic analysis handle '{rule_target_name}'")
                 return None  # Let generic analysis try
             target_name = rule_target_name or self._current_location_context or ''
@@ -1031,7 +1033,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # Check if closure contains underworld_glitches_rules lambdas
         # This catches rules combined via add_rule() that wrap the original lambdas
         if self._has_problematic_closure(rule_func):
-            if self.SKIP_GLITCH_INTERCEPTION:
+            # Check if SKIP_GLITCH_INTERCEPTION is enabled AND the rule can be handled generically
+            if self.SKIP_GLITCH_INTERCEPTION and not self._has_unanalyzable_closure(rule_func):
                 logger.info(f"ALttP: SKIP_GLITCH_INTERCEPTION enabled - letting generic analysis handle closure for '{rule_target_name}'")
                 return None  # Let generic analysis try
             target_name = rule_target_name or self._current_location_context or ''
@@ -1090,6 +1093,53 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             except ValueError:
                 # Empty cell
                 pass
+
+        return False
+
+    def _has_unanalyzable_closure(self, func, depth: int = 0) -> bool:
+        """Check if function has closure patterns that generic analysis can't handle.
+
+        These are patterns where the generic analyzer would produce invalid output.
+        Note: rule_map dicts with lambdas ARE now supported via _try_handle_dict_lambda_lookup
+        in the generic analyzer, so we allow those to go through.
+
+        Currently only dungeon_entrance objects are truly unanalyzable because they
+        involve dynamic entrance lookups that can't be serialized.
+
+        Args:
+            func: Function to check
+            depth: Recursion depth (to prevent infinite recursion)
+
+        Returns:
+            True if the function has unanalyzable patterns that require interception
+        """
+        if depth > 5 or not callable(func):
+            return False
+
+        # Check closure variables
+        if not hasattr(func, '__closure__') or func.__closure__ is None:
+            return False
+
+        try:
+            free_vars = func.__code__.co_freevars
+            for var_name, cell in zip(free_vars, func.__closure__):
+                try:
+                    value = cell.cell_contents
+
+                    # dungeon_entrance objects can't be serialized - this is used in
+                    # dungeon_reentry_rules and involves dynamic entrance lookups
+                    if var_name == 'dungeon_entrance':
+                        logger.debug(f"ALttP: Found unanalyzable closure: dungeon_entrance")
+                        return True
+
+                    # Recurse into callable closures
+                    if callable(value) and self._has_unanalyzable_closure(value, depth + 1):
+                        return True
+
+                except ValueError:
+                    pass  # Empty cell
+        except (AttributeError, TypeError):
+            pass
 
         return False
 

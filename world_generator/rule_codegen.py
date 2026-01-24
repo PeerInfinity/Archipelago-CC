@@ -1214,6 +1214,7 @@ class RuleCodeGenerator:
             'bunny_accessibility_check': self._convert_bunny_accessibility_check,
             'AST_group_count': self._convert_ast_group_count,
             'group_count': self._convert_ast_group_count,
+            'dict_lambda_lookup': self._convert_dict_lambda_lookup,
         }
 
         converter = converters.get(rule_type)
@@ -6121,6 +6122,73 @@ class RuleCodeGenerator:
 
         return f'Conditional(test={test_code}, if_true={if_true_code}, if_false={if_false_code})'
 
+    def _convert_dict_lambda_lookup(self, rule: Dict[str, Any]) -> str:
+        """Convert dict_lambda_lookup rule to Python code.
+
+        This handles patterns like: rule_map.get(key, default)(state)
+        where rule_map contains lambda values that have been analyzed.
+
+        The generated code creates an Or() of all possible cases, since at export time
+        we don't know which entrance shuffle resulted in which region connections.
+        Each case is: (key matches) AND (rule for that key)
+
+        This is a permissive approach - if ANY of the dict's rules could be satisfied,
+        the overall rule passes. This is correct because:
+        1. At runtime, only ONE key will match (the actual region name)
+        2. By OR-ing all cases, we ensure the correct rule is evaluated
+        3. The server uses the same permissive approach when multiple paths exist
+
+        Args:
+            rule: Dict with 'cases' (analyzed rules for each key), 'key', 'default'
+
+        Returns:
+            Python Rule Builder expression
+        """
+        cases = rule.get('cases', {})
+        default = rule.get('default', {'rule': 'False_'})
+        key_expr = rule.get('key', {})
+
+        if not cases:
+            # No cases - just use the default
+            return self._convert_rule(default)
+
+        # If there's only one case, we can simplify
+        if len(cases) == 1:
+            key_name, case_rule = list(cases.items())[0]
+            # Return just the case rule - if the key matches, this is what would execute
+            return self._convert_rule(case_rule)
+
+        # Multiple cases - create an Or of all case rules
+        # This is permissive but correct: at runtime only one key matches,
+        # but we don't know which at export time, so we allow any matching rule
+        self.required_imports.add('Or')
+
+        case_rules = []
+        for key_name, case_rule in cases.items():
+            # Convert each case's rule
+            case_code = self._convert_rule(case_rule)
+            # Skip False_ rules - they don't contribute anything
+            if case_code in ('False_()', 'False_'):
+                continue
+            case_rules.append(case_code)
+
+        # Also include the default if it's not False_
+        default_code = self._convert_rule(default)
+        if default_code not in ('False_()', 'False_'):
+            case_rules.append(default_code)
+
+        if not case_rules:
+            # All cases were False_ - return False_
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if len(case_rules) == 1:
+            # Only one non-False_ rule
+            return case_rules[0]
+
+        # Multiple rules - Or them together
+        return f'Or({", ".join(case_rules)})'
+
     def _try_evaluate_conditional_test(self, test: Dict[str, Any]) -> Optional[bool]:
         """Try to evaluate a conditional test to a constant boolean.
 
@@ -6846,6 +6914,7 @@ class HelperCodeGenerator:
             'region_attribute': self._expr_region_attribute,
             'map': self._expr_map,
             'lambda': self._expr_lambda,
+            'dict_lambda_lookup': self._expr_dict_lambda_lookup,
         }
 
         handler = handlers.get(expr_type)
@@ -9066,3 +9135,58 @@ class HelperCodeGenerator:
         body_expr = self._generate_expression(body)
 
         return f"lambda {params_str}: {body_expr}"
+
+    def _expr_dict_lambda_lookup(self, expr: Dict[str, Any]) -> str:
+        """Generate Python code for a dict_lambda_lookup rule.
+
+        This handles patterns like: rule_map.get(key, default)(state)
+        where rule_map contains lambda values that have been analyzed.
+
+        The generated code OR's together all possible case results since at export time
+        we don't know which key will match (depends on entrance shuffle).
+
+        Structure: {
+            "type": "dict_lambda_lookup",
+            "dict_name": "rule_map",
+            "key": <key_expr>,
+            "cases": {"key1": <rule1>, "key2": <rule2>, ...},
+            "default": <default_rule>
+        }
+        """
+        cases = expr.get('cases', {})
+        default = expr.get('default', {'type': 'constant', 'value': False})
+
+        if not cases:
+            # No cases - just use the default
+            return self._generate_expression(default)
+
+        # If there's only one case, just return that case's expression
+        if len(cases) == 1:
+            key_name, case_rule = list(cases.items())[0]
+            return self._generate_expression(case_rule)
+
+        # Multiple cases - OR them together
+        # This is permissive: at runtime only one key matches, but we allow any
+        case_exprs = []
+        for key_name, case_rule in cases.items():
+            case_expr = self._generate_expression(case_rule)
+            # Skip False expressions - they don't contribute anything
+            if case_expr in ('False', 'false'):
+                continue
+            case_exprs.append(f'({case_expr})')
+
+        # Also include the default if it's not False
+        default_expr = self._generate_expression(default)
+        if default_expr not in ('False', 'false'):
+            case_exprs.append(f'({default_expr})')
+
+        if not case_exprs:
+            # All cases were False - return False
+            return 'False'
+
+        if len(case_exprs) == 1:
+            # Only one non-False expression
+            return case_exprs[0].strip('()')
+
+        # Multiple expressions - OR them together
+        return '(' + ' or '.join(case_exprs) + ')'
