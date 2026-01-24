@@ -232,6 +232,10 @@
       "reason": "Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns."
     },
     {
+      "name": "Oxygen Not Included.yaml",
+      "reason": "APWorld bug: Duplicate location names created when bionic=true with base-game-only clusters (spaced_out=false). Four Bionic DLC items have empty tech_base values, causing locations named ' - 1' to collide in the global location cache."
+    },
+    {
       "name": "Pokemon Mystery Dungeon Explorers of Sky.yaml",
       "reason": "APWorld bug: 'Team Name' classification not handled in create_regions(), causing KeyError when subx_rules() tries to access 'Team Name Location'. Also has logic mismatches from complex rule patterns."
     },
