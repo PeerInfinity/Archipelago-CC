@@ -168,10 +168,10 @@ rm -rf frontend/presets/*/AP_*
 | `no_glitches` | 100% | Default, fully supported |
 | `minor_glitches` | ~90% | Fully supported (uses CanReachRegion) |
 | `overworld_glitches` | ~75% | Mostly supported |
-| `hybrid_major_glitches` | ~45% | Dict lambda lookup now supported |
+| `hybrid_major_glitches` | ~70% | Dict lambda lookup + bunny revival fixes |
 | `no_logic` | ~70% | Mostly supported |
 
-**Why hybrid_major_glitches still has ~55% failures:**
+**Why hybrid_major_glitches still has ~30% failures:**
 
 Cross-dungeon clips (`mire_clip`, `hera_clip`) now export with `CanReachRegion` checks:
 ```python
@@ -184,6 +184,11 @@ The `rule_map.get(key, default)(state)` pattern is now supported via `dict_lambd
 - Results are OR'd together since we don't know which key matches at export time
 - This permissive approach allows any matching rule path
 
+Bunny revival rules are now correctly exported using dynamic imports from ALttP:
+- Swamp Palace: Moon Pearl only (0hp revival not in logic)
+- Tower of Hera: (Magic Mirror AND sword) OR Moon Pearl
+- Other invalid dungeons (Turtle Rock, Sanctuary): Magic Mirror OR Moon Pearl
+
 However, some failures remain due to:
 - Dynamic entrance shuffle affecting which regions connect
 - Complex nested closures beyond the `rule_map` pattern
@@ -191,7 +196,7 @@ However, some failures remain due to:
 
 Previously, hybrid_major_glitches used `add_rule(..., combine='or')` which was difficult to export.
 The new approach analyzes the combined rules and exports both paths, improving compatibility
-from ~10% to ~45%.
+from ~10% to ~45%, then to ~70% with the bunny revival fixes.
 
 **Glitch rule handling:**
 - `dict_lambda_lookup`: Dicts with lambda values are analyzed and OR'd together
