@@ -148,7 +148,11 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content = f"# Spoiler Fuzz Test Results{title_suffix}\n\n"
 
     # Add navigation links
-    md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
+    if world_source == "apworlds":
+        md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | "
+    else:
+        md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | "
+    md_content += "[Main Test Results](./test-results-summary.md)\n\n"
 
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"

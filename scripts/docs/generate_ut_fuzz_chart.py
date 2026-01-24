@@ -171,7 +171,11 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content = f"# Universal Tracker Fuzz Test Results{title_suffix}\n\n"
 
     # Add navigation links
-    md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
+    if world_source == "apworlds":
+        md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | "
+    else:
+        md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | "
+    md_content += "[Main Test Results](./test-results-summary.md)\n\n"
 
     # Add link to comparison docs
     if world_source == "apworlds":
@@ -622,7 +626,11 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
     md_content += f"and the {version2_description}.\n\n"
 
     # Add navigation links
-    md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
+    if world_source == "apworlds":
+        md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | "
+    else:
+        md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | "
+    md_content += "[Main Test Results](./test-results-summary.md)\n\n"
 
     # Add links to individual result docs
     md_content += "### Individual Test Results\n\n"

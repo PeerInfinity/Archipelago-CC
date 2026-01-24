@@ -1,8 +1,8 @@
 # Spoiler Fuzz Test Results
 
-[<- Back to Test Results Summary](./test-results-summary.md)
+[<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-**Generated:** 2026-01-24 14:11:36
+**Generated:** 2026-01-24 14:22:28
 
 **Source Data Created:** 2026-01-24T22:06:57.714517
 
