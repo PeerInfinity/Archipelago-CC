@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-23 21:31:31
+**Generated:** 2026-01-24 05:05:20
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -17,7 +17,6 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Passing Both:** 40 (32.3%)
 - **Passing Original Only:** 2 (1.6%)
 - **Passing Hybrid Only:** 16 (12.9%)
-- **Passing Hybrid Only with Generic Exporter:** 14 (11.3%)
 - **Passing Neither:** 66 (53.2%)
 
 ## Full Comparison

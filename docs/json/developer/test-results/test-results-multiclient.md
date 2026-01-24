@@ -6,9 +6,11 @@
 
 [📖 Learn about this test](../tests/test-multiclient.md)
 
+[View APWorld Template Results](./test-results-multiclient-apworld.md)
+
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-01-23 21:19:56
+**Generated:** 2026-01-24 09:07:07
 
 ## Summary
 

@@ -419,6 +419,20 @@ def get_world_directory_name(game_name: str) -> str:
             except (IOError, json.JSONDecodeError) as e:
                 logger.debug(f"Could not read world mapping file: {e}")
 
+        # Also check world-mapping-unofficial.json for apworld entries
+        unofficial_mapping_file = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'data', 'world-mapping-unofficial.json')
+        if os.path.exists(unofficial_mapping_file):
+            try:
+                with open(unofficial_mapping_file, 'r', encoding='utf-8') as f:
+                    import json
+                    mapping = json.load(f)
+                    if game_name in mapping:
+                        world_dir = mapping[game_name].get('world_directory')
+                        if world_dir:
+                            return world_dir
+            except (IOError, json.JSONDecodeError) as e:
+                logger.debug(f"Could not read unofficial world mapping file: {e}")
+
         # Fall back to scanning worlds directory
         # Get path to worlds directory relative to this file (exporter/exporter.py)
         worlds_dir = os.path.join(os.path.dirname(__file__), '..', 'worlds')

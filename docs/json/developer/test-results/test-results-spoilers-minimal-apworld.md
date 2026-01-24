@@ -8,11 +8,11 @@
 
 [View Original Template Results](./test-results-spoilers-minimal.md)
 
-**Generated:** 2026-01-23 21:19:56
+**Generated:** 2026-01-24 09:07:07
 
-**Source Data Created:** 2026-01-24T03:36:00.002396
+**Source Data Created:** 2026-01-24T05:56:04.771277
 
-**Source Data Last Updated:** 2026-01-24T03:36:00.002401
+**Source Data Last Updated:** 2026-01-24T05:56:04.771282
 
 ## Summary
 
@@ -24,9 +24,9 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 30/40 (75.0% of passed)
+- **Passing with Generic Exporter:** 29/40 (72.5% of passed)
 - **Passing with Generic Logic:** 40/40 (100.0% of passed)
-- **Passing with Both Generic:** 30/40 (75.0% of passed)
+- **Passing with Both Generic:** 29/40 (72.5% of passed)
 
 ## Test Results
 
@@ -120,7 +120,7 @@
 | Ship of Harkinian | ❌ Failed | 0 | 0 | 27.2 | 🔴 0.0% | ✅ | ✅ |
 | Simon Tatham's Portable Puzzle Collection | ✅ Passed | 0 | 30.1 | 30.1 | 🟢 Complete | ✅ | ✅ |
 | Sly Cooper and the Thievius Raccoonus | ❌ Failed | 0 | 9.1 | 10.1 | 🟡 90.1% | ✅ | ✅ |
-| Sonic Adventure DX | ❌ Failed | 0 | 0 | 8.1 | 🔴 0.0% | 29.9KB | ✅ |
+| Sonic Adventure DX | ❌ Failed | 0 | 0.1 | 8.1 | 🟠 1.2% | 29.9KB | ✅ |
 | Sonic Heroes | ❌ Failed | 8831 | 0 | 6.9 | 🔴 0.0% | ✅ | ✅ |
 | Sonic Rush | ❌ Failed | 0 | 0.5 | 4.1 | 🟠 12.2% | ✅ | ✅ |
 | Sonic the Hedgehog 1 | ✅ Passed | 0 | 2.32 | 2.32 | 🟢 Complete | 9.4KB | ✅ |
@@ -137,7 +137,7 @@
 | Tetris Attack | ❌ Failed | 1 | 0 | 57.1 | 🔴 0.0% | 23.1KB | ✅ |
 | Tevi | ❌ Failed | 0 | 0 | 12.32 | 🔴 0.0% | ✅ | ✅ |
 | The Legend of Zelda - Oracle of Seasons | ❌ Failed | 678 | 0.1 | 17.1 | 🟠 0.6% | ✅ | ✅ |
-| The Legend of Zelda - Phantom Hourglass | ❌ Failed | 0 | 0 | 18.5 | 🔴 0.0% | ✅ | ✅ |
+| The Legend of Zelda - Phantom Hourglass | ❌ Failed | 0 | 0 | 17.4 | 🔴 0.0% | ✅ | ✅ |
 | The Sims 4 | ❌ Failed | 0 | 0 | 48.1 | 🔴 0.0% | 5.5KB | ✅ |
 | ToeJam and Earl | ❌ Failed | 0 | 0.16 | 8.14 | 🟠 2.0% | ✅ | ✅ |
 | TurnipBoy | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
