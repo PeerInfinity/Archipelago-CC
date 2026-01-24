@@ -599,10 +599,19 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
         game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
         return exporter_size == 0 and game_logic_size == 0
 
+    # Helper to check if a game has no custom exporter (generic exporter)
+    def has_generic_exporter(game_name: str) -> bool:
+        """Returns True if the game uses generic exporter."""
+        if game_name not in world_mapping:
+            return False
+        exporter_size = world_mapping[game_name].get('exporter_size', 0)
+        return exporter_size == 0
+
     # Calculate games passing version2 (both + version2 only) with no custom code
     passing_version2 = passing_both + passing_version2_only
     passing_version2_no_custom = [g for g in passing_version2 if has_no_custom_code(g)]
     passing_version2_only_no_custom = [g for g in passing_version2_only if has_no_custom_code(g)]
+    passing_version2_only_generic_exporter = [g for g in passing_version2_only if has_generic_exporter(g)]
 
     # Start building markdown
     title_suffix = " (APWorlds)" if world_source == "apworlds" else ""
@@ -630,6 +639,9 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
     md_content += f"- **Passing Both:** {len(passing_both)} ({len(passing_both)/len(all_games)*100:.1f}%)\n"
     md_content += f"- **Passing {version1_display} Only:** {len(passing_version1_only)} ({len(passing_version1_only)/len(all_games)*100:.1f}%)\n"
     md_content += f"- **Passing {version2_display} Only:** {len(passing_version2_only)} ({len(passing_version2_only)/len(all_games)*100:.1f}%)\n"
+    # Show generic exporter stats for apworlds original comparisons
+    if world_source == "apworlds" and version1 == "original":
+        md_content += f"- **Passing {version2_display} Only with Generic Exporter:** {len(passing_version2_only_generic_exporter)} ({len(passing_version2_only_generic_exporter)/len(all_games)*100:.1f}%)\n"
     md_content += f"- **Passing Neither:** {len(passing_neither)} ({len(passing_neither)/len(all_games)*100:.1f}%)\n"
     # Only show custom code stats for bundled worlds (not apworlds)
     if world_source != "apworlds":
