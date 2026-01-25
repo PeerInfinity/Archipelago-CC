@@ -208,6 +208,13 @@ jobs:
           echo "Installed APWorlds:"
           ls -la custom_worlds/ || echo "No apworlds installed"
 
+      - name: Generate world mapping for apworlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Generating world mapping for apworlds..."
+          python scripts/build/build-world-mapping.py --apworlds-only
+
       - name: Upload APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/upload-artifact@v4
@@ -223,6 +230,14 @@ jobs:
           name: custom-worlds
           path: custom_worlds/
           retention-days: 1
+
+      - name: Upload world mapping for apworlds
+        if: inputs.template_type == 'apworld'
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
+          retention-days: 7
 
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
@@ -273,11 +288,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -291,6 +301,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -465,13 +480,7 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-      - name: Upload world mapping for apworlds
-        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: world-mapping-unofficial
-          path: scripts/data/world-mapping-unofficial.json
-          retention-days: 7
+      # Note: world-mapping-unofficial is uploaded by setup-branch job
 
   # Combine minimal spoiler results
   combine-minimal-spoiler:
@@ -603,11 +612,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -621,6 +625,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -761,13 +770,7 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-      - name: Upload world mapping for apworlds
-        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: world-mapping-unofficial
-          path: scripts/data/world-mapping-unofficial.json
-          retention-days: 7
+      # Note: world-mapping-unofficial is uploaded by setup-branch job
 
   # Combine full spoiler results
   combine-full-spoiler:
@@ -899,11 +902,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -917,6 +915,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -1017,13 +1020,7 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-      - name: Upload world mapping for apworlds
-        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: world-mapping-unofficial
-          path: scripts/data/world-mapping-unofficial.json
-          retention-days: 7
+      # Note: world-mapping-unofficial is uploaded by setup-branch job
 
   # Combine multiclient results
   combine-multiclient:
@@ -1147,11 +1144,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -1165,6 +1157,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -1245,13 +1242,7 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results.json
           retention-days: 7
 
-      - name: Upload world mapping for apworlds
-        if: ${{ !cancelled() && inputs.template_type == 'apworld' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: world-mapping-unofficial
-          path: scripts/data/world-mapping-unofficial.json
-          retention-days: 7
+      # Note: world-mapping-unofficial is uploaded by setup-branch job
 
   # Combine multiworld results (single job version)
   combine-multiworld-single:
@@ -1372,11 +1363,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
         uses: actions/download-artifact@v4
@@ -1390,6 +1376,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.template_type == 'apworld'
@@ -1472,13 +1463,7 @@ jobs:
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-      - name: Upload world mapping for apworlds
-        if: ${{ !cancelled() && inputs.template_type == 'apworld' && matrix.split_num == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: world-mapping-unofficial
-          path: scripts/data/world-mapping-unofficial.json
-          retention-days: 7
+      # Note: world-mapping-unofficial is uploaded by setup-branch job
 
   # Combine multiworld results
   combine-multiworld:

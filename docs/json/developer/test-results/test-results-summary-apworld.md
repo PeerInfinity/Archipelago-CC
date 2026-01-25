@@ -1,13 +1,14 @@
 # Archipelago Template Test Results Summary (APWorld)
 
-**Generated:** 2026-01-23 20:14:19
+**Generated:** 2026-01-24 09:07:07
 
 [View Original Template Results](./test-results-summary.md)
 
-This summary combines results from 3 types of tests:
+This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal-apworld.md)
 - **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full-apworld.md)
 - **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient-apworld.md)
+- **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld-apworld.md)
 
 Additional test results:
 - **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-apworld.md)
@@ -17,25 +18,28 @@ Additional test results:
 ### Individual Test Results
 
 - **Minimal Test:** 40/119 passed (33.6%)
-- **Full Test:** 0/0 passed (0.0%)
-- **Multiclient Test:** 0/0 passed (0.0%)
+- **Full Test:** 40/119 passed (33.6%)
+- **Multiclient Test:** 0/119 passed (0.0%)
+- **Multiworld Test:** 29/119 passed (24.4%)
 
 ### Intermittent Failures
 
 - **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
+- **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/119 (0.0%)
-- **Templates passing 2 tests:** 0/119 (0.0%)
-- **Templates passing 1 test:** 40/119 (33.6%)
-- **Templates passing 0 tests:** 79/119 (66.4%)
+- **Templates passing all 4 tests:** 0/119 (0.0%)
+- **Templates passing 3 tests:** 23/119 (19.3%)
+- **Templates passing 2 tests:** 17/119 (14.3%)
+- **Templates passing 1 test:** 6/119 (5.0%)
+- **Templates passing 0 tests:** 73/119 (61.3%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 0 templates passing all 3 tests:
+Of the 0 templates passing all 4 tests:
 
 - **Passing with Generic Exporter:** 0/0
 - **Passing with Generic Logic:** 0/0
@@ -43,133 +47,133 @@ Of the 0 templates passing all 3 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 407.1KB
+- **Total Exporter Code:** 414.0KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 407.1KB
+- **Combined Total:** 414.0KB
 
 ## Test Results
 
-| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
-|-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|
-| A Dance of Fire and Ice | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| A Difficult Game About Climbing | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| A Link Between Worlds | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| ANIMAL WELL | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 1.5KB | ✅ | N/A |
-| Actraiser | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Against the Storm | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Air Delivery | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 6.6KB | ✅ | N/A |
-| An Untitled Story | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 8.7KB | ✅ | N/A |
-| Anodyne | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 3.1KB | ✅ | N/A |
-| Ape Escape | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Ape Escape 3 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Astalon | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Autopelago | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 9.2KB | ✅ | N/A |
-| Axiom Verge | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Balatro | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Brotato | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Cavern of Dreams | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| ChecksMate | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Chrono Trigger Jets of Time | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| ClusterTruck | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Corn Kidz 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| CrossCode | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Crystal Project | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Crystalis | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 9.2KB | ✅ | N/A |
-| Cuphead | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| DORONKO WANKO | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Deep Rock Galactic | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Diddy Kong Racing | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Digimon World | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Dome Keeper | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Final Fantasy Tactics A2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Final Fantasy Tactics Advance | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Fire Emblem Sacred Stones | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Frogmonster | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| GZDoom | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Garfield Kart - Furious Racing | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Golden Sun The Lost Age | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Grim Dawn | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Hammerwatch | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Hatsune Miku Project Diva Mega Mix+ | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Here Comes Niko! | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Iji | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Into the Breach | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Isles Of Sea And Sky | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Ittle Dew 2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Jigsaw | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 1.6KB | ✅ | N/A |
-| K-On! After School Live!! | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Keep Talking and Nobody Explodes | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Kingdom Hearts Birth by Sleep | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Kingdom Hearts Chain of Memories | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Kingdom Hearts RE Chain of Memories | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Kirby Super Star | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| League of Legends | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Lil Gator Game | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Lingo 2 | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 17.1KB | ✅ | N/A |
-| Little Witch Nobeta | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Luigi's Mansion | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Lunacid | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 8.2KB | ✅ | N/A |
-| Majora's Mask Recompiled | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 10.4KB | ✅ | N/A |
-| Mario Kart Double Dash | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| MetroCUBEvania | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Metroid Fusion | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Metroid Zero Mission | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 9.7KB | ✅ | N/A |
-| Minishoot Adventures | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 25.9KB | ✅ | N/A |
-| Minit | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 23.9KB | ✅ | N/A |
-| Monster Sanctuary | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Nine Sols | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Ori and the Blind Forest | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | 23.2KB | ✅ | N/A |
-| Ori and the Will of the Wisps | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ⚫ | ✅ | ✅ | N/A |
-| Oxygen Not Included | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Pizza Tower | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 7.0KB | ✅ | N/A |
-| Pokemon FireRed and LeafGreen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Pokemon Mystery Dungeon Explorers of Sky | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Pseudoregalia | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 17.1KB | ✅ | N/A |
-| Rabi-Ribi | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rain World | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 11.7KB | ✅ | N/A |
-| Ratchet & Clank 2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Reventure | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rift Wizard | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 6.6KB | ✅ | N/A |
-| Rift of the Necrodancer | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Rusted Moss | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Sentinels of the Multiverse | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Shadow The Hedgehog | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Ship of Harkinian | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Simon Tatham's Portable Puzzle Collection | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Sonic Adventure DX | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | 29.9KB | ✅ | N/A |
-| Sonic Heroes | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Sonic Rush | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Sonic the Hedgehog 1 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | 9.4KB | ✅ | N/A |
-| Soul Blazer | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 10.6KB | ✅ | N/A |
-| Spinball | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Spyro 3 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 15.2KB | ✅ | N/A |
-| Stacklands | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 12.7KB | ✅ | N/A |
-| Star Fox 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 17.1KB | ✅ | N/A |
-| Star Wars Episode I Racer | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Super Cat Planet | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Symphony of the Night | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | 15.0KB | ✅ | N/A |
-| TCG Card Shop Simulator | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Tetris Attack | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 23.1KB | ✅ | N/A |
-| Tevi | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| The Legend of Zelda - Oracle of Seasons | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| The Legend of Zelda - Phantom Hourglass | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| The Sims 4 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 5.5KB | ✅ | N/A |
-| ToeJam and Earl | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| TurnipBoy | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Tyrian | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Vampire Survivors | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| Wario Land | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Watery Words | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | 9.1KB | ✅ | N/A |
-| Wordipelago | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 19.5KB | ✅ | N/A |
-| XCOM 2 War of the Chosen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ✅ | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | 28.7KB | ✅ | N/A |
-| Yu-Gi-Oh! Forbidden Memories | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| osu! | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
-| plateup | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ | N/A |
+| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
+|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
+| A Dance of Fire and Ice | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| A Difficult Game About Climbing | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| A Link Between Worlds | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| ANIMAL WELL | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ✅ | 1.5KB | ✅ | N/A |
+| Actraiser | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Against the Storm | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Air Delivery | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 6.6KB | ✅ | N/A |
+| An Untitled Story | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 8.7KB | ✅ | N/A |
+| Anodyne | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 10.7KB | ✅ | N/A |
+| Another Crabs Treasure | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ✅ | 3.1KB | ✅ | N/A |
+| Ape Escape | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Ape Escape 3 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Astalon | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Autopelago | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 9.2KB | ✅ | N/A |
+| Axiom Verge | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Balatro | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Brotato | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Cavern of Dreams | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| ChecksMate | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Chrono Trigger Jets of Time | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| ClusterTruck | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Corn Kidz 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| CrossCode | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Crystal Project | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Crystalis | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 9.2KB | ✅ | N/A |
+| Cuphead | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| DORONKO WANKO | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Deep Rock Galactic | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Diddy Kong Racing | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Digimon World | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Dome Keeper | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Final Fantasy Tactics A2 | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Final Fantasy Tactics Advance | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Fire Emblem Sacred Stones | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Frogmonster | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| GZDoom | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Garfield Kart - Furious Racing | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Golden Sun The Lost Age | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Grim Dawn | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Hammerwatch | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Hatsune Miku Project Diva Mega Mix+ | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Here Comes Niko! | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Iji | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Into the Breach | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Isles Of Sea And Sky | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Ittle Dew 2 | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Jigsaw | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 1.6KB | ✅ | N/A |
+| K-On! After School Live!! | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Keep Talking and Nobody Explodes | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Kingdom Hearts Birth by Sleep | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Kingdom Hearts Chain of Memories | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Kingdom Hearts RE Chain of Memories | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Kirby Super Star | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| League of Legends | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Lil Gator Game | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Lingo 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 17.1KB | ✅ | N/A |
+| Little Witch Nobeta | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Luigi's Mansion | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Lunacid | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 8.2KB | ✅ | N/A |
+| Majora's Mask Recompiled | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 10.4KB | ✅ | N/A |
+| Mario Kart Double Dash | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| MetroCUBEvania | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Metroid Fusion | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Metroid Zero Mission | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 9.7KB | ✅ | N/A |
+| Minishoot Adventures | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 25.9KB | ✅ | N/A |
+| Minit | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 23.9KB | ✅ | N/A |
+| Monster Sanctuary | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Nine Sols | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Ori and the Blind Forest | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 23.2KB | ✅ | N/A |
+| Ori and the Will of the Wisps | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ⚫ | ✅ | ✅ | N/A |
+| Oxygen Not Included | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Pizza Tower | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | N/A |
+| Pokemon FireRed and LeafGreen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Pokemon Mystery Dungeon Explorers of Sky | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Pseudoregalia | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 17.1KB | ✅ | N/A |
+| Rabi-Ribi | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Rain World | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 11.7KB | ✅ | N/A |
+| Ratchet & Clank 2 | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Reventure | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Rift Wizard | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 7.7KB | ✅ | N/A |
+| Rift of the Necrodancer | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Rusted Moss | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Sentinels of the Multiverse | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Shadow The Hedgehog | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Ship of Harkinian | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Simon Tatham's Portable Puzzle Collection | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Sonic Adventure DX | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 29.9KB | ✅ | N/A |
+| Sonic Heroes | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Sonic Rush | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Sonic the Hedgehog 1 | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 9.4KB | ✅ | N/A |
+| Soul Blazer | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 10.6KB | ✅ | N/A |
+| Spinball | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Spyro 3 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 15.2KB | ✅ | N/A |
+| Stacklands | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 12.7KB | ✅ | N/A |
+| Star Fox 64 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 17.1KB | ✅ | N/A |
+| Star Wars Episode I Racer | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.7KB | ✅ | N/A |
+| Super Cat Planet | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Symphony of the Night | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| System Shock 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 15.0KB | ✅ | N/A |
+| TCG Card Shop Simulator | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Tetris Attack | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 23.1KB | ✅ | N/A |
+| Tevi | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| The Legend of Zelda - Oracle of Seasons | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| The Legend of Zelda - Phantom Hourglass | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| The Sims 4 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.5KB | ✅ | N/A |
+| ToeJam and Earl | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| TurnipBoy | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Tyrian | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Vampire Survivors | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| Wario Land | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Watery Words | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 9.1KB | ✅ | N/A |
+| Wordipelago | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 19.5KB | ✅ | N/A |
+| XCOM 2 War of the Chosen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 28.7KB | ✅ | N/A |
+| Yu-Gi-Oh! Forbidden Memories | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| osu! | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
+| plateup | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 
 ### Exporter Files by Size
 
@@ -199,13 +203,14 @@ Of the 0 templates passing all 3 tests:
 | 22 | Watery Words | 9.1KB |
 | 23 | An Untitled Story | 8.7KB |
 | 24 | Lunacid | 8.2KB |
-| 25 | Pizza Tower | 7.0KB |
-| 26 | Air Delivery | 6.6KB |
-| 27 | Rift Wizard | 6.6KB |
-| 28 | The Sims 4 | 5.5KB |
-| 29 | Another Crabs Treasure | 3.1KB |
-| 30 | Jigsaw | 1.6KB |
-| 31 | ANIMAL WELL | 1.5KB |
+| 25 | Rift Wizard | 7.7KB |
+| 26 | Pizza Tower | 7.0KB |
+| 27 | Air Delivery | 6.6KB |
+| 28 | Star Wars Episode I Racer | 5.7KB |
+| 29 | The Sims 4 | 5.5KB |
+| 30 | Another Crabs Treasure | 3.1KB |
+| 31 | Jigsaw | 1.6KB |
+| 32 | ANIMAL WELL | 1.5KB |
 
 ## Excluded Templates
 
@@ -229,6 +234,7 @@ These templates are excluded from testing:
 | Digimon World.yaml | Uses iterative calculate_prosperity helper that accumulates prosperity by simulating digimon recruitment. Cannot export recursive state-tracking logic to Rule Builder format. |
 | Duke Nukem 3D.yaml | Uses dynamic location/region creation in interpret_slot_data() instead of static definitions. Locations are created when level.create_region() is called based on slot_data['levels']. Rules use nested classes (HasRule, LambdaRule) defined inside Rules.__init__() that cannot be serialized. Exporter captures 0 locations and null rules. Tracker fails with 'location already exists' assertion when interpret_slot_data tries to create locations that already exist. |
 | Final Fantasy Tactics A2.yaml | APWorld bug: StartingUnits option allows selecting more than 5 non-special units, but rom.py raises exception during output generation. Fails before UT tracking phase with randomized options. |
+| Final Fantasy Tactics Advance.yaml | APWorld bug: In create_gates() when last_gate=True with gate_paths>1 and gate_items=dispatch_gate, the dispatch_gate region is never added to multiworld.regions. Dispatch locations are orphaned, causing ~50% logic mismatch failures. |
 | Frogmonster.yaml | Uses functools.partial wrapping lambdas (unexportable) and has bug where 40 bug regions are not registered with multiworld. |
 | GZDoom.yaml | Base framework apworld with hidden=True. Not a standalone game - requires WAD-specific apworlds (e.g., zdoom_doom_2.apworld) that extend GZDoomWorld and provide wad_logic. Accessing wad_logic on base class raises AttributeError because the attribute is only declared, not initialized. |
 | Garfield Kart - Furious Racing.yaml | APWorld bug: Compares Choice options against invalid string 'on' (e.g., randomize_spoilers in ['on', 'progressive']). Valid option keys are 'off', 'progressive', 'combine_tiers'. Archipelago's option __eq__ asserts valid comparisons, causing AssertionError during seed generation. |
@@ -239,6 +245,7 @@ These templates are excluded from testing:
 | Monster Sanctuary.yaml | Uses custom AccessCondition class with data-driven rule evaluation. Exporter sees lambda calling rules.has_access() but cannot introspect the AccessCondition tree structure. |
 | Ori and the Blind Forest.yaml | Uses oribf_has helper with special keywords ('Free', 'Lure', 'DoubleBash', etc.) and item tuples. Exporter hits infinite loop analyzing helper. Custom exporter improves to 30-60% success but glitched logic settings still fail due to complex option-dependent rules in RulesData.py. |
 | Ori and the Will of the Wisps.yaml | Uses LogicMixin with dynamic resource/combat calculations (wotw_max_resources, wotw_enemies). Exporter hits infinite loop analyzing complex cached state patterns. |
+| Oxygen Not Included.yaml | APWorld bug: Duplicate location names created when bionic=true with base-game-only clusters (spaced_out=false). Four Bionic DLC items have empty tech_base values, causing locations named ' - 1' to collide in the global location cache. |
 | Pokemon Mystery Dungeon Explorers of Sky.yaml | APWorld bug: 'Team Name' classification not handled in create_regions(), causing KeyError when subx_rules() tries to access 'Team Name Location'. Also has logic mismatches from complex rule patterns. |
 | Pseudoregalia.yaml | Uses virtual items ('Kick Count', 'Cling Count') managed through custom collect/remove hooks. Collecting physical items like 'Air Kick' adds virtual counters via state.add_item(). Rules check virtual item counts but worldgen can't replicate collect hooks, so virtual items are never in collection state. |
 | Rabi-Ribi.yaml | Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis. |

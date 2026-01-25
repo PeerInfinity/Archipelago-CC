@@ -1,10 +1,10 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-01-24 05:05:20
+**Generated:** 2026-01-24 14:22:28
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
-[<- Back to Test Results Summary](./test-results-summary.md)
+[<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
 ### Individual Test Results
 
@@ -26,7 +26,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 0.0% | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 110.7KB | ✅ | 654.1KB |
+| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 113.7KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 90.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -205,7 +205,7 @@ These games fail in both Universal Tracker versions.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | 110.7KB | ✅ | 654.1KB |
+| A Link to the Past | 113.7KB | ✅ | 654.1KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.3KB |
 | Final Fantasy Mystic Quest | ✅ | ✅ | 1302.5KB |
 | Hollow Knight | ✅ | ✅ | N/A |

@@ -1,0 +1,2 @@
+astunparse>=1.6.3
+psutil>=6.1.1

@@ -243,11 +243,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Configure host settings
         run: |
           source .venv/bin/activate
@@ -272,6 +267,11 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Setup APWorlds
         if: inputs.test_apworlds

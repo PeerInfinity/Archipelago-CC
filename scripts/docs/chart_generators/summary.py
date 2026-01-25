@@ -192,13 +192,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         md_content += f"- **Multiworld Test:** {multiworld_games_count} game(s), {multiworld_total_count} total failure(s)\n"
 
     md_content += "\n### Combined Test Results\n\n"
-    md_content += f"- **Templates passing all {num_tests} tests:** {passed_all}/{total_templates} ({passed_all/total_templates*100:.1f}%)\n"
+    if total_templates > 0:
+        md_content += f"- **Templates passing all {num_tests} tests:** {passed_all}/{total_templates} ({passed_all/total_templates*100:.1f}%)\n"
 
-    for i in range(num_tests - 1, -1, -1):
-        if i > 0:
-            md_content += f"- **Templates passing {i} test{'s' if i > 1 else ''}:** {passed_counts[i]}/{total_templates} ({passed_counts[i]/total_templates*100:.1f}%)\n"
-        else:
-            md_content += f"- **Templates passing 0 tests:** {passed_counts[0]}/{total_templates} ({passed_counts[0]/total_templates*100:.1f}%)\n"
+        for i in range(num_tests - 1, -1, -1):
+            if i > 0:
+                md_content += f"- **Templates passing {i} test{'s' if i > 1 else ''}:** {passed_counts[i]}/{total_templates} ({passed_counts[i]/total_templates*100:.1f}%)\n"
+            else:
+                md_content += f"- **Templates passing 0 tests:** {passed_counts[0]}/{total_templates} ({passed_counts[0]/total_templates*100:.1f}%)\n"
+    else:
+        md_content += "- **No test data available**\n"
 
     # Calculate generic exporter/logic statistics for games passing all tests
     # For worldgen summaries, look up the original game name to get exporter/logic data
@@ -405,13 +408,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         if has_ut_fixed:
             md_content += "- [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)\n"
 
-    # Add UT Fuzz Test section (only for original, not variants)
+    # Add Fuzz Tests section (only for original, not variants)
     if variant_type is None:
-        md_content += "\n## Universal Tracker Fuzz Tests\n\n"
-        md_content += "These tests validate Universal Tracker compatibility across random option configurations.\n\n"
-        md_content += "- [UT Fuzz Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison.md)\n"
+        md_content += "\n## Fuzz Tests\n\n"
+        md_content += "Fuzz tests validate game configurations across randomized option combinations.\n\n"
+        md_content += "- **[Fuzz Test Summary](./test-results-fuzz-summary.md)** - Combined view of all fuzz test results\n\n"
+        md_content += "Individual fuzz test results:\n"
         md_content += "- [UT Fuzz Results - Original](./test-results-ut-fuzz-original.md)\n"
         md_content += "- [UT Fuzz Results - Modified](./test-results-ut-fuzz-modified.md)\n"
+        md_content += "- [UT Fuzz Results - Hybrid](./test-results-ut-fuzz-hybrid.md)\n"
+        md_content += "- [Spoiler Fuzz Results](./test-results-spoiler-fuzz.md)\n"
 
     # Add Excluded Templates section if data exists
     if excluded_games:

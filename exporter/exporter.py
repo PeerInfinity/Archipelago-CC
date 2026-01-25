@@ -415,9 +415,29 @@ def get_world_directory_name(game_name: str) -> str:
                     if game_name in mapping:
                         world_dir = mapping[game_name].get('world_directory')
                         if world_dir:
+                            logger.info(f"Found world directory '{world_dir}' for game '{game_name}' in world-mapping.json")
                             return world_dir
+                    else:
+                        logger.debug(f"Game '{game_name}' not found in world-mapping.json (has {len(mapping)} entries)")
             except (IOError, json.JSONDecodeError) as e:
                 logger.debug(f"Could not read world mapping file: {e}")
+
+        # Also check world-mapping-unofficial.json for apworld entries
+        unofficial_mapping_file = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'data', 'world-mapping-unofficial.json')
+        if os.path.exists(unofficial_mapping_file):
+            try:
+                with open(unofficial_mapping_file, 'r', encoding='utf-8') as f:
+                    import json
+                    mapping = json.load(f)
+                    if game_name in mapping:
+                        world_dir = mapping[game_name].get('world_directory')
+                        if world_dir:
+                            logger.info(f"Found world directory '{world_dir}' for game '{game_name}' in world-mapping-unofficial.json")
+                            return world_dir
+                    else:
+                        logger.debug(f"Game '{game_name}' not found in world-mapping-unofficial.json (has {len(mapping)} entries)")
+            except (IOError, json.JSONDecodeError) as e:
+                logger.debug(f"Could not read unofficial world mapping file: {e}")
 
         # Fall back to scanning worlds directory
         # Get path to worlds directory relative to this file (exporter/exporter.py)
@@ -569,8 +589,10 @@ def get_world_directory_name(game_name: str) -> str:
                 continue
         
         # If no matching world found, fall back to old logic
-        return game_name.lower().replace(' ', '_').replace(':', '_')
-        
+        fallback_dir = game_name.lower().replace(' ', '_').replace(':', '_')
+        logger.warning(f"Could not find world directory for game '{game_name}' in mappings or worlds directory, using fallback: '{fallback_dir}'")
+        return fallback_dir
+
     except Exception as e:
         logger.error(f"Error finding world directory for game '{game_name}': {e}")
         return game_name.lower().replace(' ', '_').replace(':', '_')
