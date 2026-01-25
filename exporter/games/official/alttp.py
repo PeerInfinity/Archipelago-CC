@@ -1780,14 +1780,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 location_data['access_rule'], location_name
             )
 
-        # Generate shop price rules if applicable
-        # This replaces the broken shop_price_rules helper call that references 'location'
+        # Handle shop price rules:
+        # 1. Always remove the broken shop_price_rules helper that references 'location'
+        # 2. For Hearts/Bombs/Arrows types, add the appropriate replacement rule
+        # 3. For Rupees (type 0), just removing the helper is enough (no item requirement)
+        existing_rule = location_data.get('access_rule')
+        if existing_rule:
+            existing_rule = self._remove_shop_price_rules_helper(existing_rule)
+            location_data['access_rule'] = existing_rule
+
+        # Generate shop price rules for non-Rupee types
         shop_price_rule = self._generate_shop_price_rule(location_data)
         if shop_price_rule:
             existing_rule = location_data.get('access_rule')
-            # Remove any existing shop_price_rules helper from the rule
-            if existing_rule:
-                existing_rule = self._remove_shop_price_rules_helper(existing_rule)
             if existing_rule and existing_rule != {'rule': 'True_'}:
                 # Combine with existing rule using AND
                 location_data['access_rule'] = {
