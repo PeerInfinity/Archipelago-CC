@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-24 14:22:35
+**Generated:** 2026-01-25 11:02:12
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
@@ -15,6 +15,10 @@ This summary combines results from 4 types of tests:
 Additional test results:
 - **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)
 - **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times.md)
+
+Additional information:
+- **Template Types:** Understanding original, WorldGen, and APWorld templates - [Learn More](../tests/template-types.md)
+- **Custom Exporters and Logic:** Understanding the Exporter and GameLogic columns - [Learn More](../tests/custom-exporters-and-logic.md)
 
 ## Summary Statistics
 
@@ -50,16 +54,16 @@ Of the 73 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 590.9KB
+- **Total Exporter Code:** 607.4KB
 - **Total Game Logic Code:** 267.8KB
-- **Combined Total:** 858.7KB
+- **Combined Total:** 875.2KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 235.0KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 130.7KB | ✅ | 654.1KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 147.3KB | ✅ | 654.1KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
@@ -151,7 +155,7 @@ Of the 73 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | A Link to the Past | 130.7KB |
+| 1 | A Link to the Past | 147.3KB |
 | 2 | Super Mario Land 2 | 92.5KB |
 | 3 | Super Metroid | 60.9KB |
 | 4 | Lingo | 38.0KB |

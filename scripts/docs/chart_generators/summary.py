@@ -73,6 +73,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         md_content += "\nAdditional test results:\n"
         md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-apworld.md)\n"
 
+    # Add additional information links
+    md_content += "\nAdditional information:\n"
+    md_content += "- **Template Types:** Understanding original, WorldGen, and APWorld templates - [Learn More](../tests/template-types.md)\n"
+    md_content += "- **Custom Exporters and Logic:** Understanding the Exporter and GameLogic columns - [Learn More](../tests/custom-exporters-and-logic.md)\n"
+
     md_content += "\n"
 
     # Create a unified game list with exporter/logic info
