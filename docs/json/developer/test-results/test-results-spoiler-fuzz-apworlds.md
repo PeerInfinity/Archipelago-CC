@@ -2,15 +2,15 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 
-**Generated:** 2026-01-25 04:04:32
+**Generated:** 2026-01-25 04:56:06
 
-**Source Data Created:** 2026-01-24T22:47:25.242777
+**Source Data Created:** 2026-01-25T04:56:06.693744
 
-**Source Data Last Updated:** 2026-01-24T22:47:25.242783
+**Source Data Last Updated:** 2026-01-25T04:56:06.693751
 
 **Seed Mode:** Fixed (seed=1)
 
-**Runs Per Game:** 1
+**Runs Per Game:** 10
 
 **Generation Timeout:** 300s
 
@@ -18,20 +18,68 @@
 
 ## Summary
 
-- **Total Games:** 1
-- **Games with 100% Pass Rate:** 1 (100.0%)
-- **Games with Failures:** 0 (0.0%)
-- **Total Fuzz Runs:** 1
-- **Successful Runs:** 1 (100.0%)
-- **Generation Failures:** 0
-- **Test Failures:** 0
+- **Total Games:** 49
+- **Games with 100% Pass Rate:** 26 (53.1%)
+- **Games with Failures:** 23 (46.9%)
+- **Total Fuzz Runs:** 490
+- **Successful Runs:** 326 (66.5%)
+- **Generation Failures:** 55
+- **Test Failures:** 109
 - **Timed Out Runs:** 0
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Gen Fail | Test Fail | Timeout | Success Rate | Rules Size |
 |-----------|:------:|:-----:|:-------:|:--------:|:---------:|:-------:|:------------:|:----------:|
-| Clique | ✅ | 1 | 1 | 0 | 0 | 0 | **100.0%** | N/A |
+| A Dance of Fire and Ice | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| A Difficult Game About Climbing | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | N/A |
+| Actraiser | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| An Untitled Story | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Another Crabs Treasure | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| Autopelago | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Brotato | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | N/A |
+| Castlevania: Dawn of Sorrow | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Cuphead | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A |
+| DORONKO WANKO | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| Diddy Kong Racing | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Dome Keeper | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Golden Sun The Lost Age | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Hatsune Miku Project Diva Mega Mix+ | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Here Comes Niko! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Isles Of Sea And Sky | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Ittle Dew 2 | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | N/A |
+| Jigsaw | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| K-On! After School Live!! | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| Kingdom Hearts Birth by Sleep | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Kingdom Hearts Chain of Memories | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Kingdom Hearts RE Chain of Memories | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Kirby Super Star | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A |
+| League of Legends | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Lil Gator Game | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| Little Witch Nobeta | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| Luigi's Mansion | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | N/A |
+| MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Metroid Fusion | ❌ | 10 | 0 | 1 | 9 | 0 | ❌ 0.0% | N/A |
+| Rain World | ❌ | 10 | 0 | 7 | 3 | 0 | ❌ 0.0% | N/A |
+| Ratchet & Clank 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Rift Wizard | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Simon Tatham's Portable Puzzle Collection | ❌ | 10 | 8 | 0 | 2 | 0 | ⚠️ 80.0% | N/A |
+| Sonic Heroes | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A |
+| Sonic the Hedgehog 1 | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | N/A |
+| Spinball | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Star Fox 64 | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| Star Wars Episode I Racer | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | N/A |
+| Super Cat Planet | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| TOEM: A Photo Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Tevi | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | N/A |
+| TurnipBoy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Vampire Survivors | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | N/A |
+| Watery Words | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| Wordipelago | ❌ | 10 | 0 | 2 | 8 | 0 | ❌ 0.0% | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 6 | 0 | 4 | 0 | ⚠️ 60.0% | N/A |
+| Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
+| osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A |
 
 ## Excluded Templates
 
