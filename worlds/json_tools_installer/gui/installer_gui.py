@@ -306,10 +306,18 @@ class InstallerApp(App):
 
         root.add_widget(button_box)
 
-        # Close button
-        close_btn = Button(text='Close', size_hint_y=None, height=40)
+        # Bottom button row (Help and Close)
+        bottom_btn_box = BoxLayout(size_hint_y=None, height=40, spacing=10)
+
+        help_btn = Button(text='Help')
+        help_btn.bind(on_press=self.show_help)
+        bottom_btn_box.add_widget(help_btn)
+
+        close_btn = Button(text='Close')
         close_btn.bind(on_press=self.stop)
-        root.add_widget(close_btn)
+        bottom_btn_box.add_widget(close_btn)
+
+        root.add_widget(bottom_btn_box)
 
         return root
 
@@ -450,6 +458,70 @@ class InstallerApp(App):
             popup.open()
 
         Clock.schedule_once(show)
+
+    def show_help(self, instance):
+        """Show help information about the installer."""
+        help_text = """JSON Tools Installer Help
+
+PATCH OPTIONS
+The installer offers three ways to enable JSON export functionality:
+
+[b]Monkey Patch[/b] (Recommended)
+Runtime patching that hooks into Archipelago without modifying files. Safe, reversible, and works across AP versions.
+
+[b]Main Patches[/b]
+Replaces core Archipelago files (Main.py, BaseClasses.py, settings.py) with patched versions. Original files are backed up. Requires confirmation before applying.
+
+[b]ROM-less Patches[/b]
+Additional patches that allow seed generation for games that normally require ROM files. Useful for testing.
+
+Note: Monkey patch and Main patches are mutually exclusive - you can use one or the other, or neither.
+
+COMPONENTS
+Select which parts of JSON Tools to install:
+- Core modules (exporter, rule_builder, world_generator)
+- Frontend web UI for viewing game logic
+- Scripts for testing and setup
+- Documentation
+- Demo worlds for learning
+
+VERSION
+- Stable: Release-quality code from JSONExport branch
+- Dev: Latest development code (may be unstable)
+
+For more information, see the README.md file."""
+
+        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+
+        # Use ScrollView for the help text
+        scroll = ScrollView(size_hint_y=0.9, do_scroll_x=False)
+        help_label = Label(
+            text=help_text,
+            markup=True,
+            halign='left',
+            valign='top',
+            size_hint=(1, None),
+            text_size=(None, None),
+        )
+        # Bind width to scroll width (minus padding) for text wrapping
+        def update_text_width(instance, value):
+            help_label.text_size = (value - 20, None)
+        scroll.bind(width=update_text_width)
+        # Bind height to texture height for scrolling
+        help_label.bind(texture_size=lambda inst, size: setattr(inst, 'height', size[1]))
+        scroll.add_widget(help_label)
+        content.add_widget(scroll)
+
+        ok_btn = Button(text='OK', size_hint_y=None, height=40)
+        content.add_widget(ok_btn)
+
+        popup = Popup(
+            title='JSON Tools Installer Help',
+            content=content,
+            size_hint=(0.9, 0.85),
+        )
+        ok_btn.bind(on_press=popup.dismiss)
+        popup.open()
 
     def do_install(self, instance):
         """Start installation in background thread."""
