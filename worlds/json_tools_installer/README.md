@@ -237,23 +237,33 @@ worlds/json_tools_installer/
 ├── archipelago.json      # APWorld manifest
 ├── config.py             # Configuration management
 ├── components.py         # Launcher components
+├── requirements.txt      # Python dependencies for this module
+├── README.md             # This file
 ├── installer/
+│   ├── __init__.py
 │   ├── version_detector.py  # AP version detection
 │   ├── downloader.py        # GitHub download
 │   ├── extractor.py         # Archive extraction
-│   ├── patcher.py           # File patching
-│   └── patches/             # Bundled patch files
-│       └── 0.6.5/
+│   ├── patcher.py           # Main file patching
+│   └── romless_patcher.py   # ROM-less world patching
 ├── cli/
+│   ├── __init__.py
 │   ├── install.py        # Install CLI
 │   └── status.py         # Status CLI
 ├── gui/
+│   ├── __init__.py
 │   ├── installer_gui.py  # Install/update GUI
 │   ├── status_gui.py     # Status GUI
 │   └── scripts_gui.py    # Scripts GUI
 └── monkey_patches/
     ├── __init__.py
     └── hooks.py          # Runtime patching hooks
+
+# Patches are downloaded to (not bundled in the module):
+json_tools_patches/
+└── 0.6.5/
+    ├── main/             # Main patches (Main.py, BaseClasses.py, settings.py)
+    └── romless/          # ROM-less world patches
 ```
 
 ## License
