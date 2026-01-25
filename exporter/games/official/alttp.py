@@ -2794,72 +2794,33 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 else:
                     return {'rule': 'HasAll', 'args': {'items': filtered_items}}
 
-        # Handle Rule Builder HasAny - filter out Moon Pearl from items list
+        # Handle Rule Builder HasAny - DO NOT remove Moon Pearl from HasAny rules
+        # HasAny represents actual game logic alternatives (e.g., "Moon Pearl OR Beat Agahnim 1")
+        # The bunny rule system adds simple Has(Moon Pearl) requirements, not HasAny alternatives.
+        # Removing Moon Pearl from HasAny would change the game logic, not just remove bunny requirements.
+        # For example, the Frog location rule "can_lift_heavy_rocks AND (Moon Pearl OR Beat Agahnim 1)"
+        # means you need EITHER Moon Pearl OR having defeated Agahnim 1 to access the frog.
+        # This is different from bunny rules that require Moon Pearl to act in a region.
         if rule.get('rule') == 'HasAny':
-            args = rule.get('args', {})
-            items = args.get('items', [])
-            if 'Moon Pearl' in items:
-                filtered_items = [item for item in items if item != 'Moon Pearl']
-                logger.debug(f"ALttP: Removed Moon Pearl from HasAny rule for '{rule_name}'")
-                if not filtered_items:
-                    # If only Moon Pearl was in HasAny, that means Moon Pearl was the only option
-                    # In a mixed region, this becomes True_
-                    return {'rule': 'True_'}
-                else:
-                    # Keep the rest of the items as valid options (the original HasAny becomes simpler)
-                    return {'rule': 'HasAny', 'args': {'items': filtered_items}}
+            # Don't remove Moon Pearl from HasAny - it's an actual game logic choice
+            return rule
 
-        # Handle Rule Builder Or - recursively process children and filter out pure Moon Pearl rules
-        # This is needed for dungeon exits where _add_mirror_alternative_to_moon_pearl creates
-        # Or(Moon Pearl, Magic Mirror), and then dungeon exit processing should remove Moon Pearl.
+        # Handle Rule Builder Or - DO NOT remove Moon Pearl from Or rules
+        # Or rules represent actual game logic alternatives (e.g., "Moon Pearl OR Beat Agahnim 1")
+        # The bunny rule system adds simple Has(Moon Pearl) requirements that get ANDed,
+        # not Or'd. Removing Moon Pearl from Or would change the actual game logic.
+        # For example, the Frog location rule "can_lift_heavy_rocks AND (Moon Pearl OR Beat Agahnim 1)"
+        # means you can access the frog via Moon Pearl OR via the Agahnim portal.
+        # Note: _add_mirror_alternative_to_moon_pearl creates Or(Moon Pearl, Magic Mirror)
+        # for dungeon exits, but we want to KEEP that alternative, not remove Moon Pearl.
         if rule.get('rule') == 'Or':
-            children = rule.get('children', [])
-            # First, recursively process each child
-            processed_children = [
-                self._remove_moon_pearl_from_rule(child, rule_name)
-                for child in children
-            ]
-            # Filter out children that became True_ (pure Moon Pearl rules)
-            filtered_children = [
-                child for child in processed_children
-                if child != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(child)
-            ]
-            if len(filtered_children) != len(children):
-                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
+            # Don't remove Moon Pearl from Or - it's an actual game logic choice
+            return rule
 
-            if not filtered_children:
-                # All children were Moon Pearl - return True_ (no restriction)
-                return {'rule': 'True_'}
-            elif len(filtered_children) == 1:
-                # Single child remains - unwrap the Or
-                return filtered_children[0]
-            else:
-                return {'rule': 'Or', 'children': filtered_children}
-
-        # Handle AST-style 'or' rules
+        # Handle AST-style 'or' rules - same reasoning as above
         if rule.get('type') == 'or':
-            conditions = rule.get('conditions', [])
-            # First, recursively process each condition
-            processed_conditions = [
-                self._remove_moon_pearl_from_rule(cond, rule_name)
-                for cond in conditions
-            ]
-            # Filter out conditions that became True_ (pure Moon Pearl rules)
-            filtered_conditions = [
-                cond for cond in processed_conditions
-                if cond != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(cond)
-            ]
-            if len(filtered_conditions) != len(conditions):
-                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
-
-            if not filtered_conditions:
-                # All conditions were Moon Pearl - return True_ (no restriction)
-                return {'rule': 'True_'}
-            elif len(filtered_conditions) == 1:
-                # Single condition remains - unwrap the Or
-                return filtered_conditions[0]
-            else:
-                return {'type': 'or', 'conditions': filtered_conditions}
+            # Don't remove Moon Pearl from or - it's an actual game logic choice
+            return rule
 
         # No changes needed
         return rule
