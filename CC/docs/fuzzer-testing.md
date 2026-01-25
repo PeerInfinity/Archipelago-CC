@@ -152,14 +152,23 @@ rm -rf frontend/presets/*/AP_*
 | Mode | Pass Rate | Notes |
 |------|-----------|-------|
 | `vanilla` | 100% | Default, fully supported |
-| `dungeons_simple` | 100% | Fully supported |
-| `dungeons_full` | 100% | Fully supported |
-| `simple` | 100% | Fully supported |
-| `restricted` | 100% | Fully supported |
-| `full` | 100% | Fully supported |
-| `dungeons_crossed` | ~60% | Cross-world dungeon entrance tracking issues |
-| `crossed` | ~60% | Cross-world entrance tracking issues |
+| `dungeons_simple` | ~50-90% | Affected by er_seed regeneration - key rules differ |
+| `dungeons_full` | ~50-90% | Affected by er_seed regeneration - key rules differ |
+| `simple` | ~70-90% | Affected by er_seed regeneration when combined with glitches |
+| `restricted` | ~70-90% | Affected by er_seed regeneration - Turtle Rock key rules differ |
+| `full` | ~50-70% | Affected by er_seed regeneration when combined with inverted/glitches |
+| `dungeons_crossed` | ~40-60% | Cross-world dungeon entrance tracking + er_seed issues |
+| `crossed` | ~40-60% | Cross-world entrance tracking + er_seed issues |
 | `insanity` | ~20% | Severe entrance tracking issues |
+
+**Note:** Pass rates vary based on combinations with `mode` and `glitches_required`. The underlying cause is that the ALttP world's `er_seed` is not included in slot_data, causing TrackerCore to regenerate with different entrance connections. See "Root Cause - Entrance Shuffle Regeneration" below.
+
+**Mode Interactions:**
+
+| Combination | Pass Rate | Notes |
+|-------------|-----------|-------|
+| `entrance_shuffle` + `mode=inverted` | ~90% | Inverted mode may affect dungeon entrance rules |
+| `entrance_shuffle` + `glitches_required` | Varies | Combined failures stack - test separately first |
 
 **Glitches Required Compatibility:**
 
@@ -203,6 +212,34 @@ from ~10% to ~45%, then to ~70% with the bunny revival fixes.
 - `CanReachRegion`: Direct glitch rules (mire_clip, hera_clip) use region reachability
 - Combined or-rules now export both the original and glitch alternative paths
 - Fallback rules are used for dungeon entrance patterns when analysis fails
+
+**Root Cause - Entrance Shuffle Regeneration:**
+
+The fundamental issue with entrance shuffle failures is that the ALttP world's `er_seed` (entrance random seed) is not included in slot_data. When TrackerCore regenerates the world:
+
+1. It uses the same `entrance_shuffle` option (e.g., "restricted")
+2. But generates a DIFFERENT random `er_seed`
+3. This causes different entrance connections
+4. Which causes `set_trock_key_rules` to evaluate `can_reach_back` differently
+5. Leading to different key requirements for Turtle Rock (and other dungeons)
+
+For example, with `entrance_shuffle=restricted` and `glitches_required=overworld_glitches`:
+- Original world: Glitch paths might make `can_reach_back = True` → Turtle Rock Chain Chomp Room (South) requires 5 keys
+- Regenerated world: Different entrance shuffle → `can_reach_back = False` → Requires 3 keys if Big Key is in front
+- Result: Locations accessible in one world but not the other
+
+**Workaround:**
+
+Use `--default-options entrance_shuffle` to test with vanilla entrance shuffle, which has deterministic connections:
+
+```bash
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --default-options entrance_shuffle
+```
+
+**Future Fix:**
+
+Add `er_seed` to ALttP's `fill_slot_data` and handle it in `generate_early` via `re_gen_passthrough`. This would require a contribution to upstream Archipelago.
 
 **Other Notes:**
 - Bunny rules are simplified to Moon Pearl requirements

@@ -1780,14 +1780,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 location_data['access_rule'], location_name
             )
 
-        # Generate shop price rules if applicable
-        # This replaces the broken shop_price_rules helper call that references 'location'
+        # Handle shop price rules:
+        # 1. Always remove the broken shop_price_rules helper that references 'location'
+        # 2. For Hearts/Bombs/Arrows types, add the appropriate replacement rule
+        # 3. For Rupees (type 0), just removing the helper is enough (no item requirement)
+        existing_rule = location_data.get('access_rule')
+        if existing_rule:
+            existing_rule = self._remove_shop_price_rules_helper(existing_rule)
+            location_data['access_rule'] = existing_rule
+
+        # Generate shop price rules for non-Rupee types
         shop_price_rule = self._generate_shop_price_rule(location_data)
         if shop_price_rule:
             existing_rule = location_data.get('access_rule')
-            # Remove any existing shop_price_rules helper from the rule
-            if existing_rule:
-                existing_rule = self._remove_shop_price_rules_helper(existing_rule)
             if existing_rule and existing_rule != {'rule': 'True_'}:
                 # Combine with existing rule using AND
                 location_data['access_rule'] = {
@@ -2534,6 +2539,58 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 else:
                     # Keep the rest of the items as valid options (the original HasAny becomes simpler)
                     return {'rule': 'HasAny', 'args': {'items': filtered_items}}
+
+        # Handle Rule Builder Or - recursively process children and filter out pure Moon Pearl rules
+        # This is needed for dungeon exits where _add_mirror_alternative_to_moon_pearl creates
+        # Or(Moon Pearl, Magic Mirror), and then dungeon exit processing should remove Moon Pearl.
+        if rule.get('rule') == 'Or':
+            children = rule.get('children', [])
+            # First, recursively process each child
+            processed_children = [
+                self._remove_moon_pearl_from_rule(child, rule_name)
+                for child in children
+            ]
+            # Filter out children that became True_ (pure Moon Pearl rules)
+            filtered_children = [
+                child for child in processed_children
+                if child != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(child)
+            ]
+            if len(filtered_children) != len(children):
+                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
+
+            if not filtered_children:
+                # All children were Moon Pearl - return True_ (no restriction)
+                return {'rule': 'True_'}
+            elif len(filtered_children) == 1:
+                # Single child remains - unwrap the Or
+                return filtered_children[0]
+            else:
+                return {'rule': 'Or', 'children': filtered_children}
+
+        # Handle AST-style 'or' rules
+        if rule.get('type') == 'or':
+            conditions = rule.get('conditions', [])
+            # First, recursively process each condition
+            processed_conditions = [
+                self._remove_moon_pearl_from_rule(cond, rule_name)
+                for cond in conditions
+            ]
+            # Filter out conditions that became True_ (pure Moon Pearl rules)
+            filtered_conditions = [
+                cond for cond in processed_conditions
+                if cond != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(cond)
+            ]
+            if len(filtered_conditions) != len(conditions):
+                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
+
+            if not filtered_conditions:
+                # All conditions were Moon Pearl - return True_ (no restriction)
+                return {'rule': 'True_'}
+            elif len(filtered_conditions) == 1:
+                # Single condition remains - unwrap the Or
+                return filtered_conditions[0]
+            else:
+                return {'type': 'or', 'conditions': filtered_conditions}
 
         # No changes needed
         return rule

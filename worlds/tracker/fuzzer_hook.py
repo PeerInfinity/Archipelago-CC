@@ -50,6 +50,19 @@ class Hook(BaseHook):
 
         slot_data = temp["slot_data"][1] #slot 0 is reserved
 
+        # Fix ALttP entrance shuffle regeneration by setting entrance_shuffle_seed
+        # to the actual er_seed from the original generation. This ensures TrackerCore
+        # regenerates with the same entrance connections when using YAML-based regeneration.
+        # Note: For worldgen-based tracking (what the fuzzer uses), the rules.json is
+        # exported BEFORE we can apply this fix, so remaining failures may be due to:
+        # - Bunny rule export differences (e.g., Magic Mirror requirements)
+        # - Complex entrance shuffle modes (crossed, insanity)
+        # - Inverted mode interactions with glitch rules
+        if mw.worlds[1].game == "A Link to the Past" and hasattr(mw.worlds[1], 'er_seed'):
+            er_seed = mw.worlds[1].er_seed
+            if er_seed != "vanilla":
+                self._fix_alttp_entrance_shuffle_seed(er_seed)
+
         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
         # Set seed_name to enable auto-discovery of rules.json for worldgen tracking
         self.ut_core.seed_name = mw.seed_name
@@ -305,6 +318,46 @@ class Hook(BaseHook):
 
         except Exception as e:
             logger.warning(f"Failed to write explain stats: {e}")
+
+    def _fix_alttp_entrance_shuffle_seed(self, er_seed):
+        """Rewrite ALttP YAML files to use the actual er_seed as entrance_shuffle_seed.
+
+        This ensures TrackerCore regenerates with the same entrance connections as
+        the original generation. Without this, ALttP's generate_early would create
+        a different er_seed, leading to different entrance shuffle and different
+        key rules (especially for Turtle Rock).
+        """
+        import os
+        import yaml
+
+        yaml_dir = self.player_files_path
+        if not os.path.isdir(yaml_dir):
+            return
+
+        for filename in os.listdir(yaml_dir):
+            if not filename.endswith('.yaml'):
+                continue
+            filepath = os.path.join(yaml_dir, filename)
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+
+                if not data:
+                    continue
+
+                # Find the ALttP game section
+                for game_name, game_data in data.items():
+                    if game_name in ('A Link to the Past', 'alttp') and isinstance(game_data, dict):
+                        # Set entrance_shuffle_seed to the actual er_seed
+                        # ALttP will use this directly when it's a numeric string
+                        game_data['entrance_shuffle_seed'] = str(er_seed)
+
+                        with open(filepath, 'w', encoding='utf-8') as f:
+                            yaml.safe_dump(data, f, default_flow_style=False, allow_unicode=True)
+                        logger.debug(f"Fixed ALttP entrance_shuffle_seed in {filename} to {er_seed}")
+                        break
+            except Exception as e:
+                logger.warning(f"Failed to fix entrance_shuffle_seed in {filename}: {e}")
 
     def reclassify_outcome(self, outcome, exc):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored
