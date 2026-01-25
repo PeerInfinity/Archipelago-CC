@@ -19,13 +19,13 @@ from ..config import (
 from .version_detector import detect_ap_version, SupportLevel
 
 
-# Files that need to be patched
+# Files that need to be patched for file-based patching
+# Note: .gitignore and requirements.txt removed - not needed for JSON Tools functionality
+# Individual worlds can have their own requirements.txt which ModuleUpdate.py reads automatically
 PATCH_FILES = [
     "Main.py",
     "BaseClasses.py",
     "settings.py",
-    ".gitignore",
-    "requirements.txt",
 ]
 
 
