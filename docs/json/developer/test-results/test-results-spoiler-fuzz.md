@@ -2,7 +2,7 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-**Generated:** 2026-01-25 00:20:28
+**Generated:** 2026-01-24 19:06:06
 
 **Source Data Created:** 2026-01-25T00:20:28.326505
 
@@ -116,6 +116,29 @@
 | Yu-Gi-Oh! 2006 | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | 628.0KB |
 | Zillion | ❌ | 10 | 0 | 1 | 9 | 0 | ❌ 0.0% | N/A |
 | shapez | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 155.5KB |
+
+## Excluded Templates
+
+These templates are excluded from testing:
+
+| Template | Reason |
+|----------|--------|
+| APWorld Manager.yaml | Not a game. |
+| Archipelago.yaml | Not a game. |
+| Blasphemous.yaml | The spoiler test currently freezes. |
+| Final Fantasy.yaml | Requires manual configuration and is not compatible with the spoiler test. |
+| Hollow Knight.yaml | The spoiler test currently freezes. |
+| JSON Tools Installer.yaml | Not a game. |
+| Jak and Daxter The Precursor Legacy.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
+| Ocarina of Time.yaml | The default yaml file fails to generate. |
+| Pokemon Emerald.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
+| Pokemon Red and Blue.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
+| SMZ3.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
+| Sudoku.yaml | Cannot be used for generating worlds. |
+| Universal Tracker.yaml | Not a game. |
+| Yacht Dice.yaml | Temporarily excluded. It currently times out the multiworld test. |
+| Yu-Gi-Oh! 2006.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
+| Zillion.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
 
 ## Notes
 

@@ -22,6 +22,7 @@ from typing import Dict, Any, List
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from chart_generators.utils import format_file_size, get_rules_json_size
+from lib.test_utils import load_template_exclude_list
 
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
@@ -128,7 +129,8 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
                                     metadata: Dict[str, Any],
                                     world_mapping: Dict[str, Dict[str, Any]],
                                     project_root: str = None,
-                                    world_source: str = "bundled") -> str:
+                                    world_source: str = "bundled",
+                                    excluded_games: Dict[str, str] = None) -> str:
     """
     Generate a markdown table for spoiler fuzz test data.
 
@@ -138,6 +140,7 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
         world_mapping: Full world mapping dict with game info
         project_root: Project root path for looking up rules.json sizes
         world_source: Source of worlds (bundled or apworlds)
+        excluded_games: Dict mapping template names to exclusion reasons
     """
     # Determine seed info
     seed = metadata.get('seed', 'random')
@@ -228,6 +231,15 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - | - |\n"
 
+    # Add Excluded Templates section if data exists
+    if excluded_games:
+        md_content += "\n## Excluded Templates\n\n"
+        md_content += "These templates are excluded from testing:\n\n"
+        md_content += "| Template | Reason |\n"
+        md_content += "|----------|--------|\n"
+        for game, reason in sorted(excluded_games.items()):
+            md_content += f"| {game} | {reason} |\n"
+
     md_content += "\n## Notes\n\n"
     md_content += "- **Result:** ✅ if all fuzz runs passed (0 failures, 0 timeouts), ❌ otherwise\n"
     md_content += "- **Total:** Number of fuzz runs attempted for this game\n"
@@ -308,6 +320,15 @@ def main():
     # Load world mapping
     world_mapping = load_world_mapping(project_root)
 
+    # Load exclude lists
+    # For bundled games: use 'main' (same as test-all-templates.py)
+    # For apworlds: use 'ut_fuzz_apworld'
+    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
+    excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
+
+    excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld')
+    excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_apworld}
+
     # Output directory
     output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
     os.makedirs(output_dir, exist_ok=True)
@@ -350,9 +371,12 @@ def main():
         else:
             world_source = metadata.get('world_source', 'bundled')
 
+        # Select appropriate exclude list based on world_source
+        excluded_games = excluded_games_apworld if world_source == "apworlds" else excluded_games_bundled
+
         # Generate markdown
         md_content = generate_spoiler_fuzz_markdown(
-            chart_data, metadata, world_mapping, project_root, world_source
+            chart_data, metadata, world_mapping, project_root, world_source, excluded_games
         )
 
         # Determine output path
