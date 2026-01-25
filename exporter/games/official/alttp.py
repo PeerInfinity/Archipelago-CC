@@ -2405,12 +2405,23 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         location_data['access_rule'] = self._resolve_placement_conditionals(access_rule)
                         access_rule = location_data.get('access_rule', {})
 
-                    # NOTE: We intentionally do NOT remove Moon Pearl from location rules here.
-                    # Location rules that contain Moon Pearl alternatives (like Frog's
-                    # "can_lift_heavy_rocks AND (Moon Pearl OR Beat Agahnim 1)") are game logic,
-                    # not bunny form requirements. Removing Moon Pearl would change the game logic.
-                    # The bunny rules are applied separately by the original ALttP code and
-                    # are already correctly exported.
+                    # For mixed regions (both Light World and Dark World accessible),
+                    # the bunny rule system adds Moon Pearl requirements via add_rule().
+                    # But since there are Light World paths available, Moon Pearl isn't
+                    # actually required - you can enter as Link from a Light World entrance.
+                    # Remove Moon Pearl from location rules in mixed regions.
+                    #
+                    # NOTE: This is different from game logic rules like Frog's
+                    # "can_lift_heavy_rocks AND (Moon Pearl OR Beat Agahnim 1)" where
+                    # Moon Pearl is one of multiple alternatives. Those are preserved
+                    # because removing Moon Pearl would change the game logic.
+                    # The _remove_moon_pearl_from_rule() function handles this distinction
+                    # by only removing pure Moon Pearl requirements or filtering from HasAny/Or.
+                    if is_mixed_region and access_rule:
+                        location_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                            access_rule, location_name
+                        )
+                        access_rule = location_data.get('access_rule', {})
 
                     # Replace dungeon small key checks when universal keys are enabled
                     if self._is_universal_keys and access_rule:
