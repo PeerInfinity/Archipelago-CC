@@ -24,6 +24,11 @@ class Hook(BaseHook):
     def before_generate(self, args):
         self.status = None
         self.player_files_path = args.player_files_path
+
+        # Pre-generate ALttP entrance shuffle seed if needed
+        # This must happen BEFORE generation so the original world uses our seed
+        self._pregenerate_alttp_entrance_shuffle_seed()
+
         self.ut_core = TrackerCore.TrackerCore(logger,False,False)
         self.ut_core.enforce_deferred_connections = DeferredEntranceMode.disabled
         self.ut_core.run_generator(None,None,args.player_files_path) #initial UT gen
@@ -49,6 +54,19 @@ class Hook(BaseHook):
         temp = Context.decompress(data)
 
         slot_data = temp["slot_data"][1] #slot 0 is reserved
+
+        # Fix ALttP entrance shuffle regeneration by setting entrance_shuffle_seed
+        # to the actual er_seed from the original generation. This ensures TrackerCore
+        # regenerates with the same entrance connections when using YAML-based regeneration.
+        # Note: For worldgen-based tracking (what the fuzzer uses), the rules.json is
+        # exported BEFORE we can apply this fix, so remaining failures may be due to:
+        # - Bunny rule export differences (e.g., Magic Mirror requirements)
+        # - Complex entrance shuffle modes (crossed, insanity)
+        # - Inverted mode interactions with glitch rules
+        if mw.worlds[1].game == "A Link to the Past" and hasattr(mw.worlds[1], 'er_seed'):
+            er_seed = mw.worlds[1].er_seed
+            if er_seed != "vanilla":
+                self._fix_alttp_entrance_shuffle_seed(er_seed)
 
         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
         # Set seed_name to enable auto-discovery of rules.json for worldgen tracking
@@ -305,6 +323,119 @@ class Hook(BaseHook):
 
         except Exception as e:
             logger.warning(f"Failed to write explain stats: {e}")
+
+    def _pregenerate_alttp_entrance_shuffle_seed(self):
+        """Pre-generate entrance_shuffle_seed for ALttP before generation.
+
+        When ALttP has entrance_shuffle != "vanilla" and entrance_shuffle_seed == "random",
+        it generates a random er_seed in generate_early(). This causes problems for
+        worldgen-based tracking because the exported rules.json uses one er_seed but
+        any regeneration would use a different one.
+
+        By pre-generating a numeric seed and writing it to the YAML before generation,
+        we ensure the original generation uses our explicit seed, which then gets
+        exported in rules.json and used consistently.
+        """
+        import os
+        import random
+        import yaml
+
+        yaml_dir = self.player_files_path
+        if not os.path.isdir(yaml_dir):
+            return
+
+        for filename in os.listdir(yaml_dir):
+            if not filename.endswith('.yaml'):
+                continue
+            filepath = os.path.join(yaml_dir, filename)
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+
+                if not data:
+                    continue
+
+                modified = False
+                for game_name, game_data in data.items():
+                    if game_name in ('A Link to the Past', 'alttp') and isinstance(game_data, dict):
+                        # Check if entrance_shuffle is non-vanilla
+                        entrance_shuffle = game_data.get('entrance_shuffle', 'vanilla')
+                        # Handle weighted options format
+                        if isinstance(entrance_shuffle, dict):
+                            # If it's a weighted dict, check if vanilla is the only option
+                            if list(entrance_shuffle.keys()) == ['vanilla']:
+                                continue  # vanilla only, no need to pre-generate
+                            # Otherwise, some non-vanilla shuffle is possible
+                        elif entrance_shuffle == 'vanilla':
+                            continue  # vanilla, no need to pre-generate
+
+                        # Check if entrance_shuffle_seed is random or not set
+                        entrance_shuffle_seed = game_data.get('entrance_shuffle_seed', 'random')
+                        if isinstance(entrance_shuffle_seed, dict):
+                            # Weighted format - check if 'random' is the only/primary option
+                            if 'random' not in entrance_shuffle_seed:
+                                continue  # Has explicit seed(s), don't override
+                        elif entrance_shuffle_seed != 'random':
+                            # Already has an explicit seed
+                            continue
+
+                        # Generate a random 64-bit integer (same as ALttP's generate_early)
+                        er_seed = random.randint(0, 2 ** 64)
+                        game_data['entrance_shuffle_seed'] = str(er_seed)
+                        modified = True
+                        logger.debug(f"Pre-generated ALttP entrance_shuffle_seed in {filename}: {er_seed}")
+                        break
+
+                if modified:
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        yaml.safe_dump(data, f, default_flow_style=False, allow_unicode=True)
+
+            except Exception as e:
+                logger.warning(f"Failed to pre-generate entrance_shuffle_seed in {filename}: {e}")
+
+    def _fix_alttp_entrance_shuffle_seed(self, er_seed):
+        """Rewrite ALttP YAML files to use the actual er_seed as entrance_shuffle_seed.
+
+        This ensures TrackerCore regenerates with the same entrance connections as
+        the original generation. Without this, ALttP's generate_early would create
+        a different er_seed, leading to different entrance shuffle and different
+        key rules (especially for Turtle Rock).
+
+        Note: This is now mostly a backup - _pregenerate_alttp_entrance_shuffle_seed
+        handles the common case. This method still helps if the pre-generation didn't
+        run or if the seed format changed.
+        """
+        import os
+        import yaml
+
+        yaml_dir = self.player_files_path
+        if not os.path.isdir(yaml_dir):
+            return
+
+        for filename in os.listdir(yaml_dir):
+            if not filename.endswith('.yaml'):
+                continue
+            filepath = os.path.join(yaml_dir, filename)
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+
+                if not data:
+                    continue
+
+                # Find the ALttP game section
+                for game_name, game_data in data.items():
+                    if game_name in ('A Link to the Past', 'alttp') and isinstance(game_data, dict):
+                        # Set entrance_shuffle_seed to the actual er_seed
+                        # ALttP will use this directly when it's a numeric string
+                        game_data['entrance_shuffle_seed'] = str(er_seed)
+
+                        with open(filepath, 'w', encoding='utf-8') as f:
+                            yaml.safe_dump(data, f, default_flow_style=False, allow_unicode=True)
+                        logger.debug(f"Fixed ALttP entrance_shuffle_seed in {filename} to {er_seed}")
+                        break
+            except Exception as e:
+                logger.warning(f"Failed to fix entrance_shuffle_seed in {filename}: {e}")
 
     def reclassify_outcome(self, outcome, exc):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored

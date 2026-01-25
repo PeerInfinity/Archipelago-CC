@@ -453,8 +453,15 @@ def main():
         print(f"Error: Templates directory not found: {templates_dir}")
         return 1
 
-    # Get skip list (use only permanent exclusions)
-    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='permanent')
+    # Get skip list based on world source
+    # For bundled games: use 'main' (same as test-all-templates.py)
+    # For apworlds: use 'ut_fuzz_apworld' exclusions
+    if args.skip_list:
+        skip_list = args.skip_list
+    elif args.custom_worlds_only:
+        skip_list = load_template_exclude_list(test_type='ut_fuzz_apworld')
+    else:
+        skip_list = load_template_exclude_list(test_type='main')
 
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)
