@@ -2468,8 +2468,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
                             dest_is_pure_bunny_territory = dest_is_light and not dest_is_dark
                         else:
-                            # Standard: pure Dark World is bunny (handled elsewhere)
-                            pass
+                            # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
+                            # Exiting from a mixed region to pure Dark World requires Moon Pearl
+                            dest_is_pure_bunny_territory = dest_is_dark and not dest_is_light
                         should_keep_moon_pearl = (
                             (is_bunny_impassable and self._is_inverted_mode) or
                             dest_is_pure_bunny_territory
@@ -2569,6 +2570,40 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         player_helpers[helper_name] = self._resolve_placement_conditionals(
                             player_helpers[helper_name]
                         )
+
+        # Add implicit exits for single-entrance caves with entrance shuffle
+        # In ALttP with entrance shuffle, single-entrance caves (caves with no defined exits)
+        # have an implicit exit back to the entrance's parent region. When entrance shuffle
+        # remaps these connections, we need to create explicit exit data for the UT to
+        # properly evaluate reachability.
+        if self._entrance_shuffle_mode != 'vanilla':
+            logger.debug(f"ALttP: Processing single-entrance cave exits for entrance_shuffle={self._entrance_shuffle_mode}")
+            for player_id, player_regions in regions.items():
+                for region_name, region_data in player_regions.items():
+                    entrances = region_data.get('entrances', [])
+                    exits = region_data.get('exits', [])
+
+                    # Check if this is a single-entrance cave (has entrances but no exits)
+                    # Type 3 = Cave, Type 4 = Dungeon (don't process dungeons)
+                    region_type = region_data.get('type', 0)
+                    if entrances and not exits and region_type == 3:
+                        # Create an implicit exit for each entrance
+                        for entrance_data in entrances:
+                            parent_region = entrance_data.get('parent_region')
+                            entrance_name = entrance_data.get('name', 'Unknown')
+                            if parent_region:
+                                # Create exit going back to entrance's parent region
+                                exit_name = f"{region_name} Exit"
+                                implicit_exit = {
+                                    'name': exit_name,
+                                    'connected_region': parent_region,
+                                    'access_rule': {'rule': 'True_'},  # No requirements to exit
+                                }
+                                region_data['exits'].append(implicit_exit)
+                                logger.debug(
+                                    f"ALttP: Added implicit exit '{exit_name}' from '{region_name}' "
+                                    f"to '{parent_region}' (via entrance '{entrance_name}')"
+                                )
 
         return data
 
