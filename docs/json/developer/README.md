@@ -25,7 +25,6 @@ Step-by-step guides for common development tasks:
 | [Format Converter](./guides/format-converter.md) | Rule format conversion |
 | [Testing Pipeline](./guides/testing-pipeline.md) | How validation works |
 | [Test Results](./guides/test-results.md) | Understanding test output |
-| [UT Comparison Testing](./guides/ut-comparison-testing.md) | Universal Tracker validation |
 
 ### [Reference](./reference/)
 
@@ -95,7 +94,6 @@ Formal specifications for data formats and protocols.
 
 1. [Testing Pipeline](./guides/testing-pipeline.md) - How tests work
 2. [Test Results](./guides/test-results.md) - Interpreting results
-3. [UT Comparison Testing](./guides/ut-comparison-testing.md) - Universal Tracker validation
 
 ### Working with Exports
 

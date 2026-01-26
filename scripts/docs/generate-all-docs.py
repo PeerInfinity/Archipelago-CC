@@ -33,13 +33,6 @@ GENERATORS: List[Tuple[str, str, str, List[str], bool]] = [
         False
     ),
     (
-        "ut-comparison",
-        "generate_ut_comparison_chart.py",
-        "UT comparison charts (random and fixed seed)",
-        ["ut", "comparison"],
-        False
-    ),
-    (
         "ut-fuzz",
         "generate_ut_fuzz_chart.py",
         "UT fuzz charts and comparisons (original/modified/hybrid, bundled/apworlds)",

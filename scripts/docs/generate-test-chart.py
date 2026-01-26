@@ -16,13 +16,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from lib.test_utils import load_template_exclude_list
 
-# Import UT comparison functions from the dedicated script
-from generate_ut_comparison_chart import (
-    extract_ut_comparison_chart_data,
-    generate_ut_comparison_markdown,
-    load_world_mapping
-)
-
 # Import from the chart_generators package
 from chart_generators import (
     load_full_world_mapping,
@@ -43,7 +36,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate test results charts from template test results')
     parser.add_argument('--input-file', type=str, help='Input JSON file path (processes only this file)')
     parser.add_argument('--output-file', type=str, help='Output markdown file path')
-    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'ut-comparison'],
+    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld'],
                        help='Test type when using --input-file')
     parser.add_argument('--include-timing', action='store_true', default=False,
                        help='Include test timing data in output (default: off)')
@@ -86,10 +79,6 @@ def main():
                 'seed': results.get('seed')
             }
             md_content = generate_multiclient_markdown(chart_data, metadata, top_level)
-        elif args.test_type == 'ut-comparison':
-            chart_data = extract_ut_comparison_chart_data(results)
-            world_mapping = load_world_mapping(project_root)
-            md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
         else:  # multiworld
             full_world_mapping = load_full_world_mapping(project_root)
             chart_data = extract_multiworld_chart_data(results, full_world_mapping)
@@ -409,59 +398,8 @@ def main():
     else:
         print(f"Info: APWorld multiworld test results not found: {mw_ap_input}")
 
-    # Load UT comparison test results (both random and fixed seed)
-    ut_random_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-random-seed.json')
-    ut_fixed_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-fixed-seed.json')
-    ut_output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
-
-    ut_random_data = None
-    ut_fixed_data = None
-    world_mapping = load_world_mapping(project_root)
-
-    has_random = os.path.exists(ut_random_input)
-    has_fixed = os.path.exists(ut_fixed_input)
-
-    if has_random:
-        ut_random_results = load_test_results(ut_random_input)
-        ut_random_data = extract_ut_comparison_chart_data(ut_random_results)
-        other_link = './test-results-ut-comparison-fixed-seed.md' if has_fixed else None
-        ut_random_md = generate_ut_comparison_markdown(
-            ut_random_data,
-            ut_random_results.get('metadata', {}),
-            world_mapping,
-            seed_type="random",
-            other_results_link=other_link
-        )
-        ut_random_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-random-seed.md')
-        os.makedirs(ut_output_dir, exist_ok=True)
-        with open(ut_random_output, 'w') as f:
-            f.write(ut_random_md)
-    else:
-        print(f"Info: UT comparison random seed results not found: {ut_random_input}")
-
-    if has_fixed:
-        ut_fixed_results = load_test_results(ut_fixed_input)
-        ut_fixed_data = extract_ut_comparison_chart_data(ut_fixed_results)
-        other_link = './test-results-ut-comparison-random-seed.md' if has_random else None
-        ut_fixed_md = generate_ut_comparison_markdown(
-            ut_fixed_data,
-            ut_fixed_results.get('metadata', {}),
-            world_mapping,
-            seed_type="fixed",
-            other_results_link=other_link
-        )
-        ut_fixed_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-fixed-seed.md')
-        os.makedirs(ut_output_dir, exist_ok=True)
-        with open(ut_fixed_output, 'w') as f:
-            f.write(ut_fixed_md)
-    else:
-        print(f"Info: UT comparison fixed seed results not found: {ut_fixed_input}")
-
-    # For the summary, use fixed seed data if available, otherwise random
-    ut_data = ut_fixed_data if ut_fixed_data else ut_random_data
-
     # Generate summary charts (original, WorldGen, and APWorld)
-    if minimal_data or full_data or mp_data or mw_data or ut_data:
+    if minimal_data or full_data or mp_data or mw_data:
         # Load the exclude list with reasons for main tests
         # Convert list of dicts to dict for generate_summary_chart
         excluded_list = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
@@ -486,7 +424,7 @@ def main():
 
         # Generate original summary with cross-links to variants
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, ut_data, excluded_games_main, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, project_root=project_root, version_links=summary_version_links if summary_version_links else None)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, excluded_games_main, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, world_mapping=full_world_mapping, project_root=project_root, version_links=summary_version_links if summary_version_links else None)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 
@@ -504,7 +442,7 @@ def main():
         mw_wg_meta = mw_wg_results.get('metadata', {}) if 'mw_wg_results' in locals() else None
 
         summary_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-worldgen.md')
-        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, excluded_games_worldgen, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, project_root=project_root, variant_type="worldgen", version_links={"original": "./test-results-summary.md"})
+        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, excluded_games_worldgen, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, world_mapping=full_world_mapping, project_root=project_root, variant_type="worldgen", version_links={"original": "./test-results-summary.md"})
         with open(summary_wg_output, 'w') as f:
             f.write(summary_wg_md)
 
@@ -523,7 +461,7 @@ def main():
         mw_ap_meta = mw_ap_results.get('metadata', {}) if 'mw_ap_results' in locals() else None
 
         summary_ap_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-apworld.md')
-        summary_ap_md = generate_summary_chart(minimal_ap_data, full_ap_data, mp_ap_data, mw_ap_data, None, excluded_games_apworld, minimal_ap_meta, full_ap_meta, multiclient_metadata=mp_ap_meta, multiworld_metadata=mw_ap_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, project_root=project_root, variant_type="apworld", version_links={"original": "./test-results-summary.md"})
+        summary_ap_md = generate_summary_chart(minimal_ap_data, full_ap_data, mp_ap_data, mw_ap_data, excluded_games_apworld, minimal_ap_meta, full_ap_meta, multiclient_metadata=mp_ap_meta, multiworld_metadata=mw_ap_meta, world_mapping=full_world_mapping, project_root=project_root, variant_type="apworld", version_links={"original": "./test-results-summary.md"})
         with open(summary_ap_output, 'w') as f:
             f.write(summary_ap_md)
 

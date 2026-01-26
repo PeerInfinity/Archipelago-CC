@@ -259,5 +259,4 @@ if tracker.auto_discover_rules_json():
 
 - **Original repository:** https://github.com/FarisTheAncient/Archipelago (tracker branch)
 - **Original copy for comparison:** `scripts/test/fixtures/tracker_original/`
-- **UT comparison testing guide:** `docs/json/developer/guides/ut-comparison-testing.md`
 - **World generator:** `world_generator/`
