@@ -300,6 +300,12 @@ def get_random_value(name, option, disallowed=None):
         # Megamix is a special child and requires this to be valid JSON. Since we can't provide that, just ignore it
         return option.default
 
+    if name == "entrance_shuffle_seed":
+        # ALttP's entrance_shuffle_seed expects a numeric string for consistent entrance shuffle
+        # Always use numeric to ensure the same seed is used in both original and worldgen worlds
+        # (using 'random' would cause the worldgen world to regenerate a different er_seed)
+        return str(random.randint(0, 2 ** 64))
+
     if issubclass(option, (PlandoConnections, PlandoTexts)):
         # See, I was already afraid with item_links but now it's plain terror. Let's not ever touch this ever.
         return option.default

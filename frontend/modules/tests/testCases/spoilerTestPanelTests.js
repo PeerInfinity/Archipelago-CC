@@ -107,11 +107,8 @@ export async function spoilerTestPanelFullRun(testController) {
       throw new Error('Spoiler log failed to load within expected time');
     }
 
-    // Check if UT comparison mode is requested via URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const useUtComparison = urlParams.get('ut') === 'true';
-    const targetButtonId = useUtComparison ? '#ut-comparison-btn' : '#run-full-spoiler-test';
-    const targetButtonText = useUtComparison ? 'Compare with UT' : 'Run Full Test';
+    const targetButtonId = '#run-full-spoiler-test';
+    const targetButtonText = 'Run Full Test';
 
     // 3. Wait for the target button to appear, which indicates the log has loaded
     let targetButton = null;

@@ -200,13 +200,6 @@ Of the 73 templates passing all 4 tests:
 | 5 | Stardew Valley | 8.0KB |
 | 6 | Secret of Evermore | 6.9KB |
 
-## Universal Tracker Comparison
-
-These tests compare Universal Tracker results with our spoiler test results.
-
-- [UT Comparison - Random Seed](./test-results-ut-comparison-random-seed.md)
-- [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)
-
 ## Fuzz Tests
 
 Fuzz tests validate game configurations across randomized option combinations.
