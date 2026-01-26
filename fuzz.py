@@ -301,10 +301,9 @@ def get_random_value(name, option, disallowed=None):
         return option.default
 
     if name == "entrance_shuffle_seed":
-        # ALttP's entrance_shuffle_seed expects either 'random' or a numeric string
-        # Random Unicode garbage would cause entrance shuffle mismatches in UT testing
-        if random.random() < 0.5:
-            return "random"
+        # ALttP's entrance_shuffle_seed expects a numeric string for consistent entrance shuffle
+        # Always use numeric to ensure the same seed is used in both original and worldgen worlds
+        # (using 'random' would cause the worldgen world to regenerate a different er_seed)
         return str(random.randint(0, 2 ** 64))
 
     if issubclass(option, (PlandoConnections, PlandoTexts)):
