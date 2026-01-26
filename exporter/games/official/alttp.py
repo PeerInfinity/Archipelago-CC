@@ -1595,7 +1595,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         When add_rule(..., combine='or') creates a combined rule, the old_rule
         closure variable contains the original rule. This method attempts to
-        analyze that original rule and serialize it.
+        analyze that original rule and serialize it using the standard analyzer.
 
         Args:
             old_rule_func: The original rule function from the closure
@@ -1604,9 +1604,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         Returns:
             A serialized rule dict, or None if analysis fails
         """
-        import inspect
-        import re
-
         # First, check if old_rule_func itself has problematic closures
         # If so, recursively handle it
         old_rule_qualname = getattr(old_rule_func, '__qualname__', '')
@@ -1622,81 +1619,51 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # If old_rule is from underworld_glitches_rules, it may be a chained combined rule
         if 'underworld_glitches_rules' in old_rule_qualname:
             # This is another problematic rule - use conservative approach
-            logger.debug(f"ALttP: old_rule is also a glitch rule, using False_")
+            logger.debug(f"ALttP: old_rule is also a glitch rule, returning None")
             return None
 
         # Check if old_rule has its own problematic closure (nested combined rules)
         if self._has_problematic_closure(old_rule_func):
-            logger.debug(f"ALttP: old_rule has problematic closure, using False_")
+            logger.debug(f"ALttP: old_rule has problematic closure, returning None")
             return None
 
+        # Use the standard analyzer to parse the rule
+        # This handles state.has(), _lttp_has_key(), helper calls, and complex AND/OR structures
         try:
-            source = inspect.getsource(old_rule_func)
+            from exporter.analyzer import analyze_rule
+            player_ctx = getattr(self.world, 'player', None) if self.world else None
+            result = analyze_rule(
+                rule_func=old_rule_func,
+                game_handler=self,
+                player_context=player_ctx,
+                rule_target_name=f"old_rule:{target_name}"
+            )
 
-            # Parse common patterns in ALttP rules
+            # Check if analysis succeeded
+            if result and result.get('type') != 'error':
+                logger.debug(f"ALttP: Successfully analyzed old_rule for '{target_name}' using standard analyzer")
+                return result
 
-            # Pattern: state.has('Item Name', player)
-            has_pattern = r"state\.has\(['\"]([^'\"]+)['\"],\s*player\)"
-            has_matches = re.findall(has_pattern, source)
+            # Analysis failed - check if this is a nested combined lambda
+            # that we might have a fallback rule for
+            error_msg = result.get('message', '') if result else ''
+            logger.debug(f"ALttP: Standard analyzer failed for old_rule '{target_name}': {error_msg}")
 
-            # Pattern: state._lttp_has_key('Key Name', player)
-            key_pattern = r"state\._lttp_has_key\(['\"]([^'\"]+)['\"],\s*player\)"
-            key_matches = re.findall(key_pattern, source)
-
-            # Pattern: helper function calls like can_activate_crystal_switch(state, player)
-            helper_pattern = r"(can_\w+|has_\w+|defeat_\w+)\(state,\s*player\)"
-            helper_matches = re.findall(helper_pattern, source)
-
-            # Build rule components
-            components = []
-
-            for item in has_matches:
-                components.append({'rule': 'Has', 'args': {'item_name': item}})
-
-            for key in key_matches:
-                components.append({'rule': 'Has', 'args': {'item_name': key}})
-
-            for helper in helper_matches:
-                components.append({'rule': helper, '_original_ast_type': 'helper', '_converted_from_ast': True})
-
-            if not components:
-                # No recognizable patterns - can't serialize
-                # Check if this is a combined lambda that wraps another combined lambda
-                # If so, we can't analyze it directly, but we can use fallback rules
-                # based on the target name
+            # Try to get source to check for nested combined lambda pattern
+            import inspect
+            try:
+                source = inspect.getsource(old_rule_func)
                 if 'rule(state)' in source and 'old_rule(state)' in source:
-                    # This is a nested combined lambda - can't analyze directly
-                    # Use fallback rules for known dungeon doors
+                    # This is a nested combined lambda - use fallback rules
                     logger.debug(f"ALttP: Nested combined lambda for '{target_name}', using fallback")
                     return self._get_dungeon_door_fallback_rule(target_name)
-                logger.debug(f"ALttP: No recognizable patterns in old_rule source")
-                return None
+            except (OSError, TypeError):
+                pass
 
-            # Determine if it's an AND or OR combination based on source
-            if ' and ' in source and ' or ' not in source:
-                # All components ANDed together
-                if len(components) == 1:
-                    result = components[0]
-                else:
-                    result = {'rule': 'And', 'children': components}
-            elif ' or ' in source and ' and ' not in source:
-                # All components ORed together
-                if len(components) == 1:
-                    result = components[0]
-                else:
-                    result = {'rule': 'Or', 'children': components}
-            else:
-                # Mixed or complex - just AND all components for safety
-                if len(components) == 1:
-                    result = components[0]
-                else:
-                    result = {'rule': 'And', 'children': components}
+            return None
 
-            logger.debug(f"ALttP: Successfully analyzed old_rule for '{target_name}': {result.get('rule', 'unknown')}")
-            return result
-
-        except (OSError, TypeError) as e:
-            logger.debug(f"ALttP: Could not analyze old_rule source: {e}")
+        except Exception as e:
+            logger.debug(f"ALttP: Could not analyze old_rule: {e}")
             return None
 
     def _get_dungeon_door_fallback_rule(self, target_name: str) -> Optional[Dict[str, Any]]:
