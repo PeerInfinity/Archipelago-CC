@@ -5773,7 +5773,7 @@ class RuleCodeGenerator:
                 kw_value_str = self._convert_helper_arg(kw_value)
                 # Skip None values that represent filtered args
                 if kw_value_str != 'None' or not isinstance(kw_value, dict):
-                    kwarg_strs.append(f'{kw_name}={kw_value_str}')
+                    kwarg_strs.append(f'"{kw_name}": {kw_value_str}')
 
             # Filter out None values from arg_strs (which represent skipped args like 'world')
             arg_strs = [a for a in arg_strs if a is not None]
@@ -6146,7 +6146,7 @@ class RuleCodeGenerator:
             for kw_name, kw_value in kwargs.items():
                 kw_value_str = self._convert_helper_kwarg_value(kw_value)
                 if kw_value_str is not None:
-                    kwarg_strs.append(f'{kw_name}={kw_value_str}')
+                    kwarg_strs.append(f'"{kw_name}": {kw_value_str}')
 
             # Build HelperCall with helper_func reference
             # Try to convert the helper body to a Rule Builder expression for Tier 1 support
