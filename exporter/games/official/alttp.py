@@ -2471,9 +2471,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
                             # Exiting from a mixed region to pure Dark World requires Moon Pearl
                             dest_is_pure_bunny_territory = dest_is_dark and not dest_is_light
+
+                        # Check if all locations in the destination are bunny-accessible.
+                        # If so, we don't need Moon Pearl even in bunny territory since
+                        # bunnies can collect items at these locations.
+                        dest_locations = [loc.get('name', '') for loc in connected_region.get('locations', [])]
+                        dest_all_bunny_accessible = (
+                            len(dest_locations) > 0 and
+                            all(loc in BUNNY_ACCESSIBLE_LOCATIONS for loc in dest_locations)
+                        )
+
                         should_keep_moon_pearl = (
                             (is_bunny_impassable and self._is_inverted_mode) or
-                            dest_is_pure_bunny_territory
+                            (dest_is_pure_bunny_territory and not dest_all_bunny_accessible)
                         )
                         if is_mixed_region and not should_keep_moon_pearl:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
