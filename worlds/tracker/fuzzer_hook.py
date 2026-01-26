@@ -376,8 +376,14 @@ class Hook(BaseHook):
                             if 'random' not in entrance_shuffle_seed:
                                 continue  # Has explicit seed(s), don't override
                         elif entrance_shuffle_seed != 'random':
-                            # Already has an explicit seed
-                            continue
+                            # Check if it's actually a valid numeric seed
+                            # The fuzzer may generate random FreeText garbage that isn't numeric
+                            seed_str = str(entrance_shuffle_seed)
+                            if seed_str.isdigit():
+                                # Already has a valid explicit numeric seed
+                                continue
+                            # Otherwise, it's garbage (e.g., random Unicode from fuzzer) - replace it
+                            logger.debug(f"Replacing invalid entrance_shuffle_seed '{seed_str[:50]}...' with numeric seed")
 
                         # Generate a random 64-bit integer (same as ALttP's generate_early)
                         er_seed = random.randint(0, 2 ** 64)
