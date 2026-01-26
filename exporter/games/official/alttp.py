@@ -129,12 +129,23 @@ BUNNY_IMPASSABLE_CAVES = {
     'Desert Palace Main (Inner)', 'Fairy Ascension Cave (Drop)'
 }
 
-# Set of dungeon names for small key mapping
-DUNGEON_NAMES = {
+# Fallback set of dungeon names for small key mapping (used if world.dungeons unavailable)
+_FALLBACK_DUNGEON_NAMES = {
     'Hyrule Castle', 'Agahnims Tower', 'Eastern Palace', 'Desert Palace',
     'Tower of Hera', 'Palace of Darkness', 'Swamp Palace', 'Skull Woods',
     'Thieves Town', 'Ice Palace', 'Misery Mire', 'Turtle Rock', 'Ganons Tower'
 }
+
+
+def _get_dungeon_names(world) -> Set[str]:
+    """Get the set of dungeon names from the world object.
+
+    Reads dungeon names dynamically from world.dungeons when available,
+    falling back to a hardcoded list if the world is not available.
+    """
+    if world is not None and hasattr(world, 'dungeons') and world.dungeons:
+        return set(world.dungeons.keys())
+    return _FALLBACK_DUNGEON_NAMES
 
 
 class ALttPGameExportHandler(GenericGameExportHandler):
@@ -161,8 +172,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._entrance_shuffle_mode = self._check_entrance_shuffle_mode(world)
         self._is_no_logic_single_player = self._check_no_logic_single_player(world)
         self._item_placements: Dict[str, str] = {}
-        # Turtle Rock key rule reachability - computed for fixing empty locations in conditionals
-        self._trock_reachability = self._compute_trock_reachability(world)
+        # Dungeon names for small key validation - read from world.dungeons when available
+        self._dungeon_names = _get_dungeon_names(world)
 
     def _check_glitch_mode(self, world) -> bool:
         """Check if the world is in a glitch mode that enables superbunny accessibility."""
@@ -259,132 +270,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             return False
         logger.info("ALttP: Detected no_logic single-player mode - all rules will be trivial")
         return True
-
-    def _compute_trock_reachability(self, world) -> Dict[str, Any]:
-        """Compute Turtle Rock key rule reachability values.
-
-        This mirrors the logic in set_trock_key_rules from worlds/alttp/Rules.py.
-        We need this to properly export the front_locked_locations for conditional
-        key rules when can_reach_back is False.
-
-        Returns a dict with:
-        - can_reach_back: bool - whether Eye Bridge is reachable without TR keys
-        - can_reach_front: bool - whether TR Entrance is reachable without TR keys
-        - can_reach_middle: bool - whether TR Second Section is reachable without TR keys
-        - front_locked_locations: set - locations that are locked behind the front door
-        """
-        result = {
-            'can_reach_back': False,
-            'can_reach_front': False,
-            'can_reach_middle': False,
-            'can_reach_big_chest': False,
-            'front_locked_locations': set(),
-        }
-
-        if world is None or not hasattr(world, 'multiworld'):
-            logger.debug("ALttP: No multiworld available for TR reachability computation")
-            return result
-
-        try:
-            multiworld = world.multiworld
-            player = world.player
-
-            # Save the original rules for the locked doors
-            tr_doors = [
-                'Turtle Rock Dark Room Staircase',
-                'Turtle Rock (Chain Chomp Room) (North)',
-                'Turtle Rock (Chain Chomp Room) (South)',
-                'Turtle Rock Entrance to Pokey Room',
-                'Turtle Rock (Pokey Room) (South)',
-                'Turtle Rock (Pokey Room) (North)',
-                'Turtle Rock Big Key Door'
-            ]
-
-            original_rules = {}
-            for door_name in tr_doors:
-                try:
-                    entrance = multiworld.get_entrance(door_name, player)
-                    original_rules[door_name] = entrance.access_rule
-                    # Temporarily set to impassable
-                    entrance.access_rule = lambda state: False
-                except KeyError:
-                    pass  # Entrance might not exist in this configuration
-
-            # Get all_state with locked doors impassable
-            all_state = multiworld.get_all_state(use_cache=False, allow_partial_entrances=True)
-            # Wipe reachable regions so the locked doors actually work
-            all_state.reachable_regions[player] = set()
-            all_state.stale[player] = True
-
-            # Check reachability of each TR section
-            try:
-                result['can_reach_back'] = all_state.can_reach(
-                    multiworld.get_region('Turtle Rock (Eye Bridge)', player))
-            except KeyError:
-                pass
-            try:
-                result['can_reach_front'] = all_state.can_reach(
-                    multiworld.get_region('Turtle Rock (Entrance)', player))
-            except KeyError:
-                pass
-            try:
-                result['can_reach_big_chest'] = all_state.can_reach(
-                    multiworld.get_region('Turtle Rock (Big Chest)', player))
-            except KeyError:
-                pass
-            try:
-                result['can_reach_middle'] = all_state.can_reach(
-                    multiworld.get_region('Turtle Rock (Second Section)', player))
-            except KeyError:
-                pass
-
-            # Compute front_locked_locations
-            # Base set of locations that are always front-locked
-            base_front_locked = {
-                ('Turtle Rock - Compass Chest', player),
-                ('Turtle Rock - Roller Room - Left', player),
-                ('Turtle Rock - Roller Room - Right', player)
-            }
-
-            if result['can_reach_middle'] and not result['can_reach_back'] and not result['can_reach_front']:
-                # Special case: only middle is reachable
-                # Need to compute which locations are reachable only from the front
-                try:
-                    normal_regions = all_state.reachable_regions[player].copy()
-                    # Temporarily allow front exits
-                    chain_chomp_south = multiworld.get_entrance('Turtle Rock (Chain Chomp Room) (South)', player)
-                    pokey_south = multiworld.get_entrance('Turtle Rock (Pokey Room) (South)', player)
-                    chain_chomp_south.access_rule = lambda state: True
-                    pokey_south.access_rule = lambda state: True
-                    all_state.update_reachable_regions(player)
-                    front_locked_regions = all_state.reachable_regions[player].difference(normal_regions)
-                    result['front_locked_locations'] = set(
-                        (location.name, player)
-                        for region in front_locked_regions
-                        for location in region.locations
-                    )
-                except Exception as e:
-                    logger.debug(f"ALttP: Error computing dynamic front_locked_locations: {e}")
-                    result['front_locked_locations'] = base_front_locked
-            else:
-                result['front_locked_locations'] = base_front_locked
-
-            # Restore original rules
-            for door_name, rule in original_rules.items():
-                try:
-                    entrance = multiworld.get_entrance(door_name, player)
-                    entrance.access_rule = rule
-                except KeyError:
-                    pass
-
-            logger.debug(f"ALttP: TR reachability computed - can_reach_back={result['can_reach_back']}, "
-                        f"front_locked_locations count={len(result['front_locked_locations'])}")
-
-        except Exception as e:
-            logger.warning(f"ALttP: Error computing TR reachability: {e}")
-
-        return result
-
     def _get_option_value(self, option_name: str) -> Any:
         """Get the value of an option from the world.
 
@@ -925,144 +810,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def _fix_trock_empty_locations(self, rule: Dict[str, Any], exit_name: str) -> Dict[str, Any]:
-        """Fix Turtle Rock entrance rules that have empty locations arrays.
-
-        When set_trock_key_rules creates conditional rules based on item_name_in_location_names,
-        the front_locked_locations.union({...}) call in the lambda closure isn't properly
-        evaluated during AST analysis, resulting in empty locations arrays.
-
-        This method detects these cases and fills in the correct locations based on
-        the precomputed _trock_reachability values.
-
-        Args:
-            rule: The rule dictionary to fix
-            exit_name: The name of the exit (e.g., "Turtle Rock (Chain Chomp Room) (South)")
-
-        Returns:
-            The fixed rule with proper locations, or the original rule if not applicable
-        """
-        if not isinstance(rule, dict):
-            return rule
-
-        # Only process Turtle Rock entrances
-        if 'Turtle Rock' not in exit_name:
-            return rule
-
-        # If can_reach_back is True, the rules don't have conditionals - they're simple key requirements
-        if self._trock_reachability.get('can_reach_back', False):
-            return rule
-
-        # Define which locations apply to which exits
-        # Based on set_trock_key_rules in worlds/alttp/Rules.py
-        trock_exit_locations = {
-            'Turtle Rock (Chain Chomp Room) (South)': 'chain_chomp',  # front_locked + Pokey 1 Key Drop
-            'Turtle Rock (Pokey Room) (South)': 'pokey_room',  # front_locked only
-        }
-
-        exit_type = trock_exit_locations.get(exit_name)
-        if not exit_type:
-            return rule
-
-        # Get the front_locked_locations from reachability computation
-        front_locked = self._trock_reachability.get('front_locked_locations', set())
-        if not front_locked:
-            # Use default if not computed
-            front_locked = {
-                ('Turtle Rock - Compass Chest', 1),
-                ('Turtle Rock - Roller Room - Left', 1),
-                ('Turtle Rock - Roller Room - Right', 1)
-            }
-
-        # Build the full locations set for this exit
-        if exit_type == 'chain_chomp':
-            # Chain Chomp Room (South) uses front_locked + Pokey 1 Key Drop
-            player = 1  # Default to player 1, adjust if needed
-            for loc in front_locked:
-                if isinstance(loc, tuple) and len(loc) == 2:
-                    player = loc[1]
-                    break
-            locations = front_locked.union({('Turtle Rock - Pokey 1 Key Drop', player)})
-        else:
-            # Pokey Room (South) uses just front_locked
-            locations = front_locked
-
-        # Now fix the rule - look for AST_placement_search with empty locations
-        return self._fix_empty_locations_in_rule(rule, locations)
-
-    def _fix_empty_locations_in_rule(self, rule: Dict[str, Any], locations: set) -> Dict[str, Any]:
-        """Recursively fix empty locations arrays in placement search rules.
-
-        Args:
-            rule: The rule dictionary to fix
-            locations: The set of (location_name, player) tuples to use
-
-        Returns:
-            The fixed rule
-        """
-        if not isinstance(rule, dict):
-            return rule
-
-        rule_type = rule.get('rule') or rule.get('type')
-
-        # Handle AST_placement_search with empty locations
-        if rule_type in ('AST_placement_search', 'placement_search'):
-            args = rule.get('args', {}) if 'args' in rule else rule
-            current_locations = args.get('locations', [])
-
-            # Check if locations is empty or contains only empty structures
-            is_empty = not current_locations
-            if not is_empty:
-                # Check if it's a list type with empty value
-                if isinstance(current_locations, dict) and current_locations.get('type') == 'list':
-                    is_empty = not current_locations.get('value', [])
-
-            if is_empty:
-                # Convert locations set to the expected format
-                location_list = []
-                for loc_name, player in sorted(locations):
-                    location_list.append({
-                        'type': 'tuple',
-                        'elements': [
-                            {'type': 'constant', 'value': loc_name},
-                            {'type': 'constant', 'value': player}
-                        ]
-                    })
-
-                if 'args' in rule:
-                    rule['args']['locations'] = location_list
-                else:
-                    rule['locations'] = {'type': 'list', 'value': location_list}
-
-                logger.debug(f"ALttP: Fixed empty locations in placement_search, "
-                           f"added {len(location_list)} locations")
-
-        # Recursively process nested structures
-        if 'args' in rule and isinstance(rule['args'], dict):
-            for key, value in rule['args'].items():
-                if isinstance(value, dict):
-                    rule['args'][key] = self._fix_empty_locations_in_rule(value, locations)
-                elif isinstance(value, list):
-                    rule['args'][key] = [
-                        self._fix_empty_locations_in_rule(v, locations) if isinstance(v, dict) else v
-                        for v in value
-                    ]
-
-        # Process AST format nested keys
-        for key in ('test', 'if_true', 'if_false', 'left', 'right'):
-            if key in rule and isinstance(rule[key], dict):
-                rule[key] = self._fix_empty_locations_in_rule(rule[key], locations)
-
-        # Process children/operands/conditions
-        for key in ('children', 'operands', 'conditions'):
-            if key in rule and isinstance(rule[key], list):
-                rule[key] = [
-                    self._fix_empty_locations_in_rule(c, locations) if isinstance(c, dict) else c
-                    for c in rule[key]
-                ]
-
-        return rule
-
     def _resolve_placement_conditionals(self, rule: Dict[str, Any], depth: int = 0) -> Dict[str, Any]:
         """Resolve conditionals with placement-dependent tests to the correct branch.
 
@@ -1149,14 +896,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             item = rule.get('item', '')
             if isinstance(item, str) and item.startswith('Small Key ('):
                 dungeon = item[11:-1]  # Extract dungeon name from 'Small Key (X)'
-                return dungeon in DUNGEON_NAMES
+                return dungeon in self._dungeon_names
 
         # Check item_check type
         if rule.get('type') == 'item_check':
             item = rule.get('item', '')
             if isinstance(item, str) and item.startswith('Small Key ('):
                 dungeon = item[11:-1]
-                return dungeon in DUNGEON_NAMES
+                return dungeon in self._dungeon_names
 
         # Check Rule Builder Has format
         if rule.get('rule') == 'Has':
@@ -1164,7 +911,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             item_name = args.get('item_name', '')
             if isinstance(item_name, str) and item_name.startswith('Small Key ('):
                 dungeon = item_name[11:-1]
-                return dungeon in DUNGEON_NAMES
+                return dungeon in self._dungeon_names
 
         return False
 
@@ -2575,10 +2322,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         # Resolve OptionValue comparisons first
                         exit_data['access_rule'] = self._resolve_option_comparisons_in_rule(
                             exit_data['access_rule']
-                        )
-                        # Fix Turtle Rock entrance rules with empty locations before resolving
-                        exit_data['access_rule'] = self._fix_trock_empty_locations(
-                            exit_data['access_rule'], exit_name
                         )
                         # Resolve placement search conditionals
                         if self._item_placements:

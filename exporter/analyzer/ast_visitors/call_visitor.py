@@ -1571,6 +1571,54 @@ class CallVisitorMixin:
                     else:
                         logging.debug(f"list.index argument is not a constant, keeping as method_call")
 
+                # Handle set-like methods on lists (sets from closures are converted to lists)
+                # This enables evaluation of patterns like: front_locked_locations.union({...})
+                elif method_name == 'union' and len(args) >= 1:
+                    # Evaluate set.union(other) at analysis time
+                    # Treat the list as a set and combine with the argument
+                    other_arg = args[0]
+                    other_elements = self._extract_set_elements(other_arg)
+                    if other_elements is not None:
+                        # Convert to sets for proper union (handles duplicates)
+                        base_set = set(tuple(x) if isinstance(x, list) else x for x in list_value)
+                        other_set = set(tuple(x) if isinstance(x, list) else x for x in other_elements)
+                        # Perform union and convert back to sorted list
+                        union_result = base_set | other_set
+                        # Convert tuples back to lists for JSON serialization
+                        result_list = sorted([list(x) if isinstance(x, tuple) else x for x in union_result], key=lambda x: str(x))
+                        logging.debug(f"Evaluated list.union(...) = {result_list}")
+                        return {'type': 'constant', 'value': result_list}
+                    else:
+                        logging.debug(f"list.union argument could not be resolved, keeping as method_call")
+
+                elif method_name == 'intersection' and len(args) >= 1:
+                    # Evaluate set.intersection(other) at analysis time
+                    other_arg = args[0]
+                    other_elements = self._extract_set_elements(other_arg)
+                    if other_elements is not None:
+                        base_set = set(tuple(x) if isinstance(x, list) else x for x in list_value)
+                        other_set = set(tuple(x) if isinstance(x, list) else x for x in other_elements)
+                        intersection_result = base_set & other_set
+                        result_list = sorted([list(x) if isinstance(x, tuple) else x for x in intersection_result], key=lambda x: str(x))
+                        logging.debug(f"Evaluated list.intersection(...) = {result_list}")
+                        return {'type': 'constant', 'value': result_list}
+                    else:
+                        logging.debug(f"list.intersection argument could not be resolved, keeping as method_call")
+
+                elif method_name == 'difference' and len(args) >= 1:
+                    # Evaluate set.difference(other) at analysis time
+                    other_arg = args[0]
+                    other_elements = self._extract_set_elements(other_arg)
+                    if other_elements is not None:
+                        base_set = set(tuple(x) if isinstance(x, list) else x for x in list_value)
+                        other_set = set(tuple(x) if isinstance(x, list) else x for x in other_elements)
+                        difference_result = base_set - other_set
+                        result_list = sorted([list(x) if isinstance(x, tuple) else x for x in difference_result], key=lambda x: str(x))
+                        logging.debug(f"Evaluated list.difference(...) = {result_list}")
+                        return {'type': 'constant', 'value': result_list}
+                    else:
+                        logging.debug(f"list.difference argument could not be resolved, keeping as method_call")
+
                 # For other list methods or when we can't evaluate, create a method_call structure
                 result = {
                     'type': 'method_call',
@@ -1650,3 +1698,105 @@ class CallVisitorMixin:
             result['args'] = filtered_args
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
+
+    def _extract_set_elements(self, arg: Dict[str, Any]) -> list:
+        """Extract a list of elements from a set/tuple/list/constant structure.
+
+        This handles various representations of collections in the AST:
+        - {'type': 'constant', 'value': [...]} - direct constant value
+        - {'type': 'set', 'elements': [...]} - set literal from AST
+        - {'type': 'tuple', 'elements': [...]} - tuple literal from AST
+        - {'type': 'list', 'value': [...]} - list literal from AST
+
+        For set operations like union/intersection/difference, we need to extract
+        the actual values to perform the operation at analysis time.
+
+        Args:
+            arg: The analyzed argument structure
+
+        Returns:
+            A list of extracted values, or None if extraction failed
+        """
+        if not isinstance(arg, dict):
+            return None
+
+        arg_type = arg.get('type')
+
+        # Handle constant values (already resolved)
+        if arg_type == 'constant':
+            value = arg.get('value')
+            if isinstance(value, (list, tuple)):
+                return list(value)
+            else:
+                return [value]
+
+        # Handle set literals: {'type': 'set', 'elements': [...]}
+        if arg_type == 'set':
+            elements = arg.get('elements', [])
+            return self._extract_elements_to_values(elements)
+
+        # Handle tuple literals: {'type': 'tuple', 'elements': [...]}
+        if arg_type == 'tuple':
+            elements = arg.get('elements', [])
+            extracted = self._extract_elements_to_values(elements)
+            if extracted is not None:
+                # Return as a single tuple element
+                return [tuple(extracted)]
+            return None
+
+        # Handle list literals: {'type': 'list', 'value': [...]}
+        if arg_type == 'list':
+            elements = arg.get('value', [])
+            return self._extract_elements_to_values(elements)
+
+        logging.debug(f"_extract_set_elements: Cannot extract from type '{arg_type}'")
+        return None
+
+    def _extract_elements_to_values(self, elements: list) -> list:
+        """Extract values from a list of element structures.
+
+        Args:
+            elements: List of element dicts from set/tuple/list
+
+        Returns:
+            List of extracted values, or None if any element couldn't be extracted
+        """
+        result = []
+        for elem in elements:
+            if not isinstance(elem, dict):
+                return None
+
+            elem_type = elem.get('type')
+
+            if elem_type == 'constant':
+                result.append(elem.get('value'))
+            elif elem_type == 'tuple':
+                # Recursively extract tuple elements
+                inner = self._extract_elements_to_values(elem.get('elements', []))
+                if inner is None:
+                    return None
+                result.append(tuple(inner))
+            elif elem_type == 'list':
+                # Recursively extract list elements
+                inner = self._extract_elements_to_values(elem.get('value', []))
+                if inner is None:
+                    return None
+                result.append(inner)
+            elif elem_type == 'name':
+                # Try to resolve the name from closure/defaults
+                name = elem.get('name')
+                if name == 'player':
+                    # player is typically 1 for single-player exports
+                    result.append(1)
+                else:
+                    resolved = self.expression_resolver.resolve_variable(name)
+                    if resolved is not None:
+                        result.append(resolved)
+                    else:
+                        logging.debug(f"_extract_elements_to_values: Cannot resolve name '{name}'")
+                        return None
+            else:
+                logging.debug(f"_extract_elements_to_values: Cannot extract from element type '{elem_type}'")
+                return None
+
+        return result
