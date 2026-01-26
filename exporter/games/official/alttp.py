@@ -111,6 +111,14 @@ STANDARD_MIRROR_REVIVAL_DUNGEONS = {
     'Sanctuary',
 }
 
+# All invalid bunny revival dungeons combined - these are the ONLY dungeons
+# that require Moon Pearl or Magic Mirror in glitch modes. All other dungeons
+# allow bunny revival without any item requirements.
+ALL_INVALID_BUNNY_REVIVAL_DUNGEONS = (
+    STANDARD_MIRROR_REVIVAL_DUNGEONS |
+    {SWAMP_PALACE_ENTRANCE, TOWER_OF_HERA_BOTTOM}
+)
+
 # Other superbunny accessible locations in glitch modes that require Magic Mirror
 # (in addition to Moon Pearl as an alternative). Computed dynamically from
 # OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
@@ -2362,11 +2370,27 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
                         # Add Moon Pearl if needed - but ONLY in entrance shuffle modes
                         # Skip this in no_logic single-player mode where no rules are set
+                        #
+                        # IMPORTANT: In glitch modes, dungeons allow bunny revival, meaning
+                        # you can enter as a bunny and revive to Link state inside. Only
+                        # the invalid bunny revival dungeons (Swamp Palace, Tower of Hera,
+                        # Turtle Rock, Sanctuary) have special Moon Pearl requirements.
+                        # For all other dungeons, we skip adding Moon Pearl here.
+                        dest_is_dungeon = connected_region.get('type') == 4  # type 4 = Dungeon
+                        dest_allows_bunny_revival = (
+                            dest_is_dungeon and
+                            connected_region_name not in ALL_INVALID_BUNNY_REVIVAL_DUNGEONS
+                        )
+                        skip_moon_pearl_for_glitch_dungeon = (
+                            self._is_glitch_mode and dest_allows_bunny_revival
+                        )
+
                         if (not self._is_no_logic_single_player and
                             self._entrance_shuffle_mode != 'vanilla' and
                             src_is_pure_bunny_territory and
                             dest_has_non_bunny_locs and
-                            not self._rule_contains_moon_pearl(exit_data.get('access_rule', {}))):
+                            not self._rule_contains_moon_pearl(exit_data.get('access_rule', {})) and
+                            not skip_moon_pearl_for_glitch_dungeon):
                             current_rule = exit_data.get('access_rule', {})
                             logger.debug(f"ALttP: Adding Moon Pearl to exit '{exit_name}' "
                                          f"from bunny territory '{region_name}' to '{connected_region_name}'")
