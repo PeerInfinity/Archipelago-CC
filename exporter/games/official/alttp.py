@@ -10,7 +10,7 @@ This exporter handles ALttP-specific patterns:
   to purchase items from shops.
 """
 
-from typing import Dict, Any, Optional, List, Set
+from typing import Dict, Any, Optional, List, Set, Callable
 from ..base import GenericGameExportHandler
 import logging
 import re
@@ -1473,25 +1473,25 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Get a replacement rule for dungeon reentry rules.
 
         Dungeon reentry rules from dungeon_reentry_rules() reference a dynamically
-        determined dungeon_entrance variable that can't be serialized. These rules
-        are active when entrance_shuffle is 'full' or 'dungeons_full'.
+        determined dungeon_entrance variable. Instead of hardcoding simplified rules,
+        we now extract the actual entrance data and export the real rules.
 
         The rules are:
         1. Entry rule: dungeon_entrance.access_rule(fake_pearl_state(state, player))
-           - Checks if dungeon entrance is accessible with Moon Pearl
-           - Simplified to: requires Moon Pearl (conservative but safe)
+           - Checks if dungeon entrance is accessible with Moon Pearl assumed
+           - We export: entrance's access_rule with Moon Pearl requirements stripped
+             (since fake_pearl_state provides Moon Pearl for free)
 
         2. Exit rule: dungeon_entrance.can_reach(state)
-           - Checks if dungeon entrance region is reachable
-           - Simplified to: True_ (permissive - allows exit even if entrance not reached)
-           - This is safe because it's an exit restriction, not an entry requirement
+           - Checks if dungeon entrance's parent region is reachable
+           - We export: CanReachRegion(parent_region_name)
 
         Args:
             rule_func: The rule function to analyze
             target_name: The name of the entrance/location this rule applies to
 
         Returns:
-            A simplified rule dict
+            A rule dict using real entrance data
         """
         # Try to determine which type of rule this is by examining closure variables
         closure_vars = {}
@@ -1507,28 +1507,77 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if 'dungeon_entrance' in closure_vars:
             dungeon_entrance = closure_vars['dungeon_entrance']
             entrance_name = getattr(dungeon_entrance, 'name', 'unknown')
+            parent_region_name = getattr(getattr(dungeon_entrance, 'parent_region', None), 'name', None)
             logger.info(f"ALttP: Intercepting dungeon_reentry rule for '{target_name}' "
-                       f"(dungeon_entrance={entrance_name})")
+                       f"(dungeon_entrance={entrance_name}, parent_region={parent_region_name})")
 
             # Try to get the source code to distinguish between access_rule and can_reach
             try:
                 import inspect
                 source = inspect.getsource(rule_func)
                 if 'access_rule' in source and 'fake_pearl_state' in source:
-                    # Entry rule - requires reaching dungeon entrance with Moon Pearl
-                    # Simplify to just requiring Moon Pearl
-                    logger.debug(f"ALttP: Replacing access_rule(fake_pearl_state) with Moon Pearl requirement")
+                    # Entry rule - requires entrance's access rule with Moon Pearl assumed
+                    # Get the entrance's actual access_rule and analyze it
+                    access_rule_func = getattr(dungeon_entrance, 'access_rule', None)
+                    if access_rule_func is not None and callable(access_rule_func):
+                        logger.debug(f"ALttP: Analyzing dungeon_entrance.access_rule for '{entrance_name}'")
+                        try:
+                            # Local import to avoid circular import
+                            from exporter.analyzer import analyze_rule
+                            # Get player context from world if available
+                            player_ctx = getattr(self.world, 'player', None) if self.world else None
+                            # Recursively analyze the entrance's access rule
+                            analyzed_rule = analyze_rule(
+                                rule_func=access_rule_func,
+                                game_handler=self,
+                                player_context=player_ctx,
+                                rule_target_name=f"dungeon_reentry:{entrance_name}",
+                                target_type='Entrance'
+                            )
+                            # Strip Moon Pearl requirements since fake_pearl_state provides it
+                            if analyzed_rule and not analyzed_rule.get('error'):
+                                result = self._remove_moon_pearl_from_rule(analyzed_rule, f"dungeon_reentry:{entrance_name}")
+                                logger.debug(f"ALttP: Exported entry rule for '{target_name}': {result}")
+                                return result
+                        except Exception as e:
+                            logger.warning(f"ALttP: Failed to analyze access_rule for '{entrance_name}': {e}")
+                    # Fallback to Moon Pearl if we can't analyze the access rule
+                    logger.debug(f"ALttP: Falling back to Moon Pearl for entry rule '{target_name}'")
                     return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
-                elif 'can_reach' in source:
-                    # Exit rule - checks if entrance region is reachable
-                    # Simplify to True_ (permissive) since we can't know the entrance
-                    logger.debug(f"ALttP: Replacing can_reach rule with True_")
-                    return {'rule': 'True_'}
-            except (OSError, TypeError):
-                pass
 
-            # Default: if we can't determine the type, use Moon Pearl (safer)
-            logger.debug(f"ALttP: Unknown dungeon_reentry rule type, using Moon Pearl")
+                elif 'can_reach' in source:
+                    # Exit rule - checks if entrance's parent region is reachable
+                    if parent_region_name:
+                        logger.debug(f"ALttP: Using CanReachRegion('{parent_region_name}') for exit rule '{target_name}'")
+                        return {'rule': 'CanReachRegion', 'args': {'region_name': parent_region_name}}
+                    # Fallback to True_ if we can't get the parent region
+                    logger.debug(f"ALttP: Falling back to True_ for exit rule '{target_name}'")
+                    return {'rule': 'True_'}
+            except (OSError, TypeError) as e:
+                logger.debug(f"ALttP: Could not get source for rule_func: {e}")
+
+            # Default: if we can't determine the type, try to use the access rule
+            access_rule_func = getattr(dungeon_entrance, 'access_rule', None)
+            if access_rule_func is not None and callable(access_rule_func):
+                try:
+                    # Local import to avoid circular import
+                    from exporter.analyzer import analyze_rule
+                    player_ctx = getattr(self.world, 'player', None) if self.world else None
+                    analyzed_rule = analyze_rule(
+                        rule_func=access_rule_func,
+                        game_handler=self,
+                        player_context=player_ctx,
+                        rule_target_name=f"dungeon_reentry:{entrance_name}",
+                        target_type='Entrance'
+                    )
+                    if analyzed_rule and not analyzed_rule.get('error'):
+                        result = self._remove_moon_pearl_from_rule(analyzed_rule, f"dungeon_reentry:{entrance_name}")
+                        logger.debug(f"ALttP: Exported default rule for '{target_name}': {result}")
+                        return result
+                except Exception as e:
+                    logger.warning(f"ALttP: Failed to analyze access_rule for '{entrance_name}': {e}")
+
+            logger.debug(f"ALttP: Unknown dungeon_reentry rule type for '{target_name}', using Moon Pearl")
             return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
 
         # No dungeon_entrance in closure - this might be a simpler rule
@@ -1565,8 +1614,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         has_problematic_closure = False
         problematic_reason = None
         is_combined_or_rule = False  # True if this is a combined rule from add_rule(..., combine='or')
+        is_combined_and_rule = False  # True if this is a combined rule from add_rule(...) with default combine='and'
         glitch_rule_source = None  # Source code of the glitch rule if it's in closure
         old_rule_func = None  # The original rule from a combined or-rule
+        rule_func_in_closure = None  # The 'rule' variable from combined rule
+        rule_is_dungeon_reentry = False  # True if 'rule' is from dungeon_reentry_rules
 
         if hasattr(rule_func, '__closure__') and rule_func.__closure__:
             free_vars = rule_func.__code__.co_freevars
@@ -1586,20 +1638,33 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         problematic_reason = "rule_map dict"
 
                     # Check for nested lambdas (mirrorless_moat_rule, hera_rule, gt_rule, etc.)
-                    elif callable(value) and 'underworld_glitches_rules' in getattr(value, '__qualname__', ''):
+                    # Also check for dungeon_reentry_rules lambdas
+                    elif callable(value) and ('underworld_glitches_rules' in getattr(value, '__qualname__', '') or
+                                              'dungeon_reentry_rules' in getattr(value, '__qualname__', '')):
                         has_problematic_closure = True
                         problematic_reason = f"nested lambda {var_name}"
-                        # If this is named 'rule', it's likely from add_rule(spot, rule, combine='or')
+                        # If this is named 'rule', it's from add_rule(spot, rule)
                         if var_name == 'rule':
-                            is_combined_or_rule = 'old_rule' in free_vars
+                            rule_func_in_closure = value
+                            # Check if this is from dungeon_reentry_rules specifically
+                            if 'dungeon_reentry_rules' in getattr(value, '__qualname__', ''):
+                                rule_is_dungeon_reentry = True
+                            # Combined rule check: 'old_rule' indicates combine was used
+                            if 'old_rule' in free_vars:
+                                is_combined_or_rule = True  # Could be AND or OR, we'll determine later
                             # Try to get the source of the glitch rule
                             try:
                                 glitch_rule_source = inspect.getsource(value)
                             except (OSError, TypeError):
                                 pass
+                        # If this is named 'old_rule', capture it for later analysis
+                        # (even though it's a glitch rule, we may need to combine with it)
+                        elif var_name == 'old_rule':
+                            old_rule_func = value
 
                     # Store old_rule for later analysis if this is a combined or-rule
-                    elif var_name == 'old_rule' and callable(value):
+                    # (only if not already captured above)
+                    elif var_name == 'old_rule' and callable(value) and old_rule_func is None:
                         old_rule_func = value
 
                     # Check for mire_clip, hera_clip (lambda functions) - alternate detection
@@ -1625,6 +1690,31 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         logger.info(f"ALttP: Intercepting underworld_glitch rule for '{target_name}' "
                    f"(reason: {problematic_reason})")
+
+        # Special handling for combined rules where 'rule' is from dungeon_reentry_rules
+        # The combined rule is: rule(state) AND/OR old_rule(state)
+        # For dungeon_reentry_rules, we can analyze 'rule' properly now
+        if rule_is_dungeon_reentry and rule_func_in_closure is not None:
+            logger.debug(f"ALttP: Combined rule with dungeon_reentry - analyzing both parts for '{target_name}'")
+            # Analyze the dungeon_reentry rule
+            dungeon_reentry_result = self._get_dungeon_reentry_replacement_rule(rule_func_in_closure, target_name)
+            if dungeon_reentry_result is not None:
+                # If old_rule exists, try to analyze it and combine with AND
+                if old_rule_func is not None:
+                    # For base clip rules, use a simplified rule (Pegasus Boots for can_bomb_clip)
+                    old_rule_qualname = getattr(old_rule_func, '__qualname__', '')
+                    if 'underworld_glitches_rules' in old_rule_qualname:
+                        # Base clip rule - simplified to Pegasus Boots requirement
+                        logger.debug(f"ALttP: Base clip rule simplified to Pegasus Boots")
+                        return {
+                            'rule': 'And',
+                            'children': [
+                                {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}},
+                                dungeon_reentry_result
+                            ]
+                        }
+                # No old_rule or can't analyze it - just return the dungeon_reentry result
+                return dungeon_reentry_result
 
         # For combined rules (from add_rule with combine='or'), prioritize analyzing old_rule
         # to preserve the original (non-glitch) rule requirements.
@@ -1774,9 +1864,16 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # If so, recursively handle it
         old_rule_qualname = getattr(old_rule_func, '__qualname__', '')
 
-        # If old_rule is also from underworld_glitches_rules or dungeon_reentry_rules,
-        # it may be a chained combined rule. Check its closure.
-        if 'underworld_glitches_rules' in old_rule_qualname or 'dungeon_reentry_rules' in old_rule_qualname:
+        # If old_rule is from dungeon_reentry_rules, use our specialized handler
+        if 'dungeon_reentry_rules' in old_rule_qualname:
+            logger.debug(f"ALttP: old_rule is from dungeon_reentry_rules, using specialized handler")
+            result = self._get_dungeon_reentry_replacement_rule(old_rule_func, target_name)
+            if result is not None:
+                return result
+            # If dungeon_reentry handler returns None, fall through to other checks
+
+        # If old_rule is from underworld_glitches_rules, it may be a chained combined rule
+        if 'underworld_glitches_rules' in old_rule_qualname:
             # This is another problematic rule - use conservative approach
             logger.debug(f"ALttP: old_rule is also a glitch rule, using False_")
             return None
