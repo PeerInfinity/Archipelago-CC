@@ -11,9 +11,10 @@ This is the largest visitor method and handles various call patterns including:
 
 import ast
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from ..utils import is_simple_value, make_json_serializable
+from ..closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
 
 
 class CallVisitorMixin:
@@ -585,13 +586,33 @@ class CallVisitorMixin:
                                     if item_result and item_result.get('type') != 'error':
                                         analyzed_items.append(item_result)
                                     else:
-                                        logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
-                                        analyzed_items = None
-                                        break
+                                        # Try ClosureFunctionAnalyzer as fallback for bunny rules
+                                        logging.debug(f"all(GeneratorExp): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"all(GeneratorExp): ClosureFunctionAnalyzer succeeded")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
+                                            analyzed_items = None
+                                            break
                                 except Exception as e:
                                     logging.debug(f"Error analyzing item in {iterator_name}: {e}")
-                                    analyzed_items = None
-                                    break
+                                    # Try ClosureFunctionAnalyzer as fallback
+                                    try:
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"all(GeneratorExp): ClosureFunctionAnalyzer fallback succeeded after exception")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            analyzed_items = None
+                                            break
+                                    except Exception as fallback_e:
+                                        logging.debug(f"all(GeneratorExp): ClosureFunctionAnalyzer also failed: {fallback_e}")
+                                        analyzed_items = None
+                                        break
 
                             if analyzed_items:
                                 # Successfully analyzed all items - return an 'and' of all items
@@ -699,13 +720,33 @@ class CallVisitorMixin:
                                     if item_result and item_result.get('type') != 'error':
                                         analyzed_items.append(item_result)
                                     else:
-                                        logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
-                                        analyzed_items = None
-                                        break
+                                        # Try ClosureFunctionAnalyzer as fallback for bunny rules
+                                        logging.debug(f"any(GeneratorExp): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"any(GeneratorExp): ClosureFunctionAnalyzer succeeded")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
+                                            analyzed_items = None
+                                            break
                                 except Exception as e:
                                     logging.debug(f"Error analyzing item in {iterator_name}: {e}")
-                                    analyzed_items = None
-                                    break
+                                    # Try ClosureFunctionAnalyzer as fallback
+                                    try:
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"any(GeneratorExp): ClosureFunctionAnalyzer fallback succeeded after exception")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            analyzed_items = None
+                                            break
+                                    except Exception as fallback_e:
+                                        logging.debug(f"any(GeneratorExp): ClosureFunctionAnalyzer also failed: {fallback_e}")
+                                        analyzed_items = None
+                                        break
 
                             if analyzed_items:
                                 # Successfully analyzed all items - return an 'or' of all items (different from 'all')
@@ -743,13 +784,33 @@ class CallVisitorMixin:
                                             if item_result and item_result.get('type') != 'error':
                                                 inner_conditions.append(item_result)
                                             else:
-                                                logging.debug(f"Could not analyze item in nested list, falling back to unresolved")
-                                                analysis_failed = True
-                                                break
+                                                # Try ClosureFunctionAnalyzer as fallback
+                                                logging.debug(f"any(GeneratorExp nested): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                                closure_analyzer = ClosureFunctionAnalyzer(self)
+                                                fallback_result = closure_analyzer.analyze_function(item_func)
+                                                if fallback_result:
+                                                    logging.debug(f"any(GeneratorExp nested): ClosureFunctionAnalyzer succeeded")
+                                                    inner_conditions.append(fallback_result)
+                                                else:
+                                                    logging.debug(f"Could not analyze item in nested list, falling back to unresolved")
+                                                    analysis_failed = True
+                                                    break
                                         except Exception as e:
                                             logging.debug(f"Error analyzing item in nested list: {e}")
-                                            analysis_failed = True
-                                            break
+                                            # Try ClosureFunctionAnalyzer as fallback
+                                            try:
+                                                closure_analyzer = ClosureFunctionAnalyzer(self)
+                                                fallback_result = closure_analyzer.analyze_function(item_func)
+                                                if fallback_result:
+                                                    logging.debug(f"any(GeneratorExp nested): ClosureFunctionAnalyzer fallback succeeded")
+                                                    inner_conditions.append(fallback_result)
+                                                else:
+                                                    analysis_failed = True
+                                                    break
+                                            except Exception as fallback_e:
+                                                logging.debug(f"any(GeneratorExp nested): ClosureFunctionAnalyzer also failed: {fallback_e}")
+                                                analysis_failed = True
+                                                break
 
                                     if analysis_failed:
                                         break
