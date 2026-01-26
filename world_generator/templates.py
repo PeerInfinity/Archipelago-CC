@@ -252,7 +252,10 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # Dynamic references need lambda to generate proper runtime access patterns
     # These are evaluated to constants in Rule Builder but should be preserved
     # as dynamic option/attribute access for proper re-export
-    if rule_type in ('setting_value',):
+    # - setting_value: legacy setting access
+    # - placement_lookup: location_item_name() calls require state
+    # - option_value: world options require state.multiworld access
+    if rule_type in ('setting_value', 'placement_lookup', 'option_value'):
         return True
 
     # AST format dynamic references also need lambda

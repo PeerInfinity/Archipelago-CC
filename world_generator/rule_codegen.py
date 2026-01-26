@@ -3654,22 +3654,24 @@ class RuleCodeGenerator:
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
         """Generate code to access an option at runtime.
 
-        Options are accessed via the world's options attribute at runtime.
-        This generates: state.multiworld.worlds[player].options.<name>
-        This pattern is recognized by the exporter's _is_world_options_pattern().
+        For Rule Builder context, we generate OptionValue('option_name') which is a
+        proper Rule Builder object that can be composed with And/Or operators.
+        This allows options to be checked at rule evaluation time.
         """
         option = expr.get('option', '')
-        base_path = f'state.multiworld.worlds[player].options.{option}'
 
-        # Handle indexed access (not common for options, but supported)
+        # Handle indexed access (not common for options, use raw Python for this case)
         if 'index' in expr:
             index = expr['index']
+            base_path = f'state.multiworld.worlds[player].options.{option}'
             if isinstance(index, int):
                 return f'{base_path}[{index}]'
             elif isinstance(index, str):
                 return f'{base_path}[{repr(index)}]'
 
-        return base_path
+        # Generate OptionValue for proper Rule Builder composition
+        self.required_imports.add('OptionValue')
+        return f"OptionValue({repr(option)})"
 
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
