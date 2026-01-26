@@ -674,6 +674,8 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         "",
         "[<- Back to Test Results Summary](./test-results-summary.md)",
         "",
+        "[📖 Learn about this test](../tests/test-world-generator.md)",
+        "",
         f"**Generated:** {generated_display}",
         "",
     ]
@@ -743,6 +745,8 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "# World Generator Test Results",
         "",
         "[<- Back to Test Results Summary](./test-results-summary.md)",
+        "",
+        "[📖 Learn about this test](../tests/test-world-generator.md)",
         "",
         f"**Generated:** {generated_display}",
         "",
