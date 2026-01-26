@@ -230,9 +230,11 @@ For example, with `entrance_shuffle=restricted` and `glitches_required=overworld
 
 **Fixes Applied:**
 
-1. **er_seed pre-generation** (`fuzzer_hook.py`): The fuzzer now pre-generates `entrance_shuffle_seed` before generation runs, ensuring the YAML has the correct seed value before the world is created. This ensures consistent entrance connections between original and regenerated worlds.
+1. **Numeric entrance_shuffle_seed generation** (`fuzz.py`): The fuzzer's `get_random_value()` always generates a numeric string for `entrance_shuffle_seed` instead of random Unicode garbage or "random". This ensures consistent entrance connections between original and regenerated worlds.
 
-2. **Turtle Rock key rule location fix** (`exporter/games/official/alttp.py`): The exporter now computes TR reachability (`can_reach_back`, `front_locked_locations`) at export time and fixes empty `locations` arrays in conditional key rules. When `set_trock_key_rules` creates rules with `front_locked_locations.union({...})`, the `.union()` call wasn't being evaluated during AST analysis - this fix properly populates the locations.
+2. **er_seed pre-generation safety net** (`fuzzer_hook.py`): As a backup, the fuzzer hook validates that `entrance_shuffle_seed` is numeric before generation runs. If it finds "random" or invalid values, it pre-generates a numeric seed. This catches edge cases like manually-created YAMLs.
+
+3. **Turtle Rock key rule location fix** (`exporter/games/official/alttp.py`): The exporter now computes TR reachability (`can_reach_back`, `front_locked_locations`) at export time and fixes empty `locations` arrays in conditional key rules. When `set_trock_key_rules` creates rules with `front_locked_locations.union({...})`, the `.union()` call wasn't being evaluated during AST analysis - this fix properly populates the locations.
 
 **Remaining Issues:**
 

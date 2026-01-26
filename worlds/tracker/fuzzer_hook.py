@@ -325,16 +325,20 @@ class Hook(BaseHook):
             logger.warning(f"Failed to write explain stats: {e}")
 
     def _pregenerate_alttp_entrance_shuffle_seed(self):
-        """Pre-generate entrance_shuffle_seed for ALttP before generation.
+        """Safety net to ensure entrance_shuffle_seed is numeric for ALttP.
 
-        When ALttP has entrance_shuffle != "vanilla" and entrance_shuffle_seed == "random",
-        it generates a random er_seed in generate_early(). This causes problems for
-        worldgen-based tracking because the exported rules.json uses one er_seed but
-        any regeneration would use a different one.
+        Note: fuzz.py's get_random_value() now always generates numeric seeds for
+        entrance_shuffle_seed, so this function mainly serves as a backup for edge
+        cases like manually-created YAMLs or other generation paths.
 
-        By pre-generating a numeric seed and writing it to the YAML before generation,
-        we ensure the original generation uses our explicit seed, which then gets
-        exported in rules.json and used consistently.
+        When ALttP has entrance_shuffle != "vanilla" and entrance_shuffle_seed == "random"
+        (or invalid garbage), it generates a random er_seed in generate_early(). This
+        causes problems for worldgen-based tracking because the exported rules.json
+        uses one er_seed but any regeneration would use a different one.
+
+        By validating/pre-generating a numeric seed and writing it to the YAML before
+        generation, we ensure the original generation uses an explicit seed, which then
+        gets exported in rules.json and used consistently.
         """
         import os
         import random
