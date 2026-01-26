@@ -159,6 +159,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
         self._entrance_shuffle_mode = self._check_entrance_shuffle_mode(world)
+        self._is_no_logic_single_player = self._check_no_logic_single_player(world)
         self._item_placements: Dict[str, str] = {}
         # Turtle Rock key rule reachability - computed for fixing empty locations in conditionals
         self._trock_reachability = self._compute_trock_reachability(world)
@@ -231,6 +232,33 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if mode in ('full', 'dungeons_full'):
             logger.info(f"ALttP: Entrance shuffle mode '{mode}' detected - will intercept glitch rules")
         return mode
+
+    def _check_no_logic_single_player(self, world) -> bool:
+        """Check if the world is in no_logic single-player mode.
+
+        In no_logic single-player mode, ALttP's set_rules() returns early
+        without setting any rules at all. This means:
+        - All locations are accessible without items
+        - All exits are passable without items
+        - No bunny rules, no key rules, nothing
+
+        We need to detect this to avoid exporting rules that don't exist
+        in the original world. When this returns True, all rules should
+        be trivially True (no access requirements).
+        """
+        if world is None:
+            return False
+        if not hasattr(world, 'options') or not hasattr(world.options, 'glitches_required'):
+            return False
+        if world.options.glitches_required.current_key != 'no_logic':
+            return False
+        # Check if this is a single-player world
+        if not hasattr(world, 'multiworld'):
+            return False
+        if world.multiworld.players != 1:
+            return False
+        logger.info("ALttP: Detected no_logic single-player mode - all rules will be trivial")
+        return True
 
     def _compute_trock_reachability(self, world) -> Dict[str, Any]:
         """Compute Turtle Rock key rule reachability values.
@@ -2395,6 +2423,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     location_name = location_data.get('name', '')
                     access_rule = location_data.get('access_rule', {})
 
+                    # In no_logic single-player mode, all locations should be trivially accessible
+                    if self._is_no_logic_single_player:
+                        location_data['access_rule'] = {}
+                        continue
+
                     # Resolve OptionValue comparisons first (e.g., mode checks, small_key_shuffle checks)
                     if access_rule:
                         location_data['access_rule'] = self._resolve_option_comparisons_in_rule(access_rule)
@@ -2436,6 +2469,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
+                    # In no_logic single-player mode, all exits should be trivially passable
+                    # since set_rules() returns early without setting any rules
+                    if self._is_no_logic_single_player:
+                        exit_data['access_rule'] = {'rule': 'True_'}
+                        continue
                     if 'access_rule' in exit_data and exit_data['access_rule']:
                         # Resolve OptionValue comparisons first
                         exit_data['access_rule'] = self._resolve_option_comparisons_in_rule(
@@ -2516,7 +2554,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         )
 
                         # Add Moon Pearl if needed - but ONLY in entrance shuffle modes
-                        if (self._entrance_shuffle_mode != 'vanilla' and
+                        # Skip this in no_logic single-player mode where no rules are set
+                        if (not self._is_no_logic_single_player and
+                            self._entrance_shuffle_mode != 'vanilla' and
                             src_is_pure_bunny_territory and
                             dest_has_non_bunny_locs and
                             not self._rule_contains_moon_pearl(exit_data.get('access_rule', {}))):
@@ -2549,13 +2589,17 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         # Note: Swamp Palace is NOT included - 0hp revival isn't in logic,
                         # so only Moon Pearl works there.
                         # Note: Tower of Hera (Bottom) has a special case requiring sword.
-                        if self._is_glitch_mode and connected_region_name in STANDARD_MIRROR_REVIVAL_DUNGEONS:
+                        # Skip in no_logic single-player mode where no rules are set.
+                        if (not self._is_no_logic_single_player and
+                            self._is_glitch_mode and connected_region_name in STANDARD_MIRROR_REVIVAL_DUNGEONS):
                             exit_data['access_rule'] = self._add_mirror_alternative_to_moon_pearl(
                                 exit_data['access_rule'], exit_name
                             )
                         # Tower of Hera (Bottom) has a special case - requires hitting a crystal switch.
                         # Rule is: (Magic Mirror AND sword) OR Moon Pearl
-                        if self._is_glitch_mode and connected_region_name == TOWER_OF_HERA_BOTTOM:
+                        # Skip in no_logic single-player mode where no rules are set.
+                        if (not self._is_no_logic_single_player and
+                            self._is_glitch_mode and connected_region_name == TOWER_OF_HERA_BOTTOM):
                             exit_data['access_rule'] = self._add_hera_bottom_alternative_to_moon_pearl(
                                 exit_data['access_rule'], exit_name
                             )
@@ -2578,6 +2622,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
                     connected_region = entrance_data.get('connected_region', '')
+                    # In no_logic single-player mode, all entrances should be trivially passable
+                    if self._is_no_logic_single_player:
+                        entrance_data['access_rule'] = {'rule': 'True_'}
+                        continue
                     if 'access_rule' in entrance_data and entrance_data['access_rule']:
                         # Resolve OptionValue comparisons first
                         entrance_data['access_rule'] = self._resolve_option_comparisons_in_rule(

@@ -16,6 +16,12 @@ Run the fuzzer with a specific game:
 python fuzz.py -r <runs> -j <jobs> -g <game> -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
 
+**Important:** On Linux, use `exec` to avoid module caching issues (see [Troubleshooting](#module-caching-with-code-changes)):
+
+```bash
+exec python fuzz.py -r <runs> -j <jobs> -g <game> -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+```
+
 ### Parameters
 
 | Parameter | Description |
@@ -43,8 +49,11 @@ python fuzz.py -r 50 -j 8 -g adventure -n 1 --hook worlds.tracker.fuzzer_hook:Ho
 ### ALttP Testing
 
 ```bash
-python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+# Use exec to ensure fresh module imports (avoids caching issues)
+exec python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
+
+**Expected pass rate:** ~60-70% due to entrance shuffle and glitch mode limitations (see [Known Limitations](#alttp)).
 
 ### Testing with Specific Options
 
@@ -230,9 +239,17 @@ For example, with `entrance_shuffle=restricted` and `glitches_required=overworld
 
 **Fixes Applied:**
 
-1. **er_seed pre-generation** (`fuzzer_hook.py`): The fuzzer now pre-generates `entrance_shuffle_seed` before generation runs, ensuring the YAML has the correct seed value before the world is created. This ensures consistent entrance connections between original and regenerated worlds.
+1. **Numeric entrance_shuffle_seed generation** (`fuzz.py`): The fuzzer's `get_random_value()` always generates a numeric string for `entrance_shuffle_seed` instead of random Unicode garbage or "random". This ensures consistent entrance connections between original and regenerated worlds.
 
-2. **Turtle Rock key rule location fix** (`exporter/games/official/alttp.py`): The exporter now computes TR reachability (`can_reach_back`, `front_locked_locations`) at export time and fixes empty `locations` arrays in conditional key rules. When `set_trock_key_rules` creates rules with `front_locked_locations.union({...})`, the `.union()` call wasn't being evaluated during AST analysis - this fix properly populates the locations.
+2. **er_seed pre-generation safety net** (`fuzzer_hook.py`): As a backup, the fuzzer hook validates that `entrance_shuffle_seed` is numeric before generation runs. If it finds "random" or invalid values, it pre-generates a numeric seed. This catches edge cases like manually-created YAMLs.
+
+3. **Turtle Rock key rule location fix** (`exporter/games/official/alttp.py`): The exporter now computes TR reachability (`can_reach_back`, `front_locked_locations`) at export time and fixes empty `locations` arrays in conditional key rules. When `set_trock_key_rules` creates rules with `front_locked_locations.union({...})`, the `.union()` call wasn't being evaluated during AST analysis - this fix properly populates the locations.
+
+4. **Shop price rule generation** (`exporter/games/official/alttp.py`): When `randomize_cost_types` is enabled, shop locations can require Hearts, Bombs, or Arrows instead of Rupees. The exporter's `post_process_location_data` method generates appropriate access rules:
+   - Hearts (type 1): `has_hearts` helper with count = (price // 8) + 1
+   - Bombs (type 3): `can_use_bombs` helper with count = price
+   - Arrows (type 4): `can_hold_arrows` helper with count = price
+   - Rupees/Magic (types 0, 2): No rule needed (always accessible)
 
 **Remaining Issues:**
 
