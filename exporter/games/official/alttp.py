@@ -1604,8 +1604,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         Returns:
             A serialized rule dict, or None if analysis fails
         """
-        # First, check if old_rule_func itself has problematic closures
-        # If so, recursively handle it
         old_rule_qualname = getattr(old_rule_func, '__qualname__', '')
 
         # If old_rule is from dungeon_reentry_rules, use our specialized handler
@@ -1614,15 +1612,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             result = self._get_dungeon_reentry_replacement_rule(old_rule_func, target_name)
             if result is not None:
                 return result
-            # If dungeon_reentry handler returns None, fall through to other checks
+            # If dungeon_reentry handler returns None, fall through to standard analysis
 
-        # If old_rule is from underworld_glitches_rules, it may be a chained combined rule
-        if 'underworld_glitches_rules' in old_rule_qualname:
-            # This is another problematic rule - use conservative approach
-            logger.debug(f"ALttP: old_rule is also a glitch rule, returning None")
-            return None
-
-        # Check if old_rule has its own problematic closure (nested combined rules)
+        # Check if old_rule has closures the analyzer can't handle
+        # (This also catches underworld_glitches_rules via qualname check)
         if self._has_problematic_closure(old_rule_func):
             logger.debug(f"ALttP: old_rule has problematic closure, returning None")
             return None
@@ -1644,70 +1637,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 logger.debug(f"ALttP: Successfully analyzed old_rule for '{target_name}' using standard analyzer")
                 return result
 
-            # Analysis failed - check if this is a nested combined lambda
-            # that we might have a fallback rule for
             error_msg = result.get('message', '') if result else ''
             logger.debug(f"ALttP: Standard analyzer failed for old_rule '{target_name}': {error_msg}")
-
-            # Try to get source to check for nested combined lambda pattern
-            import inspect
-            try:
-                source = inspect.getsource(old_rule_func)
-                if 'rule(state)' in source and 'old_rule(state)' in source:
-                    # This is a nested combined lambda - use fallback rules
-                    logger.debug(f"ALttP: Nested combined lambda for '{target_name}', using fallback")
-                    return self._get_dungeon_door_fallback_rule(target_name)
-            except (OSError, TypeError):
-                pass
-
             return None
 
         except Exception as e:
             logger.debug(f"ALttP: Could not analyze old_rule: {e}")
             return None
-
-    def _get_dungeon_door_fallback_rule(self, target_name: str) -> Optional[Dict[str, Any]]:
-        """Get a fallback rule for dungeon doors when old_rule analysis fails.
-
-        When the old_rule is itself a nested combined lambda (from multiple add_rule calls),
-        we can't easily analyze it. For known dungeon doors, we use fallback rules based
-        on the original game requirements.
-
-        Big Key Doors typically require:
-        - The Big Key for that dungeon
-        - Optional: can_activate_crystal_switch (for Tower of Hera)
-
-        Args:
-            target_name: The name of the entrance
-
-        Returns:
-            A rule dict or None if no fallback is available
-        """
-        # Map of Big Key Doors to their Big Key requirements
-        # These are the baseline requirements that glitches can bypass
-        big_key_door_map = {
-            'Tower of Hera Big Key Door': {
-                'rule': 'And',
-                'children': [
-                    {'rule': 'can_activate_crystal_switch', '_original_ast_type': 'helper', '_converted_from_ast': True},
-                    {'rule': 'Has', 'args': {'item_name': 'Big Key (Tower of Hera)'}}
-                ]
-            },
-            'Swamp Palace Small Key Door': {
-                'rule': 'Has',
-                'args': {'item_name': 'Small Key (Swamp Palace)'}
-            },
-            'Ice Palace (Main)': {
-                'rule': 'Has',
-                'args': {'item_name': 'Small Key (Ice Palace)', 'count': 2}
-            },
-        }
-
-        if target_name in big_key_door_map:
-            logger.info(f"ALttP: Using fallback rule for '{target_name}'")
-            return big_key_door_map[target_name]
-
-        return None
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.
