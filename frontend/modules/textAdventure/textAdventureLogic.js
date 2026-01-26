@@ -93,33 +93,38 @@ export class TextAdventureLogic {
     handleRulesLoaded(data) {
         log('info', 'Rules loaded, initializing player positioning and display');
         log('debug', 'Rules loaded event data:', data);
-        
+
+        // Clear message history and show initial message
+        // This is done here so that the region display follows the "Rules loaded!" message
+        this.clearMessageHistory();
+        this.addMessage('Rules loaded! Your adventure begins...');
+
         try {
             // Get snapshot and static data
             const snapshot = data.snapshot;
             const staticData = stateManager.getStaticData();
-            
+
             log('debug', 'Snapshot from event:', { hasSnapshot: !!snapshot });
             log('debug', 'Static data:', { hasStaticData: !!staticData, hasRegions: !!(staticData && staticData.regions) });
-            
+
             if (!snapshot) {
                 log('error', 'No snapshot in rules loaded event. Cannot initialize player.');
                 this.displayCurrentRegion(); // Show fallback
                 return;
             }
-            
+
             if (!staticData || !staticData.regions) {
                 log('error', 'No static data or regions available. Cannot initialize player.');
                 this.displayCurrentRegion(); // Show fallback
                 return;
             }
-            
+
             // Reset retry attempts since we got valid data
             this.retryAttempts = 0;
-            
+
             // Initialize player positioning with the snapshot and static data
             this.initializePlayerWithSnapshot(snapshot, staticData);
-            
+
         } catch (error) {
             log('error', 'Error handling rules loaded:', error);
             this.displayCurrentRegion(); // Show fallback
@@ -954,6 +959,13 @@ export class TextAdventureLogic {
      */
     handleRegionChange(data) {
         log('info', 'Region changed:', data);
+
+        // Skip display if this is from a reset (oldRegion is null)
+        // handleRulesLoaded will display the region after showing "Rules loaded!"
+        if (data && data.oldRegion === null) {
+            log('debug', 'Skipping region display - this is from reset, handleRulesLoaded will display');
+            return;
+        }
 
         // Only display if the region is different from the last one we displayed
         // This prevents duplicate messages when sync events fire
