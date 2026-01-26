@@ -191,6 +191,8 @@ def generate_fuzz_summary_markdown(
     else:
         md_content += "[View APWorlds Fuzz Results](./test-results-fuzz-summary-apworlds.md)\n\n"
 
+    md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
+
     # Description
     md_content += "This summary combines results from fuzz tests that validate game configurations "
     md_content += "across randomized option combinations:\n\n"
