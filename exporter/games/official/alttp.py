@@ -2471,14 +2471,79 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
                             # Exiting from a mixed region to pure Dark World requires Moon Pearl
                             dest_is_pure_bunny_territory = dest_is_dark and not dest_is_light
+
+                        # Check if all locations in the destination are bunny-accessible.
+                        # If so, we don't need Moon Pearl even in bunny territory since
+                        # bunnies can collect items at these locations.
+                        dest_locations = [loc.get('name', '') for loc in connected_region.get('locations', [])]
+                        dest_all_bunny_accessible = (
+                            len(dest_locations) > 0 and
+                            all(loc in BUNNY_ACCESSIBLE_LOCATIONS for loc in dest_locations)
+                        )
+
                         should_keep_moon_pearl = (
                             (is_bunny_impassable and self._is_inverted_mode) or
-                            dest_is_pure_bunny_territory
+                            (dest_is_pure_bunny_territory and not dest_all_bunny_accessible)
                         )
                         if is_mixed_region and not should_keep_moon_pearl:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
+
+                        # For exits FROM pure bunny territory (not mixed) to regions with
+                        # non-bunny-accessible locations, ADD Moon Pearl requirement.
+                        # This handles entrance shuffle cases where an exit from bunny
+                        # territory leads to a region that wasn't originally accessible
+                        # from that world.
+                        #
+                        # IMPORTANT: Only apply this in entrance shuffle modes. In vanilla mode,
+                        # DW regions like Dark Death Mountain (West Bottom) are directly reachable
+                        # from Light World via teleporter, so the player arrives in Link state
+                        # and doesn't need Moon Pearl for exits. The original Python rules
+                        # account for these Light World paths via set_bunny_rules() path tracing.
+                        src_is_pure_bunny_territory = False
+                        if self._is_inverted_mode:
+                            # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
+                            src_is_pure_bunny_territory = is_light_world and not is_dark_world
+                        else:
+                            # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
+                            src_is_pure_bunny_territory = is_dark_world and not is_light_world
+
+                        # Check if destination has any non-bunny-accessible locations
+                        dest_has_non_bunny_locs = (
+                            len(dest_locations) > 0 and
+                            any(loc not in BUNNY_ACCESSIBLE_LOCATIONS for loc in dest_locations)
+                        )
+
+                        # Add Moon Pearl if needed - but ONLY in entrance shuffle modes
+                        if (self._entrance_shuffle_mode != 'vanilla' and
+                            src_is_pure_bunny_territory and
+                            dest_has_non_bunny_locs and
+                            not self._rule_contains_moon_pearl(exit_data.get('access_rule', {}))):
+                            current_rule = exit_data.get('access_rule', {})
+                            logger.debug(f"ALttP: Adding Moon Pearl to exit '{exit_name}' "
+                                         f"from bunny territory '{region_name}' to '{connected_region_name}'")
+                            # Check if rule is trivially true (Rule Builder True_ or AST constant=true)
+                            is_trivially_true = (
+                                current_rule.get('rule') == 'True_' or
+                                (current_rule.get('type') == 'constant' and current_rule.get('value') is True)
+                            )
+                            if is_trivially_true:
+                                # Replace trivial rule with just Moon Pearl
+                                exit_data['access_rule'] = {
+                                    'rule': 'Has',
+                                    'args': {'item_name': 'Moon Pearl'}
+                                }
+                            else:
+                                # AND Moon Pearl with existing rule
+                                exit_data['access_rule'] = {
+                                    'rule': 'And',
+                                    'children': [
+                                        {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
+                                        current_rule
+                                    ]
+                                }
+
                         # In glitch modes, exits to certain invalid bunny revival dungeons
                         # can use Magic Mirror for bunny revival instead of Moon Pearl.
                         # Note: Swamp Palace is NOT included - 0hp revival isn't in logic,
@@ -2724,6 +2789,45 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             if not children:
                 return False
             return all(self._is_pure_moon_pearl_rule(c) for c in children)
+
+        return False
+
+    def _rule_contains_moon_pearl(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule contains Moon Pearl anywhere in its structure.
+
+        Returns True if Moon Pearl is required anywhere in the rule,
+        even if combined with other requirements.
+        """
+        if not rule or not isinstance(rule, dict):
+            return False
+
+        # True_ has no requirements
+        if rule.get('rule') == 'True_':
+            return False
+
+        # Check Has(Moon Pearl)
+        if rule.get('rule') == 'Has':
+            args = rule.get('args', {})
+            return args.get('item_name') == 'Moon Pearl'
+
+        # Check HasAll/HasAny containing Moon Pearl
+        if rule.get('rule') in ('HasAll', 'HasAny'):
+            args = rule.get('args', {})
+            items = args.get('items', [])
+            return 'Moon Pearl' in items
+
+        # Recursively check And/Or children
+        if rule.get('rule') in ('And', 'Or'):
+            children = rule.get('children', [])
+            return any(self._rule_contains_moon_pearl(c) for c in children)
+
+        # Check AST format
+        if rule.get('type') == 'item_check':
+            return rule.get('item') == 'Moon Pearl'
+
+        if rule.get('type') in ('and', 'or'):
+            conditions = rule.get('conditions', [])
+            return any(self._rule_contains_moon_pearl(c) for c in conditions)
 
         return False
 

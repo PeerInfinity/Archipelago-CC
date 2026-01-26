@@ -587,6 +587,88 @@ class RuleCodeGenerator:
         except (ZeroDivisionError, TypeError, ValueError):
             return 'None'
 
+    def _evaluate_binary_op_constant(self, arg: Dict[str, Any]) -> Optional[str]:
+        """
+        Evaluate an AST-format binary_op to a constant repr string if possible.
+
+        This handles the AST format:
+        {"type": "binary_op", "left": {...}, "op": "*", "right": {...}}
+
+        Returns repr(result) if both operands are numeric constants,
+        'None' if evaluation fails or operands aren't constants,
+        or None if arg is not a binary_op.
+        """
+        if not isinstance(arg, dict):
+            return None
+        if arg.get('type') != 'binary_op':
+            return None
+
+        left_node = arg.get('left', {})
+        op = arg.get('op', '+')
+        right_node = arg.get('right', {})
+
+        # Extract values from operand nodes
+        left = self._extract_constant_value(left_node)
+        right = self._extract_constant_value(right_node)
+
+        # Both operands must be numeric constants
+        if not (isinstance(left, (int, float)) and isinstance(right, (int, float))):
+            return 'None'
+
+        try:
+            if op == '+':
+                result = left + right
+            elif op == '-':
+                result = left - right
+            elif op == '*':
+                result = left * right
+            elif op == '/':
+                result = left / right
+            elif op == '//':
+                result = left // right
+            elif op == '%':
+                result = left % right
+            elif op == '**':
+                result = left ** right
+            else:
+                return 'None'
+            return repr(result)
+        except (ZeroDivisionError, TypeError, ValueError):
+            return 'None'
+
+    def _extract_constant_value(self, node: Any) -> Any:
+        """
+        Extract a constant value from an AST node.
+
+        Handles:
+        - {"type": "constant", "value": X}
+        - {"rule": "Constant", "args": {"value": X}}
+        - Primitive values (int, float, str, etc.)
+        - Nested binary_op (recursively evaluated)
+        """
+        if not isinstance(node, dict):
+            return node
+
+        node_type = node.get('type', '')
+        node_rule = node.get('rule', '')
+
+        if node_type == 'constant':
+            return node.get('value')
+        elif node_rule == 'Constant':
+            return node.get('args', {}).get('value')
+        elif node_type == 'binary_op':
+            # Recursively evaluate nested binary_op
+            result = self._evaluate_binary_op_constant(node)
+            if result and result != 'None':
+                # Parse the repr string back to a value
+                try:
+                    return eval(result)
+                except (SyntaxError, ValueError):
+                    return None
+            return None
+        else:
+            return None
+
     def _deep_equals(self, a: Any, b: Any) -> bool:
         """Deep equality comparison that works with lists."""
         if type(a) != type(b):
@@ -3654,22 +3736,24 @@ class RuleCodeGenerator:
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
         """Generate code to access an option at runtime.
 
-        Options are accessed via the world's options attribute at runtime.
-        This generates: state.multiworld.worlds[player].options.<name>
-        This pattern is recognized by the exporter's _is_world_options_pattern().
+        For Rule Builder context, we generate OptionValue('option_name') which is a
+        proper Rule Builder object that can be composed with And/Or operators.
+        This allows options to be checked at rule evaluation time.
         """
         option = expr.get('option', '')
-        base_path = f'state.multiworld.worlds[player].options.{option}'
 
-        # Handle indexed access (not common for options, but supported)
+        # Handle indexed access (not common for options, use raw Python for this case)
         if 'index' in expr:
             index = expr['index']
+            base_path = f'state.multiworld.worlds[player].options.{option}'
             if isinstance(index, int):
                 return f'{base_path}[{index}]'
             elif isinstance(index, str):
                 return f'{base_path}[{repr(index)}]'
 
-        return base_path
+        # Generate OptionValue for proper Rule Builder composition
+        self.required_imports.add('OptionValue')
+        return f"OptionValue({repr(option)})"
 
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
@@ -5829,6 +5913,10 @@ class RuleCodeGenerator:
         elif isinstance(arg, dict) and arg.get('rule') == 'Arithmetic':
             arith_result = self._evaluate_arithmetic_constant(arg)
             return arith_result if arith_result else 'None'
+        elif isinstance(arg, dict) and arg.get('type') == 'binary_op':
+            # Handle AST format binary operations (used after parameter substitution)
+            binop_result = self._evaluate_binary_op_constant(arg)
+            return binop_result if binop_result else 'None'
         elif isinstance(arg, dict) and arg.get('type') == 'attribute':
             # Handle attribute access on setting_value (e.g., world.options.goal.value)
             obj = arg.get('object', {})
