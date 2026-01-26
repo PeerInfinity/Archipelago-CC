@@ -267,9 +267,9 @@ python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
     --default-options entrance_shuffle
 ```
 
-**Future Fix:**
+**Note on er_seed:**
 
-Add `er_seed` to ALttP's `fill_slot_data` and handle it in `generate_early` via `re_gen_passthrough`. This would require a contribution to upstream Archipelago.
+The `er_seed` propagation is already handled by `fuzzer_hook.py`, which captures the original world's `er_seed` and rewrites YAML files so TrackerCore regenerates with the same entrance connections. The remaining failures are due to the exporter not fully capturing entrance-dependent logic (like `set_trock_key_rules` computations) at export time.
 
 **Other Notes:**
 - Bunny rules are simplified to Moon Pearl requirements
