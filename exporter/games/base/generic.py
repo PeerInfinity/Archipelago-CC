@@ -220,12 +220,18 @@ class GenericGameExportHandler(BaseGameExportHandler):
                 'description': f"Requires having {subject.replace('_', ' ').title()}"
             }
         elif action == 'can':
-            return {
+            result = {
                 'type': 'capability',
                 'capability': subject,
                 'inferred': True,
                 'description': f"Requires ability to {subject.replace('_', ' ')}"
             }
+            # Preserve helper arguments so they can be used during world generation
+            # This is critical for helpers like can_use_hat(state, player, hat_id)
+            # where hat_id specifies which specific hat is required
+            if args:
+                result['helper_args'] = args
+            return result
         elif action in ['defeat', 'slay']:
             return {
                 'type': 'enemy_requirement',

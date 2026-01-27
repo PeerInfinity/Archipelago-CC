@@ -16,8 +16,8 @@ on:
         default: 50
 
       jobs:
-        description: 'Number of parallel fuzzer jobs'
-        required: true
+        description: 'Number of parallel fuzzer jobs. Leave empty to use CPU count.'
+        required: false
         type: number
         default: 4
 
@@ -160,7 +160,7 @@ jobs:
           CMD="python scripts/test/test-all-ut-fuzz.py"
           CMD="$CMD --include-list \"${{ inputs.game }}\""
           CMD="$CMD --runs ${{ inputs.runs }}"
-          CMD="$CMD --jobs ${{ inputs.jobs }}"
+          CMD="$CMD ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }}"
           CMD="$CMD --timeout ${{ inputs.timeout }}"
           CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"

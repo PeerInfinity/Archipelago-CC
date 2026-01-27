@@ -215,6 +215,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -680,6 +688,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -715,6 +731,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -924,6 +948,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 4
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -1277,6 +1309,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -3041,6 +3081,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 0
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -3395,6 +3443,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -3633,6 +3689,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4146,6 +4210,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4173,6 +4245,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4349,6 +4429,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4454,6 +4542,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4681,6 +4777,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4702,6 +4806,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5267,6 +5379,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5491,6 +5611,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5526,6 +5654,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5547,6 +5683,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5568,6 +5712,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5589,6 +5741,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5624,6 +5784,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5687,6 +5855,14 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true

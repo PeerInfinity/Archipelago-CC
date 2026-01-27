@@ -7468,7 +7468,16 @@ class HelperCodeGenerator:
                     helper_name = f'can_{capability}'
                     func_name = self.get_function_name(helper_name)
 
-                    # Get helper data including param_mappings
+                    # Check if helper_args were preserved from the original helper call
+                    # This is critical for helpers like can_use_hat(state, player, hat_id)
+                    # where the specific argument value matters
+                    helper_args = args.get('helper_args', [])
+                    if helper_args:
+                        # Use the preserved helper arguments
+                        arg_exprs = [self._generate_expression(arg) for arg in helper_args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+
+                    # Fall back to param_mappings for helpers that use world attributes
                     helper_info = self.helper_data.get(helper_name, {})
                     params = helper_info.get('params', [])
                     param_mappings = helper_info.get('param_mappings', {})
@@ -7485,7 +7494,7 @@ class HelperCodeGenerator:
                             # Access as world attribute for all param_mapping values
                             arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
                         else:
-                            # No mapping, use None as default
+                            # No mapping and no preserved args - use None as default
                             arg_exprs.append('None')
 
                     if arg_exprs:
