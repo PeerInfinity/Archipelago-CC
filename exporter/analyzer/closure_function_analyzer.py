@@ -333,6 +333,8 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed rule dict, or None if analysis failed
         """
+        import dis
+
         func_code = getattr(func, '__code__', None)
         if not func_code:
             return None
@@ -344,15 +346,53 @@ class ClosureFunctionAnalyzer:
         # Extract closure variables for additional context
         closure_vars = self._extract_closure_vars(func)
 
-        # Check for state.has() pattern
+        # Analyze bytecode to detect OR vs AND patterns
+        # Look for JUMP_IF_TRUE_OR_POP (OR short-circuit) vs JUMP_IF_FALSE_OR_POP (AND)
+        is_or_pattern = False
+        is_and_pattern = False
+        try:
+            bytecode = list(dis.get_instructions(func_code))
+            for instr in bytecode:
+                if instr.opname in ('JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_TRUE'):
+                    is_or_pattern = True
+                elif instr.opname in ('JUMP_IF_FALSE_OR_POP', 'POP_JUMP_IF_FALSE'):
+                    is_and_pattern = True
+        except Exception:
+            pass  # Fall back to heuristics if bytecode analysis fails
+
+        # Check for state.has() pattern - collect ALL item names first
         if 'has' in names:
-            # Find item name in constants
+            # Known ALttP items that appear in bunny/access rules
+            alttp_items = {
+                'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
+                'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow', 'Cane of Somaria',
+                'Cane of Byrna', 'Cape', 'Bottle', 'Bombos', 'Ether', 'Quake',
+                'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
+            }
+            item_names = []
             for const in consts:
                 if isinstance(const, str) and const and not const.startswith('<'):
-                    # Skip type strings like 'Entrance', 'Region'
+                    # Skip type strings
                     if const not in ('Entrance', 'Region', 'Location'):
-                        logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has('{const}')")
-                        return {'rule': 'Has', 'args': {'item_name': const}}
+                        if const in alttp_items:
+                            item_names.append(const)
+
+            if len(item_names) == 1:
+                logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has('{item_names[0]}')")
+                return {'rule': 'Has', 'args': {'item_name': item_names[0]}}
+            elif len(item_names) > 1:
+                # Multiple items - use bytecode analysis to determine OR vs AND
+                item_checks = [{'rule': 'Has', 'args': {'item_name': name}} for name in item_names]
+                if is_or_pattern:
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found OR pattern with items: {item_names}")
+                    return {'rule': 'Or', 'children': item_checks}
+                elif is_and_pattern:
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found AND pattern with items: {item_names}")
+                    return {'rule': 'And', 'children': item_checks}
+                else:
+                    # Default to OR for bunny rules (most common pattern)
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found multiple items (assuming OR): {item_names}")
+                    return {'rule': 'Or', 'children': item_checks}
 
         # Check for state.can_reach() pattern
         if 'can_reach' in names:
@@ -379,21 +419,6 @@ class ClosureFunctionAnalyzer:
         if 'has_sword' in names:
             logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has_sword()")
             return {'rule': 'has_sword', '_original_ast_type': 'helper', '_converted_from_ast': True}
-
-        # Check for combined patterns (AND with multiple items)
-        item_checks = []
-        for const in consts:
-            if isinstance(const, str) and const in {
-                'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
-                'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow'
-            }:
-                item_checks.append({'rule': 'Has', 'args': {'item_name': const}})
-
-        if len(item_checks) == 1:
-            return item_checks[0]
-        elif len(item_checks) > 1:
-            # Multiple items found - likely an AND of all of them
-            return {'rule': 'And', 'children': item_checks}
 
         return None
 
