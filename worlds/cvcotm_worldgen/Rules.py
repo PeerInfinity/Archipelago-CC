@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, False_, Has, HasAny, HelperCall, Or
+from rule_builder import True_, False_, And, Has, HasAny, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -72,7 +72,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Catacomb to Stairway", player),
-        Or(HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1", body_rule=(Has("Double")) | (Has("Roc Wing"))), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
@@ -87,17 +87,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Audience to Machine Top", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Chapel", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2")), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Audience to Gallery", player),
-        And(HelperCall(helper_func=broke_iron_maidens, helper_name="broke_iron_maidens"), HelperCall(helper_func=has_push, helper_name="has_push"))
+        And(HelperCall(helper_func=broke_iron_maidens, helper_name="broke_iron_maidens", body_rule=Has("Maiden Detonator")), HelperCall(helper_func=has_push, helper_name="has_push", body_rule=Has("Heavy Ring")))
     )
 
     world.set_rule(
@@ -127,7 +127,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Escape the Gallery Pit", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
@@ -137,12 +137,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Climb to Chapel Top", player),
-        Or(HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Arena Passage", player),
-        And(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_push, helper_name="has_push"))
+        And(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_push, helper_name="has_push", body_rule=Has("Heavy Ring")))
     )
 
     world.set_rule(
@@ -162,7 +162,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Into Waterway Main", player),
-        Or(False_(), Has('Cleansing'))
+        Has('Cleansing')
     )
     # Location rules
     world.set_rule(
@@ -182,7 +182,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catacomb: Fleamen brain room - Upper", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1", body_rule=(Has("Double")) | (Has("Roc Wing")))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
@@ -192,12 +192,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catacomb: Earth Demon bone pit - Upper", player),
-        Or(HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Muddy Mudman platforms room - Upper", player),
-        Or(HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_1, helper_name="has_jump_level_1", body_rule=(Has("Double")) | (Has("Roc Wing"))), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
@@ -227,32 +227,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Audience Room: Right exterior - Upper", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: 100 meter skelly dash hallway", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower roc ledge", player),
-        And(HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5"), HelperCall(helper_func=has_tackle, helper_name="has_tackle"))
+        And(HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_tackle, helper_name="has_tackle", body_rule=Has("Tackle")))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Below Machine Tower push crate room", player),
-        And(HelperCall(helper_func=has_push, helper_name="has_push"), HelperCall(helper_func=has_tackle, helper_name="has_tackle"))
+        And(HelperCall(helper_func=has_push, helper_name="has_push", body_rule=Has("Heavy Ring")), HelperCall(helper_func=has_tackle, helper_name="has_tackle", body_rule=Has("Tackle")))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Left", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Roc horse jaguar armory - Right", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
@@ -262,22 +262,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Outer Wall: Right-brained ledge", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Triumph Hallway: Entrance Flame Armor climb", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_kick, helper_name="has_kick")), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots"))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Boneheaded argument wall kicks room", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Skelly-rang wall kicks room", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
@@ -287,7 +287,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Flame Armor climb room", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
@@ -302,7 +302,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Sharp mind climb room", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
@@ -312,12 +312,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Upper", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Outside Battle Arena - Lower", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3")), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
@@ -332,12 +332,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Lower", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy climb room - Upper", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
@@ -347,22 +347,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Succubus shaft roc ledge", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4")), HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Optional puzzle ceiling fake wall", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Holy fox hideout - Right roc ledge", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2")), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"))
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Brain freeze room", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone"), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3"))
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
@@ -372,7 +372,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Lizard-man turf - Top", player),
-        Or(False_(), Has('Cleansing'))
+        Has('Cleansing')
     )
 
     world.set_rule(
@@ -382,7 +382,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Behind Camilla", player),
-        Or(False_(), Has('Cleansing'))
+        Has('Cleansing')
     )
 
     world.set_rule(
@@ -392,7 +392,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ceremonial Room: Fake floor", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2"), HelperCall(helper_func=has_kick, helper_name="has_kick"))
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(

@@ -26273,10 +26273,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "constant",
-                "value": 13
-              },
               "body": [
                 {
                   "type": "if_statement",
@@ -26647,6 +26643,10 @@
                   ]
                 }
               ],
+              "count": {
+                "type": "constant",
+                "value": 13
+              },
               "var": "i"
             },
             {

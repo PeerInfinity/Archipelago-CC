@@ -17347,7 +17347,7 @@
       "author": "SilentSR & ScipioWright",
       "world_description": "Explore a land filled with lost legends, ancient powers, and ferocious monsters in TUNIC, an isometric action game\nabout a small fox on a big adventure. Stranded on a mysterious beach, armed with only your own curiosity, you will\nconfront colossal beasts, collect strange and powerful items, and unravel long-lost secrets. Be brave, tiny fox!",
       "slot_data": {
-        "seed": 749489738,
+        "seed": 1218988168,
         "start_with_sword": 0,
         "keys_behind_bosses": 0,
         "sword_progression": 1,
@@ -17532,10 +17532,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "def_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17556,6 +17552,10 @@
                   }
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "def_upgrades"
+              },
               "var": "_"
             },
             {
@@ -17568,10 +17568,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "sp_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17592,6 +17588,10 @@
                   }
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "sp_upgrades"
+              },
               "var": "_"
             },
             {
@@ -17736,10 +17736,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "hp_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17760,6 +17756,10 @@
                   }
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "hp_upgrades"
+              },
               "var": "_"
             },
             {
@@ -17772,10 +17772,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "potion_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17850,6 +17846,10 @@
                   ]
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "potion_upgrades"
+              },
               "var": "_"
             },
             {
@@ -20074,10 +20074,6 @@
           },
           {
             "type": "for_range",
-            "count": {
-              "type": "name",
-              "name": "effigy_count"
-            },
             "body": [
               {
                 "type": "assign",
@@ -20114,6 +20110,10 @@
                 }
               }
             ],
+            "count": {
+              "type": "name",
+              "name": "effigy_count"
+            },
             "var": "_"
           },
           {
@@ -23085,10 +23085,6 @@
                         },
                         {
                           "type": "for_range",
-                          "count": {
-                            "type": "name",
-                            "name": "paid_mp"
-                          },
                           "body": [
                             {
                               "type": "assign",
@@ -23109,6 +23105,10 @@
                               }
                             }
                           ],
+                          "count": {
+                            "type": "name",
+                            "name": "paid_mp"
+                          },
                           "var": "_"
                         }
                       ]
@@ -23203,10 +23203,6 @@
                 },
                 {
                   "type": "for_range",
-                  "count": {
-                    "type": "name",
-                    "name": "paid_att"
-                  },
                   "body": [
                     {
                       "type": "assign",
@@ -23227,6 +23223,10 @@
                       }
                     }
                   ],
+                  "count": {
+                    "type": "name",
+                    "name": "paid_att"
+                  },
                   "var": "_"
                 }
               ]
@@ -23430,10 +23430,6 @@
                         },
                         {
                           "type": "for_range",
-                          "count": {
-                            "type": "constant",
-                            "value": 0
-                          },
                           "body": [
                             {
                               "type": "assign",
@@ -23523,6 +23519,39 @@
                               ]
                             }
                           ],
+                          "start": {
+                            "type": "constant",
+                            "value": 0
+                          },
+                          "stop": {
+                            "type": "min",
+                            "args": [
+                              {
+                                "type": "binary_op",
+                                "left": {
+                                  "type": "name",
+                                  "name": "def_offerings"
+                                },
+                                "op": "+",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              },
+                              {
+                                "type": "binary_op",
+                                "left": {
+                                  "type": "name",
+                                  "name": "stats_to_buy"
+                                },
+                                "op": "+",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              }
+                            ]
+                          },
                           "var": "paid_def"
                         },
                         {
@@ -23782,17 +23811,9 @@
                     },
                     {
                       "type": "for_range",
-                      "count": {
-                        "type": "constant",
-                        "value": 0
-                      },
                       "body": [
                         {
                           "type": "for_range",
-                          "count": {
-                            "type": "constant",
-                            "value": 0
-                          },
                           "body": [
                             {
                               "type": "if_statement",
@@ -23879,9 +23900,33 @@
                               ]
                             }
                           ],
+                          "start": {
+                            "type": "constant",
+                            "value": 0
+                          },
+                          "stop": {
+                            "type": "name",
+                            "name": "lowest_hp_added"
+                          },
                           "var": "paid_hp"
                         }
                       ],
+                      "start": {
+                        "type": "constant",
+                        "value": 0
+                      },
+                      "stop": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "potion_offerings"
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "constant",
+                          "value": 1
+                        }
+                      },
                       "var": "paid_potion"
                     },
                     {

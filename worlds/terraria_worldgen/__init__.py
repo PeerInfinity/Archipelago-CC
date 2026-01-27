@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -35,6 +35,9 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Post-Queen Bee": 1,
     "Post-Queen Slime": 1,
     "Post-Skeletron": 1,
+    "Post-Skeletron Prime": 1,
+    "Post-The Destroyer": 1,
+    "Post-The Twins": 1,
     "Reward: Ancient Chisel": 1,
     "Reward: Armor Polish": 1,
     "Reward: Black Belt": 1,
@@ -269,9 +272,6 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
     "Mechanical Eye": "Mechanical Eye",
     "Mechanical Worm": "Mechanical Worm",
     "Mechanical Skull": "Mechanical Skull",
-    "The Twins": "Post-The Twins",
-    "The Destroyer": "Post-The Destroyer",
-    "Skeletron Prime": "Post-Skeletron Prime",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -577,6 +577,255 @@ class TerrariaWorld(RuleWorldMixin, World):
         "Skeletron Prime": "Post-Skeletron Prime",
     }
 
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Copper Shortsword": True,
+        "Guide": True,
+        "Squire Slime": True,
+        "Traveling Merchant": True,
+        "Lifeform Analyzer": True,
+        "DPS Meter": True,
+        "Stopwatch": True,
+        "Timber!!": False,
+        "Benched": False,
+        "Stop! Hammer Time!": False,
+        "Matching Attire": False,
+        "Fashion Statement": False,
+        "Ooo! Shiny!": False,
+        "No Hobo": False,
+        "Merchant": True,
+        "Bug Net": True,
+        "Heavy Metal": False,
+        "Dye Trader": True,
+        "Dye Hard": False,
+        "Demolitionist": True,
+        "Lucky Break": False,
+        "Star Power": False,
+        "You Can Do It!": False,
+        "Cactus": True,
+        "Unusual Survival Strategies": False,
+        "Aglet": True,
+        "Radar": True,
+        "Wand of Sparking": True,
+        "Heliophobia": False,
+        "Evil Powder": True,
+        "Zoologist": True,
+        "Cat": True,
+        "Feeling Petty": False,
+        "Dog": True,
+        "Painter": True,
+        "Enchanted Sword": True,
+        "Angler": True,
+        "Fisherman's Pocket Guide": True,
+        "Weather Radio": True,
+        "Sextant": True,
+        "Water Walking Boots": True,
+        "Into Orbit": False,
+        "Starfury": True,
+        "Celestial Magnet": True,
+        "Clumsy Slime": True,
+        "Watch Your Step!": False,
+        "Throwing Lines": False,
+        "Torch God": True,
+        "Vehicular Manslaughter": True,
+        "Depth Meter": True,
+        "Compass": True,
+        "Hey! Listen!": False,
+        "I Am Loot!": False,
+        "Magic Mirror": True,
+        "Heart Breaker": False,
+        "Nurse": True,
+        "The Frequent Flyer": True,
+        "Feast of Midas": False,
+        "Hold on Tight!": False,
+        "Gold Hammer": True,
+        "Gold Pickaxe": True,
+        "Gold Watch": True,
+        "Like a Boss": False,
+        "Hermes Boots": True,
+        "Jeepers Creepers": False,
+        "Stylist": True,
+        "Funkytown": False,
+        "Metal Detector": True,
+        "Dead Men Tell No Tales": False,
+        "Obsidian": True,
+        "Obsidian Skull": True,
+        "Lava Charm": True,
+        "Demonite Ore": True,
+        "Demonite Bar": True,
+        "Evil Sword": True,
+        "Ice Skates": True,
+        "Flinx Fur Coat": True,
+        "Golfer": True,
+        "Party Girl": True,
+        "Cool Slime": True,
+        "Anklet of the Wind": True,
+        "Feral Claws": True,
+        "Stinger": True,
+        "Jungle Spores": True,
+        "Vine": True,
+        "Blade of Grass": True,
+        "Nature's Gift": True,
+        "Bezoar": True,
+        "Summoning Potion": True,
+        "A Shimmer In The Dark": False,
+        "It's Getting Hot in Here": False,
+        "Rock Bottom": False,
+        "Obsidian Rose": True,
+        "Magma Stone": True,
+        "Smashing, Poppet!": False,
+        "Arms Dealer": True,
+        "Leading Landlord": False,
+        "Completely Awesome": True,
+        "Illegal Gun Parts": True,
+        "King Slime": False,
+        "The Cavalry": False,
+        "Solidifier": True,
+        "Nerdy Slime": True,
+        "Sandstorm": True,
+        "Shark Tooth Necklace": True,
+        "Quiet Neighborhood": False,
+        "Surly Slime": True,
+        "Eye of Cthulhu": False,
+        "Dryad": True,
+        "Pumpkin Seeds": True,
+        "Pumpkin": True,
+        "Purification Powder": True,
+        "Mystic Slime": True,
+        "Evil Boss": False,
+        "Evil Boss Part": True,
+        "Evil Pickaxe": True,
+        "Obsidian Armor": True,
+        "Tavernkeep": True,
+        "Old One's Army Tier 1": False,
+        "Meteorite": True,
+        "Meteorite Bar": True,
+        "Meteor Hamaxe": True,
+        "Hellforge": True,
+        "Hellstone": True,
+        "Hellstone Bar": True,
+        "Fiery Greatsword": True,
+        "Molten Hamaxe": True,
+        "Molten Pickaxe": True,
+        "Miner for Fire": True,
+        "Hot Reels!": False,
+        "Goblin Army": False,
+        "Goblin Tinkerer": True,
+        "Tinkerer's Workshop": True,
+        "Mana Flower": True,
+        "Rocket Boots": True,
+        "Spectre Boots": True,
+        "Lightning Boots": True,
+        "Frostspark Boots": True,
+        "Lava Waders": True,
+        "Terraspark Boots": True,
+        "GPS": True,
+        "Goblin Tech": True,
+        "Fish Finder": True,
+        "Diving Gear": True,
+        "Where's My Honey?": False,
+        "Queen Bee": False,
+        "Bee Keeper": True,
+        "Bee Wax": True,
+        "Bee Armor": True,
+        "Not the Bees!": False,
+        "Witch Doctor": True,
+        "Pygmy Necklace": True,
+        "Skeletron": False,
+        "Clothier": True,
+        "Dungeon": True,
+        "Dungeon Heist": False,
+        "Bone": True,
+        "Tally Counter": True,
+        "R.E.K. 3000": True,
+        "PDA": True,
+        "Cell Phone": True,
+        "Bewitching Table": True,
+        "Alchemy Table": True,
+        "Mechanic": True,
+        "Wire": True,
+        "Actuator": True,
+        "Muramasa": True,
+        "Cobalt Shield": True,
+        "Obsidian Shield": True,
+        "Elder Slime": True,
+        "Deerclops": False,
+        "Night's Edge": True,
+        "Wall of Flesh": False,
+        "Pwnhammer": True,
+        "Emblem": True,
+        "Fast Clock": True,
+        "Wizard": True,
+        "Titan Glove": True,
+        "Power Glove": True,
+        "Magic Quiver": True,
+        "Hallowed Seeds": True,
+        "Armor Polish": True,
+        "Adhesive Bandage": True,
+        "Medicated Bandage": True,
+        "Megaphone": True,
+        "Pocket Mirror": True,
+        "Trifold Map": True,
+        "The Plan": True,
+        "Tax Collector": True,
+        "Spider Fangs": True,
+        "Spider Armor": True,
+        "Cross Necklace": True,
+        "Altar": True,
+        "Begone, Evil!": False,
+        "Cobalt Ore": True,
+        "Extra Shiny!": False,
+        "Cobalt Bar": True,
+        "Cobalt Pickaxe": True,
+        "Blindfold": True,
+        "Reflective Shades": True,
+        "Vitamins": True,
+        "Armor Bracing": True,
+        "Nazar": True,
+        "Countercurse Mantra": True,
+        "Ankh Charm": True,
+        "Ankh Shield": True,
+        "Soul of Night": True,
+        "Hallow": True,
+        "Pixie Dust": True,
+        "Holy Water": True,
+        "Unicorn Horn": True,
+        "Crystal Shard": True,
+        "Soul of Light": True,
+        "Meteor Staff": True,
+        "Blessed Apple": True,
+        "Rod of Discord": True,
+        "Soul of Flight": True,
+        "Head in the Clouds": False,
+        "Bunny": True,
+        "Forbidden Fragment": True,
+        "Don't Dread on Me": False,
+        "Truffle": True,
+        "It Can Talk?!": False,
+        "Pirate Invasion": True,
+        "Pirate": True,
+        "Queen Slime": True,
+        "Sparkle Slime Balloon": True,
+        "Diva Slime": True,
+        "The Great Slime Mitosis": False,
+        "Mythril Ore": True,
+        "Mythril Bar": True,
+        "Hardmode Anvil": True,
+        "Mythril Pickaxe": True,
+        "Adamantite Ore": True,
+        "Hardmode Forge": True,
+        "Adamantite Bar": True,
+        "Adamantite Pickaxe": True,
+        "Forbidden Armor": True,
+        "Mechanical Eye": True,
+        "Mechanical Worm": True,
+        "Mechanical Skull": True,
+        "The Twins": True,
+        "The Destroyer": True,
+        "Skeletron Prime": True,
+    }
+
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
@@ -673,14 +922,38 @@ class TerrariaWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = TerrariaWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = TerrariaWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = TerrariaWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -707,27 +980,81 @@ class TerrariaWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

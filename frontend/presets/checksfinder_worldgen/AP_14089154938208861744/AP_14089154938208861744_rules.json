@@ -601,30 +601,30 @@
   "canonical_placements": {
     "1": {
       "Tile 1": "Map Bombs",
-      "Tile 2": "Map Width",
-      "Tile 3": "Map Width",
-      "Tile 4": "Map Width",
-      "Tile 5": "Map Height",
-      "Tile 6": "Map Bombs",
-      "Tile 7": "Map Width",
-      "Tile 8": "Map Bombs",
-      "Tile 9": "Map Bombs",
       "Tile 10": "Map Bombs",
       "Tile 11": "Map Bombs",
-      "Tile 12": "Map Height",
       "Tile 13": "Map Bombs",
       "Tile 14": "Map Bombs",
       "Tile 15": "Map Bombs",
       "Tile 16": "Map Bombs",
       "Tile 17": "Map Bombs",
-      "Tile 18": "Map Height",
-      "Tile 19": "Map Height",
       "Tile 20": "Map Bombs",
       "Tile 21": "Map Bombs",
       "Tile 22": "Map Bombs",
       "Tile 23": "Map Bombs",
+      "Tile 6": "Map Bombs",
+      "Tile 8": "Map Bombs",
+      "Tile 9": "Map Bombs",
+      "Tile 2": "Map Width",
       "Tile 24": "Map Width",
-      "Tile 25": "Map Height"
+      "Tile 3": "Map Width",
+      "Tile 4": "Map Width",
+      "Tile 7": "Map Width",
+      "Tile 12": "Map Height",
+      "Tile 18": "Map Height",
+      "Tile 19": "Map Height",
+      "Tile 25": "Map Height",
+      "Tile 5": "Map Height"
     }
   },
   "progression_mapping": {
@@ -637,6 +637,7 @@
     "1": {
       "game": "ChecksFinder WorldGen",
       "world_class_name": "ChecksFinderWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -682,7 +683,7 @@
       },
       "world_description": "ChecksFinder is a game where you avoid mines and collect checks by beating boards!\nYou win when you get all your items and beat the last board!",
       "slot_data": {
-        "world_seed": 2277925128,
+        "world_seed": 122746603,
         "seed_name": "14089154938208861744",
         "player_name": "Player1",
         "player_id": 1,

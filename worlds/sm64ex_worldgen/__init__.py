@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -24,6 +24,17 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "1Up Mushroom": 29,
+    "Cannon Unlock BoB": 1,
+    "Cannon Unlock CCM": 1,
+    "Cannon Unlock JRB": 1,
+    "Cannon Unlock RR": 1,
+    "Cannon Unlock SL": 1,
+    "Cannon Unlock SSL": 1,
+    "Cannon Unlock THI": 1,
+    "Cannon Unlock TTM": 1,
+    "Cannon Unlock WDW": 1,
+    "Cannon Unlock WF": 1,
     "Metal Cap": 1,
     "Power Star": 105,
     "Progressive Key": 2,
@@ -33,45 +44,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "BoB: Bob-omb Buddy": "Cannon Unlock BoB",
-    "WF: Bob-omb Buddy": "Cannon Unlock WF",
-    "JRB: Bob-omb Buddy": "Cannon Unlock JRB",
-    "CCM: Bob-omb Buddy": "Cannon Unlock CCM",
-    "CCM: 1Up Block Near Snowman": "1Up Mushroom",
-    "CCM: 1Up Block Ice Pillar": "1Up Mushroom",
-    "CCM: 1Up Block Secret Slide": "1Up Mushroom",
-    "BBH: 1Up Block Top of Mansion": "1Up Mushroom",
-    "Bowser in the Dark World 1Up Block on Tower": "1Up Mushroom",
-    "Bowser in the Dark World 1Up Block near Goombas": "1Up Mushroom",
-    "HMC: 1Up Block Past Rolling Rocks": "1Up Mushroom",
-    "HMC: 1Up Block above Pit": "1Up Mushroom",
-    "SSL: Bob-omb Buddy": "Cannon Unlock SSL",
-    "SSL: 1Up Block Outside Pyramid": "1Up Mushroom",
-    "SSL: 1Up Block Pyramid Left Path": "1Up Mushroom",
-    "SSL: 1Up Block Pyramid Back": "1Up Mushroom",
-    "Cavern of the Metal Cap 1Up Block": "1Up Mushroom",
-    "Vanish Cap Under the Moat 1Up Block": "1Up Mushroom",
-    "Bowser in the Fire Sea 1Up Block Swaying Stairs": "1Up Mushroom",
-    "Bowser in the Fire Sea 1Up Block Near Poles": "1Up Mushroom",
-    "SL: Bob-omb Buddy": "Cannon Unlock SL",
-    "SL: 1Up Block Near Moneybags": "1Up Mushroom",
-    "SL: 1Up Block inside Igloo": "1Up Mushroom",
-    "WDW: Bob-omb Buddy": "Cannon Unlock WDW",
-    "WDW: 1Up Block in Downtown": "1Up Mushroom",
-    "TTM: Bob-omb Buddy": "Cannon Unlock TTM",
-    "TTM: 1Up Block on Red Mushroom": "1Up Mushroom",
-    "THI: 1Up Block THI Small near Start": "1Up Mushroom",
-    "THI: Bob-omb Buddy": "Cannon Unlock THI",
-    "THI: 1Up Block THI Large near Start": "1Up Mushroom",
-    "THI: 1Up Block Windy Area": "1Up Mushroom",
-    "TTC: 1Up Block Midway Up": "1Up Mushroom",
-    "TTC: 1Up Block at the Top": "1Up Mushroom",
-    "RR: 1Up Block Top of Red Coin Maze": "1Up Mushroom",
-    "RR: 1Up Block Under Fly Guy": "1Up Mushroom",
-    "RR: Bob-omb Buddy": "Cannon Unlock RR",
-    "RR: 1Up Block On House in the Sky": "1Up Mushroom",
-    "Wing Mario Over the Rainbow 1Up Block": "1Up Mushroom",
-    "Bowser in the Sky 1Up Block": "1Up Mushroom",
+
 }
 
 # Starting items - items the player begins with (precollected)
@@ -131,154 +104,308 @@ class SM64World(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Toad (Basement)": "Metal Cap",
-        "Toad (Second Floor)": "Power Star",
-        "Toad (Third Floor)": "Power Star",
-        "MIPS 1": "Power Star",
-        "MIPS 2": "Power Star",
-        "BoB: Big Bob-Omb on the Summit": "Power Star",
-        "BoB: Footrace with Koopa The Quick": "Power Star",
-        "BoB: Mario Wings to the Sky": "Power Star",
-        "BoB: Behind Chain Chomp's Gate": "Power Star",
-        "BoB: Bob-omb Buddy": "Cannon Unlock BoB",
-        "BoB: Shoot to the Island in the Sky": "Power Star",
-        "BoB: Find the 8 Red Coins": "Power Star",
-        "WF: Chip Off Whomp's Block": "Progressive Key",
-        "WF: Shoot into the Wild Blue": "Power Star",
-        "WF: Red Coins on the Floating Isle": "Power Star",
-        "WF: Fall onto the Caged Island": "Power Star",
-        "WF: Blast Away the Wall": "Power Star",
-        "WF: To the Top of the Fortress": "Power Star",
-        "WF: Bob-omb Buddy": "Cannon Unlock WF",
-        "JRB: Plunder in the Sunken Ship": "Power Star",
-        "JRB: Can the Eel Come Out to Play?": "Power Star",
-        "JRB: Treasure of the Ocean Cave": "Power Star",
-        "JRB: Blast to the Stone Pillar": "Power Star",
-        "JRB: Through the Jet Stream": "Power Star",
-        "JRB: Bob-omb Buddy": "Cannon Unlock JRB",
-        "JRB: Red Coins on the Ship Afloat": "Power Star",
-        "CCM: Slip Slidin' Away": "Power Star",
-        "CCM: Li'l Penguin Lost": "Power Star",
-        "CCM: Big Penguin Race": "Power Star",
-        "CCM: Frosty Slide for 8 Red Coins": "Progressive Key",
-        "CCM: Snowman's Lost His Head": "Power Star",
-        "CCM: Wall Kicks Will Work": "Power Star",
-        "CCM: Bob-omb Buddy": "Cannon Unlock CCM",
-        "CCM: 1Up Block Near Snowman": "1Up Mushroom",
-        "CCM: 1Up Block Ice Pillar": "1Up Mushroom",
-        "CCM: 1Up Block Secret Slide": "1Up Mushroom",
+        "BBH: Big Boo's Balcony": "Power Star",
+        "BBH: Eye to Eye in the Secret Room": "Power Star",
         "BBH: Go on a Ghost Hunt": "Power Star",
         "BBH: Ride Big Boo's Merry-Go-Round": "Power Star",
         "BBH: Secret of the Haunted Books": "Power Star",
         "BBH: Seek the 8 Red Coins": "Power Star",
-        "BBH: Eye to Eye in the Secret Room": "Power Star",
-        "BBH: Big Boo's Balcony": "Power Star",
-        "BBH: 1Up Block Top of Mansion": "1Up Mushroom",
+        "BoB: Behind Chain Chomp's Gate": "Power Star",
+        "BoB: Big Bob-Omb on the Summit": "Power Star",
+        "BoB: Find the 8 Red Coins": "Power Star",
+        "BoB: Footrace with Koopa The Quick": "Power Star",
+        "BoB: Mario Wings to the Sky": "Power Star",
+        "BoB: Shoot to the Island in the Sky": "Power Star",
+        "Bowser in the Dark World Key": "Power Star",
+        "Bowser in the Dark World Red Coins": "Power Star",
+        "Bowser in the Fire Sea Key": "Power Star",
+        "Bowser in the Fire Sea Red Coins": "Power Star",
+        "Bowser in the Sky Red Coins": "Power Star",
+        "CCM: Big Penguin Race": "Power Star",
+        "CCM: Li'l Penguin Lost": "Power Star",
+        "CCM: Slip Slidin' Away": "Power Star",
+        "CCM: Snowman's Lost His Head": "Power Star",
+        "CCM: Wall Kicks Will Work": "Power Star",
+        "Cavern of the Metal Cap Red Coins": "Power Star",
+        "Cavern of the Metal Cap Switch": "Power Star",
+        "DDD: Board Bowser's Sub": "Power Star",
+        "DDD: Chests in the Current": "Power Star",
+        "DDD: Collect the Caps...": "Power Star",
+        "DDD: Pole-Jumping for Red Coins": "Power Star",
+        "DDD: The Manta Ray's Reward": "Power Star",
+        "DDD: Through the Jet Stream": "Power Star",
+        "HMC: A-Maze-Ing Emergency Exit": "Power Star",
+        "HMC: Elevate for 8 Red Coins": "Power Star",
+        "HMC: Metal-Head Mario Can Move!": "Power Star",
+        "HMC: Navigating the Toxic Maze": "Power Star",
+        "HMC: Swimming Beast in the Cavern": "Power Star",
+        "HMC: Watch for Rolling Rocks": "Power Star",
+        "JRB: Blast to the Stone Pillar": "Power Star",
+        "JRB: Can the Eel Come Out to Play?": "Power Star",
+        "JRB: Plunder in the Sunken Ship": "Power Star",
+        "JRB: Red Coins on the Ship Afloat": "Power Star",
+        "JRB: Through the Jet Stream": "Power Star",
+        "JRB: Treasure of the Ocean Cave": "Power Star",
+        "LLL: 8-Coin Puzzle with 15 Pieces": "Power Star",
+        "LLL: Boil the Big Bully": "Power Star",
+        "LLL: Bully the Bullies": "Power Star",
+        "LLL: Elevator Tour in the Volcano": "Power Star",
+        "LLL: Hot-Foot-It into the Volcano": "Power Star",
+        "LLL: Red-Hot Log Rolling": "Power Star",
+        "MIPS 1": "Power Star",
+        "MIPS 2": "Power Star",
+        "RR: Coins Amassed in a Maze": "Power Star",
+        "RR: Somewhere Over the Rainbow": "Power Star",
+        "RR: Swingin' in the Breeze": "Power Star",
+        "RR: The Big House in the Sky": "Power Star",
+        "RR: Tricky Triangles!": "Power Star",
+        "SL: Chill with the Bully": "Power Star",
+        "SL: In the Deep Freeze": "Power Star",
+        "SL: Into the Igloo": "Power Star",
+        "SL: Shell Shreddin' for Red Coins": "Power Star",
+        "SL: Snowman's Big Head": "Power Star",
+        "SL: Whirl from the Freezing Pond": "Power Star",
+        "SSL: Free Flying for 8 Red Coins": "Power Star",
+        "SSL: In the Talons of the Big Bird": "Power Star",
+        "SSL: Inside the Ancient Pyramid": "Power Star",
+        "SSL: Pyramid Puzzle": "Power Star",
+        "SSL: Shining Atop the Pyramid": "Power Star",
+        "SSL: Stand Tall on the Four Pillars": "Power Star",
+        "THI: Five Itty Bitty Secrets": "Power Star",
+        "THI: Make Wiggler Squirm": "Power Star",
+        "THI: Pluck the Piranha Flower": "Power Star",
+        "THI: Rematch with Koopa the Quick": "Power Star",
+        "THI: The Tip Top of the Huge Island": "Power Star",
+        "THI: Wiggler's Red Coins": "Power Star",
+        "TTC: Get a Hand": "Power Star",
+        "TTC: Roll into the Cage": "Power Star",
+        "TTC: Stomp on the Thwomp": "Power Star",
+        "TTC: Stop Time for Red Coins": "Power Star",
+        "TTC: The Pit and the Pendulums": "Power Star",
+        "TTC: Timed Jumps on Moving Bars": "Power Star",
+        "TTM: Blast to the Lonely Mushroom": "Power Star",
+        "TTM: Breathtaking View from Bridge": "Power Star",
+        "TTM: Mysterious Mountainside": "Power Star",
+        "TTM: Mystery of the Monkey Cage": "Power Star",
+        "TTM: Scale the Mountain": "Power Star",
+        "TTM: Scary 'Shrooms, Red Coins": "Power Star",
         "The Princess's Secret Slide Block": "Power Star",
         "The Princess's Secret Slide Fast": "Power Star",
         "The Secret Aquarium": "Power Star",
-        "Tower of the Wing Cap Switch": "Power Star",
+        "Toad (Second Floor)": "Power Star",
+        "Toad (Third Floor)": "Power Star",
         "Tower of the Wing Cap Red Coins": "Power Star",
-        "Bowser in the Dark World Red Coins": "Power Star",
-        "Bowser in the Dark World Key": "Power Star",
-        "Bowser in the Dark World 1Up Block on Tower": "1Up Mushroom",
-        "Bowser in the Dark World 1Up Block near Goombas": "1Up Mushroom",
-        "HMC: Swimming Beast in the Cavern": "Power Star",
-        "HMC: Metal-Head Mario Can Move!": "Power Star",
-        "HMC: Watch for Rolling Rocks": "Power Star",
-        "HMC: Navigating the Toxic Maze": "Power Star",
-        "HMC: 1Up Block Past Rolling Rocks": "1Up Mushroom",
-        "HMC: Elevate for 8 Red Coins": "Power Star",
-        "HMC: A-Maze-Ing Emergency Exit": "Power Star",
-        "HMC: 1Up Block above Pit": "1Up Mushroom",
-        "LLL: Boil the Big Bully": "Power Star",
-        "LLL: Bully the Bullies": "Power Star",
-        "LLL: 8-Coin Puzzle with 15 Pieces": "Power Star",
-        "LLL: Red-Hot Log Rolling": "Power Star",
-        "LLL: Hot-Foot-It into the Volcano": "Power Star",
-        "LLL: Elevator Tour in the Volcano": "Power Star",
-        "SSL: In the Talons of the Big Bird": "Power Star",
-        "SSL: Shining Atop the Pyramid": "Power Star",
-        "SSL: Free Flying for 8 Red Coins": "Power Star",
-        "SSL: Bob-omb Buddy": "Cannon Unlock SSL",
-        "SSL: 1Up Block Outside Pyramid": "1Up Mushroom",
-        "SSL: 1Up Block Pyramid Left Path": "1Up Mushroom",
-        "SSL: 1Up Block Pyramid Back": "1Up Mushroom",
-        "SSL: Inside the Ancient Pyramid": "Power Star",
-        "SSL: Stand Tall on the Four Pillars": "Power Star",
-        "SSL: Pyramid Puzzle": "Power Star",
-        "DDD: Board Bowser's Sub": "Power Star",
-        "DDD: Chests in the Current": "Power Star",
-        "DDD: Through the Jet Stream": "Power Star",
-        "DDD: The Manta Ray's Reward": "Power Star",
-        "DDD: Collect the Caps...": "Power Star",
-        "DDD: Pole-Jumping for Red Coins": "Power Star",
-        "Cavern of the Metal Cap Switch": "Power Star",
-        "Cavern of the Metal Cap Red Coins": "Power Star",
-        "Cavern of the Metal Cap 1Up Block": "1Up Mushroom",
-        "Vanish Cap Under the Moat Switch": "Power Star",
+        "Tower of the Wing Cap Switch": "Power Star",
         "Vanish Cap Under the Moat Red Coins": "Power Star",
-        "Vanish Cap Under the Moat 1Up Block": "1Up Mushroom",
-        "Bowser in the Fire Sea Red Coins": "Power Star",
-        "Bowser in the Fire Sea Key": "Power Star",
-        "Bowser in the Fire Sea 1Up Block Swaying Stairs": "1Up Mushroom",
-        "Bowser in the Fire Sea 1Up Block Near Poles": "1Up Mushroom",
-        "SL: Snowman's Big Head": "Power Star",
-        "SL: Chill with the Bully": "Power Star",
-        "SL: In the Deep Freeze": "Power Star",
-        "SL: Whirl from the Freezing Pond": "Power Star",
-        "SL: Shell Shreddin' for Red Coins": "Power Star",
-        "SL: Into the Igloo": "Power Star",
-        "SL: Bob-omb Buddy": "Cannon Unlock SL",
-        "SL: 1Up Block Near Moneybags": "1Up Mushroom",
-        "SL: 1Up Block inside Igloo": "1Up Mushroom",
+        "Vanish Cap Under the Moat Switch": "Power Star",
         "WDW: Express Elevator--Hurry Up!": "Power Star",
+        "WDW: Go to Town for Red Coins": "Power Star",
+        "WDW: Secrets in the Shallows & Sky": "Power Star",
         "WDW: Shocking Arrow Lifts!": "Power Star",
         "WDW: Top o' the Town": "Power Star",
-        "WDW: Secrets in the Shallows & Sky": "Power Star",
-        "WDW: Bob-omb Buddy": "Cannon Unlock WDW",
-        "WDW: Go to Town for Red Coins": "Power Star",
-        "WDW: Quick Race Through Downtown!": "Wing Cap",
-        "WDW: 1Up Block in Downtown": "1Up Mushroom",
-        "TTM: Scary 'Shrooms, Red Coins": "Power Star",
-        "TTM: Blast to the Lonely Mushroom": "Power Star",
-        "TTM: Bob-omb Buddy": "Cannon Unlock TTM",
-        "TTM: 1Up Block on Red Mushroom": "1Up Mushroom",
-        "TTM: Scale the Mountain": "Power Star",
-        "TTM: Mystery of the Monkey Cage": "Power Star",
-        "TTM: Mysterious Mountainside": "Power Star",
-        "TTM: Breathtaking View from Bridge": "Power Star",
-        "THI: 1Up Block THI Small near Start": "1Up Mushroom",
-        "THI: The Tip Top of the Huge Island": "Power Star",
-        "THI: Pluck the Piranha Flower": "Power Star",
-        "THI: Rematch with Koopa the Quick": "Power Star",
-        "THI: Five Itty Bitty Secrets": "Power Star",
-        "THI: Wiggler's Red Coins": "Power Star",
-        "THI: Bob-omb Buddy": "Cannon Unlock THI",
-        "THI: 1Up Block THI Large near Start": "1Up Mushroom",
-        "THI: 1Up Block Windy Area": "1Up Mushroom",
-        "THI: Make Wiggler Squirm": "Power Star",
-        "TTC: Stop Time for Red Coins": "Power Star",
-        "TTC: Roll into the Cage": "Power Star",
-        "TTC: Get a Hand": "Power Star",
-        "TTC: Timed Jumps on Moving Bars": "Power Star",
-        "TTC: The Pit and the Pendulums": "Power Star",
-        "TTC: 1Up Block Midway Up": "1Up Mushroom",
-        "TTC: Stomp on the Thwomp": "Power Star",
-        "TTC: 1Up Block at the Top": "1Up Mushroom",
-        "RR: Swingin' in the Breeze": "Power Star",
-        "RR: Tricky Triangles!": "Power Star",
+        "WF: Blast Away the Wall": "Power Star",
+        "WF: Fall onto the Caged Island": "Power Star",
+        "WF: Red Coins on the Floating Isle": "Power Star",
+        "WF: Shoot into the Wild Blue": "Power Star",
+        "WF: To the Top of the Fortress": "Power Star",
+        "Wing Mario Over the Rainbow Red Coins": "Power Star",
+        "BoB: Bob-omb Buddy": "Cannon Unlock BoB",
+        "CCM: Frosty Slide for 8 Red Coins": "Progressive Key",
+        "WF: Chip Off Whomp's Block": "Progressive Key",
+        "WF: Bob-omb Buddy": "Cannon Unlock WF",
+        "JRB: Bob-omb Buddy": "Cannon Unlock JRB",
+        "CCM: Bob-omb Buddy": "Cannon Unlock CCM",
+        "BBH: 1Up Block Top of Mansion": "1Up Mushroom",
+        "Bowser in the Dark World 1Up Block near Goombas": "1Up Mushroom",
+        "Bowser in the Dark World 1Up Block on Tower": "1Up Mushroom",
+        "Bowser in the Fire Sea 1Up Block Near Poles": "1Up Mushroom",
+        "Bowser in the Fire Sea 1Up Block Swaying Stairs": "1Up Mushroom",
+        "Bowser in the Sky 1Up Block": "1Up Mushroom",
+        "CCM: 1Up Block Ice Pillar": "1Up Mushroom",
+        "CCM: 1Up Block Near Snowman": "1Up Mushroom",
+        "CCM: 1Up Block Secret Slide": "1Up Mushroom",
+        "Cavern of the Metal Cap 1Up Block": "1Up Mushroom",
+        "HMC: 1Up Block Past Rolling Rocks": "1Up Mushroom",
+        "HMC: 1Up Block above Pit": "1Up Mushroom",
+        "RR: 1Up Block On House in the Sky": "1Up Mushroom",
         "RR: 1Up Block Top of Red Coin Maze": "1Up Mushroom",
         "RR: 1Up Block Under Fly Guy": "1Up Mushroom",
-        "RR: Bob-omb Buddy": "Cannon Unlock RR",
-        "RR: Coins Amassed in a Maze": "Power Star",
-        "RR: Cruiser Crossing the Rainbow": "Vanish Cap",
-        "RR: Somewhere Over the Rainbow": "Power Star",
-        "RR: The Big House in the Sky": "Power Star",
-        "RR: 1Up Block On House in the Sky": "1Up Mushroom",
-        "Wing Mario Over the Rainbow Red Coins": "Power Star",
+        "SL: 1Up Block Near Moneybags": "1Up Mushroom",
+        "SL: 1Up Block inside Igloo": "1Up Mushroom",
+        "SSL: 1Up Block Outside Pyramid": "1Up Mushroom",
+        "SSL: 1Up Block Pyramid Back": "1Up Mushroom",
+        "SSL: 1Up Block Pyramid Left Path": "1Up Mushroom",
+        "THI: 1Up Block THI Large near Start": "1Up Mushroom",
+        "THI: 1Up Block THI Small near Start": "1Up Mushroom",
+        "THI: 1Up Block Windy Area": "1Up Mushroom",
+        "TTC: 1Up Block Midway Up": "1Up Mushroom",
+        "TTC: 1Up Block at the Top": "1Up Mushroom",
+        "TTM: 1Up Block on Red Mushroom": "1Up Mushroom",
+        "Vanish Cap Under the Moat 1Up Block": "1Up Mushroom",
+        "WDW: 1Up Block in Downtown": "1Up Mushroom",
         "Wing Mario Over the Rainbow 1Up Block": "1Up Mushroom",
-        "Bowser in the Sky 1Up Block": "1Up Mushroom",
-        "Bowser in the Sky Red Coins": "Power Star",
+        "SSL: Bob-omb Buddy": "Cannon Unlock SSL",
+        "SL: Bob-omb Buddy": "Cannon Unlock SL",
+        "WDW: Bob-omb Buddy": "Cannon Unlock WDW",
+        "WDW: Quick Race Through Downtown!": "Wing Cap",
+        "TTM: Bob-omb Buddy": "Cannon Unlock TTM",
+        "THI: Bob-omb Buddy": "Cannon Unlock THI",
+        "RR: Bob-omb Buddy": "Cannon Unlock RR",
+        "RR: Cruiser Crossing the Rainbow": "Vanish Cap",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Toad (Basement)": True,
+        "Toad (Second Floor)": True,
+        "Toad (Third Floor)": True,
+        "MIPS 1": True,
+        "MIPS 2": True,
+        "BoB: Big Bob-Omb on the Summit": True,
+        "BoB: Footrace with Koopa The Quick": True,
+        "BoB: Mario Wings to the Sky": True,
+        "BoB: Behind Chain Chomp's Gate": True,
+        "BoB: Bob-omb Buddy": True,
+        "BoB: Shoot to the Island in the Sky": True,
+        "BoB: Find the 8 Red Coins": True,
+        "WF: Chip Off Whomp's Block": True,
+        "WF: Shoot into the Wild Blue": True,
+        "WF: Red Coins on the Floating Isle": True,
+        "WF: Fall onto the Caged Island": True,
+        "WF: Blast Away the Wall": True,
+        "WF: To the Top of the Fortress": True,
+        "WF: Bob-omb Buddy": True,
+        "JRB: Plunder in the Sunken Ship": True,
+        "JRB: Can the Eel Come Out to Play?": True,
+        "JRB: Treasure of the Ocean Cave": True,
+        "JRB: Blast to the Stone Pillar": True,
+        "JRB: Through the Jet Stream": True,
+        "JRB: Bob-omb Buddy": True,
+        "JRB: Red Coins on the Ship Afloat": True,
+        "CCM: Slip Slidin' Away": True,
+        "CCM: Li'l Penguin Lost": True,
+        "CCM: Big Penguin Race": True,
+        "CCM: Frosty Slide for 8 Red Coins": True,
+        "CCM: Snowman's Lost His Head": True,
+        "CCM: Wall Kicks Will Work": True,
+        "CCM: Bob-omb Buddy": True,
+        "CCM: 1Up Block Near Snowman": False,
+        "CCM: 1Up Block Ice Pillar": False,
+        "CCM: 1Up Block Secret Slide": False,
+        "BBH: Go on a Ghost Hunt": True,
+        "BBH: Ride Big Boo's Merry-Go-Round": True,
+        "BBH: Secret of the Haunted Books": True,
+        "BBH: Seek the 8 Red Coins": True,
+        "BBH: Eye to Eye in the Secret Room": True,
+        "BBH: Big Boo's Balcony": True,
+        "BBH: 1Up Block Top of Mansion": False,
+        "The Princess's Secret Slide Block": True,
+        "The Princess's Secret Slide Fast": True,
+        "The Secret Aquarium": True,
+        "Tower of the Wing Cap Switch": True,
+        "Tower of the Wing Cap Red Coins": True,
+        "Bowser in the Dark World Red Coins": True,
+        "Bowser in the Dark World Key": True,
+        "Bowser in the Dark World 1Up Block on Tower": False,
+        "Bowser in the Dark World 1Up Block near Goombas": False,
+        "HMC: Swimming Beast in the Cavern": True,
+        "HMC: Metal-Head Mario Can Move!": True,
+        "HMC: Watch for Rolling Rocks": True,
+        "HMC: Navigating the Toxic Maze": True,
+        "HMC: 1Up Block Past Rolling Rocks": False,
+        "HMC: Elevate for 8 Red Coins": True,
+        "HMC: A-Maze-Ing Emergency Exit": True,
+        "HMC: 1Up Block above Pit": False,
+        "LLL: Boil the Big Bully": True,
+        "LLL: Bully the Bullies": True,
+        "LLL: 8-Coin Puzzle with 15 Pieces": True,
+        "LLL: Red-Hot Log Rolling": True,
+        "LLL: Hot-Foot-It into the Volcano": True,
+        "LLL: Elevator Tour in the Volcano": True,
+        "SSL: In the Talons of the Big Bird": True,
+        "SSL: Shining Atop the Pyramid": True,
+        "SSL: Free Flying for 8 Red Coins": True,
+        "SSL: Bob-omb Buddy": True,
+        "SSL: 1Up Block Outside Pyramid": False,
+        "SSL: 1Up Block Pyramid Left Path": False,
+        "SSL: 1Up Block Pyramid Back": False,
+        "SSL: Inside the Ancient Pyramid": True,
+        "SSL: Stand Tall on the Four Pillars": True,
+        "SSL: Pyramid Puzzle": True,
+        "DDD: Board Bowser's Sub": True,
+        "DDD: Chests in the Current": True,
+        "DDD: Through the Jet Stream": True,
+        "DDD: The Manta Ray's Reward": True,
+        "DDD: Collect the Caps...": True,
+        "DDD: Pole-Jumping for Red Coins": True,
+        "Cavern of the Metal Cap Switch": True,
+        "Cavern of the Metal Cap Red Coins": True,
+        "Cavern of the Metal Cap 1Up Block": False,
+        "Vanish Cap Under the Moat Switch": True,
+        "Vanish Cap Under the Moat Red Coins": True,
+        "Vanish Cap Under the Moat 1Up Block": False,
+        "Bowser in the Fire Sea Red Coins": True,
+        "Bowser in the Fire Sea Key": True,
+        "Bowser in the Fire Sea 1Up Block Swaying Stairs": False,
+        "Bowser in the Fire Sea 1Up Block Near Poles": False,
+        "SL: Snowman's Big Head": True,
+        "SL: Chill with the Bully": True,
+        "SL: In the Deep Freeze": True,
+        "SL: Whirl from the Freezing Pond": True,
+        "SL: Shell Shreddin' for Red Coins": True,
+        "SL: Into the Igloo": True,
+        "SL: Bob-omb Buddy": True,
+        "SL: 1Up Block Near Moneybags": False,
+        "SL: 1Up Block inside Igloo": False,
+        "WDW: Express Elevator--Hurry Up!": True,
+        "WDW: Shocking Arrow Lifts!": True,
+        "WDW: Top o' the Town": True,
+        "WDW: Secrets in the Shallows & Sky": True,
+        "WDW: Bob-omb Buddy": True,
+        "WDW: Go to Town for Red Coins": True,
+        "WDW: Quick Race Through Downtown!": True,
+        "WDW: 1Up Block in Downtown": False,
+        "TTM: Scary 'Shrooms, Red Coins": True,
+        "TTM: Blast to the Lonely Mushroom": True,
+        "TTM: Bob-omb Buddy": True,
+        "TTM: 1Up Block on Red Mushroom": False,
+        "TTM: Scale the Mountain": True,
+        "TTM: Mystery of the Monkey Cage": True,
+        "TTM: Mysterious Mountainside": True,
+        "TTM: Breathtaking View from Bridge": True,
+        "THI: 1Up Block THI Small near Start": False,
+        "THI: The Tip Top of the Huge Island": True,
+        "THI: Pluck the Piranha Flower": True,
+        "THI: Rematch with Koopa the Quick": True,
+        "THI: Five Itty Bitty Secrets": True,
+        "THI: Wiggler's Red Coins": True,
+        "THI: Bob-omb Buddy": True,
+        "THI: 1Up Block THI Large near Start": False,
+        "THI: 1Up Block Windy Area": False,
+        "THI: Make Wiggler Squirm": True,
+        "TTC: Stop Time for Red Coins": True,
+        "TTC: Roll into the Cage": True,
+        "TTC: Get a Hand": True,
+        "TTC: Timed Jumps on Moving Bars": True,
+        "TTC: The Pit and the Pendulums": True,
+        "TTC: 1Up Block Midway Up": False,
+        "TTC: Stomp on the Thwomp": True,
+        "TTC: 1Up Block at the Top": False,
+        "RR: Swingin' in the Breeze": True,
+        "RR: Tricky Triangles!": True,
+        "RR: 1Up Block Top of Red Coin Maze": False,
+        "RR: 1Up Block Under Fly Guy": False,
+        "RR: Bob-omb Buddy": True,
+        "RR: Coins Amassed in a Maze": True,
+        "RR: Cruiser Crossing the Rainbow": True,
+        "RR: Somewhere Over the Rainbow": True,
+        "RR: The Big House in the Sky": True,
+        "RR: 1Up Block On House in the Sky": False,
+        "Wing Mario Over the Rainbow Red Coins": True,
+        "Wing Mario Over the Rainbow 1Up Block": False,
+        "Bowser in the Sky 1Up Block": False,
+        "Bowser in the Sky Red Coins": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -377,14 +504,38 @@ class SM64World(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = SuperMario64WorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = SuperMario64WorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = SuperMario64WorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -411,27 +562,81 @@ class SM64World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

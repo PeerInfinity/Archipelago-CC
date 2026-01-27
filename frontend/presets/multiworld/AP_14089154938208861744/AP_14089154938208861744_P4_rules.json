@@ -1514,7 +1514,14 @@
                 "type": "constant",
                 "value": true
               },
-              "if_false": null
+              "if_false": {
+                "type": "item_check",
+                "item": "Progressive Painting Unlock",
+                "count": {
+                  "type": "name",
+                  "name": "count"
+                }
+              }
             },
             "if_false": {
               "type": "item_check",
@@ -1528,39 +1535,6 @@
         },
         "defaults": {
           "allow_skip": true
-        }
-      },
-      "has_relic_combo": {
-        "params": [
-          "relic"
-        ],
-        "body": {
-          "type": "group_check",
-          "group": {
-            "type": "name",
-            "name": "relic"
-          },
-          "count": {
-            "type": "helper",
-            "name": "len",
-            "args": [
-              {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "item_name_groups"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "relic"
-                }
-              }
-            ]
-          }
         }
       },
       "painting_logic": {
@@ -1730,46 +1704,11 @@
         ]
       },
       "basement_key_rule": {
-        "type": "conditional",
-        "test": {
-          "type": "compare",
-          "left": {
-            "type": "placement_lookup",
-            "location": {
-              "type": "constant",
-              "value": "Sewers - Key Rat Key Drop"
-            }
-          },
-          "op": "==",
-          "right": {
-            "type": "tuple",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Small Key (Hyrule Castle)"
-              },
-              {
-                "type": "constant",
-                "value": 2
-              }
-            ]
-          }
-        },
-        "if_true": {
-          "type": "count_check",
-          "item": "Small Key (Hyrule Castle)",
-          "count": {
-            "type": "constant",
-            "value": 2
-          }
-        },
-        "if_false": {
-          "type": "count_check",
-          "item": "Small Key (Hyrule Castle)",
-          "count": {
-            "type": "constant",
-            "value": 3
-          }
+        "type": "count_check",
+        "item": "Small Key (Hyrule Castle)",
+        "count": {
+          "type": "constant",
+          "value": 2
         }
       },
       "bottle_count": {

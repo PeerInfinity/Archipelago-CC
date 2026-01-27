@@ -151,7 +151,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Tar River From Lobby", player),
-        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable"), CanReachRegion('Tar River'), Has('Crawling'))
+        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))), CanReachRegion('Tar River'), Has('Crawling'))
     )
 
     world.set_rule(
@@ -225,7 +225,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Tar River", player),
-        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable"), Has('Crawling'))
+        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))), Has('Crawling'))
     )
 
     world.set_rule(
@@ -280,7 +280,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Water Capture From Janitor Closet", player),
-        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
     )
 
     world.set_rule(
@@ -338,7 +338,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Slide Room", player),
-        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set")
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
     )
 
     world.set_rule(
@@ -438,7 +438,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Tar River", player),
-        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")
+        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE')))
     )
 
     world.set_rule(
@@ -468,7 +468,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Janitor Closet", player),
-        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
     )
 
     world.set_rule(
@@ -483,50 +483,50 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Skull Dial Door", player),
-        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set")
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Water", player),
-        HelperCall(helper_func=water_capturable, helper_name="water_capturable")
+        HelperCall(helper_func=water_capturable, helper_name="water_capturable", body_rule=(HasAll('Water Pot Bottom', 'Water Pot Bottom DUPE', 'Water Pot Top', 'Water Pot Top DUPE')) | (HasAll('Water Pot Complete', 'Water Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wax", player),
-        HelperCall(helper_func=wax_capturable, helper_name="wax_capturable")
+        HelperCall(helper_func=wax_capturable, helper_name="wax_capturable", body_rule=(HasAll('Wax Pot Bottom', 'Wax Pot Bottom DUPE', 'Wax Pot Top', 'Wax Pot Top DUPE')) | (HasAll('Wax Pot Complete', 'Wax Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Ash", player),
-        HelperCall(helper_func=ash_capturable, helper_name="ash_capturable")
+        HelperCall(helper_func=ash_capturable, helper_name="ash_capturable", body_rule=(HasAll('Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE')) | (HasAll('Ash Pot Complete', 'Ash Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Oil", player),
-        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable")
+        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Cloth", player),
-        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable")
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wood", player),
-        HelperCall(helper_func=wood_capturable, helper_name="wood_capturable")
+        HelperCall(helper_func=wood_capturable, helper_name="wood_capturable", body_rule=(HasAll('Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE')) | (HasAll('Wood Pot Complete', 'Wood Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Crystal", player),
-        HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable")
+        HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable", body_rule=(HasAll('Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE')) | (HasAll('Crystal Pot Complete', 'Crystal Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Sand", player),
-        HelperCall(helper_func=sand_capturable, helper_name="sand_capturable")
+        HelperCall(helper_func=sand_capturable, helper_name="sand_capturable", body_rule=(HasAll('Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE')) | (HasAll('Sand Pot Complete', 'Sand Pot Complete DUPE')))
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Metal", player),
-        HelperCall(helper_func=metal_capturable, helper_name="metal_capturable")
+        HelperCall(helper_func=metal_capturable, helper_name="metal_capturable", body_rule=(HasAll('Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE')) | (HasAll('Metal Pot Complete', 'Metal Pot Complete DUPE')))
     )

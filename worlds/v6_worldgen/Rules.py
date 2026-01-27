@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def _has_trinket_range(state: "CollectionState", player: int, start = None, end = None) -> bool:
-    for i in range(start):
+    for i in range(start, end):
         if not (state.has(('Trinket ' + str((i + 1)).zfill(2)), player)):
             return False
     return True

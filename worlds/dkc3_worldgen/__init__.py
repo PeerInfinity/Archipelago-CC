@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -28,14 +28,14 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Bear Coin": 18,
     "Bonus Coin": 85,
     "DK Coin": 41,
-    "Krematoa Cog": 4,
+    "Donkey Kong": 1,
+    "Krematoa Cog": 5,
     "Progressive Boat Upgrade": 3,
 }
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Rocket Rush - Flag": "Krematoa Cog",
-    "Kastle KAOS": "Donkey Kong",
+
 }
 
 # Starting items - items the player begins with (precollected)
@@ -95,186 +95,371 @@ class DKC3World(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Lakeside Limbo - Flag": "Bear Coin",
-        "Lakeside Limbo - Bonus 1": "Bear Coin",
-        "Lakeside Limbo - Bonus 2": "DK Coin",
-        "Lakeside Limbo - DK Coin": "DK Coin",
-        "Doorstop Dash - Flag": "DK Coin",
-        "Doorstop Dash - Bonus 1": "1-Up Balloon",
-        "Doorstop Dash - Bonus 2": "Bonus Coin",
-        "Doorstop Dash - DK Coin": "Bonus Coin",
-        "Tidal Trouble - Flag": "Bonus Coin",
-        "Tidal Trouble - Bonus 1": "DK Coin",
-        "Tidal Trouble - Bonus 2": "Progressive Boat Upgrade",
-        "Tidal Trouble - DK Coin": "Bonus Coin",
-        "Skidda's Row - Flag": "Bonus Coin",
-        "Skidda's Row - Bonus 1": "DK Coin",
-        "Skidda's Row - Bonus 2": "Bonus Coin",
-        "Skidda's Row - DK Coin": "Bonus Coin",
-        "Murky Mill - Flag": "Bonus Coin",
-        "Murky Mill - Bonus 1": "1-Up Balloon",
-        "Murky Mill - Bonus 2": "Bonus Coin",
-        "Murky Mill - DK Coin": "1-Up Balloon",
-        "Barrel Shield Bust-Up - Flag": "Bonus Coin",
+        "Barrel Drop Bounce - Bonus 1": "Bear Coin",
         "Barrel Shield Bust-Up - Bonus 1": "Bear Coin",
         "Barrel Shield Bust-Up - Bonus 2": "Bear Coin",
-        "Barrel Shield Bust-Up - DK Coin": "DK Coin",
-        "Riverside Race - Flag": "1-Up Balloon",
-        "Riverside Race - Bonus 1": "Bear Coin",
-        "Riverside Race - Bonus 2": "DK Coin",
-        "Riverside Race - DK Coin": "Bonus Coin",
-        "Squeals On Wheels - Flag": "Progressive Boat Upgrade",
-        "Squeals On Wheels - Bonus 1": "Bonus Coin",
-        "Squeals On Wheels - Bonus 2": "Bonus Coin",
-        "Squeals On Wheels - DK Coin": "Progressive Boat Upgrade",
-        "Springin' Spiders - Flag": "Bonus Coin",
-        "Springin' Spiders - Bonus 1": "DK Coin",
-        "Springin' Spiders - Bonus 2": "Bonus Coin",
-        "Springin' Spiders - DK Coin": "1-Up Balloon",
-        "Bobbing Barrel Brawl - Flag": "Bonus Coin",
-        "Bobbing Barrel Brawl - Bonus 1": "1-Up Balloon",
-        "Bobbing Barrel Brawl - Bonus 2": "Bonus Coin",
-        "Bobbing Barrel Brawl - DK Coin": "DK Coin",
-        "Bazza's Blockade - Flag": "Krematoa Cog",
-        "Bazza's Blockade - Bonus 1": "1-Up Balloon",
-        "Bazza's Blockade - Bonus 2": "DK Coin",
-        "Bazza's Blockade - DK Coin": "Bonus Coin",
-        "Rocket Barrel Ride - Flag": "1-Up Balloon",
-        "Rocket Barrel Ride - Bonus 1": "Bonus Coin",
-        "Rocket Barrel Ride - Bonus 2": "1-Up Balloon",
-        "Rocket Barrel Ride - DK Coin": "1-Up Balloon",
-        "Kreeping Klasps - Flag": "Bonus Coin",
-        "Kreeping Klasps - Bonus 1": "Bonus Coin",
-        "Kreeping Klasps - Bonus 2": "DK Coin",
-        "Kreeping Klasps - DK Coin": "Bonus Coin",
-        "Tracker Barrel Trek - Flag": "Bear Coin",
-        "Tracker Barrel Trek - Bonus 1": "Bear Coin",
-        "Tracker Barrel Trek - Bonus 2": "Bonus Coin",
-        "Tracker Barrel Trek - DK Coin": "Bonus Coin",
-        "Fish Food Frenzy - Flag": "Krematoa Cog",
-        "Fish Food Frenzy - Bonus 1": "Bonus Coin",
-        "Fish Food Frenzy - Bonus 2": "Bonus Coin",
-        "Fish Food Frenzy - DK Coin": "Bonus Coin",
-        "Fire-Ball Frenzy - Flag": "Bear Coin",
+        "Bounty Beach": "Bear Coin",
         "Fire-Ball Frenzy - Bonus 1": "Bear Coin",
-        "Fire-Ball Frenzy - Bonus 2": "Bonus Coin",
-        "Fire-Ball Frenzy - DK Coin": "Bonus Coin",
-        "Demolition Drain-Pipe - Flag": "1-Up Balloon",
-        "Demolition Drain-Pipe - Bonus 1": "Bonus Coin",
-        "Demolition Drain-Pipe - Bonus 2": "1-Up Balloon",
-        "Demolition Drain-Pipe - DK Coin": "Bonus Coin",
-        "Ripsaw Rage - Flag": "Bonus Coin",
-        "Ripsaw Rage - Bonus 1": "Bonus Coin",
-        "Ripsaw Rage - Bonus 2": "Bonus Coin",
-        "Ripsaw Rage - DK Coin": "Bear Coin",
-        "Blazing Bazukas - Flag": "Bonus Coin",
-        "Blazing Bazukas - Bonus 1": "DK Coin",
-        "Blazing Bazukas - Bonus 2": "Krematoa Cog",
-        "Blazing Bazukas - DK Coin": "DK Coin",
-        "Low-G Labyrinth - Flag": "DK Coin",
-        "Low-G Labyrinth - Bonus 1": "Bonus Coin",
+        "Fire-Ball Frenzy - Flag": "Bear Coin",
+        "K's Cache": "Bear Coin",
+        "Krack-Shot Kroc - Bonus 1": "Bear Coin",
+        "Lakeside Limbo - Bonus 1": "Bear Coin",
+        "Lakeside Limbo - Flag": "Bear Coin",
         "Low-G Labyrinth - Bonus 2": "Bear Coin",
-        "Low-G Labyrinth - DK Coin": "Bonus Coin",
-        "Krevice Kreepers - Flag": "Bonus Coin",
-        "Krevice Kreepers - Bonus 1": "Bonus Coin",
-        "Krevice Kreepers - Bonus 2": "DK Coin",
-        "Krevice Kreepers - DK Coin": "1-Up Balloon",
-        "Tearaway Toboggan - Flag": "1-Up Balloon",
-        "Tearaway Toboggan - Bonus 1": "Bonus Coin",
-        "Tearaway Toboggan - Bonus 2": "DK Coin",
-        "Tearaway Toboggan - DK Coin": "Bonus Coin",
-        "Barrel Drop Bounce - Flag": "Bonus Coin",
-        "Barrel Drop Bounce - Bonus 1": "Bear Coin",
+        "Ripsaw Rage - DK Coin": "Bear Coin",
+        "Riverside Race - Bonus 1": "Bear Coin",
+        "Rocket Rush - DK Coin": "Bear Coin",
+        "Stampede Sprint - Bonus 2": "Bear Coin",
+        "Tracker Barrel Trek - Bonus 1": "Bear Coin",
+        "Tracker Barrel Trek - Flag": "Bear Coin",
+        "Tyrant Twin Tussle - DK Coin": "Bear Coin",
+        "Arich's Ambush": "DK Coin",
+        "Arich's Hoard": "DK Coin",
+        "Barbos's Barrier": "DK Coin",
         "Barrel Drop Bounce - Bonus 2": "DK Coin",
         "Barrel Drop Bounce - DK Coin": "DK Coin",
-        "Krack-Shot Kroc - Flag": "Bonus Coin",
-        "Krack-Shot Kroc - Bonus 1": "Bear Coin",
+        "Barrel Shield Bust-Up - DK Coin": "DK Coin",
+        "Bazza's Blockade - Bonus 2": "DK Coin",
+        "Blazing Bazukas - Bonus 1": "DK Coin",
+        "Blazing Bazukas - DK Coin": "DK Coin",
+        "Bleak's House": "DK Coin",
+        "Bobbing Barrel Brawl - DK Coin": "DK Coin",
+        "Creepy Caverns - DK Coin": "DK Coin",
+        "Criss Kross Cliffs - Bonus 2": "DK Coin",
+        "Doorstop Dash - Flag": "DK Coin",
+        "Glacial Grotto": "DK Coin",
+        "Hill-Top Hoard": "DK Coin",
+        "KAOS Karnage": "DK Coin",
+        "Knautilus": "DK Coin",
+        "Koindozer Klamber - Bonus 1": "DK Coin",
+        "Koindozer Klamber - Bonus 2": "DK Coin",
         "Krack-Shot Kroc - Bonus 2": "DK Coin",
         "Krack-Shot Kroc - DK Coin": "DK Coin",
+        "Kreeping Klasps - Bonus 2": "DK Coin",
+        "Krevice Kreepers - Bonus 2": "DK Coin",
+        "Lakeside Limbo - Bonus 2": "DK Coin",
+        "Lakeside Limbo - DK Coin": "DK Coin",
         "Lemguin Lunge - Flag": "DK Coin",
+        "Low-G Labyrinth - Flag": "DK Coin",
+        "Poisonous Pipeline - Bonus 1": "DK Coin",
+        "Riverside Race - Bonus 2": "DK Coin",
+        "Ropey Rumpus - Bonus 2": "DK Coin",
+        "Sewer Stockpile": "DK Coin",
+        "Skidda's Row - Bonus 1": "DK Coin",
+        "Springin' Spiders - Bonus 1": "DK Coin",
+        "Squirt's Showdown": "DK Coin",
+        "Stampede Sprint - DK Coin": "DK Coin",
+        "Swoopy Salvo - Bonus 2": "DK Coin",
+        "Tearaway Toboggan - Bonus 2": "DK Coin",
+        "Tidal Trouble - Bonus 1": "DK Coin",
+        "Tyrant Twin Tussle - Bonus 1": "DK Coin",
+        "Undercover Cove": "DK Coin",
+        "Bazza's Blockade - Bonus 1": "1-Up Balloon",
+        "Bobbing Barrel Brawl - Bonus 1": "1-Up Balloon",
+        "Demolition Drain-Pipe - Bonus 2": "1-Up Balloon",
+        "Demolition Drain-Pipe - Flag": "1-Up Balloon",
+        "Doorstop Dash - Bonus 1": "1-Up Balloon",
+        "Floodlit Fish - DK Coin": "1-Up Balloon",
+        "Floodlit Fish - Flag": "1-Up Balloon",
+        "Kong-Fused Cliffs - DK Coin": "1-Up Balloon",
+        "Konveyor Rope Klash - Flag": "1-Up Balloon",
+        "Krevice Kreepers - DK Coin": "1-Up Balloon",
         "Lemguin Lunge - Bonus 1": "1-Up Balloon",
         "Lemguin Lunge - Bonus 2": "1-Up Balloon",
-        "Lemguin Lunge - DK Coin": "Bonus Coin",
-        "Buzzer Barrage - Flag": "Bonus Coin",
+        "Lightning Lookout - DK Coin": "1-Up Balloon",
+        "Murky Mill - Bonus 1": "1-Up Balloon",
+        "Murky Mill - DK Coin": "1-Up Balloon",
+        "Poisonous Pipeline - DK Coin": "1-Up Balloon",
+        "Riverside Race - Flag": "1-Up Balloon",
+        "Rocket Barrel Ride - Bonus 2": "1-Up Balloon",
+        "Rocket Barrel Ride - DK Coin": "1-Up Balloon",
+        "Rocket Barrel Ride - Flag": "1-Up Balloon",
+        "Ropey Rumpus - Bonus 1": "1-Up Balloon",
+        "Ropey Rumpus - DK Coin": "1-Up Balloon",
+        "Smuggler's Cove": "1-Up Balloon",
+        "Springin' Spiders - DK Coin": "1-Up Balloon",
+        "Stampede Sprint - Bonus 1": "1-Up Balloon",
+        "Tearaway Toboggan - Flag": "1-Up Balloon",
+        "Tyrant Twin Tussle - Flag": "1-Up Balloon",
+        "Barrel Drop Bounce - Flag": "Bonus Coin",
+        "Barrel Shield Bust-Up - Flag": "Bonus Coin",
+        "Bazza's Blockade - DK Coin": "Bonus Coin",
+        "Belcha's Barn": "Bonus Coin",
+        "Belcha's Burrow": "Bonus Coin",
+        "Blazing Bazukas - Flag": "Bonus Coin",
+        "Bobbing Barrel Brawl - Bonus 2": "Bonus Coin",
+        "Bobbing Barrel Brawl - Flag": "Bonus Coin",
+        "Bounty Bay": "Bonus Coin",
         "Buzzer Barrage - Bonus 1": "Bonus Coin",
         "Buzzer Barrage - Bonus 2": "Bonus Coin",
         "Buzzer Barrage - DK Coin": "Bonus Coin",
-        "Kong-Fused Cliffs - Flag": "Bonus Coin",
+        "Buzzer Barrage - Flag": "Bonus Coin",
+        "Creepy Caverns - Bonus 1": "Bonus Coin",
+        "Creepy Caverns - Bonus 2": "Bonus Coin",
+        "Creepy Caverns - Flag": "Bonus Coin",
+        "Criss Kross Cliffs - Bonus 1": "Bonus Coin",
+        "Criss Kross Cliffs - DK Coin": "Bonus Coin",
+        "Criss Kross Cliffs - Flag": "Bonus Coin",
+        "Demolition Drain-Pipe - Bonus 1": "Bonus Coin",
+        "Demolition Drain-Pipe - DK Coin": "Bonus Coin",
+        "Doorstop Dash - Bonus 2": "Bonus Coin",
+        "Doorstop Dash - DK Coin": "Bonus Coin",
+        "Fire-Ball Frenzy - Bonus 2": "Bonus Coin",
+        "Fire-Ball Frenzy - DK Coin": "Bonus Coin",
+        "Fish Food Frenzy - Bonus 1": "Bonus Coin",
+        "Fish Food Frenzy - Bonus 2": "Bonus Coin",
+        "Fish Food Frenzy - DK Coin": "Bonus Coin",
+        "Floodlit Fish - Bonus 2": "Bonus Coin",
+        "Koindozer Klamber - DK Coin": "Bonus Coin",
+        "Koindozer Klamber - Flag": "Bonus Coin",
+        "Kong Cave": "Bonus Coin",
         "Kong-Fused Cliffs - Bonus 1": "Bonus Coin",
         "Kong-Fused Cliffs - Bonus 2": "Bonus Coin",
-        "Kong-Fused Cliffs - DK Coin": "1-Up Balloon",
-        "Floodlit Fish - Flag": "1-Up Balloon",
-        "Floodlit Fish - Bonus 1": "Krematoa Cog",
-        "Floodlit Fish - Bonus 2": "Bonus Coin",
-        "Floodlit Fish - DK Coin": "1-Up Balloon",
-        "Pothole Panic - Flag": "Bonus Coin",
-        "Pothole Panic - Bonus 1": "Bonus Coin",
-        "Pothole Panic - Bonus 2": "Bonus Coin",
-        "Pothole Panic - DK Coin": "Bonus Coin",
-        "Ropey Rumpus - Flag": "Bonus Coin",
-        "Ropey Rumpus - Bonus 1": "1-Up Balloon",
-        "Ropey Rumpus - Bonus 2": "DK Coin",
-        "Ropey Rumpus - DK Coin": "1-Up Balloon",
-        "Konveyor Rope Klash - Flag": "1-Up Balloon",
+        "Kong-Fused Cliffs - Flag": "Bonus Coin",
         "Konveyor Rope Klash - Bonus 1": "Bonus Coin",
         "Konveyor Rope Klash - Bonus 2": "Bonus Coin",
         "Konveyor Rope Klash - DK Coin": "Bonus Coin",
-        "Creepy Caverns - Flag": "Bonus Coin",
-        "Creepy Caverns - Bonus 1": "Bonus Coin",
-        "Creepy Caverns - Bonus 2": "Bonus Coin",
-        "Creepy Caverns - DK Coin": "DK Coin",
-        "Lightning Lookout - Flag": "Bonus Coin",
+        "Krack-Shot Kroc - Flag": "Bonus Coin",
+        "Kreeping Klasps - Bonus 1": "Bonus Coin",
+        "Kreeping Klasps - DK Coin": "Bonus Coin",
+        "Kreeping Klasps - Flag": "Bonus Coin",
+        "Krevice Kreepers - Bonus 1": "Bonus Coin",
+        "Krevice Kreepers - Flag": "Bonus Coin",
+        "Lemguin Lunge - DK Coin": "Bonus Coin",
         "Lightning Lookout - Bonus 1": "Bonus Coin",
         "Lightning Lookout - Bonus 2": "Bonus Coin",
-        "Lightning Lookout - DK Coin": "1-Up Balloon",
-        "Koindozer Klamber - Flag": "Bonus Coin",
-        "Koindozer Klamber - Bonus 1": "DK Coin",
-        "Koindozer Klamber - Bonus 2": "DK Coin",
-        "Koindozer Klamber - DK Coin": "Bonus Coin",
-        "Poisonous Pipeline - Flag": "Bonus Coin",
-        "Poisonous Pipeline - Bonus 1": "DK Coin",
+        "Lightning Lookout - Flag": "Bonus Coin",
+        "Low-G Labyrinth - Bonus 1": "Bonus Coin",
+        "Low-G Labyrinth - DK Coin": "Bonus Coin",
+        "Murky Mill - Bonus 2": "Bonus Coin",
+        "Murky Mill - Flag": "Bonus Coin",
         "Poisonous Pipeline - Bonus 2": "Bonus Coin",
-        "Poisonous Pipeline - DK Coin": "1-Up Balloon",
-        "Stampede Sprint - Flag": "Bonus Coin",
-        "Stampede Sprint - Bonus 1": "1-Up Balloon",
-        "Stampede Sprint - Bonus 2": "Bear Coin",
+        "Poisonous Pipeline - Flag": "Bonus Coin",
+        "Pothole Panic - Bonus 1": "Bonus Coin",
+        "Pothole Panic - Bonus 2": "Bonus Coin",
+        "Pothole Panic - DK Coin": "Bonus Coin",
+        "Pothole Panic - Flag": "Bonus Coin",
+        "Ripsaw Rage - Bonus 1": "Bonus Coin",
+        "Ripsaw Rage - Bonus 2": "Bonus Coin",
+        "Ripsaw Rage - Flag": "Bonus Coin",
+        "Riverside Race - DK Coin": "Bonus Coin",
+        "Rocket Barrel Ride - Bonus 1": "Bonus Coin",
+        "Ropey Rumpus - Flag": "Bonus Coin",
+        "Skidda's Row - Bonus 2": "Bonus Coin",
+        "Skidda's Row - DK Coin": "Bonus Coin",
+        "Skidda's Row - Flag": "Bonus Coin",
+        "Springin' Spiders - Bonus 2": "Bonus Coin",
+        "Springin' Spiders - Flag": "Bonus Coin",
+        "Squeals On Wheels - Bonus 1": "Bonus Coin",
+        "Squeals On Wheels - Bonus 2": "Bonus Coin",
         "Stampede Sprint - Bonus 3": "Bonus Coin",
-        "Stampede Sprint - DK Coin": "DK Coin",
-        "Criss Kross Cliffs - Flag": "Bonus Coin",
-        "Criss Kross Cliffs - Bonus 1": "Bonus Coin",
-        "Criss Kross Cliffs - Bonus 2": "DK Coin",
-        "Criss Kross Cliffs - DK Coin": "Bonus Coin",
-        "Tyrant Twin Tussle - Flag": "1-Up Balloon",
-        "Tyrant Twin Tussle - Bonus 1": "DK Coin",
-        "Tyrant Twin Tussle - Bonus 2": "Bonus Coin",
-        "Tyrant Twin Tussle - Bonus 3": "Bonus Coin",
-        "Tyrant Twin Tussle - DK Coin": "Bear Coin",
-        "Swoopy Salvo - Flag": "Bonus Coin",
+        "Stampede Sprint - Flag": "Bonus Coin",
         "Swoopy Salvo - Bonus 1": "Bonus Coin",
-        "Swoopy Salvo - Bonus 2": "DK Coin",
         "Swoopy Salvo - Bonus 3": "Bonus Coin",
         "Swoopy Salvo - DK Coin": "Bonus Coin",
+        "Swoopy Salvo - Flag": "Bonus Coin",
+        "Tearaway Toboggan - Bonus 1": "Bonus Coin",
+        "Tearaway Toboggan - DK Coin": "Bonus Coin",
+        "Tidal Trouble - DK Coin": "Bonus Coin",
+        "Tidal Trouble - Flag": "Bonus Coin",
+        "Tracker Barrel Trek - Bonus 2": "Bonus Coin",
+        "Tracker Barrel Trek - DK Coin": "Bonus Coin",
+        "Tyrant Twin Tussle - Bonus 2": "Bonus Coin",
+        "Tyrant Twin Tussle - Bonus 3": "Bonus Coin",
+        "Squeals On Wheels - DK Coin": "Progressive Boat Upgrade",
+        "Squeals On Wheels - Flag": "Progressive Boat Upgrade",
+        "Tidal Trouble - Bonus 2": "Progressive Boat Upgrade",
+        "Bazza's Blockade - Flag": "Krematoa Cog",
+        "Blazing Bazukas - Bonus 2": "Krematoa Cog",
+        "Fish Food Frenzy - Flag": "Krematoa Cog",
+        "Floodlit Fish - Bonus 1": "Krematoa Cog",
         "Rocket Rush - Flag": "Krematoa Cog",
-        "Rocket Rush - DK Coin": "Bear Coin",
-        "Belcha's Barn": "Bonus Coin",
-        "Arich's Ambush": "DK Coin",
-        "Squirt's Showdown": "DK Coin",
-        "KAOS Karnage": "DK Coin",
-        "Bleak's House": "DK Coin",
-        "Barbos's Barrier": "DK Coin",
         "Kastle KAOS": "Donkey Kong",
-        "Knautilus": "DK Coin",
-        "Belcha's Burrow": "Bonus Coin",
-        "Kong Cave": "Bonus Coin",
-        "Undercover Cove": "DK Coin",
-        "K's Cache": "Bear Coin",
-        "Hill-Top Hoard": "DK Coin",
-        "Bounty Beach": "Bear Coin",
-        "Smuggler's Cove": "1-Up Balloon",
-        "Arich's Hoard": "DK Coin",
-        "Bounty Bay": "Bonus Coin",
-        "Glacial Grotto": "DK Coin",
-        "Sewer Stockpile": "DK Coin",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Lakeside Limbo - Flag": False,
+        "Lakeside Limbo - Bonus 1": False,
+        "Lakeside Limbo - Bonus 2": True,
+        "Lakeside Limbo - DK Coin": True,
+        "Doorstop Dash - Flag": True,
+        "Doorstop Dash - Bonus 1": False,
+        "Doorstop Dash - Bonus 2": True,
+        "Doorstop Dash - DK Coin": True,
+        "Tidal Trouble - Flag": True,
+        "Tidal Trouble - Bonus 1": True,
+        "Tidal Trouble - Bonus 2": True,
+        "Tidal Trouble - DK Coin": True,
+        "Skidda's Row - Flag": True,
+        "Skidda's Row - Bonus 1": True,
+        "Skidda's Row - Bonus 2": True,
+        "Skidda's Row - DK Coin": True,
+        "Murky Mill - Flag": True,
+        "Murky Mill - Bonus 1": False,
+        "Murky Mill - Bonus 2": True,
+        "Murky Mill - DK Coin": False,
+        "Barrel Shield Bust-Up - Flag": True,
+        "Barrel Shield Bust-Up - Bonus 1": False,
+        "Barrel Shield Bust-Up - Bonus 2": False,
+        "Barrel Shield Bust-Up - DK Coin": True,
+        "Riverside Race - Flag": False,
+        "Riverside Race - Bonus 1": False,
+        "Riverside Race - Bonus 2": True,
+        "Riverside Race - DK Coin": True,
+        "Squeals On Wheels - Flag": True,
+        "Squeals On Wheels - Bonus 1": True,
+        "Squeals On Wheels - Bonus 2": True,
+        "Squeals On Wheels - DK Coin": True,
+        "Springin' Spiders - Flag": True,
+        "Springin' Spiders - Bonus 1": True,
+        "Springin' Spiders - Bonus 2": True,
+        "Springin' Spiders - DK Coin": False,
+        "Bobbing Barrel Brawl - Flag": True,
+        "Bobbing Barrel Brawl - Bonus 1": False,
+        "Bobbing Barrel Brawl - Bonus 2": True,
+        "Bobbing Barrel Brawl - DK Coin": True,
+        "Bazza's Blockade - Flag": True,
+        "Bazza's Blockade - Bonus 1": False,
+        "Bazza's Blockade - Bonus 2": True,
+        "Bazza's Blockade - DK Coin": True,
+        "Rocket Barrel Ride - Flag": False,
+        "Rocket Barrel Ride - Bonus 1": True,
+        "Rocket Barrel Ride - Bonus 2": False,
+        "Rocket Barrel Ride - DK Coin": False,
+        "Kreeping Klasps - Flag": True,
+        "Kreeping Klasps - Bonus 1": True,
+        "Kreeping Klasps - Bonus 2": True,
+        "Kreeping Klasps - DK Coin": True,
+        "Tracker Barrel Trek - Flag": False,
+        "Tracker Barrel Trek - Bonus 1": False,
+        "Tracker Barrel Trek - Bonus 2": True,
+        "Tracker Barrel Trek - DK Coin": True,
+        "Fish Food Frenzy - Flag": True,
+        "Fish Food Frenzy - Bonus 1": True,
+        "Fish Food Frenzy - Bonus 2": True,
+        "Fish Food Frenzy - DK Coin": True,
+        "Fire-Ball Frenzy - Flag": False,
+        "Fire-Ball Frenzy - Bonus 1": False,
+        "Fire-Ball Frenzy - Bonus 2": True,
+        "Fire-Ball Frenzy - DK Coin": True,
+        "Demolition Drain-Pipe - Flag": False,
+        "Demolition Drain-Pipe - Bonus 1": True,
+        "Demolition Drain-Pipe - Bonus 2": False,
+        "Demolition Drain-Pipe - DK Coin": True,
+        "Ripsaw Rage - Flag": True,
+        "Ripsaw Rage - Bonus 1": True,
+        "Ripsaw Rage - Bonus 2": True,
+        "Ripsaw Rage - DK Coin": False,
+        "Blazing Bazukas - Flag": True,
+        "Blazing Bazukas - Bonus 1": True,
+        "Blazing Bazukas - Bonus 2": True,
+        "Blazing Bazukas - DK Coin": True,
+        "Low-G Labyrinth - Flag": True,
+        "Low-G Labyrinth - Bonus 1": True,
+        "Low-G Labyrinth - Bonus 2": False,
+        "Low-G Labyrinth - DK Coin": True,
+        "Krevice Kreepers - Flag": True,
+        "Krevice Kreepers - Bonus 1": True,
+        "Krevice Kreepers - Bonus 2": True,
+        "Krevice Kreepers - DK Coin": False,
+        "Tearaway Toboggan - Flag": False,
+        "Tearaway Toboggan - Bonus 1": True,
+        "Tearaway Toboggan - Bonus 2": True,
+        "Tearaway Toboggan - DK Coin": True,
+        "Barrel Drop Bounce - Flag": True,
+        "Barrel Drop Bounce - Bonus 1": False,
+        "Barrel Drop Bounce - Bonus 2": True,
+        "Barrel Drop Bounce - DK Coin": True,
+        "Krack-Shot Kroc - Flag": True,
+        "Krack-Shot Kroc - Bonus 1": False,
+        "Krack-Shot Kroc - Bonus 2": True,
+        "Krack-Shot Kroc - DK Coin": True,
+        "Lemguin Lunge - Flag": True,
+        "Lemguin Lunge - Bonus 1": False,
+        "Lemguin Lunge - Bonus 2": False,
+        "Lemguin Lunge - DK Coin": True,
+        "Buzzer Barrage - Flag": True,
+        "Buzzer Barrage - Bonus 1": True,
+        "Buzzer Barrage - Bonus 2": True,
+        "Buzzer Barrage - DK Coin": True,
+        "Kong-Fused Cliffs - Flag": True,
+        "Kong-Fused Cliffs - Bonus 1": True,
+        "Kong-Fused Cliffs - Bonus 2": True,
+        "Kong-Fused Cliffs - DK Coin": False,
+        "Floodlit Fish - Flag": False,
+        "Floodlit Fish - Bonus 1": True,
+        "Floodlit Fish - Bonus 2": True,
+        "Floodlit Fish - DK Coin": False,
+        "Pothole Panic - Flag": True,
+        "Pothole Panic - Bonus 1": True,
+        "Pothole Panic - Bonus 2": True,
+        "Pothole Panic - DK Coin": True,
+        "Ropey Rumpus - Flag": True,
+        "Ropey Rumpus - Bonus 1": False,
+        "Ropey Rumpus - Bonus 2": True,
+        "Ropey Rumpus - DK Coin": False,
+        "Konveyor Rope Klash - Flag": False,
+        "Konveyor Rope Klash - Bonus 1": True,
+        "Konveyor Rope Klash - Bonus 2": True,
+        "Konveyor Rope Klash - DK Coin": True,
+        "Creepy Caverns - Flag": True,
+        "Creepy Caverns - Bonus 1": True,
+        "Creepy Caverns - Bonus 2": True,
+        "Creepy Caverns - DK Coin": True,
+        "Lightning Lookout - Flag": True,
+        "Lightning Lookout - Bonus 1": True,
+        "Lightning Lookout - Bonus 2": True,
+        "Lightning Lookout - DK Coin": False,
+        "Koindozer Klamber - Flag": True,
+        "Koindozer Klamber - Bonus 1": True,
+        "Koindozer Klamber - Bonus 2": True,
+        "Koindozer Klamber - DK Coin": True,
+        "Poisonous Pipeline - Flag": True,
+        "Poisonous Pipeline - Bonus 1": True,
+        "Poisonous Pipeline - Bonus 2": True,
+        "Poisonous Pipeline - DK Coin": False,
+        "Stampede Sprint - Flag": True,
+        "Stampede Sprint - Bonus 1": False,
+        "Stampede Sprint - Bonus 2": False,
+        "Stampede Sprint - Bonus 3": True,
+        "Stampede Sprint - DK Coin": True,
+        "Criss Kross Cliffs - Flag": True,
+        "Criss Kross Cliffs - Bonus 1": True,
+        "Criss Kross Cliffs - Bonus 2": True,
+        "Criss Kross Cliffs - DK Coin": True,
+        "Tyrant Twin Tussle - Flag": False,
+        "Tyrant Twin Tussle - Bonus 1": True,
+        "Tyrant Twin Tussle - Bonus 2": True,
+        "Tyrant Twin Tussle - Bonus 3": True,
+        "Tyrant Twin Tussle - DK Coin": False,
+        "Swoopy Salvo - Flag": True,
+        "Swoopy Salvo - Bonus 1": True,
+        "Swoopy Salvo - Bonus 2": True,
+        "Swoopy Salvo - Bonus 3": True,
+        "Swoopy Salvo - DK Coin": True,
+        "Rocket Rush - Flag": True,
+        "Rocket Rush - DK Coin": False,
+        "Belcha's Barn": True,
+        "Arich's Ambush": True,
+        "Squirt's Showdown": True,
+        "KAOS Karnage": True,
+        "Bleak's House": True,
+        "Barbos's Barrier": True,
+        "Kastle KAOS": True,
+        "Knautilus": True,
+        "Belcha's Burrow": True,
+        "Kong Cave": True,
+        "Undercover Cove": True,
+        "K's Cache": False,
+        "Hill-Top Hoard": True,
+        "Bounty Beach": False,
+        "Smuggler's Cove": False,
+        "Arich's Hoard": True,
+        "Bounty Bay": True,
+        "Glacial Grotto": True,
+        "Sewer Stockpile": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -370,14 +555,38 @@ class DKC3World(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = DonkeyKongCountry3WorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = DonkeyKongCountry3WorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = DonkeyKongCountry3WorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -404,27 +613,81 @@ class DKC3World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

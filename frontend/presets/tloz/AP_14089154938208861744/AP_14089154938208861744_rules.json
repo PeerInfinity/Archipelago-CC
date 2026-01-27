@@ -17259,7 +17259,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 26,
+        "classification_counts": {
+          "filler": 25,
+          "progression": 1
+        }
       },
       "Recovery Heart": {
         "name": "Recovery Heart",

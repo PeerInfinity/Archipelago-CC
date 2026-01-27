@@ -1257,7 +1257,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 20,
+        "classification_counts": {
+          "progression_skip_balancing": 16,
+          "filler": 4
+        }
       },
       "Dash Refills": {
         "name": "Dash Refills",

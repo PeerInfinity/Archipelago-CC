@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, HelperCall, Or
+from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, HasAny, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -611,12 +611,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Headstone Island -> Earth Temple", player),
-        HelperCall(helper_func=can_access_dungeon_entrance_on_headstone_island, helper_name="can_access_dungeon_entrance_on_headstone_island")
+        HelperCall(helper_func=can_access_dungeon_entrance_on_headstone_island, helper_name="can_access_dungeon_entrance_on_headstone_island", body_rule=Has("Power Bracelets"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Gale Isle -> Wind Temple", player),
-        HelperCall(helper_func=can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle")
+        HelperCall(helper_func=can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle", body_rule=HasAll('Iron Boots', 'Skull Hammer'))
     )
 
     world.set_rule(
@@ -651,7 +651,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Private Oasis -> Cabana Labyrinth", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis", body_rule=HasAll('Cabana Deed', 'Delivery Bag', 'Grappling Hook'))
     )
 
     world.set_rule(
@@ -671,17 +671,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_stone_watcher_island, helper_name="can_access_secret_cave_entrance_on_stone_watcher_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_stone_watcher_island, helper_name="can_access_secret_cave_entrance_on_stone_watcher_island", body_rule=Has("Power Bracelets"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_overlook_island, helper_name="can_access_secret_cave_entrance_on_overlook_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_overlook_island, helper_name="can_access_secret_cave_entrance_on_overlook_island", body_rule=Has("Hookshot"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_birds_peak_rock, helper_name="can_access_secret_cave_entrance_on_birds_peak_rock")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_birds_peak_rock, helper_name="can_access_secret_cave_entrance_on_birds_peak_rock", body_rule=Has("Bait Bag"))
     )
 
     world.set_rule(
@@ -691,12 +691,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_pawprint_isle_side_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle_side_isle")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_pawprint_isle_side_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle_side_isle", body_rule=Has("Hookshot"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_diamond_steppe_island, helper_name="can_access_secret_cave_entrance_on_diamond_steppe_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_diamond_steppe_island, helper_name="can_access_secret_cave_entrance_on_diamond_steppe_island", body_rule=Has("Hookshot"))
     )
 
     world.set_rule(
@@ -706,12 +706,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_rock_spire_isle, helper_name="can_access_secret_cave_entrance_on_rock_spire_isle")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_rock_spire_isle, helper_name="can_access_secret_cave_entrance_on_rock_spire_isle", body_rule=Has("Bombs"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Shark Island -> Shark Island Secret Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island")
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island", body_rule=HasAll('Iron Boots', 'Skull Hammer'))
     )
 
     world.set_rule(
@@ -736,7 +736,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain", player),
-        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_thorned_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_thorned_fairy_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_thorned_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_thorned_fairy_island", body_rule=Has("Skull Hammer"))
     )
 
     world.set_rule(
@@ -746,7 +746,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain", player),
-        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_western_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_western_fairy_island")
+        HelperCall(helper_func=can_access_fairy_fountain_entrance_on_western_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_western_fairy_island", body_rule=Has("Skull Hammer"))
     )
 
     world.set_rule(
@@ -806,7 +806,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave", player),
-        HelperCall(helper_func=can_access_inner_entrance_in_ice_ring_isle_secret_cave, helper_name="can_access_inner_entrance_in_ice_ring_isle_secret_cave")
+        HelperCall(helper_func=can_access_inner_entrance_in_ice_ring_isle_secret_cave, helper_name="can_access_inner_entrance_in_ice_ring_isle_secret_cave", body_rule=Has("Iron Boots"))
     )
 
     world.set_rule(
@@ -854,17 +854,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item", player),
-        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
+        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade", body_rule=Has("Wallet Capacity Upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", player),
-        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
+        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade", body_rule=Has("Wallet Capacity Upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item", player),
-        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
+        HelperCall(helper_func=has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade", body_rule=Has("Wallet Capacity Upgrade"))
     )
 
     world.set_rule(
@@ -1003,7 +1003,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - First Chest Guarded by Armos Knights", player),
-        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"))
+        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow", body_rule=Has("Progressive Bow")))
     )
 
     multiworld.get_location("Tower of the Gods - Floating Platforms Room", player).access_rule = \
@@ -1016,12 +1016,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Second Chest Guarded by Armos Knights", player),
-        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem"), HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Bombs'))
+        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=HasAll('Wind Waker', "Wind's Requiem")), HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Bombs'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Shoot Eye Above Skulls Room Chest", player),
-        And(HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"), Has('Bombs'))
+        And(HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow", body_rule=Has("Progressive Bow")), Has('Bombs'))
     )
 
     world.set_rule(
@@ -1036,7 +1036,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Top of Floating Platforms Room", player),
-        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow"))
+        And(HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=has_heros_bow, helper_name="has_heros_bow", body_rule=Has("Progressive Bow")))
     )
 
     multiworld.get_location("Earth Temple - Big Key Chest", player).access_rule = \
@@ -1049,17 +1049,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Destructible Walls", player),
-        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield"))
+        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield", body_rule=Has("Progressive Shield", 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Statues", player),
-        And(HelperCall(helper_func=can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")))
+        And(HelperCall(helper_func=can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest In Three Blocks Room", player),
-        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path"), HelperCall(helper_func=has_fire_arrows, helper_name="has_fire_arrows"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path"), HelperCall(helper_func=has_fire_arrows, helper_name="has_fire_arrows"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))), Has('Power Bracelets'))
     )
 
     world.set_rule(
@@ -1069,22 +1069,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - End of Foggy Room With Floormasters", player),
-        And(HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")))
+        And(HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Kill All Floormasters in Foggy Room", player),
-        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")))
+        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Left Chest", player),
-        And(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker')), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Right Chest", player),
-        And(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
+        And(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker')), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
     )
 
     world.set_rule(
@@ -1094,17 +1094,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest In Warp Pot Room", player),
-        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")
+        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest in First Crypt", player),
-        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), Or(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield")), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), Or(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker')), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield", body_rule=Has("Progressive Shield", 2))), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Big Key Chest", player),
-        And(HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria"), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
+        And(HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf", body_rule=Has("Deku Leaf")), HelperCall(helper_func=can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria", body_rule=HasAll("Wind God's Aria", 'Wind Waker')), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
     )
 
     world.set_rule(
@@ -1119,7 +1119,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Between Two Dirt Patches", player),
-        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody")
+        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))
     )
 
     multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player).access_rule = \
@@ -1137,7 +1137,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest in Left Alcove", player),
-        And(HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
+        And(HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf", body_rule=Has("Deku Leaf")), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
     )
 
     world.set_rule(
@@ -1182,12 +1182,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Gohma Heart Container", player),
-        HelperCall(helper_func=can_defeat_gohma, helper_name="can_defeat_gohma")
+        HelperCall(helper_func=can_defeat_gohma, helper_name="can_defeat_gohma", body_rule=Has("Grappling Hook"))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Kalle Demos Heart Container", player),
-        HelperCall(helper_func=can_defeat_kalle_demos, helper_name="can_defeat_kalle_demos")
+        HelperCall(helper_func=can_defeat_kalle_demos, helper_name="can_defeat_kalle_demos", body_rule=Has("Boomerang"))
     )
 
     world.set_rule(
@@ -1197,7 +1197,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Helmaroc King Heart Container", player),
-        HelperCall(helper_func=can_defeat_helmaroc_king, helper_name="can_defeat_helmaroc_king")
+        HelperCall(helper_func=can_defeat_helmaroc_king, helper_name="can_defeat_helmaroc_king", body_rule=Has("Skull Hammer"))
     )
 
     world.set_rule(
@@ -1217,7 +1217,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Upper Floor Chest", player),
-        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem"), Has('Skull Hammer'))
+        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=HasAll('Wind Waker', "Wind's Requiem")), Has('Skull Hammer'))
     )
 
     world.set_rule(
@@ -1232,17 +1232,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bird's Peak Rock - Cave", player),
-        HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem")
+        HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=HasAll('Wind Waker', "Wind's Requiem"))
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Left Boulder", player),
-        HelperCall(helper_func=can_move_boulders, helper_name="can_move_boulders")
+        HelperCall(helper_func=can_move_boulders, helper_name="can_move_boulders", body_rule=HasAny('Bombs', 'Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Right Boulder", player),
-        HelperCall(helper_func=can_move_boulders, helper_name="can_move_boulders")
+        HelperCall(helper_func=can_move_boulders, helper_name="can_move_boulders", body_rule=HasAny('Bombs', 'Power Bracelets'))
     )
 
     world.set_rule(
