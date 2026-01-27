@@ -300,13 +300,34 @@ def run_fuzzer_test(
     print(f"  Running: {' '.join(cmd[:10])}...")
 
     try:
-        proc = subprocess.run(
+        # Stream output in real-time for progress visibility
+        # Use Popen to capture stderr while streaming stdout
+        proc = subprocess.Popen(
             cmd,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=runs * timeout + 300,  # Allow extra time for overhead
             cwd=str(PROJECT_ROOT)
         )
+
+        # Read and print stdout in real-time
+        stdout_lines = []
+        while True:
+            line = proc.stdout.readline()
+            if line:
+                print(f"    {line.rstrip()}")
+                stdout_lines.append(line)
+                sys.stdout.flush()
+            elif proc.poll() is not None:
+                # Process finished, read any remaining output
+                for remaining_line in proc.stdout:
+                    print(f"    {remaining_line.rstrip()}")
+                    stdout_lines.append(remaining_line)
+                break
+
+        # Get stderr after process completes
+        stderr_output = proc.stderr.read()
+        returncode = proc.returncode
 
         # Check for report.json
         report_file = FUZZ_OUTPUT_DIR / "report.json"
@@ -335,18 +356,18 @@ def run_fuzzer_test(
             # No report file - check for errors
             error_details = []
             error_details.append("Report file not found")
-            if proc.returncode != 0:
-                error_details.append(f"Exit code: {proc.returncode}")
-            if proc.stderr:
-                stderr = proc.stderr.strip()
+            if returncode != 0:
+                error_details.append(f"Exit code: {returncode}")
+            if stderr_output:
+                stderr = stderr_output.strip()
                 if len(stderr) > 1000:
                     stderr = "..." + stderr[-1000:]
                 error_details.append(f"stderr: {stderr}")
-            if proc.stdout:
-                stdout = proc.stdout.strip()
-                if len(stdout) > 1000:
-                    stdout = "..." + stdout[-1000:]
-                error_details.append(f"stdout: {stdout}")
+            stdout_text = ''.join(stdout_lines)
+            if stdout_text:
+                if len(stdout_text) > 1000:
+                    stdout_text = "..." + stdout_text[-1000:]
+                error_details.append(f"stdout: {stdout_text}")
             result["error"] = " | ".join(error_details)
 
     except subprocess.TimeoutExpired:
