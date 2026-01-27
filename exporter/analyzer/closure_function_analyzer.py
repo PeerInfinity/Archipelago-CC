@@ -224,36 +224,48 @@ class ClosureFunctionAnalyzer:
         """
         if not options:
             # Empty options list - any([]) is False
-            return {'type': 'constant', 'value': False}
+            return {'rule': 'False_'}
 
         analyzed_options = []
+        failed_count = 0
 
         for i, option_func in enumerate(options):
             if not callable(option_func):
                 logger.warning(f"ClosureFunctionAnalyzer: Option {i} is not callable: {type(option_func)}")
-                # Return conservative Moon Pearl rule
-                return {'type': 'item_check', 'item': 'Moon Pearl'}
+                failed_count += 1
+                continue
 
             result = self.analyze_function(option_func, depth + 1)
             if result is not None:
                 analyzed_options.append(result)
             else:
-                # Unanalyzable option - return conservative Moon Pearl rule
-                logger.debug(f"ClosureFunctionAnalyzer: Could not analyze option {i}, using Moon Pearl fallback")
-                return {'type': 'item_check', 'item': 'Moon Pearl'}
+                # Try bytecode analysis as last resort
+                bytecode_result = self._analyze_via_bytecode(option_func)
+                if bytecode_result is not None:
+                    analyzed_options.append(bytecode_result)
+                else:
+                    logger.debug(f"ClosureFunctionAnalyzer: Could not analyze option {i}")
+                    failed_count += 1
 
+        # If we analyzed at least some options, return what we got
+        # Only fail completely if we couldn't analyze ANY option
         if len(analyzed_options) == 0:
-            return {'type': 'constant', 'value': False}
-        elif len(analyzed_options) == 1:
+            if failed_count > 0:
+                # We had options but couldn't analyze any - use Moon Pearl fallback
+                logger.debug(f"ClosureFunctionAnalyzer: All {failed_count} options failed, using Moon Pearl")
+                return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+            return {'rule': 'False_'}
+
+        if len(analyzed_options) == 1:
             return analyzed_options[0]
-        else:
-            # Simplify: remove duplicates and True constants
-            simplified = self._simplify_or_conditions(analyzed_options)
-            if len(simplified) == 0:
-                return {'type': 'constant', 'value': False}
-            elif len(simplified) == 1:
-                return simplified[0]
-            return {'type': 'or', 'conditions': simplified}
+
+        # Simplify: remove duplicates and True constants
+        simplified = self._simplify_or_conditions(analyzed_options)
+        if len(simplified) == 0:
+            return {'rule': 'False_'}
+        elif len(simplified) == 1:
+            return simplified[0]
+        return {'rule': 'Or', 'children': simplified}
 
     def _analyze_path_pattern(self, path: List, entrance, depth: int) -> Optional[Dict[str, Any]]:
         """Analyze path_to_access_rule result.
@@ -273,9 +285,8 @@ class ClosureFunctionAnalyzer:
         # Build the can_reach part
         entrance_name = getattr(entrance, 'name', str(entrance))
         can_reach = {
-            'type': 'can_reach',
-            'target': entrance_name,
-            'target_type': 'Entrance'
+            'rule': 'CanReachEntrance',
+            'args': {'entrance_name': entrance_name}
         }
 
         # Analyze each rule in path
@@ -286,12 +297,17 @@ class ClosureFunctionAnalyzer:
                 if result is not None:
                     path_conditions.append(result)
                 else:
-                    # Unanalyzable path rule - return conservative Moon Pearl
-                    logger.debug(f"ClosureFunctionAnalyzer: Could not analyze path rule {i}, using Moon Pearl fallback")
-                    return {'type': 'item_check', 'item': 'Moon Pearl'}
+                    # Try bytecode analysis
+                    bytecode_result = self._analyze_via_bytecode(rule_func)
+                    if bytecode_result is not None:
+                        path_conditions.append(bytecode_result)
+                    else:
+                        logger.debug(f"ClosureFunctionAnalyzer: Could not analyze path rule {i}")
+                        # Skip this rule rather than failing entirely
+                        continue
             else:
                 logger.warning(f"ClosureFunctionAnalyzer: Path rule {i} is not callable")
-                return {'type': 'item_check', 'item': 'Moon Pearl'}
+                continue
 
         # Combine: can_reach AND all(path)
         if not path_conditions:
@@ -303,11 +319,87 @@ class ClosureFunctionAnalyzer:
         simplified = self._simplify_and_conditions(all_conditions)
         if len(simplified) == 1:
             return simplified[0]
-        return {'type': 'and', 'conditions': simplified}
+        return {'rule': 'And', 'children': simplified}
+
+    def _analyze_via_bytecode(self, func: Callable) -> Optional[Dict[str, Any]]:
+        """Analyze a function by examining its bytecode constants and names.
+
+        This is a last-resort analysis that extracts information from the
+        compiled bytecode when source code is not available.
+
+        Args:
+            func: The function to analyze
+
+        Returns:
+            Analyzed rule dict, or None if analysis failed
+        """
+        func_code = getattr(func, '__code__', None)
+        if not func_code:
+            return None
+
+        consts = func_code.co_consts
+        names = func_code.co_names if hasattr(func_code, 'co_names') else ()
+        freevars = func_code.co_freevars
+
+        # Extract closure variables for additional context
+        closure_vars = self._extract_closure_vars(func)
+
+        # Check for state.has() pattern
+        if 'has' in names:
+            # Find item name in constants
+            for const in consts:
+                if isinstance(const, str) and const and not const.startswith('<'):
+                    # Skip type strings like 'Entrance', 'Region'
+                    if const not in ('Entrance', 'Region', 'Location'):
+                        logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has('{const}')")
+                        return {'rule': 'Has', 'args': {'item_name': const}}
+
+        # Check for state.can_reach() pattern
+        if 'can_reach' in names:
+            # Find target name in constants or closure
+            for const in consts:
+                if isinstance(const, str) and const and const not in ('Entrance', 'Region', 'Location'):
+                    target_type = 'Region'
+                    if 'Entrance' in consts:
+                        target_type = 'Entrance'
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found can_reach('{const}', '{target_type}')")
+                    return {
+                        'rule': 'CanReachEntrance' if target_type == 'Entrance' else 'CanReachRegion',
+                        'args': {'entrance_name' if target_type == 'Entrance' else 'region_name': const}
+                    }
+
+            # Check closure for entrance object
+            if 'entrance' in closure_vars:
+                entrance = closure_vars['entrance']
+                entrance_name = getattr(entrance, 'name', str(entrance))
+                logger.debug(f"ClosureFunctionAnalyzer: Bytecode found can_reach via closure entrance '{entrance_name}'")
+                return {'rule': 'CanReachEntrance', 'args': {'entrance_name': entrance_name}}
+
+        # Check for has_sword helper (used in superbunny rules)
+        if 'has_sword' in names:
+            logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has_sword()")
+            return {'rule': 'has_sword', '_original_ast_type': 'helper', '_converted_from_ast': True}
+
+        # Check for combined patterns (AND with multiple items)
+        item_checks = []
+        for const in consts:
+            if isinstance(const, str) and const in {
+                'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
+                'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow'
+            }:
+                item_checks.append({'rule': 'Has', 'args': {'item_name': const}})
+
+        if len(item_checks) == 1:
+            return item_checks[0]
+        elif len(item_checks) > 1:
+            # Multiple items found - likely an AND of all of them
+            return {'rule': 'And', 'children': item_checks}
+
+        return None
 
     def _analyze_simple_check_pattern(self, func: Callable,
                                       closure_vars: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Analyze simple state.has() patterns.
+        """Analyze simple state.has() patterns by examining bytecode.
 
         Handles patterns like:
         - lambda state: state.has('Moon Pearl', player)
@@ -320,21 +412,46 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed item_check rule, or None if pattern not matched
         """
-        # Try to extract the item name from the function's code constants
         func_code = getattr(func, '__code__', None)
         if not func_code:
             return None
 
         consts = func_code.co_consts
+        names = func_code.co_names if hasattr(func_code, 'co_names') else ()
 
-        # Look for item names in constants
-        known_items = {'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers', 'Hammer'}
+        # Check if this calls 'has' method (state.has())
+        if 'has' not in names:
+            return None
+
+        # Extract item name from constants - it's the string argument to has()
+        # Filter out None and code objects, look for item-like strings
+        item_candidates = []
         for const in consts:
-            if isinstance(const, str) and const in known_items:
-                logger.debug(f"ClosureFunctionAnalyzer: Detected simple check for '{const}'")
-                return {'type': 'item_check', 'item': const}
+            if isinstance(const, str) and const and not const.startswith('<'):
+                item_candidates.append(const)
 
-        # If we can't determine the specific item, fall back to source analysis
+        if len(item_candidates) == 1:
+            item_name = item_candidates[0]
+            logger.debug(f"ClosureFunctionAnalyzer: Detected has() check for '{item_name}'")
+            return {'rule': 'Has', 'args': {'item_name': item_name}}
+
+        # Multiple string constants - try to identify the item
+        # Common ALttP items that appear in bunny rules
+        alttp_items = {
+            'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
+            'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow'
+        }
+        for const in item_candidates:
+            if const in alttp_items:
+                logger.debug(f"ClosureFunctionAnalyzer: Detected has() check for '{const}'")
+                return {'rule': 'Has', 'args': {'item_name': const}}
+
+        # If we have candidates but couldn't identify, use first one
+        if item_candidates:
+            item_name = item_candidates[0]
+            logger.debug(f"ClosureFunctionAnalyzer: Using first constant as item: '{item_name}'")
+            return {'rule': 'Has', 'args': {'item_name': item_name}}
+
         return None
 
     def _extract_closure_vars(self, func: Callable) -> Dict[str, Any]:
@@ -380,12 +497,16 @@ class ClosureFunctionAnalyzer:
         seen = []
 
         for cond in conditions:
-            # True makes the whole OR true
+            # True makes the whole OR true (both formats)
             if cond.get('type') == 'constant' and cond.get('value') is True:
-                return [{'type': 'constant', 'value': True}]
+                return [{'rule': 'True_'}]
+            if cond.get('rule') == 'True_':
+                return [{'rule': 'True_'}]
 
-            # Skip False (doesn't affect OR)
+            # Skip False (doesn't affect OR) (both formats)
             if cond.get('type') == 'constant' and cond.get('value') is False:
+                continue
+            if cond.get('rule') == 'False_':
                 continue
 
             # Skip duplicates (simple equality check)
@@ -411,19 +532,23 @@ class ClosureFunctionAnalyzer:
         seen = []
 
         for cond in conditions:
-            # False makes the whole AND false
+            # False makes the whole AND false (both formats)
             if cond.get('type') == 'constant' and cond.get('value') is False:
-                return [{'type': 'constant', 'value': False}]
+                return [{'rule': 'False_'}]
+            if cond.get('rule') == 'False_':
+                return [{'rule': 'False_'}]
 
-            # Skip True (doesn't affect AND)
+            # Skip True (doesn't affect AND) (both formats)
             if cond.get('type') == 'constant' and cond.get('value') is True:
+                continue
+            if cond.get('rule') == 'True_':
                 continue
 
             # Skip duplicates (simple equality check)
             if cond not in seen:
                 seen.append(cond)
 
-        return seen if seen else [{'type': 'constant', 'value': True}]
+        return seen if seen else [{'rule': 'True_'}]
 
 
 class BunnyRulePatternMatcher:
