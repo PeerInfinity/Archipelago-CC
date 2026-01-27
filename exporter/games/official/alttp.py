@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 
 # Feature flag for dynamic bunny rule analysis
 # When True, attempts to analyze bunny rules dynamically before falling back to workaround
-ENABLE_DYNAMIC_BUNNY_ANALYSIS = True
+# EXPERIMENTAL: Set to False to let the main analyzer handle bunny rules via
+# factory function execution and callable list analysis
+ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
 
 
 # --- Dynamic imports from original ALttP code ---
@@ -71,7 +73,26 @@ BUNNY_ACCESSIBLE_LOCATIONS = {
 }
 
 # Glitch modes that enable superbunny accessibility
-GLITCH_MODES_WITH_SUPERBUNNY = {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+# Derived dynamically from GlitchesRequired options - all modes except no_glitches
+def _get_glitch_modes_with_superbunny() -> Set[str]:
+    """Get the set of glitch modes that enable superbunny accessibility.
+
+    Derives this dynamically from the GlitchesRequired class in Options.py.
+    All glitch modes except 'no_glitches' enable superbunny accessibility.
+    """
+    try:
+        from worlds.alttp.Options import GlitchesRequired
+        # Get all option_* attributes and extract mode names (excluding no_glitches)
+        return {
+            key.replace('option_', '') for key, value in vars(GlitchesRequired).items()
+            if key.startswith('option_') and key != 'option_no_glitches'
+        }
+    except ImportError:
+        logger.warning("Could not import ALttP Options, using fallback glitch modes list")
+        return {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+
+
+GLITCH_MODES_WITH_SUPERBUNNY = _get_glitch_modes_with_superbunny()
 
 # Locations with mandatory superbunny paths that work in glitch modes
 # These are locations where the superbunny entrance path is always available
@@ -951,11 +972,23 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Check if this is a small key check that should be replaced
         if self._is_dungeon_small_key_check(rule):
-            # With universal keys enabled, shops selling unlimited keys are accessible
-            # in normal gameplay, so we can safely expand to True.
+            # With universal keys enabled, replace dungeon small key checks with
+            # can_buy_unlimited('Small Key (Universal)') - this requires actually
+            # reaching a shop that sells unlimited universal keys.
             # Note: This method is only called when self._is_universal_keys is True
             # (checked at call sites in post_process_data).
-            return {'rule': 'True_'}
+            return {
+                'rule': 'can_buy_unlimited',
+                '_original_ast_type': 'helper',
+                '_converted_from_ast': True,
+                'args': [
+                    {
+                        'rule': 'Constant',
+                        'args': {'value': 'Small Key (Universal)'},
+                        '_converted_from_ast': True
+                    }
+                ]
+            }
 
         # Handle Or/And conditions - recursively process and simplify
         if rule.get('type') in ('or', 'and'):
@@ -1092,7 +1125,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             location_name = rule_target_name or self._current_location_context or ''
             logger.debug(f"ALttP: Detected bunny rule for '{location_name}'")
 
-            # Attempt dynamic analysis if enabled
+            # Attempt dynamic analysis if enabled (legacy path using ClosureFunctionAnalyzer)
             if ENABLE_DYNAMIC_BUNNY_ANALYSIS:
                 try:
                     analyzed_result = self._try_dynamic_bunny_analysis(rule_func, location_name)
@@ -1103,9 +1136,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 except Exception as e:
                     logger.debug(f"ALttP: Dynamic bunny rule analysis failed: {e}, using workaround")
 
-            # Fall back to pre-computed workaround
-            logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
-            return self._get_bunny_replacement_rule(location_name)
+                # Fall back to pre-computed workaround
+                logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
+                return self._get_bunny_replacement_rule(location_name)
+
+            # When ENABLE_DYNAMIC_BUNNY_ANALYSIS is False, let the main analyzer handle
+            # bunny rules via factory function execution and callable list analysis
+            logger.debug(f"ALttP: Letting main analyzer handle bunny rule for '{location_name}'")
+            return None
 
         # All other rules are handled by the generic analyzer
         return None
@@ -1223,12 +1261,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if base_result is not None:
             return base_result
 
-        # Handle can_buy_unlimited for universal keys
-        # When small_key_shuffle is 'universal', shops with unlimited universal keys
-        # are accessible in normal gameplay. We expand this to True for simplicity.
-        if helper_name == 'can_buy_unlimited' and self._is_universal_keys:
-            logger.debug("ALttP: Expanding can_buy_unlimited to True (universal keys enabled)")
-            return {'type': 'constant', 'value': True}
+        # Note: can_buy_unlimited is NOT expanded to True anymore.
+        # When small_key_shuffle is 'universal', rules that check for dungeon small keys
+        # are replaced with can_buy_unlimited('Small Key (Universal)'), which requires
+        # actually reaching a shop that sells unlimited universal keys.
+        # The can_buy_unlimited helper is exported to the worldgen world's Rules.py
+        # and evaluates shop reachability at runtime.
 
         # Helper for creating item check rules
         def _item(name: str) -> Dict[str, Any]:

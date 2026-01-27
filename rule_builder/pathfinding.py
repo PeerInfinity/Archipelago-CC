@@ -6,9 +6,6 @@ This module provides tools for games that need to check:
 - "What if" checks with hypothetical items
 - Region properties (light/dark world, dungeon type, etc.)
 
-Primary use case: ALttP bunny rules, which check how you reached a region
-to determine if Moon Pearl is required.
-
 Usage:
     from rule_builder.pathfinding import (
         PathExistsToRegion,
@@ -60,8 +57,8 @@ class PathExistsToRegion:
     Check if any path exists from the current reachable regions to a target region,
     where each entrance in the path satisfies a given condition.
 
-    This is used for ALttP-style bunny rules where you need to check if you can
-    reach a region through entrances that allow bunny passage.
+    This is useful for path-dependent accessibility rules where you need to check
+    if you can reach a region through specific types of entrances.
 
     Attributes:
         target_region: Name of the region to find a path to
@@ -297,8 +294,7 @@ class EntranceChainCondition:
     A condition that can be checked for each entrance in a path.
 
     This is used to define rules like "all entrances in the path must be
-    from light world regions" or "at least one entrance must allow bunny
-    passage".
+    from light world regions" or "at least one entrance must be outdoors".
     """
 
     # Simple item requirement for the entrance
@@ -431,144 +427,3 @@ def find_paths_to_region(
             queue.append((parent, new_path))
 
     return valid_paths
-
-
-@dataclasses.dataclass()
-class BunnyAccessibilityCheck:
-    """
-    Rule that checks if a location/region is accessible in bunny form.
-
-    This rule evaluates to True if:
-    1. The player has Moon Pearl, OR
-    2. There's a path from a link region to the target that doesn't require Moon Pearl
-
-    The rule is option-aware: it reads inverted mode and glitch mode from
-    the world options at evaluation time.
-
-    Attributes:
-        target_region: Name of the region to check accessibility for
-        location_name: Optional location name (for superbunny accessibility checks)
-    """
-
-    target_region: str
-    location_name: Optional[str] = None
-
-    def evaluate(self, state: CollectionState, player: int) -> bool:
-        """Evaluate bunny accessibility at runtime."""
-        # Get options from world
-        world = state.multiworld.worlds[player]
-        is_inverted = getattr(world.options, 'mode', None)
-        if is_inverted is not None:
-            is_inverted = str(is_inverted) == 'inverted' or getattr(is_inverted, 'value', 0) == 2
-        else:
-            is_inverted = False
-
-        glitch_mode = getattr(world.options, 'glitches_required', None)
-        if glitch_mode is not None:
-            # Convert to string name
-            glitch_value = getattr(glitch_mode, 'value', 0)
-            glitch_names = {0: 'no_glitches', 1: 'minor_glitches', 2: 'overworld_glitches',
-                          3: 'hybrid_major_glitches', 4: 'no_logic'}
-            glitch_mode = glitch_names.get(glitch_value, 'no_glitches')
-        else:
-            glitch_mode = 'no_glitches'
-
-        return can_reach_via_bunny_path(
-            state, player, self.target_region,
-            is_inverted=is_inverted,
-            glitch_mode=glitch_mode
-        )
-
-    def __call__(self, state: CollectionState) -> bool:
-        """Make the rule callable for use as an access_rule."""
-        # This requires player to be bound - typically done via lambda wrapper
-        raise NotImplementedError("BunnyAccessibilityCheck requires player binding")
-
-    def to_dict(self) -> Dict[str, Any]:
-        """Serialize to JSON-compatible dict."""
-        result = {
-            "type": "bunny_accessibility_check",
-            "target_region": self.target_region,
-        }
-        if self.location_name:
-            result["location_name"] = self.location_name
-        return result
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "BunnyAccessibilityCheck":
-        """Deserialize from JSON dict."""
-        return cls(
-            target_region=data["target_region"],
-            location_name=data.get("location_name"),
-        )
-
-
-def can_reach_via_bunny_path(
-    state: CollectionState,
-    player: int,
-    target_region: str,
-    is_inverted: bool = False,
-    glitch_mode: str = "no_glitches"
-) -> bool:
-    """
-    ALttP-specific: Check if a region is reachable via a bunny-safe path.
-
-    This implements the core logic of ALttP's set_bunny_rules, checking if
-    the player can reach a region without needing Moon Pearl by finding a
-    path through bunny-passable entrances.
-
-    Args:
-        state: The collection state
-        player: The player
-        target_region: Name of the target region
-        is_inverted: True if playing in inverted mode
-        glitch_mode: One of "no_glitches", "minor_glitches", "overworld_glitches",
-            "hybrid_major_glitches", "no_logic"
-
-    Returns:
-        True if the region is reachable without Moon Pearl
-    """
-    # If player has Moon Pearl, they can always reach as link
-    if state.has("Moon Pearl", player):
-        return True
-
-    # Define what regions are "bunny" regions based on mode
-    def is_bunny_region(region: Region) -> bool:
-        if is_inverted:
-            return getattr(region, 'is_light_world', False)
-        else:
-            return getattr(region, 'is_dark_world', False)
-
-    def is_link_region(region: Region) -> bool:
-        if is_inverted:
-            return getattr(region, 'is_dark_world', False)
-        else:
-            return getattr(region, 'is_light_world', False)
-
-    # Try to find a path from a link region to the target
-    def path_condition(state: CollectionState, entrance: Entrance) -> bool:
-        parent = entrance.parent_region
-        if parent is None:
-            return False
-
-        # If coming from a link region, this path is valid
-        if is_link_region(parent):
-            return True
-
-        # In glitch modes, some additional paths are available
-        if glitch_mode in ("minor_glitches", "overworld_glitches",
-                          "hybrid_major_glitches", "no_logic"):
-            # Superbunny paths with mirror
-            if state.has("Magic Mirror", player):
-                return True
-
-        return False
-
-    paths = find_paths_to_region(
-        state, player, target_region,
-        path_condition=path_condition,
-        max_depth=10,
-        find_all=False
-    )
-
-    return len(paths) > 0
