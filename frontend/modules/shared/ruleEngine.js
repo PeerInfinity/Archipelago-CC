@@ -3746,18 +3746,57 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       }
 
       case 'can_reach': {
-        // Check if a region is reachable
-        const regionName = evaluateRule(rule.region, context, depth + 1, localScope);
-        if (regionName === undefined) {
+        // Check if a region, entrance, or location is reachable
+        // Supports two formats:
+        // 1. Legacy: { type: 'can_reach', region: 'RegionName' }
+        // 2. New: { type: 'can_reach', target: 'Name', target_type: 'Region'|'Entrance'|'Location' }
+        let targetName;
+        let targetType = 'Region'; // Default to region for backwards compatibility
+
+        if (rule.target !== undefined) {
+          // New format with target and target_type
+          targetName = typeof rule.target === 'string'
+            ? rule.target
+            : evaluateRule(rule.target, context, depth + 1, localScope);
+          targetType = rule.target_type || 'Region';
+        } else if (rule.region !== undefined) {
+          // Legacy format with just region
+          targetName = evaluateRule(rule.region, context, depth + 1, localScope);
+        } else {
+          log('warn', '[evaluateRule] can_reach rule missing both target and region');
           result = undefined;
-        } else if (typeof context.isRegionReachable === 'function') {
-          result = context.isRegionReachable(regionName);
-          if (result === undefined) {
-            log('debug', `[evaluateRule] Region ${regionName} reachability could not be determined`);
+          break;
+        }
+
+        if (targetName === undefined) {
+          result = undefined;
+        } else if (targetType === 'Entrance') {
+          // Check entrance reachability
+          if (typeof context.isEntranceReachable === 'function') {
+            result = context.isEntranceReachable(targetName);
+          } else {
+            log('warn', '[evaluateRule] context.isEntranceReachable is not a function for can_reach Entrance');
+            result = undefined;
+          }
+        } else if (targetType === 'Location') {
+          // Check location accessibility
+          if (typeof context.isLocationAccessible === 'function') {
+            result = context.isLocationAccessible(targetName);
+          } else {
+            log('warn', '[evaluateRule] context.isLocationAccessible is not a function for can_reach Location');
+            result = undefined;
           }
         } else {
-          log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach.');
-          result = undefined;
+          // Default: Check region reachability
+          if (typeof context.isRegionReachable === 'function') {
+            result = context.isRegionReachable(targetName);
+            if (result === undefined) {
+              log('debug', `[evaluateRule] Region ${targetName} reachability could not be determined`);
+            }
+          } else {
+            log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach.');
+            result = undefined;
+          }
         }
         break;
       }
