@@ -2464,7 +2464,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 35
+        "max_count": 35,
+        "classification_counts": {
+          "filler": 31,
+          "progression": 4
+        }
       },
       "Elixir": {
         "name": "Elixir",

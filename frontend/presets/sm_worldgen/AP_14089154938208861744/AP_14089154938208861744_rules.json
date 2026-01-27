@@ -9409,6 +9409,7 @@
     "1": {
       "game": "Super Metroid WorldGen",
       "world_class_name": "SuperMetroidWorldGenWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -10101,7 +10102,6 @@
           }
         ]
       },
-      "count_non_advancement_items": true,
       "hardRooms": {
         "X-Ray": [
           [

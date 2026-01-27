@@ -16622,7 +16622,11 @@
         "classification": "progression",
         "event": false,
         "type": "Missile",
-        "max_count": 30
+        "max_count": 30,
+        "classification_counts": {
+          "filler": 27,
+          "progression": 3
+        }
       },
       "Super Missile": {
         "name": "Super Missile",
@@ -16633,7 +16637,11 @@
         "classification": "progression",
         "event": false,
         "type": "Super",
-        "max_count": 25
+        "max_count": 25,
+        "classification_counts": {
+          "progression": 2,
+          "filler": 23
+        }
       },
       "Power Bomb": {
         "name": "Power Bomb",
@@ -16644,7 +16652,11 @@
         "classification": "progression",
         "event": false,
         "type": "PowerBomb",
-        "max_count": 11
+        "max_count": 11,
+        "classification_counts": {
+          "filler": 8,
+          "progression": 3
+        }
       },
       "Bomb": {
         "name": "Bomb",

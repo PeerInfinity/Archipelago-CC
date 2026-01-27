@@ -1646,156 +1646,132 @@
         "name": "4 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "46 coins": {
         "name": "46 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "60 coins": {
         "name": "60 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "100 coins": {
         "name": "100 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "50 coins": {
         "name": "50 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "9 coins": {
         "name": "9 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "10 coins": {
         "name": "10 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "89 coins": {
         "name": "89 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "7 coins": {
         "name": "7 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "171 coins": {
         "name": "171 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "76 coins": {
         "name": "76 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "203 coins": {
         "name": "203 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "Victory Basic": {
@@ -2018,7 +1994,7 @@
         "item_shuffle": 0,
         "permanent_coins": 0,
         "coinbundlerange": 20,
-        "seed": 71185160
+        "seed": 3835831
       },
       "web": {
         "theme": "grass",
@@ -2061,6 +2037,11 @@
           "pattern": "^(\\d+) coins?$",
           "extract_value": true,
           "target": " coins"
+        },
+        {
+          "pattern": "^(\\d+) coins? freemium$",
+          "extract_value": true,
+          "target": " coins freemium"
         }
       ],
       "prog_items_init": {

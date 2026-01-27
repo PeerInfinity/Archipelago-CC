@@ -9427,6 +9427,7 @@
     "1": {
       "game": "Terraria WorldGen",
       "world_class_name": "TerrariaWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "calamity": false,
